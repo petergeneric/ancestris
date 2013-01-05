@@ -21,7 +21,7 @@ public class BackupFile {
 
 
     public static void createBackup(File file) throws GedcomIOException {
-        if (file.exists()) {
+        if ((Options.getNbBackups()!= 0) && file.exists()) {
             final Pattern p = Pattern.compile(getBasename(file.getName()) + "_([0-9]{8}-[0-9]{6})" + getExtension(file.getName()));
             final File theFile = file;
             File bak;
