@@ -17,6 +17,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import genj.view.ViewContext;
+import java.awt.Component;
 import org.openide.util.Exceptions;
 
 public class GedcomPanel extends Editor {
@@ -26,6 +27,11 @@ public class GedcomPanel extends Editor {
     /** Creates new form FamillyVisualPanel */
     public GedcomPanel() {
         initComponents();
+    }
+
+    @Override
+    public Component getEditorComponent() {
+        return this;
     }
 
     @Override
@@ -43,9 +49,8 @@ public class GedcomPanel extends Editor {
         commit();
     }
 
-
-  @Override
-  protected void setContextImpl(Context context) {
+    @Override
+    protected void setContextImpl(Context context) {
         this.context = context;
         Gedcom gedcom = context.getGedcom();
         placeFormat.setJurisdictions(gedcom.getPlaceFormat());
@@ -53,14 +58,13 @@ public class GedcomPanel extends Editor {
         placeFormat.setDisplayFormat(gedcom.getPlaceDisplayFormat());
         placeFormat.setSortOrder(gedcom.getPlaceSortOrder());
         gedcomDescription.setTag("NOTE");  // NOI18N
-        gedcomDescription.setContext(gedcom.getFirstEntity("HEAD"),null);  // NOI18N
+        gedcomDescription.setContext(gedcom.getFirstEntity("HEAD"), null);  // NOI18N
     }
 
     @Override
     public ViewContext getContext() {
         return new ViewContext(context);
     }
-
 
     @Override
     public String getName() {
@@ -81,7 +85,7 @@ public class GedcomPanel extends Editor {
 
         placeFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(GedcomPanel.class, "GedcomPanel.placeFormat.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPanel.class, "GedcomPanel.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -120,6 +124,7 @@ public class GedcomPanel extends Editor {
     public void commit() {
         try {
             context.getGedcom().doUnitOfWork(new UnitOfWork() {
+
                 public void perform(Gedcom gedcom) throws GedcomException {
                     context.getGedcom().setPlaceFormat(placeFormat.getJurisdictions());
                     context.getGedcom().setShowJuridictions(placeFormat.getShowJuridictions());
@@ -130,6 +135,7 @@ public class GedcomPanel extends Editor {
             });
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
-        } catch (NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
 }

@@ -17,11 +17,10 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import genj.util.ChangeSupport;
 import genj.view.ViewContext;
+import java.awt.Component;
 import java.awt.Image;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -44,16 +43,21 @@ public abstract class Editor extends JPanel {
      */
     public abstract ViewContext getContext();
 
-    public void setContext(Context context){
+    public abstract Component getEditorComponent();
+
+    public void setContext(Context context) {
         if (context == null) {
             return;
         }
-        if (changes != null)
+        if (changes != null) {
             changes.mute();
+        }
         setContextImpl(context);
-        if (changes != null)
+        if (changes != null) {
             changes.unmute();
+        }
     }
+
     protected abstract void setContextImpl(Context context);
 
     /**
@@ -97,6 +101,7 @@ public abstract class Editor extends JPanel {
 
     /**
      * Show editor in a dialog window
+     *
      * @return true if commit succesfull, false if not or cancel button has been clicked
      */
     public boolean showPanel() {

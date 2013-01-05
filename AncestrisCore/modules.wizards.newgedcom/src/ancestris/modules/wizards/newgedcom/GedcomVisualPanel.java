@@ -15,19 +15,20 @@
  *
  * Created on 27 juil. 2011, 00:18:07
  */
-
 package ancestris.modules.wizards.newgedcom;
 
 import ancestris.api.editor.Editor;
 import ancestris.modules.editors.standard.GedcomPanel;
 import genj.gedcom.Context;
 import genj.view.ViewContext;
+import java.awt.Component;
 
 /**
  *
  * @author daniel
  */
 public class GedcomVisualPanel extends Editor {
+
     private Context context;
     private GedcomPanel gedcomPanel;
 
@@ -36,6 +37,11 @@ public class GedcomVisualPanel extends Editor {
         initComponents();
         gedcomPanel = new GedcomPanel();
         jPanel.add(gedcomPanel);
+    }
+
+    @Override
+    public Component getEditorComponent() {
+        return this;
     }
 
     /** This method is called from within the constructor to
@@ -81,16 +87,14 @@ public class GedcomVisualPanel extends Editor {
                 .addComponent(jPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
-  @Override
-  protected void setContextImpl(Context context) {
+    @Override
+    protected void setContextImpl(Context context) {
         this.context = context;
         gedcomPanel.setContext(context);
         jTextField1.setText(context.getGedcom().getName());
@@ -112,9 +116,9 @@ public class GedcomVisualPanel extends Editor {
 
     @Override
     public String getName() {
-        if (gedcomPanel != null)
-        return gedcomPanel.getName();
+        if (gedcomPanel != null) {
+            return gedcomPanel.getName();
+        }
         return "";
     }
-
 }

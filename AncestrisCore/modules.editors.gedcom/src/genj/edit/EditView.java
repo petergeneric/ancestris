@@ -1,7 +1,9 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris - http://www.ancestris.org (Formerly GenJ - GenealogyJ)
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2010 - 2013 Ancestris
+ * Author: Daniel Andre <daniel@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -10,18 +12,19 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.edit;
 
-import ancestris.core.resources.Images;
 import ancestris.api.editor.Editor;
 import ancestris.core.beans.ConfirmChangeWidget;
+import ancestris.core.resources.Images;
+import ancestris.view.ExplorerHelper;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -35,13 +38,11 @@ import genj.view.ContextProvider;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JToggleButton;
@@ -51,7 +52,7 @@ import javax.swing.JToggleButton;
  */
 public class EditView extends View implements ContextProvider, ConfirmChangeWidget.ConfirmChangeCallBack {
 
-    /*package*/ final static Logger LOG = Logger.getLogger("genj.edit");
+    /* package */ final static Logger LOG = Logger.getLogger("genj.edit");
     private final static Registry REGISTRY = Registry.get(EditView.class);
     static final Resources RESOURCES = Resources.get(EditView.class);
     private Mode mode = new Mode();
@@ -114,6 +115,8 @@ public class EditView extends View implements ContextProvider, ConfirmChangeWidg
         editor = set;
         if (editor != null) {
             add(editor, BorderLayout.CENTER);
+            // XXX: quickfix: don't create new explorerhelper each time
+            setExplorerHelper(new ExplorerHelper(editor.getEditorComponent()));
             if (old != null) {
                 editor.setContext(old);
             }
@@ -128,7 +131,7 @@ public class EditView extends View implements ContextProvider, ConfirmChangeWidg
     /**
      * Check whether editor should grab focus or not
      */
-    /*package*/ boolean isGrabFocus() {
+    /* package */ boolean isGrabFocus() {
         return focus.isSelected();
     }
 
@@ -229,7 +232,7 @@ public class EditView extends View implements ContextProvider, ConfirmChangeWidg
 
             if (editor == null) {
                 sticky.setSelected(false);
-        if (mode.isSelected()){
+                if (mode.isSelected()) {
                     setEditor(new AdvancedEditor(context.getGedcom(), this));
                 } else {
                     setEditor(new BasicEditor(context.getGedcom(), this));
@@ -277,8 +280,9 @@ public class EditView extends View implements ContextProvider, ConfirmChangeWidg
         // add sticky/focus/mode
         toolbar.add(new JToggleButton(sticky));
         toolbar.add(new JToggleButton(focus));
-        if (REGISTRY.get("showstandard", false))
+        if (REGISTRY.get("showstandard", false)) {
             toolbar.add(new JToggleButton(mode));
+        }
 
         // done
         toolbar.endUpdate();

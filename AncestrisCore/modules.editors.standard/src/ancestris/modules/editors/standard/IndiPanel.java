@@ -11,11 +11,11 @@
  */
 package ancestris.modules.editors.standard;
 
-import ancestris.modules.beans.PropertyTabbedPane;
 import ancestris.api.editor.Editor;
 import ancestris.modules.beans.AEventBean;
 import ancestris.modules.beans.AListBean;
 import ancestris.modules.beans.ANameBean;
+import ancestris.modules.beans.PropertyTabbedPane;
 import ancestris.util.TimingUtility;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
@@ -27,6 +27,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -116,6 +117,11 @@ public final class IndiPanel extends Editor {
         }
         LOG.log(Level.FINE, "{0}: IndiPanel: end", TimingUtility.geInstance().getTime());
 
+    }
+
+    @Override
+    public Component getEditorComponent() {
+        return this;
     }
     private Indi indi;
 
