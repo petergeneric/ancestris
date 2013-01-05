@@ -48,7 +48,7 @@ java %JAVA_OPTS% genjreports.rdf.gedsem.Convert -gedcom %GED% -uri %URI% -format
 @echo =============
 @echo collect place names? CTRL-C to abort
 @pause
-java %JAVA_OPTS% genjreports.rdf.semweb.Select mashup.tsv gedcom.ttl mashup.tsv mashup.arq
+java %JAVA_OPTS% genjreports.rdf.semweb.Select mashup.ttl gedcom.ttl mashup.tsv mashup.arq
 
 @echo =============
 @echo PLEASE: add missing GeoNameIDs to mashup.tsv
