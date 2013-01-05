@@ -17,6 +17,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
 import genj.view.ViewContext;
+import java.awt.Component;
 import org.openide.util.Exceptions;
 
 public final class FamPanel extends Editor {
@@ -27,6 +28,11 @@ public final class FamPanel extends Editor {
         setOpaque(true);
         initComponents();
         marrEvent.addChangeListener(changes);
+    }
+
+    @Override
+    public Component getEditorComponent() {
+        return this;
     }
     private Fam fam;
 
@@ -70,8 +76,8 @@ public final class FamPanel extends Editor {
      *
      * @param entity new value of indi
      */
-  @Override
-  protected void setContextImpl(Context context) {
+    @Override
+    protected void setContextImpl(Context context) {
         this.context = context;
 
         Entity entity = context.getEntity();
