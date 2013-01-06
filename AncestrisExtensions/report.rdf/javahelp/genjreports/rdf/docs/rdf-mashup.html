@@ -168,28 +168,29 @@
         <p class="justify">
             GeoNameIDs can create a bridge between
             your family data and the data on the web. 
-            The file <code>muOutput.ttl</code> in the diagram is the bridge,
-            the mashup command builds the bridge.
+            The file <code>mashup.ttl</code> in the diagram is the bridge,
+            the <code>semweb.mashup</code> command builds the bridge.
             As long as the geo plugin does not provide an export,
-            you will have to create the file <code>muInput.tsv</code>
-            with the <a href="./mashup/mashup.arq">mashup query</a>.
+            you will have to create the file <code>mashup.tsv</code>
+            with <a href="./mashup/mashup.arq"><code>mashup.arq</code></a>.
             The first time you run the query,
             it won't produce GeoName URI's in the first column.
         </p>
 
         <p class="justify">
-            The mashup command needs a tab separated file as input,
-            so make sure to run the mashup query with tsv as output.
+            The <code>semweb.mashup</code> command needs a tab separated file as input,
+            so make sure to run <code>mashup.arq</code> with tsv as output.
             You will have to add missing GeoNameIDs in the first column.
             You might use a spreadheet program,
-            but make sure to save as a tab separated file,
+            but make sure to save as a tab separated file:
             <a href="./images/saveAsTextWithTabs.jpg">screenshot</a>.
-            Keep the places in the second column,
+            Keep the places in the second column of the tsv file,
             together with all their jurisdictions and separators between them.
             Search the places on www.geonames.org with the show-on-map button
-            The balloons with details shows a GeoNameId:
+            The balloons with details shows a GeoNameId,
+            put that ID in the first column of the tsv:
+            <a href="./images/FindGeoNamesID.jpg">screenshot</a>.
         </p>
-        <img src="./images/FindGeoNamesID.jpg"/>.
 
 
         <a name="FAQ"></a>

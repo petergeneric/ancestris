@@ -30,9 +30,9 @@
         <dl>
             <dt>q / s</dt><dd>The type of rules that at least should have been applied with the last conversion.</dd>
             <dt>FAM / INDI / ...</dt><dd>Launch the report from the type of entity.<br/>
-                <i>Know bug: you may first have to execute another type of query.</i>
+                <i>Known bug: you may first have to execute another type of query.</i>
             </dd>
-            <dt>SOSA / TREETOP</dt><dd>Custom properties that should have been generated before conversion took place.
+            <dt>SOSA / TREETOP</dt><dd>Custom properties generated with the report "tool box".
                 <!-- TODO add link to the tools that generate these properties -->
             </dd>
         </dl>
@@ -55,9 +55,10 @@
                 <li><a href="./reports/SlowRules.txt">SlowRules.txt</a> QuickRules + ancestor/descendant relations.</li>
                 <li><a href="./rdf-submit.html">your set of rules?</a></li>
               </ul>
-            </dd></dt><dt>queries</dt><dd>
+            </dd></dt><dt>GUI queries</dt><dd>
               <p class="justify">
-                These queries need no additional tools. See the prefix explanations above.
+                These queries won't work with the batch tool as the follwing list will do.
+                See the prefix explanations above.
               </p>
               <ul>
                 <li><a href="./reports/AgeDiffBetweenSpouses.txt">AgeDiffBetweenSpouses.txt</a></li>
@@ -66,7 +67,6 @@
                 <li><a href="./reports/CountGivnNames.txt">CountGivnNames.txt</a></li>
                 <li><a href="./reports/FAM-PatchworkFamily.txt">FAM-PatchworkFamily.txt</a></li>
                 <li><a href="./reports/qINDI-TimeLineWithCloseRelatives.txt">qINDI-TimeLineWithCloseRelatives.txt</a></li>
-                <li><a href="./reports/sINDI-MigrationLines.txt">sINDI-MigrationLines.txt</a></li>
                 <li><a href="./reports/sINDI-RootAncestors.txt">sINDI-RootAncestors.txt</a></li>
                 <li><a href="./reports/SOSA-MultiMedia.txt">SOSA-MultiMedia.txt</a></li>
                 <li><a href="./reports/SOSA-InbredStatistics.txt">SOSA-InbredStatistics.txt</a></li>
@@ -74,13 +74,16 @@
               </ul>
             </dd></dt><dt>mashup queries</dt><dd>
               <p class="justify">
-                Currently these require the Jena command line tools,
-                or something else that executes SPARQL queries.
-                See the <a href="./rdf-mashup.html">explanations</a>
+                These queries require the command line tools,
+                see the <a href="./rdf-mashup.html#batches">explanations</a>.
+                Queries marked with an astrix (*)
+                run also with the GUI but some columns will remain empty.
+                Also chek the comment headers in the files.
               </p>
               <ul>
-                <li><a href="./mashup/mashup.arq">mashup.arq</a></li>
+                <li><a href="./mashup/mashup.arq">mashup.arq</a> *</li>
                 <li><a href="./mashup/classmates.arq">classmates.arq</a></li>
+                <li><a href="./mashup/MigrationLines.txt">MigrationLines.txt</a> *</li>
                 <li><a href="./mashup/dbpediaLanguages.arq">dbpediaLanguages.arq</a></li>
                 <li><a href="./mashup/dbpediaProperties.arq">dbpediaProperties.arq</a></li>
                 <li><a href="./mashup/dbpediaRelatedEntities.arq">dbpediaRelatedEntities.arq</a></li>
