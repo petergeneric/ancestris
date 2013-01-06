@@ -17,8 +17,20 @@ import ancestris.util.TimingUtility;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.view.SelectionSink;
 import genj.common.ContextListWidget;
-import genj.gedcom.*;
-import genj.io.*;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.UnitOfWork;
+import genj.io.BackupFile;
+import genj.io.Filter;
+import genj.io.GedcomEncodingException;
+import genj.io.GedcomIOException;
+import genj.io.GedcomReader;
+import genj.io.GedcomReaderContext;
+import genj.io.GedcomReaderFactory;
+import genj.io.GedcomWriter;
+import genj.io.IGedcomWriter;
 import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -140,7 +152,7 @@ public abstract class GedcomMgr {
         gedcom.setPassword(options.getPassword());
         gedcom.setEncoding(options.getEncoding());
 
-        Origin newOrigin = null;
+        Origin newOrigin;
         // .. create new origin
         try {
             newOrigin = Origin.create(output.getURL());
@@ -322,13 +334,12 @@ public abstract class GedcomMgr {
          */
         //XXX: use fileobject api and outfile parameter
         public boolean saveGedcomImpl(Gedcom gedcom, Collection<Filter> filters, FileObject outFile) {
-            IGedcomWriter writer = null;
+            IGedcomWriter writer;
 
             try {
 
                 // prep files and writer
-                writer = null;
-                File file = null, temp = null;
+                File file, temp;
                 try {
                     // .. resolve to canonical file now to make sure we're writing to the
                     // file being pointed to by a symbolic link
@@ -363,11 +374,12 @@ public abstract class GedcomMgr {
                 }
 
                 // .. make backup
-                BackupFile.createBackup(file);
-
-                // .. and now !finally! move from temp to result
-                if (!temp.renameTo(file)) {
-                    throw new GedcomIOException("Couldn't move temporary " + temp.getName() + " to " + file.getName(), -1);
+                if (BackupFile.createBackup(file)) {
+                    file.delete();
+                    // .. and now !finally! move from temp to result
+                    if (!temp.renameTo(file)) {
+                        throw new GedcomIOException("Couldn't move temporary " + temp.getName() + " to " + file.getName(), -1);
+                    }
                 }
 
             } catch (GedcomIOException gioex) {
