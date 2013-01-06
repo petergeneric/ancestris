@@ -2,10 +2,18 @@
 #
 # Migration lines.
 #
-# Requirements:
+# Prerequisites:
+#   Create (almost empty) records for unknown dads.
 #   Generate _TREETOP and _SOSAN with report "tool box".
 #   Apply the slow rules.
-#   Create (almost empty) records for unknown dads.
+#
+# Customisation for KML processing:
+#   The first 4 columns are used to construct
+#   the KML layout: don't change them.
+#   Any column can be used for place holders in an
+#   HTML template injected per person into the KML file:
+#   for example: <p><a href={11}>{1}</a> {6}</p>
+#   for a linked sosa-number followed by a name. 
 #
 # Note:
 #   A person appears two times with the same sosa-nr 
@@ -13,11 +21,9 @@
 #   Other cousin mariages cause the grandparents 
 #   appear with different sosa numbers.
 #
-# It would be great to turn the result into a KML file that draws lines from ?top to ?root.
-#
 ###############################################
 
-### from external data
+### external data
 PREFIX rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 PREFIX rdfs:         <http://www.w3.org/2000/01/rdf-schema#> 
 PREFIX xsd:          <http://www.w3.org/2001/XMLSchema#> 
@@ -40,17 +46,18 @@ PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#>
 
 ###############################################
 SELECT DISTINCT
-  (?sosa_top  as ?branche)
-  (?sosa_indi as ?sosa)
-  ?isTop
-  ?gn
-  ?lat
-  ?long
-  (?nameIndi  as ?name)
+  (?sosa_top  as ?branche) # {0}
+  (?sosa_indi as ?sosa)    # {1}
+  ?lat                     # {2}
+  ?long                    # {3}
+  ?isTop                   # {4}
+  ?place                   # {5}
+  (?nameIndi  as ?name)    # {6}
   (fn:substring(str(?dateMarried),1,4) as ?year_married)
-  ?placeMarried 
-  ?placeBirth 
-  ?placeDeath 
+  ?placeMarried            # {8}
+  ?placeBirth              # {9}
+  ?placeDeath              #{10}
+  ?indi                    #{11}
 {
  ### the persons between the root and top
  {
@@ -61,6 +68,7 @@ SELECT DISTINCT
    ?indi p:_SOSAN   [rdfs:label ?sosa_indi];
          r:ancestor ?top.
 
+   #### whatever you want to show about the INDI
    OPTIONAL { ?indi          p:NAME [rdfs:label ?nameIndi  ] }
    OPTIONAL { ?indi p:DEAT [ p:DATE [rdfs:label ?dateDeath ]]}
    OPTIONAL { ?indi p:BIRT [ p:DATE [rdfs:label ?dateBirth ]]}
@@ -73,14 +81,16 @@ SELECT DISTINCT
        ?fam  p:HUSB [p:_SOSAN [rdfs:label ?sosaHusb]];
              p:WIFE [p:_SOSAN [rdfs:label ?sosaWife]].
 
+       #### whatever you want to show about the FAM
        OPTIONAL { ?fam p:MARR [p:DATE [rdfs:label ?dateMarried ]]}
+
        OPTIONAL { ?fam p:MARR [p:PLAC [rdfs:label ?placeMarried]].
+                  ### match with downloaded data
                   OPTIONAL { ?link     rdfs:label ?placeMarried;
                                        rdfs:isDefinedBy ?gn. 
-                             #?gn wgs84_pos:lat  ?lat;
-                             #    wgs84_pos:long ?long.
-                             #OPTIONAL {?gn gn:name ?place.}
-                             #### FIXME match with downloaded data
+                             OPTIONAL {?gn wgs84_pos:lat  ?lat;
+                                           wgs84_pos:long ?long}.
+                             OPTIONAL {?gn gn:name ?place.}
                            }
                 }
    }
@@ -96,6 +106,8 @@ SELECT DISTINCT
    ?indi p:_TREETOP [a t:_TREETOP];
          p:_SOSAN   [rdfs:label ?sosa_top ];
          p:_SOSAN   [rdfs:label ?sosa_indi].
+
+   #### whatever you want to show about the INDI
    OPTIONAL { ?indi          p:NAME [rdfs:label ?nameIndi  ] }
    OPTIONAL { ?indi p:DEAT [ p:DATE [rdfs:label ?dateDeath ]]}
    OPTIONAL { ?indi p:BIRT [ p:DATE [rdfs:label ?dateBirth ]]}
@@ -103,13 +115,24 @@ SELECT DISTINCT
    OPTIONAL { ?indi p:BIRT [ p:PLAC [rdfs:label ?placeBirth]]}
    OPTIONAL {
        ?indi  p:FAMS ?fam.
-       OPTIONAL { ?fam p:MARR [p:DATE [rdfs:label ?dateMarried ]]}
-       OPTIONAL { ?fam p:MARR [p:PLAC [rdfs:label ?placeMarried]]}
-       #### TODO add: match with downloaded data
-   }
-   LET (?isTop:=true)
 
-   ### switch of if you don't store GIVN and SURN separately
+       #### whatever you want to show about the FAM
+       OPTIONAL { ?fam p:MARR [p:DATE [rdfs:label ?dateMarried ]]}
+
+       OPTIONAL { ?fam p:MARR [p:PLAC [rdfs:label ?placeMarried]]
+                  ### match with downloaded data
+                  OPTIONAL { ?link     rdfs:label ?placeMarried;
+                                       rdfs:isDefinedBy ?gn. 
+                             OPTIONAL {?gn wgs84_pos:lat  ?lat;
+                                           wgs84_pos:long ?long}.
+                             OPTIONAL {?gn gn:name ?place.}
+                           }
+                }
+   }
+   #### visual emphasis on the end of the branches 
+   LET (?isTop:='top')
+
+   #### switch of if you don't store GIVN and SURN separately
    FILTER( fn:contains(?nameIndi,'/') )
  }
 } order by ?sosa_top ?sosa_indi
