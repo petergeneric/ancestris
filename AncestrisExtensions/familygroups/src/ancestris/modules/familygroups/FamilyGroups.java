@@ -190,7 +190,7 @@ public class FamilyGroups {
 
                     doc.nextTableRow("font-size=1.125em, font-weight=bold, line-height=200%");
                     doc.nextTableCell("colspan=6, width=100%");
-                    doc.addText("Group " + i + " " + NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.count") + " " + String.format("%d", tree.size()));
+                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.groupCount", new Object[]{i, tree.size()}));
                     doc.nextTableRow("font-weight=bold");
                     doc.nextTableCell("colspan=2, width=34%");
                     doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
