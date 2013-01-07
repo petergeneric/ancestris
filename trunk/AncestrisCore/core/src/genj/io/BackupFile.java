@@ -28,6 +28,7 @@ public class BackupFile {
     static private final SimpleDateFormat ISO_FORMAT = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
     public static boolean createBackup(File file) throws GedcomIOException {
+        boolean result=false;
         try {
             if ((Options.getNbBackups() != 0) && file.exists()) {
                 final Pattern p = Pattern.compile(getBasename(file.getName()) + "_([0-9]{8}-[0-9]{6})" + getExtension(file.getName()));
@@ -68,9 +69,9 @@ public class BackupFile {
                     throw new GedcomIOException("Couldn't create backup for " + file.getName(), -1);
                 }
             }
-            return true;
+            result = true;
         } finally {
-            return false;
+            return result;
         }
     }
 
