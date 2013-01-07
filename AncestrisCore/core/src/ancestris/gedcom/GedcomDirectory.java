@@ -36,6 +36,7 @@ import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooser;
 import java.awt.Component;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
 import java.util.logging.Level;
@@ -335,6 +336,15 @@ public abstract class GedcomDirectory {
             int rc = DialogHelper.openDialog(RES.getString("cc.save.title", context.getGedcom().toString()), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
             if (rc != 0) {
                 return false;
+            }
+        } else {
+            //FIXME: if file doesn't exist, create a blank one (FileObject will then be correctly set)
+            // On drawback is that an empty backup file is created.
+            // FIXME: on the other hand, if file exists, the backup created will not necesserally be related 
+            // To this gedcom data
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
             }
         }
 
