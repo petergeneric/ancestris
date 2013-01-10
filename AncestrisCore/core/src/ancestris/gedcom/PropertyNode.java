@@ -11,14 +11,18 @@
  */
 package ancestris.gedcom;
 
+import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import genj.gedcom.Context;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -30,7 +34,8 @@ public class PropertyNode extends AbstractNode {
     private genj.gedcom.Property property;
 
     public PropertyNode(Context context) {
-        this((genj.gedcom.Property) null);
+        this(context, new InstanceContent());
+        this.property = null;
         if (context.getProperty() != null) {
             this.property = context.getProperty();
         } else if (context.getEntity() != null) {
@@ -43,14 +48,20 @@ public class PropertyNode extends AbstractNode {
         lookupContents.add(context);
     }
 
-    public PropertyNode(genj.gedcom.Property property) {
-        this(new InstanceContent());
-        this.property = property;
+    private PropertyNode(Context context, InstanceContent ic) {
+        super(Children.LEAF, createLookup(context, ic));
+        this.lookupContents = ic;
     }
 
-    private PropertyNode(InstanceContent ic) {
-        super(Children.LEAF, new AbstractLookup(ic));
-        this.lookupContents = ic;
+    // We create a proxy lookup here to expose DataObject Lookup to TopComponent
+    // That way the SaveCookie in dao lookup is seen in TP and can be used to enable Save Action
+    static private Lookup createLookup(Context context, InstanceContent ic) {
+        try {
+            return new ProxyLookup(new AbstractLookup(ic), GedcomDirectory.getDefault().getDataObject(context).getLookup());
+        } catch (ContextNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return new AbstractLookup(ic);
     }
 
     @Override
