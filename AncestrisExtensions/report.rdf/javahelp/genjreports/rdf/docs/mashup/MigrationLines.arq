@@ -46,18 +46,18 @@ PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#>
 
 ###############################################
 SELECT DISTINCT
-  (?sosa_top  as ?branche) # {0}
-  (?sosa_indi as ?sosa)    # {1}
-  ?lat                     # {2}
-  ?long                    # {3}
-  ?isTop                   # {4}
-  ?place                   # {5}
-  (?nameIndi  as ?name)    # {6}
+  (?sosa_top  as ?branche) # {0} A
+  (?sosa_indi as ?sosa)    # {1} B
+  ?lat                     # {2} C
+  ?long                    # {3} D
+  ?isTop                   # {4} E
+  ?place                   # {5} F
+  (?nameIndi  as ?name)    # {6} G
   (fn:substring(str(?dateMarried),1,4) as ?year_married)
-  ?placeMarried            # {8}
-  ?placeBirth              # {9}
-  ?placeDeath              #{10}
-  ?indi                    #{11}
+  ?placeMarried            # {8} I
+  ?placeBirth              # {9} J
+  ?placeDeath              #{10} K
+  (str(?indi) as ?url)     #{11} L
 {
  ### the persons between the root and top
  {
