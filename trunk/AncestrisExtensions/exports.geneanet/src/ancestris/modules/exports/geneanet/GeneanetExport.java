@@ -18,21 +18,7 @@
 package ancestris.modules.exports.geneanet;
 
 import ancestris.modules.console.Console;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyAssociation;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertyName;
-import genj.gedcom.PropertyNote;
-import genj.gedcom.PropertyPlace;
-import genj.gedcom.PropertySex;
-import genj.gedcom.PropertySource;
-import genj.gedcom.PropertyXRef;
-import genj.gedcom.Source;
+import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -42,10 +28,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -197,7 +180,7 @@ public class GeneanetExport {
         /*
          * List all unexported Individuals
          */
-        Iterator <String>iterator = indiMap.keySet().iterator();
+        Iterator<String> iterator = indiMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
             GwIndi indi = indiMap.get(key);
@@ -275,7 +258,7 @@ public class GeneanetExport {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
 
             out.write("encoding: utf-8\n\n");
-            Iterator <Fam>familysIterator = familys.iterator();
+            Iterator<Fam> familysIterator = familys.iterator();
             while (familysIterator.hasNext()) {
                 Fam family = familysIterator.next();
                 Indi husband = family.getHusband();
@@ -293,7 +276,7 @@ public class GeneanetExport {
                     out.write("fam ");
                     if (husband != null) {
                         /*
-                         *  LastName FirstName.Occurence
+                         * LastName FirstName.Occurence
                          */
                         out.write(indiMap.get(husband.getId()).getNameOccurenced() + " ");
                         Fam[] husbandFamc = husband.getFamiliesWhereChild();
@@ -367,8 +350,7 @@ public class GeneanetExport {
                         }
                     } else {
                         /*
-                         * not married
-                         * [#nm | #eng]
+                         * not married [#nm | #eng]
                          *
                          */
                         out.write(" #nm ");
@@ -380,7 +362,7 @@ public class GeneanetExport {
                      */
                     if (wife != null) {
                         /*
-                         *  LastName FirstName.Occurence
+                         * LastName FirstName.Occurence
                          */
                         out.write(indiMap.get(wife.getId()).getNameOccurenced());
                         Fam[] wifeFamc = wife.getFamiliesWhereChild();
@@ -444,7 +426,8 @@ public class GeneanetExport {
                     }
 
                     /*
-                     * [wit: Witness (use Person format, see Person Information section) ]
+                     * [wit: Witness (use Person format, see Person Information
+                     * section) ]
                      */
                     if (marriage != null && weddingDetailExported == true) {
                         Property[] propertiesXRef = marriage.getProperties("XREF");
@@ -465,9 +448,8 @@ public class GeneanetExport {
                     }
 
                     /*
-                     * beg
-                     * - [h | f | ] Person (see detailed description at the next section)
-                     * end
+                     * beg - [h | f | ] Person (see detailed description at the
+                     * next section) end
                      */
                     Indi[] childrens = family.getChildren();
                     if (childrens.length > 0) {
@@ -499,7 +481,7 @@ public class GeneanetExport {
                                     out.write(indiMap.get(children.getId()).getFirstNameOccurenced() + " ");
                                     if (children.getLastName().equals(husband.getLastName()) != true) {
                                         /*
-                                         *  LastName FirstName.Occurence
+                                         * LastName FirstName.Occurence
                                          */
                                         out.write(indiMap.get(children.getId()).getLastName() + " ");
                                     }
@@ -510,7 +492,7 @@ public class GeneanetExport {
                                     out.write(indiMap.get(children.getId()).getFirstNameOccurenced() + " ");
                                     if (children.getLastName().equals(wife.getLastName())) {
                                         /*
-                                         *  LastName
+                                         * LastName
                                          */
                                         out.write(indiMap.get(children.getId()).getLastName() + " ");
                                     }
@@ -526,17 +508,14 @@ public class GeneanetExport {
                 }
             }
 
-            Iterator <Map.Entry<String, GwIndi>>it = indiMap.entrySet().iterator();
+            Iterator<Map.Entry<String, GwIndi>> it = indiMap.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<String, GwIndi> entry = it.next();
                 GwIndi indi = entry.getValue();
                 if (indi.canBeExported()) {
                     /*
-                     * indi Notes
-                     * notes LastName FirstName[.Number]
-                     * beg
-                     * Notes go here in a free format
-                     * end notes
+                     * indi Notes notes LastName FirstName[.Number] beg Notes go
+                     * here in a free format end notes
                      */
                     if (notesExported == true) {
                         if (indi.getNotes() != null) {
@@ -546,8 +525,7 @@ public class GeneanetExport {
                     }
 
                     /*
-                     * indi Relations
-                     * rel LastName FirstName[.Number]
+                     * indi Relations rel LastName FirstName[.Number]
                      */
                     if (relationsExported == true) {
                         if (indi.getRelations() != null) {
@@ -712,11 +690,8 @@ public class GeneanetExport {
          * [#apubl | #apriv]
          */
         /*
-        if ((indi.isPrivate() == true)) {
-        indiDescription += " #apriv ";
-        } else {
-        indiDescription += " #apubl ";
-        }
+         * if ((indi.isPrivate() == true)) { indiDescription += " #apriv "; }
+         * else { indiDescription += " #apubl "; }
          */
 
         /*
@@ -762,8 +737,8 @@ public class GeneanetExport {
         }
 
         /*
-         * DateOfBirth [#bs BirthSource] [#bp PlaceOfBirth] [!BaptizeDate]
-         * [#pp BaptizePlace] [#ps BaptizeSource]
+         * DateOfBirth [#bs BirthSource] [#bp PlaceOfBirth] [!BaptizeDate] [#pp
+         * BaptizePlace] [#ps BaptizeSource]
          */
         Property birth = indi.getProperty("BIRT");
         if (birth != null) {
@@ -773,8 +748,8 @@ public class GeneanetExport {
         }
 
         /*
-         * [DateOfDeath] [#dp PlaceOfDeath] [#ds DeathSource]
-         * [#buri | #crem [BurialDate]] [#rp BurialPlace] [#rs BurialSource]
+         * [DateOfDeath] [#dp PlaceOfDeath] [#ds DeathSource] [#buri | #crem
+         * [BurialDate]] [#rp BurialPlace] [#rs BurialSource]
          */
         Property death = indi.getProperty("DEAT");
         if (death != null) {
@@ -808,18 +783,35 @@ public class GeneanetExport {
              * end
              */
             String relations = "";
-            Property propertyBapm = indi.getProperty("BAPM");
-            if (propertyBapm != null) {
-                Property[] propertiesXRef = propertyBapm.getProperties("XREF");
-                for (Property propertyXRef : propertiesXRef) {
-                    Entity targetEntity = ((PropertyXRef) propertyXRef).getTargetEntity();
-                    if (((Indi) targetEntity).getSex() == PropertySex.MALE) {
-                        relations += "- godp fath: " + indiMap.get(((Indi) targetEntity).getId()).getNameOccurenced() + "\n";
-                    } else {
-                        relations += "- godp moth: " + indiMap.get(((Indi) targetEntity).getId()).getNameOccurenced() + "\n";
+            for (Property property : indi.getProperties()) {
+                if (property instanceof PropertyEvent) {
+                    if (property.getTag().equals("BIRT")
+                            || property.getTag().equals("BAPL")
+                            || property.getTag().equals("BAPM")
+                            || property.getTag().equals("CHR")) {
+                        Property[] propertiesXRef = property.getProperties("XREF");
+                        for (Property propertyXRef : propertiesXRef) {
+                            Entity targetEntity = ((PropertyXRef) propertyXRef).getTargetEntity();
+                            if (((Indi) targetEntity).getSex() == PropertySex.MALE) {
+                                relations += "- godp fath: " + indiMap.get(((Indi) targetEntity).getId()).getNameOccurenced() + "\n";
+                            } else {
+                                relations += "- godp moth: " + indiMap.get(((Indi) targetEntity).getId()).getNameOccurenced() + "\n";
+                            }
+                        }
+                    } else if(property.getTag().equals("ADOP")) {
+                        Property[] propertiesXRef = property.getProperties("XREF");
+                        for (Property propertyXRef : propertiesXRef) {
+                            Entity targetEntity = ((PropertyXRef) propertyXRef).getTargetEntity();
+                            if (((Indi) targetEntity).getSex() == PropertySex.MALE) {
+                                relations += "- adop fath: " + indiMap.get(((Indi) targetEntity).getId()).getNameOccurenced() + "\n";
+                            } else {
+                                relations += "- adop moth: " + indiMap.get(((Indi) targetEntity).getId()).getNameOccurenced() + "\n";
+                            }
+                        }                        
                     }
                 }
             }
+            
             if (relations.length() > 0) {
                 GwIndi gwIndi = indiMap.get(indi.getId());
                 gwIndi.setRelations(relations);
@@ -830,26 +822,22 @@ public class GeneanetExport {
 
     /*
      *
-     * LastName FirstName [{FirstNameAlias}] [#salias SurnameAlias] [(PublicName)]
-     * [#image ImageFilePath] [#nick Qualifier] [#alias Alias]
+     * LastName FirstName [{FirstNameAlias}] [#salias SurnameAlias]
+     * [(PublicName)] [#image ImageFilePath] [#nick Qualifier] [#alias Alias]
      *
      * NB LastName FirstName already inserted by analyseFamily.
      */
     private String analyseName(Property[] indiNames) {
         String nameDescription = "";
         /*
-         * <NAME default="1" type="PropertyName" img="Name">
-         *   <NPFX type="PropertySimpleValue" img="Name"/>
-         *   <GIVN type="PropertySimpleValue" img="Name"/>
-         *   <NICK type="PropertySimpleValue" img="Name"/>
-         *   <SPFX type="PropertySimpleValue" img="Name"/>
-         *   <SURN type="PropertySimpleValue" img="Name"/>
-         *   <NSFX type="PropertySimpleValue" img="Name"/>
-         *   <SOUR/>
-         *   <NOTE>
-         *      <SOUR/>
-         *   </NOTE>
-         *</NAME>
+         * <NAME default="1" type="PropertyName" img="Name"> <NPFX
+         * type="PropertySimpleValue" img="Name"/> <GIVN
+         * type="PropertySimpleValue" img="Name"/> <NICK
+         * type="PropertySimpleValue" img="Name"/> <SPFX
+         * type="PropertySimpleValue" img="Name"/> <SURN
+         * type="PropertySimpleValue" img="Name"/> <NSFX
+         * type="PropertySimpleValue" img="Name"/> <SOUR/> <NOTE> <SOUR/>
+         * </NOTE> </NAME>
          */
 
         /*
@@ -870,7 +858,7 @@ public class GeneanetExport {
         }
 
         /*
-         * Extract [(PublicName)]  from the fisrt PropertyName found
+         * Extract [(PublicName)] from the fisrt PropertyName found
          */
         Property pGivenName = indiNames[0].getProperty("GIVN");
         if (pGivenName != null) {
@@ -895,8 +883,8 @@ public class GeneanetExport {
     }
 
     /*
-     * DateOfBirth [#bs BirthSource] [#bp PlaceOfBirth] [!BaptizeDate]
-     * [#pp BaptizePlace] [#ps BaptizeSource]
+     * DateOfBirth [#bs BirthSource] [#bp PlaceOfBirth] [!BaptizeDate] [#pp
+     * BaptizePlace] [#ps BaptizeSource]
      */
     private String analyzeBirth(Property birth) {
 
@@ -935,8 +923,8 @@ public class GeneanetExport {
     }
 
     /*
-     * [DateOfDeath] [#dp PlaceOfDeath] [#ds DeathSource]
-     * [#buri | #crem [BurialDate]] [#rp BurialPlace] [#rs BurialSource]
+     * [DateOfDeath] [#dp PlaceOfDeath] [#ds DeathSource] [#buri | #crem
+     * [BurialDate]] [#rp BurialPlace] [#rs BurialSource]
      */
     private String analyzeDeath(Property death) {
 
@@ -1035,26 +1023,9 @@ public class GeneanetExport {
     private String source2String(Property source) {
         String srcString = "";
         /*
-         *   <SOUR>
-         *       <PAGE/>
-         *       <EVEN>
-         *           <ROLE/>
-         *       </EVEN>
-         *       <DATA>
-         *           <DATE/>
-         *       <TEXT/>
-         *       </DATA>
-         *       <QUAY/>
-         *       <OBJE>
-         *           <TITL/>
-         *           <FILE>
-         *           <FORM/>
-         *           </FILE>
-         *           <NOTE/>
-         *       </OBJE>
-         *       <TEXT/>
-         *       <NOTE/>
-         *   </SOUR>
+         * <SOUR> <PAGE/> <EVEN> <ROLE/> </EVEN> <DATA> <DATE/> <TEXT/> </DATA>
+         * <QUAY/> <OBJE> <TITL/> <FILE> <FORM/> </FILE> <NOTE/> </OBJE> <TEXT/>
+         * <NOTE/> </SOUR>
          */
         if (source instanceof PropertySource || source instanceof Source) {
             if (source instanceof PropertySource) {
