@@ -5,6 +5,7 @@ import genj.fo.Document;
 import genj.gedcom.*;
 import genj.io.Filter;
 import java.util.*;
+import java.util.regex.Pattern;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
@@ -40,6 +41,32 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
         public Indi getYoungestIndividual() {
             return (youngestIndividual);
+        }
+
+        public HashSet<PropertyPlace> getPlaces() {
+            HashSet<PropertyPlace> propertyPlaces = new HashSet<PropertyPlace>();
+
+            Iterator<Indi> entityIterator = this.iterator();
+            while (entityIterator.hasNext()) {
+                Indi indi = entityIterator.next();
+                List<Property> findProperties = indi.findProperties(Pattern.compile("PLAC"), null);
+                Iterator<Property> indiPlacesIt = findProperties.iterator();
+                while (indiPlacesIt.hasNext()) {
+                    boolean found = false;
+                    Property findProperty = indiPlacesIt.next();
+                    Iterator<PropertyPlace> propertyPlacesIt = propertyPlaces.iterator();
+                    while (propertyPlacesIt.hasNext()) {
+                        PropertyPlace propertyPlace = propertyPlacesIt.next();
+                        if (propertyPlace.compareTo(findProperty) == 0) {
+                            found = true;
+                        }
+                    }
+                    if (found == false) {
+                        propertyPlaces.add((PropertyPlace) findProperty);
+                    }
+                }
+            }
+            return propertyPlaces;
         }
 
         @Override
@@ -219,22 +246,32 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                 if (tree.size() < getMinGroupSize()) {
                     loners += tree.size();
                 } else {
-
                     doc.nextTableRow("font-size=1.125em, font-weight=bold, line-height=200%");
                     doc.nextTableCell("colspan=6, width=100%");
                     doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.groupCount", new Object[]{i, tree.size()}));
-                    doc.nextTableRow("line-height=200%");
+
+                    doc.nextTableRow();
                     doc.nextTableCell("colspan=6, width=100%");
                     doc.addText(tree.getTitle());
-                    doc.nextTableRow("font-weight=bold");
-                    doc.nextTableCell("colspan=2, width=34%");
-                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
-                    doc.nextTableCell("colspan=2, width=33%");
-                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familySpouse"));
-                    doc.nextTableCell("colspan=2, width=33%");
-                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familyChild"));
-
                     if (tree.size() < getMaxGroupSize()) {
+
+                        for (Iterator<PropertyPlace> it = tree.getPlaces().iterator(); it.hasNext();) {
+                            PropertyPlace PropertyPlace = it.next();
+                            if (PropertyPlace.format(null).length() > 0) {
+                                doc.nextTableRow();
+                                doc.nextTableCell("colspan=6, width=100%");
+                                doc.addText(PropertyPlace.format(null));
+                            }
+                        }
+
+                        doc.nextTableRow("font-weight=bold");
+                        doc.nextTableCell("colspan=2, width=34%");
+                        doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
+                        doc.nextTableCell("colspan=2, width=33%");
+                        doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familySpouse"));
+                        doc.nextTableCell("colspan=2, width=33%");
+                        doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familyChild"));
+
                         // Print sorted list of groups
                         Iterator<Indi> it = tree.iterator();
                         while (it.hasNext()) {
@@ -279,18 +316,6 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                                 }
                             }
                         }
-                    } else {
-                        // Print sorted list of groups
-                        doc.nextTableRow();
-                        doc.nextTableCell("width=4%");
-                        Indi oldestIndividual = tree.getOldestIndividual();
-                        doc.addLink(oldestIndividual.getId(), oldestIndividual.getAnchor());
-                        doc.nextTableCell("width=30%");
-                        doc.addText(oldestIndividual.getName() + " (" + oldestIndividual.getBirthAsString() + " - " + oldestIndividual.getDeathAsString() + ")");
-                        doc.nextTableCell("width=4%");
-                        doc.nextTableCell("width=29%");
-                        doc.nextTableCell("width=4%");
-                        doc.nextTableCell("width=29%");
                     }
 
                     FamilyGroupFilter filter = new FamilyGroupFilter(tree);
