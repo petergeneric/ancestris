@@ -75,13 +75,13 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         }
 
         public String getTitle() {
-            return oldestIndividual.getName()
-                    + " (" + oldestIndividual.getBirthAsString() + "-"
-                    + oldestIndividual.getDeathAsString() + ")"
-                    + " - "
-                    + youngestIndividual.getName()
-                    + " (" + youngestIndividual.getBirthAsString() + "-"
-                    + youngestIndividual.getDeathAsString() + ")";
+            return NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.treeTitle",
+                    new Object[]{oldestIndividual.getName(),
+                        oldestIndividual.getBirthAsString().length() > 0?oldestIndividual.getBirthAsString():"-",
+                        oldestIndividual.getDeathAsString().length() > 0?oldestIndividual.getDeathAsString():"-",
+                        youngestIndividual.getName(),
+                        youngestIndividual.getBirthAsString().length() > 0?youngestIndividual.getBirthAsString():"-",
+                        youngestIndividual.getDeathAsString().length() > 0?youngestIndividual.getDeathAsString():"-"});
         }
 
         @Override
