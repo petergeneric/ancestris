@@ -579,6 +579,11 @@ public class TreeView extends View implements AncestrisActionProvider,MySelectio
   
     @Override
     public List<Action> getActions(Node[] nodes) {
+        return new ArrayList<Action>();
+    }
+    
+    @Override
+    public List<Action> getFocusedActions(Node[] nodes) {
         List<Action> actions = new ArrayList<Action>();
         if (nodes.length == 1) {
             if (nodes[0] instanceof PropertyNode) {

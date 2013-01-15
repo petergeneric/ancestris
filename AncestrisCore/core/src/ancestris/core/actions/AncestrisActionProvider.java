@@ -11,6 +11,7 @@
  */
 package ancestris.core.actions;
 
+import genj.util.swing.Action2;
 import java.awt.Component;
 import java.util.List;
 import javax.swing.Action;
@@ -22,6 +23,18 @@ import org.openide.nodes.Node;
  */
 public interface AncestrisActionProvider {
 
+    /**
+     * Returns actions applicable for nodes when this component has focus.
+     * @param nodes
+     * @return If no action returns empty list
+     */
+    public List<Action> getFocusedActions(Node[] nodes);
+
+    /**
+     * Returns actions applicable to the nodes passed in parameter
+     * @param nodes
+     * @return If no action returns empty list
+     */
     public List<Action> getActions(Node[] nodes);
 
     public static class Lookup {

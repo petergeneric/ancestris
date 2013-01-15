@@ -44,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import org.openide.awt.DynamicMenuContent;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -80,6 +81,7 @@ implements LookupListener{
    * Conxtructor
    */
     public AbstractChange(Lookup context) {
+            putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
         this.context = context;
     }
     
