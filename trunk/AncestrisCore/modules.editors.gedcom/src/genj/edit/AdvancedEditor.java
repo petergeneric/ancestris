@@ -22,6 +22,7 @@
 package genj.edit;
 
 import ancestris.api.editor.Editor;
+import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.resources.Images;
 import ancestris.view.SelectionSink;
 import genj.common.SelectEntityWidget;
@@ -45,7 +46,6 @@ import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
-import genj.view.ActionProvider;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -87,6 +87,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
+import org.openide.nodes.Node;
 
 /**
  * Our advanced version of the editor allowing low-level
@@ -856,7 +857,7 @@ import javax.swing.tree.TreePath;
     /**
      * our patched up PropertyTreeWidget
      */
-    private class Tree extends PropertyTreeWidget {
+    private class Tree extends PropertyTreeWidget implements AncestrisActionProvider {
 
         /** constructor */
         private Tree() {
@@ -888,7 +889,7 @@ import javax.swing.tree.TreePath;
                 result.addAction(new Paste(selection.get(0)));
 
                 // add
-                result.addAction(new ActionProvider.SeparatorAction());
+                result.addAction(null);
                 Property prop = selection.get(0);
                 if (!prop.isTransient()) {
                     result.addAction(new Add(prop));
@@ -911,5 +912,24 @@ import javax.swing.tree.TreePath;
             // done
             return result;
         }
+
+        @Override
+        public List<Action> getFocusedActions(Node[] nodes) {
+            List<Property> selection = tree.getSelection();
+            List<Action> result = new ArrayList<Action>();
+
+            // cut copy paste
+            if (nodes.length !=0) {
+                result.add(new Cut(selection));
+                result.add(new Copy(selection));
+            }
+            return result;
+        }
+
+        @Override
+    public List<Action> getActions(Node[] nodes) {
+        return new ArrayList<Action>();
+    }
+    
     } //Tree
 } //AdvancedEditor

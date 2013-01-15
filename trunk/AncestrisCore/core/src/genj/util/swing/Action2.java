@@ -22,13 +22,11 @@ package genj.util.swing;
 
 import genj.util.MnemonicAndText;
 import genj.util.Resources;
-
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -38,6 +36,7 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import org.openide.awt.Actions;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -52,8 +51,8 @@ public class Action2 extends AbstractAction implements Presenter.Popup{
     KEY_TIP = Action.SHORT_DESCRIPTION,
     KEY_ENABLED = "enabled",
     KEY_MNEMONIC = Action.MNEMONIC_KEY,
-    KEY_ICON = Action.SMALL_ICON,
-    KEY_SELECTED = "SwingSelectedKey";
+    KEY_ICON = Action.SMALL_ICON
+    ,KEY_SELECTED = "SwingSelectedKey"; // XXX: maybe we can remove this by using BooleanStateAction
     
   private final static Logger LOG = Logger.getLogger("genj.actions");
   
@@ -63,8 +62,6 @@ public class Action2 extends AbstractAction implements Presenter.Popup{
     TXT_NO          = UIManager.getString("OptionPane.noButtonText"),
     TXT_OK          = UIManager.getString("OptionPane.okButtonText"),
     TXT_CANCEL  = UIManager.getString("OptionPane.cancelButtonText");
-
-    private static MenuHelper mh = new MenuHelper();
 
   /** constructor */
   public Action2() {
@@ -205,7 +202,9 @@ public class Action2 extends AbstractAction implements Presenter.Popup{
   }
 
     public JMenuItem getPopupPresenter() {
-        return mh.createItem(this);
+        JMenuItem m;
+         m = new Actions.MenuItem(this, true);
+        return m;
     }
   
   /** convenience factory */

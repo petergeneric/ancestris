@@ -4,16 +4,16 @@
  */
 package ancestris.util;
 
+import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.gedcom.Context;
 import genj.util.swing.Action2;
 import genj.view.ActionProvider;
 import genj.view.ActionProvider.Purpose;
-import ancestris.core.pluginservice.AncestrisPlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.Action;
 
 /**
  *
@@ -37,7 +37,7 @@ public class MyContext extends Context {
             if (action instanceof Action2.Group) {
                 Action2.Group group = lookup.get(action);
                 if (group != null) {
-                    group.add(new ActionProvider.SeparatorAction());
+                    group.add(null);
                     group.addAll((Action2.Group) action);
                 } else {
                     lookup.put((Action2.Group) action, (Action2.Group) action);

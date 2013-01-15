@@ -80,7 +80,7 @@ public class CreateXReference extends CreateRelationship {
         }
         if (source != null) {
             String tgtType = getTargetType(source, sourceTag);
-            //XXX: we must find a better way to check xref validity
+            //XXX: we must find a better way to check xref validity: use MetaProperty.allow?
             if (tgtType != null) {
                 setEnabled(true);
                 this.targetType = tgtType;

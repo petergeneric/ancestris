@@ -107,7 +107,7 @@ public class ExplorerHelper {
 
             List<Action> actions = new ArrayList<Action>();
             if (provider != null) {
-                actions.addAll(provider.getActions(selNodes));
+                actions.addAll(provider.getFocusedActions(selNodes));
                 actions.add(null);
             }
             if (selNodes.length > 0) {
