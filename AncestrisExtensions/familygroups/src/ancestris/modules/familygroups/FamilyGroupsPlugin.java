@@ -77,11 +77,11 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         public String getTitle() {
             return NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.treeTitle",
                     new Object[]{oldestIndividual.getName(),
-                        oldestIndividual.getBirthAsString().length() > 0?oldestIndividual.getBirthAsString():"-",
-                        oldestIndividual.getDeathAsString().length() > 0?oldestIndividual.getDeathAsString():"-",
+                        oldestIndividual.getBirthAsString().length() > 0 ? oldestIndividual.getBirthAsString() : "-",
+                        oldestIndividual.getDeathAsString().length() > 0 ? oldestIndividual.getDeathAsString() : "-",
                         youngestIndividual.getName(),
-                        youngestIndividual.getBirthAsString().length() > 0?youngestIndividual.getBirthAsString():"-",
-                        youngestIndividual.getDeathAsString().length() > 0?youngestIndividual.getDeathAsString():"-"});
+                        youngestIndividual.getBirthAsString().length() > 0 ? youngestIndividual.getBirthAsString() : "-",
+                        youngestIndividual.getDeathAsString().length() > 0 ? youngestIndividual.getDeathAsString() : "-"});
         }
 
         @Override
@@ -188,38 +188,26 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
     public Document start(Gedcom myGedcom) {
         List<Tree> trees = new ArrayList<Tree>();
         Document doc = null;
-        Entity[] _indis = myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
 
         setMinGroupSize(Integer.valueOf(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("minGroupSize", "2")));
         setMaxGroupSize(Integer.valueOf(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("maxGroupSize", "20")));
 
-        // FIXME: must be redesigned!!
-        List<Indi> indiList = new ArrayList<Indi>(_indis.length);
-
-        for (Entity indi : _indis) {
-            if (indi instanceof Indi) {
-                indiList.add((Indi) indi);
-            }
-        }
-
+        Collection<Indi> indiList = myGedcom.getIndis();
         HashSet<Indi> unvisited = new HashSet<Indi>(indiList);
-        HashSet<Indi> allIndis = new HashSet<Indi>(indiList);
 
-//          println(String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.fileheader"), myGedcom.getName()));
         while (!unvisited.isEmpty()) {
             Indi indi = unvisited.iterator().next();
 
             // start a new sub-tree
             Tree tree = new Tree();
 
-            // indi has been visited now
-            unvisited.remove(indi);
-
             // collect all relatives
-            iterate(indi, tree, allIndis);
+            iterate(indi, tree, unvisited);
 
             // remember
-            trees.add(tree);
+            if (!tree.isEmpty()) {
+                trees.add(tree);
+            }
         }
 
         // Report about groups
@@ -287,7 +275,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                                     doc.nextTableCell("width=4%");
                                     doc.addLink(indi.getId(), indi.getAnchor());
                                     doc.nextTableCell("width=30%");
-                                    doc.addText(indi.getLastName(), "font-weight=bold");
+                                    doc.addText(indi.getLastName(), "font-weight=bold, color=blue");
                                     doc.addText(" " + indi.getFirstName());
                                     doc.addText(" (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
                                 } else {
@@ -361,7 +349,6 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             Fam famc = todo.getFamilyWhereBiologicalChild();
 
             if (famc != null) {
-                tree.addEntity(famc);
                 Indi mother = famc.getWife();
                 if (mother != null && unvisited.remove(mother)) {
                     todos.push(mother);
@@ -381,12 +368,13 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
                 // Get the family & process the spouse
                 Fam fam = fams[f];
-                tree.addEntity(fam);
                 Indi spouse = fam.getOtherSpouse(todo);
 
                 if (spouse != null && unvisited.remove(spouse)) {
                     todos.push(spouse);
-                } // .. and all the kids
+                }
+
+                // .. and all the kids
                 Indi[] children = fam.getChildren();
 
                 for (int c = 0; c < children.length; c++) {
