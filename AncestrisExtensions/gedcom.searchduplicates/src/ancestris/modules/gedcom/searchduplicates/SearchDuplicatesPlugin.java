@@ -3,10 +3,7 @@ package ancestris.modules.gedcom.searchduplicates;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import static ancestris.modules.gedcom.searchduplicates.Bundle.*;
 import ancestris.modules.gedcom.utilities.matchers.*;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyXRef;
+import genj.gedcom.*;
 import java.awt.Dialog;
 import java.util.*;
 import java.util.logging.Level;
@@ -16,6 +13,7 @@ import javax.swing.SwingUtilities;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -131,8 +129,14 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     });
                     mergeButton.setDefaultCapable(true);
                     mergeButton.setText(SearchDuplicatesPlugin_mergeButton()); // NOI18N
-                    mergeButton.setEnabled(false);
+                    mergeButton.setEnabled(true);
+                    mergeButton.addActionListener(new java.awt.event.ActionListener() {
 
+                        @Override
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            mergeButtonActionPerformed(evt);
+                        }
+                    });
                     // There is duplicates let displaying them
                     if (matchesLinkedList.size() > 0) {
                         checkDuplicatePanelDescriptor = new DialogDescriptor(
@@ -187,6 +191,54 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     }
                     if (linkedListIndex > 0) {
                         previousButton.setEnabled(true);
+                    }
+                }
+
+                private void mergeButtonActionPerformed(java.awt.event.ActionEvent evt) {
+                    try {
+                        gedcom.doUnitOfWork(new UnitOfWork() {
+
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                Entity left = matchesLinkedList.get(linkedListIndex).getLeft();
+                                Entity right = matchesLinkedList.get(linkedListIndex).getRight();
+
+                                for (Property property : entityViewPanel.getSelectedProperties()) {
+                                    System.out.println(property.getTag());
+                                    try {
+                                        left.copyProperties(property, true);
+                                    } catch (GedcomException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                }
+
+                                // delete merged entity
+                                gedcom.deleteEntity(right);
+                            }
+                        });
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    
+                    matchesLinkedList.remove(linkedListIndex);
+
+                    // display next
+                    if (matchesLinkedList.size() > 0) {
+                        if (matchesLinkedList.size() == 1) {
+                            checkDuplicatePanelDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CLOSED_OPTION, mergeButton});
+                        }
+
+                        if (linkedListIndex >= matchesLinkedList.size() - 1) {
+                            nextButton.setEnabled(false);
+                            linkedListIndex = matchesLinkedList.size() - 1;
+                        }
+
+                        if (linkedListIndex > 0) {
+                            previousButton.setEnabled(true);
+                        }
+
+                        entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+                        checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
                     }
                 }
             });

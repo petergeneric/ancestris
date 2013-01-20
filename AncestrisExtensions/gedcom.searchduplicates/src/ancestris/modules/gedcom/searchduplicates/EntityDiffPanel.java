@@ -3,9 +3,11 @@ package ancestris.modules.gedcom.searchduplicates;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -99,5 +101,16 @@ public class EntityDiffPanel extends javax.swing.JPanel {
             TagPath tagPath = it.next();
             entityPropertiesPanel.add(new PropertiesDiffPanel(leftEntity.getProperty(tagPath), rightEntity.getProperty(tagPath)));
         }
+    }
+    
+    public List<Property> getSelectedProperties () {
+        List<Property> selectedProperties = new ArrayList<Property>();
+        for (Component component : entityPropertiesPanel.getComponents()){
+            if (component instanceof PropertiesDiffPanel) {
+                selectedProperties.addAll(((PropertiesDiffPanel)component).getSelectedProperties());
+            }
+        }
+        
+        return selectedProperties;
     }
 }
