@@ -2,7 +2,9 @@ package ancestris.modules.gedcom.searchduplicates;
 
 import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
 import genj.gedcom.Entity;
+import genj.gedcom.Property;
 import java.awt.BorderLayout;
+import java.util.List;
 
 /**
  *
@@ -59,4 +61,8 @@ public class SearchDuplicatesResultPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    public List<Property> getSelectedProperties() {
+        return entityDiffPanel.getSelectedProperties();
+    }
 }
