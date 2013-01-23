@@ -8,7 +8,6 @@ import ancestris.app.ActionClose;
 import ancestris.app.ActionSave;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
-import ancestris.util.MyContext;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.swing.Action2;
@@ -30,6 +29,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author daniel
  */
+//XXX: must be reworked (see PropertyNode class
 class GedcomFileNode extends AbstractNode implements ExplorerNode {
 
     Context context;
@@ -45,6 +45,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
         setDisplayName(gedcom.getName());
     }
 
+    @Override
     public PasteType getDropType(Transferable t, final int action, int index) {
         final Node dropNode = NodeTransfer.node(t,
                 DnDConstants.ACTION_COPY_OR_MOVE + NodeTransfer.CLIPBOARD_CUT);
@@ -66,6 +67,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
         return null;
     }
 
+    @Override
     public <T extends Cookie> T getCookie(Class<T>  clazz) {
         try {
             return GedcomDirectory.getDefault().getDataObject(context).getCookie(clazz);
@@ -74,6 +76,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
         }
     }
 
+    @Override
     protected void createPasteTypes(Transferable t, List<PasteType> s) {
         super.createPasteTypes(t, s);
         PasteType paste = getDropType(t, DnDConstants.ACTION_COPY, -1);
@@ -83,14 +86,15 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
     }
 
     public Action[] getActions(boolean isContext) {
-        MyContext vcontext = new MyContext(context);
-        if (vcontext == null) {
-            return null;
-        }
-        List<Action2> nodeactions = new ArrayList<Action2>(8);
+//        MyContext vcontext = new MyContext(context);
+//        if (vcontext == null) {
+//            return null;
+//        }
+        List<Action> nodeactions = new ArrayList<Action>(8);
         nodeactions.add(saveAction);
         nodeactions.add(closeAction);
-        nodeactions.addAll(vcontext.getPopupActions());
+//        nodeactions.addAll(vcontext.getPopupActions());
+        nodeactions.addAll(org.openide.util.AUtilities.actionsForPath("Ancestris/Actions/GedcomProperty"));
 
         // done
         return nodeactions.toArray(new Action[0]);

@@ -1,41 +1,42 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2012 Ancestris
+ * 
+ * Author: Daniel Andre (daniel@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 package ancestris.explorer;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.PropertyNode;
+import ancestris.view.AncestrisTopComponent;
+import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Note;
-import genj.util.swing.Action2;
-import ancestris.view.SelectionSink;
-import ancestris.view.AncestrisTopComponent;
-import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.util.MyContext;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
-import org.openide.util.lookup.Lookups;
 
 /**
  *
  * @author daniel
  */
-class EntityNode extends AbstractNode implements Comparable<EntityNode>, ExplorerNode {
+class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<EntityNode>, ExplorerNode {
 
     Entity entity;
 
     public EntityNode(Entity e) {
-        super(Children.LEAF, Lookups.fixed(new Object[]{e}));
+        super(new Context(e));
+//        super(Children.LEAF, Lookups.fixed(new Object[]{e}));
         entity = e;
     }
 
@@ -98,19 +99,6 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>, Explore
             return i.toString(false).compareToIgnoreCase(o.toString(false));
         }
         return entity.compareTo(that.getEntity());
-    }
-
-    @Override
-    public Action[] getActions(boolean isContext) {
-        MyContext nodeContext = new MyContext(new Context(entity));
-        if (nodeContext == null) {
-            return null;
-        }
-        List<Action2> nodeactions = new ArrayList<Action2>(8);
-        nodeactions.addAll(nodeContext.getPopupActions());
-
-        // done
-        return nodeactions.toArray(new Action[0]);
     }
 
     public Context getContext() {

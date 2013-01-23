@@ -26,7 +26,7 @@ import org.openide.awt.MouseUtils;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeOp;
-import org.openide.util.AUtilities;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -103,6 +103,7 @@ public class ExplorerHelper {
     void createPopup(Component source, Point p) {
         if (isPopupAllowed()) {
             Node[] selNodes = manager.getSelectedNodes();
+            // gets actions from first ActionProvider in parent hierarchy from source
             AncestrisActionProvider provider = AncestrisActionProvider.Lookup.lookup(source);
 
             List<Action> actions = new ArrayList<Action>();
@@ -114,7 +115,7 @@ public class ExplorerHelper {
                 actions.addAll(Arrays.asList(NodeOp.findActions(selNodes)));
 
                 if (actions.size() > 0) {
-                    createPopup(p, AUtilities.actionsToPopup(actions.toArray(new Action[0]), source));
+                    createPopup(p, Utilities.actionsToPopup(actions.toArray(new Action[0]), source));
                 }
             }
         }
