@@ -4,9 +4,18 @@
  */
 package ancestris.explorer;
 
+import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.view.ExplorerHelper;
 import genj.view.ViewContext;
+import java.awt.Component;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JPopupMenu;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -15,8 +24,12 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
+//import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
+import org.openide.nodes.NodeOp;
+import org.openide.util.AUtilities;
+import org.openide.util.Utilities;
 import org.openide.windows.Mode;
 import org.openide.windows.RetainLocation;
 
@@ -51,6 +64,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
         explorerManager.setRootContext(new AbstractNode(new GedcomFileChildren()));
         ((BeanTreeView) gedcomsPane).setRootVisible(false);
+//        setExplorerHelper(new ExplorerHelper(gedcomsPane.getViewport()));
     }
 
     /** This method is called from within the constructor to
@@ -180,4 +194,30 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
             return new ViewContext(((ExplorerNode)contextnode).getContext());
         return null;
     }
+//    ExplorerHelper explorerHelper;
+//
+//    protected void setExplorerHelper(ExplorerHelper explorerHelper) {
+//        this.explorerHelper = explorerHelper;
+//    }
+//  
+//    /** Initializes the component and lookup explorer manager.
+//     */
+//    @Override
+//    public void addNotify () {
+//        super.addNotify ();
+//        // default to show context menu
+//        if (explorerHelper != null)
+//            explorerHelper.setPopupAllowed(true);
+//    }
+//    
+//    /**
+//     * Deinitializes listeners.
+//     */
+//    @Override
+//    public void removeNotify () {
+//        super.removeNotify ();
+//        if (explorerHelper != null)
+//            explorerHelper.setPopupAllowed(false);
+//    }
+//
 }

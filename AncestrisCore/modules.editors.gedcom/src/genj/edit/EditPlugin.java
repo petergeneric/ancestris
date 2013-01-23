@@ -20,52 +20,20 @@
 package genj.edit;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.gedcom.GedcomFileListener;
-import genj.crypto.Enigma;
-import genj.edit.actions.CreateAlias;
 import genj.edit.actions.CreateAssociation;
-import genj.edit.actions.CreateChild;
-import genj.edit.actions.CreateEntity;
-import genj.edit.actions.CreateParent;
-import genj.edit.actions.CreateSibling;
-import genj.edit.actions.CreateSpouse;
-import genj.edit.actions.CreateXReference;
-import genj.edit.actions.DelProperty;
-import genj.edit.actions.OpenForEdit;
-import genj.edit.actions.Redo;
 import ancestris.core.actions.RunExternal;
-import genj.edit.actions.SetPlaceHierarchy;
-import genj.edit.actions.SetSubmitter;
-import genj.edit.actions.SwapSpouses;
-import genj.edit.actions.TogglePrivate;
-import genj.edit.actions.Undo;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
-import genj.gedcom.PropertyFamilyChild;
 import genj.gedcom.PropertyFile;
-import genj.gedcom.PropertyMedia;
-import genj.gedcom.PropertyNote;
-import genj.gedcom.PropertyPlace;
-import genj.gedcom.PropertyRepository;
-import genj.gedcom.PropertySource;
-import genj.gedcom.PropertySubmitter;
-import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Logger;
 
 
 /**
