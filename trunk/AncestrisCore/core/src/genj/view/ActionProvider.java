@@ -19,6 +19,7 @@
  */
 package genj.view;
 
+import ancestris.core.actions.SubMenuAction;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -50,7 +51,7 @@ public interface ActionProvider {
   /**
    * an action group for a property
    */
-  public final class PropertyActionGroup extends Action2.Group {
+  public final class PropertyActionGroup extends SubMenuAction {
     private Property p;
     public PropertyActionGroup(Property property) {
       super(Property.LABEL+" '"+TagPath.get(property).getName() + '\'', property.getImage(false));
@@ -69,7 +70,7 @@ public interface ActionProvider {
   /**
    * an action group for an entity
    */
-  public class EntityActionGroup extends Action2.Group {
+  public class EntityActionGroup extends SubMenuAction {
     private Entity e;
     public EntityActionGroup(Entity entity) {
       super(Gedcom.getName(entity.getTag(),false)+" '"+entity.getId()+'\'', entity.getImage(false));
@@ -88,7 +89,7 @@ public interface ActionProvider {
   /**
    * an action group for a list of properties
    */
-  public class PropertiesActionGroup extends Action2.Group {
+  public class PropertiesActionGroup extends SubMenuAction {
     private List<Property> ps;
     public PropertiesActionGroup(List<? extends Property> properties) {
       super("'"+Property.getPropertyNames(properties, 5)+"' ("+properties.size()+")");
@@ -107,7 +108,7 @@ public interface ActionProvider {
   /**
    * an action group for a list of entities
    */
-  public class EntitiesActionGroup extends Action2.Group {
+  public class EntitiesActionGroup extends SubMenuAction {
     private List<Entity> es;
     public EntitiesActionGroup(List<? extends Entity> entities) {
       super("'"+Property.getPropertyNames(entities,5)+"' ("+entities.size()+")");
@@ -126,7 +127,7 @@ public interface ActionProvider {
   /**
    * an action group for gedcom
    */
-  public class GedcomActionGroup extends Action2.Group {
+  public class GedcomActionGroup extends SubMenuAction {
     private Gedcom gedcom;
     public GedcomActionGroup(Gedcom gedcom) {
       super("Gedcom '"+gedcom.getName()+'\'', Gedcom.getImage());

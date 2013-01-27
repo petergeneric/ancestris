@@ -306,6 +306,7 @@ public class Action2 extends AbstractAction implements Presenter.Popup{
   /**
    * An action group
    */
+    //XXX: remove this class
   public static class Group extends Action2 implements Iterable<Action2> {
     
     private ArrayList<Action2> actions = new ArrayList<Action2>(4);

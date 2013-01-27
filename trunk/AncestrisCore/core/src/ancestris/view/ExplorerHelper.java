@@ -26,6 +26,7 @@ import org.openide.awt.MouseUtils;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeOp;
+import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 
 /**
@@ -113,10 +114,15 @@ public class ExplorerHelper {
             }
             if (selNodes.length > 0) {
                 actions.addAll(Arrays.asList(NodeOp.findActions(selNodes)));
-
-                if (actions.size() > 0) {
-                    createPopup(p, Utilities.actionsToPopup(actions.toArray(new Action[0]), source));
-                }
+            }
+            
+            List<Action> aactions = new ArrayList<Action>();
+            for (AncestrisActionProvider aap:Lookup.getDefault().lookupAll(AncestrisActionProvider.class)){
+                aactions.addAll(aap.getActions(selNodes));
+            }
+            actions.addAll(aactions);
+            if (actions.size() > 0) {
+                createPopup(p, Utilities.actionsToPopup(actions.toArray(new Action[0]), source));
             }
         }
     }

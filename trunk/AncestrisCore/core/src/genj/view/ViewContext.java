@@ -96,16 +96,9 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
   /**
    * Add an action
    */
+  //XXX: we must remove this as context actions are handled with Node API
   public ViewContext addAction(Action2 action) {
     actions.add(action);
-    return this;
-  }
-  
-  /**
-   * Add actions
-   */
-  public ViewContext addActions(Action2.Group group) {
-    actions.add(group);
     return this;
   }
   
