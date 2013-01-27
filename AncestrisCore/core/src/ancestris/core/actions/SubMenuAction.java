@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -51,6 +52,10 @@ public class SubMenuAction
         putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
     }
 
+        public SubMenuAction(String displayName,Icon icon) {
+        super(displayName,icon);
+        putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
+        }
     @Override
     public void actionPerformed(ActionEvent e) {
         JPopupMenu menu = Utilities.actionsToPopup(actions.toArray(new Action[]{}), Lookup.EMPTY);

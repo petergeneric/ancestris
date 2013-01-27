@@ -19,9 +19,10 @@
  */
 package genj.edit;
 
+import ancestris.core.actions.RunExternal;
+import ancestris.core.actions.SubMenuAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.edit.actions.CreateAssociation;
-import ancestris.core.actions.RunExternal;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -30,16 +31,15 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.TagPath;
-import genj.util.swing.Action2;
-import genj.util.swing.Action2.Group;
-import genj.view.ActionProvider;
 
 
 
 /**
  * our editing plugin
  */
-public class EditPlugin implements ActionProvider {
+public class EditPlugin
+//implements ActionProvider 
+{
   
 //  private final static Resources RESOURCES = Resources.get(EditPlugin.class);
 //  private final static Logger LOG = Logger.getLogger("genj.edit");
@@ -102,7 +102,7 @@ public class EditPlugin implements ActionProvider {
   /**
    * @see genj.view.ContextSupport#createActions(Property)
    */
-  private void createActions(Property property, Action2.Group group) {
+  private void createActions(Property property, SubMenuAction group) {
     
     // FileAssociationActions for PropertyFile
     if (property instanceof PropertyFile)  
@@ -136,7 +136,7 @@ public class EditPlugin implements ActionProvider {
     if ( property instanceof PropertyEvent
         && ( (property.getEntity() instanceof Indi)
             || property.getGedcom().getGrammar().getMeta(new TagPath("INDI:ASSO")).allows("TYPE"))  )
-      group.add(new CreateAssociation(property));
+      group.addAction(new CreateAssociation(property));
     
 //    // Toggle "Private"
 //    if (Enigma.isAvailable())
@@ -152,7 +152,7 @@ public class EditPlugin implements ActionProvider {
   /**
    * Actions for context
    */
-  public void createActions(Context context, Purpose purpose, Group result) {
+  public void createActions(Context context,SubMenuAction result) {
 
     // take out shortcuts
 //    Action2.uninstall(workbench, ACC_REDO);
@@ -163,209 +163,29 @@ public class EditPlugin implements ActionProvider {
       return;
     
     
-    switch (purpose) {
-//      case MENU:
-//    	  
-//        // create entities
-//        Action2.Group edit = new EditActionGroup();
-//        if (context.getEntity()==null)
-//          createActions(context.getGedcom(), edit);
-//        else if (context.getEntities().size()==1)
-//          createActions(context.getEntity(), edit);
-//        result.add(edit);
-//          
-//        edit.add(new ActionProvider.SeparatorAction());
-////        edit.add(new Undo(context.getGedcom()).install(workbench, ACC_UNDO));
-////        edit.add(new Redo(context.getGedcom()).install(workbench, ACC_REDO));
-//        
-//        break;
-//        
-      case CONTEXT:
-        
-        // sub-menu for properties
-//        if (context.getProperties().size()>1) {
-//          Action2.Group group = new ActionProvider.PropertiesActionGroup(context.getProperties());
-//          if (context.getEntities().size()>1) {
-//              //
-//            createActions(context.getEntities(), group);
-//          } else {
-//              createActions(context.getProperties(), group);
-//            }
-//          if (group.size()>0)
-//            result.add(group);
-//        } else if (context.getProperties().size()==1) {
-//          
             // XXX: recurse for all parent properties. In ancestris we don't do that ATM
             // It could probably be difficult to do with NB logic
             // and not very user friendly
           Property cursor = context.getProperty();
           while (!(cursor instanceof Entity)) {
-            Action2.Group group = new ActionProvider.PropertyActionGroup(cursor);
+            SubMenuAction group = new SubMenuAction(
+                    Property.LABEL+" '"+TagPath.get(cursor).getName() + '\'', 
+                    cursor.getImage(false));
             createActions(cursor, group);
-            if (group.size()>0)
-              result.add(group);
+            if (!group.getActions().isEmpty())
+              result.addAction(group);
             cursor = cursor.getParent();
           }
-//        }
-     
-//        // sub-menu for entity
-//        if (context.getEntities().size()==1) {
-//          Action2.Group group = new ActionProvider.EntityActionGroup(context.getEntity());
-//          createActions(context.getEntity(), group);
-//          if (group.size()>0)
-//            result.add(group);
-//          
-//          // add an "edit in EditView"
-//          if (null==workbench.getView(EditViewFactory.class))
-//            result.add(new OpenForEdit(workbench, context));
-//
-//
-//        }
-//        
-//        // sub-menu for gedcom
-//        Action2.Group group = new ActionProvider.GedcomActionGroup(context.getGedcom());
-//        createActions(context.getGedcom(), group);
-//        if (group.size()>0)
-//          result.add(group);
-//        
-//        result.add(new ActionProvider.SeparatorAction());
-//        result.add(new Undo(context.getGedcom()));
-//        result.add(new Redo(context.getGedcom()));
-        
-        break;
-        
-//      case TOOLBAR:
-//        result.add(new Undo(context.getGedcom()));
-//        result.add(new Redo(context.getGedcom()));
-//        result.add(new ActionProvider.SeparatorAction());
-//        break;
-    }
-
     
     // done
   }
 
-  /**
-   * @see genj.view.ViewFactory#createActions(Entity)
-   */
-//  private void createActions(Entity entity, Action2.Group group) {
-//    
-//    // indi?
-//    if (entity instanceof Indi) 
-//      createActions((Indi)entity, group);
-//      
-//    // fam?
-//    if (entity instanceof Fam) createActions(group, (Fam)entity);
-//    // submitter?
-//    if (entity instanceof Submitter) createActions(group, (Submitter)entity);
-    
-    // separator
-//    group.add(new ActionProvider.SeparatorAction());
-//
-//    // Check what xrefs can be added
-//    MetaProperty[] subs = entity.getNestedMetaProperties(0);
-//    for (int s=0;s<subs.length;s++) {
-//      // NOTE||REPO||SOUR||SUBM
-//      Class<? extends Property> type = subs[s].getType();
-//      if (type==PropertyNote.class||
-//          type==PropertyRepository.class||
-//          type==PropertySource.class||
-//          type==PropertySubmitter.class||
-//          type==PropertyMedia.class
-//          ) {
-//        group.add(new CreateXReference(entity,subs[s].getTag()));
-//      }
-//    }
-//
-//    // add delete
-//    group.add(new ActionProvider.SeparatorAction());
-//    group.add(new DelEntity(entity));
-//    
-//    // done
-//  }
-
-  /**
-   * @see genj.view.ContextMenuSupport#createActions(Gedcom)
-   */
-//  private void createActions(Gedcom gedcom, Action2.Group group) {
-//    
-//    // create the actions
-//    group.add(new CreateEntity(gedcom, Gedcom.INDI));
-//    group.add(new CreateEntity(gedcom, Gedcom.FAM));
-//    group.add(new CreateEntity(gedcom, Gedcom.NOTE));
-//    group.add(new CreateEntity(gedcom, Gedcom.OBJE));
-//    group.add(new CreateEntity(gedcom, Gedcom.REPO));
-//    group.add(new CreateEntity(gedcom, Gedcom.SOUR));
-//    group.add(new CreateEntity(gedcom, Gedcom.SUBM));
-//    group.add(new OpenForEdit(new Context(gedcom)));
-//  
-//    // done
-//  }
-
-  /**
-   * Create actions for Individual
-   */
-//  private void createActions(Indi indi, Action2.Group group) {
-//    
-//    Action2.Group more = new Action2.Group(Resources.get(this).getString("add.more"));
-//    CreateXReference createFamc = null;
-//    // Check if xrefs FAMC can be added
-//    MetaProperty[] subs = indi.getNestedMetaProperties(0);
-//    for (int s=0;s<subs.length;s++) {
-//      Class<? extends Property> type = subs[s].getType();
-//      if (type==PropertyFamilyChild.class) {
-//        createFamc = new CreateXReference(indi,subs[s].getTag());
-//      }
-//    }
-//      if (indi.getParents().size() < 2) {
-//          group.add(new CreateParent(indi));
-//          group.add(createFamc);
-//      } else {
-//          more.add(new CreateParent(indi));
-//          more.add(createFamc);
-//      }
-//
-//      if (indi.getPartners().length == 0) {
-//          group.add(new CreateSpouse(indi));
-//      } else {
-//          more.add(new CreateSpouse(indi));
-//      }
-//
-//    group.add(new CreateChild(indi, true));
-//    group.add(new CreateChild(indi, false));
-//    group.add(new CreateSibling(indi, true));
-//    group.add(new CreateSibling(indi, false));
-//    
-//    more.add(new CreateAlias(indi));
-//    
-//    group.add(more);
-//  }
-
-  /**
-   * Create actions for Families
-   */
-//  private void createActions(Action2.Group group, Fam fam) {
-//    group.add(new CreateChild(fam, true));
-//    group.add(new CreateChild(fam, false));
-//    if (fam.getNoOfSpouses()<2)
-//      group.add(new CreateParent(fam));
-//    if (fam.getNoOfSpouses()!=0)
-//      group.add(new SwapSpouses(fam));
-//  }
-
-//  /**
-//   * Create actions for Submitters
-//   */
-//  private void createActions(Action2.Group group, Submitter submitter) {
-//    group.add(new SetSubmitter(submitter));
-//  }
-//
   /**  
    * Create actions for PropertyFile
    */
-  private void createActions(Action2.Group group, PropertyFile file) {
+  private void createActions(SubMenuAction group, PropertyFile file) {
     if (file.getFile()!=null)
-      group.add(new RunExternal(file.getFile()));
+      group.addAction(new RunExternal(file.getFile()));
   }
 
 }

@@ -23,6 +23,7 @@ package genj.edit;
 
 import ancestris.api.editor.Editor;
 import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.core.actions.SubMenuAction;
 import ancestris.core.resources.Images;
 import ancestris.view.SelectionSink;
 import genj.common.SelectEntityWidget;
@@ -871,48 +872,6 @@ import org.openide.nodes.Node;
             new Paste().install(this, ACC_PASTE, JComponent.WHEN_FOCUSED);
         }
 
-        /** provide context */
-        @Override
-        public ViewContext getContext() {
-
-            // check selection
-            ViewContext result = super.getContext();
-            List<? extends Property> props = result.getProperties();
-            List<Property> selection = tree.getSelection();
-
-            // cut copy paste
-            if (!props.isEmpty()) {
-                result.addAction(new Cut(selection));
-                result.addAction(new Copy(selection));
-            }
-            if (selection.size() == 1) {
-                result.addAction(new Paste(selection.get(0)));
-
-                // add
-                result.addAction(null);
-                Property prop = selection.get(0);
-                if (!prop.isTransient()) {
-                    result.addAction(new Add(prop));
-                    Action2.Group group = new Action2.Group(resources.getString("action.add"));
-                    MetaProperty[] metas = prop.getNestedMetaProperties(MetaProperty.WHERE_NOT_HIDDEN | MetaProperty.WHERE_CARDINALITY_ALLOWS);
-                    Arrays.sort(metas);
-                    for (int i = 0; i < metas.length; i++) {
-                        if (metas[i].isInstantiated()) {
-                            group.add(new Add(prop, metas[i]));
-                        }
-                    }
-                    result.addActions(group);
-                }
-            }
-
-            if (!selection.isEmpty() && !selection.contains(tree.getRoot())) {
-                result.addAction(new Propagate(selection));
-            }
-
-            // done
-            return result;
-        }
-
         @Override
         public List<Action> getFocusedActions(Node[] nodes) {
             List<Property> selection = tree.getSelection();
@@ -923,6 +882,30 @@ import org.openide.nodes.Node;
                 result.add(new Cut(selection));
                 result.add(new Copy(selection));
             }
+            if (selection.size() == 1) {
+                result.add(new Paste(selection.get(0)));
+
+                // add
+                result.add(null);
+                Property prop = selection.get(0);
+                if (!prop.isTransient()) {
+                    result.add(new Add(prop));
+                    SubMenuAction menu = new SubMenuAction(resources.getString("action.add"));
+                    MetaProperty[] metas = prop.getNestedMetaProperties(MetaProperty.WHERE_NOT_HIDDEN | MetaProperty.WHERE_CARDINALITY_ALLOWS);
+                    Arrays.sort(metas);
+                    for (int i = 0; i < metas.length; i++) {
+                        if (metas[i].isInstantiated()) {
+                            menu.addAction(new Add(prop, metas[i]));
+                        }
+                    }
+                    result.add(menu);
+                }
+            }
+
+            if (!selection.isEmpty() && !selection.contains(tree.getRoot())) {
+                result.add(new Propagate(selection));
+            }
+
             return result;
         }
 
