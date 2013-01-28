@@ -14,7 +14,9 @@ package ancestris.core.actions;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JMenuItem;
 import org.openide.awt.DynamicMenuContent;
+import org.openide.util.actions.Presenter;
 
 /**
  *
@@ -35,6 +37,31 @@ public class CommonActions {
         @Override
         public void actionPerformed(ActionEvent e) {
             //noop
+        }
+    }
+    
+    public static SeparatorAction createSeparatorAction(String title){
+        SeparatorAction result = new SeparatorAction(title);
+        return result;
+    }
+    
+    private static class SeparatorAction extends AbstractAction implements Presenter.Popup{
+        private String title;
+        public SeparatorAction(String title) {
+            this.title = title;
+            setEnabled(true);
+            putValue(NAME, title);
+            putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //nothing to do
+        }
+
+        public JMenuItem getPopupPresenter() {
+            JMenuItem item = new JMenuItem("<html><b><font size=+1>"+title+"</font></b></html>");
+            return item;
         }
     }
 }
