@@ -22,6 +22,7 @@
 package genj.report;
 
 import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.core.actions.CommonActions;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.report.ReportTopComponent;
@@ -43,12 +44,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.swing.Action;
 import org.openide.nodes.Node;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Plugin
  */
 @ServiceProvider(service = AncestrisActionProvider.class)
+@NbBundle.Messages({"popup.title=Run Reports"})
 public class ReportPlugin implements AncestrisActionProvider {
 
     private final static Resources RESOURCES = Resources.get(ReportPlugin.class);
@@ -110,6 +113,10 @@ public class ReportPlugin implements AncestrisActionProvider {
         getActions(context.getGedcom(), context.getGedcom(), group);
         result.add(group);
 
+        if (!result.isEmpty()){
+            result.add(0, CommonActions.createSeparatorAction(NbBundle.getMessage(ReportPlugin.class, "popup.title")));
+            result.add(0, null);
+        }
         return result;
         // done
     }
@@ -221,8 +228,8 @@ public class ReportPlugin implements AncestrisActionProvider {
             if (context == null) {
                 return;
             }
-            //XXX: !!!    
-            ReportView view = getReportView(null/* context */);
+            //XXX: Very quick fix!!!
+            ReportView view = getReportView(new Context(gedcom));
             if (view != null) {
                 view.startReport(report, context);
             }
