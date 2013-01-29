@@ -564,6 +564,7 @@ public class TreeView extends View implements AncestrisActionProvider,MySelectio
     pb.setOpaque(false);
     toolbar.add(pb);
     toolbar.add(new ActionGotoRoot());
+    toolbar.add(new ActionChooseRoot());
     toolbar.addSeparator();
     
     // settings
@@ -600,7 +601,7 @@ public class TreeView extends View implements AncestrisActionProvider,MySelectio
                 });
             }
         }
-        actions.add(new ActionChooseRoot());
+//        actions.add(new ActionChooseRoot());
         return actions;
     }
   
