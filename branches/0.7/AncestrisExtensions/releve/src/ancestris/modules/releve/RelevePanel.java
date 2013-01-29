@@ -30,7 +30,7 @@ public class RelevePanel extends javax.swing.JPanel  {
         releveTable.setTableSelectionListener(releveEditor);
     }
 
-    public void setModel(DataManager dataManager, DataManager.ModelType modelType, 
+    public void setModel(DataManager dataManager, DataManager.ModelType modelType,
             PlaceManager placeManager, MenuCommandProvider menuComandProvider) {
         releveModel = dataManager.getModel(modelType);
         releveTable.setModel(dataManager, modelType, placeManager);
@@ -82,13 +82,47 @@ public class RelevePanel extends javax.swing.JPanel  {
         releveEditor.putEditorWidth(jSplitPane1.getDividerLocation() );
     }
 
-    public void selectRecord(int rowIndex) {
+    /**
+     * selectionne une ligne en fonction du numéro de ligne de la table
+     * @param rowIndex numero de la ligne
+     */
+    public void selectRow(int rowIndex) {
         if (releveTable.getRowCount() > 0) {
             // je verifie la coherence du releve en cours d'edition
             String errorMessage = releveModel.verifyRecord(releveEditor.getCurrentRecordIndex());
             if ( errorMessage.isEmpty() ) {
                 // je recupere l'index du releve courant dans la table
                 int recordIndex = releveTable.convertRowIndexToModel(rowIndex);
+                // j'affiche le premier enregistrement dans l'editeur
+                releveEditor.selectRecord(recordIndex);
+                // je selectionne la ligne dans la table
+                releveTable.setRowSelectionInterval(rowIndex, rowIndex);
+                // je rends visible la premiere ligne selectionnée et de la colonne triée
+                Rectangle cellRect = releveTable.getCellRect(rowIndex, releveTable.getSelectedColumn(), true);
+                if (cellRect != null) {
+                    releveTable.scrollRectToVisible(cellRect);
+                }
+            } else {
+                // j'affiche le message d'erreur
+                Toolkit.getDefaultToolkit().beep();
+                JOptionPane.showMessageDialog(this, errorMessage, "Relevé", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            releveEditor.selectRecord(-1);
+        }
+    }
+
+    /**
+     * selectionne une ligne en fonction du numéro de record du modele
+     * @param rowIndex numero de la ligne
+     */
+    public void selectRecord(int recordIndex) {
+        if (releveTable.getRowCount() > 0) {
+            // je verifie la coherence du releve en cours d'edition
+            String errorMessage = releveModel.verifyRecord(releveEditor.getCurrentRecordIndex());
+            if ( errorMessage.isEmpty() ) {
+                // je recupere l'index du releve courant dans la table
+                int rowIndex = releveTable.convertRowIndexToView(recordIndex);
                 // j'affiche le premier enregistrement dans l'editeur
                 releveEditor.selectRecord(recordIndex);
                 // je selectionne la ligne dans la table

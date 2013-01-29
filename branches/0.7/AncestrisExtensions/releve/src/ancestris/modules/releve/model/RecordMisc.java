@@ -1,5 +1,7 @@
 package ancestris.modules.releve.model;
 
+import ancestris.modules.releve.model.DataManager.RecordType;
+
 /**
  *
  * @author Michel
@@ -96,6 +98,11 @@ public class RecordMisc extends Record {
         witness4LastName    = new FieldSimpleValue();
         witness4Occupation  = new FieldOccupation();
         witness4Comment     = new FieldComment();
+    }
+
+    @Override
+    public RecordType getType() {
+        return RecordType.misc;
     }
 
     @Override

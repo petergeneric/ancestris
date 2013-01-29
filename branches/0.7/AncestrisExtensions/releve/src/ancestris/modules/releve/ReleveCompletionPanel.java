@@ -31,7 +31,7 @@ public class ReleveCompletionPanel extends javax.swing.JFrame {
 
     
     /**
-     * affiche la fenetre de completion des noms
+     * affiche la fenetre de completion des prénoms
      */
     static public void  showFirstNameCompletionPanel() {
         ReleveCompletionPanel statistics = new ReleveCompletionPanel();        

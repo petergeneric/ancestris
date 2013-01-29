@@ -41,7 +41,11 @@ public class BeanEventType extends Bean implements CompletionListener {
         if (eventType == null) {
             // j'affiche le premier element de la liste pas defaut
             //cListEventType.setText(cListEventType.getDataList().get(0).toString());
-            cListEventType.getEditor().setItem(cListEventType.getDataList().get(0).toString());
+            if ( cListEventType.getDataList().isEmpty()) {
+                cListEventType.getEditor().setItem("");
+            } else {
+                cListEventType.getEditor().setItem(cListEventType.getDataList().get(0).toString());
+            }
         } else {
             //cListEventType.setText(eventType.toString());
             cListEventType.getEditor().setItem(eventType.toString());

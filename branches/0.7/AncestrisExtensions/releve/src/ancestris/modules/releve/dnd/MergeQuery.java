@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
  */
 public class MergeQuery {
 
-    protected static int minMarriageYearOld = 15; // age minimum pour etre marié
-    protected static int minParentYearOld = 15;   // age minimum pour etre parent
+    protected static int minMarriageYearOld = 18; // age minimum pour etre marié
+    protected static int minParentYearOld = 18;   // age minimum pour etre parent
     protected static int indiMaxYearOld = 100;    // age maximum d'un individu
     protected static int aboutYear = 5;           // marge d'incertitude ( date ABOUT ou ESTMATED ou CALCULATED)
     protected static int maxParentYearOld = 60;    // age maximum d'un parent
@@ -1734,8 +1734,7 @@ public class MergeQuery {
 
 
     /**
-     *  retourne vrai si la date de naissance du releve est plus precise
-     *  que la date de naissance de l'entité
+     *  retourne la date la plus précise entre la date du releve la date de l'entité
      *
      *  record      birth
      *  date        date    vrai si record est plus precis que birth
@@ -1759,40 +1758,59 @@ public class MergeQuery {
      *  range       range   vrai si l'intersection des intervalles n'est pas vide
 
      * @param recordDate date du releve
-     * @param birthDate date de naissance
+     * @param gedcomDate  date de l'individu Gedcom
      * @return
+     *      null si les dates sont incompatibles
+     *      recordDate si la date du relevé est plus précise
+     *      gedcomDate si la date de l'entité est plus précise
+     *      mergeDate  si une intersection plus precise existe entre les deux dates
      */
-    static protected boolean isBestBirthDate(PropertyDate recordDate, PropertyDate birthDate) {
-        boolean result;
+    static protected PropertyDate getMostAccurateDate(PropertyDate recordDate, PropertyDate gedcomDate) {
+        PropertyDate result;
         try {
-            if ( !birthDate.isValid() ) {
-                result = true;
-            } else if (birthDate.getFormat() == PropertyDate.DATE) {
+
+            if ( !gedcomDate.isValid() ) {
+                result = recordDate;
+            } else if (gedcomDate.getFormat() == PropertyDate.DATE) {
                 if (recordDate.getFormat() == PropertyDate.DATE) {
                     // je compare l'année , puis le mois , puis le jour
-                    if ( birthDate.getStart().getYear() == PointInTime.UNKNOWN ) {
+                    if ( gedcomDate.getStart().getYear() == PointInTime.UNKNOWN ) {
                         if ( recordDate.getStart().getYear() != PointInTime.UNKNOWN ) {
-                           result = true;
+                           result = recordDate;
                         } else {
-                           result = false;
+                           result = gedcomDate;
                         }
-                    } else if ( birthDate.getStart().getMonth() == PointInTime.UNKNOWN ) {
+                    } else if ( gedcomDate.getStart().getMonth() == PointInTime.UNKNOWN ) {
                         if ( recordDate.getStart().getMonth() != PointInTime.UNKNOWN ) {
-                           result = true;
+                           result = recordDate;
                         } else {
-                           result = false;
+                           result = gedcomDate;
                         }
-                    } else  if ( birthDate.getStart().getDay() == PointInTime.UNKNOWN ) {
+                    } else  if ( gedcomDate.getStart().getDay() == PointInTime.UNKNOWN ) {
                         if ( recordDate.getStart().getDay() != PointInTime.UNKNOWN ) {
-                           result = true;
+                           result = recordDate;
                         } else {
-                           result = false;
+                           result = gedcomDate;
                         }
                     } else {
-                        result = false;
+                        if ( recordDate.getStart().getYear() != PointInTime.UNKNOWN
+                                && recordDate.getStart().getMonth() != PointInTime.UNKNOWN
+                                && recordDate.getStart().getDay() != PointInTime.UNKNOWN) {
+                            if ( recordDate.getStart().getYear() == gedcomDate.getStart().getYear()
+                                    && recordDate.getStart().getMonth() == gedcomDate.getStart().getMonth()
+                                    && recordDate.getStart().getDay() == gedcomDate.getStart().getDay()) {
+                                // dates precises egales
+                                return gedcomDate;
+                            } else {
+                                // dates precises incompatibles
+                                result = null;
+                            }
+                        } else {
+                            result = gedcomDate;
+                        }
                     }
                 } else {
-                    result = false;
+                    result = gedcomDate;
                 }
             } else {
                 int start1;
@@ -1808,6 +1826,9 @@ public class MergeQuery {
                 } else if (recordDate.getFormat() == PropertyDate.AFTER || recordDate.getFormat() == PropertyDate.FROM) {
                     start1 = recordDate.getStart().getJulianDay();
                     end1 = Integer.MAX_VALUE;
+                } else if (recordDate.getFormat() == PropertyDate.BETWEEN_AND || recordDate.getFormat() == PropertyDate.FROM_TO ) {
+                    start1 = recordDate.getStart().getJulianDay();
+                    end1 = recordDate.getEnd().getJulianDay();
                 } else {
                     // ABOUT, ESTIMATED, CALCULATED
                     PointInTime startPit = new PointInTime();
@@ -1818,47 +1839,92 @@ public class MergeQuery {
                     end1 = startPit.add(0, 0, +aboutYear).getJulianDay();
                 } 
 
-                if (birthDate.getFormat() == PropertyDate.DATE) {
+                if (gedcomDate.getFormat() == PropertyDate.DATE) {
                     // intervalle [start2 , start2]
-                    start2 = birthDate.getStart().getJulianDay();
+                    start2 = gedcomDate.getStart().getJulianDay();
                     end2 = start2;
-                } else if (birthDate.getFormat() == PropertyDate.BEFORE || birthDate.getFormat() == PropertyDate.TO) {
+                } else if (gedcomDate.getFormat() == PropertyDate.BEFORE || gedcomDate.getFormat() == PropertyDate.TO) {
                     // intervalle [start2 - 100 ans , start2]
                     PointInTime startPit = new PointInTime();
-                    startPit.set(birthDate.getStart());
+                    startPit.set(gedcomDate.getStart());
                     start2 = Integer.MIN_VALUE; 
-                    end2 = birthDate.getStart().getJulianDay();
-                } else if (birthDate.getFormat() == PropertyDate.AFTER || birthDate.getFormat() == PropertyDate.FROM) {
-                    start2 = birthDate.getStart().getJulianDay();
+                    end2 = gedcomDate.getStart().getJulianDay();
+                } else if (gedcomDate.getFormat() == PropertyDate.AFTER || gedcomDate.getFormat() == PropertyDate.FROM) {
+                    start2 = gedcomDate.getStart().getJulianDay();
                     PointInTime startPit = new PointInTime();
-                    startPit.set(birthDate.getStart());
+                    startPit.set(gedcomDate.getStart());
                     end2 = Integer.MAX_VALUE;
+                } else if (gedcomDate.getFormat() == PropertyDate.BETWEEN_AND || gedcomDate.getFormat() == PropertyDate.FROM_TO ) {
+                    start2 = gedcomDate.getStart().getJulianDay();
+                    end2 = gedcomDate.getEnd().getJulianDay();
                 } else {
                     // ABOUT, ESTIMATED, CALCULATED
                     // intervalle [start2 , end2]
                     PointInTime startPit = new PointInTime();
-                    startPit.set(birthDate.getStart());
+                    startPit.set(gedcomDate.getStart());
                     start2 = startPit.add(0, 0, -aboutYear).getJulianDay();
                     PointInTime endPit = new PointInTime();
-                    endPit.set(birthDate.getStart());
+                    endPit.set(gedcomDate.getStart());
                     end2 = startPit.add(0, 0, +aboutYear).getJulianDay();
                 } 
 
-                // je verifie si l'intervalle 1 est inclus dans l'intervalle 2
+                // je verifie si l'intervalle 1 (record) est inclus dans l'intervalle 2 (gedcom)
                 if (start1 >= start2  && end1 <= end2 ) {
-                    result = true;
+                    //recordDate est inclus dans gedcomDate
+                    result = recordDate;
                 } else {
-                    // l'intersection entre les intervalles est nulle
-                    result = false;
+                    if( start2 == Integer.MIN_VALUE && end1 == Integer.MAX_VALUE && start1 <= end2 ) {
+                        // recouvrement partiel  1=AFT et 2=BEF                        
+                        if ( start1 != Integer.MIN_VALUE) {
+                            PropertyDate mergeDate = new PropertyDate();
+                            mergeDate.setValue(PropertyDate.BETWEEN_AND, toPointInTime(start1), toPointInTime(end2), "intersection entre la date du releve et la date du gedcom" );
+                            result = mergeDate;
+                        } else {
+                            result = gedcomDate;
+                        }
+                    } else if ( start1 == Integer.MIN_VALUE && (end2 == Integer.MAX_VALUE || end2 <= end1) && start2 <= end1 ) {
+                        if ( start2 != Integer.MIN_VALUE) {
+                            // recouvrement partiel  1=BEF (min , end1)   et 2=AFT (start2 , max) => (start2 , end1)
+                            PropertyDate mergeDate = new PropertyDate();
+                            mergeDate.setValue(PropertyDate.BETWEEN_AND, toPointInTime(start2), toPointInTime(end1), "intersection entre la date du releve et la date du gedcom" );
+                            result = mergeDate;
+                        } else {
+                            result = gedcomDate;
+                        }
+                    } else {
+                        if( start1 <= start2 && end1 == Integer.MAX_VALUE  && end2 == Integer.MAX_VALUE ) {
+                            result = gedcomDate;
+                        } else {
+                            // l'intersection entre les intervalles est nulle
+                            // les dates sont incompatibles
+                            result = null;
+                        }
+                    }
                 }
             }
         } catch (GedcomException ex) {
-            result = false;
+            result = null;
         }
 
         return result;
     }
 
+     static protected PointInTime toPointInTime(int julianDay) {
+
+        // see toJulianDay
+        int l = julianDay + 68569;
+        int n = (4 * l) / 146097;
+        l = l - (146097 * n + 3) / 4;
+        int i = (4000 * (l + 1)) / 1461001;
+        l = l - (1461 * i) / 4 + 31;
+        int j = (80 * l) / 2447;
+        int d = l - (2447 * j) / 80;
+        l = j / 11;
+        int m = j + 2 - (12 * l);
+        int y = 100 * (n - 49) + i + l;
+
+        return new PointInTime(PointInTime.UNKNOWN, PointInTime.UNKNOWN, y <= 0 ? y - 1 : y);
+    }
 
 
     /**
