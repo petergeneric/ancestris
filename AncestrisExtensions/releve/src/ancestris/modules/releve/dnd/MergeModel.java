@@ -605,8 +605,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.entityValue = entityValue;
         mergeRow.recordValue = recordValue;
-        recordValue.getPhrase();
-
+        
         if (isRowParentApplicable(rowType)) {
 
             // je compare les valeurs par defaut du releve et de l'entite
@@ -646,16 +645,21 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                             mergeRow.merge = false;
                             mergeRow.compareResult = CompareResult.EQUAL;
                         } else {
-                            // la valeur ne sont pas egales
-                            // je verifie si la date du releve est plus précise
-                            mergeRow.merge = MergeQuery.isBestBirthDate(recordValue, entityValue);
-                            // TODO traiter le cas ou les dates sont incompatibles
-                            //if (rowType==RowType.EventDate && (this instanceof MergeModelMarriage) ) {
-                                mergeRow.compareResult = MergeQuery.isCompatible(recordValue, entityValue) ? CompareResult.COMPATIBLE : CompareResult.CONFLIT;
-                            //} else {
-                            //    mergeRow.compareResult = CompareResult.COMPATIBLE;
-                            //}
+                            PropertyDate bestDate = MergeQuery.getMostAccurateDate(recordValue, entityValue);
+                            if( bestDate == null) {
+                                mergeRow.merge = false;
+                                mergeRow.compareResult = CompareResult.CONFLIT;
+                            } else if (bestDate == entityValue ) {
+                                mergeRow.merge = false;
+                                mergeRow.compareResult = CompareResult.COMPATIBLE;
+                            } else {
+                                // je propose une date plus precise que celle du releve
+                                recordValue.setValue(bestDate.getFormat(), bestDate.getStart(), bestDate.getEnd(), bestDate.getPhrase());
+                                mergeRow.merge = true;
+                                mergeRow.compareResult = CompareResult.COMPATIBLE;
+                            } 
                         }
+
                         break;
                     default:
                         mergeRow.merge = recordValue.compareTo(entityValue) == 0;

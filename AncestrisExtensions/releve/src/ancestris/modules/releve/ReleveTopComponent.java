@@ -8,7 +8,9 @@ import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.editor.StandaloneEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.modules.copyFam.CopyFamPanel;
 import ancestris.modules.releve.dnd.TreeViewDropTarget;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.file.ReleveFileAncestrisV2;
@@ -162,26 +164,29 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt T"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt G"), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt K"), this);
         getActionMap().put(this, new AbstractAction() {
 
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( actionEvent.getActionCommand().equals("n") ) {
+                if ( actionEvent.getActionCommand().toUpperCase().equals("N") ) {
                     jTabbedPane1.setSelectedComponent(panelBirth);
                     panelBirth.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("m") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("M") ) {
                     jTabbedPane1.setSelectedComponent(panelMarriage);
                     panelMarriage.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("d") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("D") ) {
                     jTabbedPane1.setSelectedComponent(panelDeath);
                     panelDeath.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("d") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("V") ) {
                     jTabbedPane1.setSelectedComponent(panelMisc);
                     panelMisc.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("t") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("T") ) {
                     jTabbedPane1.setSelectedComponent(panelAll);
                     panelMisc.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("g") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("K") ) {
+                    CopyFamPanel.showStatistics();
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("G") ) {
                     // load current gedcom
                     boolean saveResult = true;
                     if (dataManager.isDirty()) {
@@ -190,7 +195,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                     }
                     if ( saveResult ) {
                         // je convertis le fichier GEDCOM courant en releve
-                        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+                        //Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+                        Context context = GedcomDirectory.getInstance().getContext(0);
                         if (context != null && context.getGedcom() != null) {
                             try {
                                 FileBuffer  fileBuffer = ReleveFileGedcom.loadFile(context.getGedcom());
@@ -316,7 +322,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
     /**
      * Cette methode est appelee par ReleveQuickSearch
-     * Elle permet de sélectionner le champ qui choso dans l'outil de recherche
+     * Elle permet de sélectionner le champ qui est choisi dans l'outil de recherche
      * @param record
      * @param fieldType
      */
@@ -339,6 +345,20 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             panelMisc.selectField(fieldType);
         }
     }
+
+    /**
+     * Cette methode est appelee par EditorBeanGroup
+     * pour afficher les champs dans l'editeur 
+     * apres avoir modifié la liste des champs visibles
+     */
+    public void udpdateEditorVisibleField() {
+        panelBirth.selectRow(panelBirth.getCurrentRecordIndex());
+        panelMarriage.selectRow(panelMarriage.getCurrentRecordIndex());
+        panelDeath.selectRow(panelDeath.getCurrentRecordIndex());
+        panelMisc.selectRow(panelMisc.getCurrentRecordIndex());
+    }
+
+
 
     ///////////////////////////////////////////////////////////////////////////
     //  Traite les actions du popup menu
@@ -615,29 +635,29 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                     // pas de releve deja selectionne
                     if (!append ) {                        
                         if( dataManager.getReleveBirthModel().getRowCount() > 0 ) {
-                            panelBirth.selectRecord(0);
+                            panelBirth.selectRow(0);
                         } else  {
-                            panelBirth.selectRecord(-1);
+                            panelBirth.selectRow(-1);
                         }
                         if (dataManager.getReleveMarriageModel().getRowCount() > 0) {
-                            panelMarriage.selectRecord(0);
+                            panelMarriage.selectRow(0);
                         } else  {
-                            panelMarriage.selectRecord(-1);
+                            panelMarriage.selectRow(-1);
                         }
                         if (dataManager.getReleveDeathModel().getRowCount() > 0) {
-                            panelDeath.selectRecord(0);
+                            panelDeath.selectRow(0);
                         } else  {
-                            panelDeath.selectRecord(-1);
+                            panelDeath.selectRow(-1);
                         }
                         if (dataManager.getReleveMiscModel().getRowCount() > 0) {
-                            panelMisc.selectRecord(0);
+                            panelMisc.selectRow(0);
                         } else  {
-                            panelMisc.selectRecord(-1);
+                            panelMisc.selectRow(-1);
                         }
                         if (dataManager.getReleveAllModel().getRowCount() > 0) {
-                            panelAll.selectRecord(0);
+                            panelAll.selectRow(0);
                         } else  {
-                            panelAll.selectRecord(-1);
+                            panelAll.selectRow(-1);
                         }
                     }
 
@@ -653,7 +673,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         } catch (Exception ex) {
             String message = ex.getMessage();
-            if (message.isEmpty()) {
+            if (message != null && message.isEmpty()) {
                 message = ex.toString();
             }
             Toolkit.getDefaultToolkit().beep();
@@ -1153,29 +1173,29 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 setCurrentFile(null);
                 dataManager.resetDirty();
                 if (dataManager.getReleveBirthModel().getRowCount() > 0) {
-                    panelBirth.selectRecord(0);
+                    panelBirth.selectRow(0);
                 } else {
-                    panelBirth.selectRecord(-1);
+                    panelBirth.selectRow(-1);
                 }
                 if (dataManager.getReleveMarriageModel().getRowCount() > 0) {
-                    panelMarriage.selectRecord(0);
+                    panelMarriage.selectRow(0);
                 } else {
-                    panelMarriage.selectRecord(-1);
+                    panelMarriage.selectRow(-1);
                 }
                 if (dataManager.getReleveDeathModel().getRowCount() > 0) {
-                    panelDeath.selectRecord(0);
+                    panelDeath.selectRow(0);
                 } else {
-                    panelDeath.selectRecord(-1);
+                    panelDeath.selectRow(-1);
                 }
                 if (dataManager.getReleveMiscModel().getRowCount() > 0) {
-                    panelMisc.selectRecord(0);
+                    panelMisc.selectRow(0);
                 } else {
-                    panelMisc.selectRecord(-1);
+                    panelMisc.selectRow(-1);
                 }
                 if (dataManager.getReleveAllModel().getRowCount() > 0) {
-                    panelAll.selectRecord(0);
+                    panelAll.selectRow(0);
                 } else {
-                    panelAll.selectRecord(-1);
+                    panelAll.selectRow(-1);
                 }
 
                 setCurrentFile(new File(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.demoRecord")));

@@ -94,6 +94,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jButtonActivateDnd = new javax.swing.JButton();
         jButtonLastNameCompletion = new javax.swing.JButton();
         jButtonFirstNameCompletion = new javax.swing.JButton();
+        jButtonConfigEditor = new javax.swing.JButton();
         fillerPanelHorizontal = new javax.swing.JPanel();
         fillerPanelVertical = new javax.swing.JPanel();
 
@@ -200,6 +201,17 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.gridy = 2;
         OptionsPanel.add(jButtonFirstNameCompletion, gridBagConstraints);
 
+        jButtonConfigEditor.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonConfigEditor.text")); // NOI18N
+        jButtonConfigEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConfigEditorActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        OptionsPanel.add(jButtonConfigEditor, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -271,6 +283,10 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         ReleveCompletionPanel.showFirstNameCompletionPanel();
     }//GEN-LAST:event_jButtonFirstNameCompletionActionPerformed
 
+    private void jButtonConfigEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigEditorActionPerformed
+        ReleveEditorConfigPanel.showEditorConfigPanel();
+    }//GEN-LAST:event_jButtonConfigEditorActionPerformed
+
     /**
      * charge le fichier de démo
      * @param evt
@@ -289,6 +305,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JPanel fillerPanelHorizontal;
     private javax.swing.JPanel fillerPanelVertical;
     private javax.swing.JButton jButtonActivateDnd;
+    private javax.swing.JButton jButtonConfigEditor;
     private javax.swing.JButton jButtonFirstNameCompletion;
     private javax.swing.JButton jButtonLastNameCompletion;
     private javax.swing.JCheckBox jCheckBoxDuplicateRecord;

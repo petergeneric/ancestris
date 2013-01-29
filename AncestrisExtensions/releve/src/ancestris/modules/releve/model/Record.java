@@ -113,6 +113,8 @@ public abstract class Record implements Cloneable{
         generalComment = new FieldComment();
     }
 
+    abstract public DataManager.RecordType getType();
+    
     @Override
     public Record clone() {
 	    Record object = null;
@@ -826,7 +828,9 @@ public abstract class Record implements Cloneable{
 //    }
 
     public void setCote(String value) {
-        cote.setValue(value);
+        if (cote != null) {
+            cote.setValue(value);
+        }
     }
 
     public void setFreeComment(String value) {
@@ -839,7 +843,9 @@ public abstract class Record implements Cloneable{
 
     
     public void setNotary(String value) {
-        notary.setValue(value);
+        if( notary != null ) {
+            notary.setValue(value);
+        }
     }
 
     public void setParish(String value) {

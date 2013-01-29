@@ -31,11 +31,14 @@ public class DataManager implements PlaceManager {
     // données volatiles
     private int lastRecordNo = 0;
     private String freeComment = "";
+    private String defaultCote = "";
+    private String defaultNotary = "";
+
 
     
 
     // previous record
-
+    public enum RecordType { birth, marriage, death, misc }
     public enum ModelType { birth, marriage, death, misc, all }
 
     public DataManager () {
@@ -77,6 +80,8 @@ public class DataManager implements PlaceManager {
             // je valorise le numero de photo avec la valeur par defaut
             String defaultValue = this.getDefaultFreeComment();
             record.setFreeComment(defaultValue);
+            record.setCote(defaultCote);
+            record.setNotary(defaultNotary);
         }
         
         return addRecord(record, true);
@@ -285,6 +290,14 @@ public class DataManager implements PlaceManager {
 
     public void setDefaultFreeComment(String text) {
         freeComment = text;
+    }
+
+    public void setDefaultCote(String text) {
+        defaultCote = text;
+    }
+
+    public void setDefaultNotary(String text) {
+        defaultNotary = text;
     }
 
     ///////////////////////////////////////////////////////////////////////////

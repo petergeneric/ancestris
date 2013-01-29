@@ -1,5 +1,7 @@
 package ancestris.modules.releve.model;
 
+import ancestris.modules.releve.model.DataManager.RecordType;
+
 /**
  *
  * @author Michel
@@ -96,8 +98,13 @@ public class RecordMarriage extends Record implements Cloneable{
     }
 
     @Override
+    public RecordType getType() {
+        return RecordType.marriage;
+    }
+
+    @Override
     public RecordMarriage clone() {
-	    RecordMarriage object = (RecordMarriage) super.clone();
+	RecordMarriage object = (RecordMarriage) super.clone();
         
         object.indiFirstName       = indiFirstName.clone();
         object.indiLastName        = indiLastName.clone();

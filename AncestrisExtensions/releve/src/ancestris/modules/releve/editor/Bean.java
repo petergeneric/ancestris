@@ -1,7 +1,8 @@
 package ancestris.modules.releve.editor;
 
-import ancestris.modules.releve.model.BeanField;
 import ancestris.modules.releve.model.Field;
+import ancestris.modules.releve.model.Field.FieldType;
+import ancestris.modules.releve.model.Record;
 import genj.util.ChangeSupport;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -16,7 +17,9 @@ import javax.swing.event.ChangeListener;
  * @author Michel
  */
 public abstract class Bean extends JPanel {
-    protected BeanField beanField;
+    //protected BeanField beanField;
+    private Record record;
+    private Field.FieldType fieldType;
 
     protected JComponent defaultFocus = null;
     protected ChangeSupport changeSupport = new ChangeSupport(this);
@@ -31,8 +34,9 @@ public abstract class Bean extends JPanel {
      * 
      * set property to look at
      */
-    public final Bean setContext(BeanField beanField) {
-        this.beanField = beanField;
+    public final Bean setContext(Record record, FieldType fieldType) {
+        this.record = record;
+        this.fieldType = fieldType;
 
         setFieldImpl();
         changeSupport.setChanged(false);
@@ -52,12 +56,20 @@ public abstract class Bean extends JPanel {
         return this;
     }
 
+    /**
+     *
+     * set property to look at
+     */
+    public final void refresh() {
+        setFieldImpl();
+        changeSupport.setChanged(false);
+    }
+
     protected abstract void setFieldImpl();
 
-    protected void replaceValue(Field field) {
-        String oldValue = beanField.getField().toString();
-        if ( field!= null && !field.toString().equals(oldValue)) {
-            replaceValueImpl(field);
+    protected void replaceValue(Field newField) {
+        if ( newField!= null ) {
+            replaceValueImpl(newField);
             changeSupport.setChanged(true);
         }
     }
@@ -82,15 +94,22 @@ public abstract class Bean extends JPanel {
     /**
      * Current Property
      */
-    public final Field getField() {
-        return beanField.getField();
+    public final Record getRecord() {
+        return record;
     }
 
     /**
      * Current Property
      */
-    public final BeanField getBeanField() {
-        return beanField;
+    public final Field getField() {
+        return record.getField(fieldType);
+    }
+
+    /**
+     * Current Property
+     */
+    public final FieldType getFieldType() {
+        return fieldType;
     }
 
     /**

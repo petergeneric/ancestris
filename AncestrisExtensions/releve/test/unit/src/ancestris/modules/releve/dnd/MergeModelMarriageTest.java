@@ -289,4 +289,39 @@ public class MergeModelMarriageTest extends TestCase {
         }
     }
 
+
+    /**
+     * modification de la date de deces du pere
+     */
+    public void testUpdateMariageAndFatherDeathDate() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+            RecordMarriage mariageRecord = createMarriageRecord("M1");
+            // je change la date de deces du pere et de la mere
+            mariageRecord.setIndiFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "true", "");
+            mariageRecord.setIndiMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "true", "");
+            MergeRecord mergeRecord = new MergeRecord(mariageRecord);
+            List<MergeModel> models;
+
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
+            assertEquals("Nombre model",2,models.size());
+            models.get(0).copyRecordToEntity();
+
+            Fam fam = (Fam) gedcom.getEntity("F00004");
+            assertEquals("Lien mariage vers source","@S00004@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
+            assertEquals("Source mariage","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
+
+            assertEquals("Mari mere date deces","BET 1970 AND 1999", mergeRecord.getIndiMotherDeathDate().getValue());
+
+            Fam indiParentFamily = fam.getHusband().getFamilyWhereBiologicalChild();
+            Indi indiFather = indiParentFamily.getHusband();
+            assertEquals("Mari pere date deces","BET 1969 AND 1999", indiFather.getDeathDate().getValue());
+            Indi indiMother = indiParentFamily.getWife();
+            assertEquals("Mari mere date deces","BET 1970 AND 1999", indiMother.getDeathDate().getValue());
+
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
 }

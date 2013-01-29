@@ -368,7 +368,7 @@ public class MergeRecord {
             IndiMotherDeathDate = calculateParentDeathDate(
                    record.getIndiMotherDead()!=null ? record.getIndiMotherDead().getState() : false,
                    getIndiBirthDate(),
-                   0 // le mere peut être decedee au plus toto 0 mois avant le naissance.
+                   0 // le mere peut être decedee au plus tot 0 mois avant le naissance (par opposition au pere qui peut etre decede 9 mois avant la naissance)
                );
         }
         return IndiMotherDeathDate;
@@ -1282,7 +1282,7 @@ public class MergeRecord {
             boolean beforeChildMarriageComparable = beforeChildMarriage.isComparable();
             if (beforeChildBirthComparable && beforeChildMarriageComparable) {
                 // les dates sont comparables , je retiens la plus petite
-                if (MergeQuery.isBestBirthDate(beforeChildBirth, beforeChildMarriage)) {
+                if (MergeQuery.getMostAccurateDate(beforeChildBirth, beforeChildMarriage) == beforeChildBirth) {
                     parentMariageDate = beforeChildBirth;
                 } else {
                     parentMariageDate = beforeChildMarriage;

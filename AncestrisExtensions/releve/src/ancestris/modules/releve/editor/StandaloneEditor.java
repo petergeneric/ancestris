@@ -105,16 +105,16 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( actionEvent.getActionCommand().equals("n") ) {
+                if ( actionEvent.getActionCommand().toUpperCase().equals("N") ) {
                     jTabbedPane1.setSelectedComponent(birthEditor);
                     birthEditor.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("m") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("M") ) {
                     jTabbedPane1.setSelectedComponent(marriageEditor);
                     marriageEditor.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("d") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("D") ) {
                     jTabbedPane1.setSelectedComponent(deathEditor);
                     deathEditor.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("d") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("V") ) {
                     jTabbedPane1.setSelectedComponent(miscEditor);
                     miscEditor.createRecord();
                 }
