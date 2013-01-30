@@ -1122,6 +1122,7 @@ public class TreeView extends View implements AncestrisActionProvider,MySelectio
     /** constructor */
     private ActionChooseRoot() {
       setText(RESOURCES, "select.root");
+      setTip(RESOURCES, "select.root");
       setImage(Images.imgView);
     }
 
