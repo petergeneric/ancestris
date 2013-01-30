@@ -31,7 +31,7 @@ import org.openide.util.NbBundle.Messages;
 id = "ancestris.modules.editors.standard.OpenEditorAction")
 @ActionRegistration(displayName = "#CTL_OpenEditorAction")
 @ActionReferences({
-    @ActionReference(path = "Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 @Messages("CTL_OpenEditorAction=Open in Editor")
 public final class OpenEditorAction
         extends AbstractAction
