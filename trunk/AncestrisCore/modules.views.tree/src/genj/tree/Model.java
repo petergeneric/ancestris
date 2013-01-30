@@ -101,6 +101,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
   private TreeMetrics metrics = new TreeMetrics( 66, 40, 80, 7, 10 );
   
   /** bookmarks */
+  //XXX: We must write a standalone bookmark manager with all styuff
+  //from tree module related to bookmark
+  //also actions will go to the main toolbar to be used event if 
+  //treeview is not opened
   private LinkedList<Bookmark> bookmarks = new LinkedList<Bookmark>();
   
   /**
