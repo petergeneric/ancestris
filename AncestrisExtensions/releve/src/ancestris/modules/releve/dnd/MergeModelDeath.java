@@ -117,8 +117,10 @@ class MergeModelDeath extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndiFirstName(), currentIndi.getFirstName());
             addRow(RowType.IndiSex, record.getIndiSexString(), currentIndi.getPropertyValue("SEX"));
             addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , currentIndi.getBirthDate());
+            addRow(RowType.IndiBirthPlace, record.getIndiBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.IndiDeathDate, record.getIndiDeathDate() , currentIndi.getDeathDate());
-            addRow(RowType.IndiPlace, record.getIndiBirthPlace(), currentIndi.getValue(new TagPath("INDI:DEAT:PLAC"), ""));
+            addRow(RowType.IndiResidence, record.getIndiResidence() , currentIndi.getValue(new TagPath("INDI:DEAT:PLAC"), ""));
+            addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(), MergeQuery.findOccupation(currentIndi, record.getEventDate()));
             addRow(RowType.EventComment, record.getEventComment(), currentIndi.getValue(new TagPath("INDI:DEAT:NOTE"), ""));
 
         } else {
@@ -136,8 +138,10 @@ class MergeModelDeath extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndiFirstName(), "");
             addRow(RowType.IndiSex, record.getIndiSexString(), "");
             addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , null);
+            addRow(RowType.IndiBirthPlace, record.getIndiBirthPlace(), "");
             addRow(RowType.IndiDeathDate, record.getIndiDeathDate() , null);
-            addRow(RowType.IndiPlace, record.getIndiBirthPlace(), "");
+            addRow(RowType.IndiResidence, record.getIndiResidence() , "");
+            addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(), "");
             addRow(RowType.EventComment, record.getEventComment(), "");
         }
     }
@@ -164,7 +168,6 @@ class MergeModelDeath extends MergeModel {
             addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), father.getBirthDate());
             addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), father.getDeathDate());
             addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(), MergeQuery.findOccupation(father, record.getEventDate()));
-
         } else {
             addRow(RowType.IndiFatherLastName, record.getIndiFatherLastName(), "");
             addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), "");
@@ -272,7 +275,7 @@ class MergeModelDeath extends MergeModel {
         }
 
         // je cree la propriete de naissance si elle n'existait pas
-        if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
+        if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.IndiBirthPlace) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
             Property birthProperty = currentIndi.getProperty("BIRT");
             if (birthProperty == null) {
                 birthProperty = currentIndi.addProperty("BIRT", "");
@@ -283,11 +286,22 @@ class MergeModelDeath extends MergeModel {
                 // j'ajoute (ou remplace) la date de la naissance (le lieu de naissance n'est pas connu)
                 copyBirthDate(currentIndi,record.getIndiBirthDate(), "", record);
             }
+
+            // je copie le lieu de naissance
+            if (isChecked(RowType.IndiBirthPlace)) {
+                copyPlace(record.getIndiBirthPlace(), birthProperty);
+            }
         }
+
+        // je copie la profession de l'individu
+        if (isChecked(RowType.IndiOccupation) && !record.getIndiOccupation().isEmpty()) {
+            copyOccupation(currentIndi, record.getIndiOccupation(), record.getIndiResidence(), record);
+        }
+
 
         
         // je cree la propriete de deces si elle n'existait pas
-        if (isChecked(RowType.IndiDeathDate) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
+        if (isChecked(RowType.IndiDeathDate) || isChecked(RowType.IndiResidence) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
             Property deathProperty = currentIndi.getProperty("DEAT");
             if (deathProperty == null) {
                 deathProperty = currentIndi.addProperty("DEAT", "");
@@ -302,15 +316,15 @@ class MergeModelDeath extends MergeModel {
                 }
                 propertyDate.setValue(record.getIndiDeathDate().getValue());
             }
+
+            // je copie le domicile dans le lieu du deces
+            if (isChecked(RowType.IndiResidence)) {
+                copyPlace(record.getIndiResidence(),  deathProperty);
+            }
             
             // je copie la source du deces du releve dans l'individu
             if (isChecked(RowType.EventSource)) {
                 copySource((Source) getRow(RowType.EventSource).entityObject, deathProperty, record);
-            }
-
-            // je copie le lieu du deces
-            if (isChecked(RowType.IndiPlace)) {
-                copyPlace(record.getIndiBirthPlace(), deathProperty);
             }
 
             // je copie le commentaire du deces
@@ -473,12 +487,8 @@ class MergeModelDeath extends MergeModel {
             // je met à jour la profession de la mere
             if (isChecked(RowType.IndiMotherOccupation) && !record.getIndiMotherOccupation().isEmpty()) {
                 copyOccupation(mother, record.getIndiMotherOccupation(), record.getIndiMotherResidence(), record);
-            }
-            
+            }            
         }
-
-        //TODo ajouter les données de l'ex conjoint
-
     }
 
     /**

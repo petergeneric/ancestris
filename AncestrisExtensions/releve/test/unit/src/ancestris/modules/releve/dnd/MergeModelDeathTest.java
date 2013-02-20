@@ -6,7 +6,6 @@ import ancestris.modules.releve.model.RecordDeath;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.util.List;
-import javax.swing.JFrame;
 import junit.framework.TestCase;
 
 /**
@@ -22,7 +21,7 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/2003");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiplace", "indioccupation", "indiResidence", "indicomment");
+                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiBirthPlace", "indioccupation", "indiResidence", "indicomment");
                 record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "", "70y");
                 record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
                 record.setIndiMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "indiMarriedResidence", "marriedcomment", "dead");
@@ -38,7 +37,7 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/1988");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiplace", "indioccupation", "indiResidence", "indicomment");
+                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiBirthPlace", "indioccupation", "indiResidence", "indicomment");
                 //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
                 //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
@@ -70,12 +69,21 @@ public class MergeModelDeathTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
 
             assertEquals("Nombre model",3,models.size());
+            // je copie la premierse proposition dans l'entité
             models.get(0).copyRecordToEntity();
+
+            assertEquals("indiBirthDate",previousIndiBirthDate, indi.getBirthDate().getValue());
+            assertEquals("indiBirthPlace",mergeRecord.getIndiBirthPlace(), indi.getPropertyByPath("INDI:BIRT:PLAC").getValue());
+
+            assertEquals("indiDeathDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:DEAT:DATE").getValue());
+            assertEquals("indiDeathPlace",mergeRecord.getIndiResidence(), indi.getPropertyByPath("INDI:DEAT:PLAC").getValue());
+
+            assertEquals("indiOccupation",mergeRecord.getIndiOccupation(), indi.getProperty("OCCU").getValue());
+            assertEquals("indiOcccupationResidence",mergeRecord.getIndiResidence(), indi.getPropertyByPath("INDI:OCCU:PLAC").getValue());
+            assertEquals("indiOcccupationDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:OCCU:DATE").getValue());
 
             assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
             assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
-
-            assertEquals("indiBirthDate",previousIndiBirthDate, indi.getBirthDate().getValue());
 
             Indi father = indi.getBiologicalFather();
             assertEquals("fatherFirstName",mergeRecord.getIndiFatherFirstName(), father.getFirstName());

@@ -1582,7 +1582,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         IndiAge,
         IndiBirthDate,
         IndiDeathDate,
-        IndiPlace,
+        IndiBirthPlace,
+        IndiResidence,
         IndiOccupation,
         //  conjoint (ou ancien conjoint) //////////////////////////////////////////
         IndiMarriedFamily,

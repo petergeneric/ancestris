@@ -3,7 +3,6 @@ package ancestris.modules.releve.editor;
 import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.PlaceManager;
-import ancestris.modules.releve.ReleveTopComponent;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -12,8 +11,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import org.openide.util.NbPreferences;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /*
  * StandaloneEditor.java
