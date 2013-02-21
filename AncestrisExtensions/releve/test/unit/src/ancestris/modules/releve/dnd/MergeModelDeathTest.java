@@ -5,8 +5,11 @@ import ancestris.modules.releve.dnd.MergeModel.MergeRow;
 import ancestris.modules.releve.model.RecordDeath;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import java.util.List;
+import javax.swing.JFrame;
 import junit.framework.TestCase;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -58,7 +61,8 @@ public class MergeModelDeathTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
-            MergeRecord mergeRecord = new MergeRecord(createDeathRecord("sansfamille1"));
+            RecordDeath recordDeath = createDeathRecord("sansfamille1");
+            MergeRecord mergeRecord = new MergeRecord(recordDeath);
             List<MergeModel> models;
 
             // je memorise la date de naissance de l'enfant
@@ -72,30 +76,74 @@ public class MergeModelDeathTest extends TestCase {
             // je copie la premierse proposition dans l'entité
             models.get(0).copyRecordToEntity();
 
-            assertEquals("indiBirthDate",previousIndiBirthDate, indi.getBirthDate().getValue());
-            assertEquals("indiBirthPlace",mergeRecord.getIndiBirthPlace(), indi.getPropertyByPath("INDI:BIRT:PLAC").getValue());
+            /**
+
+             record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiBirthPlace", "indioccupation", "indiResidence", "indicomment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
+                record.setIndiMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "indiMarriedResidence", "marriedcomment", "dead");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setEventPlace("Paris","75000","","state","country");
+                record.setGeneralComment("generalcomment");
+              */
 
             assertEquals("indiDeathDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:DEAT:DATE").getValue());
             assertEquals("indiDeathPlace",mergeRecord.getIndiResidence(), indi.getPropertyByPath("INDI:DEAT:PLAC").getValue());
+            //assertEquals("indiBirthComment",recordDeath.getIndiComment(), indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
 
+            assertEquals("indiBirthDate",previousIndiBirthDate, indi.getBirthDate().getValue());
+            assertEquals("indiBirthPlace",mergeRecord.getIndiBirthPlace(), indi.getPropertyByPath("INDI:BIRT:PLAC").getValue());
+            
             assertEquals("indiOccupation",mergeRecord.getIndiOccupation(), indi.getProperty("OCCU").getValue());
             assertEquals("indiOcccupationResidence",mergeRecord.getIndiResidence(), indi.getPropertyByPath("INDI:OCCU:PLAC").getValue());
             assertEquals("indiOcccupationDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:OCCU:DATE").getValue());
 
-            assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
-            assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
+            // conjoint
+            Indi married = indi.getFamiliesWhereSpouse()[0].getWife();
+            assertEquals("marriedLastName",recordDeath.getIndiMarriedLastName().getValue(), married.getLastName());
+            assertEquals("marriedFirstName",recordDeath.getIndiMarriedFirstName().getValue(), married.getFirstName());
+            assertEquals("marriedBirth","BEF 1985", married.getBirthDate().getValue());
+            assertEquals("marriedDead","AFT 2003", married.getDeathDate().getValue());
+            Property marriedOccupation = married.getProperties("OCCU")[0];
+            assertEquals("marriedOccupation",recordDeath.getIndiMarriedOccupation().getValue(), marriedOccupation.getValue());
+            assertEquals("marriedOcccupationPlace",recordDeath.getIndiMarriedResidence().getValue(), marriedOccupation.getProperty("PLAC").getValue());
+            assertEquals("marriedOcccupationDate",recordDeath.getEventDateProperty().getValue(), marriedOccupation.getProperty("DATE").getValue());
+            assertEquals("marriedOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le FATHERLASTNAME ( 01/01/2003 ) ", marriedOccupation.getProperty("NOTE").getValue());
 
+            //parents
+            assertEquals("famille Parent","F1", indi.getFamilyWhereBiologicalChild().getId());
+            assertEquals("Mariage Parent date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
+
+            // pere
             Indi father = indi.getBiologicalFather();
+            assertEquals("fatherLastName",mergeRecord.getIndiFatherLastName(), father.getLastName());
             assertEquals("fatherFirstName",mergeRecord.getIndiFatherFirstName(), father.getFirstName());
             // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
             assertEquals("Naissance du pere",previousFatherBirthDate, father.getBirthDate().getValue());
             assertEquals("deces du pere",   "AFT 1999", father.getDeathDate().getValue());
 
+            Property fatherOccupation = father.getProperties("OCCU")[1];
+            assertEquals("fatherOccupation",mergeRecord.getIndiFatherOccupation(), fatherOccupation.getValue());
+            assertEquals("fatherOcccupationPlace",mergeRecord.getIndiFatherResidence(), fatherOccupation.getProperty("PLAC").getValue());
+            assertEquals("fatherOcccupationDate",mergeRecord.getEventDate().getValue(), fatherOccupation.getProperty("DATE").getValue());
+            assertEquals("fatherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le FATHERLASTNAME ( 01/01/2003 ) ", fatherOccupation.getProperty("NOTE").getValue());
+
+            // mere
             Indi mother = indi.getBiologicalMother();
             assertEquals("Naissance de la mere","CAL 1931", mother.getBirthDate().getValue());
             assertEquals("deces de la mere",    "AFT 2000", mother.getDeathDate().getValue());
 
+            Property motherOccupation = mother.getProperties("OCCU")[0];
+            assertEquals("motherOccupation",mergeRecord.getIndiMotherOccupation(), motherOccupation.getValue());
+            assertEquals("motherOcccupationPlace",mergeRecord.getIndiMotherResidence(), motherOccupation.getProperty("PLAC").getValue());
+            assertEquals("motherOcccupationDate",mergeRecord.getEventDate().getValue(), motherOccupation.getProperty("DATE").getValue());
+            assertEquals("motherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le FATHERLASTNAME ( 01/01/2003 ) ", motherOccupation.getProperty("NOTE").getValue());
+
         } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
             fail(ex.getMessage());
         }
     }
@@ -169,6 +217,7 @@ public class MergeModelDeathTest extends TestCase {
             MergeRow IndiMarriedLastNameRow =  models.get(0).getRow(MergeModel.RowType.IndiMarriedLastName);
             assertNotNull("IndiMarriedLastName", IndiMarriedLastNameRow.entityValue);
             assertEquals("IndiMarriedLastName not null", "MOTHERLASTNAME", IndiMarriedLastNameRow.entityValue.toString());
+
             //MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, record, true);
             //Thread.sleep(10000);
            

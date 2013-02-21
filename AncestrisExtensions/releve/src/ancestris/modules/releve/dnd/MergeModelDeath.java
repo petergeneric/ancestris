@@ -217,14 +217,14 @@ class MergeModelDeath extends MergeModel {
                 addRow(RowType.IndiMarriedFirstName, record.getIndiMarriedFirstName(), married.getFirstName());
                 addRow(RowType.IndiMarriedBirthDate, record.getIndiMarriedBirthDate(), married.getBirthDate());
                 addRow(RowType.IndiMarriedDeathDate, record.getIndiMarriedDeathDate(), married.getDeathDate());
-                addRow(RowType.IndiMarriedOccupation, record.getIndiMotherOccupationWithDate(), MergeQuery.findOccupation(married, record.getEventDate()));
+                addRow(RowType.IndiMarriedOccupation, record.getIndiMarriedOccupationWithDate(), MergeQuery.findOccupation(married, record.getEventDate()));
             } else {
                 addRow(RowType.IndiMarriedMarriageDate, record.getIndiMarriedMarriageDate(),null);
                 addRow(RowType.IndiMarriedLastName, record.getIndiMarriedLastName(), "", null);
                 addRow(RowType.IndiMarriedFirstName, record.getIndiMarriedFirstName(), "");
                 addRow(RowType.IndiMarriedBirthDate, record.getIndiMarriedBirthDate(), null);
                 addRow(RowType.IndiMarriedDeathDate, record.getIndiMarriedDeathDate(), null);
-                addRow(RowType.IndiMarriedOccupation, record.getIndiMotherOccupationWithDate(), "");
+                addRow(RowType.IndiMarriedOccupation, record.getIndiMarriedOccupationWithDate(), "");
             }
             
         }
