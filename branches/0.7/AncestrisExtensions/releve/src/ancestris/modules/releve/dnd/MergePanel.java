@@ -59,10 +59,10 @@ public class MergePanel extends javax.swing.JPanel {
         JLabel jLabelEnd = new javax.swing.JLabel();
         jPanelChoice.add(jLabelEnd, gridBagConstraints);
 
-        // je coche bouton associé au premier modele
-        ((JRadioButton)buttonGroupChoiceModel.getElements().nextElement()).setSelected(true);
         // je selectionne le premier modele
         if ( models.size() >0 ) {
+            // je coche bouton associé au premier modele
+            ((JRadioButton)buttonGroupChoiceModel.getElements().nextElement()).setSelected(true);
             mergeDialog.selectModel(models.get(0));
         }
         this.revalidate();

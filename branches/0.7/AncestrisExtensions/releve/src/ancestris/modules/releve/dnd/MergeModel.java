@@ -504,6 +504,18 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 }
 
             }
+        } else  if( mergeRecord.getType() ==  MergeRecord.RecordType.Misc ) {
+            if ( mergeRecord.getEventTypeTag()== MergeRecord.EventTypeTag.MARC ) {
+                // 4.1) Record Misc : Contrat de mariage
+                models = MergeModelMiscMarc.createMiscMergeModel(mergeRecord, gedcom, selectedEntity, showNewParents);
+            } else if ( mergeRecord.getEventTypeTag()== MergeRecord.EventTypeTag.WILL ) {
+                // 4.2) Record Misc : Testament
+                
+            } else {
+                // 4.2) Record Misc : autre (quittance, ...;
+
+            }
+
 
         } else {
              models = new ArrayList<MergeModel>();
@@ -1069,9 +1081,9 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         }
 
         // j'ajoute la page
-        if (sourcexref!=null )  {
+        if (sourcexref!=null && !record.getEventPage().isEmpty())  {
             String value = record.getEventPage();
-            Property pageProperty = sourcexref.addProperty("PAGE", value);
+            sourcexref.addProperty("PAGE", value);
         }
 
     }
@@ -1109,7 +1121,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         String noteText ;
         switch ( record.getType()) {
             case Birth:
-                noteText = MessageFormat.format("Naissance {0} déduite de  l''acte de naissance de {1} {2} le {3} ({4})",
+                noteText = MessageFormat.format("Naissance {0} déduite de l''acte de naissance de {1} {2} le {3} ({4})",
                     propertyDate.getDisplayValue(),
                     record.getIndiFirstName(),
                     record.getIndiLastName(),
@@ -1138,7 +1150,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     );
                 break;
             default:
-                noteText = MessageFormat.format("Naissance {0} déduite de  l''acte {1} entre {2} {3} et {4} {5} le {6} ( {7}, {8})",
+                noteText = MessageFormat.format("Naissance {0} déduite de l''acte {1} entre {2} {3} et {4} {5} le {6} ({7})",
                     propertyDate.getDisplayValue(),
                     record.getEventType(),
                     record.getIndiFirstName(),
@@ -1146,8 +1158,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     record.getWifeFirstName(),
                     record.getWifeLastName(),
                     record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName(),
-                    record.getNotary()
+                    record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
                     );
         
         }
@@ -1213,7 +1224,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         String noteText ;
         switch ( record.getType()) {
             case Birth:
-                noteText = MessageFormat.format("Décès {0} déduit de  l''acte de naissance de {1} {2} le {3} ({4})",
+                noteText = MessageFormat.format("Date de décès {0} déduite de l''acte de naissance de {1} {2} le {3} ({4})",
                     propertyDate.getDisplayValue(),
                     record.getIndiFirstName(),
                     record.getIndiLastName(),
@@ -1222,7 +1233,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     );
                 break;
             case Marriage:
-                noteText = MessageFormat.format("Décès {0} déduit de l''acte de mariage de {1} {2} et {3} {4} le {5} ({6})",
+                noteText = MessageFormat.format("Date de décès {0} déduite de l''acte de mariage de {1} {2} et {3} {4} le {5} ({6})",
                     propertyDate.getDisplayValue(),
                     record.getIndiFirstName(),
                     record.getIndiLastName(),
@@ -1233,7 +1244,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     );
                 break;
             case Death:
-                noteText = MessageFormat.format("Décès {0} déduit de l''acte de décès de {1} {2} le {3} ({4})",
+                noteText = MessageFormat.format("Date de décès {0} déduite de l''acte de décès de {1} {2} le {3} ({4})",
                     propertyDate.getDisplayValue(),
                     record.getIndiFirstName(),
                     record.getIndiLastName(),
@@ -1242,7 +1253,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     );
                 break;
             default:
-                noteText = MessageFormat.format("Décès {0} déduits de  l''acte {1} entre {2} {3} et {4} {5} le {6} ( {7}, {8})",
+                noteText = MessageFormat.format("Date de décès {0} déduite de l''acte {1} entre {2} {3} et {4} {5} le {6} ({7})",
                     propertyDate.getDisplayValue(),
                     record.getEventType(),
                     record.getIndiFirstName(),
@@ -1250,8 +1261,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     record.getWifeFirstName(),
                     record.getWifeLastName(),
                     record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName(),
-                    record.getNotary()
+                    record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
                     );
 
         }
@@ -1341,7 +1351,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     );
                 break;
             default:
-             noteText = MessageFormat.format("Date de mariage {0} déduite de l''acte {0} entre {1} {2} et {3} {4} le {6} ({7}, {8})",
+             noteText = MessageFormat.format("Date de mariage {0} déduite de l''acte {1} entre {2} {3} et {4} {5} le {6} ({7})",
                     propertyDate.getDisplayValue(),
                     record.getEventType(),
                     record.getIndiFirstName(),
@@ -1349,8 +1359,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     record.getWifeFirstName(),
                     record.getWifeLastName(),
                     record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName(),
-                    record.getNotary()
+                    record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
                     );
         }
         Property[] notes = marriageProperty.getProperties("NOTE");
@@ -1379,28 +1388,36 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param occupationDate  date du releve
      * @param record    releve servant a renseigner la note de la profession
      */
-    static protected void copyOccupation(Indi indi, String occupation, String occupationPlace, MergeRecord record ) {
+    static protected void copyOccupation(Indi indi, String occupation, String residence, MergeRecord record ) {
         PropertyDate occupationDate = record.getEventDate();
         // je cherche si l'individu a deja un tag OCCU a la meme date
-        Property occupationProperty = null ;  // = MergeQuery.findOccupation(indi, occupation, occupationDate);
-        if (occupationProperty == null) {
-            // j'ajoute la profession 
+        Property occupationProperty = null;
+        String occupationLabel ="";
+        // j'ajoute la profession ou la residence
+        if( !occupation.isEmpty()) {
             occupationProperty = indi.addProperty("OCCU", "");
             occupationProperty.setValue(occupation);
+            occupationLabel ="Profession indiquée";
+        } else if (!residence.isEmpty()) {
+            occupationProperty = indi.addProperty("RESI", "");
+            occupationLabel ="Domicile indiqué";
+        }
+
+        if (occupationProperty != null) {
             // j'ajoute la date
             PropertyDate date = (PropertyDate) occupationProperty.addProperty("DATE", "");
             date.setValue(occupationDate.getValue());
             // j'ajoute le lieu
-            if (!occupationPlace.isEmpty()) {
+            if (!residence.isEmpty()) {
                 PropertyPlace place = (PropertyPlace) occupationProperty.addProperty("PLAC", "");
-                place.setValue(occupationPlace);
+                place.setValue(residence);
             }
             
             // j'ajoute une note indiquant la source
             String noteText ;
             switch ( record.getType()) {
                 case Birth:
-                noteText = MessageFormat.format("Profession indiquée dans l''acte de naissance de {0} {1} le {2} ( {3} ) ",
+                noteText = MessageFormat.format(occupationLabel + " dans l''acte de naissance de {0} {1} le {2} ({3})",
                         record.getIndiFirstName(),
                         record.getIndiLastName(),
                         record.getEventDateDDMMYYYY(),
@@ -1408,7 +1425,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         );
                     break;
                 case Marriage:
-                    noteText = MessageFormat.format("Profession indiquée dans l''acte de mariage de {0} {1} et {2} {3} le {4} ( {5} ) ",
+                    noteText = MessageFormat.format(occupationLabel + " dans l''acte de mariage de {0} {1} et {2} {3} le {4} ({5})",
                         record.getIndiFirstName(),
                         record.getIndiLastName(),
                         record.getWifeFirstName(),
@@ -1418,7 +1435,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         );
                     break;
                 case Death:
-                    noteText = MessageFormat.format("Profession indiquée dans l''acte de décès de {0} {1} le {1} ( {2} ) ",
+                    noteText = MessageFormat.format(occupationLabel + " dans l''acte de décès de {0} {1} le {2} ({3})",
                         record.getIndiFirstName(),
                         record.getIndiLastName(),
                         record.getEventDateDDMMYYYY(),
@@ -1426,15 +1443,14 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         );
                     break;
                 default:
-                    noteText = MessageFormat.format("Profession indiquée dans l''acte {0} entre {1} {2} et {3} {4} le {5} ( {6}, {7}) ",
+                    noteText = MessageFormat.format(occupationLabel + " dans l''acte {0} entre {1} {2} et {3} {4} le {5} ({6})",
                         record.getEventType(),
                         record.getIndiFirstName(),
                         record.getIndiLastName(),
                         record.getWifeFirstName(),
                         record.getWifeLastName(),
                         record.getEventDateDDMMYYYY(),
-                        record.getEventPlaceCityName(),
-                        record.getNotary()
+                        record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
                         );
             }
             occupationProperty.addProperty("NOTE", noteText);
@@ -1575,6 +1591,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         EventPlace,
         EventComment,
         MarriageFamily,
+        MarriageDate,
         //  indi ///////////////////////////////////////////////////////////////////
         IndiFirstName,
         IndiLastName,
