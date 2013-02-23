@@ -234,19 +234,29 @@ public class MergeQueryTest extends TestCase {
 
             fatherBirtDate.setValue("EST 1870");
             fams = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-            assertEquals("Father="+fatherBirtDate.getValue(), 0, fams.size());
+            assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 0, fams.size());
 
             fatherBirtDate.setValue("EST 1894");
             fams = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-            assertEquals("Father="+fatherBirtDate.getValue(), 0, fams.size());
+            assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 0, fams.size());
 
-            fatherBirtDate.setValue("EST 1989");
+            fatherBirtDate.setValue("EST 1982");
             fams = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-            assertEquals("Father="+fatherBirtDate.getValue(), 1, fams.size());
+            assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 1, fams.size());
+
+            //  fatherBirtDate < 2000 - 18 +5  OK
+            fatherBirtDate.setValue("EST 1986");
+            fams = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
+            assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 1, fams.size());
+
+            //  fatherBirtDate < 2000 - 18 +5  KO
+            fatherBirtDate.setValue("EST 1988");
+            fams = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
+            assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 0, fams.size());
 
             fatherBirtDate.setValue("EST 2001");
             fams = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-            assertEquals("Father="+fatherBirtDate.getValue(), 0, fams.size());
+            assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 0, fams.size());
 
 
         } catch (Exception ex) {
@@ -379,6 +389,10 @@ public class MergeQueryTest extends TestCase {
             recordDate.setValue("22 FEB 1980");
             birthDate.setValue(" MAR 1980");
             assertEquals("Date du releve plus precise",recordDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+
+            recordDate.setValue("BET 1688 AND 1720");
+            birthDate.setValue("ABT 1720");
+            assertEquals("Date du releve moins precise",birthDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
 
         } catch (Exception ex) {
             fail(ex.getMessage());

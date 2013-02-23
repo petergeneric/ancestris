@@ -84,7 +84,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Indi : Profession",mergeRecord.getIndiOccupation(), occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("Indi : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("Indi : Lieu Profession",mergeRecord.getIndiResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
-            assertEquals("Indi : Note Profession","Profession indiquée dans l'acte de mariage de Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_mariage ) ",
+            assertEquals("Indi : Note Profession","Profession indiquée dans l'acte de mariage de Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 (ville_mariage)",
                     occupation.getValue(new TagPath("OCCU:NOTE"),""));
 
             indiParentFamily = fam.getHusband().getFamilyWhereBiologicalChild();
@@ -112,7 +112,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Wife : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("Wife : Lieu Profession",mergeRecord.getWifeResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
             assertEquals("Wife : Note Profession",
-                    "Profession indiquée dans l'acte de mariage de Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_mariage ) ",
+                    "Profession indiquée dans l'acte de mariage de Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 (ville_mariage)",
                     occupation.getValue(new TagPath("OCCU:NOTE"),""));
 
             wifeParentFamily = fam.getWife().getFamilyWhereBiologicalChild();
@@ -177,7 +177,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Indi : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("Indi : Lieu Profession",mergeRecord.getIndiResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
             assertEquals("Indi : Note Profession",
-                "Profession indiquée dans l'acte de mariage de Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_mariage ) ",
+                "Profession indiquée dans l'acte de mariage de Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 (ville_mariage)",
                 occupation.getValue(new TagPath("OCCU:NOTE"),""));
 
             // épouse
@@ -194,7 +194,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Wife : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("Wife : Lieu Profession",mergeRecord.getWifeResidence(),     occupation.getValue(new TagPath("OCCU:PLAC"),""));
             assertEquals("Wife : Note Profession",
-                "Profession indiquée dans l'acte de mariage de Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_mariage ) ",
+                "Profession indiquée dans l'acte de mariage de Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 (ville_mariage)",
                 occupation.getValue(new TagPath("OCCU:NOTE"),""));
 
 
@@ -267,7 +267,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Indi : Profession",mergeRecord.getIndiOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("Indi : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("Indi : Lieu Profession",mergeRecord.getIndiResidence(),     occupation.getValue(new TagPath("OCCU:PLAC"),""));
-            assertEquals("Indi : Note Profession",129, occupation.getValue(new TagPath("OCCU:NOTE"),"").length());
+            assertEquals("Indi : Note Profession",126, occupation.getValue(new TagPath("OCCU:NOTE"),"").length());
 
             assertEquals("Wife : Nom",mergeRecord.getWifeLastName(), fam.getWife().getLastName());
             assertEquals("Wife : Prénom",mergeRecord.getWifeFirstName().toString(), fam.getWife().getFirstName().toString());
@@ -281,7 +281,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Wife : Profession",mergeRecord.getWifeOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("Wife : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("Wife : Lieu Profession",mergeRecord.getWifeResidence(),     occupation.getValue(new TagPath("OCCU:PLAC"),""));
-            assertEquals("Wife : Note Profession",129, occupation.getValue(new TagPath("OCCU:NOTE"),"").length());
+            assertEquals("Wife : Note Profession",126, occupation.getValue(new TagPath("OCCU:NOTE"),"").length());
 
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

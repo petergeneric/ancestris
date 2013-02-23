@@ -294,7 +294,7 @@ class MergeModelDeath extends MergeModel {
         }
 
         // je copie la profession de l'individu
-        if (isChecked(RowType.IndiOccupation) && !record.getIndiOccupation().isEmpty()) {
+        if (isChecked(RowType.IndiOccupation)) {
             copyOccupation(currentIndi, record.getIndiOccupation(), record.getIndiResidence(), record);
         }
 
@@ -380,7 +380,7 @@ class MergeModelDeath extends MergeModel {
             }
 
             // je copie la profession de l'ex conjoint
-            if (isChecked(RowType.IndiMarriedOccupation) && !record.getIndiMarriedOccupation().isEmpty()) {
+            if (isChecked(RowType.IndiMarriedOccupation)) {
                 copyOccupation(exSpouse, record.getIndiMarriedOccupation(), record.getIndiMarriedResidence(), record);
             }
 
@@ -453,7 +453,7 @@ class MergeModelDeath extends MergeModel {
             }
 
             // je copie la profession du pere
-            if (isChecked(RowType.IndiFatherOccupation) && !record.getIndiFatherOccupation().isEmpty()) {
+            if (isChecked(RowType.IndiFatherOccupation)) {
                 copyOccupation(father, record.getIndiFatherOccupation(), record.getIndiFatherResidence(), record);
             }            
 
@@ -485,7 +485,7 @@ class MergeModelDeath extends MergeModel {
             }
 
             // je met à jour la profession de la mere
-            if (isChecked(RowType.IndiMotherOccupation) && !record.getIndiMotherOccupation().isEmpty()) {
+            if (isChecked(RowType.IndiMotherOccupation)) {
                 copyOccupation(mother, record.getIndiMotherOccupation(), record.getIndiMotherResidence(), record);
             }            
         }

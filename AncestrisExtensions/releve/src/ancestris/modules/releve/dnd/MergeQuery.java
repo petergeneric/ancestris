@@ -417,7 +417,7 @@ public class MergeQuery {
                 } else {
                     // si le nom du pere est vide dans le releve, je verifie que le nom de l'individu est identique
                     // au nom du pere de la famille (pour eviter de trop nombreuses réponses sans rapport)
-                    if ( !isSameName(record.getWifeLastName(), father.getLastName())) {
+                    if ( record.getWifeLastName().isEmpty() || !isSameName(record.getWifeLastName(), father.getLastName())) {
                         continue;
                     }
                 }
@@ -1817,6 +1817,8 @@ public class MergeQuery {
                 int start2;
                 int end1;
                 int end2;
+                boolean about1 = false;
+                boolean about2 = false;
                 if (recordDate.getFormat() == PropertyDate.DATE) {
                     start1 = recordDate.getStart().getJulianDay();
                     end1 = start1;
@@ -1837,6 +1839,7 @@ public class MergeQuery {
                     PointInTime endPit = new PointInTime();
                     endPit.set(recordDate.getStart());
                     end1 = startPit.add(0, 0, +aboutYear).getJulianDay();
+                    about1 = true;
                 } 
 
                 if (gedcomDate.getFormat() == PropertyDate.DATE) {
@@ -1866,12 +1869,66 @@ public class MergeQuery {
                     PointInTime endPit = new PointInTime();
                     endPit.set(gedcomDate.getStart());
                     end2 = startPit.add(0, 0, +aboutYear).getJulianDay();
+                    about2 = true;
                 } 
 
+                
+                int start;
+                int end;
+                boolean aboutStart = false;
+                boolean aboutEnd = false;
+                // start = max (start1, start2)
+                if( start1 > start2) {
+                    start = start1;
+                    aboutStart = about1;
+                } else {
+                    start = start2;
+                    aboutStart = about2;
+                }
+                // end = min (end1, end2)
+                if( end1 > end2) {
+                    end = end2;
+                    aboutEnd = about2;
+                } else {
+                    end = end1;
+                    aboutEnd = about1;
+                }
+
+                if (start <= end) {
+                    if (start == start1 && end == end1) {
+                        result = recordDate;
+                    } else if (start == start2 && end == end2) {
+                        result = gedcomDate;
+                    } else if (start != Integer.MIN_VALUE && end != Integer.MAX_VALUE) {
+                        if ((aboutEnd == true && end == end2) || (aboutStart == true && start == start2)) {
+                            result = gedcomDate;
+                        } else {
+                            result = new PropertyDate();
+                            result.setValue(PropertyDate.BETWEEN_AND, toPointInTime(start), toPointInTime(end), "intersection entre la date du releve et la date du gedcom");
+                        }
+
+                    } else if (start == Integer.MIN_VALUE && end != Integer.MAX_VALUE) {
+                        result = new PropertyDate();
+                        result.setValue(PropertyDate.BEFORE, toPointInTime(end), null, "");
+                    } else if (start != Integer.MIN_VALUE && end == Integer.MAX_VALUE) {
+                        result = new PropertyDate();
+                        result.setValue(PropertyDate.AFTER, toPointInTime(start), null, "");
+                    } else {
+                        result = null;
+                    }
+                } else {
+                    result = null;
+                }
+
                 // je verifie si l'intervalle 1 (record) est inclus dans l'intervalle 2 (gedcom)
-                if (start1 >= start2  && end1 <= end2 ) {
+                /*
+                 if (start1 >= start2  && end1 <= end2 ) {
                     //recordDate est inclus dans gedcomDate
                     result = recordDate;
+                } else if (start1 < start2  && end1 <= end2 ) {
+                    PropertyDate mergeDate = new PropertyDate();
+                    mergeDate.setValue(PropertyDate.BETWEEN_AND, toPointInTime(start1), toPointInTime(end2), "intersection entre la date du releve et la date du gedcom" );
+                    result = mergeDate;
                 } else {
                     if( start2 == Integer.MIN_VALUE && end1 == Integer.MAX_VALUE && start1 <= end2 ) {
                         // recouvrement partiel  1=AFT et 2=BEF                        
@@ -1901,6 +1958,7 @@ public class MergeQuery {
                         }
                     }
                 }
+                */
             }
         } catch (GedcomException ex) {
             result = null;
@@ -1908,6 +1966,7 @@ public class MergeQuery {
 
         return result;
     }
+
 
      static protected PointInTime toPointInTime(int julianDay) {
 
@@ -1929,7 +1988,7 @@ public class MergeQuery {
 
     /**
      * retourne la profession d'un individu.
-     * S'il ya plusieurs profession, retourne celle qui a la date la plus proche de
+     * S'il y a plusieurs profession, retourne celle qui a la date la plus proche de
      * la date donnée en paramètre
      * @param indi
      * @param occupation
@@ -1957,9 +2016,46 @@ public class MergeQuery {
             if (!date.isEmpty()) {
                 result += " (" + date + ")";
             }
+        } else {
+            result = findResidence(indi, occupationDate);
         }
         return result;
     }
+
+    /**
+     * retourne la profession d'un individu.
+     * S'il y a plusieurs profession, retourne celle qui a la date la plus proche de
+     * la date donnée en paramètre
+     * @param indi
+     * @param occupation
+     * @param residenceDate
+     * @return occution property or null
+     */
+    static protected String findResidence(Indi indi, PropertyDate residenceDate) {
+        Property residenceProperty = null;
+        for (Property residence : indi.getProperties("RESI")) {
+            for (Property occuDate : residence.getProperties("DATE")) {
+                if (residenceProperty == null) {
+                    residenceProperty = residence;
+                } else {
+                    if (Math.abs(residenceDate.compareTo((PropertyDate) occuDate)) <= Math.abs(residenceDate.compareTo( residenceDate))) {
+                        residenceProperty = residence;
+                    }
+                }
+
+            }
+        }
+        String result = "";
+        if (residenceProperty != null) {
+            result = residenceProperty.getValue();
+            String date = residenceProperty.getPropertyDisplayValue("DATE");
+            if (!date.isEmpty()) {
+                result += " (" + date + ")";
+            }
+        }
+        return result;
+    }
+
 
     /**
      * retourne la source d'un releve

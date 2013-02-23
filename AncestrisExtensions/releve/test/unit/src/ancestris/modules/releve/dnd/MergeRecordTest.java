@@ -53,9 +53,7 @@ public class MergeRecordTest extends TestCase {
                 deathRecord.getIndiBirthDate().getPropertyDate().setValue("");
                 deathRecord.getIndiAge().setValue("");
                 assertEquals("RecordDeath Date mariage avec ex conjoint", "BEF 2000",  mergeRecord.getIndiMarriedMarriageDate().getValue());
-                assertEquals("RecordDeath Date naissance indi ", "BEF 1985",  mergeRecord.getIndiBirthDate().getValue());
-
-
+                assertEquals("RecordDeath Date naissance indi ", "BEF 1982",  mergeRecord.getIndiBirthDate().getValue());
             }
 
         } catch (Exception ex) {
@@ -96,7 +94,7 @@ public class MergeRecordTest extends TestCase {
                 birthRecord.getIndiBirthDate().getPropertyDate().setValue("31 JAN 2000");
                 birthRecord.getIndiFatherAge().getDelta().setValue("");
                 birthDate = mergeRecord.getIndiFatherBirthDate();
-                assertEquals("RecordBirth Date naissance pere = eventDate - minParentYearsOld", "BEF 1985", birthDate.getValue());
+                assertEquals("RecordBirth Date naissance pere = eventDate - minParentYearsOld", "BEF 1982", birthDate.getValue());
 
             }
 
@@ -230,14 +228,14 @@ public class MergeRecordTest extends TestCase {
                 marriageRecord.getEventDateProperty().setValue("1 JAN 2000");
                 marriageRecord.getIndiBirthDate().getPropertyDate().setValue("");
                 birthDate = mergeRecord.getIndiBirthDate();
-                assertEquals("RecordMarriage naissance=mariage - minMarriageYearOld ", "BEF 1985", birthDate.getValue());
+                assertEquals("RecordMarriage naissance=mariage - minMarriageYearOld ", "BEF 1982", birthDate.getValue());
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
                 mergeRecord = new MergeRecord(marriageRecord);
                 marriageRecord.getEventDateProperty().setValue("BEF 1999");
                 marriageRecord.getIndiBirthDate().getPropertyDate().setValue("");
                 birthDate = mergeRecord.getIndiBirthDate();
-                assertEquals("RecordMarriage sDate naissance ", "BEF 1984", birthDate.getValue());
+                assertEquals("RecordMarriage sDate naissance ", "BEF 1981", birthDate.getValue());
             }
 
         } catch (Exception ex) {
@@ -291,7 +289,7 @@ public class MergeRecordTest extends TestCase {
                 marriageRecord.getEventDateProperty().setValue("1 JAN 2000");
                 marriageRecord.getIndiBirthDate().getPropertyDate().setValue("30 JUN 1993");
                 parentMarriageDate = mergeRecord.getIndiParentMarriageDate();
-                assertEquals("RecordMarriage Date exacte", "BEF 1985", parentMarriageDate.getValue());
+                assertEquals("RecordMarriage Date exacte", "BEF 1982", parentMarriageDate.getValue());
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
                 mergeRecord = new MergeRecord(marriageRecord);                                
@@ -305,28 +303,28 @@ public class MergeRecordTest extends TestCase {
                 marriageRecord.getEventDateProperty().setValue("BET 1985 AND 2000");
                 marriageRecord.getIndiBirthDate().getPropertyDate().setValue("BET 1983 AND 1987");
                 parentMarriageDate = mergeRecord.getIndiParentMarriageDate();
-                assertEquals("RecordMarriage Date exacte", "BEF 1985", parentMarriageDate.getValue());
+                assertEquals("RecordMarriage Date exacte", "BEF 1982", parentMarriageDate.getValue());
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
                 mergeRecord = new MergeRecord(marriageRecord);                                
                 marriageRecord.getEventDateProperty().setValue("ABT 2000");
                 marriageRecord.getIndiBirthDate().getPropertyDate().setValue("AFT 1980");
                 parentMarriageDate = mergeRecord.getIndiParentMarriageDate();
-                assertEquals("RecordMarriage Date exacte", "BEF 1985", parentMarriageDate.getValue());
+                assertEquals("RecordMarriage Date exacte", "BEF 1982", parentMarriageDate.getValue());
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
                 mergeRecord = new MergeRecord(marriageRecord);                                
                 marriageRecord.getEventDateProperty().setValue("ABT 1970");
                 marriageRecord.getIndiBirthDate().getPropertyDate().setValue("BEF 1980");
                 parentMarriageDate = mergeRecord.getIndiParentMarriageDate();
-                assertEquals("RecordMarriageDate exacte", "BEF 1955", parentMarriageDate.getValue());
+                assertEquals("RecordMarriageDate exacte", "BEF 1952", parentMarriageDate.getValue());
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
                 mergeRecord = new MergeRecord(marriageRecord);                                
                 marriageRecord.getEventDateProperty().setValue("BEF 1980");
                 marriageRecord.getIndiBirthDate().getPropertyDate().setValue("ABT 1970");
                 parentMarriageDate = mergeRecord.getIndiParentMarriageDate();
-                assertEquals("RecordMarriageDate exacte", "BEF 1965", parentMarriageDate.getValue());
+                assertEquals("RecordMarriageDate exacte", "BEF 1962", parentMarriageDate.getValue());
             }
         } catch (Exception ex) {
             fail(ex.getMessage());
