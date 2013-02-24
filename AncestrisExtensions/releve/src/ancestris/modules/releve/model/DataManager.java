@@ -403,7 +403,7 @@ public class DataManager implements PlaceManager {
     // listeners devant être prevenus du changement de lieu
     private ArrayList<PlaceListener> placeListeners = new ArrayList<PlaceListener>(1);
     FieldPlace place = new FieldPlace();
-
+    
     
     private boolean placeChanged = false;
     

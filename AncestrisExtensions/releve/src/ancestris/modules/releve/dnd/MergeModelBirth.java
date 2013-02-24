@@ -10,6 +10,8 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import org.openide.util.NbBundle;
 
 /**
@@ -20,7 +22,125 @@ class MergeModelBirth extends MergeModel {
     private Indi currentIndi;
     private MergeRecord record;
     private Gedcom gedcom;
-    
+
+    /**
+     * model factory
+     * cree un liste contenant un modele comparant le releve et l'entité
+     * selectionnée dans le gedcom.
+     * Si selectedEntity = null, la liste contient les modeles comparant le relevé
+     * avec les entités du gedcom dont les noms, prenoms, et dates de naissance,
+     * mariage et décès sont compatibles avec le relevé.
+     * @param mergeRecord   releve
+     * @param gedcom
+     * @param selectedEntity entité sélectionnée dans le gedcom
+     * @return
+     */
+    static protected List<MergeModel> createMergeModelBirth (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+        List<MergeModel> models = new ArrayList<MergeModel>();
+        if (selectedEntity instanceof Fam) {
+            // 1.1) Record Birth : l'entité selectionnée est une famille
+            Fam family = (Fam) selectedEntity;
+            // j'ajoute un nouvel individu
+            models.add(new MergeModelBirth(mergeRecord, gedcom, null, family));
+            // je recherche les enfants de la famille sélectionnée compatibles avec le releve
+            List<Indi> sameChildren = MergeQuery.findSameChild(mergeRecord, gedcom, family);
+            // j'ajoute les enfants compatibles
+            for (Indi samedIndi : sameChildren) {
+                models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
+            }
+        } else if (selectedEntity instanceof Indi) {
+            // 1.2) Record Birth : l'entité selectionnée est un individu
+            Indi selectedIndi = (Indi) selectedEntity;
+
+            // je cherche les familles compatibles avec le releve de naissance
+            List<Fam> families = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
+
+            // j'ajoute l'individu selectionné par dnd
+            if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
+                // j'ajoute l'individu selectionné par dnd
+                models.add(new MergeModelBirth(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
+            } else {
+                models.add(new MergeModelBirth(mergeRecord, gedcom, selectedIndi, (Fam) null));
+                // j'ajoute l'individu selectionné par dnd avec les familles compatibles
+                for (Fam family : families) {
+                    models.add(new MergeModelBirth(mergeRecord, gedcom, selectedIndi, family));
+                }
+            }
+
+            // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
+            // releve et avec les dates de naissance compatibles et les parents compatibles)
+            // en excluant l'individu selectionne s'il a deja une famille
+            List<Indi> sameIndis;
+            if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
+                // l'individu est lié a une famille précise, je l'exclue de la recherche
+                sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, selectedIndi);
+            } else {
+                // l'individu n'est pas lié a une famille précise, je l'inclue dans la recherche
+                sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
+            }
+            // j'ajoute les individus compatibles
+            for (Indi samedIndi : sameIndis) {
+                // j'ajoute les familles compatibles
+                Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
+                if (sameIndiFamily != null) {
+                    models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                } else {
+                    for (Fam family : families) {
+                        models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, family));
+                    }
+                }
+            }
+
+        } else {
+            // 1.3) Record Birth : pas d'entité selectionnee
+
+            // j'ajoute un nouvel individu , sans famille associée
+            models.add(new MergeModelBirth(mergeRecord, gedcom));
+
+            // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
+            // releve et avec les dates de naissance compatibles et les parents compatibles)
+            List<Indi> sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
+
+            // je cherche les familles compatibles avec le releve de naissance
+            List<Fam> families = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
+
+            // j'ajoute un nouvel individu avec les familles compatibles
+            for (Fam family : families) {
+                models.add(new MergeModelBirth(mergeRecord, gedcom, null, family));
+            }
+
+            // j'ajoute les individus compatibles avec la famille de chacun
+            for (Indi samedIndi : sameIndis) {
+                Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
+                if (sameIndiFamily != null) {
+                    // j'ajoute l'individus compatible avec sa famille
+                    models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                } else {
+                    // j'ajoute l'individus compatible sans famille
+                    models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, (Fam) null));
+                    // j'ajoute l'individus compatible avec les familles compatibles
+                    for (Fam family : families) {
+                        models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, family));
+                    }
+                }
+            }
+
+            if (showNewParents) {
+                // j'ajoute un nouvel individu avec les couples qui ne sont pas des familles
+                // mais qui pourraient être ses parents
+                List<Indi> fathers = new ArrayList<Indi>();
+                List<Indi> mothers = new ArrayList<Indi>();
+                MergeQuery.findFatherMotherCompatibleWithBirthRecord(mergeRecord, gedcom, families, fathers, mothers);
+                for (Indi father : fathers) {
+                    for (Indi mother : mothers) {
+                        models.add(new MergeModelBirth(mergeRecord, gedcom, father, mother));
+                    }
+                }
+            }
+        }
+        return models;
+    }
+
     /**
      * le constucteur initialise les données du modele
      * en comparant les champs du releve et les

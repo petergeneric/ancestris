@@ -4,7 +4,7 @@ package ancestris.modules.releve;
  * Interface pour les listeners de la selection de releves dans la table
  * @author Michel
  */
-public interface PlaceListener {
+public interface PlaceListenerInterface {
     /**
      * met a jour le lieu
      * @param place

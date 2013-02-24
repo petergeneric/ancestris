@@ -168,7 +168,7 @@ public class MergeModelDeathTest extends TestCase {
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire père: comment\n";
             expected +="Commentaire mère: comment\n";
-            expected +="generalcomment\n";
+            expected +="Commentaire général: generalcomment\n";
             expected +="Age: "+record.getIndiAge().toString()+ "\n";
             expected +="Photo: photo";
             assertEquals("comment1",expected, indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
@@ -182,7 +182,7 @@ public class MergeModelDeathTest extends TestCase {
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire père: comment\n";
             expected +="Commentaire mère: comment\n";
-            expected +="generalcomment\n";
+            expected +="Commentaire général: generalcomment\n";
             expected +="Age: "+record.getIndiAge().toString()+ "\n";
             expected +="Photo: photo\n";
             expected += "oldcomment";

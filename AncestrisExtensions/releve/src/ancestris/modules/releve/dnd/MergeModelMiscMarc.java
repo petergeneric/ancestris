@@ -25,7 +25,7 @@ public class MergeModelMiscMarc extends MergeModel {
     private MergeRecord record;
     private Gedcom gedcom;
 
-    static public List<MergeModel> createMiscMergeModel(MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+    static public List<MergeModel> createMergeModelMiscMarc(MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
         List<MergeModel> models = new ArrayList<MergeModel>();
         if ( selectedEntity instanceof Fam ) {
             // 4.1) Record Misc : l'entité selectionnée est une famille

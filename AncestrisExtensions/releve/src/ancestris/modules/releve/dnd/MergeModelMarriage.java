@@ -10,6 +10,9 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.openide.util.NbBundle;
 
 /**
@@ -21,6 +24,169 @@ public class MergeModelMarriage extends MergeModel {
     private Fam currentFamily;
     private MergeRecord record;
     private Gedcom gedcom;
+
+    /**
+     * model factory
+     * cree un liste contenant un modele comparant le releve et l'entité
+     * selectionnée dans le gedcom.
+     * Si selectedEntity = null, la liste contient les modeles comparant le relevé
+     * avec les entités du gedcom dont les noms, prenoms, et dates de naissance,
+     * mariage et décès sont compatibles avec le relevé.
+     * @param mergeRecord   releve
+     * @param gedcom
+     * @param selectedEntity entité sélectionnée dans le gedcom
+     * @return
+     */
+    static protected List<MergeModel> createMergeModelMarriage (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+        List<MergeModel> models = new ArrayList<MergeModel>();
+        if (selectedEntity instanceof Fam) {
+            // 2.1) Record Marriage : l'entité selectionnée est une famille
+            Fam selectedFamily = (Fam) selectedEntity;
+
+            // j'ajoute un modele avec la famille selectionne
+            models.add(new MergeModelMarriage(mergeRecord, gedcom, selectedFamily));
+
+        } else if (selectedEntity instanceof Indi) {
+            // 2.2) Record Marriage : l'entité selectionnée est un individu
+            Indi selectedIndi = (Indi) selectedEntity;
+
+            // je cherche les familles avec l'individu selectionné
+            Fam[] families = selectedIndi.getFamiliesWhereSpouse();
+            // j'ajoute les familles compatibles
+            for (Fam family : families) {
+                models.add(new MergeModelMarriage(mergeRecord, gedcom, family));
+            }
+
+            if (showNewParents) {
+                // j'ajoute les parents possibles non maries entre eux
+                List<Indi> husbands = new ArrayList<Indi>();
+                List<Indi> wifes = new ArrayList<Indi>();
+                if (selectedIndi.getSex() == PropertySex.MALE) {
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, selectedIndi, (Indi) null));
+                    husbands.add(selectedIndi);
+                } else if (selectedIndi.getSex() == PropertySex.FEMALE) {
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, (Indi) null, selectedIndi));
+                    wifes.add(selectedIndi);
+                }
+                MergeQuery.findHusbanWifeCompatibleWithMarriageRecord(mergeRecord, gedcom, Arrays.asList(families), husbands, wifes);
+                for (Indi husband : husbands) {
+                    for (Indi wife : wifes) {
+                        //TODO  rechercher la famille de l'epoux et la famille de l'epouse et la prendre en compte si elle existe
+                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wife));
+                    }
+                }
+            }
+        } else {
+            // 2.3) Record Marriage : pas d'entité selectionnee
+
+            // j'ajoute une nouvelle famille
+            models.add(new MergeModelMarriage(mergeRecord, gedcom));
+
+            // je recherche les familles compatibles
+            List<Fam> families = MergeQuery.findFamilyCompatibleWithMarriageRecord(mergeRecord, gedcom, null);
+            // j'ajoute les familles compatibles
+            for (Fam family : families) {
+                models.add(new MergeModelMarriage(mergeRecord, gedcom, family));
+            }
+
+            // je recherche les individus compatibles avec l'epoux et l'epouse du releve
+            List<Indi> husbands = new ArrayList<Indi>();
+            List<Indi> wifes = new ArrayList<Indi>();
+            MergeQuery.findHusbanWifeCompatibleWithMarriageRecord(mergeRecord, gedcom, families, husbands, wifes);
+            for (Indi husband : husbands) {
+                for (Indi wife : wifes) {
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wife));
+                }
+                models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, (Indi) null));
+            }
+            for (Indi wife : wifes) {
+                models.add(new MergeModelMarriage(mergeRecord, gedcom, (Indi) null, wife));
+            }
+
+            // je recherche les familles des parents compatibles qui ne sont pas
+            // dans les modeles precedents
+            if (showNewParents
+                    || (showNewParents
+                    && !mergeRecord.getIndiFatherFirstName().isEmpty()
+                    && !mergeRecord.getIndiMotherFirstName().isEmpty()
+                    && !mergeRecord.getIndiMotherLastName().isEmpty())) {
+
+                List<Fam> husbandFamilies = new ArrayList<Fam>();
+                List<Fam> wifeFamilies = new ArrayList<Fam>();
+
+                for (Fam husbandFamily : MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom)) {
+                    Indi[] children = husbandFamily.getChildren();
+
+                    boolean foundHusband = false;
+
+                    for (int i = 0; i < children.length; i++) {
+                        // l'enfant ne doit pas être dans husbands déjà retenus
+                        if (husbands.contains(children[i])) {
+                            foundHusband = true;
+                        }
+                        // l'enfant ne doit pas être un epoux dans une famile déjà retenue
+                        for (Fam family : families) {
+                            if (family.getHusband() != null) {
+                                if (family.getHusband().equals(children[i])) {
+                                    foundHusband = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!foundHusband) {
+                        husbandFamilies.add(husbandFamily);
+                    }
+                }
+
+                for (Fam wifeFamily : MergeQuery.findFamilyCompatibleWithWifeParents(mergeRecord, gedcom)) {
+                    Indi[] children = wifeFamily.getChildren();
+
+                    boolean foundWife = false;
+
+                    for (int i = 0; i < children.length; i++) {
+                        // l'enfant ne doit pas être dans husbands
+                        if (wifes.contains(children[i])) {
+                            foundWife = true;
+                        }
+                        // l'enfant ne doit pas être un epoux dans une famile
+                        for (Fam family : families) {
+                            if (family.getWife() != null) {
+                                if (family.getWife().equals(children[i])) {
+                                    foundWife = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!foundWife) {
+                        wifeFamilies.add(wifeFamily);
+                    }
+                }
+
+                for (Fam husbandFamily : husbandFamilies) {
+                    for (Fam wifeFamily : wifeFamilies) {
+                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, wifeFamily));
+                    }
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, (Fam) null));
+                }
+                for (Fam wifeFamily : wifeFamilies) {
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, (Fam) null, wifeFamily));
+                }
+
+                // j'ajoute les combinaisons entre les epoux précedents et les familles
+                for (Indi husband : husbands) {
+                    for (Fam wifeFamily : wifeFamilies) {
+                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wifeFamily));
+                    }
+                }
+                for (Indi wife : wifes) {
+                    for (Fam husbandFamily : husbandFamilies) {
+                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, wife));
+                    }
+                }
+            }
+        }
+        return models;
+    }
 
     /**
      * le constucteur initialise les données du modele

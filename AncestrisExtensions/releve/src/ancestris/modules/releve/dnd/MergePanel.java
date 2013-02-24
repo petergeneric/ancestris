@@ -29,8 +29,10 @@ public class MergePanel extends javax.swing.JPanel {
     }
 
     /**
-     * affiche les entites qui peuvent être concernées par le relevé.
-     * et selection le premier de la liste
+     * affiche les modeles contenant les comparaisons du releve avec les entites
+     * qui peuvent être concernées par le relevé,
+     * et selectionne le premier modele de la liste classée par ordre decroissant de pertinence.
+     *
      * @param models    liste des modeles
      * @param selectedEntity  entite selectonne
      * @param mergeDialog     fenetre principale
@@ -39,13 +41,13 @@ public class MergePanel extends javax.swing.JPanel {
         this.mergeDialog = mergeDialog;
         // je vide le panneau
         jPanelChoice.removeAll();
-        buttonGroupChoiceModel=new javax.swing.ButtonGroup();
         jToggleButtonShowAllParents.setSelected(mergeDialog.getShowAllParents());
 
         // j'affiche le titre
         jLabel1.setText(MessageFormat.format(NbBundle.getMessage(MergePanel.class, "MergePanel.title"), models.size())); // NOI18N
 
-        // j'ajoute les modeles
+        // j'ajoute les modeles avec un radio bouton pour chaque modele
+        buttonGroupChoiceModel=new javax.swing.ButtonGroup();
         for(int i= 0; i< models.size(); i++) {
             addRadioButton(i, models.get(i), selectedEntity, mergeDialog);
         }
