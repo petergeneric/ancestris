@@ -49,9 +49,9 @@ public class MergeQuery {
     static protected List<Fam> findFamilyCompatibleWithIndiParents(MergeRecord record, Gedcom gedcom) throws Exception {
         List<Fam> parentFamilies = new ArrayList<Fam>();
 
-        // j'arret la recherche si le nom des parents n'est pas renseigné
+        // j'arrete la recherche si aucun nom et prenom des parents de l'individu n'est renseigné
         if ( record.getIndiFatherLastName().isEmpty() && record.getIndiFatherFirstName().isEmpty()
-                && record.getWifeFatherLastName().isEmpty() && record.getWifeFatherFirstName().isEmpty() ) {
+                && record.getIndiMotherLastName().isEmpty() && record.getIndiMotherFirstName().isEmpty() ) {
             return parentFamilies;
         }
 
@@ -385,6 +385,11 @@ public class MergeQuery {
     static protected List<Fam> findFamilyCompatibleWithWifeParents(MergeRecord record, Gedcom gedcom) throws Exception {
         List<Fam> parentFamilies = new ArrayList<Fam>();
 
+        // j'arrete la recherche si aucun nom et prenom des parents de la femme n'est renseigné
+        if ( record.getWifeFatherLastName().isEmpty() && record.getWifeFatherFirstName().isEmpty()
+                && record.getWifeMotherLastName().isEmpty() && record.getWifeMotherFirstName().isEmpty() ) {
+            return parentFamilies;
+        }
         // je recupere la date de naissance du releve
         PropertyDate recordBirthDate = record.getWifeBirthDate();
 
@@ -1987,13 +1992,13 @@ public class MergeQuery {
 
 
     /**
-     * retourne la profession d'un individu.
+     * retourne la profession d'un individu, avec le lieu et la date
      * S'il y a plusieurs profession, retourne celle qui a la date la plus proche de
-     * la date donnée en paramètre
+     * la date donnée en paramètre.
+     * Si audune profession n'est trouvée, retourne le domicile
      * @param indi
-     * @param occupation
      * @param occupationDate
-     * @return occution property or null
+     * @return occupation+residence+date or empty string
      */   
     static protected String findOccupation(Indi indi, PropertyDate occupationDate) {
         Property occupationProperty = null;
@@ -2012,6 +2017,13 @@ public class MergeQuery {
         String result = "";
         if (occupationProperty != null) {
             result = occupationProperty.getValue();
+            Property place = occupationProperty.getProperty("PLAC");
+            if ( place != null && !place.getValue().isEmpty()) {
+                if (!result.isEmpty()) {
+                    result += ", ";
+                }
+                result += place.getValue();
+            }
             String date = occupationProperty.getPropertyDisplayValue("DATE");
             if (!date.isEmpty()) {
                 result += " (" + date + ")";
@@ -2023,13 +2035,12 @@ public class MergeQuery {
     }
 
     /**
-     * retourne la profession d'un individu.
-     * S'il y a plusieurs profession, retourne celle qui a la date la plus proche de
+     * retourne le domicile d'un individu.
+     * S'il y a plusieurs domicile, retourne celui qui a la date la plus proche de
      * la date donnée en paramètre
      * @param indi
-     * @param occupation
      * @param residenceDate
-     * @return occution property or null
+     * @return residence+date or empty string
      */
     static protected String findResidence(Indi indi, PropertyDate residenceDate) {
         Property residenceProperty = null;

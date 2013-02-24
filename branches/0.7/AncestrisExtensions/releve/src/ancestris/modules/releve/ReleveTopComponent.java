@@ -426,7 +426,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      */
     @Override
     public void showConfigPanel() {
-        ReleveConfig.show(WindowManager.getDefault().getMainWindow(), dataManager);
+        ReleveConfigDialog.show(WindowManager.getDefault().getMainWindow(), dataManager);
     }
 
     /**

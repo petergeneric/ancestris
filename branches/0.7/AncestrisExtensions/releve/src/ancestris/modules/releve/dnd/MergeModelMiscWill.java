@@ -17,7 +17,7 @@ import org.openide.util.NbBundle;
 /**
  *
  */
-class MergeModelDeath extends MergeModel {
+class MergeModelMiscWill extends MergeModel {
 
     private Indi currentIndi;
     private MergeRecord record;
@@ -35,21 +35,21 @@ class MergeModelDeath extends MergeModel {
      * @param selectedEntity entité sélectionnée dans le gedcom
      * @return
      */
-    static protected List<MergeModel> createMergeModelDeath (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+    static protected List<MergeModel> createMergeModelMiscWill (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
         List<MergeModel> models = new ArrayList<MergeModel>();
         if (selectedEntity instanceof Fam) {
-            // 1.1) Record Death : l'entité selectionnée est une famille
+            // 1) Record Will : l'entité selectionnée est une famille
             Fam family = (Fam) selectedEntity;
             // j'ajoute un nouvel individu
-            models.add(new MergeModelDeath(mergeRecord, gedcom, null, family));
+            models.add(new MergeModelMiscWill(mergeRecord, gedcom, null, family));
             // je recherche les enfants de la famille sélectionnée compatibles avec le releve
             List<Indi> sameChildren = MergeQuery.findSameChild(mergeRecord, gedcom, family);
             // j'ajoute les enfants compatibles
             for (Indi samedIndi : sameChildren) {
-                models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
+                models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
             }
         } else if (selectedEntity instanceof Indi) {
-            // 1.2) Record Death : l'entité selectionnée est un individu
+            // 1) Record Will : l'entité selectionnée est un individu
             Indi selectedIndi = (Indi) selectedEntity;
 
             // je recherche la famille avec l'ex conjoint
@@ -64,12 +64,12 @@ class MergeModelDeath extends MergeModel {
                         Indi husband = family.getHusband();
                         if (selectedIndi.compareTo(husband) == 0) {
                             Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, husbandParentFamily));
+                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, husbandParentFamily));
 
                             if (husbandParentFamily == null) {
                                 // j'ajoute un nouvel individu avec les familles compatibles
                                 for (Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, parentFamily));
+                                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, parentFamily));
                                 }
                             }
                         }
@@ -77,12 +77,12 @@ class MergeModelDeath extends MergeModel {
                         Indi wife = family.getWife();
                         if (selectedIndi.compareTo(wife) == 0) {
                             Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, wifeParentFamily));
+                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, wifeParentFamily));
 
                             if (wifeParentFamily == null) {
                                 // j'ajoute un nouvel individu avec les familles compatibles
                                 for (Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, parentFamily));
+                                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, parentFamily));
                                 }
                             }
                         }
@@ -97,12 +97,12 @@ class MergeModelDeath extends MergeModel {
                 // j'ajoute l'individu selectionné par dnd
                 if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
                     // j'ajoute l'individu selectionné par dnd
-                    models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
+                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
                 } else {
-                    models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, (Fam) null));
+                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, (Fam) null));
                     // j'ajoute l'individu selectionné par dnd avec les familles compatibles
                     for (Fam family : families) {
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, family));
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, family));
                     }
                 }
 
@@ -122,20 +122,20 @@ class MergeModelDeath extends MergeModel {
                     // j'ajoute les familles compatibles
                     Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
                     if (sameIndiFamily != null) {
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, sameIndiFamily));
                     } else {
                         for (Fam family : families) {
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, family));
+                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, family));
                         }
                     }
                 }
             }
 
         } else {
-            // 1.3) Record Death : pas d'entité selectionnee
+            // 3) Record Will : pas d'entité selectionnee
 
             // j'ajoute un nouvel individu , sans famille associée
-            models.add(new MergeModelDeath(mergeRecord, gedcom));
+            models.add(new MergeModelMiscWill(mergeRecord, gedcom));
 
             // je recherche la famille avec l'ex conjoint
             List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithMarried(mergeRecord, gedcom);
@@ -148,23 +148,23 @@ class MergeModelDeath extends MergeModel {
                     if (mergeRecord.getIndiSex() == PropertySex.MALE) {
                         Indi husband = family.getHusband();
                         Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, husbandParentFamily));
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, husbandParentFamily));
 
                         if (husbandParentFamily == null) {
                             // j'ajoute un nouvel individu avec les familles compatibles
                             for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, parentFamily));
+                                models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, parentFamily));
                             }
                         }
                     } else {
                         Indi wife = family.getWife();
                         Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, wifeParentFamily));
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, wifeParentFamily));
 
                         if (wifeParentFamily == null) {
                             // j'ajoute un nouvel individu avec les familles compatibles
                             for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, parentFamily));
+                                models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, parentFamily));
                             }
                         }
                     }
@@ -179,7 +179,7 @@ class MergeModelDeath extends MergeModel {
 
                 // j'ajoute un nouvel individu avec les familles compatibles
                 for (Fam family : parentFamilies) {
-                    models.add(new MergeModelDeath(mergeRecord, gedcom, null, family));
+                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, null, family));
                 }
 
                 // j'ajoute les individus compatibles avec la famille de chacun
@@ -187,27 +187,27 @@ class MergeModelDeath extends MergeModel {
                     Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
                     if (sameIndiFamily != null) {
                         // j'ajoute l'individus compatible avec sa famille
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, sameIndiFamily));
                     } else {
                         // j'ajoute l'individus compatible sans famille
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, (Fam) null));
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, (Fam) null));
                         // j'ajoute l'individus compatible avec les familles compatibles
                         for (Fam family : parentFamilies) {
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, family));
+                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, family));
                         }
                     }
                 }
             }
 
             if (showNewParents) {
-                // j'ajoute un nouvel individu avec les couples qui ne sont pas des familles
+                // j'ajoute un nouvel individu en formant des couples qui ne sont pas des familles
                 // mais qui pourraient être ses parents
                 List<Indi> fathers = new ArrayList<Indi>();
                 List<Indi> mothers = new ArrayList<Indi>();
                 MergeQuery.findFatherMotherCompatibleWithBirthRecord(mergeRecord, gedcom, parentFamilies, fathers, mothers);
                 for (Indi father : fathers) {
                     for (Indi mother : mothers) {
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, father, mother));
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, father, mother));
                     }
                 }
             }
@@ -224,7 +224,7 @@ class MergeModelDeath extends MergeModel {
      * @param indi
      * @param record
      */
-    protected MergeModelDeath(MergeRecord record, Gedcom gedcom) throws Exception {
+    protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom) throws Exception {
         this.record = record;
         this.currentIndi = null;
         this.gedcom = gedcom;
@@ -240,7 +240,7 @@ class MergeModelDeath extends MergeModel {
      * @param indi
      * @param record
      */
-    protected MergeModelDeath(MergeRecord record, Gedcom gedcom, Indi indi, Fam parentfam) throws Exception {
+    protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom, Indi indi, Fam parentfam) throws Exception {
         this.record = record;
         this.currentIndi = indi;
         this.gedcom = gedcom;
@@ -259,7 +259,7 @@ class MergeModelDeath extends MergeModel {
      * @param marriedFamily famille avec l'ex conjoint
      * @param parentFamily  famille parent de l'individu
      */
-    protected MergeModelDeath(MergeRecord record, Gedcom gedcom, Indi indi, Fam marriedFamily, Fam parentFamily) throws Exception {
+    protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom, Indi indi, Fam marriedFamily, Fam parentFamily) throws Exception {
         this.record = record;
         this.currentIndi = indi;
         this.gedcom = gedcom;
@@ -276,7 +276,7 @@ class MergeModelDeath extends MergeModel {
      * @param indi
      * @param record
      */
-    protected MergeModelDeath(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
+    protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
         this.record = record;
         this.currentIndi = null;
         this.gedcom = gedcom;
@@ -286,38 +286,46 @@ class MergeModelDeath extends MergeModel {
         // j'affiche l'ex conjoint
         addRowMarried(null);
 
-        // j'affiche la famille de l'enfant
+        // j'affiche la famille des parents de l'individu
         addRowSeparator();
         addRow(RowType.IndiParentFamily, record, null);
         addRow(RowType.IndiParentMarriageDate, record.getIndiParentMarriageDate(), null);
 
-        // j'affiche les parents
+        // j'affiche les parents de l'individu
         addRowFather(father);
         addRowMother(mother);
+
+        // j'affiche la famille de l'individu
+
+
 
     }
 
     private void addRowIndi() throws Exception {
 
        if (currentIndi != null) {
-            // j'affiche la source de la naissance
-            Property sourceProperty = MergeQuery.findSource(record, gedcom, currentIndi.getProperty("DEAT"));
+           // je recherche la source d'un testament deja existant
+           Property willProperty = currentIndi.getProperty("WILL");
+           Property sourceProperty = MergeQuery.findSource(record, gedcom, willProperty);
+            // j'affiche la source de du testament
             addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
             addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
-
-            // j'affiche un separateur
             addRowSeparator();
 
-            // j'affiche le nom
+            // j'affiche la date, le lieu et les commentaires du testament
+            addRow(RowType.EventDate, record.getEventDate(),   willProperty != null ? (PropertyDate)willProperty.getProperty("DATE") : null);
+            addRow(RowType.EventPlace, record.getEventPlace(),  willProperty != null ? willProperty.getPropertyValue("PLAC") : "");
+            addRow(RowType.EventComment, record.getEventComment(),  willProperty != null ? willProperty.getPropertyValue("NOTE") : "");
+            addRowSeparator();
+
+            // j'affiche les informations de l'individu
             addRow(RowType.IndiLastName, record.getIndiLastName(), currentIndi.getLastName(), currentIndi);
             addRow(RowType.IndiFirstName, record.getIndiFirstName(), currentIndi.getFirstName());
             addRow(RowType.IndiSex, record.getIndiSexString(), currentIndi.getPropertyValue("SEX"));
             addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , currentIndi.getBirthDate());
             addRow(RowType.IndiBirthPlace, record.getIndiBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.IndiDeathDate, record.getIndiDeathDate() , currentIndi.getDeathDate());
-            addRow(RowType.IndiResidence, record.getIndiResidence() , currentIndi.getValue(new TagPath("INDI:DEAT:PLAC"), ""));
             addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(), MergeQuery.findOccupation(currentIndi, record.getEventDate()));
-            addRow(RowType.EventComment, record.getEventComment(), currentIndi.getValue(new TagPath("INDI:DEAT:NOTE"), ""));
 
         } else {
             // selectedIndi est nul
@@ -325,8 +333,12 @@ class MergeModelDeath extends MergeModel {
             // j'affiche la source de la naissance
             addRow(RowType.EventSource, record.getEventSource(), "", MergeQuery.findSource(record, gedcom) );
             addRow(RowType.EventPage,       record.getEventPage(), "", null);
+            addRowSeparator();
 
-            // j'affiche un separateur
+            // j'affiche la date, le lieu et les commentaires du testament
+            addRow(RowType.EventDate, record.getEventDate(), null);
+            addRow(RowType.EventPlace, record.getEventPlace(), "");
+            addRow(RowType.EventComment, record.getEventComment(), "");
             addRowSeparator();
 
             // j'affiche le nom
@@ -336,9 +348,7 @@ class MergeModelDeath extends MergeModel {
             addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , null);
             addRow(RowType.IndiBirthPlace, record.getIndiBirthPlace(), "");
             addRow(RowType.IndiDeathDate, record.getIndiDeathDate() , null);
-            addRow(RowType.IndiResidence, record.getIndiResidence() , "");
             addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(), "");
-            addRow(RowType.EventComment, record.getEventComment(), "");
         }
     }
 
@@ -347,7 +357,6 @@ class MergeModelDeath extends MergeModel {
         addRow(RowType.IndiParentFamily, record, fam);
         if (fam != null) {
             addRow(RowType.IndiParentMarriageDate, record.getIndiParentMarriageDate(), fam.getMarriageDate());
-
             addRowFather(fam.getHusband());
             addRowMother(fam.getWife());
         } else {
@@ -421,8 +430,7 @@ class MergeModelDeath extends MergeModel {
                 addRow(RowType.IndiMarriedBirthDate, record.getIndiMarriedBirthDate(), null);
                 addRow(RowType.IndiMarriedDeathDate, record.getIndiMarriedDeathDate(), null);
                 addRow(RowType.IndiMarriedOccupation, record.getIndiMarriedOccupationWithDate(), "");
-            }
-            
+            }            
         }
     }
 
@@ -493,45 +501,43 @@ class MergeModelDeath extends MergeModel {
         if (isChecked(RowType.IndiOccupation)) {
             copyOccupation(currentIndi, record.getIndiOccupation(), record.getIndiResidence(), record);
         }
-
-
         
-        // je cree la propriete de deces si elle n'existait pas
-        if (isChecked(RowType.IndiDeathDate) || isChecked(RowType.IndiResidence) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
-            Property deathProperty = currentIndi.getProperty("DEAT");
-            if (deathProperty == null) {
-                deathProperty = currentIndi.addProperty("DEAT", "");
+        // je cree la propriete de testament si elle n'existait pas
+        if (isChecked(RowType.EventDate) || isChecked(RowType.EventPlace) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
+            Property willProperty = currentIndi.getProperty("WILL");
+            if (willProperty == null) {
+                willProperty = currentIndi.addProperty("WILL", "");
             }
 
-            // je copie la date de deces du releve dans l'individu
-            if (isChecked(RowType.IndiDeathDate)) {
+            // je copie la date du testament du releve dans l'individu
+            if (isChecked(RowType.EventDate)) {
                 // j'ajoute (ou remplace) la date de la naissance
-                PropertyDate propertyDate = (PropertyDate) deathProperty.getProperty("DATE");
+                PropertyDate propertyDate = (PropertyDate) willProperty.getProperty("DATE");
                 if (propertyDate == null) {
-                    propertyDate = (PropertyDate) deathProperty.addProperty("DATE", "");
+                    propertyDate = (PropertyDate) willProperty.addProperty("DATE", "");
                 }
-                propertyDate.setValue(record.getIndiDeathDate().getValue());
+                propertyDate.setValue(record.getEventDate().getValue());
             }
 
-            // je copie le domicile dans le lieu du deces
-            if (isChecked(RowType.IndiResidence)) {
-                copyPlace(record.getIndiResidence(),  deathProperty);
+            // je copie le lieu du testament
+            if (isChecked(RowType.EventPlace)) {
+                copyPlace(record.getEventPlace(),  willProperty);
             }
             
-            // je copie la source du deces du releve dans l'individu
+            // je copie la source du testament 
             if (isChecked(RowType.EventSource)) {
-                copySource((Source) getRow(RowType.EventSource).entityObject, deathProperty, record);
+                copySource((Source) getRow(RowType.EventSource).entityObject, willProperty, record);
             }
 
-            // je copie le commentaire du deces
+            // je copie le commentaire du testament
             if (isChecked(RowType.EventComment)) {
-                Property propertyNote = deathProperty.getProperty("NOTE");
+                Property propertyNote = willProperty.getProperty("NOTE");
                 if (propertyNote == null) {
                     // je cree une note .
-                    propertyNote = deathProperty.addProperty("NOTE", "");
+                    propertyNote = willProperty.addProperty("NOTE", "");
                 }
 
-                // j'ajoute le commentaire du deces au debut de la note existante.
+                // j'ajoute le commentaire general au debut de la note existante.
                 String value = propertyNote.getValue();
                 String comment = record.getEventComment();
                 if (!comment.isEmpty()) {
@@ -544,8 +550,7 @@ class MergeModelDeath extends MergeModel {
             }
         }
 
-
-        // je copie les données de l'ex conjoint
+        // je copie les données du conjoint
         if (isChecked(RowType.IndiMarriedFamily)) {
             Indi exSpouse = (Indi) getRow(RowType.IndiMarriedLastName).entityObject;
             if (exSpouse == null) {
@@ -565,22 +570,22 @@ class MergeModelDeath extends MergeModel {
                 }
             }
 
-            // je copie la date, le lieu et commentaire de naissance de l'ex conjoint
+            // je copie la date, le lieu et commentaire de naissance du conjoint
             if (isChecked(RowType.IndiMarriedBirthDate)) {
                 copyBirthDate(exSpouse, record.getIndiMarriedBirthDate(), "", record);
             }
 
-            // je copie la date, le lieu et commentaire de naissance de l'ex conjoint
+            // je copie la date, le lieu et commentaire de naissance du conjoint
             if (isChecked(RowType.IndiMarriedDeathDate)) {
                 copyDeathDate(exSpouse, record.getIndiMarriedDeathDate(), "", record);
             }
 
-            // je copie la profession de l'ex conjoint
+            // je copie la profession du conjoint
             if (isChecked(RowType.IndiMarriedOccupation)) {
                 copyOccupation(exSpouse, record.getIndiMarriedOccupation(), record.getIndiMarriedResidence(), record);
             }
 
-            // je copie la famille avec l'ex conjoint
+            // je copie la famille avec le conjoint
             Fam family = (Fam) getRow(RowType.IndiMarriedFamily).entityObject;
             if (family == null) {
                 // je cree la famille
@@ -595,7 +600,7 @@ class MergeModelDeath extends MergeModel {
                 }
             }
 
-           // je copie la date du mariage avec l'ex conjoint et une note indiquant l'origine de cette date
+           // je copie la date du mariage avec le conjoint et une note indiquant l'origine de cette date
             if (isChecked(RowType.IndiMarriedMarriageDate)) {
                 copyMarriageDate(family, record.getIndiMarriedMarriageDate(), record );
             }
@@ -695,7 +700,7 @@ class MergeModelDeath extends MergeModel {
     @Override
     protected String getTitle() {
         String message = record.getIndiFirstName() + " "+ record.getIndiLastName()+ " " + record.getEventDate().getDisplayValue();
-        return MessageFormat.format(NbBundle.getMessage(MergeDialog.class, "MergeModel.title.death"), message);
+        return MessageFormat.format(NbBundle.getMessage(MergeDialog.class, "MergeModel.title.miscWill"), message);
     }
 
     /**

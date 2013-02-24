@@ -113,7 +113,15 @@ public class MergeRecord {
     }
 
     String getEventPage() {
-        return record.getFreeComment().toString();
+        String eventPage = "";
+        eventPage = record.getCote().toString();
+        if( !record.getFreeComment().isEmpty() ) {
+            if ( !eventPage.isEmpty()) {
+                eventPage += ", ";
+            }
+            eventPage += record.getFreeComment().toString();
+        }
+        return eventPage;
     }
 
     PropertyDate getEventDate() {
@@ -228,9 +236,11 @@ public class MergeRecord {
 
     String getIndiOccupationWithDate() {
         String occupation = record.getIndiOccupation().toString();
-        if (occupation.isEmpty()) {
-            // si la profession est vide, j'affiche le domicile
-            occupation = record.getIndiResidence().toString();
+        if (!record.getIndiResidence().isEmpty() ) {
+            if( !occupation.isEmpty()) {
+                occupation += ", ";
+            }
+            occupation += record.getIndiResidence().toString();
         }
         if (!occupation.isEmpty()) {
             occupation += " (" + getEventDate().getDisplayValue()+")";
@@ -305,9 +315,11 @@ public class MergeRecord {
 
     String getIndiMarriedOccupationWithDate() {
         String occupation = record.getIndiMarriedOccupation().toString();
-        if (occupation.isEmpty()) {
-            // si la profession est vide, j'affiche le domicile
-            occupation = record.getIndiMarriedResidence().toString();            
+        if (!record.getIndiMarriedResidence().isEmpty()) {
+            if( !occupation.isEmpty()) {
+                occupation += ", ";
+            }
+            occupation += record.getIndiMarriedResidence().toString();
         }
         if (!occupation.isEmpty()) {
             occupation += " (" + getEventDate().getDisplayValue()+")";
@@ -365,9 +377,11 @@ public class MergeRecord {
 
     String getIndiFatherOccupationWithDate() {
         String occupation = record.getIndiFatherOccupation().toString();
-        if (occupation.isEmpty()) {
-            // si la profession est vide, j'affiche le domicile
-            occupation = record.getIndiFatherResidence().toString();
+        if (!record.getIndiFatherResidence().isEmpty()) {
+            if( !occupation.isEmpty()) {
+                occupation += ", ";
+            }
+            occupation += record.getIndiFatherResidence().toString();
         } 
         if (!occupation.isEmpty()) {
             occupation += " (" + getEventDate().getDisplayValue()+")";
@@ -407,9 +421,11 @@ public class MergeRecord {
 
     String getIndiMotherOccupationWithDate() {
         String occupation = record.getIndiMotherOccupation().toString();
-        if (occupation.isEmpty()) {
-            // si la profession est vide, j'affiche le domicile
-            occupation = record.getIndiMotherResidence().toString();
+        if (!record.getIndiMotherResidence().isEmpty()) {
+            if( !occupation.isEmpty()) {
+                occupation += ", ";
+            }
+            occupation += record.getIndiMotherResidence().toString();
         }
         if (!occupation.isEmpty()) {
             occupation += " (" + getEventDate().getDisplayValue()+")";
@@ -471,9 +487,11 @@ public class MergeRecord {
 
     String getWifeOccupationWithDate() {
         String occupation = record.getWifeOccupation().toString();
-        if (occupation.isEmpty()) {
-            // si la profession est vide, j'affiche le domicile
-            occupation = record.getWifeResidence().toString();
+        if (!record.getWifeResidence().isEmpty()) {
+            if( !occupation.isEmpty()) {
+                occupation += ", ";
+            }
+            occupation += record.getWifeResidence().toString();
         }
         if (!occupation.isEmpty()) {
             occupation += " (" + getEventDate().getDisplayValue()+")";
@@ -541,9 +559,11 @@ public class MergeRecord {
 
     String getWifeMarriedOccupationWithDate() {
         String occupation = record.getWifeMarriedOccupation().toString();
-        if (occupation.isEmpty()) {
-            // si la profession est vide, j'affiche le domicile
-            occupation = record.getWifeMarriedResidence().toString();
+        if (!record.getWifeMarriedResidence().isEmpty()) {
+            if( !occupation.isEmpty()) {
+                occupation += ", ";
+            }
+            occupation += record.getWifeMarriedResidence().toString();
         }
         if (!occupation.isEmpty()) {
             occupation += " (" + getEventDate().getDisplayValue()+")";
@@ -611,9 +631,11 @@ public class MergeRecord {
 
     String getWifeFatherOccupationWithDate() {
         String occupation = getWifeFatherOccupation();
-        if (occupation.isEmpty()) {
-            // si la profession est vide, j'affiche le domicile
-            occupation = getWifeFatherResidence();
+        if (!getWifeFatherResidence().isEmpty()) {
+            if( !occupation.isEmpty()) {
+                occupation += ", ";
+            }
+            occupation += getWifeFatherResidence();
         }
         if (!occupation.isEmpty()) {
             occupation += " (" + getEventDate().getDisplayValue()+")";
@@ -666,9 +688,11 @@ public class MergeRecord {
 
     String getWifeMotherOccupationWithDate() {
         String occupation = getWifeMotherOccupation();
-        if (occupation.isEmpty()) {
-            // si la profession est vide, j'affiche le domicile
-            occupation = record.getWifeMotherResidence().toString();
+        if (!record.getWifeMotherResidence().isEmpty()) {
+            if( !occupation.isEmpty()) {
+                occupation += ", ";
+            }
+            occupation += record.getWifeMotherResidence().toString();
         }
         if (!occupation.isEmpty()) {
             occupation += " (" + getEventDate().getDisplayValue()+")";
@@ -958,7 +982,7 @@ public class MergeRecord {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += generalComment;
+            comment += "Commentaire général"+": " + generalComment;
         }
 
         if ( record.getIndiAge()!= null && !record.getIndiAge().isEmpty() ) {
@@ -982,11 +1006,12 @@ public class MergeRecord {
     /**
      * genere le commentaire d'un evenement divers
      * en concatenant :
-     *     commentaire general,
-     *     commentaire libre,
-     *     commentaire de l'epoux
-     *     commentaire de l'epouse
+     *     commentaire de l'individu
+     *     commentaire du pere de l'individu
+     *     commentaire de la mere de l'individu
      *     noms, prénom et commentaires des témoins
+     *     commentaire general
+     *     commentaire libre
      *
      * @return
      */
@@ -1000,8 +1025,16 @@ public class MergeRecord {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += "Commentaire epoux"+": " +indiComment;
+            comment += "Commentaire individu"+": " +indiComment;
         }
+
+        if ( record.getIndiAge()!= null && !record.getIndiAge().isEmpty() ) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+                comment += "\n";
+            }
+            comment += "Age"+": " +record.getIndiAge().toString();
+        }
+
 
         String indiFatherComment = appendValue(
                 record.getIndiFatherComment().toString(),
@@ -1010,7 +1043,7 @@ public class MergeRecord {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
                 comment += "\n";
             }
-            comment += "Commentaire père époux" + ": " + indiFatherComment;
+            comment += "Commentaire père individu" + ": " + indiFatherComment;
         }
 
         String indiMotherComment = appendValue(
@@ -1020,7 +1053,7 @@ public class MergeRecord {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += "Commentaire mère époux" + ": " + indiMotherComment;
+            comment += "Commentaire mère individu" + ": " + indiMotherComment;
         }
 
         String wifeComment = appendValue(record.getWifeComment().toString(),
@@ -1030,7 +1063,7 @@ public class MergeRecord {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += "Commentaire épouse"+": " +wifeComment;
+            comment += "Commentaire intervenant 2"+": " +wifeComment;
         }
 
         String wifeFatherComment = appendValue(
@@ -1040,7 +1073,7 @@ public class MergeRecord {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
                 comment += "\n";
             }
-            comment += "Commentaire père épouse" + ": " + wifeFatherComment;
+            comment += "Commentaire père intervenant 2" + ": " + wifeFatherComment;
         }
 
         String wifeMotherComment = appendValue(
@@ -1050,7 +1083,7 @@ public class MergeRecord {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += "Commentaire mère épouse" + ": " + wifeMotherComment;
+            comment += "Commentaire mère intervenant 2" + ": " + wifeMotherComment;
         }
 
         String witness = appendValue(
@@ -1073,15 +1106,12 @@ public class MergeRecord {
             comment += "Témoin(s)" + ": " + witness;
         }
 
-        String generalComment = appendValue(
-                record.getGeneralComment().toString()
-                );
-
+        String generalComment = appendValue(record.getGeneralComment().toString());
         if (!generalComment.isEmpty()) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += generalComment;
+            comment += "Commentaire général"+": " + generalComment;
         }
 
        String freeComment = appendValue(

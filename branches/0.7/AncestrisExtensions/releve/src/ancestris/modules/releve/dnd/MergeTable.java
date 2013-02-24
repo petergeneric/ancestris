@@ -3,6 +3,8 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.MergeModel.CompareResult;
 import ancestris.modules.releve.dnd.MergeModel.RowType;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.Source;
 import genj.util.WordBuffer;
@@ -11,6 +13,7 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
@@ -58,12 +61,12 @@ public class MergeTable extends JTable {
                     Entity entity = (Entity) ((MergeModel)getModel()).getValueAt(row, column);
                     if ( entityActionManager != null && entity != null) {
                         if ( e.getClickCount() == 2 ) {
-                            entityActionManager.showEntityInDndSource(entity, true);
-                        } else {
-                            entityActionManager.showEntityInDndSource(entity, false);
+                                entityActionManager.showEntityInDndSource(entity, true);
+                            } else {
+                                entityActionManager.showEntityInDndSource(entity, false);
+                            }
                         }
                     }
-                }
 
             }
         });
@@ -217,7 +220,17 @@ public class MergeTable extends JTable {
                         setText(((Entity)value).getDisplayValue());
                     }
                 } else {
-                    if ( mergeRow.rowType == RowType.EventComment && (column == 1 || column==3) ) {
+                    // j'affiche un tooltip pour les commentaires et les professions
+                    if ( (mergeRow.rowType == RowType.EventComment
+                          ||  mergeRow.rowType == RowType.IndiOccupation
+                          ||  mergeRow.rowType == RowType.IndiMarriedOccupation
+                          ||  mergeRow.rowType == RowType.IndiFatherOccupation
+                          ||  mergeRow.rowType == RowType.IndiMotherOccupation
+                          ||  mergeRow.rowType == RowType.WifeOccupation
+                          ||  mergeRow.rowType == RowType.WifeMarriedOccupation
+                          ||  mergeRow.rowType == RowType.WifeFatherOccupation
+                          ||  mergeRow.rowType == RowType.WifeMotherOccupation )
+                          && (column == 1 || column==3) ) {
                         String tooltipText = "<html>";
                         tooltipText += value.toString().replace("\n", "<br>");
                         tooltipText += "</html>";
