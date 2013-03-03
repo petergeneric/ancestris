@@ -25,7 +25,8 @@ public class MergeModelTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             Fam fam = (Fam)gedcom.getEntity("F1");
             RecordBirth record = MergeModelBirthTest.createBirthRecord("sansfamille1");
-            MergeRecord mergeRecord = new MergeRecord(record);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, record);
             PropertyDate marriageDate = new PropertyDate();
             marriageDate.setValue("1 NOV 1970");
 
@@ -50,7 +51,8 @@ public class MergeModelTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
-            MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.createBirthRecord("sansfamille1"));
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("sansfamille1"));
 
             MergeModel.copyOccupation(indi, mergeRecord.getIndiFatherOccupation(), mergeRecord.getIndiFatherResidence(), mergeRecord);
             

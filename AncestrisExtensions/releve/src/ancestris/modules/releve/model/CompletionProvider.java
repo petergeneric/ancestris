@@ -96,9 +96,6 @@ public class CompletionProvider implements GedcomFileListener {
         occupations.add(record.getWitness3Occupation());
         occupations.add(record.getWitness4Occupation());
 
-        // places
-        places.add(record.getEventPlace());
-
         places.add(record.getIndiBirthPlace());
         places.add(record.getIndiResidence());
         places.add(record.getIndiMarriedResidence());
@@ -184,8 +181,6 @@ public class CompletionProvider implements GedcomFileListener {
         occupations.remove(record.getWitness4Occupation());
         
         // places
-        // EventPlace
-        places.remove(record.getEventPlace());
         //Indi places
         places.remove(record.getIndiBirthPlace());
         places.remove(record.getIndiResidence());

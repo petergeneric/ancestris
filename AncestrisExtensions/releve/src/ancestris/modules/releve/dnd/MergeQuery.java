@@ -2078,16 +2078,27 @@ public class MergeQuery {
     static protected Source findSource(MergeRecord record, Gedcom gedcom) {
         Source source = null;
 
+        /*
         // je verifie si la source existe deja dans le gescom
         String cityName = record.getEventPlaceCityName();
         String cityCode = record.getEventPlaceCityCode();
         String countyName = record.getEventPlaceCountyName();
         //String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
-        String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);
+        String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);        
         Pattern pattern = Pattern.compile(stringPatter);
         Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
         for (Entity gedComSource : sources) {
             if (pattern.matcher(((Source)gedComSource).getTitle()).matches()) {
+                source = (Source)gedComSource;
+            }
+        }
+         */
+
+        String sourceTitle = record.getEventSource();
+        Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
+        for (Entity gedComSource : sources) {
+
+            if (((Source)gedComSource).getTitle().startsWith(sourceTitle)) {
                 source = (Source)gedComSource;
             }
         }
@@ -2101,7 +2112,7 @@ public class MergeQuery {
      * @param gedcom
      * @return
      */
-    static protected Property findSource(MergeRecord record, Gedcom gedcom, Property eventProperty) {
+    static protected Property findPropertySource(MergeRecord record, Gedcom gedcom, Property eventProperty) {
         Property sourceProperty = null;
 
         if (eventProperty != null) {

@@ -4,14 +4,30 @@
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 <link href="./ancestris.css" rel="stylesheet"></head>
 <body>
-<h2>Format des Fichiers&nbsp;NIMEGUEV3</h2>
+<h1>Format des Fichiers&nbsp;NIMEGUEV3</h1>
+Les quatre types de relevés ont des formats différents. <br>
+<br>
+<ul>
+<li>Les lignes des naissances contiennent 30 colonnes</li>
+<li>Les lignes des mariages contiennent 60&nbsp;colonnes</li>
+<li>Les lignes des décès contiennent 38&nbsp;colonnes.</li>
+<li>Les lignes des actes divers&nbsp; contiennent
+64&nbsp;colonnes</li>
+</ul>
+<br>
+Les champs sont séparés par un point-virgule. Le dernier champ de la
+ligne est toujours suivi d'un point-virgule.<br>
+Les lignes sont séparées par &nbsp;2 caractères x0A x0D<br>
+Si le caractère séparateur point-virgule est &nbsp;présent à
+l'intérieur
+d'un champ, il est remplacé par un point lors de l'écriture dans le
+fichier car NIMEGUE ne supporte pas la recommandation &nbsp;RFC
+4180.<br>
+<br>
+<br>
+<br>
 
-Les quatre types de releves ont des formats différents. <br><br><ul><li>Les lignes des naissances contiennent 30 colonnes</li><li>Les lignes des mariages contiennent 60&nbsp;colonnes</li><li>Les lignes des décès contiennent 38&nbsp;colonnes.</li><li>Les lignes des actes divers&nbsp; contiennent 64&nbsp;colonnes</li></ul><br>Les champs sont séparés par un point-vigule. Le dernier champ de la ligne est toujours suivi d'un point-virgule.<br>Les lignes sont séparées par &nbsp;2 caractères x0A x0D<br>Si le caractere séparateur point-virgule est &nbsp;présent à l'intérieur
-d'un champ , il est remplacé par un point lors de l'écriture dans le
-fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
-<br>
-<br>
-<table style="text-align: left; width: 971px; height: 1808px;" border="1" cellpadding="2" cellspacing="2">
+<table style="text-align: left; width: 100%; height: 1808px;" border="1" cellpadding="2" cellspacing="2">
 <tbody>
 <tr>
 <th style="width: 173px;"><span style="font-weight: bold;">Colonne</span></th>
@@ -19,37 +35,62 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <th style="text-align: center; width: 82px;">Mariage</th>
 <th style="text-align: center; width: 76px;">Décès</th>
 <th style="text-align: center; width: 83px;">Divers</th>
-<td style="text-align: center; width: 233px;"><span style="font-weight: bold;">Description</span></td><td style="width: 194px;"><span style="font-weight: bold;">Import dans Ancestris</span></td>
+<td style="width: 233px;"><span style="font-weight: bold;">Description</span></td>
+<td style="width: 194px;"><span style="font-weight: bold;">Import dans Ancestris</span></td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">"NIMEGUEV3"</td>
 <td style="width: 83px;" colspan="1" rowspan="1">x<br>
-</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
-<td style="width: 233px;"><span style="font-weight: bold;">obligatoire</span></td><td style="width: 194px;"><br></td>
+</td>
+<td colspan="1">x</td>
+<td colspan="1">x</td>
+<td>x</td>
+<td style="width: 233px; text-align: left;"><span style="font-weight: bold;">obligatoire</span></td>
+<td style="width: 194px; text-align: left;">&nbsp; <br>
+</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">CityCode</td>
-<td style="width: 83px;" colspan="1" rowspan="1">x <br>
-</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
-<td style="width: 233px;"></td><td style="width: 194px;">ignoré</td>
+<td style="width: 83px;" colspan="1" rowspan="1">x
+<br>
+</td>
+<td colspan="1">x</td>
+<td colspan="1">x</td>
+<td>x</td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">ignoré</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">CityName</td>
 <td style="width: 83px;" colspan="1" rowspan="1">x<br>
-</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"><br></td>
+</td>
+<td colspan="1">x</td>
+<td colspan="1">x</td>
+<td>x</td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;<br>
+</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">CountyCode</td>
 <td style="width: 83px;" colspan="1" rowspan="1">x<br>
-</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
-<td style="width: 233px;"></td><td style="width: 194px;">Anectris utilise&nbsp;CountyCode si CountyName est vide</td>
+</td>
+<td colspan="1">x</td>
+<td colspan="1">x</td>
+<td>x</td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">ANCESTRIS
+utilise&nbsp;CountyCode si CountyName est vide</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">CountyName</td>
 <td style="width: 83px;" colspan="1" rowspan="1">x<br>
-</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</td>
+<td colspan="1">x</td>
+<td colspan="1">x</td>
+<td>x</td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">EventType</td>
@@ -57,7 +98,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">"M"</td>
 <td style="text-align: center; width: 76px;">"D"</td>
 <td style="text-align: center; width: 83px;">"V"</td>
-<td style="width: 233px; text-align: center; font-weight: bold;">obligatoire</td><td style="width: 194px;">ne doit pas être vide</td>
+<td style="width: 233px; font-weight: bold; text-align: left;">obligatoire</td>
+<td style="width: 194px; text-align: left;">ne doit pas être vide</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">Date</td>
@@ -66,7 +108,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="width: 82px;" colspan="1">x</td>
 <td style="width: 76px;" colspan="1">x</td>
 <td style="width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">IncompletDate</td>
@@ -75,7 +118,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="width: 82px;" colspan="1">x</td>
 <td style="width: 76px;" colspan="1">x</td>
 <td style="width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">Cote</td>
@@ -84,7 +128,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="width: 82px;" colspan="1">x</td>
 <td style="width: 76px;" colspan="1">x</td>
 <td style="width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;">Freecomment</td>
@@ -93,23 +138,26 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="width: 82px;" colspan="1">x</td>
 <td style="width: 76px;" colspan="1">x</td>
 <td style="width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">EventTypeName</td>
-<td style="width: 86px;"></td>
-<td style="width: 82px;"></td>
-<td style="width: 76px;"></td>
+<td style="width: 86px;">&nbsp;</td>
+<td style="width: 82px;">&nbsp;</td>
+<td style="width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">EventTypeTag</td>
-<td style="width: 86px;"></td>
-<td style="width: 82px;"></td>
-<td style="width: 76px;"></td>
+<td style="width: 86px;">&nbsp;</td>
+<td style="width: 82px;">&nbsp;</td>
+<td style="width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr align="center">
 <td style="text-align: left; width: 173px;"></td>
@@ -118,7 +166,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="width: 82px;" colspan="1"></td>
 <td style="width: 76px;" colspan="1"></td>
 <td style="width: 83px;"></td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">IndiLastName</td>
@@ -126,7 +175,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">IndiFirstName</td>
@@ -134,7 +184,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">IndiSex</td>
@@ -142,33 +193,37 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;"></td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">IndiPlace</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">IndiBirthDate</td>
-<td style="text-align: center; width: 86px;"><br>
+<td style="text-align: center; width: 86px;">&nbsp;<br>
 </td>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">IndiAge</td>
-<td style="text-align: center; width: 86px;"><br>
+<td style="text-align: center; width: 86px;">&nbsp;<br>
 </td>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">IndiComment</td>
@@ -177,15 +232,17 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;">IndiOccupation</td>
-<td style="text-align: center; width: 86px;"> </td>
+<td style="text-align: center; width: 86px;"> &nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="text-align: left; width: 173px;"></td>
@@ -193,42 +250,56 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;"></td>
 <td style="text-align: center; width: 76px;"></td>
 <td style="text-align: center; width: 83px;"></td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiMarriedLastName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x<br>
 </td>
 <td style="width: 76px; text-align: center;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;">ex conjoint</td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">ex conjoint</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiMarriedFirstName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x<br>
 </td>
 <td style="width: 76px; text-align: center;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiMarriedComment</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x<br>
 </td>
 <td style="width: 76px; text-align: center;">x&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
-<tr><td>IndiMarriedOccupation</td><td></td><td></td><td style="text-align: center;">x</td><td></td><td></td><td></td></tr><tr>
+<tr>
+<td>IndiMarriedOccupation</td>
+<td>&nbsp; </td>
+<td>&nbsp;</td>
+<td style="text-align: center;">x</td>
+<td>&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+</tr>
+<tr>
 <td style="width: 173px;"></td>
 <td style="text-align: center; width: 86px;"></td>
 <td style="text-align: center; width: 82px;"></td>
 <td style="width: 76px; text-align: center;"></td>
 <td style="text-align: center; width: 83px;"></td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiFatherLastName</td>
@@ -236,7 +307,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiFatherFirstName</td>
@@ -244,7 +316,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiFatherComment</td>
@@ -252,7 +325,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiFatherOccupation</td>
@@ -260,15 +334,26 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td style="text-align: left;">&nbsp;&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+</tr>
+<tr>
 <td style="width: 173px;">IndiMotherLastName</td>
 <td style="text-align: center; width: 86px;">x</td>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiMotherFirstName</td>
@@ -276,7 +361,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiMotherComment</td>
@@ -284,7 +370,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">IndiMotherOccupation</td>
@@ -292,191 +379,224 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 173px;"></td>
-<td style="text-align: center; width: 86px;"></td>
-<td style="text-align: center; width: 82px;"></td>
-<td style="text-align: center; width: 76px;"></td>
-<td style="text-align: center; width: 83px;"></td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 173px;">&nbsp;</td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
+<td style="text-align: center; width: 82px;">&nbsp;</td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
+<td style="text-align: center; width: 83px;">&nbsp;</td>
+<td style="width: 233px; text-align: left;">&nbsp; </td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeLastName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeFirstName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeSex</td>
-<td style="width: 86px;"></td>
+<td style="width: 86px;">&nbsp; </td>
 <td style="width: 82px;"></td>
-<td style="width: 76px;"></td>
+<td style="width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifePlace</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeBirthDate</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeAge</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeComment</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeOccupation</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 173px;"></td>
-<td style="text-align: center; width: 86px;"></td>
-<td style="text-align: center; width: 82px;"></td>
-<td style="text-align: center; width: 76px;"></td>
-<td style="text-align: center; width: 83px;"></td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 173px;">&nbsp;</td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
+<td style="text-align: center; width: 82px;">&nbsp;</td>
+<td style="text-align: center; width: 76px;">&nbsp; </td>
+<td style="text-align: center; width: 83px;">&nbsp;</td>
+<td style="width: 233px; text-align: left;">&nbsp; </td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeMarriedLastName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;">ex conjoint</td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">ex conjoint</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeMarriedFirstName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeMarriedComment</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 173px;"></td>
-<td style="text-align: center; width: 86px;"></td>
-<td style="text-align: center; width: 82px;"></td>
-<td style="text-align: center; width: 76px;"></td>
-<td style="text-align: center; width: 83px;"></td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 173px;">&nbsp;</td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
+<td style="text-align: center; width: 82px;">&nbsp;</td>
+<td style="text-align: center; width: 76px;">&nbsp; </td>
+<td style="text-align: center; width: 83px;">&nbsp;</td>
+<td style="width: 233px; text-align: left;">&nbsp; </td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeFatherLastName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeFatherFirstName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeFatherComment</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeFatherOccupation</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp; </td>
+<td>&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+</tr>
+<tr>
 <td style="width: 173px;">WifeMotherLastName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeMotherFirstName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeMotherComment</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">WifeMotherOccupation</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 173px;"></td>
-<td style="text-align: center; width: 86px;"></td>
-<td style="text-align: center; width: 82px;"></td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="width: 173px;">&nbsp;</td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
+<td style="text-align: center; width: 82px;">&nbsp;</td>
+<td style="text-align: center; width: 76px;">&nbsp;&nbsp;</td>
 <td style="text-align: center; width: 83px;"></td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness1LastName</td>
@@ -484,7 +604,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;">témoin n°1 ou parrain</td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">témoin n°1 ou parrain</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness1FirstName</td>
@@ -492,7 +613,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness1Comment</td>
@@ -500,7 +622,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness2LastName</td>
@@ -508,7 +631,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;">témoin n°2 ou marraine</td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">témoin n°2 ou marraine</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness2FirstName</td>
@@ -516,7 +640,8 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness2Comment</td>
@@ -524,55 +649,62 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness3LastName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness3FirstName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness3Comment</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness4LastName</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp; </td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness4FirstName</td>
 <td style="text-align: center; width: 86px;"></td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">Witness4Comment</td>
-<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 86px;">&nbsp;</td>
 <td style="text-align: center; width: 82px;">x</td>
-<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 76px;">&nbsp; </td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
 </tr>
 <tr>
 <td style="width: 173px;">GeneralComment</td>
@@ -580,10 +712,20 @@ fichier car Nimegue ne supporte pas la recommandation &nbsp;RFC 4180.<br><br>
 <td style="text-align: center; width: 82px;">x</td>
 <td style="text-align: center; width: 76px;">x</td>
 <td style="text-align: center; width: 83px;">x</td>
-<td style="width: 233px;"></td><td style="width: 194px;"></td>
-</tr><tr><td style="width: 173px;">RecordNo</td><td style="text-align: center; width: 86px;">x</td><td style="text-align: center; width: 82px;">x</td><td style="text-align: center; width: 76px;">x</td><td style="text-align: center; width: 83px;">x</td><td style="width: 233px;">numéro de relevé</td><td style="width: 194px;"></td></tr>
+<td style="width: 233px; text-align: left;">&nbsp;</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 173px;">RecordNo</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px; text-align: left;">numéro de relevé</td>
+<td style="width: 194px; text-align: left;">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 <p>
-</p>
+&nbsp;</p>
 </body></html>

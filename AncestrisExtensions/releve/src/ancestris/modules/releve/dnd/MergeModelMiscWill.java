@@ -306,7 +306,7 @@ class MergeModelMiscWill extends MergeModel {
        if (currentIndi != null) {
            // je recherche la source d'un testament deja existant
            Property willProperty = currentIndi.getProperty("WILL");
-           Property sourceProperty = MergeQuery.findSource(record, gedcom, willProperty);
+           Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, willProperty);
             // j'affiche la source de du testament
             addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
             addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);

@@ -145,16 +145,21 @@ public class ReleveFileAncestrisV3 {
                     if ( fields == null) {
                         break;
                     }
-                    
-                    if (fields[Field.eventType.ordinal()].equals("N")) {
-                        RecordBirth record = new RecordBirth();
-
-                        record.setEventPlace(
-                                fields[Field.nomCommune.ordinal()],
+                    if (fields[Field.eventType.ordinal()].equals("N/M/D/V")) {
+                        // je decompte l'entete
+                        lineNumber--;
+                        continue;
+                    }
+                    if ( lineNumber == 1) {
+                        fileBuffer.setRegisterInfoPlace(fields[Field.nomCommune.ordinal()],
                                 fields[Field.codeCommune.ordinal()],
                                 fields[Field.nomDepartement.ordinal()],
                                 fields[Field.stateName.ordinal()],
                                 fields[Field.countryName.ordinal()] );
+                    }
+                    if (fields[Field.eventType.ordinal()].equals("N")) {
+                        RecordBirth record = new RecordBirth();
+                       
                         record.setParish(fields[Field.parish.ordinal()]);
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
                         record.setCote(fields[Field.cote.ordinal()]);
@@ -216,17 +221,11 @@ public class ReleveFileAncestrisV3 {
                         } catch ( NumberFormatException ex ) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("M")) {
                         RecordMarriage record = new RecordMarriage();
 
-                        record.setEventPlace(
-                                fields[Field.nomCommune.ordinal()],
-                                fields[Field.codeCommune.ordinal()],
-                                fields[Field.nomDepartement.ordinal()],
-                                fields[Field.stateName.ordinal()],
-                                fields[Field.countryName.ordinal()] );
                         record.setParish(fields[Field.parish.ordinal()]);
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
                         record.setCote(fields[Field.cote.ordinal()]);
@@ -337,17 +336,11 @@ public class ReleveFileAncestrisV3 {
                         } catch (NumberFormatException ex) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("D")) {
                         RecordDeath record = new RecordDeath();
 
-                        record.setEventPlace(
-                                fields[Field.nomCommune.ordinal()],
-                                fields[Field.codeCommune.ordinal()],
-                                fields[Field.nomDepartement.ordinal()],
-                                fields[Field.stateName.ordinal()],
-                                fields[Field.countryName.ordinal()] );
                         record.setParish(fields[Field.parish.ordinal()]);
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
                         record.setCote(fields[Field.cote.ordinal()]);
@@ -421,19 +414,13 @@ public class ReleveFileAncestrisV3 {
                         } catch (NumberFormatException ex) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("V")) {
                         RecordMisc record = new RecordMisc();
                         record.setEventType(fields[Field.eventTypeName.ordinal()]);
                         record.setNotary(fields[Field.notaryComment.ordinal()]);
 
-                        record.setEventPlace(
-                                fields[Field.nomCommune.ordinal()],
-                                fields[Field.codeCommune.ordinal()],
-                                fields[Field.nomDepartement.ordinal()],
-                                fields[Field.stateName.ordinal()],
-                                fields[Field.countryName.ordinal()] );
                         record.setParish(fields[Field.parish.ordinal()]);
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
                         record.setCote(fields[Field.cote.ordinal()]);
@@ -545,12 +532,8 @@ public class ReleveFileAncestrisV3 {
                         } catch (NumberFormatException ex) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
                         
-                    } else if (fields[Field.eventType.ordinal()].equals("N/M/D/V")) {
-                        // je decompte l'entete
-                        lineNumber--;
-                        continue;
                     } else {
                         fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
                         fileBuffer.append("\n");

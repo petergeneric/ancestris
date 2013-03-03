@@ -1,6 +1,5 @@
 package ancestris.modules.releve.model;
 
-import ancestris.app.App;
 import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.file.FileBuffer;
@@ -33,9 +32,6 @@ public class DataManager implements PlaceManager {
     private String freeComment = "";
     private String defaultCote = "";
     private String defaultNotary = "";
-
-
-    
 
     // previous record
     public enum RecordType { birth, marriage, death, misc }
@@ -148,21 +144,7 @@ public class DataManager implements PlaceManager {
 
         // j'ajoute les releves
         for (Record record : fileBuffer.getRecords()) {
-            FieldPlace fieldPlace = record.getEventPlace();
-            String place = fieldPlace.getValue();
-            if (!place.equals(defaultPlace)) {
-                if (forceDefaultPlace == 1) {
-                    // je supprime le lieu pour gagner de la place en mémoire
-                    record.eventPlace = null;
-                    this.addRecord(record, false);
-                } else {
-                    // j'ignore le releve
-                }
-            } else {
-                // je supprime le lieu pour gagner de la place en mémoire
-                record.eventPlace = null;
-                this.addRecord(record, false);
-            }
+            this.addRecord(record, false);
         }
 
         // si des lignes ont été ajoutées , je previens les listeners
@@ -402,7 +384,8 @@ public class DataManager implements PlaceManager {
 
     // listeners devant être prevenus du changement de lieu
     private ArrayList<PlaceListener> placeListeners = new ArrayList<PlaceListener>(1);
-    FieldPlace place = new FieldPlace();
+    private FieldPlace recordsInfoPlace = new FieldPlace();
+    private String sourceTitle = "";
     
     
     private boolean placeChanged = false;
@@ -426,32 +409,35 @@ public class DataManager implements PlaceManager {
     @Override
     public void setPlace(String cityName, String cityCode, String county, String state, String country) {
        
-       if (!cityName.equals(this.place.getCityName()) ||
-               !cityCode.equals(this.place.getCityCode()) ||
-               !county.equals(this.place.getCountyName()) ||
-               !state.equals(this.place.getStateName()) ||
-               !country.equals(this.place.getCountryName())
+       if (!cityName.equals(this.recordsInfoPlace.getCityName()) ||
+               !cityCode.equals(this.recordsInfoPlace.getCityCode()) ||
+               !county.equals(this.recordsInfoPlace.getCountyName()) ||
+               !state.equals(this.recordsInfoPlace.getStateName()) ||
+               !country.equals(this.recordsInfoPlace.getCountryName())
           )
        {
-           this.place.setCityName(cityName);
-           this.place.setCityCode(cityCode);
-           this.place.setCountyName(county);
-           this.place.setStateName(state);
-           this.place.setCountryName(country);
+           String oldValue = recordsInfoPlace.getValue();
+           this.recordsInfoPlace.setCityName(cityName);
+           this.recordsInfoPlace.setCityCode(cityCode);
+           this.recordsInfoPlace.setCountyName(county);
+           this.recordsInfoPlace.setStateName(state);
+           this.recordsInfoPlace.setCountryName(country);
+           completionProvider.updatePlaces(recordsInfoPlace, oldValue);
            
            placeChanged = true;
             // je notifie les listeners
             for(PlaceListener placeListener : placeListeners) {
                 placeListener.updatePlace(getPlace());
             }
-       }
-      
+       }      
     }
 
     @Override
     public void setPlace(String value) {
-        place.setValue(value);
+        String oldValue = recordsInfoPlace.getValue();
+        recordsInfoPlace.setValue(value);
         placeChanged = true;
+        completionProvider.updatePlaces(recordsInfoPlace, oldValue);
 
         // je notifie les listeners
         for (PlaceListener placeListener : placeListeners) {
@@ -465,31 +451,49 @@ public class DataManager implements PlaceManager {
      */
     @Override
     public String getPlace() {
-        return place.getValue();
+        return recordsInfoPlace.getValue();
     }
 
     @Override
     public String getCityName() {
-        return place.getCityName();
+        return recordsInfoPlace.getCityName();
     }
 
     @Override
     public String getCityCode() {
-        return place.getCityCode();
+        return recordsInfoPlace.getCityCode();
     }
 
     @Override
     public String getCountyName() {
-        return place.getCountyName();
+        return recordsInfoPlace.getCountyName();
     }
 
     @Override
     public String getStateName() {
-        return place.getStateName();
+        return recordsInfoPlace.getStateName();
     }
 
     @Override
     public String getCountryName() {
-        return place.getCountryName();
+        return recordsInfoPlace.getCountryName();
     }
+
+    /**
+     * @return the sourceTitle
+     */
+    @Override
+    public String getSourceTitle() {
+        return sourceTitle;
+    }
+
+    /**
+     * @param sourceTitle the sourceTitle to set
+     */
+    public void setSourceTitle(String sourceTitle) {
+        this.sourceTitle = sourceTitle;
+    }
+
+
+
 }

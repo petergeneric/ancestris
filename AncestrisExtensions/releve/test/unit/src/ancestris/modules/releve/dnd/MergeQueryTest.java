@@ -151,17 +151,18 @@ public class MergeQueryTest extends TestCase {
             Fam family = (Fam)gedcom.getEntity("F1");
             MergeRecord mergeRecord;
             List<Indi> children;
+            String sourceTitle = "";
 
-            mergeRecord = new MergeRecord(MergeModelBirthTest.createBirthRecord("sansfamille1"));
+            mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("sansfamille1"));
             children = MergeQuery.findSameChild(mergeRecord, gedcom, family);
             assertEquals("l'enfant n'existe pas dans la famille", 0, children.size());
 
-            mergeRecord = new MergeRecord(MergeModelBirthTest.createBirthRecord("child1"));
+            mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("child1"));
             children = MergeQuery.findSameChild(mergeRecord, gedcom, family);
             assertEquals("l'enfant existe deja dans la famille", 1, children.size());
             assertEquals("Nom de l'enfant", mergeRecord.getIndiFirstName(), children.get(0).getFirstName());
 
-            mergeRecord = new MergeRecord(MergeModelBirthTest.createBirthRecord("child1"));
+            mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("child1"));
             Indi father = family.getHusband();
             PropertyDate fatherBirtDate =  father.getBirthDate();
             //  l'individu est né 10 ans apres la naissance du pere
@@ -183,7 +184,8 @@ public class MergeQueryTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("child1");
-            MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.createBirthRecord("sansfamille1"));
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("sansfamille1"));
 
 
             List<Fam> fams = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
@@ -206,7 +208,7 @@ public class MergeQueryTest extends TestCase {
             fams = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
             assertEquals("l'individu existe mais n'a que 10 ans de plus que le pere", 0, fams.size());
 
-            mergeRecord = new MergeRecord(MergeModelBirthTest.createBirthRecord("sansfamille1"));
+            mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("sansfamille1"));
             mergeRecord.getEventDate().setValue("1 JAN 2000");
 
             fatherBirtDate.setValue("BEF 1880");
@@ -273,7 +275,8 @@ public class MergeQueryTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             indi.getBirthDate().setValue("1 APR 2000");
-            MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.createBirthRecord("sansfamille1"));
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("sansfamille1"));
 
             mergeRecord.getEventDate().setValue("1 APR 2000");
 

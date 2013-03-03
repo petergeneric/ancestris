@@ -124,7 +124,7 @@ public class TreeViewDropTarget {
                     try {
                         if ( treeView.getContext() != null ) {
                             TransferableRecord.TransferableData data = (TransferableData) t.getTransferData(TransferableRecord.recordFlavor);
-                            MergeDialog.show(treeView, treeView.getContext().getGedcom(), entity, data.record, true);
+                            MergeDialog.show(treeView, treeView.getContext().getGedcom(), entity, data.recordsInfoPlace, data.sourceTitle, data.record, true);
                             dropTargetDropEvent.dropComplete(true);
                         } else {
                             dropTargetDropEvent.dropComplete(false);

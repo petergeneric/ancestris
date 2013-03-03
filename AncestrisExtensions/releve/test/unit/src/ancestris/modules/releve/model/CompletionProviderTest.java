@@ -34,7 +34,6 @@ public class CompletionProviderTest extends TestCase {
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setEventPlace("Paris","75000","","state","country");
             record.setGeneralComment("generalcomment");
             
             CompletionProvider completionProvider = new CompletionProvider();
@@ -43,7 +42,7 @@ public class CompletionProviderTest extends TestCase {
             assertEquals("Nombre de prenoms",     7,  completionProvider.getFirstNames().size());
             assertEquals("Nombre de noms",        6,  completionProvider.getLastNames().size());
             assertEquals("Nombre de professions", 6,  completionProvider.getOccupations().size());
-            assertEquals("Nombre de lieux",       4,  completionProvider.getPlaces().size());
+            assertEquals("Nombre de lieux",       3,  completionProvider.getPlaces().size());
 
             completionProvider.removeRecord(record);
             assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames().size());
@@ -164,7 +163,6 @@ public class CompletionProviderTest extends TestCase {
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setEventPlace("Paris","75000","","state","country");
             record.setGeneralComment("generalcomment");
 
             ArrayList<String> excludedFirstNameList = new ArrayList<String>();

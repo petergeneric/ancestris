@@ -6,6 +6,7 @@
 
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -44,7 +45,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     * @param selectedEntity
     * @param record
     */
-    public static MergeDialog show(Component parent, final Gedcom gedcom, final Entity selectedEntity, final Record record, boolean visible) {
+    public static MergeDialog show(Component parent, final Gedcom gedcom, final Entity selectedEntity, final FieldPlace recordsInfoPlace, final String sourceTitle, final Record record, boolean visible) {
 
         final MergeDialog dialog = new MergeDialog(parent);
         try {
@@ -57,7 +58,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                 }
             });
             dialog.setVisible(visible);
-            dialog.initData(record, gedcom, selectedEntity);
+            dialog.initData(recordsInfoPlace, sourceTitle, record, gedcom, selectedEntity);
             return dialog;
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
@@ -141,9 +142,9 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
      * @param selectedEntity
      * @param record
      */
-    protected void initData(Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
+    protected void initData(FieldPlace recordsInfoPlace, String sourceTitle, Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
         List<MergeModel> models;
-        this.mergeRecord = new MergeRecord(record);
+        this.mergeRecord = new MergeRecord(recordsInfoPlace, sourceTitle, record);
         this.gedcom = gedcom;
         this.selectedEntity = selectedEntity;
 

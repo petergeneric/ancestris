@@ -208,7 +208,7 @@ class MergeModelBirth extends MergeModel {
     private void addRowIndi() throws Exception {
        if (currentIndi != null) {
             // j'affiche la source de la naissance
-            Property sourceProperty = MergeQuery.findSource(record, gedcom, currentIndi.getProperty("BIRT"));
+            Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, currentIndi.getProperty("BIRT"));
             addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
             addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
 
@@ -341,7 +341,7 @@ class MergeModelBirth extends MergeModel {
                 currentIndi.setName(record.getIndiFirstName(), currentIndi.getLastName());
             }
 
-            // je copie le sex du releve dans l'individu
+            // je copie le sexe du releve dans l'individu
             if (isChecked(RowType.IndiSex)) {
                 currentIndi.setSex(record.getIndiSex());
             }

@@ -11,7 +11,7 @@ public abstract class Record implements Cloneable{
 
     public int recordNo;
     protected FieldEventType eventType;
-    protected FieldPlace eventPlace;
+    //protected FieldPlace eventPlace;
     protected FieldSimpleValue cote;
     protected FieldPicture freeComment;
     protected FieldDate eventDate;
@@ -105,7 +105,6 @@ public abstract class Record implements Cloneable{
     protected FieldComment witness4Comment;
 
     public Record() {
-        eventPlace = new FieldPlace();
         eventDate = new FieldDate();
         cote = new FieldSimpleValue(); 
         parish = new FieldSimpleValue(); 
@@ -121,7 +120,6 @@ public abstract class Record implements Cloneable{
 		try {
 			object = (Record) super.clone();
            
-            if (eventPlace != null) object.eventPlace = eventPlace.clone();
             if (eventDate != null) object.eventDate = eventDate.clone();
             if (cote != null) object.cote = cote.clone();
             if (parish != null) object.parish = parish.clone();
@@ -167,10 +165,7 @@ public abstract class Record implements Cloneable{
 //        return eventPlace.getCountyName();
 //    }
 //
-    public FieldPlace getEventPlace() {
-        return eventPlace;
-    }
-
+   
     public FieldSimpleValue getCote() {
         return cote;
     }
@@ -509,22 +504,7 @@ public abstract class Record implements Cloneable{
 //        eventPlace.setValue(juridictions);
 //    }
 
-    public void setEventPlace(String cityName, String cityCode, String countyName, String stateName, String countryName) {
-        if (eventPlace==null) {
-            eventPlace =new FieldPlace();
-        }
-        eventPlace.setCityName(cityName.trim());
-        eventPlace.setCityCode(cityCode.trim());
-        eventPlace.setCountyName(countyName.trim());
-        eventPlace.setStateName(stateName.trim());
-        eventPlace.setCountryName(countryName.trim());
-    }
-
-    public void setEventPlace(FieldPlace place) {
-        eventPlace.setValue(place);
-    }
-
-    /////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////
    /**
      * @return the field
      */

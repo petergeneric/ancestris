@@ -309,7 +309,7 @@ public class MergeModelMarriage extends MergeModel {
             Property marriageProperty = currentFamily.getProperty("MARR");
 
             // j'affiche la source du mariage
-            Property sourceProperty = MergeQuery.findSource(record, gedcom, marriageProperty);
+            Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, marriageProperty);
             addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
             addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
 
