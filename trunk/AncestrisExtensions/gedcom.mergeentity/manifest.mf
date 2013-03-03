@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: ancestris.modules.gedcom.mergeentity
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/mergeentity/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Specification-Version: 0.8.0
 
