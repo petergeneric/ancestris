@@ -1,5 +1,6 @@
 package ancestris.modules.releve.file;
 
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Michel
  */
 public class FileBuffer {
+    private FieldPlace recordsInfoPlace = new FieldPlace();
     private List<Record> records = new ArrayList<Record>();
     private HashMap<String, Integer> places = new HashMap<String, Integer>();
     private int birthCount =0;
@@ -24,16 +26,12 @@ public class FileBuffer {
     StringBuilder sb = new StringBuilder();
 
      /**
-     * Cette methode est appelée par les ckasses qui lisent un fichier
+     * Cette methode est appelée par les classes qui lisent un fichier
      * @param record
      * @param recordNo
      */
-    public void loadRecord(Record record) {
+    public void addRecord(Record record) {
         getRecords().add(record);
-        String placeValue = record.getEventPlace().getValue();
-        // je met a jour le compter des lieux
-        int count = places.containsKey(placeValue) ? places.get(placeValue) : 0;
-        places.put(placeValue, count + 1);
         //je mets a jour le compteur des releves
         if (record instanceof RecordBirth) {
             birthCount++;
@@ -45,6 +43,22 @@ public class FileBuffer {
             miscCount++;
         }
     }
+
+    public void setRegisterInfoPlace(String cityName, String cityCode, String county, String state, String country) {
+        recordsInfoPlace.setCityName(cityName);
+        recordsInfoPlace.setCityCode(cityCode);
+        recordsInfoPlace.setCountyName(county);
+        recordsInfoPlace.setStateName(state);
+        recordsInfoPlace.setCountryName(country);
+        // je met a jour le compter des lieux
+        String placeValue = recordsInfoPlace.getValue();
+        int count = places.containsKey(placeValue) ? places.get(placeValue) : 0;
+        places.put(placeValue, count + 1);
+    }
+
+     public FieldPlace getRegisterInfoPlace() {
+        return recordsInfoPlace;
+     }
 
     public StringBuilder append(String message) {
         return sb.append( message );

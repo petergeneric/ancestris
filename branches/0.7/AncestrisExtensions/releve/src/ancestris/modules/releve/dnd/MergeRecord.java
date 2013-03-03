@@ -1,5 +1,6 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
@@ -8,7 +9,6 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
-import org.openide.util.Exceptions;
 
 
 /**
@@ -17,6 +17,8 @@ import org.openide.util.Exceptions;
  * et des methodes pour assembler les commentaires.
  */
 public class MergeRecord {
+    private FieldPlace recordsInfoPlace = new FieldPlace();
+    private String sourceTitle;
     private Record record;
 
     // memorise les dates calculees (pour éviter de les recalculer a chaque consultation)
@@ -74,7 +76,9 @@ public class MergeRecord {
      * constructeur
      * @param record
      */
-    protected MergeRecord( Record record)  {
+    protected MergeRecord( FieldPlace recordsInfoPlace, String sourceTitle, Record record)  {
+        this.recordsInfoPlace = recordsInfoPlace;
+        this.sourceTitle = sourceTitle;
         this.record = record;
         if (record instanceof RecordBirth) {
             type = RecordType.Birth;
@@ -97,6 +101,7 @@ public class MergeRecord {
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs
     //////////////////////////////////////////////////////////////////////////
+    
     RecordType getType() {
         return type;
     }
@@ -106,10 +111,14 @@ public class MergeRecord {
     }
 
     String getEventSource() {
-        String cityName = record.getEventPlace().getCityName();
-        //String cityCode = record.getEventPlace().getCityCode();
-        //return String.format("%s %s Etat civil", cityCode, cityName);
-        return String.format("Etat civil %s", cityName);
+        if ( sourceTitle.isEmpty()) {
+            String cityName = recordsInfoPlace.getCityName();
+            //String cityCode = record.getEventPlace().getCityCode();
+            //return String.format("%s %s Etat civil", cityCode, cityName);
+            return String.format("Etat civil %s", cityName);
+        } else {
+            return sourceTitle;
+        }
     }
 
     String getEventPage() {
@@ -132,17 +141,17 @@ public class MergeRecord {
     }
 
     String getEventPlace() {
-        return record.getEventPlace().toString();
+        return recordsInfoPlace.toString();
     }
 
     String getEventPlaceCityName() {
-        return record.getEventPlace().getCityName();
+        return recordsInfoPlace.getCityName();
     }
     String getEventPlaceCityCode() {
-        return record.getEventPlace().getCityCode();
+        return recordsInfoPlace.getCityCode();
     }
     String getEventPlaceCountyName() {
-        return record.getEventPlace().getCountyName();
+        return recordsInfoPlace.getCountyName();
     }
 
     String getEventType() {
@@ -217,7 +226,7 @@ public class MergeRecord {
                 if( record.getIndiFatherResidence() != null && !record.getIndiFatherResidence().isEmpty()) {
                     return record.getIndiFatherResidence().toString();
                 } else {
-                    return record.getEventPlace().toString();
+                    return recordsInfoPlace.toString();
                 }
             } else {
                 return "";
@@ -729,7 +738,20 @@ public class MergeRecord {
      * @return
      */
     private String makeBirthComment() {
-        String comment = appendValue(record.getIndiComment().toString());
+
+        String comment = "";
+        if (record.getIndiBirthDate() != null && !record.getIndiBirthDate().getValue().equals(record.getEventDateString())) {
+            // j'ajoute la date de l'acte dans le commentaire si elle différente de l'acte de naissance
+            comment = "Acte du "+getEventDateDDMMYYYY();
+        }
+
+        if (!record.getIndiComment().isEmpty()) {
+            // j'ajoute le commentaire de l'evenement
+            if (!comment.isEmpty()) {
+                comment += ", ";
+            }
+            comment += record.getIndiComment().toString();
+        }
 
         String godFather = appendValue(
                 record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),

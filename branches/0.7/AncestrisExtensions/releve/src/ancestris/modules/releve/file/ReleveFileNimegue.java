@@ -203,16 +203,18 @@ public class ReleveFileNimegue {
                         continue;
                     }
 
-                    if (fields[BirthField.typeActe.ordinal()].equals("N")) {
-                        RecordBirth record = new RecordBirth();
-
-                        record.setEventPlace(
+                    if ( lineNumber == 1) {
+                        fileBuffer.setRegisterInfoPlace(
                                 fields[BirthField.nomCommune.ordinal()],
                                 fields[BirthField.codeCommune.ordinal()],
                                 fields[BirthField.nomDepartement.ordinal()].isEmpty() ? fields[BirthField.codeDepartement.ordinal()] : fields[BirthField.nomDepartement.ordinal()],
                                 "", // stateName
                                 ""  // contryName
                                 );
+                    }
+
+                    if (fields[BirthField.typeActe.ordinal()].equals("N")) {
+                        RecordBirth record = new RecordBirth();
 
                         record.setEventDate(fields[BirthField.dateNaissance.ordinal()]);
                         //record.dateIncomplete = fields[BirthField.dateIncomplete.ordinal()];
@@ -268,18 +270,10 @@ public class ReleveFileNimegue {
                             record.recordNo = 0;
                         }
 
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
 
                     } else if (fields[MarrField.typeActe.ordinal()].equals("M")) {
                         RecordMarriage record = new RecordMarriage();
-
-                        record.setEventPlace(
-                                fields[MarrField.nomCommune.ordinal()],
-                                fields[MarrField.codeCommune.ordinal()],
-                                fields[MarrField.nomDepartement.ordinal()].isEmpty() ? fields[MarrField.codeDepartement.ordinal()] : fields[MarrField.nomDepartement.ordinal()],
-                                "", // stateName
-                                ""  // contryName
-                                );
 
                         record.setEventDate(fields[MarrField.eventDate.ordinal()]);
                         //record.dateIncomplete = fields[MarrField.dateIncomplete.ordinal()];
@@ -395,18 +389,10 @@ public class ReleveFileNimegue {
                             record.recordNo = 0;
                         }
 
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
 
                     } else if (fields[DeathField.typeActe.ordinal()].equals("D")) {
                         RecordDeath record = new RecordDeath();
-
-                        record.setEventPlace(
-                                fields[DeathField.nomCommune.ordinal()],
-                                fields[DeathField.codeCommune.ordinal()],
-                                fields[DeathField.nomDepartement.ordinal()].isEmpty() ? fields[DeathField.codeDepartement.ordinal()] : fields[DeathField.nomDepartement.ordinal()],
-                                "", // stateName
-                                ""  // contryName
-                                );
 
                         record.setEventDate(fields[DeathField.eventDate.ordinal()]);
                         //record.dateIncomplete = fields[DeathField.dateIncomplete.ordinal()];
@@ -471,17 +457,9 @@ public class ReleveFileNimegue {
                             record.recordNo = 0;
                         }
 
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
                     } else if (fields[MiscField.typeActe.ordinal()].equals("V")) {
                         RecordMisc record = new RecordMisc();
-
-                        record.setEventPlace(
-                                fields[MiscField.nomCommune.ordinal()],
-                                fields[MiscField.codeCommune.ordinal()],
-                                fields[MiscField.nomDepartement.ordinal()].isEmpty() ? fields[MiscField.codeDepartement.ordinal()] : fields[MiscField.nomDepartement.ordinal()],
-                                "", // stateName
-                                ""  // contryName
-                                );
 
                         record.setEventDate(fields[MiscField.eventDate.ordinal()]);
                         //record.dateIncomplete = fields[MiscField.dateIncomplete.ordinal()];
@@ -597,7 +575,7 @@ public class ReleveFileNimegue {
                         } catch (NumberFormatException ex) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
                         
                     } else {
                         fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));

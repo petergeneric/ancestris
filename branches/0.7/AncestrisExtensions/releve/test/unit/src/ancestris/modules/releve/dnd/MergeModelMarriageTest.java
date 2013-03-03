@@ -1,6 +1,7 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -17,10 +18,25 @@ import junit.framework.TestCase;
  */
 public class MergeModelMarriageTest extends TestCase {
 
+    static public String getSourceTitle() {
+        return "";
+    }
+
+    static public FieldPlace getRecordsInfoPlace() {
+        FieldPlace recordsInfoPlace = new FieldPlace();
+        recordsInfoPlace.setValue("Paris,75000,,state,country");
+        return recordsInfoPlace;
+    }
+
+    static public FieldPlace getRecordsInfoPlaceVilleMariage() {
+        FieldPlace recordsInfoPlace = new FieldPlace();
+        recordsInfoPlace.setValue("ville_mariage,code_mariage,departement_mariage,region_mariage,pays_mariage");
+        return recordsInfoPlace;
+    }
+
     public static RecordMarriage createMarriageRecord(String id) {
         RecordMarriage record = new RecordMarriage();
         if ( id.equals("M1")) {
-            record.setEventPlace("ville_mariage","code_mariage","departement_mariage","region_mariage","pays_mariage");
             record.setEventDate("01/03/1999");
             record.setCote("cote");
             record.setGeneralComment("generalcomment");
@@ -52,7 +68,8 @@ public class MergeModelMarriageTest extends TestCase {
     public void testAddMarriage() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
-            MergeRecord mergeRecord = new MergeRecord(createMarriageRecord("M1"));
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), sourceTitle, createMarriageRecord("M1"));
 
             List<MergeModel> models;
             Fam indiParentFamily;
@@ -139,7 +156,8 @@ public class MergeModelMarriageTest extends TestCase {
     public void testUpdateMariageAndFatherBirthDate() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
-            MergeRecord mergeRecord = new MergeRecord(createMarriageRecord("M1"));
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), sourceTitle, createMarriageRecord("M1"));
             List<MergeModel> models;
             // je change la date de naissance du pere pour permettre la modification
             ((Indi)gedcom.getEntity("I1")).getBirthDate().setValue("BEF 1971");
@@ -227,7 +245,6 @@ public class MergeModelMarriageTest extends TestCase {
 
             // je cree le relevé contenant le nom de la mere qui n'existe pas dans le gedcom
             RecordMarriage record = new RecordMarriage();
-            record.setEventPlace("ville_mariage","code_mariage","departement_mariage","region_mariage","pays_mariage");
             record.setEventDate("01/03/1999");
             record.setCote("cote");
             record.setGeneralComment("generalcomment");
@@ -241,7 +258,8 @@ public class MergeModelMarriageTest extends TestCase {
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-            MergeRecord mergeRecord = new MergeRecord(record);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(),sourceTitle, record);
             List<MergeModel> models;
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
 
@@ -300,7 +318,8 @@ public class MergeModelMarriageTest extends TestCase {
             // je change la date de deces du pere et de la mere
             mariageRecord.setIndiFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "true", "");
             mariageRecord.setIndiMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "true", "");
-            MergeRecord mergeRecord = new MergeRecord(mariageRecord);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), sourceTitle, mariageRecord);
             List<MergeModel> models;
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);

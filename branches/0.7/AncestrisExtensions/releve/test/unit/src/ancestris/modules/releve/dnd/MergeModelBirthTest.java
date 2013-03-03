@@ -1,6 +1,7 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.RecordBirth;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -17,6 +18,12 @@ import junit.framework.TestCase;
  */
 public class MergeModelBirthTest extends TestCase {
 
+    static public FieldPlace getRecordsInfoPlace() {
+        FieldPlace recordsInfoPlace = new FieldPlace();
+        recordsInfoPlace.setValue("Paris,75000,,state,country");
+        return recordsInfoPlace;
+    }
+
     static public RecordBirth createBirthRecord(String firstName) {
 
         if ( firstName.equals("sansfamille1")) {
@@ -31,7 +38,6 @@ public class MergeModelBirthTest extends TestCase {
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
                 record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setEventPlace("Paris","75000","","state","country");
                 record.setGeneralComment("generalcomment");
             return record;
         } if ( firstName.equals("child1")) {
@@ -46,7 +52,6 @@ public class MergeModelBirthTest extends TestCase {
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
                 record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setEventPlace("Paris","75000","","state","country");
                 record.setGeneralComment("generalcomment");
             return record;
         } else {
@@ -61,7 +66,6 @@ public class MergeModelBirthTest extends TestCase {
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
                 record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setEventPlace("Paris","75000","","state","country");
                 record.setGeneralComment("generalcomment");
             return record;
         }
@@ -75,7 +79,8 @@ public class MergeModelBirthTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
-            MergeRecord mergeRecord = new MergeRecord(createBirthRecord("sansfamille1"));
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, createBirthRecord("sansfamille1"));
             List<MergeModel> models;
             // je memorise la date de naissance du pere
             String previousFatherBirthDate = ((Indi)gedcom.getEntity("I1")).getBirthDate().getValue();
@@ -113,7 +118,8 @@ public class MergeModelBirthTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordBirth record = createBirthRecord("sansfamille1");
-            MergeRecord mergeRecord = new MergeRecord(record);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
             List<MergeModel> models;
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
@@ -161,8 +167,8 @@ public class MergeModelBirthTest extends TestCase {
             Indi indi = (Indi)gedcom.getEntity("I1");
             List<MergeModel> models;
             RecordBirth record = createBirthRecord("I1");
-            record.setEventPlace("Paris","75000","","state","country");
-            MergeRecord mergeRecord = new MergeRecord(record);
+            String sourceTitle = "BMS Paris";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
             
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
@@ -190,8 +196,10 @@ public class MergeModelBirthTest extends TestCase {
             List<MergeModel> models;
 
             RecordBirth record= createBirthRecord("child2");
-            record.setEventPlace("Brest","35000","","state","country");
-            MergeRecord mergeRecord = new MergeRecord(record);
+            FieldPlace recordsInfoPlace = new FieldPlace();
+            recordsInfoPlace.setValue("Brest,35000,,state,country");
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(recordsInfoPlace, sourceTitle, record);
             
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
@@ -221,9 +229,11 @@ public class MergeModelBirthTest extends TestCase {
             List<MergeModel> models;
 
             RecordBirth record = createBirthRecord("I1");
-            MergeRecord mergeRecord = new MergeRecord(record);
-            record.setEventPlace("Paris","75009","","state","country");
-
+            FieldPlace recordsInfoPlace = new FieldPlace();
+            recordsInfoPlace.setValue("Paris,75009,,state,country");
+            String sourceTitle = "BMS Paris";
+            MergeRecord mergeRecord = new MergeRecord(recordsInfoPlace, sourceTitle, record);
+            
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
@@ -249,13 +259,12 @@ public class MergeModelBirthTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
             RecordBirth record = createBirthRecord("I1");
-            MergeRecord mergeRecord = new MergeRecord(record);
+            String sourceTitle = "BMS Paris";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
             List<MergeModel> models;
 
             // je renseigne la meme date de naissance
-            record.getEventDateProperty().setValue(indi.getBirthDate().getValue());
-            record.setEventPlace("Paris","75009","","state","country");
-
+            record.getEventDateProperty().setValue(indi.getBirthDate().getValue());            
             assertEquals("otherIndi",0, MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, indi).size());
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
@@ -298,10 +307,10 @@ public class MergeModelBirthTest extends TestCase {
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setEventPlace("Paris","75000","","state","country");
             record.setGeneralComment("generalcomment");
 
-            mergeRecord = new MergeRecord(record);
+            String sourceTitle = "";
+            mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
             assertEquals("Indi Birth place=IndiFatherResidence",record.getIndiFatherResidence().toString(), mergeRecord.getIndiBirthPlace());
 
              // cas : indiBirthPlace = "" et indiFatherResidence = ""
@@ -316,11 +325,10 @@ public class MergeModelBirthTest extends TestCase {
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setEventPlace("Paris","75000","","state","country");
             record.setGeneralComment("generalcomment");
 
-            mergeRecord = new MergeRecord(record);
-            assertEquals("Indi Birth place=eventPlace",record.getEventPlace().toString(), mergeRecord.getIndiBirthPlace());
+            mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
+            assertEquals("Indi Birth place=eventPlace",getRecordsInfoPlace().toString(), mergeRecord.getIndiBirthPlace());
 
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

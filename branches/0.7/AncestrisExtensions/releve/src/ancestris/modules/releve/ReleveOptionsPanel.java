@@ -85,16 +85,16 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
-        jTextArea1 = new javax.swing.JTextArea();
         OptionsPanel = new javax.swing.JPanel();
         jCheckBoxDuplicateRecord = new javax.swing.JCheckBox();
         jCheckBoxNewValueControl = new javax.swing.JCheckBox();
         jCheckBoxGedcomCompletion = new javax.swing.JCheckBox();
         copyFreeComment = new javax.swing.JCheckBox();
         jButtonActivateDnd = new javax.swing.JButton();
-        jButtonLastNameCompletion = new javax.swing.JButton();
-        jButtonFirstNameCompletion = new javax.swing.JButton();
         jButtonConfigEditor = new javax.swing.JButton();
+        jPanelExludeCompletion = new javax.swing.JPanel();
+        jButtonFirstNameCompletion = new javax.swing.JButton();
+        jButtonLastNameCompletion = new javax.swing.JButton();
         fillerPanelHorizontal = new javax.swing.JPanel();
         fillerPanelVertical = new javax.swing.JPanel();
 
@@ -105,26 +105,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jPanel2.setForeground(new java.awt.Color(200, 45, 45));
         jPanel2.setFocusTraversalPolicyProvider(true);
         jPanel2.setLayout(new java.awt.GridBagLayout());
-
-        jTextArea1.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
-        jTextArea1.setColumns(20);
-        jTextArea1.setEditable(false);
-        jTextArea1.setRows(3);
-        jTextArea1.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jTextArea1.text")); // NOI18N
-        jTextArea1.setWrapStyleWord(true);
-        jTextArea1.setAutoscrolls(false);
-        jTextArea1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTextArea1.setFocusable(false);
-        jTextArea1.setMinimumSize(new java.awt.Dimension(200, 22));
-        jTextArea1.setPreferredSize(new java.awt.Dimension(460, 58));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        jPanel2.add(jTextArea1, gridBagConstraints);
 
         OptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.OptionsPanel.border.title"))); // NOI18N
         OptionsPanel.setLayout(new java.awt.GridBagLayout());
@@ -163,7 +143,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         copyFreeComment.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.copyFreeComment.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         OptionsPanel.add(copyFreeComment, gridBagConstraints);
 
@@ -175,31 +155,10 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         OptionsPanel.add(jButtonActivateDnd, gridBagConstraints);
-
-        jButtonLastNameCompletion.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonLastNameCompletion.text")); // NOI18N
-        jButtonLastNameCompletion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLastNameCompletionActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        OptionsPanel.add(jButtonLastNameCompletion, gridBagConstraints);
-
-        jButtonFirstNameCompletion.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonFirstNameCompletion.text")); // NOI18N
-        jButtonFirstNameCompletion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonFirstNameCompletionActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        OptionsPanel.add(jButtonFirstNameCompletion, gridBagConstraints);
 
         jButtonConfigEditor.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonConfigEditor.text")); // NOI18N
         jButtonConfigEditor.addActionListener(new java.awt.event.ActionListener() {
@@ -208,9 +167,32 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         OptionsPanel.add(jButtonConfigEditor, gridBagConstraints);
+
+        jButtonFirstNameCompletion.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonFirstNameCompletion.text")); // NOI18N
+        jButtonFirstNameCompletion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFirstNameCompletionActionPerformed(evt);
+            }
+        });
+        jPanelExludeCompletion.add(jButtonFirstNameCompletion);
+
+        jButtonLastNameCompletion.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonLastNameCompletion.text")); // NOI18N
+        jButtonLastNameCompletion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLastNameCompletionActionPerformed(evt);
+            }
+        });
+        jPanelExludeCompletion.add(jButtonLastNameCompletion);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        OptionsPanel.add(jPanelExludeCompletion, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -274,17 +256,17 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
     private void jButtonLastNameCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLastNameCompletionActionPerformed
         // TODO add your handling code here:
-        ReleveCompletionPanel.showLastNameCompletionPanel();
+        ReleveCompletionDialog.showLastNameCompletionPanel();
 
     }//GEN-LAST:event_jButtonLastNameCompletionActionPerformed
 
     private void jButtonFirstNameCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFirstNameCompletionActionPerformed
         // TODO add your handling code here:
-        ReleveCompletionPanel.showFirstNameCompletionPanel();
+        ReleveCompletionDialog.showFirstNameCompletionPanel();
     }//GEN-LAST:event_jButtonFirstNameCompletionActionPerformed
 
     private void jButtonConfigEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigEditorActionPerformed
-        ReleveEditorConfigPanel.showEditorConfigPanel();
+        ReleveEditorConfigDialog.showEditorConfigPanel();
     }//GEN-LAST:event_jButtonConfigEditorActionPerformed
 
     /**
@@ -312,8 +294,8 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JCheckBox jCheckBoxGedcomCompletion;
     private javax.swing.JCheckBox jCheckBoxNewValueControl;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanelExludeCompletion;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
     

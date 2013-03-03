@@ -1,5 +1,5 @@
 /*
- * ReleveCompletionPanel.java
+ * ReleveCompletionDialog.java
  *
  * Created on 9 déc. 2012, 11:57:25
  */
@@ -10,6 +10,8 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.CompletionType;
 import ancestris.modules.releve.model.DataManager;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,13 +20,14 @@ import java.util.Map.Entry;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  * permet de decocher les noms ou prenom que l'on ne souhaite pas voir
  * apparaitre dans les listes de completion
  * @author Michel
  */
-public class ReleveCompletionPanel extends javax.swing.JFrame {
+public class ReleveCompletionDialog extends javax.swing.JFrame {
 
     CompletionModel model = new CompletionModel() ;
     CompletionType completionType;
@@ -34,24 +37,26 @@ public class ReleveCompletionPanel extends javax.swing.JFrame {
      * affiche la fenetre de completion des prénoms
      */
     static public void  showFirstNameCompletionPanel() {
-        ReleveCompletionPanel statistics = new ReleveCompletionPanel();        
-        statistics.initData(CompletionType.firstName );
-        statistics.setVisible(true);
-
+        ReleveCompletionDialog completionDialog = new ReleveCompletionDialog();
+        completionDialog.initData(CompletionType.firstName );
+        completionDialog.setVisible(true);
     }
 
     /**
      * affiche la fenetre de completion des noms
      */
     static public void  showLastNameCompletionPanel() {
-        ReleveCompletionPanel statistics = new ReleveCompletionPanel();       
-        statistics.initData(CompletionType.lastName );
-        statistics.setVisible(true);
+        ReleveCompletionDialog completionDialog = new ReleveCompletionDialog();
+        completionDialog.initData(CompletionType.lastName );
+        completionDialog.setVisible(true);
     }
 
-    /** Creates new form ReleveCompletionPanel */
-    public ReleveCompletionPanel() {
+    public ReleveCompletionDialog() {
         initComponents();
+        
+        // je configure la position de la fenetre
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screen.width - getWidth())/ 2, (screen.height -getHeight()) / 2, getWidth(), getHeight());
     }
 
     public void initData(CompletionType completionType) {
@@ -69,46 +74,56 @@ public class ReleveCompletionPanel extends javax.swing.JFrame {
             return;
         }
 
+        String columnTitle;
         switch( completionType ) {
             case firstName:
-               model.setColumnName("Prénom");
+               columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.firstName");
                lastNameList = dataManager.getCompletionProvider().getFirstNames();
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             case lastName:
-               model.setColumnName("Nom");
+               columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.lastName");
                lastNameList = dataManager.getCompletionProvider().getLastNames();
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             default:
-               model.setColumnName("");
+               columnTitle = "";
                lastNameList = new ArrayList<String>();
                excludeList = new ArrayList<String>();
         }
-        
-        // je recupere la liste des valeurs existantes
-        HashMap<String,Boolean> lastNameMap= new HashMap<String,Boolean>();
 
+        setTitle(String.format(
+                NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.title"),
+                columnTitle));       
+
+        model.setColumnTitle(columnTitle);
+        
+        // je recupere la liste des valeurs existantes dans le relevé
+        HashMap<String,Boolean> lastNameMap= new HashMap<String,Boolean>();
         for (Iterator<String> it = lastNameList.iterator(); it.hasNext(); ) {
             lastNameMap.put(it.next(), true);
         }
-
+        // j'ajoute les valeurs deja exlues
         for (Iterator<String> it = excludeList.iterator(); it.hasNext(); ) {
             lastNameMap.put(it.next(), false);
         }
         
-        // je copie les valeurs dans le modele
+        // je copie les valeurs dans le modele de la JTable
         for (Iterator<Entry<String,Boolean>> it = lastNameMap.entrySet().iterator(); it.hasNext(); ) {
            Entry<String,Boolean> entry = it.next();
            model.add(entry.getKey(), entry.getValue());
         }
-        jTableLastName.setModel(model);
-        jTableLastName.setAutoCreateRowSorter(true);
+        jTableExclude.setModel(model);
+        // je trie la table
+        jTableExclude.setAutoCreateRowSorter(true);
         List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
-        jTableLastName.getRowSorter().setSortKeys(sortKeys);
-
+        jTableExclude.getRowSorter().setSortKeys(sortKeys);
+        // je fixe la largeur de la permiere colonne contenant les cases à cocher
+        //jTableExclude.getColumnModel().getColumn(0).setPreferredWidth (40);
+        //jTableExclude.getColumnModel().getColumn(0).setWidth (40);
+        jTableExclude.getColumnModel().getColumn(0).setMaxWidth(40);
     }
 
 
@@ -138,13 +153,16 @@ public class ReleveCompletionPanel extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanelLastName = new javax.swing.JPanel();
+        jPanelComment = new javax.swing.JPanel();
+        comment = new javax.swing.JLabel();
+        jPaneTable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableLastName = new javax.swing.JTable();
-        jPanelFirstName = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jTableExclude = new javax.swing.JTable();
+        jPanelButton = new javax.swing.JPanel();
+        jButtonDelete = new javax.swing.JButton();
+        jButtonOk = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -152,11 +170,17 @@ public class ReleveCompletionPanel extends javax.swing.JFrame {
                 formWindowClosed(evt);
             }
         });
-        getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        jPanelLastName.setLayout(new java.awt.GridBagLayout());
+        comment.setText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.comment.text")); // NOI18N
+        jPanelComment.add(comment);
+        comment.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.comment.text")); // NOI18N
 
-        jTableLastName.setModel(new javax.swing.table.DefaultTableModel(
+        getContentPane().add(jPanelComment, java.awt.BorderLayout.NORTH);
+
+        jPaneTable.setPreferredSize(new java.awt.Dimension(300, 400));
+        jPaneTable.setLayout(new java.awt.BorderLayout());
+
+        jTableExclude.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -167,61 +191,69 @@ public class ReleveCompletionPanel extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTableLastName);
+        jTableExclude.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jScrollPane1.setViewportView(jTableExclude);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        jPanelLastName.add(jScrollPane1, gridBagConstraints);
+        jPaneTable.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        getContentPane().add(jPanelLastName, gridBagConstraints);
+        getContentPane().add(jPaneTable, java.awt.BorderLayout.CENTER);
 
-        jPanelFirstName.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanelFirstName.setLayout(new java.awt.GridBagLayout());
+        jPanelButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jButton1.setText(org.openide.util.NbBundle.getMessage(ReleveCompletionPanel.class, "ReleveCompletionPanel.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDelete.setText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.jButtonDelete.text")); // NOI18N
+        jButtonDelete.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.jButtonDelete.tooltip")); // NOI18N
+        jButtonDelete.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonDeleteActionPerformed(evt);
             }
         });
-        jPanelFirstName.add(jButton1, new java.awt.GridBagConstraints());
+        jPanelButton.add(jButtonDelete);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        getContentPane().add(jPanelFirstName, gridBagConstraints);
+        jButtonOk.setText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.jButtonOk.text")); // NOI18N
+        jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOkActionPerformed(evt);
+            }
+        });
+        jPanelButton.add(jButtonOk);
+
+        jButtonCancel.setText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.jButtonCancel.text")); // NOI18N
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelActionPerformed(evt);
+            }
+        });
+        jPanelButton.add(jButtonCancel);
+
+        getContentPane().add(jPanelButton, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // TODO add your handling code here:
-        saveExcluded();
+        //rien a faire        
     }//GEN-LAST:event_formWindowClosed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int[] selectedRows = jTableLastName.getSelectedRows();
+    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
+        int[] selectedRows = jTableExclude.getSelectedRows();
 
         for (int row : selectedRows) {
-            model.remove(jTableLastName.convertRowIndexToModel(row));
+            model.remove(jTableExclude.convertRowIndexToModel(row));
         }
 	model.fireTableDataChanged();
-        jTableLastName.clearSelection();
+        jTableExclude.clearSelection();
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonDeleteActionPerformed
+
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
+        dispose();
+    }//GEN-LAST:event_jButtonCancelActionPerformed
+
+    private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
+        saveExcluded();
+        dispose();
+    }//GEN-LAST:event_jButtonOkActionPerformed
 
     /**
     * @param args the command line arguments
@@ -237,22 +269,27 @@ public class ReleveCompletionPanel extends javax.swing.JFrame {
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanelFirstName;
-    private javax.swing.JPanel jPanelLastName;
+    private javax.swing.JLabel comment;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonOk;
+    private javax.swing.JPanel jPaneTable;
+    private javax.swing.JPanel jPanelButton;
+    private javax.swing.JPanel jPanelComment;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableLastName;
+    private javax.swing.JTable jTableExclude;
     // End of variables declaration//GEN-END:variables
 
 
     private class CompletionModel extends AbstractTableModel {
         ArrayList<Boolean> includeList = new ArrayList<Boolean>();
         ArrayList<String> valueList = new ArrayList<String>();
-        String columnName;
+        String itemColumnTitle;
+        String includedColumnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.inludeColumnTitle");
 
-        public void setColumnName(String columnName) {
+        public void setColumnTitle(String columnName) {
 
-            this.columnName = columnName;
+            this.itemColumnTitle = columnName;
 
         }
 
@@ -282,9 +319,9 @@ public class ReleveCompletionPanel extends javax.swing.JFrame {
         public String getColumnName(int col) {
             switch (col) {
                 case 0:
-                    return "Inclu";
+                    return includedColumnTitle;
                 case 1:
-                    return columnName;
+                    return itemColumnTitle;
                 default:
                     return null;
             }

@@ -2,6 +2,7 @@ package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.MergeModel.MergeRow;
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.RecordDeath;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -16,6 +17,12 @@ import org.openide.util.Exceptions;
  * @author Michel
  */
 public class MergeModelDeathTest extends TestCase {
+
+    static public FieldPlace getRecordsInfoPlace() {
+        FieldPlace recordsInfoPlace = new FieldPlace();
+        recordsInfoPlace.setValue("Paris,75000,,state,country");
+        return recordsInfoPlace;
+    }
 
     static public RecordDeath createDeathRecord(String firstName) {
 
@@ -32,7 +39,6 @@ public class MergeModelDeathTest extends TestCase {
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
                 record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setEventPlace("Paris","75000","","state","country");
                 record.setGeneralComment("generalcomment");
             return record;
         } else {
@@ -47,7 +53,6 @@ public class MergeModelDeathTest extends TestCase {
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
                 record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setEventPlace("Paris","75000","","state","country");
                 record.setGeneralComment("generalcomment");
             return record;
         }
@@ -62,7 +67,8 @@ public class MergeModelDeathTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordDeath recordDeath = createDeathRecord("sansfamille1");
-            MergeRecord mergeRecord = new MergeRecord(recordDeath);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, recordDeath);
             List<MergeModel> models;
 
             // je memorise la date de naissance de l'enfant
@@ -156,7 +162,8 @@ public class MergeModelDeathTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordDeath record = createDeathRecord("sansfamille1");
-            MergeRecord mergeRecord = new MergeRecord(record);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
             List<MergeModel> models;
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
@@ -207,7 +214,8 @@ public class MergeModelDeathTest extends TestCase {
                 record.setFreeComment("photo");
                 record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "", "BEF 1981", "indiplace", "indioccupation", "indiResidence", "indicomment");
                 record.setIndiMarried("Motherfirstname", "MOTHERLASTNAME", "", "", "", "");
-            MergeRecord mergeRecord = new MergeRecord(record);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
 
             List<MergeModel> models;
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);

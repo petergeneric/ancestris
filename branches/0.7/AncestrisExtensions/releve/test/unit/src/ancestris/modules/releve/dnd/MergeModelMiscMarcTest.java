@@ -1,6 +1,7 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -16,10 +17,15 @@ import junit.framework.TestCase;
  */
 public class MergeModelMiscMarcTest extends TestCase {
 
+     static public FieldPlace getRecordsInfoPlace() {
+        FieldPlace recordsInfoPlace = new FieldPlace();
+        recordsInfoPlace.setValue("ville_marc,code_marc,departement_marc,region_marc,pays_marc");
+        return recordsInfoPlace;
+    }
+
     public static RecordMisc createMiscMarcRecord(String id) {
         RecordMisc record = new RecordMisc();
         if (id.equals("CM1")) {
-            record.setEventPlace("ville_marc","code_marc","departement_marc","region_marc","pays_marc");
             record.setEventDate("01/03/1999");
             record.setEventType("CM");
             record.setNotary("notaire_marc");
@@ -39,7 +45,6 @@ public class MergeModelMiscMarcTest extends TestCase {
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         } else if (id.equals("NEW")) {
-            record.setEventPlace("ville_marc","code_marc","departement_marc","region_marc","pays_marc");
             record.setEventDate("01/03/1999");
             record.setEventType("CM");
             record.setNotary("notaire_marc");
@@ -71,7 +76,8 @@ public class MergeModelMiscMarcTest extends TestCase {
             
 
             RecordMisc miscRecord = createMiscMarcRecord("NEW");
-            MergeRecord mergeRecord = new MergeRecord(miscRecord);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, miscRecord);
 
             List<MergeModel> models;
             Fam indiParentFamily;
@@ -94,7 +100,7 @@ public class MergeModelMiscMarcTest extends TestCase {
             assertEquals("Source marc","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARC:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Source marc",miscRecord.getCote().getValue() + ", " +miscRecord.getFreeComment().getValue(), fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
             assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));
-            assertEquals("Lieu marc",miscRecord.getEventPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
+            assertEquals("Lieu marc",getRecordsInfoPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
             //assertEquals("Note marc",miscRecord.getGeneralComment().getValue(), fam.getValue(new TagPath("FAM:MARC:NOTE"),""));
 
             assertEquals("Date marriage","ABT 1999", fam.getMarriageDate().getValue());
@@ -174,7 +180,8 @@ public class MergeModelMiscMarcTest extends TestCase {
 
 
             RecordMisc miscRecord = createMiscMarcRecord("CM1");
-            MergeRecord mergeRecord = new MergeRecord(miscRecord);
+            String sourceTitle = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, miscRecord);
 
             List<MergeModel> models;
             Fam indiParentFamily;
@@ -197,7 +204,7 @@ public class MergeModelMiscMarcTest extends TestCase {
             assertEquals("Source marc","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARC:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Source marc",miscRecord.getCote().getValue() + ", " + miscRecord.getFreeComment().getValue(), fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
             assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));
-            assertEquals("Lieu marc",miscRecord.getEventPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
+            assertEquals("Lieu marc",getRecordsInfoPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
             //assertEquals("Note marc",miscRecord.getGeneralComment().getValue(), fam.getValue(new TagPath("FAM:MARC:NOTE"),""));
 
             assertEquals("Date marriage","ABT 1999", fam.getMarriageDate().getValue());

@@ -301,7 +301,7 @@ class MergeModelDeath extends MergeModel {
 
        if (currentIndi != null) {
             // j'affiche la source de la naissance
-            Property sourceProperty = MergeQuery.findSource(record, gedcom, currentIndi.getProperty("DEAT"));
+            Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, currentIndi.getProperty("DEAT"));
             addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
             addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
 

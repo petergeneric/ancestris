@@ -9,12 +9,12 @@ package ancestris.modules.releve;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.editor.EditorBeanField;
 import ancestris.modules.releve.editor.EditorBeanGroup;
-import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.DataManager.RecordType;
 import ancestris.modules.releve.model.DataManager.RecordType;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.JLabel;
@@ -28,7 +28,7 @@ import javax.swing.table.TableCellRenderer;
  * apparaitre dans les listes de completion
  * @author Michel
  */
-public class ReleveEditorConfigPanel extends javax.swing.JFrame {
+public class ReleveEditorConfigDialog extends javax.swing.JFrame {
 
     static private Color greyColor = new Color(240, 240, 240);
 
@@ -37,13 +37,20 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
      * affiche la fenetre de completion des noms
      */
     static public void  showEditorConfigPanel() {
-        ReleveEditorConfigPanel configPanel = new ReleveEditorConfigPanel();
+        ReleveEditorConfigDialog configPanel = new ReleveEditorConfigDialog();
         configPanel.initData();
     }
 
     /** Creates new form ReleveCompletionPanel */
-    public ReleveEditorConfigPanel() {
+    public ReleveEditorConfigDialog() {
         initComponents();
+
+        // je configure la position de la fenetre
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screen.width - getWidth())/ 2, (screen.height -getHeight()) / 2, getWidth(), getHeight());
+
+        setTitle(org.openide.util.NbBundle.getMessage(ReleveEditorConfigDialog.class, "ReleveOptionsPanel.jButtonConfigEditor.text"));
+
         jTableBirth = new ConfigTable();
         jTableBirth.setUpdateSelectionOnSort(false);
         jTableBirth.setSelectionBackground(getBackground());
@@ -117,7 +124,8 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
         jScrollPaneMisc = new javax.swing.JScrollPane();
         jTableMisc = new javax.swing.JTable();
         jPanelFirstName = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jButtonOk = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -127,6 +135,7 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        jPanelConfig.setPreferredSize(new java.awt.Dimension(300, 400));
         jPanelConfig.setLayout(new java.awt.GridBagLayout());
 
         jTableBirth.setModel(new javax.swing.table.DefaultTableModel(
@@ -143,7 +152,7 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
         jTableBirth.setUpdateSelectionOnSort(false);
         jScrollPaneBirth.setViewportView(jTableBirth);
 
-        jTabbedPane.addTab(org.openide.util.NbBundle.getMessage(ReleveEditorConfigPanel.class, "ReleveTopComponent.panelBirth.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), jScrollPaneBirth); // NOI18N
+        jTabbedPane.addTab(org.openide.util.NbBundle.getMessage(ReleveEditorConfigDialog.class, "ReleveTopComponent.panelBirth.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), jScrollPaneBirth); // NOI18N
 
         jTableMarriage.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -158,7 +167,7 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
         ));
         jScrollPaneMarriage.setViewportView(jTableMarriage);
 
-        jTabbedPane.addTab(org.openide.util.NbBundle.getMessage(ReleveEditorConfigPanel.class, "ReleveTopComponent.panelMarriage.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Marriage.png")), jScrollPaneMarriage); // NOI18N
+        jTabbedPane.addTab(org.openide.util.NbBundle.getMessage(ReleveEditorConfigDialog.class, "ReleveTopComponent.panelMarriage.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Marriage.png")), jScrollPaneMarriage); // NOI18N
 
         jTableDeath.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -173,7 +182,7 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
         ));
         jScrollPaneDeath.setViewportView(jTableDeath);
 
-        jTabbedPane.addTab(org.openide.util.NbBundle.getMessage(ReleveEditorConfigPanel.class, "ReleveTopComponent.panelDeath.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Death.png")), jScrollPaneDeath); // NOI18N
+        jTabbedPane.addTab(org.openide.util.NbBundle.getMessage(ReleveEditorConfigDialog.class, "ReleveTopComponent.panelDeath.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Death.png")), jScrollPaneDeath); // NOI18N
 
         jTableMisc.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -188,7 +197,7 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
         ));
         jScrollPaneMisc.setViewportView(jTableMisc);
 
-        jTabbedPane.addTab(org.openide.util.NbBundle.getMessage(ReleveEditorConfigPanel.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/misc.png")), jScrollPaneMisc); // NOI18N
+        jTabbedPane.addTab(org.openide.util.NbBundle.getMessage(ReleveEditorConfigDialog.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/misc.png")), jScrollPaneMisc); // NOI18N
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -197,7 +206,7 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         jPanelConfig.add(jTabbedPane, gridBagConstraints);
-        jTabbedPane.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ReleveEditorConfigPanel.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle")); // NOI18N
+        jTabbedPane.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ReleveEditorConfigDialog.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle")); // NOI18N
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -210,13 +219,21 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
         jPanelFirstName.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanelFirstName.setLayout(new java.awt.GridBagLayout());
 
-        jButton1.setText(org.openide.util.NbBundle.getMessage(ReleveEditorConfigPanel.class, "ReleveEditorConfigPanel.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonOk.setText(org.openide.util.NbBundle.getMessage(ReleveEditorConfigDialog.class, "ReleveEditorConfigDialog.jButtonOk.text")); // NOI18N
+        jButtonOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonOkActionPerformed(evt);
             }
         });
-        jPanelFirstName.add(jButton1, new java.awt.GridBagConstraints());
+        jPanelFirstName.add(jButtonOk, new java.awt.GridBagConstraints());
+
+        jButtonCancel.setText(org.openide.util.NbBundle.getMessage(ReleveEditorConfigDialog.class, "ReleveEditorConfigDialog.jButtonCancel.text")); // NOI18N
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelActionPerformed(evt);
+            }
+        });
+        jPanelFirstName.add(jButtonCancel, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -228,30 +245,21 @@ public class ReleveEditorConfigPanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // TODO add your handling code here:
-        saveConfig();
+        // rien à faire
     }//GEN-LAST:event_formWindowClosed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
+        saveConfig();
+        dispose();
+    }//GEN-LAST:event_jButtonOkActionPerformed
 
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-    * @param args the command line arguments
-    */
-//    public static void main(String args[]) {
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//
-//            public void run() {
-//                new ReleveCompletionPanel().setVisible(true);
-//            }
-//        });
-//    }
-
-    
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
+        dispose();
+    }//GEN-LAST:event_jButtonCancelActionPerformed
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonOk;
     private javax.swing.JPanel jPanelConfig;
     private javax.swing.JPanel jPanelFirstName;
     private javax.swing.JScrollPane jScrollPaneBirth;

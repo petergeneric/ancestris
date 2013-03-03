@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="fr-fr"><head><title>Configuration</title>
+<html lang="fr-fr"><head><title>Copie des relevés dans un fichier GEDCOM</title>
 
 <link rel="stylesheet" href="./ancestris.css">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head>
@@ -8,9 +8,9 @@
 des relevés dans un fichier GEDCOM</h1>
 Les informations d'un relevé peuvent être copiées dans un
 arbre&nbsp;d'un fichier GEDCOM en utilisant la fonction
-Glisser-Déposer . <br>
+Glisser-Déposer (Drag and drop) avec la souris . <br>
 Ainsi il n'est pas besoin de
-re-saisir toutes les informations du relevé avec l'éditeur d'Ancestris.<br>
+re-saisir toutes les informations du relevé pour les insérer dans le fichier GEDCOM.<br>
 <br>
 <span style="color: red;">Attention : Cette fonctionnalité
 est en cours de développement. </span><br style="color: red;">
@@ -20,32 +20,9 @@ exemple
 les informations concernant les ex-conjoints des époux d'un relevé de
 mariage ne sont pas utilisées. Pas ailleurs les relevés de type Divers
 ne sont pas copiables.</span><br>
+<br>Cette fonctionnalité est décrite ci-dessous par un exemple.<br>
 <br>
-<br>
-Sommaire:<br>
-<ul id="mozToc">
-<!--mozToc h1 1 h2 2 h3 3 h4 4 h5 5 h6 6--><li><a href="#mozTocId61303">1) Afficher un exemple </a></li>
-<li><a href="#mozTocId394905">2)
-Copier un relevé de naissance </a></li>
-<li><a href="#mozTocId148095">3)
-Copier un relevé de mariage&nbsp; </a></li>
-<li><a href="#mozTocId463026">4)
-Conseils d'utilisation et limitations</a>
-<ul>
-<li><a href="#mozTocId786864">Ajout dans
-l'ordre chronologique </a></li>
-<li><a href="#mozTocId904990">Glisser-déposer
-en dehors d'une
-entité</a></li>
-<li><a href="#mozTocId662486">Annuler
-un glisser-déposer </a></li>
-<li><a href="#mozTocId970655">Règles
-de calcul des dates </a></li>
-</ul>
-</li>
-</ul>
-<br>
-<h1 class=""><a class="mozTocH1" name="mozTocId61303"></a>1) Afficher un exemple </h1>
+<h2><a class="mozTocH1" name="mozTocId61303"></a>1) Afficher un exemple </h2>
 Ouvrir le fichier Gedcom exemple et le&nbsp;relevé de démonstration
 fournis avec Ancestris<br>
 <br>
@@ -76,9 +53,10 @@ Arbre et&nbsp;relevé affichés cote à cote&nbsp; <img src="images/dnd01.jpg" s
 <br>
 <br>
 <br>
-<h1><a class="mozTocH1" name="mozTocId394905"></a>2)
-Copier un relevé de naissance </h1>
-Exécuter un Glisser-déposer du relevé de naissance vers le mariage des parents
+<h2><a class="mozTocH1" name="mozTocId394905"></a>2)
+Copier un relevé de naissance </h2>
+Exécuter un Glisser-déposer du relevé de naissance vers le mariage des
+parents
 dans&nbsp;l'arbre : <br>
 <ul>
 <li>cliquer dans la table sur le relevé du <span style="font-weight: bold;">13 sep 1751 &nbsp;CAPET Louis
@@ -117,8 +95,12 @@ souhaite
 pas copier.</p>
 <p><br>
 La
-colonne intitulée <span style="font-weight: bold;">Identifiant</span> précise les identifiants des entités
-(individu ou famille) qui sont concernées par les modifications.</p><p>Dans cet exemple un nouvel invidivu va être créé en tant qu'enfant de la famille F9 .</p><p></p>
+colonne intitulée <span style="font-weight: bold;">Identifiant</span>
+précise les identifiants des entités
+(individu ou famille) qui sont concernées par les modifications.</p>
+<p>Dans cet exemple un nouvel individu va être créé en tant
+qu'enfant de la famille F9.</p>
+<p></p>
 </td>
 </tr>
 </tbody>
@@ -140,8 +122,8 @@ l'éditeur Gedcom.<br>
 <br>
 <br>
 <br>
-<h1><a class="mozTocH1" name="mozTocId148095"></a>3)
-Copier un relevé de mariage&nbsp; </h1>
+<h2><a class="mozTocH1" name="mozTocId148095"></a>3)
+Copier un relevé de mariage&nbsp; </h2>
 Exécuter un Glisser-déposer du relevé de mariage du 16 mai 1770 de la
 table vers le mariage concerné dans l'arbre : <br>
 <br>
@@ -157,7 +139,8 @@ Valider l'ajout des données en cliquant sur le bouton OK<br>
 <tr>
 <td style="width: 10%;"><img src="images/dnd07.jpg" style="width: 441px; height: 874px;" alt=""></td>
 <td>
-<p>Le mariage de la famille <span style="font-weight: bold;">F10</span> existe déjà dans l'arbre. </p>
+<p>Le mariage de la famille <span style="font-weight: bold;">F10</span> existe déjà dans
+l'arbre. </p>
 <p><br>
 Dans
 ce cas, seules les informations du relevé qui ne sont pas déjà
@@ -165,7 +148,8 @@ présentes dans l'arbre seront copiées. Ces informations sont
 &nbsp;marquées avec une coche dans la colonne centrale. </p>
 <p><br>
 Par exemple les parents de l'épouse<span style="font-weight: bold;">
-&nbsp;François DE HASBOURG-LORRAINE et Marie-Thérèse DE BRUNSWICK-WOLFENBÜTTEL</span>
+&nbsp;François DE HASBOURG-LORRAINE et Marie-Thérèse DE
+BRUNSWICK-WOLFENBÜTTEL</span>
 seront ajoutés dans l'arbre avec création d'une nouvelle famille et de
 deux nouveaux individus. </p>
 <p><br>
@@ -174,7 +158,8 @@ Remarque
 déduites&nbsp;des données saisies dans le relevé. Un <span style="font-weight: bold;">bulle</span>
 d'information précise comment ces dates sont déduites.</p>
 <p><br>
-Remarque : Il est possible de <span style="font-weight: bold;">décocher</span> les données que l'on ne souhaite
+Remarque : Il est possible de <span style="font-weight: bold;">décocher</span>
+les données que l'on ne souhaite
 pas copier.</p>
 <br>
 </td>
@@ -190,20 +175,22 @@ Les parents de l'épouse sont ajoutés dans l'arbre <br>
 <br>
 <br>
 <br>
-<h1><a class="mozTocH1" name="mozTocId463026"></a>4)
-Conseils d'utilisation et limitations</h1>
-<h2><a class="mozTocH3" name="mozTocId786864"></a><span style="font-weight: bold;">Ajout dans l'ordre chronologique </span></h2>
-Il est préférable de copier les relevés dans l'ordre chronologique .
+<h2><a class="mozTocH1" name="mozTocId463026"></a>4)
+Conseils d'utilisation et limitations</h2>
+<h3><a class="mozTocH3" name="mozTocId786864"></a><span style="font-weight: bold;">Ajout dans l'ordre chronologique </span></h3>
+Il est préférable de copier les relevés dans l'ordre chronologique.
 Pour cela il vaut mieux utiliser l'<span style="font-weight: bold;">onglet
 "TOUS" classé par date</span>
-et ajouter les relevé du plus anciens au plus récent , plutôt que
+et ajouter les relevé du plus anciens au plus récent, plutôt que
 d'ajouter d'abord les relevés de naissance puis les mariages, puis les
 décès.&nbsp;<br>
-Cela améliore les résultats de la recherche des individus correspondant au relevés.<br>
+Cela améliore les résultats de la recherche des individus correspondant
+aux relevés.<br>
 <br>
-<h2><a class="mozTocH3" name="mozTocId904990"></a><span style="font-weight: bold;">Glisser-déposer en dehors d'une
-entité de l'arbre</span></h2>
-Il est possible de déposer un relevé&nbsp;n'importe où dans la fenêtre de l'arbre dynamique, en dehors
+<h3><a class="mozTocH3" name="mozTocId904990"></a><span style="font-weight: bold;">Glisser-déposer en dehors d'une
+entité de l'arbre</span></h3>
+Il est possible de déposer un relevé&nbsp;n'importe où dans la
+fenêtre de l'arbre dynamique, en dehors
 d'une entité de l'arbre.<br>
 <br>
 Dans
@@ -211,36 +198,42 @@ ce cas l'outil&nbsp;cherche&nbsp;l'individu ou la famille qui
 correspond le mieux au relevé et affiche une liste de propositions
 classées par ordre décroissant de pertinence.<br>
 <ul>
-<li><span style="font-weight: bold;">avantage</span> : cela évite de rechercher au préalable dans
+<li><span style="font-weight: bold;">avantage</span>
+: cela évite de rechercher au préalable dans
 l'arbre l'individu concerné par le relevé.</li>
 <li><span style="font-weight: bold;">inconvénient</span>
 : l'outil peut ne trouver aucune proposition si une donnée du relevé
-est incompatible avec les individus de l'arbre,&nbsp; ou ,au
-contraire,&nbsp;l'outil peut trouver plusieurs dizaines de
+est incompatible avec les individus de l'arbre,&nbsp; ou&nbsp;au
+contraire&nbsp;l'outil peut trouver plusieurs dizaines de
 propositions si les données du relevé sont trop imprécises. <span style="font-weight: bold;"></span></li>
 </ul>
 <br>
-<h2><a class="mozTocH3" name="mozTocId662486"></a>Annuler
-un glisser-déposer </h2>
+<h3><a class="mozTocH3" name="mozTocId662486"></a>Annuler
+un glisser-déposer </h3>
 Pour
-annuler les modifications faites dans l'arbre après un Glisser-déposer
-, cliquer n'importe où dans l'arbre et appuyer sur les<span style="font-weight: bold;"> touches CONTROL-Z.</span><br>
+annuler les modifications faites dans l'arbre après un Glisser-déposer, cliquer n'importe où dans l'arbre et appuyer sur les<span style="font-weight: bold;"> touches CONTROL-Z.</span><br>
 Un
 seul CONTROL-Z suffit à supprimer tous les individus créés et toutes
 les données qui ont été ajoutées par un Glisser-déposer.<br>
 <br>
-<h2><a class="mozTocH3" name="mozTocId970655"></a>Règles
-de calcul des dates </h2>
+<h3><a class="mozTocH3" name="mozTocId970655"></a>Règles
+de calcul des dates </h3>
 La recherche des individus correspondant à un relevé utilise les
 règles&nbsp;suivantes:<br>
 <ul>
-<li>Age minimum de mariage : 15 ans</li>
-<li>Age minimum de parent : 15 ans</li>
+<li>Age minimum de mariage : 18 ans</li>
+<li>Age minimum de parent : 18 ans</li>
 <li>Age maximum de parent : 60 ans</li>
 <li>Age maximum d'un individu : 100 ans</li>
-<li>Intervalle d'incertitude pour les dates approximatives (
-date EST, ABT, CALC) : +/- 5 ans</li>
-</ul>Ces données de base ne sont pas modifiables pour l'instant, mais elles
-le deviendront dans une version &nbsp;ultérieure. <br><br><br><br>
+<li>Intervalle d'incertitude pour les dates approximatives (date EST, ABT, CALC) : +/- 5 ans</li>
+</ul>Actuellement ces données de base ne sont pas modifiables. <br>
 <br>
+<br>
+<h2>5)
+Description des données copiées dans le gedcom</h2>
+Résultat de la copie d'un relevé de naissance dans un &nbsp;fichier GEDCOM<br>
+
+<table style="text-align: left; width: 1243px; height: 1153px;" border="1" cellpadding="2" cellspacing="2"><tbody><tr><td style="vertical-align: top;"><img style="width: 307px; height: 1018px;" alt="releve naissance" src="images/copie_naissance.jpg"></td><td style="height: 80%; width: 100%; text-align: left; vertical-align: top;"><pre><span style="font-family: Arial;">0 @I00002@ INDI</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 NAME Xavier Marie Joseph /CAPET/</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 GIVN Xavier Marie Joseph</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 SEX M</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 BIRT</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE 7 SEP 1753 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><a style="font-family: Arial;" href="#INDI:DATE">(*)</a><br style="font-family: Arial;"><span style="font-family: Arial;">2 PLAC Versailles,78646,Yvelines,,FRANCE,</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 NOTE né d'hier</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 CONT Parrain/témoin: Prénom Parrain NOM-PARRAIN, Profession parrain, commentaire parrain</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 CONT Marraine/témoin: Prénom Marraine NOM-MARRAINE, Profession marraine, commentaire marraine</span><br style="font-family: Arial;"><span style="font-family: Arial;">3<br>CONT Témoin(s): Prénom Témoin 3 NOM-TÉMOIN 4, Profession témoins 3,<br>commentaire témoin 3, Prénom-Témoin 4 NOM-TÉMOIN 4, Profession témoins<br>4, commentaire témoin 4</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 CONT Commentaire père: commentaire du père</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 CONT Commentaire mère: commentaire mère</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 CONT commentaire général</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 CONT Photo: page 45</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 SOUR @S00001@</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 PAGE 2E1234, page 45</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 FAMC @F00001@</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 CHAN</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE 28 FEB 2013</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 TIME 19:00:08</span><br style="font-family: Arial;"><span style="font-family: Arial;"><br>0 @S00001@ SOUR</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 TITL Etat civil Versailles</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 CHAN</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE 28 FEB 2013</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 TIME 19:00:08</span><br style="font-family: Arial;"><span style="font-family: Arial;"><br>0 @F00001@ FAM</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 HUSB @I00003@</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 WIFE @I00004@</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 MARR</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE BEF 1753</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 NOTE Date de mariage ava 1753 déduite de l'acte de naissance de Xavier Marie Joseph CAPET le 08/09/1753 (Versailles)</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 CHIL @I00002@</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 CHAN</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE 28 FEB 2013</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 TIME 19:00:08</span><br style="font-family: Arial;"><span style="font-family: Arial;"><br>0 @I00003@ INDI</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 NAME Louis /CAPET/</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 SEX M</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 BIRT</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE CAL 1720</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 NOTE Date de naissance cal 1720 déduite de l'acte de naissance de Xavier Marie Joseph CAPET le 08/09/1753 (Versailles)</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 DEAT</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE AFT 1752</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 NOTE Date de décès apr 1752 déduite de l'acte de naissance de Xavier Marie Joseph CAPET le 08/09/1753 (Versailles)</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 OCCU Profession père</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE 8 SEP 1753</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 PLAC Domicile,Père,,,,</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 NOTE Profession indiquée dans l'acte de naissance de Xavier Marie Joseph CAPET le 08/09/1753 (Versailles)</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 FAMS @F00001@</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 CHAN</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE 28 FEB 2013</span><br style="font-family: Arial;"><span style="font-family: Arial;">3 TIME 19:00:08</span><br style="font-family: Arial;"><span style="font-family: Arial;"><br>0 @I00004@ INDI</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 NAME Marie-Josèphe /VON SACHSEN/</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 SEX F</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 BIRT</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE CAL 1723</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 NOTE Date de naissance cal 1723 déduite de l'acte de naissance de Xavier Marie Joseph CAPET le 08/09/1753 (Versailles)</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 DEAT</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE AFT 1753</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 NOTE Date de décès apr 1753 déduite de l'acte de naissance de Xavier Marie Joseph CAPET le 08/09/1753 (Versailles)</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 OCCU Profession mère</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 DATE 8 SEP 1753</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 PLAC Domicile,Mère,,,,</span><br style="font-family: Arial;"><span style="font-family: Arial;">2 NOTE Profession indiquée dans l'acte de naissance de Xavier Marie Joseph CAPET le 08/09/1753 (Versailles)</span><br style="font-family: Arial;"><span style="font-family: Arial;">1 FAMS @F00001@</span></pre></td></tr></tbody></table><br>
+<a name="INDI:DATE"></a>(*) Le tag INDI:DATE contient la date de naissance si elle est
+    renseignée. Sinon le tag INDI:DATE contient la date de l'acte. <br><br>
 </body></html>

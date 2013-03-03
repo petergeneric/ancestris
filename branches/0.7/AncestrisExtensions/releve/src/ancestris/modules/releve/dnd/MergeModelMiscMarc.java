@@ -297,7 +297,7 @@ public class MergeModelMiscMarc extends MergeModel {
             Property marcProperty = currentFamily.getProperty("MARC");
 
             // j'affiche la source du mariage
-            Property sourceProperty = MergeQuery.findSource(record, gedcom, marcProperty);
+            Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, marcProperty);
             addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
             addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
 
