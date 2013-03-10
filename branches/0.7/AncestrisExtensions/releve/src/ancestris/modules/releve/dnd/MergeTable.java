@@ -3,8 +3,6 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.MergeModel.CompareResult;
 import ancestris.modules.releve.dnd.MergeModel.RowType;
 import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.Source;
 import genj.util.WordBuffer;
@@ -12,8 +10,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
@@ -204,8 +203,9 @@ public class MergeTable extends JTable {
             if ( value != null ) {
                 if (value instanceof PropertyDate) {
                     setText(((PropertyDate)value).getDisplayValue());
-                    if ( column==1) {
-                        setToolTipText(((PropertyDate)value).getPhrase());
+                    if ( column==1 && !((PropertyDate)value).getPhrase().isEmpty()) {
+                        //setToolTipText(((PropertyDate)value).getPhrase());
+                        setToolTipText(wrapToolTip(((PropertyDate)value).getPhrase(), 100));
                     }
                 } else if (value instanceof Source) {
                     if ( column == 4 ) {
@@ -230,13 +230,14 @@ public class MergeTable extends JTable {
                           ||  mergeRow.rowType == RowType.WifeMarriedOccupation
                           ||  mergeRow.rowType == RowType.WifeFatherOccupation
                           ||  mergeRow.rowType == RowType.WifeMotherOccupation )
-                          && (column == 1 || column==3) ) {
-                        String tooltipText = "<html>";
-                        tooltipText += value.toString().replace("\n", "<br>");
-                        tooltipText += "</html>";
-                        setToolTipText(tooltipText);
+                          && (column == 1 || column==3) && !value.toString().isEmpty()) {
+                        //String tooltipText = "<html>";
+                        //tooltipText += value.toString().replace("\n", "<br>");
+                        //tooltipText += "</html>";
+
+                        setToolTipText(wrapToolTip(value.toString(), 100));
                     }
-                    setText(value.toString());
+                    setText(value.toString().replace("\n", " "));
                 }
             } else {
                 // la valeur est nulle
@@ -322,31 +323,53 @@ public class MergeTable extends JTable {
         }
     }
 
-//    private class MergeCellComboRenderer extends JLabel implements ListCellRenderer {
-//
-//        public MergeCellComboRenderer() {
-//            setOpaque(true);
-//        }
-//
-//        @Override
-//        public Component getListCellRendererComponent(JList list,
-//                Object value,
-//                int index,
-//                boolean isSelected,
-//                boolean cellHasFocus) {
-//
-//            if (value != null) {
-//                if (value instanceof Source) {
-//                    setText(((Source) value).toString());
-//                } else {
-//                    setText(value.toString());
-//                }
-//            } else {
-//                setText("");
-//            }
-//            return this;
-//        }
-//    }
+    /**
+     * convertit en HTML et "wrappe" le texte d'un tooltip
+     * @param tip
+     * @param length
+     * @return
+     */
+    public static String wrapToolTip(String tip, int length) {
+        // marge de detection d'un espace pour wrapper
+        final int SPACE_BUFFER = 30;
+        if (tip.length() <= length + SPACE_BUFFER) {
+            return tip;
+        }
+        List<String> lines = new ArrayList<String>();
+        int maxLength = 0;
+        while (maxLength < tip.length()) {
+            if (maxLength + length + SPACE_BUFFER < tip.length()) {
+                String overLong = tip.substring(maxLength, maxLength + length + SPACE_BUFFER);
+                int firstReturn = overLong.indexOf('\n');
+                if ( firstReturn > -1 ) {
+                    // je decoupe au niveau du caractere '\n'
+                    lines.add(tip.substring(maxLength, maxLength + firstReturn)+ "</br>");
+                    maxLength = maxLength + firstReturn + 1;
+                } else {
+                    int lastSpace = overLong.lastIndexOf(' ');
+                    if (lastSpace >= length) {
+                        // je decoupe au niveau dernier espace
+                        lines.add(tip.substring(maxLength, maxLength + lastSpace));
+                        maxLength = maxLength + lastSpace + 1;
+                    } else {
+                        // je prends toute la ligne
+                        lines.add(tip.substring(maxLength, length));
+                        maxLength = maxLength + length;
+                    }
+                }
+            } else {
+                // je prends toute la ligne
+                lines.add(tip.substring(maxLength));
+                break;
+            }
+        }
 
-
+        StringBuilder sb = new StringBuilder("<html>");
+        for (int i = 0; i < lines.size() - 1; i++) {
+            sb.append(lines.get(i)).append("<br>");
+        }
+        sb.append(lines.get(lines.size() - 1));
+        sb.append(("</html>"));
+        return sb.toString();
+    }
 }

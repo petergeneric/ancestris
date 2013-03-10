@@ -101,7 +101,7 @@ class MergeModelBirth extends MergeModel {
             // releve et avec les dates de naissance compatibles et les parents compatibles)
             List<Indi> sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
 
-            // je cherche les familles compatibles avec le releve de naissance
+            // je cherche les familles des parents compatibles avec le releve de naissance
             List<Fam> families = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
 
             // j'ajoute un nouvel individu avec les familles compatibles
@@ -411,7 +411,7 @@ class MergeModelBirth extends MergeModel {
 
             // je copie la date du mariage et une note indiquant l'origine de cette date
             if (isChecked(RowType.IndiParentMarriageDate)) {                
-                copyMarriageDate(family, record.getIndiParentMarriageDate(), record );
+                copyMarriageDate(family, getRow(RowType.IndiParentMarriageDate), record );
             }
 
             // je copie le nom et le prenom du pere
@@ -433,12 +433,12 @@ class MergeModelBirth extends MergeModel {
 
             // je copie la date de naissance du pere
             if (isChecked(RowType.IndiFatherBirthDate)) {
-                copyBirthDate(father, record.getIndiFatherBirthDate(), "", record);
+                copyBirthDate(father, getRow(RowType.IndiFatherBirthDate), "", record);
             }
 
             // je copie la date de décès du pere
             if (isChecked(RowType.IndiFatherDeathDate)) {
-                copyDeathDate(father, record.getIndiFatherDeathDate(), "", record);
+                copyDeathDate(father, getRow(RowType.IndiFatherDeathDate), "", record);
             }
 
             // je copie la profession du pere
@@ -465,12 +465,12 @@ class MergeModelBirth extends MergeModel {
 
             // je copie la date de naissance de la mere
             if (isChecked(RowType.IndiMotherBirthDate)) {
-                copyBirthDate(mother, record.getIndiMotherBirthDate(), "", record);
+                copyBirthDate(mother, getRow(RowType.IndiMotherBirthDate), "", record);
             }
 
             // je copie la date de décès de la mere
             if (isChecked(RowType.IndiMotherDeathDate)) {
-                copyDeathDate(mother, record.getIndiMotherDeathDate(), "", record);
+                copyDeathDate(mother, getRow(RowType.IndiMotherDeathDate), "", record);
             }
 
             // je met à jour la profession de la mere
@@ -534,10 +534,19 @@ class MergeModelBirth extends MergeModel {
             if (selectedEntity instanceof Fam) {
                 summary = "Nouvel enfant de la famille sélectionnée";
             } else {
-                summary = "Modifier "+ currentIndi.toString(true);
-//                if ( currentIndi.equals(selectedEntity)) {
-//                    summary += " "+ "(Selectionné)";
-//                }
+                if ( getRow(RowType.IndiParentFamily).entityObject == null ) {
+                    // l'enfant n'a pas de famille dans le gedcom
+                    summary = "Modifier "+ currentIndi.toString(true) + " - nouvelle famille" ;
+                } else {
+                    // l'enfant a une famille dans le gedcom
+                    if( currentIndi.isDescendantOf((Fam)getRow(RowType.IndiParentFamily).entityObject)) {
+                        // l'enfant est déjà descendant la famille dans le gedcom
+                        summary = "Modifier "+ currentIndi.toString(true);
+                    } else {
+                        // l'enfant n'est pas encore descendant de la famille dans le gedcom
+                        summary = "Modifier "+ currentIndi.toString(true) + " - ajout filiation avec " + (Fam)getRow(RowType.IndiParentFamily).entityObject;
+                    }
+                }
             }
         }
         return summary;

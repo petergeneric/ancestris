@@ -188,7 +188,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.rowType = rowType;
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.entityValue = entityValue;
-        mergeRow.recordValue = recordValue;
+        // je clone la valeur , y compris la phase
+        PropertyDate cloneDate = new PropertyDate();
+        cloneDate.setValue(recordValue.getFormat(), recordValue.getStart(), recordValue.getEnd(), recordValue.getPhrase());
+        mergeRow.recordValue = cloneDate;
         
         if (isRowParentApplicable(rowType)) {
 
@@ -238,7 +241,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                                 mergeRow.compareResult = CompareResult.COMPATIBLE;
                             } else {
                                 // je propose une date plus precise que celle du releve
-                                recordValue.setValue(bestDate.getFormat(), bestDate.getStart(), bestDate.getEnd(), bestDate.getPhrase());
+                                cloneDate.setValue(bestDate.getFormat(), bestDate.getStart(), bestDate.getEnd(), bestDate.getPhrase());
                                 mergeRow.merge = true;
                                 mergeRow.compareResult = CompareResult.COMPATIBLE;
                             } 
@@ -668,7 +671,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param place     lieu de naissance
      * @param record    releve servant a renseigner la note
      */
-    static protected void copyBirthDate(Indi indi, PropertyDate birthDate, String place, MergeRecord record ) {
+    static protected void copyBirthDate(Indi indi, MergeRow mergeRow, String place, MergeRecord record ) {
         Property birthProperty = indi.getProperty("BIRT");
         if (birthProperty == null) {
             birthProperty = indi.addProperty("BIRT", "");
@@ -678,6 +681,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         if (propertyDate == null) {
             propertyDate = (PropertyDate) birthProperty.addProperty("DATE", "");
         }
+        PropertyDate birthDate = (PropertyDate) mergeRow.recordValue;
         propertyDate.setValue(birthDate.getValue());
 
         // j'ajoute le lieu
@@ -701,7 +705,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param place     lieu de naissance
      * @param record    releve servant a renseigner la note
      */
-    static protected void copyDeathDate(Indi indi, PropertyDate deathDate, String place, MergeRecord record ) {
+    static protected void copyDeathDate(Indi indi, MergeRow mergeRow, String place, MergeRecord record ) {
         Property deathProperty = indi.getProperty("DEAT");
         if (deathProperty == null) {
             deathProperty = indi.addProperty("DEAT", "");
@@ -711,6 +715,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         if (propertyDate == null) {
             propertyDate = (PropertyDate) deathProperty.addProperty("DATE", "");
         }
+        PropertyDate deathDate = (PropertyDate) mergeRow.recordValue;
         propertyDate.setValue(deathDate.getValue());
 
         // j'ajoute le lieu
@@ -735,7 +740,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param occupationDate    date du releve
      * @param record            releve servant a renseigner la note 
      */
-    static protected void copyMarriageDate(Fam family, PropertyDate marriageDate, MergeRecord record ) {
+    static protected void copyMarriageDate(Fam family, MergeRow mergeRow, MergeRecord record ) {
         // j'ajoute (ou remplace) la date du mariage des parents
         // je crée la propriété MARR
         Property marriageProperty = family.getProperty("MARR");
@@ -747,6 +752,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         if (propertyDate == null) {
             propertyDate = (PropertyDate) marriageProperty.addProperty("DATE", "");
         }
+        PropertyDate marriageDate = (PropertyDate) mergeRow.recordValue;
         propertyDate.setValue(marriageDate.getValue());
 
         // j'ajoute une note indiquant l'origine de la date de naissance

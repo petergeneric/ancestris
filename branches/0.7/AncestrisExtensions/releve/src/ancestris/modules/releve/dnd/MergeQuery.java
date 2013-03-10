@@ -1873,7 +1873,7 @@ public class MergeQuery {
                     start2 = startPit.add(0, 0, -aboutYear).getJulianDay();
                     PointInTime endPit = new PointInTime();
                     endPit.set(gedcomDate.getStart());
-                    end2 = startPit.add(0, 0, +aboutYear).getJulianDay();
+                    end2 = endPit.add(0, 0, +aboutYear).getJulianDay();
                     about2 = true;
                 } 
 
@@ -2001,30 +2001,33 @@ public class MergeQuery {
      * @return occupation+residence+date or empty string
      */   
     static protected String findOccupation(Indi indi, PropertyDate occupationDate) {
-        Property occupationProperty = null;
-        for (Property occu : indi.getProperties("OCCU")) {
-            for (Property occuDate : occu.getProperties("DATE")) {
-                if (occupationProperty == null) {
-                    occupationProperty = occu;
+        Property foundOccupation = null;
+        Property foundDate = null;
+        for (Property iterationOccupation : indi.getProperties("OCCU")) {
+            for (Property iterationDate : iterationOccupation.getProperties("DATE")) {
+                if (foundOccupation == null) {
+                    foundOccupation = iterationOccupation;
+                    foundDate = iterationDate;
                 } else {
-                    if (Math.abs(occupationDate.compareTo((PropertyDate) occuDate)) <= Math.abs(occupationDate.compareTo( occupationDate))) {
-                        occupationProperty = occu;
+                    if (Math.abs(occupationDate.compareTo((PropertyDate) iterationDate)) <= Math.abs(occupationDate.compareTo(foundDate))) {
+                        foundOccupation = iterationOccupation;
+                        foundDate = iterationDate;
                     }
                 }
 
             }
         }
         String result = "";
-        if (occupationProperty != null) {
-            result = occupationProperty.getValue();
-            Property place = occupationProperty.getProperty("PLAC");
+        if (foundOccupation != null) {
+            result = foundOccupation.getValue();
+            Property place = foundOccupation.getProperty("PLAC");
             if ( place != null && !place.getValue().isEmpty()) {
                 if (!result.isEmpty()) {
                     result += ", ";
                 }
                 result += place.getValue();
             }
-            String date = occupationProperty.getPropertyDisplayValue("DATE");
+            String date = foundOccupation.getPropertyDisplayValue("DATE");
             if (!date.isEmpty()) {
                 result += " (" + date + ")";
             }
@@ -2036,30 +2039,39 @@ public class MergeQuery {
 
     /**
      * retourne le domicile d'un individu.
-     * S'il y a plusieurs domicile, retourne celui qui a la date la plus proche de
+     * S'il y a plusieurs domiciles, retourne celui qui a la date la plus proche de
      * la date donnée en paramètre
      * @param indi
      * @param residenceDate
      * @return residence+date or empty string
      */
     static protected String findResidence(Indi indi, PropertyDate residenceDate) {
-        Property residenceProperty = null;
-        for (Property residence : indi.getProperties("RESI")) {
-            for (Property occuDate : residence.getProperties("DATE")) {
-                if (residenceProperty == null) {
-                    residenceProperty = residence;
+        Property foundResidence = null;
+        Property foundDate = null;
+        for (Property iterationResidence : indi.getProperties("RESI")) {
+            for (Property iterationDate : iterationResidence.getProperties("DATE")) {
+                if (foundResidence == null) {
+                    foundResidence = iterationResidence;
+                    foundDate = iterationDate;
                 } else {
-                    if (Math.abs(residenceDate.compareTo((PropertyDate) occuDate)) <= Math.abs(residenceDate.compareTo( residenceDate))) {
-                        residenceProperty = residence;
+                    if (Math.abs(residenceDate.compareTo((PropertyDate) iterationDate)) <= Math.abs(residenceDate.compareTo( foundDate))) {
+                        foundResidence = iterationResidence;
+                        foundDate = iterationDate;
                     }
                 }
-
             }
         }
         String result = "";
-        if (residenceProperty != null) {
-            result = residenceProperty.getValue();
-            String date = residenceProperty.getPropertyDisplayValue("DATE");
+        if (foundResidence != null) {
+            result = foundResidence.getValue();
+            Property place = foundResidence.getProperty("PLAC");
+            if ( place != null && !place.getValue().isEmpty()) {
+                if (!result.isEmpty()) {
+                    result += ", ";
+                }
+                result += place.getValue();
+            }
+            String date = foundResidence.getPropertyDisplayValue("DATE");
             if (!date.isEmpty()) {
                 result += " (" + date + ")";
             }
