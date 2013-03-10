@@ -370,7 +370,7 @@ public class MergeRecord {
             IndiFatherDeathDate = calculateParentDeathDate(
                    record.getIndiFatherDead()!=null ? record.getIndiFatherDead().getState() :false,
                    getIndiBirthDate(),
-                   9 // le pere peut être decede au plus tot 9 mois avant la naissance
+                   9 // le pere peut être decede au plus tot apres la conception, soit 9 mois avant la naissance
                );
         }
         return IndiFatherDeathDate;
@@ -620,7 +620,7 @@ public class MergeRecord {
              WifeFatherDeathDate = calculateParentDeathDate(
                    record.getWifeFatherDead()!=null ? record.getWifeFatherDead().getState() :false,
                    getWifeBirthDate(),
-                   9 // le pere peut être decede avant la naissance - 9 mois
+                   9 // le pere peut être decede au plus tot apres la conception, soit 9 mois avant la naissance
                );
         }
         return WifeFatherDeathDate;
@@ -1415,62 +1415,70 @@ public class MergeRecord {
     }
 
     /**
-     * calcule la date de deces d'un parent
+     * calcule la date de deces d'un parent a partir de la date du relevé et
+     * la date de naissance d'un enfant.
+     *  
+     * enfant
      * @param record
      * @param dead      true si le parent est decede avant la date de l'evenement
-     * @param birthDate date de naissance de l'enfant
+     * @param childBirthDate date de naissance de l'enfant
      * @param monthBeforeBirth nombre de mois du deces avant la naissance de l'enfant (9 mois pour le pere, 0 mois pour la mere)
      * @return date de deces du parent
      */
-    private PropertyDate calculateParentDeathDate(boolean dead, PropertyDate birthDate, int monthBeforeBirth ) throws Exception {
+    private PropertyDate calculateParentDeathDate(boolean dead, PropertyDate childBirthDate, int monthBeforeBirth) throws Exception {
 
         PropertyDate parentDeathDate = new PropertyDate();
-        
+
         if (getEventDate().isComparable()) {
             // la naissance de l'individu n'est utilisable pour determiner la date de minimale de deces du pere
             // que si c'est une date exacte ou une date avec une borne inferieure
             // J'ignore la date si c'est une date maximale (BEF) ou estimée
-            PointInTime birthPit = new PointInTime();
+            PointInTime childBirthPit = new PointInTime();
             boolean birthDateUsefull;
-            if (birthDate.isValid()) {
-                if( birthDate.getFormat()== PropertyDate.DATE
-                      ||  birthDate.getFormat()== PropertyDate.AFTER
-                      ||  birthDate.getFormat()== PropertyDate.BETWEEN_AND
-                      ||  birthDate.getFormat()== PropertyDate.CALCULATED
-                    ) {
+            if (childBirthDate.isValid()) {
+                if (childBirthDate.getFormat() == PropertyDate.DATE
+                        || childBirthDate.getFormat() == PropertyDate.AFTER
+                        || childBirthDate.getFormat() == PropertyDate.BETWEEN_AND
+                        || childBirthDate.getFormat() == PropertyDate.CALCULATED) {
                     birthDateUsefull = true;
-                    birthPit.set(birthDate.getStart());
-                    birthPit.add(0, -monthBeforeBirth, 0);
+                    childBirthPit.set(childBirthDate.getStart());
+                    childBirthPit.add(0, -monthBeforeBirth, 0);
                 } else {
                     birthDateUsefull = false;
                 }
             } else {
                 birthDateUsefull = false;
             }
-            
-            if ( dead) {
+
+            if (dead) {
                 if (birthDateUsefull) {
                     // le parent est decede entre la date de naissance et la date du releve
-                    //parentDeathDate.setValue(String.format("BEF %d", getEventDate().getStart().getYear()));
-                    ///parentDeathDate.setValue(String.format("BET %d AND %d", birthPit.getYear(), getEventDate().getStart().getYear()));
-                    parentDeathDate.setValue(PropertyDate.BETWEEN_AND, getYear(birthPit), getYear(getEventDate().getStart()), "date deces= entre la naissance et la date du releve");
+                    // parentDeathDate.setValue(String.format("BEF %d", getEventDate().getStart().getYear()));
+                    // parentDeathDate.setValue(String.format("BET %d AND %d", birthPit.getYear(), getEventDate().getStart().getYear()));
+                    if (monthBeforeBirth == 0) {
+                        parentDeathDate.setValue(PropertyDate.BETWEEN_AND, getYear(childBirthPit), getYear(getEventDate().getStart()), "date deces= entre la naissance de l'enfant et la date du releve");
+                    } else {
+                        parentDeathDate.setValue(PropertyDate.BETWEEN_AND, getYear(childBirthPit), getYear(getEventDate().getStart()), "date deces= entre la conceptionde l'enfant et la date du releve");
+                    }
                 } else {
                     // le parent est decede avant la date du releve
-                    ///parentDeathDate.setValue(String.format("BEF %d", getEventDate().getStart().getYear()));
                     parentDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "date deces= avant la date du releve");
                 }
             } else {
-                if (birthDateUsefull ) {
+                if (birthDateUsefull) {
                     // le parent est decede apres la naissance 
-                    parentDeathDate.setValue(String.format("AFT %d", birthPit.getYear()));
-                    parentDeathDate.setValue(PropertyDate.AFTER, getYear(birthPit), null, "date deces= apres la naissance");
+                    parentDeathDate.setValue(String.format("AFT %d", childBirthPit.getYear()));
+                    if (monthBeforeBirth == 0) {
+                        parentDeathDate.setValue(PropertyDate.AFTER, getYear(childBirthPit), null, "date deces= apres la naissance de l'enfant");
+                    } else {
+                        parentDeathDate.setValue(PropertyDate.AFTER, getYear(childBirthPit), null, "date deces= apres la conception de l'enfant");
+                    }
                 } else {
                     // date inconnue, rien a faire
                 }
             }
         } else {
             // date inconnue, rien a faire
-
         }
 
         return parentDeathDate;

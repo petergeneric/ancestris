@@ -488,7 +488,7 @@ class MergeModelMiscWill extends MergeModel {
             // je copie la date de naissance du releve dans l'individu
             if (isChecked(RowType.IndiBirthDate)) {
                 // j'ajoute (ou remplace) la date de la naissance (le lieu de naissance n'est pas connu)
-                copyBirthDate(currentIndi,record.getIndiBirthDate(), "", record);
+                copyBirthDate(currentIndi, getRow(RowType.IndiBirthDate), "", record);
             }
 
             // je copie le lieu de naissance
@@ -572,12 +572,12 @@ class MergeModelMiscWill extends MergeModel {
 
             // je copie la date, le lieu et commentaire de naissance du conjoint
             if (isChecked(RowType.IndiMarriedBirthDate)) {
-                copyBirthDate(exSpouse, record.getIndiMarriedBirthDate(), "", record);
+                copyBirthDate(exSpouse, getRow(RowType.IndiMarriedBirthDate), "", record);
             }
 
             // je copie la date, le lieu et commentaire de naissance du conjoint
             if (isChecked(RowType.IndiMarriedDeathDate)) {
-                copyDeathDate(exSpouse, record.getIndiMarriedDeathDate(), "", record);
+                copyDeathDate(exSpouse, getRow(RowType.IndiMarriedDeathDate), "", record);
             }
 
             // je copie la profession du conjoint
@@ -602,7 +602,7 @@ class MergeModelMiscWill extends MergeModel {
 
            // je copie la date du mariage avec le conjoint et une note indiquant l'origine de cette date
             if (isChecked(RowType.IndiMarriedMarriageDate)) {
-                copyMarriageDate(family, record.getIndiMarriedMarriageDate(), record );
+                copyMarriageDate(family, getRow(RowType.IndiMarriedMarriageDate), record );
             }
         }
 
@@ -623,7 +623,7 @@ class MergeModelMiscWill extends MergeModel {
 
             // je copie la date du mariage et une note indiquant l'origine de cette date
             if (isChecked(RowType.IndiParentMarriageDate)) {                
-                copyMarriageDate(family, record.getIndiParentMarriageDate(), record );
+                copyMarriageDate(family, getRow(RowType.IndiParentMarriageDate), record );
             }
 
             // je copie le nom et le prenom du pere
@@ -645,12 +645,12 @@ class MergeModelMiscWill extends MergeModel {
 
             // je copie la date de naissance du pere
             if (isChecked(RowType.IndiFatherBirthDate)) {
-                copyBirthDate(father, record.getIndiFatherBirthDate(), "", record);
+                copyBirthDate(father, getRow(RowType.IndiFatherBirthDate), "", record);
             }
 
             //je copie la date de décès du pere
             if (isChecked(RowType.IndiFatherDeathDate)) {
-                copyDeathDate(father, record.getIndiFatherDeathDate(), "", record);
+                copyDeathDate(father, getRow(RowType.IndiFatherDeathDate), "", record);
             }
 
             // je copie la profession du pere
@@ -677,12 +677,12 @@ class MergeModelMiscWill extends MergeModel {
 
             // je copie la date de naissance de la mere
             if (isChecked(RowType.IndiMotherBirthDate)) {
-                copyBirthDate(mother, record.getIndiMotherBirthDate(), "", record);
+                copyBirthDate(mother, getRow(RowType.IndiMotherBirthDate), "", record);
             }
 
             // je copie la date de décès de la mere
             if (isChecked(RowType.IndiMotherDeathDate)) {
-                copyDeathDate(mother, record.getIndiMotherDeathDate(), "", record);
+                copyDeathDate(mother, getRow(RowType.IndiMotherDeathDate), "", record);
             }
 
             // je met à jour la profession de la mere

@@ -542,7 +542,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie la date, le lieu et commentaire de naissance de l'epoux
         if (isChecked(RowType.IndiBirthDate)) {
-            copyBirthDate(husband, record.getIndiBirthDate(), record.getIndiBirthPlace(), record);
+            copyBirthDate(husband, getRow(RowType.IndiBirthDate), record.getIndiBirthPlace(), record);
         }
 
         // je copie la profession de l'epoux
@@ -566,7 +566,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la date du mariage des parents et une note indiquant l'origine de cette date
             if (isChecked(RowType.IndiParentMarriageDate)) {
-                copyMarriageDate(parentfamily, record.getIndiParentMarriageDate(), record );
+                copyMarriageDate(parentfamily, getRow(RowType.IndiParentMarriageDate), record );
             }
             
 
@@ -589,12 +589,12 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la date de naissance du pere de l'epoux
             if (isChecked(RowType.IndiFatherBirthDate)) {
-                copyBirthDate(father, record.getIndiFatherBirthDate(), "", record);
+                copyBirthDate(father, getRow(RowType.IndiFatherBirthDate), "", record);
             }
 
             //je copie la date de décès du pere de l'epoux
             if (isChecked(RowType.IndiFatherDeathDate)) {
-                copyDeathDate(father, record.getIndiFatherDeathDate(), "", record);
+                copyDeathDate(father, getRow(RowType.IndiFatherDeathDate), "", record);
             }
 
             // je copie la profession du pere
@@ -621,12 +621,12 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la date de naissance de la mere de l'epoux
             if (isChecked(RowType.IndiMotherBirthDate)) {
-                copyBirthDate(mother, record.getIndiMotherBirthDate(), "", record);
+                copyBirthDate(mother, getRow(RowType.IndiMotherBirthDate), "", record);
             }
 
             // je copie la date de décès de la mere de l'epoux
             if (isChecked(RowType.IndiMotherDeathDate)) {
-                copyDeathDate(mother, record.getIndiMotherDeathDate(), "", record);
+                copyDeathDate(mother, getRow(RowType.IndiMotherDeathDate), "", record);
             }
 
             // je copie la profession de la mere de l'epoux
@@ -660,7 +660,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie la date, le lieu et le commentaire de naissance de l'epouse
         if (isChecked(RowType.WifeBirthDate)) {
-            copyBirthDate(wife, record.getWifeBirthDate(), record.getWifeBirthPlace(), record);
+            copyBirthDate(wife, getRow(RowType.WifeBirthDate), record.getWifeBirthPlace(), record);
         }
 
         // je copie la profession de l'epouse
@@ -685,7 +685,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la date du mariage des parents et une note indiquant l'origine de cette date
             if (isChecked(RowType.WifeParentMarriageDate)) {
-                copyMarriageDate(parentfamily, record.getWifeParentMarriageDate(), record );
+                copyMarriageDate(parentfamily, getRow(RowType.WifeParentMarriageDate), record );
             }
 
 
@@ -708,12 +708,12 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la date de naissance du pere de l'epouse
             if (isChecked(RowType.WifeFatherBirthDate)) {
-                copyBirthDate(father, record.getWifeFatherBirthDate(), "", record);
+                copyBirthDate(father, getRow(RowType.WifeFatherBirthDate), "", record);
             }
 
             //je copie la date de décès du pere de l'epouse
             if (isChecked(RowType.WifeFatherDeathDate)) {
-                copyDeathDate(father, record.getWifeFatherDeathDate(), "", record);
+                copyDeathDate(father, getRow(RowType.WifeFatherDeathDate), "", record);
             }
 
             // je copie la profession du pere de l'epouse
@@ -740,12 +740,12 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la date de naissance de la mere e l'epouse
             if (isChecked(RowType.WifeMotherBirthDate)) {
-                copyBirthDate(mother, record.getWifeMotherBirthDate(), "", record);
+                copyBirthDate(mother, getRow(RowType.WifeMotherBirthDate), "", record);
             }
 
             // je copie la date de décès de la mere e l'epouse
             if (isChecked(RowType.WifeMotherDeathDate)) {
-                copyDeathDate(mother, record.getWifeMotherDeathDate(), "", record);
+                copyDeathDate(mother, getRow(RowType.WifeMotherDeathDate), "", record);
             }
 
             // je copie la profession de la mere de l'epouse

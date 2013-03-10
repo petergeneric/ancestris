@@ -8,7 +8,6 @@ import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.editor.StandaloneEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.copyFam.CopyFamPanel;
 import ancestris.modules.releve.dnd.TreeViewDropTarget;
@@ -30,11 +29,17 @@ import genj.util.swing.DialogHelper;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import javax.swing.filechooser.FileFilter;
@@ -73,6 +78,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     private JMenuItem menuItemSave      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save"));
     private JMenuItem menuItemSaveAs    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.saveas"));
     private JMenuItem menuItemImport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
+    private JMenuItem menuItemImportClipboard = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.title"));
     private JMenuItem menuItemExport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
     private JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
     private JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
@@ -108,6 +114,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemImport.addActionListener(popupMouseHandler);
         menuItemImport.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png")));
         popup.add(menuItemImport);
+        menuItemImportClipboard.addActionListener(popupMouseHandler);
+        menuItemImportClipboard.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png")));
+        //popup.add(menuItemImportClipboard);
         menuItemExport.addActionListener(popupMouseHandler);
         menuItemExport.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ExportFile16.png")));
         popup.add(menuItemExport);
@@ -397,6 +406,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 saveFileAs();
             } else if (menuItemImport.equals(e.getSource())) {
                 importFile();
+            } else if (menuItemImportClipboard.equals(e.getSource())) {
+                importClipboard();
             } else if (menuItemExport.equals(e.getSource())) {
                 exportFile();
             } else if (menuItemStatistics.equals(e.getSource())) {
@@ -947,7 +958,89 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         loadFile(releveFile, true);
     }
 
+    /**
+     * importe les données du presse papier 
+     *
+     */
+    protected void importClipboard()  {
+        if(dataManager.isDirty()) {
+            // je demande s'il faut sauvegarder les données
+            if ( false == askSaveData() ) {
+                return;
+            }
+        }
+        int result;
+        String title = NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.title");
+        String message = NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.message");
+        String[] options = {
+            NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.import"),
+            NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.cancel")};
+        result = JOptionPane.showOptionDialog(this,
+                message,
+                title,
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                (Icon) null,
+                options,
+                options[0]);
+        switch (result) {
+            case 0:
+                result = 0;
+                break;
+            case 1:
+                result = 1;
+                break;
+            default:
+                // l'utilisateur n'a pas répondu a la question
+                result = -1;
+        }
+        if (result != 0) {
+            return;
+        }
 
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        //odd: the Object param of getContents is not currently used
+        Transferable contents = clipboard.getContents(null);
+
+        boolean hasTransferableText =
+                (contents != null)
+                && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+        String inputData = "";
+        if (hasTransferableText) {
+            try {
+                inputData = (String) contents.getTransferData(DataFlavor.stringFlavor);
+            } catch (UnsupportedFlavorException ex) {
+                //highly unlikely since we are using a standard DataFlavor
+                System.out.println(ex);
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+        }
+        inputData = inputData.replaceAll(";", ",");
+        inputData = inputData.replaceAll("\t", ";");
+
+        // je lis la premiere ligne du fichier
+        if (inputData==null || inputData.isEmpty() ) {
+            //throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.EmptyFile"), ""));
+            return;
+        }
+
+        File inputFile = new File(System.getProperty("user.home") + File.separator + "clipboard.txt");
+        try {
+            FileWriter writer = null;
+            boolean append = false;
+            writer = new FileWriter(inputFile, append);
+            writer.write(inputData);
+            writer.close();
+
+//            setCurrentFile(null);
+            loadFile(inputFile, false);
+        } catch (Exception ex) {
+            // j'intercepte l'exception pour fermer le fichier
+            inputFile.delete();
+            // TODO afficher un message d'erreur
+        }
+    }
 
     /**
      * exporte les releves dans un format different de ANCESTRIS :

@@ -332,70 +332,74 @@ public class MergeQueryTest extends TestCase {
     /**
      * testfindSameIndi
      */
-    public void testIsBestBirthDate() {
+    public void testGetMostAccurateDate() {
         try {
             PropertyDate recordDate = new PropertyDate();
-            PropertyDate birthDate = new PropertyDate();
+            PropertyDate gedcomDate = new PropertyDate();
 
             recordDate.setValue("BEF 1970");
-            birthDate.setValue("BEF 1972");
-            assertEquals("Date du releve BEF plus precises",recordDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("BEF 1972");
+            assertEquals("Date du releve BEF plus precises",recordDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("BEF 1793");
-            birthDate.setValue("BEF 1770");
-            assertEquals("Date du releve BEF moins precises",birthDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("BEF 1770");
+            assertEquals("Date du releve BEF moins precises",gedcomDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("AFT 1970");
-            birthDate.setValue("AFT 1972");
-            assertEquals("Date du releve AFT moins precises",birthDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("AFT 1972");
+            assertEquals("Date du releve AFT moins precises",gedcomDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("AFT 1972");
-            birthDate.setValue("AFT 1970");
-            assertEquals("Date du releve AFT plus precises",recordDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("AFT 1970");
+            assertEquals("Date du releve AFT plus precises",recordDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("AFT 1770");
-            birthDate.setValue("BEF 1774");
-            assertEquals("Date du releve entre AFT et BEF","BET 1770 AND 1774", MergeQuery.getMostAccurateDate(recordDate, birthDate).getValue() );
+            gedcomDate.setValue("BEF 1774");
+            assertEquals("Date du releve entre AFT et BEF","BET 1770 AND 1774", MergeQuery.getMostAccurateDate(recordDate, gedcomDate).getValue() );
 
             recordDate.setValue("AFT 1774");
-            birthDate.setValue("BEF 1770");
-            assertEquals("Date du releve incompatible",null, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("BEF 1770");
+            assertEquals("Date du releve incompatible",null, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("BEF 1774");
-            birthDate.setValue("AFT 1770");
-            assertEquals("Date du releve entre AFT et BEF","BET 1770 AND 1774", MergeQuery.getMostAccurateDate(recordDate, birthDate).getValue() );
+            gedcomDate.setValue("AFT 1770");
+            assertEquals("Date du releve entre AFT et BEF","BET 1770 AND 1774", MergeQuery.getMostAccurateDate(recordDate, gedcomDate).getValue() );
 
             recordDate.setValue("BEF 1770");
-            birthDate.setValue("AFT 1774");
-            assertEquals("Date du releve incompatible",null, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("AFT 1774");
+            assertEquals("Date du releve incompatible",null, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("1 FEB 1980");
-            birthDate.setValue("2 MAR 1980");
-            assertEquals("Date precises incompatibles",null, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("2 MAR 1980");
+            assertEquals("Date precises incompatibles",null, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("1 FEB 1980");
-            birthDate.setValue("1980");
-            assertEquals("Date du releve plus precises",recordDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("1980");
+            assertEquals("Date du releve plus precises",recordDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("1980");
-            birthDate.setValue("1 FEB 1980");
-            assertEquals("Date du releve incomplete moins precise",birthDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("1 FEB 1980");
+            assertEquals("Date du releve incomplete moins precise",gedcomDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue(" FEB 1980");
-            birthDate.setValue("1 FEB 1980");
-            assertEquals("Date du releve incomplete moins precise",birthDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("1 FEB 1980");
+            assertEquals("Date du releve incomplete moins precise",gedcomDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("22 FEB 1980");
-            birthDate.setValue(" FEB 1980");
-            assertEquals("Date du releve plus precise",recordDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue(" FEB 1980");
+            assertEquals("Date du releve plus precise",recordDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("22 FEB 1980");
-            birthDate.setValue(" MAR 1980");
-            assertEquals("Date du releve plus precise",recordDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue(" MAR 1980");
+            assertEquals("Date du releve plus precise",recordDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
             recordDate.setValue("BET 1688 AND 1720");
-            birthDate.setValue("ABT 1720");
-            assertEquals("Date du releve moins precise",birthDate, MergeQuery.getMostAccurateDate(recordDate, birthDate) );
+            gedcomDate.setValue("ABT 1720");
+            assertEquals("Date du releve moins precise",gedcomDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
+
+            recordDate.setValue("24 FEB 1811");
+            gedcomDate.setValue("EST 1811");
+            assertEquals("Date du releve plus precise",recordDate, MergeQuery.getMostAccurateDate(recordDate, gedcomDate) );
 
         } catch (Exception ex) {
             fail(ex.getMessage());
