@@ -42,9 +42,7 @@ import genj.util.ChangeSupport;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.view.ContextProvider;
 import genj.view.ViewContext;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
@@ -57,7 +55,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -67,7 +64,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Beans allow the user to edit gedcom properties
  */
-public abstract class PropertyBean extends JPanel implements ContextProvider {
+public abstract class PropertyBean extends JPanel {
 
     private final static int CACHE_PRELOAD = 10;
     protected final static Resources RESOURCES = Resources.get(PropertyBean.class);
@@ -334,7 +331,6 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
     /**
      * ContextProvider callback
      */
-    @Override
     public ViewContext getContext() {
         // ok, this is tricky since some beans might not
         // want to expose a property (is null) and the one

@@ -32,9 +32,6 @@ import genj.util.Resources;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.PopupWidget;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -52,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -66,7 +62,7 @@ import javax.swing.event.ChangeListener;
 /**
  * A panel for laying out beans for an entity
  */
-public class BeanPanel extends JPanel implements ContextProvider {
+public class BeanPanel extends JPanel {
   
   private final static Resources RES = Resources.get(BeanPanel.class);
   private final static Registry REGISTRY = Registry.get(BeanPanel.class);
@@ -140,11 +136,6 @@ public class BeanPanel extends JPanel implements ContextProvider {
     setFocusCycleRoot(true);
   }
   
-  @Override
-  public ViewContext getContext() {
-    return root!=null ? new ViewContext(root) : null;
-  }
-
   public void addChangeListener(ChangeListener listener) {
     changeSupport.addChangeListener(listener);
   }

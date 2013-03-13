@@ -33,13 +33,10 @@ import genj.io.PropertyReader;
 import genj.io.PropertyTransferable;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
-import genj.view.ContextProvider;
 import genj.view.ViewContext;
 import java.awt.Color;
-
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -54,7 +51,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
-
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
 import javax.swing.plaf.TreeUI;
@@ -62,7 +58,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
 import spin.Spin;
 import swingx.dnd.tree.DnDTree;
 import swingx.dnd.tree.DnDTreeModel;
@@ -71,7 +66,7 @@ import swingx.tree.AbstractTreeModel;
 /**
  * A Property Tree
  */
-public class PropertyTreeWidget extends DnDTree implements ContextProvider {
+public class PropertyTreeWidget extends DnDTree {
   
   private final static String UNIX_DND_FILE_PREFIX = "file:";
   
@@ -121,6 +116,7 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
    * Accessor - current context 
    * @return Gedcom tree's root and selection 
    */
+  //XXX: will be refactored. left ATM but no more a contetxprovider
   public ViewContext getContext() {
     // no root - it's the gedcom itself
     Entity root = (Entity)getRoot();

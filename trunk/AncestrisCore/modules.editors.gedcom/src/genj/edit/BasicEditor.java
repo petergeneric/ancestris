@@ -31,7 +31,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.util.Registry;
-import genj.view.ContextProvider;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -43,7 +42,7 @@ import javax.swing.SwingUtilities;
  * The basic version of an editor for a entity. Tries to hide Gedcom complexity from the user while being flexible in what it offers to edit information pertaining to an entity.
  */
 /* package */
-class BasicEditor extends Editor implements ContextProvider {
+class BasicEditor extends Editor{
 
     final static Registry REGISTRY = Registry.get(BasicEditor.class);
     /** our gedcom */
@@ -83,6 +82,7 @@ class BasicEditor extends Editor implements ContextProvider {
     /**
      * Callback - our current context
      */
+    @Override
     public ViewContext getContext() {
         // try to find a bean with focus
         PropertyBean bean = getFocus();

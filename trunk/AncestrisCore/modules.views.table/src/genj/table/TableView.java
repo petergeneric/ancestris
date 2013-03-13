@@ -35,17 +35,14 @@ import genj.util.swing.Action2;
 import genj.view.SettingsAction;
 import genj.view.ToolBar;
 import genj.view.View;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JToggleButton;
 

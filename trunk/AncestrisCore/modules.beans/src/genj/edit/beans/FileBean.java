@@ -19,6 +19,7 @@
  */
 package genj.edit.beans;
 
+import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.RunExternal;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyBlob;
@@ -27,22 +28,22 @@ import genj.io.InputSource;
 import genj.util.Origin;
 import genj.util.swing.FileChooserWidget;
 import genj.util.swing.ThumbnailWidget;
-import genj.view.ViewContext;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FilePermission;
+import java.util.ArrayList;
 import java.util.List;
-
+import javax.swing.Action;
 import javax.swing.JCheckBox;
+import org.openide.nodes.Node;
 
 /**
  * A proxy knows how to generate interaction components that the user
  * will use to change a property : FILE / BLOB
  */
-public class FileBean extends PropertyBean {
+public class FileBean extends PropertyBean implements AncestrisActionProvider{
   
   /** a check as accessory */
   private JCheckBox updateMeta = new JCheckBox(RESOURCES.getString("file.update"), true);
@@ -183,19 +184,19 @@ public class FileBean extends PropertyBean {
     // done
   }
 
-  /**
-   * ContextProvider callback 
-   */
-  public ViewContext getContext() {
-    ViewContext result = super.getContext();
-    if (result!=null) {
-      PropertyFile file = (PropertyFile)getProperty();
-      if (file!=null) 
-        result.addAction(new RunExternal(file.getFile()));
+  @Override
+    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+        if (!hasFocus){
+            return AncestrisActionProvider.EMPTY_ACTIONS;
+        }
+        List<Action> result = new ArrayList<Action>(1);
+        if (nodes != null) {
+            PropertyFile file = (PropertyFile) getProperty();
+            if (file != null) {
+                result.add(new RunExternal(file.getFile()));
+            }
+        }
+        return result;
     }
-    // all done
-    return result;
-  }
-  
 
 } //FileBean

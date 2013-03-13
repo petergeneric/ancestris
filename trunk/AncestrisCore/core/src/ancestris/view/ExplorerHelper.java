@@ -105,11 +105,11 @@ public class ExplorerHelper {
         if (isPopupAllowed()) {
             Node[] selNodes = manager.getSelectedNodes();
             // gets actions from first ActionProvider in parent hierarchy from source
-            AncestrisActionProvider provider = AncestrisActionProvider.Lookup.lookup(source);
+            List<AncestrisActionProvider> providers = AncestrisActionProvider.Lookup.lookupAll(source);
 
             List<Action> actions = new ArrayList<Action>();
-            if (provider != null) {
-                actions.addAll(provider.getFocusedActions(selNodes));
+            for (AncestrisActionProvider provider:providers) {
+                actions.addAll(provider.getActions(true, selNodes));
                 actions.add(null);
             }
             if (selNodes.length > 0) {
@@ -118,7 +118,7 @@ public class ExplorerHelper {
             
             List<Action> aactions = new ArrayList<Action>();
             for (AncestrisActionProvider aap:Lookup.getDefault().lookupAll(AncestrisActionProvider.class)){
-                aactions.addAll(aap.getActions(selNodes));
+                aactions.addAll(aap.getActions(false, selNodes));
             }
             actions.addAll(aactions);
             if (actions.size() > 0) {

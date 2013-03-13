@@ -37,7 +37,6 @@ import java.util.List;
  */  
 public class ViewContext extends Context implements Comparable<ViewContext> {
   
-  private List<Action2> actions = new ArrayList<Action2>();
   private ImageIcon img = null;
   private String txt = null;
   
@@ -91,22 +90,6 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
    */
   public ViewContext(Entity entity) {
     super(entity);
-  }
-  
-  /**
-   * Add an action
-   */
-  //XXX: we must remove this as context actions are handled with Node API
-  public ViewContext addAction(Action2 action) {
-    actions.add(action);
-    return this;
-  }
-  
-  /**
-   * Access to actions
-   */
-  public List<Action2> getActions() {
-    return Collections.unmodifiableList(actions);
   }
   
   /**

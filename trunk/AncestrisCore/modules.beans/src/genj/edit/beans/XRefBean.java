@@ -19,6 +19,8 @@
  */
 package genj.edit.beans;
 
+import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.view.SelectionSink;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -29,32 +31,37 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.UnitOfWork;
 import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
-import ancestris.view.SelectionSink;
 import genj.view.ViewContext;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
+import javax.swing.Action;
+import org.openide.nodes.Node;
 
 /**
  * A proxy for a property that links entities
  */
-public class XRefBean extends PropertyBean {
+public class XRefBean extends PropertyBean implements AncestrisActionProvider{
 
   private Preview preview;
   private PropertyXRef xref;
   
   @Override
-  public ViewContext getContext() {
-    // super knows
-    ViewContext result = super.getContext();
-    if (result!=null)
-      result.addAction(new Swivel());
-    return result;
-  }
+    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+        if (!hasFocus){
+            return new ArrayList<Action>();
+        }
+        List<Action> result = new ArrayList<Action>(1);
+        if (nodes != null) {
+            result.add(new Swivel());
+        }
+        return result;
+    }
 
   /**
    * swivle a reference pointer

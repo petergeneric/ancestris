@@ -11,8 +11,8 @@
  */
 package ancestris.core.actions;
 
-import genj.util.swing.Action2;
 import java.awt.Component;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.Node;
@@ -23,31 +23,33 @@ import org.openide.nodes.Node;
  */
 public interface AncestrisActionProvider {
 
-    /**
-     * Returns actions applicable for nodes when this component has focus.
-     * @param nodes
-     * @return If no action returns empty list
-     */
-    public List<Action> getFocusedActions(Node[] nodes);
+    static final public List<Action> EMPTY_ACTIONS = new ArrayList<Action>();
 
     /**
-     * Returns actions applicable to the nodes passed in parameter
+     * Returns actions applicable to the nodes passed in parameter. The returned
+     * action may depend on hasFocus paramemer to differentiate global action from
+     * those applicable only when the component has focus
+     *
+     * @param hasFocus true if component has focus
      * @param nodes
+     *
      * @return If no action returns empty list
      */
-    public List<Action> getActions(Node[] nodes);
+    public List<Action> getActions(boolean hasFocus, Node[] nodes);
 
     public static class Lookup {
 
-        public static AncestrisActionProvider lookup(Component component) {
+        public static List<AncestrisActionProvider> lookupAll(Component component) {
+            List<AncestrisActionProvider> result = new ArrayList<AncestrisActionProvider>(2);
             while (component != null) {
                 // component can provide context?
                 if (component instanceof AncestrisActionProvider) {
+                    result.add((AncestrisActionProvider) component);
                     break;
                 }
                 component = component.getParent();
             }
-            return (AncestrisActionProvider)component;
+            return result;
         }
     }
 }

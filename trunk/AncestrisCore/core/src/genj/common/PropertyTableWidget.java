@@ -34,7 +34,6 @@ import genj.util.swing.HeadlessLabel;
 import genj.util.swing.LinkWidget;
 import genj.util.swing.SortableTableModel;
 import genj.util.swing.SortableTableModel.Directive;
-import genj.view.ContextProvider;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -358,7 +357,7 @@ public class PropertyTableWidget extends JPanel  {
   /**
    * Table Content
    */
-  private class Table extends JTable implements ContextProvider {
+  private class Table extends JTable {
     
     private PropertyTableModel propertyModel;
     private SortableTableModel sortableModel = new SortableTableModel();
@@ -666,7 +665,9 @@ public class PropertyTableWidget extends JPanel  {
     /**
      * ContextProvider - callback 
      */
-    public ViewContext getContext() {
+    //XXX: we will have to handle this differently: use nodes (see TableView)
+    // FIXME: this is used only in changeSelection... Should we refactor
+    private ViewContext getContext() {
       
       // check gedcom first
       Gedcom ged = propertyModel.getGedcom();

@@ -19,6 +19,7 @@
  */
 package genj.timeline;
 
+import ancestris.view.SelectionSink;
 import genj.almanac.Almanac;
 import genj.almanac.Event;
 import genj.gedcom.Context;
@@ -37,22 +38,17 @@ import genj.util.swing.ScrollPaneWidget;
 import genj.util.swing.SliderWidget;
 import genj.util.swing.UnitGraphics;
 import genj.util.swing.ViewPortAdapter;
-import genj.view.ContextProvider;
 import genj.view.ScreenshotAction;
-import ancestris.view.SelectionSink;
 import genj.view.SettingsAction;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -67,7 +63,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.BorderFactory;
-
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.ToolTipManager;
@@ -561,7 +556,7 @@ public class TimelineView extends View {
   /**
    * The content for displaying the timeline model
    */
-  private class Content extends JComponent implements MouseListener, ContextProvider {
+  private class Content extends JComponent implements MouseListener {
     
     /**
      * constructor
@@ -573,7 +568,8 @@ public class TimelineView extends View {
     /**
      * ContextProvider - callback
      */
-    public ViewContext getContext() {
+    //FIXME: only for selection callback
+    private ViewContext getContext() {
       
       // context?
       Gedcom gedcom = model.getGedcom();
