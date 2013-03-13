@@ -68,30 +68,28 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                 List<? extends Entity> entities = new ArrayList(gedcom.getEntities(tag));
 
                 log.log(Level.INFO, "Checking: {0}", tag);
-                if (entities != null) {
-                    if (tag.equals(Gedcom.INDI)) {
-                        (entitiesMatchers.get(tag)).setOptions((IndiMatcherOptions) selectedOptions.get(Gedcom.INDI));
-                    } else if (tag.equals(Gedcom.FAM)) {
-                        (entitiesMatchers.get(tag)).setOptions((FamMatcherOptions) selectedOptions.get(Gedcom.FAM));
-                    } else if (tag.equals(Gedcom.NOTE)) {
-                        (entitiesMatchers.get(tag)).setOptions((NoteMatcherOptions) selectedOptions.get(Gedcom.NOTE));
-                    } else if (tag.equals(Gedcom.REPO)) {
-                        (entitiesMatchers.get(tag)).setOptions((RepositoryMatcherOptions) selectedOptions.get(Gedcom.REPO));
-                    } else if (tag.equals(Gedcom.SOUR)) {
-                        (entitiesMatchers.get(tag)).setOptions((SourceMatcherOptions) selectedOptions.get(Gedcom.SOUR));
-                    } else if (tag.equals(Gedcom.SUBM)) {
-                        (entitiesMatchers.get(tag)).setOptions((SubmitterMatcherOptions) selectedOptions.get(Gedcom.SUBM));
-                    }
-                    List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
-                    Collections.sort(potentialMatches, new Comparator<PotentialMatch>() {
-                        @Override
-                        public int compare(PotentialMatch e1, PotentialMatch e2) {
-                            return e2.getCertainty() - e1.getCertainty();
-                        }
-                    });
-                    matchesLinkedList.addAll(potentialMatches);
-                    duplicatesHashMap.put(tag, potentialMatches.size());
+                if (tag.equals(Gedcom.INDI)) {
+                    (entitiesMatchers.get(tag)).setOptions((IndiMatcherOptions) selectedOptions.get(Gedcom.INDI));
+                } else if (tag.equals(Gedcom.FAM)) {
+                    (entitiesMatchers.get(tag)).setOptions((FamMatcherOptions) selectedOptions.get(Gedcom.FAM));
+                } else if (tag.equals(Gedcom.NOTE)) {
+                    (entitiesMatchers.get(tag)).setOptions((NoteMatcherOptions) selectedOptions.get(Gedcom.NOTE));
+                } else if (tag.equals(Gedcom.REPO)) {
+                    (entitiesMatchers.get(tag)).setOptions((RepositoryMatcherOptions) selectedOptions.get(Gedcom.REPO));
+                } else if (tag.equals(Gedcom.SOUR)) {
+                    (entitiesMatchers.get(tag)).setOptions((SourceMatcherOptions) selectedOptions.get(Gedcom.SOUR));
+                } else if (tag.equals(Gedcom.SUBM)) {
+                    (entitiesMatchers.get(tag)).setOptions((SubmitterMatcherOptions) selectedOptions.get(Gedcom.SUBM));
                 }
+                List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
+                Collections.sort(potentialMatches, new Comparator<PotentialMatch>() {
+                    @Override
+                    public int compare(PotentialMatch e1, PotentialMatch e2) {
+                        return e2.getCertainty() - e1.getCertainty();
+                    }
+                });
+                matchesLinkedList.addAll(potentialMatches);
+                duplicatesHashMap.put(tag, potentialMatches.size());
             }
 
             SwingUtilities.invokeLater(new Runnable() {
@@ -214,11 +212,25 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                                     Entity left = matchesLinkedList.get(linkedListIndex).getLeft();
                                     Entity right = matchesLinkedList.get(linkedListIndex).getRight();
 
-                                    for (Property property : entityViewPanel.getSelectedProperties()) {
-                                        System.out.println(property.getTag());
+                                    for (Property rightProperty : entityViewPanel.getSelectedProperties()) {
+                                        Property leftProperty;
+                                        System.out.println(rightProperty.getTag());
                                         try {
-                                            right.delProperty(property);
-                                            left.copyProperties(property, true);
+                                            if (rightProperty.getMetaProperty().isSingleton()) {
+                                                leftProperty = left.getProperty(rightProperty.getTag());
+                                                if (leftProperty != null) {
+                                                    left.delProperty(leftProperty);
+                                                }
+                                                leftProperty = left.addProperty(rightProperty.getTag(), rightProperty.getValue());
+                                            } else {
+                                                leftProperty = left.addProperty(rightProperty.getTag(), rightProperty.getValue());
+                                            }
+
+                                            moveProperties(rightProperty, leftProperty);
+                                            right.delProperty(rightProperty);
+                                            if (leftProperty instanceof PropertyXRef) {
+                                                ((PropertyXRef) leftProperty).link();
+                                            }
                                         } catch (GedcomException ex) {
                                             Exceptions.printStackTrace(ex);
                                         }
@@ -251,6 +263,23 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
 
                             entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
                             checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                        }
+                    }
+                }
+
+                public void moveProperties(Property src, Property dest) throws GedcomException {
+                    // loop over children of prop
+                    for (Property child : src.getProperties()) {
+                        // create copy for prop?
+                        Property copy = dest.getProperty(child.getTag(), false);
+                        if (copy != null) {
+                            dest.delProperty(copy);
+                        }
+                        copy = dest.addProperty(child.getTag(), child.getValue());
+                        moveProperties(child, copy);
+                        src.delProperty(child);
+                        if (copy instanceof PropertyXRef) {
+                            ((PropertyXRef) copy).link();
                         }
                     }
                 }
