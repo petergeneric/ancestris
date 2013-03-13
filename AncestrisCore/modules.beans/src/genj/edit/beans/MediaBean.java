@@ -19,33 +19,62 @@
  */
 package genj.edit.beans;
 
+import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.RunExternal;
-import genj.gedcom.*;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.GedcomOptions;
+import genj.gedcom.Media;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyBlob;
+import genj.gedcom.PropertyComparator;
+import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyXRef;
+import genj.gedcom.TagPath;
 import genj.io.InputSource;
 import genj.io.InputSource.FileInput;
 import genj.util.DefaultValueMap;
 import genj.util.Origin;
 import genj.util.Resources;
-import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
+import genj.util.swing.Action2;
+import genj.util.swing.DialogHelper;
+import genj.util.swing.FileChooserWidget;
+import genj.util.swing.NestedBlockLayout;
+import genj.util.swing.TextFieldWidget;
+import genj.util.swing.ThumbnailWidget;
+import genj.util.swing.ToolbarWidget;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.*;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.openide.nodes.Node;
 
 /**
  * A property bean for managing multimedia files (and blobs) associated with properties 
  */
-public class MediaBean extends PropertyBean implements ContextProvider {
+public class MediaBean extends PropertyBean implements AncestrisActionProvider{
   
   private final static Resources RES = Resources.get(MediaBean.class);
   
@@ -58,6 +87,7 @@ public class MediaBean extends PropertyBean implements ContextProvider {
     new DefaultValueMap<InputSource,Set<Property>>(new HashMap<InputSource,Set<Property>>(), new HashSet<Property>());
   
   private ThumbnailWidget thumbs = new ThumbnailWidget() {
+        @Override
     public String getToolTipText(InputSource source) {
       StringBuffer result = new StringBuffer();
       result.append("<html><body>");
@@ -112,19 +142,22 @@ public class MediaBean extends PropertyBean implements ContextProvider {
   }
   
   @Override
-  public ViewContext getContext() {
-    Property p = getProperty();
-    if (p==null)
-      return null; 
-    InputSource source = thumbs.getSelection();
-    if (!(source instanceof InputSource.FileInput))
-      return null;
-    ViewContext result = new ViewContext(p);
-    result.addAction(new RunExternal(((InputSource.FileInput)source).getFile()));
-    return result;
-  }
-  
-  @Override
+    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+        if (!hasFocus){
+            return new ArrayList<Action>();
+        }
+        List<Action> result = new ArrayList<Action>(1);
+        Property p = getProperty();
+        if (nodes != null && p != null) {
+            InputSource source = thumbs.getSelection();
+            if ((source instanceof InputSource.FileInput)) {
+                result.add(new RunExternal(((InputSource.FileInput) source).getFile()));
+            }
+        }
+        return result;
+    }
+
+    @Override
   protected void commitImpl(Property property) {
 
     // remove OBJEs marked for removal

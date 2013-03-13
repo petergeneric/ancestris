@@ -91,24 +91,25 @@ public class GedcomValidate {
         List<ViewContext> issues = new ArrayList<ViewContext>();
 
         // test if there's a submitter
-        if (gedcom.getSubmitter() == null) {
-            final ViewContext ctx = new ViewContext(gedcom);
-            ctx.setText(NbBundle.getMessage(this.getClass(), "err.nosubmitter", gedcom.getName())).setImage(Gedcom.getImage());
-            ctx.addAction(new Action2(NbBundle.getMessage(this.getClass(), "fix")) {
-
-                public void actionPerformed(ActionEvent event) {
-                    setEnabled(false);
-                    gedcom.doMuteUnitOfWork(new UnitOfWork() {
-
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            Submitter sub = (Submitter) gedcom.createEntity(Gedcom.SUBM);
-                            sub.setName(EnvironmentChecker.getProperty("user.name", "?", "using user.name for fixing missing submitter"));
-                        }
-                    });
-                }
-            });
-            issues.add(ctx);
-        }
+        // XXX: removed as addActions is obsoleted
+//        if (gedcom.getSubmitter() == null) {
+//            final ViewContext ctx = new ViewContext(gedcom);
+//            ctx.setText(NbBundle.getMessage(this.getClass(), "err.nosubmitter", gedcom.getName())).setImage(Gedcom.getImage());
+//            ctx.addAction(new Action2(NbBundle.getMessage(this.getClass(), "fix")) {
+//
+//                public void actionPerformed(ActionEvent event) {
+//                    setEnabled(false);
+//                    gedcom.doMuteUnitOfWork(new UnitOfWork() {
+//
+//                        public void perform(Gedcom gedcom) throws GedcomException {
+//                            Submitter sub = (Submitter) gedcom.createEntity(Gedcom.SUBM);
+//                            sub.setName(EnvironmentChecker.getProperty("user.name", "?", "using user.name for fixing missing submitter"));
+//                        }
+//                    });
+//                }
+//            });
+//            issues.add(ctx);
+//        }
 
         // Loop through entities and test 'em
         for (int t = 0; t < Gedcom.ENTITIES.length; t++) {

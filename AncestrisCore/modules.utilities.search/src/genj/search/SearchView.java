@@ -33,7 +33,6 @@ import genj.util.swing.ChoiceWidget;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
-import genj.view.ContextProvider;
 import ancestris.view.SelectionSink;
 import genj.view.ToolBar;
 import genj.view.View;
@@ -576,7 +575,7 @@ public class SearchView extends View {
   /**
    * our specialized list
    */  
-  private class ResultWidget extends JList implements ListSelectionListener, ListCellRenderer, ContextProvider  {
+  private class ResultWidget extends JList implements ListSelectionListener, ListCellRenderer  {
     
     /** our text component for rendering */
     private JTextPane text = new JTextPane();

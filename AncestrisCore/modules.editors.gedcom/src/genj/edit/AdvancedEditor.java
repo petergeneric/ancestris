@@ -873,7 +873,10 @@ import org.openide.nodes.Node;
         }
 
         @Override
-        public List<Action> getFocusedActions(Node[] nodes) {
+        public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+            if (!hasFocus){
+                return new ArrayList<Action>();
+            }
             List<Property> selection = tree.getSelection();
             List<Action> result = new ArrayList<Action>();
 
@@ -909,10 +912,5 @@ import org.openide.nodes.Node;
             return result;
         }
 
-        @Override
-    public List<Action> getActions(Node[] nodes) {
-        return new ArrayList<Action>();
-    }
-    
     } //Tree
 } //AdvancedEditor

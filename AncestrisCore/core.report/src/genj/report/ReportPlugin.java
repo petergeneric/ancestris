@@ -64,7 +64,10 @@ public class ReportPlugin implements AncestrisActionProvider {
     }
 
     @Override
-    public List<Action> getActions(Node[] nodes) {
+    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+        if (hasFocus){
+            return new ArrayList<Action>();
+        }
         List<Property> props = new ArrayList<Property>();
         for (Node node : nodes) {
             if (node instanceof PropertyNode) {
@@ -119,11 +122,6 @@ public class ReportPlugin implements AncestrisActionProvider {
         }
         return result;
         // done
-    }
-
-    @Override
-    public List<Action> getFocusedActions(Node[] nodes) {
-        return new ArrayList<Action>();
     }
 
 //    /**

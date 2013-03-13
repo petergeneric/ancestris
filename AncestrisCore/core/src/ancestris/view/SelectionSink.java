@@ -121,6 +121,7 @@ public interface SelectionSink {
 //      REGISTRY.put(context.getGedcom().getName()+".context", context.toString());
 //
         // notify
+        //XXX: we must put selected nodes in global selection lookup (in fact use Explorer API)
         for (SelectionListener listener : AncestrisPlugin.lookupAll(SelectionListener.class)) {
             if (!listener.equals(from)) {
                 listener.setContext(context, isActionPerformed);

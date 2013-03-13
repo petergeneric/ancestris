@@ -19,33 +19,29 @@
  */
 package genj.common;
 
+import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
-import genj.view.ContextProvider;
-import ancestris.view.SelectionSink;
 import genj.view.ViewContext;
-
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import spin.Spin;
 
 /**
  * A widget for rendering a list of contexts
  */
-public class ContextListWidget extends JList implements ContextProvider {
+public class ContextListWidget extends JList {
 
   private Gedcom gedcom;
   private Callback callback = new Callback();
@@ -72,7 +68,9 @@ public class ContextListWidget extends JList implements ContextProvider {
   /**
    * Provides a 'current' context
    */
-  public ViewContext getContext() {
+  //FIXME: used only for selection propagation.
+  //Should we remove and refactor selectionChanged listener?
+  private ViewContext getContext() {
     
     Object[] selection = getSelectedValues();
     
