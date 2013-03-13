@@ -46,6 +46,8 @@ import javax.swing.text.DefaultEditorKit;
 import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -247,9 +249,9 @@ public class AncestrisTopComponent extends TopComponent
             // When the whole gedcom will be manage as a nodes tree
             // Typically, for gedcom editor, root will be set to entity
             // for table, root will be set to gedcom
-            Node node = new PropertyNode(context);
-            manager.setRootContext(node);
-            manager.setSelectedNodes(new Node[]{node});
+            Children children = PropertyNode.getChildren(context);
+            manager.setRootContext(new AbstractNode(children));
+            manager.setSelectedNodes(children.getNodes());
         } catch (PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
         }

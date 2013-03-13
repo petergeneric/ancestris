@@ -13,6 +13,7 @@ package ancestris.gedcom;
 
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import genj.gedcom.Context;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
@@ -32,6 +33,10 @@ public class PropertyNode extends AbstractNode {
 
     private final InstanceContent lookupContents;
     private genj.gedcom.Property property;
+    
+    static public Children getChildren(Context context){
+        return new PropertyChildren(context);
+    }
 
     public PropertyNode(Context context) {
         this(context, new InstanceContent());
@@ -79,5 +84,29 @@ public class PropertyNode extends AbstractNode {
         List<? extends Action> myActions = org.openide.util.AUtilities.actionsForPath("Ancestris/Actions/GedcomProperty");
 
         return myActions.toArray(new Action[myActions.size()]);
+    }
+    private static class PropertyChildren extends Children.Keys{
+        private Context context;
+
+        public PropertyChildren(Context context) {
+            super();
+            this.context = context;
+        }
+
+        @Override
+        protected void addNotify() {
+            if (!context.getProperties().isEmpty()){
+                setKeys(context.getProperties());
+            } else if (!context.getEntities().isEmpty()){
+                setKeys(context.getEntities());
+            }        
+        }
+
+        
+        @Override
+        protected Node[] createNodes(Object key) {
+            genj.gedcom.Property prop = (genj.gedcom.Property) key;
+            return new Node[] { new PropertyNode(new Context(prop)) };
+        }
     }
 }
