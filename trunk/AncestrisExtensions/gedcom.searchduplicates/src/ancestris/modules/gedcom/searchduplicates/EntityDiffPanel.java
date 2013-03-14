@@ -23,13 +23,14 @@ public class EntityDiffPanel extends javax.swing.JPanel {
         setEntities(leftEntity, rightEntity);
         setPreferredSize(new Dimension(entityPropertiesPanel.getComponent(0).getPreferredSize().width * 2, entityPropertiesPanel.getComponent(0).getPreferredSize().height * entityPropertiesPanel.getComponentCount() + leftEntityIdLabel.getHeight()));
     }
-    
+
     /**
      * Creates new form EntityDiffPanel
      */
     public EntityDiffPanel() {
         initComponents();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,18 +100,26 @@ public class EntityDiffPanel extends javax.swing.JPanel {
         entityPropertiesPanel.removeAll();
         for (Iterator<TagPath> it = entityTagArray.iterator(); it.hasNext();) {
             TagPath tagPath = it.next();
-            entityPropertiesPanel.add(new PropertiesDiffPanel(leftEntity.getProperty(tagPath), rightEntity.getProperty(tagPath)));
-        }
-    }
-    
-    public List<Property> getSelectedProperties () {
-        List<Property> selectedProperties = new ArrayList<Property>();
-        for (Component component : entityPropertiesPanel.getComponents()){
-            if (component instanceof PropertiesDiffPanel) {
-                selectedProperties.addAll(((PropertiesDiffPanel)component).getSelectedProperties());
+            Property[] leftProperties = leftEntity.getProperties(tagPath);
+            Property[] rightProperties = rightEntity.getProperties(tagPath);
+
+            int nbProperties = Math.max(leftProperties.length, rightProperties.length);
+            for  (int index = 0 ; index < nbProperties; index++) {
+                Property leftProperty = (index >= leftProperties.length)?null:leftProperties[index];
+                Property rightProperty = (index >= rightProperties.length)?null:rightProperties[index];
+                entityPropertiesPanel.add(new PropertiesDiffPanel(leftProperty, rightProperty));
             }
         }
-        
+    }
+
+    public List<Property> getSelectedProperties() {
+        List<Property> selectedProperties = new ArrayList<Property>();
+        for (Component component : entityPropertiesPanel.getComponents()) {
+            if (component instanceof PropertiesDiffPanel) {
+                selectedProperties.addAll(((PropertiesDiffPanel) component).getSelectedProperties());
+            }
+        }
+
         return selectedProperties;
     }
 }

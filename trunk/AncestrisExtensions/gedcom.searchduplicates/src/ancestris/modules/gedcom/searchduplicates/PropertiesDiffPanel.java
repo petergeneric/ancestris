@@ -104,13 +104,13 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
         PropertyTagPathArray.add(leftProperty != null ? leftProperty.getPath() : rightProperty.getPath());
 
         if (leftProperty != null) {
-            for (Property property : leftProperty.getProperties(Property.class)) {
+            for (Property property : leftProperty.getProperties()) {
                 PropertyTagPathArray.add(property.getPath());
             }
         }
 
         if (rightProperty != null) {
-            for (Property property : rightProperty.getProperties(Property.class)) {
+            for (Property property : rightProperty.getProperties()) {
                 if (!PropertyTagPathArray.contains(property.getPath())) {
                     PropertyTagPathArray.add(property.getPath());
                 }
@@ -120,10 +120,10 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
         for (Iterator<TagPath> it = PropertyTagPathArray.iterator(); it.hasNext();) {
             TagPath tagPath = it.next();
             if (leftProperty != null) {
-                leftPropertyListModel.add(PropertyTagPathArray.indexOf(tagPath), leftProperty.getParent().getProperty(tagPath));
+                leftPropertyListModel.add(PropertyTagPathArray.indexOf(tagPath), leftProperty);
             }
             if (rightProperty != null) {
-                rightPropertyListModel.add(PropertyTagPathArray.indexOf(tagPath), rightProperty.getParent().getProperty(tagPath));
+                rightPropertyListModel.add(PropertyTagPathArray.indexOf(tagPath), rightProperty);
             }
         }
         initComponents();
