@@ -20,8 +20,6 @@
  */
 package ancestris.gedcom;
 
-import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
 import static ancestris.gedcom.Bundle.*;
@@ -35,6 +33,7 @@ import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooser;
 import java.awt.Component;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -43,15 +42,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import org.openide.awt.UndoRedo;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 
@@ -219,6 +215,7 @@ public abstract class GedcomDirectory {
      *
      * @deprecated consider using FileObject. 
      */
+    @Deprecated
     public Context openGedcom(File input) {
         if (input == null) {
             return null;
@@ -463,6 +460,7 @@ public abstract class GedcomDirectory {
      */
     //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
     //XXX: in fact we must provide Context in explorer Nodes Lookup
+        @Deprecated
     public Context getSelectedContext(boolean firstIfNoneSelected) {
         Context c = Utilities.actionsGlobalContext().lookup(Context.class);
 //        if (!firstIfNoneSelected) {
@@ -485,6 +483,7 @@ public abstract class GedcomDirectory {
      * @return 
      * @deprecated
      */
+        @Deprecated
     public Context getLastContext() {
         throw new UnsupportedOperationException("GedcomDirectory does not provide last context anymore. use private cache or lookup");
     }
@@ -688,7 +687,14 @@ public abstract class GedcomDirectory {
         /**
          * unregister gedcom file
          */
+        //FIXME: we could use vetoable setValid(false) to prevent closing dao if used in editor
         protected boolean unregisterGedcomImpl(Context context) {
+            GedcomDataObject gdao = gedcomsOpened.get(context.getGedcom());
+            try {
+                gdao.setValid(false);
+            } catch (PropertyVetoException ex) {
+                return false;
+            }
             gedcomsOpened.remove(context.getGedcom());
             return true;
         }
