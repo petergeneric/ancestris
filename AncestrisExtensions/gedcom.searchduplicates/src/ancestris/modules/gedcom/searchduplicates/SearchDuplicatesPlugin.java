@@ -196,7 +196,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                 private void mergeButtonActionPerformed(java.awt.event.ActionEvent evt) {
                     boolean merge = false;
                     if (entityViewPanel.getSelectedProperties().isEmpty() == true) {
-                        NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SearchDuplicatesPlugin.class, "SearchDuplicatesPlugin.noSelectedProperties"), NotifyDescriptor.OK_CANCEL_OPTION);
+                        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(SearchDuplicatesPlugin.class, "SearchDuplicatesPlugin.noSelectedProperties"), NotifyDescriptor.OK_CANCEL_OPTION);
                         DialogDisplayer.getDefault().notify(nd);
                         if (nd.getValue() == NotifyDescriptor.OK_OPTION) {
                             merge = true;
