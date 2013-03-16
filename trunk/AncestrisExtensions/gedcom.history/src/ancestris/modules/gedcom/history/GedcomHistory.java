@@ -67,21 +67,21 @@ public class GedcomHistory implements GedcomListener {
 
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        log.log(Level.INFO, "Entity {0} id {1} added", new Object[]{entity.getTag(), entity.getId()});
+        log.log(Level.FINE, "Entity {0} id {1} added", new Object[]{entity.getTag(), entity.getId()});
         historyList.add(new EntityHistory(EntityHistory.CREATED, entity, entity, "", ""));
         fireChange();
     }
 
     @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        log.log(Level.INFO, "Entity {0} id {1} deleted", new Object[]{entity.getTag(), entity.getId()});
+        log.log(Level.FINE, "Entity {0} id {1} deleted", new Object[]{entity.getTag(), entity.getId()});
         historyList.add(new EntityHistory(EntityHistory.DELETED, entity, entity, "", ""));
         fireChange();
     }
 
     @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        log.log(Level.INFO, "Entity {0} id {1} Property {2} changed", new Object[]{property.getEntity().getTag(), property.getEntity().getId(), property.getTag()});
+        log.log(Level.FINE, "Entity {0} id {1} Property {2} changed", new Object[]{property.getEntity().getTag(), property.getEntity().getId(), property.getTag()});
         // Do not archive PropertyChange modification
         if (!(property instanceof PropertyChange)) {
             historyList.add(new EntityHistory(EntityHistory.UPDATED, property.getEntity(), property, "", property.getValue()));
@@ -91,7 +91,7 @@ public class GedcomHistory implements GedcomListener {
 
     @Override
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        log.log(Level.INFO, "Entity {0} id {1} Property {2} added", new Object[]{property.getEntity().getTag(), added.getEntity().getId(), added.getTag()});
+        log.log(Level.FINE, "Entity {0} id {1} Property {2} added", new Object[]{property.getEntity().getTag(), added.getEntity().getId(), added.getTag()});
         // Do not archive PropertyChange modification
         if (!(property instanceof PropertyChange)) {
             historyList.add(new EntityHistory(EntityHistory.CREATED, property.getEntity(), added, "", added.getValue()));
@@ -101,7 +101,7 @@ public class GedcomHistory implements GedcomListener {
 
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        log.log(Level.INFO, "Entity {0} id {1} Property  {2} removed", new Object[]{property.getEntity().getTag(), property.getEntity().getId(), property.getTag()});
+        log.log(Level.FINE, "Entity {0} id {1} Property  {2} removed", new Object[]{property.getEntity().getTag(), property.getEntity().getId(), property.getTag()});
         // Do not archive PropertyChange modification
         if (!(property instanceof PropertyChange)) {
             historyList.add(new EntityHistory(EntityHistory.DELETED, property.getEntity(), deleted, "", ""));
