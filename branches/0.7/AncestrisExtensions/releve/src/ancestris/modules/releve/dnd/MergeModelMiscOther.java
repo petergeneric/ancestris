@@ -17,7 +17,7 @@ import org.openide.util.NbBundle;
 /**
  *
  */
-class MergeModelMiscWill extends MergeModel {
+class MergeModelMiscOther extends MergeModel {
 
     private Indi currentIndi;
     private MergeRecord record;
@@ -35,18 +35,20 @@ class MergeModelMiscWill extends MergeModel {
      * @param selectedEntity entité sélectionnée dans le gedcom
      * @return
      */
-    static protected List<MergeModel> createMergeModelMiscWill (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+    static protected List<MergeModel> createMergeModelMiscOther (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
         List<MergeModel> models = new ArrayList<MergeModel>();
+
+        // je recherche les propositions concernant le participant 1
         if (selectedEntity instanceof Fam) {
             // 1) Record Will : l'entité selectionnée est une famille
             Fam family = (Fam) selectedEntity;
             // j'ajoute un nouvel individu
-            models.add(new MergeModelMiscWill(mergeRecord, gedcom, null, family));
+            models.add(new MergeModelMiscOther(mergeRecord, gedcom, null, family));
             // je recherche les enfants de la famille sélectionnée compatibles avec le releve
             List<Indi> sameChildren = MergeQuery.findSameChild(mergeRecord, gedcom, family);
             // j'ajoute les enfants compatibles
             for (Indi samedIndi : sameChildren) {
-                models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
+                models.add(new MergeModelMiscOther(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
             }
         } else if (selectedEntity instanceof Indi) {
             // 1) Record Will : l'entité selectionnée est un individu
@@ -64,12 +66,12 @@ class MergeModelMiscWill extends MergeModel {
                         Indi husband = family.getHusband();
                         if (selectedIndi.compareTo(husband) == 0) {
                             Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, husbandParentFamily));
+                            models.add(new MergeModelMiscOther(mergeRecord, gedcom, husband, family, husbandParentFamily));
 
                             if (husbandParentFamily == null) {
                                 // j'ajoute un nouvel individu avec les familles compatibles
                                 for (Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, parentFamily));
+                                    models.add(new MergeModelMiscOther(mergeRecord, gedcom, husband, family, parentFamily));
                                 }
                             }
                         }
@@ -77,12 +79,12 @@ class MergeModelMiscWill extends MergeModel {
                         Indi wife = family.getWife();
                         if (selectedIndi.compareTo(wife) == 0) {
                             Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, wifeParentFamily));
+                            models.add(new MergeModelMiscOther(mergeRecord, gedcom, wife, family, wifeParentFamily));
 
                             if (wifeParentFamily == null) {
                                 // j'ajoute un nouvel individu avec les familles compatibles
                                 for (Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, parentFamily));
+                                    models.add(new MergeModelMiscOther(mergeRecord, gedcom, wife, family, parentFamily));
                                 }
                             }
                         }
@@ -97,12 +99,12 @@ class MergeModelMiscWill extends MergeModel {
                 // j'ajoute l'individu selectionné par dnd
                 if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
                     // j'ajoute l'individu selectionné par dnd
-                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
+                    models.add(new MergeModelMiscOther(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
                 } else {
-                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, (Fam) null));
+                    models.add(new MergeModelMiscOther(mergeRecord, gedcom, selectedIndi, (Fam) null));
                     // j'ajoute l'individu selectionné par dnd avec les familles compatibles
                     for (Fam family : families) {
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, family));
+                        models.add(new MergeModelMiscOther(mergeRecord, gedcom, selectedIndi, family));
                     }
                 }
 
@@ -122,20 +124,20 @@ class MergeModelMiscWill extends MergeModel {
                     // j'ajoute les familles compatibles
                     Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
                     if (sameIndiFamily != null) {
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                        models.add(new MergeModelMiscOther(mergeRecord, gedcom, samedIndi, sameIndiFamily));
                     } else {
                         for (Fam family : families) {
-                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, family));
+                            models.add(new MergeModelMiscOther(mergeRecord, gedcom, samedIndi, family));
                         }
                     }
                 }
             }
 
         } else {
-            // 3) Record Will : pas d'entité selectionnee
+            // 3) Record Misc Other : pas d'entité selectionnee
 
             // j'ajoute un nouvel individu , sans famille associée
-            models.add(new MergeModelMiscWill(mergeRecord, gedcom));
+            models.add(new MergeModelMiscOther(mergeRecord, gedcom));
 
             // je recherche la famille avec l'ex conjoint
             List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithIndiMarried(mergeRecord, gedcom);
@@ -148,23 +150,23 @@ class MergeModelMiscWill extends MergeModel {
                     if (mergeRecord.getIndiSex() == PropertySex.MALE) {
                         Indi husband = family.getHusband();
                         Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, husbandParentFamily));
+                        models.add(new MergeModelMiscOther(mergeRecord, gedcom, husband, family, husbandParentFamily));
 
                         if (husbandParentFamily == null) {
                             // j'ajoute un nouvel individu avec les familles compatibles
                             for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, parentFamily));
+                                models.add(new MergeModelMiscOther(mergeRecord, gedcom, husband, family, parentFamily));
                             }
                         }
                     } else {
                         Indi wife = family.getWife();
                         Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, wifeParentFamily));
+                        models.add(new MergeModelMiscOther(mergeRecord, gedcom, wife, family, wifeParentFamily));
 
                         if (wifeParentFamily == null) {
                             // j'ajoute un nouvel individu avec les familles compatibles
                             for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, parentFamily));
+                                models.add(new MergeModelMiscOther(mergeRecord, gedcom, wife, family, parentFamily));
                             }
                         }
                     }
@@ -179,7 +181,7 @@ class MergeModelMiscWill extends MergeModel {
 
                 // j'ajoute un nouvel individu avec les familles compatibles
                 for (Fam family : parentFamilies) {
-                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, null, family));
+                    models.add(new MergeModelMiscOther(mergeRecord, gedcom, null, family));
                 }
 
                 // j'ajoute les individus compatibles avec la famille de chacun
@@ -187,13 +189,13 @@ class MergeModelMiscWill extends MergeModel {
                     Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
                     if (sameIndiFamily != null) {
                         // j'ajoute l'individus compatible avec sa famille
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                        models.add(new MergeModelMiscOther(mergeRecord, gedcom, samedIndi, sameIndiFamily));
                     } else {
                         // j'ajoute l'individus compatible sans famille
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, (Fam) null));
+                        models.add(new MergeModelMiscOther(mergeRecord, gedcom, samedIndi, (Fam) null));
                         // j'ajoute l'individus compatible avec les familles compatibles
                         for (Fam family : parentFamilies) {
-                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, family));
+                            models.add(new MergeModelMiscOther(mergeRecord, gedcom, samedIndi, family));
                         }
                     }
                 }
@@ -207,12 +209,16 @@ class MergeModelMiscWill extends MergeModel {
                 MergeQuery.findFatherMotherCompatibleWithBirthRecord(mergeRecord, gedcom, parentFamilies, fathers, mothers);
                 for (Indi father : fathers) {
                     for (Indi mother : mothers) {
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, father, mother));
+                        models.add(new MergeModelMiscOther(mergeRecord, gedcom, father, mother));
                     }
                 }
             }
 
         }
+
+        // TODO: je recherche les propositions concernant le participant 2
+
+
         return models;
     }
 
@@ -224,7 +230,7 @@ class MergeModelMiscWill extends MergeModel {
      * @param indi
      * @param record
      */
-    protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom) throws Exception {
+    protected MergeModelMiscOther(MergeRecord record, Gedcom gedcom) throws Exception {
         this.record = record;
         this.currentIndi = null;
         this.gedcom = gedcom;
@@ -235,12 +241,30 @@ class MergeModelMiscWill extends MergeModel {
 
     /**
      * le constucteur initialise les données du modele
+     * en comparant les champs du releve et les
+     *
+     * @param indi
+     * @param record
+     */
+    protected MergeModelMiscOther(ParticipantType participant, MergeRecord record, Gedcom gedcom) throws Exception {
+        this.participant = participant;
+        this.record = record;
+        this.currentIndi = null;
+        this.gedcom = gedcom;
+        addRowIndi();
+        addRowMarried(null);
+        addRowParents(null);
+    }
+
+
+    /**
+     * le constucteur initialise les données du modele
      * en comparant les champs du releve
      *
      * @param indi
      * @param record
      */
-    protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom, Indi indi, Fam parentfam) throws Exception {
+    protected MergeModelMiscOther(MergeRecord record, Gedcom gedcom, Indi indi, Fam parentfam) throws Exception {
         this.record = record;
         this.currentIndi = indi;
         this.gedcom = gedcom;
@@ -259,7 +283,7 @@ class MergeModelMiscWill extends MergeModel {
      * @param marriedFamily famille avec l'ex conjoint
      * @param parentFamily  famille parent de l'individu
      */
-    protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom, Indi indi, Fam marriedFamily, Fam parentFamily) throws Exception {
+    protected MergeModelMiscOther(MergeRecord record, Gedcom gedcom, Indi indi, Fam marriedFamily, Fam parentFamily) throws Exception {
         this.record = record;
         this.currentIndi = indi;
         this.gedcom = gedcom;
@@ -276,7 +300,7 @@ class MergeModelMiscWill extends MergeModel {
      * @param indi
      * @param record
      */
-    protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
+    protected MergeModelMiscOther(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
         this.record = record;
         this.currentIndi = null;
         this.gedcom = gedcom;

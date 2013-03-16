@@ -301,6 +301,9 @@ public class MergeRecord {
                  && getEventDate().isComparable()) {
                 // l'ex conjoint existe , le mariage avec l'individu est avant la date l'evenement
                 IndiMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
+            } else if ( this.getType() == RecordType.Death ) {
+                // la date du mariage est avant le deces
+                IndiMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
             }
         }
         return IndiMarriedMarriageDate;
@@ -312,7 +315,8 @@ public class MergeRecord {
             if (record.getIndiMarriedDead().getState()==true) {
                 IndiMarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "deces avant la date du relevé");
             } else {
-                IndiMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
+                // je ne sais pas
+                //IndiMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
             }
         }
         return IndiMarriedDeathDate;
@@ -457,8 +461,8 @@ public class MergeRecord {
         return record.getWifeLastName().toString();
     }
 
-    String getWifeSex() {
-        return record.getWifeSex().toString();
+    int getWifeSex() {
+        return record.getWifeSex().getSex();
     }
 
     PropertyDate getWifeBirthDate() throws Exception {
@@ -545,7 +549,7 @@ public class MergeRecord {
                 // le mariage avec l'ex conjoit
                 //WifeMarriedMarriageDate.setValue(String.format("BEF %d",getEventDate().getStart().getYear()));
                 WifeMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
-            }
+            } 
         }
         return WifeMarriedMarriageDate;
     }
@@ -556,7 +560,8 @@ public class MergeRecord {
             if ( record.getWifeMarriedDead()!= null && record.getWifeMarriedDead().getState() ) {
                 WifeMarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "décès avant la date du relevé");
              } else {
-                WifeMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
+                // je ne sais pas
+                //WifeMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
             }
         }
         return WifeMarriedDeathDate;

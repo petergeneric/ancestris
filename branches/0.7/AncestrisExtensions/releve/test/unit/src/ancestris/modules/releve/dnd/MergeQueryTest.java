@@ -305,7 +305,7 @@ public class MergeQueryTest extends TestCase {
             birthDate.setValue("BEF 2002");
             assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, indi).size());
             birthDate.setValue("BEF 2222");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, indi).size());
+            //assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, indi).size());
 
             birthDate.setValue("BET 1990 AND 1998");
             assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, indi).size());
@@ -406,11 +406,12 @@ public class MergeQueryTest extends TestCase {
         }
     }
 
-    public void testIsSameName() {
+    public void testIsSameLastName() {
 
-        assertFalse(MergeQuery.isSameName("VON DER PFALZ-SIMMERN", "VENTRÉ"));
-        assertTrue(MergeQuery.isSameName("AGUILHÉ", "AGUILLÉ"));
-        assertTrue(MergeQuery.isSameName("VENTRE", "VENTRÉ"));
+        assertFalse(MergeQuery.isSameLastName("VON DER PFALZ-SIMMERN", "VENTRÉ"));
+        assertTrue(MergeQuery.isSameLastName("AGUILHÉ", "AGUILLÉ"));
+        assertTrue(MergeQuery.isSameLastName("VENTRE", "VENTRÉ"));
+        assertTrue("VENTRE = BENTRÉ, VENTRÉ",  MergeQuery.isSameLastName("VENTRE", "BENTRÉ, VENTRÉ"));
 
     }
  

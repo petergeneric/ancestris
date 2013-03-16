@@ -237,7 +237,7 @@ public class MergeTable extends JTable {
 
                         setToolTipText(wrapToolTip(value.toString(), 100));
                     }
-                    setText(value.toString().replace("\n", " "));
+                    setText(value.toString().replace('\n', ' '));
                 }
             } else {
                 // la valeur est nulle
@@ -332,14 +332,18 @@ public class MergeTable extends JTable {
     public static String wrapToolTip(String tip, int length) {
         // marge de detection d'un espace pour wrapper
         final int SPACE_BUFFER = 30;
-        if (tip.length() <= length + SPACE_BUFFER) {
-            return tip;
-        }
+        //if (tip.length() <= length + SPACE_BUFFER) {
+        //    return tip;
+        //}
         List<String> lines = new ArrayList<String>();
         int maxLength = 0;
         while (maxLength < tip.length()) {
+            String overLong;
             if (maxLength + length + SPACE_BUFFER < tip.length()) {
-                String overLong = tip.substring(maxLength, maxLength + length + SPACE_BUFFER);
+                overLong = tip.substring(maxLength, maxLength + length + SPACE_BUFFER);
+            } else {
+                overLong = tip.substring(maxLength);
+            }
                 int firstReturn = overLong.indexOf('\n');
                 if ( firstReturn > -1 ) {
                     // je decoupe au niveau du caractere '\n'
@@ -349,19 +353,25 @@ public class MergeTable extends JTable {
                     int lastSpace = overLong.lastIndexOf(' ');
                     if (lastSpace >= length) {
                         // je decoupe au niveau dernier espace
-                        lines.add(tip.substring(maxLength, maxLength + lastSpace));
+                        lines.add(tip.substring(maxLength, maxLength + lastSpace)+ "</br>");
                         maxLength = maxLength + lastSpace + 1;
                     } else {
                         // je prends toute la ligne
-                        lines.add(tip.substring(maxLength, length));
-                        maxLength = maxLength + length;
+                        if (maxLength + length + SPACE_BUFFER < tip.length()) {
+                            lines.add(tip.substring(maxLength, length));
+                            maxLength = maxLength + length;
+                        } else {
+                            // je prends toute la ligne
+                            lines.add(tip.substring(maxLength));
+                            break;
+                        }
                     }
                 }
-            } else {
-                // je prends toute la ligne
-                lines.add(tip.substring(maxLength));
-                break;
-            }
+            //} else {
+            //    // je prends toute la ligne
+            //    lines.add(tip.substring(maxLength));
+            //    break;
+            //}
         }
 
         StringBuilder sb = new StringBuilder("<html>");

@@ -47,6 +47,9 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         NOT_APPLICABLE
     }
 
+    public enum ParticipantType { participant1, participant2 };
+    protected ParticipantType participant = ParticipantType.participant1;
+    
     private EnumMap<RowType, MergeRow> dataMap = new EnumMap<RowType, MergeRow>(RowType.class);
     private List<MergeRow> dataList = new ArrayList<MergeRow>();
     private int nbMatch = 0;
@@ -86,7 +89,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 models = MergeModelMiscWill.createMergeModelMiscWill(mergeRecord, gedcom, selectedEntity, showNewParents);
             } else {
                 // Autre evenement (quittance, obligation, emancipation ...;
-                models = new ArrayList<MergeModel>();
+                models = MergeModelMiscOther.createMergeModelMiscOther(mergeRecord, gedcom, selectedEntity, showNewParents);
             }
         } else {
             // je retourne une liste de modeles vide.
@@ -133,12 +136,40 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 mergeRow.merge = false;
                 mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
             } else {
-                if ( rowType== RowType.IndiFirstName || rowType == RowType.IndiLastName
-                     || rowType== RowType.IndiFatherFirstName || rowType == RowType.IndiFatherLastName
-                     || rowType== RowType.IndiMotherFirstName || rowType == RowType.IndiMotherLastName
-                     || rowType== RowType.WifeFirstName || rowType == RowType.WifeLastName
-                     || rowType== RowType.WifeFatherFirstName || rowType == RowType.WifeFatherLastName
-                     || rowType== RowType.WifeMotherFirstName || rowType == RowType.WifeMotherLastName
+                if ( rowType == RowType.IndiLastName
+                     || rowType == RowType.IndiMarriedLastName
+                     || rowType == RowType.IndiFatherLastName
+                     || rowType == RowType.IndiMotherLastName
+                     || rowType == RowType.WifeLastName
+                     || rowType == RowType.WifeMarriedLastName
+                     || rowType == RowType.WifeFatherLastName
+                     || rowType == RowType.WifeMotherLastName
+                   ) {
+                    if ( entityValue.isEmpty()) {
+                        mergeRow.merge = !recordValue.equals(entityValue);
+                        mergeRow.compareResult = mergeRow.merge ? CompareResult.COMPATIBLE : CompareResult.EQUAL;
+                    } else {
+                        mergeRow.merge = false;
+                        // il suffit que l'un des noms soit identique 
+                        String[] names1 = recordValue.split(",");
+                        String[] names2 = entityValue.split(",");
+                        boolean result = false;
+                        for (String name1 : names1) {
+                            for (String name2 : names2) {
+                                result |= name1.trim().equals(name2.trim());
+                            }
+                        }
+                        mergeRow.compareResult = !result ? CompareResult.CONFLIT : CompareResult.EQUAL;
+                    }
+
+                } else if ( rowType== RowType.IndiFirstName
+                     || rowType== RowType.IndiMarriedFirstName
+                     || rowType== RowType.IndiFatherFirstName
+                     || rowType== RowType.IndiMotherFirstName
+                     || rowType== RowType.WifeFirstName
+                     || rowType== RowType.WifeMarriedFirstName
+                     || rowType== RowType.WifeFatherFirstName
+                     || rowType== RowType.WifeMotherFirstName
                    ) {
                     if ( entityValue.isEmpty()) {
                         mergeRow.merge = !recordValue.equals(entityValue);
@@ -149,7 +180,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     }
 
                 } else if (rowType== RowType.EventComment) {
-                    // merge actif si le commenatire existant dans l'entité ne contient pas deja le commentaire du relevé.
+                    // merge actif si le commentaire existant dans l'entité ne contient pas deja le commentaire du relevé.
                     mergeRow.merge = !entityValue.contains(recordValue);
                     mergeRow.compareResult = !entityValue.equals(recordValue) ? CompareResult.COMPATIBLE : CompareResult.EQUAL;
                 } else {
@@ -209,6 +240,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
                     case IndiBirthDate:
                     case IndiDeathDate:
+                    case IndiMarriedMarriageDate:
                     case IndiMarriedBirthDate:
                     case IndiMarriedDeathDate:
                     case IndiFatherBirthDate:
@@ -219,6 +251,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
                     case WifeBirthDate:
                     case WifeDeathDate:
+                    case WifeMarriedMarriageDate:
                     case WifeMarriedBirthDate:
                     case WifeMarriedDeathDate:
                     case WifeFatherBirthDate:
@@ -238,7 +271,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                                 mergeRow.compareResult = CompareResult.CONFLIT;
                             } else if (bestDate == entityValue ) {
                                 mergeRow.merge = false;
-                                mergeRow.compareResult = CompareResult.COMPATIBLE;
+                                mergeRow.compareResult = MergeQuery.isCompatible(recordValue, entityValue) ? CompareResult.COMPATIBLE : CompareResult.CONFLIT;
                             } else {
                                 // je propose une date plus precise que celle du releve
                                 cloneDate.setValue(bestDate.getFormat(), bestDate.getStart(), bestDate.getEnd(), bestDate.getPhrase());
@@ -917,6 +950,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     // utilitaires
     ///////////////////////////////////////////////////////////////////////////
 
+    public ParticipantType getPartipant() {
+        return participant;
+    }
+    
     /**
      * concatene plusieurs commentaires dans une chaine , séparés par une virgule
      */
