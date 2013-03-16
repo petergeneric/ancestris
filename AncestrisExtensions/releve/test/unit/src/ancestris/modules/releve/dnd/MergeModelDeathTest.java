@@ -112,7 +112,7 @@ public class MergeModelDeathTest extends TestCase {
             assertEquals("marriedLastName",recordDeath.getIndiMarriedLastName().getValue(), married.getLastName());
             assertEquals("marriedFirstName",recordDeath.getIndiMarriedFirstName().getValue(), married.getFirstName());
             assertEquals("marriedBirth","BEF 1985", married.getBirthDate().getValue());
-            assertEquals("marriedDead","AFT 2003", married.getDeathDate().getValue());
+            assertEquals("marriedDead",null, married.getDeathDate());
             Property marriedOccupation = married.getProperties("OCCU")[0];
             assertEquals("marriedOccupation",recordDeath.getIndiMarriedOccupation().getValue(), marriedOccupation.getValue());
             assertEquals("marriedOcccupationPlace",recordDeath.getIndiMarriedResidence().getValue(), marriedOccupation.getProperty("PLAC").getValue());

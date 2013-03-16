@@ -53,7 +53,7 @@ class MergeModelDeath extends MergeModel {
             Indi selectedIndi = (Indi) selectedEntity;
 
             // je recherche la famille avec l'ex conjoint
-            List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithMarried(mergeRecord, gedcom);
+            List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithIndiMarried(mergeRecord, gedcom);
 
             // je cherche les familles des parents compatibles avec le releve
             List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
@@ -99,7 +99,15 @@ class MergeModelDeath extends MergeModel {
                     // j'ajoute l'individu selectionné par dnd
                     models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
                 } else {
-                    models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, (Fam) null));
+                    // je verifie si le mariage de selectedIndi est apres la date de deces pour faire apparaitre un conflit
+                    Fam[] selectedIndiFamilies = selectedIndi.getFamiliesWhereSpouse();
+                    Fam selectedIndiFamily = null;
+                    for( Fam fam :selectedIndiFamilies) {
+                        if ( MergeQuery.isRecordBeforeThanDate(mergeRecord.getIndiDeathDate(), fam.getMarriageDate(), 0, 0) ) {
+                            selectedIndiFamily = fam;
+                        }
+                    }
+                    models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, selectedIndiFamily, (Fam) null));
                     // j'ajoute l'individu selectionné par dnd avec les familles compatibles
                     for (Fam family : families) {
                         models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, family));
@@ -138,7 +146,7 @@ class MergeModelDeath extends MergeModel {
             models.add(new MergeModelDeath(mergeRecord, gedcom));
 
             // je recherche la famille avec l'ex conjoint
-            List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithMarried(mergeRecord, gedcom);
+            List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithIndiMarried(mergeRecord, gedcom);
 
             // je cherche les familles des parents compatibles avec le releve
             List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
@@ -173,27 +181,27 @@ class MergeModelDeath extends MergeModel {
             } else {
                 // il n'y a pas de famille pour de l'ex conjoint
 
+                // j'ajoute un nouvel individu avec les familles compatibles
+                for (Fam parentFamily : parentFamilies) {
+                    models.add(new MergeModelDeath(mergeRecord, gedcom, null, parentFamily));
+                }
+
                 // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
                 // releve et avec les dates de naissance compatibles et les parents compatibles)
                 List<Indi> sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
 
-                // j'ajoute un nouvel individu avec les familles compatibles
-                for (Fam family : parentFamilies) {
-                    models.add(new MergeModelDeath(mergeRecord, gedcom, null, family));
-                }
-
                 // j'ajoute les individus compatibles avec la famille de chacun
-                for (Indi samedIndi : sameIndis) {
-                    Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
+                for (Indi sameIndi : sameIndis) {
+                    Fam sameIndiFamily = sameIndi.getFamilyWhereBiologicalChild();
                     if (sameIndiFamily != null) {
                         // j'ajoute l'individus compatible avec sa famille
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                        models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, sameIndiFamily));
                     } else {
                         // j'ajoute l'individus compatible sans famille
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, (Fam) null));
+                        models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, (Fam) null));
                         // j'ajoute l'individus compatible avec les familles compatibles
                         for (Fam family : parentFamilies) {
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, family));
+                            models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, family));
                         }
                     }
                 }
@@ -395,7 +403,10 @@ class MergeModelDeath extends MergeModel {
      * @throws Exception
      */
     private void addRowMarried( Fam marriedFamily ) throws Exception {
-        if (! record.getIndiMarriedLastName().isEmpty() || ! record.getIndiMarriedFirstName().isEmpty()) {
+        if (! record.getIndiMarriedLastName().isEmpty()
+              || ! record.getIndiMarriedFirstName().isEmpty()
+              || (marriedFamily != null && marriedFamily.getMarriageDate()!= null) ) {
+            
             // j'affiche un separateur
             addRowSeparator();
             addRow(RowType.IndiMarriedFamily, record, marriedFamily);
