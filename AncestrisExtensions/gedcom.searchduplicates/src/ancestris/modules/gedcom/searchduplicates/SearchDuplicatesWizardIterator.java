@@ -25,6 +25,7 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
         allPanels.add(new SearchDuplicatesWizardPanel2());
         allPanels.add(new SearchDuplicatesWizardPanel3());
         allPanels.add(new SearchDuplicatesWizardPanel4());
+        allPanels.add(new SearchDuplicatesWizardPanel5());
         String[] steps = new String[allPanels.size()];
         for (int i = 0; i < allPanels.size(); i++) {
             Component c = allPanels.get(i).getComponent();
@@ -50,6 +51,7 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
         if (selectedEntities.contains(Gedcom.FAM) == true) {
             currentPanels.add(allPanels.get(3));
         }
+        currentPanels.add(allPanels.get(4));
     }
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
@@ -96,6 +98,7 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
             if (selectedEntities.contains(Gedcom.FAM) == true) {
                 currentPanels.add(allPanels.get(3));
             }
+            currentPanels.add(allPanels.get(4));
             fireChangeListener();
         }
 
