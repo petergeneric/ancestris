@@ -236,6 +236,23 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                                         }
                                     }
 
+                                    // Update linked entities
+                                    for (Entity reference : PropertyXRef.getReferences(right)) {
+                                        System.out.println("targetEntity:" + reference.getId());
+                                        for (Iterator<PropertyXRef> it = reference.getProperties(PropertyXRef.class).iterator(); it.hasNext();) {
+                                            PropertyXRef propertyXRef = it.next();
+                                            if (propertyXRef.getTargetEntity().equals(right)) {
+                                                propertyXRef.unlink();
+                                                propertyXRef.setValue(left.getId());
+                                                try {
+                                                    propertyXRef.link();
+                                                } catch (GedcomException e) {
+                                                    log.log(Level.SEVERE, "unexpected", e);
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     // delete merged entity
                                     gedcom.deleteEntity(right);
                                 }
