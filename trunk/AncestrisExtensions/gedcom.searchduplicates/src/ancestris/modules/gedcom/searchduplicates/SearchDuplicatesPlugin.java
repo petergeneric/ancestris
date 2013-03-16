@@ -135,7 +135,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                         checkDuplicatePanelDescriptor = new DialogDescriptor(
                                 entityViewPanel,
                                 NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title"),
-                                true,
+                                false,
                                 new Object[]{previousButton, mergeButton, nextButton, DialogDescriptor.CLOSED_OPTION},
                                 DialogDescriptor.CLOSED_OPTION,
                                 DialogDescriptor.DEFAULT_ALIGN,
