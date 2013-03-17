@@ -40,11 +40,14 @@ public final class SearchDuplicatesVisualPanel2 extends JPanel {
         sourcesOptionPanel1 = new javax.swing.JPanel();
         submittersOptionPanel = new javax.swing.JPanel();
         repositoriesOptionPanel = new javax.swing.JPanel();
-        individualsCheckBox = new javax.swing.JCheckBox();
-        familiesCheckBox = new javax.swing.JCheckBox();
-        submittersCheckBox = new javax.swing.JCheckBox();
+        jPanel1 = new javax.swing.JPanel();
         repositoriesCheckBox = new javax.swing.JCheckBox();
+        familiesCheckBox = new javax.swing.JCheckBox();
         sourcesCheckBox = new javax.swing.JCheckBox();
+        individualsCheckBox = new javax.swing.JCheckBox();
+        submittersCheckBox = new javax.swing.JCheckBox();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jEditorPane1 = new javax.swing.JEditorPane();
 
         javax.swing.GroupLayout emptyPanelLayout = new javax.swing.GroupLayout(emptyPanel);
         emptyPanel.setLayout(emptyPanelLayout);
@@ -90,11 +93,10 @@ public final class SearchDuplicatesVisualPanel2 extends JPanel {
             .addGap(0, 166, Short.MAX_VALUE)
         );
 
-        individualsCheckBox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(individualsCheckBox, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel2.class, "SearchDuplicatesVisualPanel2.individualsCheckBox.text")); // NOI18N
-        individualsCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(repositoriesCheckBox, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel2.class, "SearchDuplicatesVisualPanel2.repositoriesCheckBox.text")); // NOI18N
+        repositoriesCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                individualsCheckBoxActionPerformed(evt);
+                repositoriesCheckBoxActionPerformed(evt);
             }
         });
 
@@ -105,20 +107,6 @@ public final class SearchDuplicatesVisualPanel2 extends JPanel {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(submittersCheckBox, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel2.class, "SearchDuplicatesVisualPanel2.submittersCheckBox.text")); // NOI18N
-        submittersCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                submittersCheckBoxActionPerformed(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(repositoriesCheckBox, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel2.class, "SearchDuplicatesVisualPanel2.repositoriesCheckBox.text")); // NOI18N
-        repositoriesCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                repositoriesCheckBoxActionPerformed(evt);
-            }
-        });
-
         org.openide.awt.Mnemonics.setLocalizedText(sourcesCheckBox, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel2.class, "SearchDuplicatesVisualPanel2.sourcesCheckBox.text")); // NOI18N
         sourcesCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -126,23 +114,26 @@ public final class SearchDuplicatesVisualPanel2 extends JPanel {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(individualsCheckBox)
-                    .addComponent(submittersCheckBox)
-                    .addComponent(repositoriesCheckBox)
-                    .addComponent(familiesCheckBox)
-                    .addComponent(sourcesCheckBox))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        individualsCheckBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(individualsCheckBox, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel2.class, "SearchDuplicatesVisualPanel2.individualsCheckBox.text")); // NOI18N
+        individualsCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                individualsCheckBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(submittersCheckBox, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel2.class, "SearchDuplicatesVisualPanel2.submittersCheckBox.text")); // NOI18N
+        submittersCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submittersCheckBoxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(individualsCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -154,6 +145,48 @@ public final class SearchDuplicatesVisualPanel2 extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sourcesCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(individualsCheckBox)
+                    .addComponent(familiesCheckBox)
+                    .addComponent(submittersCheckBox)
+                    .addComponent(repositoriesCheckBox)
+                    .addComponent(sourcesCheckBox))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jEditorPane1.setContentType("text/html"); // NOI18N
+        jEditorPane1.setText(org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel2.class, "SearchDuplicatesVisualPanel2.jEditorPane1.text")); // NOI18N
+        jEditorPane1.setDisabledTextColor(new java.awt.Color(32, 32, 32));
+        jEditorPane1.setEnabled(false);
+        jEditorPane1.setFocusable(false);
+        jScrollPane1.setViewportView(jEditorPane1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -200,6 +233,9 @@ public final class SearchDuplicatesVisualPanel2 extends JPanel {
     private javax.swing.JPanel emptyPanel;
     private javax.swing.JCheckBox familiesCheckBox;
     private javax.swing.JCheckBox individualsCheckBox;
+    private javax.swing.JEditorPane jEditorPane1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JCheckBox repositoriesCheckBox;
     private javax.swing.JPanel repositoriesOptionPanel;
     private javax.swing.JCheckBox sourcesCheckBox;
