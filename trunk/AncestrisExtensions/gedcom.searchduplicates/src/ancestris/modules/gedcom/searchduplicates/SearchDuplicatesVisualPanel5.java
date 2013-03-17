@@ -1,6 +1,6 @@
 package ancestris.modules.gedcom.searchduplicates;
 
-import static ancestris.modules.gedcom.searchduplicates.Bundle.CheckDuplicatesVisualPanel1_title;
+import static ancestris.modules.gedcom.searchduplicates.Bundle.CheckDuplicatesVisualPanel5_title;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
@@ -16,7 +16,7 @@ public final class SearchDuplicatesVisualPanel5 extends JPanel {
 
     @Override
     public String getName() {
-        return CheckDuplicatesVisualPanel1_title();
+        return CheckDuplicatesVisualPanel5_title();
     }
 
     /**
