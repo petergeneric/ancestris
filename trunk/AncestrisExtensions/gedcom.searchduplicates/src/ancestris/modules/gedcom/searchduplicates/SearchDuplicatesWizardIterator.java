@@ -14,21 +14,37 @@ import org.openide.WizardDescriptor;
 public final class SearchDuplicatesWizardIterator implements WizardDescriptor.Iterator<WizardDescriptor> {
 
     private int index;
-    private List<WizardDescriptor.Panel<WizardDescriptor>> allPanels;
-    private List<WizardDescriptor.Panel<WizardDescriptor>> currentPanels;
+    private WizardDescriptor wizardDescriptor;
+    private WizardDescriptor.Panel<WizardDescriptor>[] allPanels;
+    private WizardDescriptor.Panel<WizardDescriptor>[] choiseSequence;
+    private WizardDescriptor.Panel<WizardDescriptor>[] indiOnlySelectedSequence;
+    private WizardDescriptor.Panel<WizardDescriptor>[] famOnlySelectedSequence;
+    private WizardDescriptor.Panel<WizardDescriptor>[] indiAndFamSelectedSequence;
+    private WizardDescriptor.Panel<WizardDescriptor>[] indiNorFamSelectedSequence;
+    private WizardDescriptor.Panel<WizardDescriptor>[] currentPanels;
+    private String[] choiseIndex;
+    private String[] indiOnlySelectedIndex;
+    private String[] famOnlySelectedIndex;
+    private String[] indiAndFamSelectedIndex;
+    private String[] indiNorFamSelectedIndex;
     private EventListenerList listenerList = new EventListenerList();
     private ChangeEvent changeEvent = null;
 
     SearchDuplicatesWizardIterator() {
-        allPanels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-        allPanels.add(new SearchDuplicatesWizardPanel1());
-        allPanels.add(new SearchDuplicatesWizardPanel2());
-        allPanels.add(new SearchDuplicatesWizardPanel3());
-        allPanels.add(new SearchDuplicatesWizardPanel4());
-        allPanels.add(new SearchDuplicatesWizardPanel5());
-        String[] steps = new String[allPanels.size()];
-        for (int i = 0; i < allPanels.size(); i++) {
-            Component c = allPanels.get(i).getComponent();
+    }
+
+    public void initialize(WizardDescriptor wizardDescriptor) {
+        this.wizardDescriptor = wizardDescriptor;
+        allPanels = new WizardDescriptor.Panel[]{
+            new SearchDuplicatesWizardPanel1(),
+            new SearchDuplicatesWizardPanel2(),
+            new SearchDuplicatesWizardPanel3(),
+            new SearchDuplicatesWizardPanel4(),
+            new SearchDuplicatesWizardPanel5()
+        };
+        String[] steps = new String[allPanels.length];
+        for (int i = 0; i < allPanels.length; i++) {
+            Component c = allPanels[i].getComponent();
             // Default step name to component name of panel.
             steps[i] = c.getName();
             if (c instanceof JComponent) { // assume Swing components
@@ -40,37 +56,71 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
             }
         }
-        SearchDuplicatesWizardPanel2 searchDuplicatesWizardPanel2 = (SearchDuplicatesWizardPanel2) allPanels.get(1);
-        ArrayList<String> selectedEntities = searchDuplicatesWizardPanel2.getComponent().getSelectedEntities();
-        currentPanels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-        currentPanels.add(allPanels.get(0));
-        currentPanels.add(allPanels.get(1));
-        if (selectedEntities.contains(Gedcom.INDI) == true) {
-            currentPanels.add(allPanels.get(2));
-        }
-        if (selectedEntities.contains(Gedcom.FAM) == true) {
-            currentPanels.add(allPanels.get(3));
-        }
-        currentPanels.add(allPanels.get(4));
+        choiseSequence = new WizardDescriptor.Panel[]{
+            allPanels[0], allPanels[1]
+        };
+        choiseIndex = new String[]{
+            steps[0], steps[1], "...."
+        };
+
+        indiOnlySelectedSequence = new WizardDescriptor.Panel[]{
+            allPanels[0], allPanels[1], allPanels[2], allPanels[4]
+        };
+        indiOnlySelectedIndex = new String[]{
+            steps[0], steps[1], steps[2], steps[4]
+        };
+
+        famOnlySelectedSequence = new WizardDescriptor.Panel[]{
+            allPanels[0], allPanels[1], allPanels[3], allPanels[4]
+        };
+        famOnlySelectedIndex = new String[]{
+            steps[0], steps[1], steps[3], steps[4]
+        };
+
+        indiAndFamSelectedSequence = new WizardDescriptor.Panel[]{
+            allPanels[0], allPanels[1], allPanels[2], allPanels[3], allPanels[4]
+        };
+        indiAndFamSelectedIndex = new String[]{
+            steps[0], steps[1], steps[2], steps[3], steps[4]
+        };
+
+        indiNorFamSelectedSequence = new WizardDescriptor.Panel[]{
+            allPanels[0], allPanels[1], allPanels[4]
+        };
+        indiNorFamSelectedIndex = new String[]{
+            steps[0], steps[1], steps[4]
+        };
+
+        currentPanels = choiseSequence;
+        wizardDescriptor.putProperty(WizardDescriptor.PROP_CONTENT_DATA, choiseIndex);
     }
 
-    private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
+    private WizardDescriptor.Panel<WizardDescriptor>[] getPanels() {
         return currentPanels;
     }
 
     @Override
     public WizardDescriptor.Panel<WizardDescriptor> current() {
-        return getPanels().get(index);
+        return getPanels()[index];
     }
 
     @Override
     public String name() {
-        return index + 1 + ". from " + getPanels().size();
+        if (index == 0 || index == 1) {
+            return index + 1 + " from ... ";
+        } else {
+            return index + 1 + " from " + getPanels().length;
+
+        }
     }
 
     @Override
     public boolean hasNext() {
-        return index < getPanels().size() - 1;
+        if (index == 0 || index == 1) {
+            return true;
+        } else {
+            return index < getPanels().length - 1;
+        }
     }
 
     @Override
@@ -86,19 +136,22 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
 
         // Current index
         if (index == 1) {
-            SearchDuplicatesWizardPanel2 searchDuplicatesWizardPanel2 = (SearchDuplicatesWizardPanel2) allPanels.get(index);
+            SearchDuplicatesWizardPanel2 searchDuplicatesWizardPanel2 = (SearchDuplicatesWizardPanel2) allPanels[index];
             ArrayList<String> selectedEntities = searchDuplicatesWizardPanel2.getComponent().getSelectedEntities();
 
-            currentPanels.clear();
-            currentPanels.add(allPanels.get(0));
-            currentPanels.add(allPanels.get(1));
-            if (selectedEntities.contains(Gedcom.INDI) == true) {
-                currentPanels.add(allPanels.get(2));
+            if (selectedEntities.contains(Gedcom.INDI) == true && selectedEntities.contains(Gedcom.FAM) == true) {
+                currentPanels = indiAndFamSelectedSequence;
+                wizardDescriptor.putProperty(WizardDescriptor.PROP_CONTENT_DATA, indiAndFamSelectedIndex);
+            } else if (selectedEntities.contains(Gedcom.INDI) == true) {
+                currentPanels = indiOnlySelectedSequence;
+                wizardDescriptor.putProperty(WizardDescriptor.PROP_CONTENT_DATA, indiOnlySelectedIndex);
+            } else if (selectedEntities.contains(Gedcom.FAM) == true) {
+                currentPanels = famOnlySelectedSequence;
+                wizardDescriptor.putProperty(WizardDescriptor.PROP_CONTENT_DATA, famOnlySelectedIndex);
+            } else {
+                currentPanels = indiNorFamSelectedSequence;
+                wizardDescriptor.putProperty(WizardDescriptor.PROP_CONTENT_DATA, indiNorFamSelectedIndex);
             }
-            if (selectedEntities.contains(Gedcom.FAM) == true) {
-                currentPanels.add(allPanels.get(3));
-            }
-            currentPanels.add(allPanels.get(4));
             fireChangeListener();
         }
 

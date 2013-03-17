@@ -39,7 +39,9 @@ public final class SearchDuplicatesWizardAction implements ActionListener {
         Context context;
 
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
-            WizardDescriptor wizardDescriptor = new WizardDescriptor(new SearchDuplicatesWizardIterator());
+            SearchDuplicatesWizardIterator searchDuplicatesWizardIterator = new SearchDuplicatesWizardIterator();
+            WizardDescriptor wizardDescriptor = new WizardDescriptor(searchDuplicatesWizardIterator);
+            searchDuplicatesWizardIterator.initialize(wizardDescriptor);
             // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
             // {1} will be replaced by WizardDescriptor.Iterator.name()
             wizardDescriptor.setTitleFormat(new MessageFormat("{0} ({1})"));
