@@ -22,18 +22,18 @@ public abstract class EntityMatcher<E extends Entity, O extends MatcherOptions> 
         // Sorting Entities
         sortedEntities = sort(entities);
 
-        log.log(Level.INFO, "sorted entities {0} ...", sortedEntities.size());
+        log.log(Level.FINE, "sorted entities {0} ...", sortedEntities.size());
         for (String key : sortedEntities.keySet()) {
             List<E> entityList = sortedEntities.get(key);
 
-            log.log(Level.INFO, "entities to compare {0} ...", entityList.size());
+            log.log(Level.FINE, "entities to compare {0} ...", entityList.size());
 
             if (entityList.size() > 1) {
                 for (E leftEntity : entityList) {
                     List<String> idCompared = new ArrayList<String>();
                     compareDone.put(leftEntity.getId(), idCompared);
 
-                    log.log(Level.INFO, "comparing {0} with {1} entities ...", new Object[]{leftEntity.getId(), entityList.size()});
+                    log.log(Level.FINE, "comparing {0} with {1} entities ...", new Object[]{leftEntity.getId(), entityList.size()});
 
                     int numberOfCompares = 0;
                     for (E rightEntity : entityList) {
@@ -47,7 +47,7 @@ public abstract class EntityMatcher<E extends Entity, O extends MatcherOptions> 
                             }
                         }
                     }
-                    log.log(Level.INFO, "... {0} comparisons done", numberOfCompares);
+                    log.log(Level.FINE, "... {0} comparisons done", numberOfCompares);
                     Thread.sleep(0); //throws InterruptedException is the task was cancelled
                 }
             }
