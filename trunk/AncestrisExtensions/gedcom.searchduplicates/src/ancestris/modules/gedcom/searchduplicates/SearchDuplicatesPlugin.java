@@ -2,6 +2,7 @@ package ancestris.modules.gedcom.searchduplicates;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import static ancestris.modules.gedcom.searchduplicates.Bundle.*;
+import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import ancestris.modules.gedcom.utilities.matchers.*;
 import genj.gedcom.*;
 import java.awt.Dialog;
@@ -211,50 +212,8 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                                 public void perform(Gedcom gedcom) throws GedcomException {
                                     Entity left = matchesLinkedList.get(linkedListIndex).getLeft();
                                     Entity right = matchesLinkedList.get(linkedListIndex).getRight();
-
-                                    for (Property rightProperty : entityViewPanel.getSelectedProperties()) {
-                                        Property leftProperty;
-                                        System.out.println(rightProperty.getTag());
-                                        try {
-                                            if (rightProperty.getMetaProperty().isSingleton()) {
-                                                leftProperty = left.getProperty(rightProperty.getTag());
-                                                if (leftProperty != null) {
-                                                    left.delProperty(leftProperty);
-                                                }
-                                                leftProperty = left.addProperty(rightProperty.getTag(), rightProperty.getValue());
-                                            } else {
-                                                leftProperty = left.addProperty(rightProperty.getTag(), rightProperty.getValue());
-                                            }
-
-                                            moveProperties(rightProperty, leftProperty);
-                                            right.delProperty(rightProperty);
-                                            if (leftProperty instanceof PropertyXRef) {
-                                                ((PropertyXRef) leftProperty).link();
-                                            }
-                                        } catch (GedcomException ex) {
-                                            Exceptions.printStackTrace(ex);
-                                        }
-                                    }
-
-                                    // Update linked entities
-                                    for (Entity reference : PropertyXRef.getReferences(right)) {
-                                        System.out.println("targetEntity:" + reference.getId());
-                                        for (Iterator<PropertyXRef> it = reference.getProperties(PropertyXRef.class).iterator(); it.hasNext();) {
-                                            PropertyXRef propertyXRef = it.next();
-                                            if (propertyXRef.getTargetEntity().equals(right)) {
-                                                propertyXRef.unlink();
-                                                propertyXRef.setValue(left.getId());
-                                                try {
-                                                    propertyXRef.link();
-                                                } catch (GedcomException e) {
-                                                    log.log(Level.SEVERE, "unexpected", e);
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    // delete merged entity
-                                    gedcom.deleteEntity(right);
+                                    List<Property> selectedProperties = entityViewPanel.getSelectedProperties();
+                                    GedcomUtilities.MergeEntities(gedcom,left,right,selectedProperties);
                                 }
                             });
                         } catch (GedcomException ex) {
@@ -280,23 +239,6 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
 
                             entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
                             checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
-                        }
-                    }
-                }
-
-                public void moveProperties(Property src, Property dest) throws GedcomException {
-                    // loop over children of prop
-                    for (Property child : src.getProperties()) {
-                        // create copy for prop?
-                        Property copy = dest.getProperty(child.getTag(), false);
-                        if (copy != null) {
-                            dest.delProperty(copy);
-                        }
-                        copy = dest.addProperty(child.getTag(), child.getValue());
-                        moveProperties(child, copy);
-                        src.delProperty(child);
-                        if (copy instanceof PropertyXRef) {
-                            ((PropertyXRef) copy).link();
                         }
                     }
                 }
