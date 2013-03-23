@@ -33,7 +33,7 @@ import org.openide.util.Exceptions;
 
 public class GedcomUtilities {
 
-    private static final Logger log = Logger.getLogger(GedcomUtilities.class.getName());
+    private final static Logger LOG = Logger.getLogger(GedcomUtilities.class.getName(), null);
     public final static int ENT_ALL = 0;
     public final static int ENT_INDI = 1;
     public final static int ENT_FAM = 2;
@@ -50,7 +50,6 @@ public class GedcomUtilities {
         Gedcom.SUBM,
         Gedcom.REPO
     };
-    private final static Logger LOG = Logger.getLogger(GedcomUtilities.class.getName(), null);
 
     public static void deleteTags(Gedcom gedcom, String tagToRemove, int entityType) {
         LOG.log(Level.INFO, "deleting_tag {0}", tagToRemove);
@@ -113,16 +112,24 @@ public class GedcomUtilities {
 
         // Update linked entities
         for (Entity reference : PropertyXRef.getReferences(src)) {
-            System.out.println("targetEntity:" + reference.getId());
+            LOG.log(Level.INFO, "targetEntity: {0}", reference.getId());
             for (Iterator<PropertyXRef> it = reference.getProperties(PropertyXRef.class).iterator(); it.hasNext();) {
                 PropertyXRef propertyXRef = it.next();
                 if (propertyXRef.getTargetEntity().equals(src)) {
                     propertyXRef.unlink();
                     propertyXRef.setValue(dest.getId());
-                    try {
-                        propertyXRef.link();
-                    } catch (GedcomException e) {
-                        log.log(Level.SEVERE, "unexpected", e);
+                    
+                    /* Try to cope with PropertyForeignXRef exception on link
+                     * as the visibility of the class is restricted to gedcom package
+                     * use this workaround as it  seem to be the unique Xref properties 
+                     * for which transient property true
+                     */
+                    if (propertyXRef.isTransient() == false) {
+                        try {
+                            propertyXRef.link();
+                        } catch (GedcomException e) {
+                            LOG.log(Level.SEVERE, "unexpected", e);
+                        }
                     }
                 }
             }
