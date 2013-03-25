@@ -3,14 +3,15 @@ package ancestris.modules.gedcom.searchduplicates;
 import genj.gedcom.Gedcom;
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.List;
+import static ancestris.modules.gedcom.searchduplicates.Bundle.*;
 import java.util.NoSuchElementException;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import org.openide.WizardDescriptor;
-
+import org.openide.util.NbBundle;
+@NbBundle.Messages("SearchDuplicatesWizardIterator.name.text={0} from {1}")
 public final class SearchDuplicatesWizardIterator implements WizardDescriptor.Iterator<WizardDescriptor> {
 
     private int index;
@@ -107,9 +108,9 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
     @Override
     public String name() {
         if (index == 0 || index == 1) {
-            return index + 1 + " from ... ";
+            return SearchDuplicatesWizardIterator_name_text(index + 1, "...");
         } else {
-            return index + 1 + " from " + getPanels().length;
+            return SearchDuplicatesWizardIterator_name_text(index , getPanels().length);
 
         }
     }
