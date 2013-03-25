@@ -21,7 +21,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="1" attributes="0">
-          <Component id="propertyTagLabel" pref="363" max="32767" attributes="0"/>
+          <Component id="propertyTagLabel" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
               <Component id="leftPropertyList" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -35,7 +35,7 @@
               <Component id="propertyTagLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="leftPropertyList" alignment="3" pref="117" max="32767" attributes="0"/>
+                  <Component id="leftPropertyList" alignment="3" max="32767" attributes="0"/>
                   <Component id="rightPropertyList" alignment="3" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -70,6 +70,9 @@
           <Connection code="propertyListSelectionModel" type="code"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Property&gt;"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JList" name="rightPropertyList">
       <Properties>
@@ -83,6 +86,9 @@
           <Color blue="d7" green="75" red="39" type="rgb"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Property&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
