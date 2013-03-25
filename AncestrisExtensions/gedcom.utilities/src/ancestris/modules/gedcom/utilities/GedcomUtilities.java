@@ -102,24 +102,28 @@ public class GedcomUtilities {
      * properties the property list to be included in the dest entity
      */
     public static void MergeEntities(Gedcom gedcom, Entity dest, Entity src, List<Property> properties) {
+        LOG.log(Level.INFO, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
+
         for (Property rightProperty : properties) {
             try {
                 movePropertyRecursively(rightProperty, dest);
             } catch (GedcomException ex) {
+                LOG.log(Level.SEVERE, "Unexpected Gedcom exception {0}", ex);
                 Exceptions.printStackTrace(ex);
             }
         }
 
         // Update linked entities
         for (Entity reference : PropertyXRef.getReferences(src)) {
-            LOG.log(Level.INFO, "targetEntity: {0}", reference.getId());
             for (Iterator<PropertyXRef> it = reference.getProperties(PropertyXRef.class).iterator(); it.hasNext();) {
                 PropertyXRef propertyXRef = it.next();
-                if (propertyXRef.getTargetEntity().equals(src)) {
+                Entity targetEntity = propertyXRef.getTargetEntity();
+                if (targetEntity != null && targetEntity.equals(src)) {
                     propertyXRef.unlink();
                     propertyXRef.setValue(dest.getId());
-                    
-                    /* Try to cope with PropertyForeignXRef exception on link
+
+                    /* 
+                     * Try to cope with PropertyForeignXRef exception on link
                      * as the visibility of the class is restricted to gedcom package
                      * use this workaround as it  seem to be the unique Xref properties 
                      * for which transient property true
