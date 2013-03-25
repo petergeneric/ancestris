@@ -9,7 +9,7 @@ import javax.swing.AbstractListModel;
  *
  * @author lemovice
  */
-public class PropertyListModel extends AbstractListModel {
+public class PropertyListModel extends AbstractListModel <Property> {
 
     ArrayList<Property> propertyArray = new ArrayList<Property>();
 
@@ -43,7 +43,7 @@ public class PropertyListModel extends AbstractListModel {
     }
 
     @Override
-    public Object getElementAt(int i) {
+    public Property getElementAt(int i) {
         return propertyArray.get(i);
     }
 }
