@@ -26,7 +26,7 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
         }
     }
     
-    class PropertyListRenderer extends JTextArea implements ListCellRenderer {
+    class PropertyListRenderer extends JTextArea implements ListCellRenderer<Property> {
 
         public PropertyListRenderer() {
             setOpaque(true);
@@ -41,9 +41,9 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
          */
         @Override
         public Component getListCellRendererComponent(
-                JList list,
-                Object value,
-                int index,
+                JList<? extends Property> list,
+                Property value,
+                int index, 
                 boolean isSelected,
                 boolean cellHasFocus) {
 
@@ -143,8 +143,8 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         propertyTagLabel = new javax.swing.JLabel();
-        leftPropertyList = new javax.swing.JList();
-        rightPropertyList = new javax.swing.JList();
+        leftPropertyList = new javax.swing.JList<Property>();
+        rightPropertyList = new javax.swing.JList<Property>();
 
         setPreferredSize(new java.awt.Dimension(0, 0));
 
@@ -164,8 +164,8 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(propertyTagLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            .addComponent(propertyTagLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(leftPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rightPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -176,14 +176,14 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
                 .addComponent(propertyTagLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(leftPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(leftPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rightPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList leftPropertyList;
+    private javax.swing.JList<Property> leftPropertyList;
     private javax.swing.JLabel propertyTagLabel;
-    private javax.swing.JList rightPropertyList;
+    private javax.swing.JList<Property> rightPropertyList;
     // End of variables declaration//GEN-END:variables
 
     public List <Property>getSelectedProperties() {
