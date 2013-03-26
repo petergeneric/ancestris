@@ -29,11 +29,11 @@ public class RecordTransferHandle extends TransferHandler {
 
             // je recupere le clone du releve 
             Record record = ((ModelAbstract)table.getModel()).getRecord(table.convertRowIndexToModel(table.getSelectedRow()));
-            record = record.clone();
+            Record clonedRecord = record.clone();
             // je complete le lieu dans le releve
             FieldPlace recordsInfoPlace = new FieldPlace();
             recordsInfoPlace.setValue(table.getPlaceManager().getPlace());
-            return new TransferableRecord(recordsInfoPlace, table.getPlaceManager().getSourceTitle(), record, c);
+            return new TransferableRecord(recordsInfoPlace, table.getPlaceManager().getSourceTitle(), clonedRecord, c);
         } else {
             return null;
         }

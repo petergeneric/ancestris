@@ -3,11 +3,15 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.MergeModel.CompareResult;
 import ancestris.modules.releve.dnd.MergeModel.RowType;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyEvent;
 import genj.gedcom.Source;
 import genj.util.WordBuffer;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -33,6 +37,7 @@ public class MergeTable extends JTable {
     static private Color yellowColor = new Color(240, 240, 10);
     static private Color blueColor = new Color(200, 255, 255);
     static private Color greyColor = new Color(240, 240, 240);
+    static private String entityCursorToolTip = "<html>Simple clic: centrer dans l'arbre.<br>Double clic: racine de l'arbre</html>";
 
     public  MergeTable() {
         setPreferredSize(null);
@@ -47,7 +52,7 @@ public class MergeTable extends JTable {
     public void setModel(MergeModel model) {
         super.setModel(model);
         loadColumnLayout();
-        
+
         addMouseListener(new MouseAdapter() {
 
             @Override
@@ -57,16 +62,37 @@ public class MergeTable extends JTable {
                 int column = target.columnAtPoint(e.getPoint());
 
                 if (column == 4) {
-                    Entity entity = (Entity) ((MergeModel)getModel()).getValueAt(row, column);
-                    if ( entityActionManager != null && entity != null) {
-                        if ( e.getClickCount() == 2 ) {
-                                entityActionManager.showEntityInDndSource(entity, true);
-                            } else {
-                                entityActionManager.showEntityInDndSource(entity, false);
-                            }
+                    Entity entity = (Entity) ((MergeModel) getModel()).getValueAt(row, column);
+                    if (entityActionManager != null && entity != null) {
+                        if (e.getClickCount() == 2) {
+                            entityActionManager.showEntityInDndSource(entity, true);
+                        } else {
+                            entityActionManager.showEntityInDndSource(entity, false);
                         }
                     }
+                }
+            }        
+        });
 
+        addMouseMotionListener(new MouseAdapter() {
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                JTable target = (JTable) e.getSource();
+                //int cModel = target.columnAtPoint(e.getPoint());
+                //int column = target.convertColumnIndexToView(cModel);
+                int row = target.rowAtPoint(e.getPoint());
+                int column = target.columnAtPoint(e.getPoint());
+                Object value = ((MergeModel) getModel()).getValueAt(row, column);
+                if (entityActionManager != null && value != null) {
+                    if (value instanceof Indi || value instanceof Fam) {
+                        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    } else {
+                        setCursor(Cursor.getDefaultCursor());
+                    }
+                } else {
+                    setCursor(Cursor.getDefaultCursor());
+                }
             }
         });
     }
@@ -174,7 +200,7 @@ public class MergeTable extends JTable {
 
 
     /**
-     * Cette classe gère l'affichage des celleules de la table
+     * Cette classe gère l'affichage des cellules de la table
      */
     private class MergeTableRenderer extends JLabel implements TableCellRenderer {
 
@@ -198,14 +224,16 @@ public class MergeTable extends JTable {
             MergeModel model = (MergeModel) table.getModel();
             MergeModel.MergeRow mergeRow = model.getRow(row);
             setFont(table.getFont());
+            setToolTipText(null);
             // je choisis le format d'affichage du texte
             int modelColumn = column;
             if ( value != null ) {
                 if (value instanceof PropertyDate) {
-                    setText(((PropertyDate)value).getDisplayValue());
-                    if ( column==1 && !((PropertyDate)value).getPhrase().isEmpty()) {
+                    PropertyDate date = (PropertyDate)value;
+                    setText(date.getDisplayValue());
+                    if ( column==1 && date.getPhrase() != null && !date.getPhrase().isEmpty()) {
                         //setToolTipText(((PropertyDate)value).getPhrase());
-                        setToolTipText(wrapToolTip(((PropertyDate)value).getPhrase(), 100));
+                        setToolTipText(wrapToolTip(date.getPhrase(), 80));
                     }
                 } else if (value instanceof Source) {
                     if ( column == 4 ) {
@@ -216,9 +244,13 @@ public class MergeTable extends JTable {
                 } else if (value instanceof Entity) {
                     if ( column == 4 ) {
                         setText(((Entity)value).getId());
+                        // j'affiche un tooltip pour
+                        setToolTipText(entityCursorToolTip);
                     } else {
                         setText(((Entity)value).getDisplayValue());
                     }
+                } else if (value instanceof PropertyEvent) {
+                    setText(((PropertyEvent)value).getPropertyValue("TYPE"));                    
                 } else {
                     // j'affiche un tooltip pour les commentaires et les professions
                     if ( (mergeRow.rowType == RowType.EventComment
@@ -235,7 +267,7 @@ public class MergeTable extends JTable {
                         //tooltipText += value.toString().replace("\n", "<br>");
                         //tooltipText += "</html>";
 
-                        setToolTipText(wrapToolTip(value.toString(), 100));
+                        setToolTipText(wrapToolTip(value.toString(), 80));
                     }
                     setText(value.toString().replace('\n', ' '));
                 }
@@ -309,7 +341,12 @@ public class MergeTable extends JTable {
                         }
                         break;
                     case 4:
-                        setForeground(Color.blue);
+                        if (entityActionManager != null && value != null && (value instanceof Fam || value instanceof Indi)) {
+                            // j'affiche en bleu pour signaler une action possible avec la souris
+                            setForeground(Color.blue);
+                        } else {
+                            setForeground(table.getForeground());
+                        }
                         setBackground(table.getBackground());
                         break;
                     default:
@@ -331,10 +368,7 @@ public class MergeTable extends JTable {
      */
     public static String wrapToolTip(String tip, int length) {
         // marge de detection d'un espace pour wrapper
-        final int SPACE_BUFFER = 30;
-        //if (tip.length() <= length + SPACE_BUFFER) {
-        //    return tip;
-        //}
+        final int SPACE_BUFFER = 20;
         List<String> lines = new ArrayList<String>();
         int maxLength = 0;
         while (maxLength < tip.length()) {

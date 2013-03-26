@@ -13,6 +13,7 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import org.openide.util.Exceptions;
 
 /**
  * Cette classe contient les methode pour permmettre a un arbre dynamique d'etre
@@ -130,6 +131,7 @@ public class TreeViewDropTarget {
                             dropTargetDropEvent.dropComplete(false);
                         }
                     } catch (Exception ex) {
+                         Exceptions.printStackTrace(ex);
                         dropTargetDropEvent.dropComplete(false);
                     }
                 }

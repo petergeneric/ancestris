@@ -1,5 +1,6 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
@@ -17,34 +18,6 @@ import genj.gedcom.time.PointInTime;
  * et des methodes pour assembler les commentaires.
  */
 public class MergeRecord {
-    private FieldPlace recordsInfoPlace = new FieldPlace();
-    private String sourceTitle;
-    private Record record;
-
-    // memorise les dates calculees (pour éviter de les recalculer a chaque consultation)
-    private PropertyDate IndiBirthDate = null;
-    private PropertyDate IndiDeathDate = null;
-    private PropertyDate IndiFatherBirthDate = null;
-    private PropertyDate IndiFatherDeathDate = null;
-    private PropertyDate IndiMotherBirthDate = null;
-    private PropertyDate IndiMotherDeathDate = null;
-    private PropertyDate IndiParentMarriageDate = null;
-    private PropertyDate IndiMarriedBirthDate= null;
-    private PropertyDate IndiMarriedDeathDate= null;
-    private PropertyDate IndiMarriedMarriageDate= null;
-
-    private PropertyDate WifeBirthDate = null;
-    private PropertyDate WifeDeathDate = null;
-    private PropertyDate WifeFatherBirthDate = null;
-    private PropertyDate WifeFatherDeathDate = null;
-    private PropertyDate WifeMotherBirthDate = null;
-    private PropertyDate WifeMotherDeathDate = null;
-    private PropertyDate WifeParentMarriageDate = null;
-    private PropertyDate WifeMarriedBirthDate= null;
-    private PropertyDate WifeMarriedDeathDate= null;
-    private PropertyDate WifeMarriedMarriageDate= null;
-
-
 
     /**
      * liste des types de releves
@@ -55,11 +28,6 @@ public class MergeRecord {
         Death,
         Misc
     }
-    /**
-     * type du releve 
-     */
-    private RecordType type;
-
 
     /**
      * liste des types de releves
@@ -70,6 +38,21 @@ public class MergeRecord {
         EVEN
     }
 
+    public enum MergeParticipantType {
+        participant1,
+        participant2
+    };
+
+    private FieldPlace recordsInfoPlace = new FieldPlace();
+    private String sourceTitle;
+    private Record record;
+    private MergeParticipant partipant1;
+    private MergeParticipant partipant2;
+
+    /**
+     * type du releve 
+     */
+    private RecordType type;
     private EventTypeTag eventTypeTag;
 
      /**
@@ -96,12 +79,32 @@ public class MergeRecord {
                 eventTypeTag = EventTypeTag.EVEN;
             }
         }
+
+        partipant1 = new MergeParticipant(MergeParticipantType.participant1, record.getIndi());
+        partipant2 = new MergeParticipant(MergeParticipantType.participant2, record.getWife());
+
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs
     //////////////////////////////////////////////////////////////////////////
     
+    MergeParticipant getIndi() {
+        return partipant1;
+    }
+
+    MergeParticipant getWife() {
+        return partipant2;
+    }
+
+    MergeParticipant getParticipant(MergeParticipantType mergeParticipanType) {
+        if( mergeParticipanType == MergeParticipantType.participant1) {
+            return partipant1;
+        } else {
+            return partipant2;
+        }
+    }
+
     RecordType getType() {
         return type;
     }
@@ -110,6 +113,21 @@ public class MergeRecord {
         return eventTypeTag;
     }
 
+    String getEventTypeWithDate() {
+        String eventTypeWithDate = record.getEventType().toString();
+        if (!recordsInfoPlace.getValue().isEmpty()) {
+            if (!eventTypeWithDate.isEmpty()) {
+                eventTypeWithDate += ", ";
+            }
+            eventTypeWithDate += recordsInfoPlace.getValue().toString();
+        }
+        if (!eventTypeWithDate.isEmpty()) {
+            eventTypeWithDate += " (" + getEventDate().getDisplayValue() + ")";
+        }
+
+        return eventTypeWithDate;
+    }
+    
     String getEventSource() {
         if ( sourceTitle.isEmpty()) {
             String cityName = recordsInfoPlace.getCityName();
@@ -175,560 +193,560 @@ public class MergeRecord {
     }
 
     //  indi ///////////////////////////////////////////////////////////////////
-    String getIndiFirstName() {
-        return record.getIndiFirstName().toString();
-    }
-
-    String getIndiLastName() {
-        return record.getIndiLastName().toString();
-    }
-
-    int getIndiSex() {
-        return record.getIndiSex().getSex();
-    }
-    String getIndiSexString() {
-        return record.getIndiSex().getValue();
-    }
-
-    PropertyDate getIndiBirthDate() throws Exception {
-        if (IndiBirthDate == null) {
-            IndiBirthDate = calculateBirthDate(
-                record.getIndiBirthDate()!=null ? record.getIndiBirthDate().getPropertyDate() : new PropertyDate(),
-                record.getIndiAge()!=null ? record.getIndiAge().getDelta() : new Delta(0,0,0),
-                getIndiMarriedMarriageDate());
-        }
-        return IndiBirthDate;
-    }
-
-    PropertyDate getIndiDeathDate() throws Exception {
-        if (IndiDeathDate == null) {
-            if ( type == RecordType.Death) {
-                IndiDeathDate = getEventDate();
-            } else {
-                // date de deces inconnue
-                IndiDeathDate = new PropertyDate();
-            }
-        }
-        return IndiDeathDate;
-    }
-
-    /**
-     * retourne le lieu de naissance .
-     * Si c'est un acte de naissance et si IndiBirthPlace est vide
-     *      retourne IndiFatherResidence ou, à dfafaut, EventPlace
-     * @return
-     */
-    String getIndiBirthPlace() {
-        if ( record.getIndiBirthPlace() != null &&  !record.getIndiBirthPlace().isEmpty()) {
-            return record.getIndiBirthPlace().toString();
-        } else {
-            if (this.type == RecordType.Birth) {
-                if( record.getIndiFatherResidence() != null && !record.getIndiFatherResidence().isEmpty()) {
-                    return record.getIndiFatherResidence().toString();
-                } else {
-                    return recordsInfoPlace.toString();
-                }
-            } else {
-                return "";
-            }
-        }
-    }
-
-    String getIndiOccupation() {
-        if( record.getIndiOccupation() != null ) {
-            return record.getIndiOccupation().toString();
-        } else {
-            // n'est pas renseignée pour les naissances
-            return null;
-        }
-    }
-
-    String getIndiOccupationWithDate() {
-        String occupation = record.getIndiOccupation().toString();
-        if (!record.getIndiResidence().isEmpty() ) {
-            if( !occupation.isEmpty()) {
-                occupation += ", ";
-            }
-            occupation += record.getIndiResidence().toString();
-        }
-        if (!occupation.isEmpty()) {
-            occupation += " (" + getEventDate().getDisplayValue()+")";
-        }
-
-        return occupation;
-    }
-
-
-    String getIndiResidence() {
-        if (record.getIndiResidence()!= null ) {
-            return record.getIndiResidence().toString();
-        } else {
-            // n'est pas renseignée pour les naissances
-            return "";
-        }
-    }
-
-    //  conjoint (ou ancien conjoint) //////////////////////////////////////////
-
-    String getIndiMarriedFirstName() {
-        return record.getIndiMarriedFirstName().toString();
-    }
-
-    String getIndiMarriedLastName() {
-        return record.getIndiMarriedLastName().toString();
-    }
-
-    PropertyDate getIndiMarriedBirthDate() throws Exception {
-        if (IndiMarriedBirthDate == null) {
-            IndiMarriedBirthDate = new PropertyDate();
-            if ( record.getIndiMarriedFirstName()!= null 
-                 && record.getIndiMarriedLastName()!= null 
-                 && (!record.getIndiMarriedFirstName().isEmpty() ||  !record.getIndiMarriedLastName().isEmpty())
-                 && getIndiMarriedMarriageDate().isComparable()) {
-                // l'ex conjoint existe , la naissance est minMarriageYearOld le mariage avec l'individu
-                IndiMarriedBirthDate.setValue(PropertyDate.BEFORE, getYear(getIndiMarriedMarriageDate().getStart(), -MergeQuery.minMarriageYearOld), null, "naissance avant la date du mariage -"+MergeQuery.minMarriageYearOld);
-            }
-        }
-        return IndiMarriedBirthDate;
-    }
-
-    PropertyDate getIndiMarriedMarriageDate() throws Exception {
-        if (IndiMarriedMarriageDate == null) {
-            IndiMarriedMarriageDate = new PropertyDate();
-            if ( record.getIndiMarriedFirstName()!= null 
-                 && record.getIndiMarriedLastName()!= null 
-                 && (!record.getIndiMarriedFirstName().isEmpty() ||  !record.getIndiMarriedLastName().isEmpty())
-                 && getEventDate().isComparable()) {
-                // l'ex conjoint existe , le mariage avec l'individu est avant la date l'evenement
-                IndiMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
-            } else if ( this.getType() == RecordType.Death ) {
-                // la date du mariage est avant le deces
-                IndiMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
-            }
-        }
-        return IndiMarriedMarriageDate;
-    }
-
-    PropertyDate getIndiMarriedDeathDate() throws Exception {
-        if (IndiMarriedDeathDate == null) {
-            IndiMarriedDeathDate = new PropertyDate();
-            if (record.getIndiMarriedDead().getState()==true) {
-                IndiMarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "deces avant la date du relevé");
-            } else {
-                // je ne sais pas
-                //IndiMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
-            }
-        }
-        return IndiMarriedDeathDate;
-    }
-
-    String getIndiMarriedOccupation() {
-        return record.getIndiMarriedOccupation().toString();
-    }
-
-    String getIndiMarriedOccupationWithDate() {
-        String occupation = record.getIndiMarriedOccupation().toString();
-        if (!record.getIndiMarriedResidence().isEmpty()) {
-            if( !occupation.isEmpty()) {
-                occupation += ", ";
-            }
-            occupation += record.getIndiMarriedResidence().toString();
-        }
-        if (!occupation.isEmpty()) {
-            occupation += " (" + getEventDate().getDisplayValue()+")";
-        }
-        return occupation;
-    }
-
-    String getIndiMarriedResidence() {
-        return record.getIndiMarriedResidence().toString();
-    }
-
-
-    //  indi father ////////////////////////////////////////////////////////////
-
-    PropertyDate getIndiParentMarriageDate() throws Exception {
-        if (IndiParentMarriageDate == null) {
-            IndiParentMarriageDate = calculateParentMariageDate(getIndiBirthDate());
-        }
-        return IndiParentMarriageDate;
-    }
-
-    String getIndiFatherFirstName() {
-        return record.getIndiFatherFirstName().toString();
-    }
-
-    String getIndiFatherLastName() {
-        return record.getIndiFatherLastName().toString();
-    }
-
-    PropertyDate getIndiFatherBirthDate() throws Exception {
-        if (IndiFatherBirthDate == null) {
-            IndiFatherBirthDate = calculateParentBirthDate(record.getIndiFatherAge().getDelta(),getIndiBirthDate());
-        }
-        return IndiFatherBirthDate;
-    }
-
-    PropertyDate getIndiFatherDeathDate() throws Exception {
-        if (IndiFatherDeathDate == null) {
-            IndiFatherDeathDate = calculateParentDeathDate(
-                   record.getIndiFatherDead()!=null ? record.getIndiFatherDead().getState() :false,
-                   getIndiBirthDate(),
-                   9 // le pere peut être decede au plus tot apres la conception, soit 9 mois avant la naissance
-               );
-        }
-        return IndiFatherDeathDate;
-    }
-
-    String getIndiFatherOccupation() {
-        return record.getIndiFatherOccupation().toString();
-    }
-
-    String getIndiFatherResidence() {
-        return record.getIndiFatherResidence().toString();
-    }
-
-    String getIndiFatherOccupationWithDate() {
-        String occupation = record.getIndiFatherOccupation().toString();
-        if (!record.getIndiFatherResidence().isEmpty()) {
-            if( !occupation.isEmpty()) {
-                occupation += ", ";
-            }
-            occupation += record.getIndiFatherResidence().toString();
-        } 
-        if (!occupation.isEmpty()) {
-            occupation += " (" + getEventDate().getDisplayValue()+")";
-        }
-        return occupation;
-    }
-
-    String getIndiMotherFirstName() {
-        return record.getIndiMotherFirstName().toString();
-    }
-
-    String getIndiMotherLastName() {
-        return record.getIndiMotherLastName().toString();
-    }
-
-    PropertyDate getIndiMotherBirthDate() throws Exception {
-        if (IndiMotherBirthDate == null) {
-            IndiMotherBirthDate = calculateParentBirthDate(record.getIndiMotherAge().getDelta(), getIndiBirthDate());
-        }
-        return IndiMotherBirthDate;
-    }
-
-    PropertyDate getIndiMotherDeathDate() throws Exception {
-        if (IndiMotherDeathDate == null) {
-            IndiMotherDeathDate = calculateParentDeathDate(
-                   record.getIndiMotherDead()!=null ? record.getIndiMotherDead().getState() : false,
-                   getIndiBirthDate(),
-                   0 // le mere peut être decedee au plus tot 0 mois avant le naissance (par opposition au pere qui peut etre decede 9 mois avant la naissance)
-               );
-        }
-        return IndiMotherDeathDate;
-    }
-
-    String getIndiMotherOccupation() {
-        return record.getIndiMotherOccupation().toString();
-    }
-
-    String getIndiMotherOccupationWithDate() {
-        String occupation = record.getIndiMotherOccupation().toString();
-        if (!record.getIndiMotherResidence().isEmpty()) {
-            if( !occupation.isEmpty()) {
-                occupation += ", ";
-            }
-            occupation += record.getIndiMotherResidence().toString();
-        }
-        if (!occupation.isEmpty()) {
-            occupation += " (" + getEventDate().getDisplayValue()+")";
-        }
-
-        return occupation;
-    }
-
-    String getIndiMotherResidence() {
-        return record.getIndiMotherResidence().toString();
-    }
+//    String getIndiFirstName() {
+//        return record.getIndiFirstName().toString();
+//    }
+//
+//    String getIndiLastName() {
+//        return record.getIndiLastName().toString();
+//    }
+//
+//    int getIndiSex() {
+//        return record.getIndiSex().getSex();
+//    }
+//    String getIndiSexString() {
+//        return record.getIndiSex().getValue();
+//    }
+//
+//    PropertyDate getIndiBirthDate() throws Exception {
+//        if (IndiBirthDate == null) {
+//            IndiBirthDate = calculateBirthDate(
+//                record.getIndiBirthDate()!=null ? record.getIndiBirthDate().getPropertyDate() : new PropertyDate(),
+//                record.getIndiAge()!=null ? record.getIndiAge().getDelta() : new Delta(0,0,0),
+//                getIndiMarriedMarriageDate());
+//        }
+//        return IndiBirthDate;
+//    }
+//
+//    PropertyDate getIndiDeathDate() throws Exception {
+//        if (IndiDeathDate == null) {
+//            if ( type == RecordType.Death) {
+//                IndiDeathDate = getEventDate();
+//            } else {
+//                // date de deces inconnue
+//                IndiDeathDate = new PropertyDate();
+//            }
+//        }
+//        return IndiDeathDate;
+//    }
+//
+//    /**
+//     * retourne le lieu de naissance .
+//     * Si c'est un acte de naissance et si IndiBirthPlace est vide
+//     *      retourne IndiFatherResidence ou, à dfafaut, EventPlace
+//     * @return
+//     */
+//    String getIndiBirthPlace() {
+//        if ( record.getIndiBirthPlace() != null &&  !record.getIndiBirthPlace().isEmpty()) {
+//            return record.getIndiBirthPlace().toString();
+//        } else {
+//            if (this.type == RecordType.Birth) {
+//                if( record.getIndiFatherResidence() != null && !record.getIndiFatherResidence().isEmpty()) {
+//                    return record.getIndiFatherResidence().toString();
+//                } else {
+//                    return recordsInfoPlace.toString();
+//                }
+//            } else {
+//                return "";
+//            }
+//        }
+//    }
+//
+//    String getIndiOccupation() {
+//        if( record.getIndiOccupation() != null ) {
+//            return record.getIndiOccupation().toString();
+//        } else {
+//            // n'est pas renseignée pour les naissances
+//            return null;
+//        }
+//    }
+//
+//    String getIndiOccupationWithDate() {
+//        String occupation = record.getIndiOccupation().toString();
+//        if (!record.getIndiResidence().isEmpty() ) {
+//            if( !occupation.isEmpty()) {
+//                occupation += ", ";
+//            }
+//            occupation += record.getIndiResidence().toString();
+//        }
+//        if (!occupation.isEmpty()) {
+//            occupation += " (" + getEventDate().getDisplayValue()+")";
+//        }
+//
+//        return occupation;
+//    }
+//
+//
+//    String getIndiResidence() {
+//        if (record.getIndiResidence()!= null ) {
+//            return record.getIndiResidence().toString();
+//        } else {
+//            // n'est pas renseignée pour les naissances
+//            return "";
+//        }
+//    }
+//
+//    //  conjoint (ou ancien conjoint) //////////////////////////////////////////
+//
+//    String getIndiMarriedFirstName() {
+//        return record.getIndiMarriedFirstName().toString();
+//    }
+//
+//    String getIndiMarriedLastName() {
+//        return record.getIndiMarriedLastName().toString();
+//    }
+//
+//    PropertyDate getIndiMarriedBirthDate() throws Exception {
+//        if (IndiMarriedBirthDate == null) {
+//            IndiMarriedBirthDate = new PropertyDate();
+//            if ( record.getIndiMarriedFirstName()!= null
+//                 && record.getIndiMarriedLastName()!= null
+//                 && (!record.getIndiMarriedFirstName().isEmpty() ||  !record.getIndiMarriedLastName().isEmpty())
+//                 && getIndiMarriedMarriageDate().isComparable()) {
+//                // l'ex conjoint existe , la naissance est minMarriageYearOld le mariage avec l'individu
+//                IndiMarriedBirthDate.setValue(PropertyDate.BEFORE, getYear(getIndiMarriedMarriageDate().getStart(), -MergeQuery.minMarriageYearOld), null, "naissance avant la date du mariage -"+MergeQuery.minMarriageYearOld);
+//            }
+//        }
+//        return IndiMarriedBirthDate;
+//    }
+//
+//    PropertyDate getIndiMarriedMarriageDate() throws Exception {
+//        if (IndiMarriedMarriageDate == null) {
+//            IndiMarriedMarriageDate = new PropertyDate();
+//            if ( record.getIndiMarriedFirstName()!= null
+//                 && record.getIndiMarriedLastName()!= null
+//                 && (!record.getIndiMarriedFirstName().isEmpty() ||  !record.getIndiMarriedLastName().isEmpty())
+//                 && getEventDate().isComparable()) {
+//                // l'ex conjoint existe , le mariage avec l'individu est avant la date l'evenement
+//                IndiMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
+//            } else if ( this.getType() == RecordType.Death ) {
+//                // la date du mariage est avant le deces
+//                IndiMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
+//            }
+//        }
+//        return IndiMarriedMarriageDate;
+//    }
+//
+//    PropertyDate getIndiMarriedDeathDate() throws Exception {
+//        if (IndiMarriedDeathDate == null) {
+//            IndiMarriedDeathDate = new PropertyDate();
+//            if (record.getIndiMarriedDead().getState()==true) {
+//                IndiMarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "deces avant la date du relevé");
+//            } else {
+//                // je ne sais pas
+//                //IndiMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
+//            }
+//        }
+//        return IndiMarriedDeathDate;
+//    }
+//
+//    String getIndiMarriedOccupation() {
+//        return record.getIndiMarriedOccupation().toString();
+//    }
+//
+//    String getIndiMarriedOccupationWithDate() {
+//        String occupation = record.getIndiMarriedOccupation().toString();
+//        if (!record.getIndiMarriedResidence().isEmpty()) {
+//            if( !occupation.isEmpty()) {
+//                occupation += ", ";
+//            }
+//            occupation += record.getIndiMarriedResidence().toString();
+//        }
+//        if (!occupation.isEmpty()) {
+//            occupation += " (" + getEventDate().getDisplayValue()+")";
+//        }
+//        return occupation;
+//    }
+//
+//    String getIndiMarriedResidence() {
+//        return record.getIndiMarriedResidence().toString();
+//    }
+//
+//
+//    //  indi father ////////////////////////////////////////////////////////////
+//
+//    PropertyDate getIndiParentMarriageDate() throws Exception {
+//        if (IndiParentMarriageDate == null) {
+//            IndiParentMarriageDate = calculateParentMariageDate(getIndiBirthDate());
+//        }
+//        return IndiParentMarriageDate;
+//    }
+//
+//    String getIndiFatherFirstName() {
+//        return record.getIndiFatherFirstName().toString();
+//    }
+//
+//    String getIndiFatherLastName() {
+//        return record.getIndiFatherLastName().toString();
+//    }
+//
+//    PropertyDate getIndiFatherBirthDate() throws Exception {
+//        if (IndiFatherBirthDate == null) {
+//            IndiFatherBirthDate = calculateParentBirthDate(record.getIndiFatherAge().getDelta(),getIndiBirthDate());
+//        }
+//        return IndiFatherBirthDate;
+//    }
+//
+//    PropertyDate getIndiFatherDeathDate() throws Exception {
+//        if (IndiFatherDeathDate == null) {
+//            IndiFatherDeathDate = calculateParentDeathDate(
+//                   record.getIndiFatherDead()!=null ? record.getIndiFatherDead().getState() :false,
+//                   getIndiBirthDate(),
+//                   9 // le pere peut être decede au plus tot apres la conception, soit 9 mois avant la naissance
+//               );
+//        }
+//        return IndiFatherDeathDate;
+//    }
+//
+//    String getIndiFatherOccupation() {
+//        return record.getIndiFatherOccupation().toString();
+//    }
+//
+//    String getIndiFatherResidence() {
+//        return record.getIndiFatherResidence().toString();
+//    }
+//
+//    String getIndiFatherOccupationWithDate() {
+//        String occupation = record.getIndiFatherOccupation().toString();
+//        if (!record.getIndiFatherResidence().isEmpty()) {
+//            if( !occupation.isEmpty()) {
+//                occupation += ", ";
+//            }
+//            occupation += record.getIndiFatherResidence().toString();
+//        }
+//        if (!occupation.isEmpty()) {
+//            occupation += " (" + getEventDate().getDisplayValue()+")";
+//        }
+//        return occupation;
+//    }
+//
+//    String getIndiMotherFirstName() {
+//        return record.getIndiMotherFirstName().toString();
+//    }
+//
+//    String getIndiMotherLastName() {
+//        return record.getIndiMotherLastName().toString();
+//    }
+//
+//    PropertyDate getIndiMotherBirthDate() throws Exception {
+//        if (IndiMotherBirthDate == null) {
+//            IndiMotherBirthDate = calculateParentBirthDate(record.getIndiMotherAge().getDelta(), getIndiBirthDate());
+//        }
+//        return IndiMotherBirthDate;
+//    }
+//
+//    PropertyDate getIndiMotherDeathDate() throws Exception {
+//        if (IndiMotherDeathDate == null) {
+//            IndiMotherDeathDate = calculateParentDeathDate(
+//                   record.getIndiMotherDead()!=null ? record.getIndiMotherDead().getState() : false,
+//                   getIndiBirthDate(),
+//                   0 // le mere peut être decedee au plus tot 0 mois avant le naissance (par opposition au pere qui peut etre decede 9 mois avant la naissance)
+//               );
+//        }
+//        return IndiMotherDeathDate;
+//    }
+//
+//    String getIndiMotherOccupation() {
+//        return record.getIndiMotherOccupation().toString();
+//    }
+//
+//    String getIndiMotherOccupationWithDate() {
+//        String occupation = record.getIndiMotherOccupation().toString();
+//        if (!record.getIndiMotherResidence().isEmpty()) {
+//            if( !occupation.isEmpty()) {
+//                occupation += ", ";
+//            }
+//            occupation += record.getIndiMotherResidence().toString();
+//        }
+//        if (!occupation.isEmpty()) {
+//            occupation += " (" + getEventDate().getDisplayValue()+")";
+//        }
+//
+//        return occupation;
+//    }
+//
+//    String getIndiMotherResidence() {
+//        return record.getIndiMotherResidence().toString();
+//    }
 
     //  wife ///////////////////////////////////////////////////////////////////
 
-    String getWifeFirstName() {
-        return record.getWifeFirstName().toString();
-    }
-
-    String getWifeLastName() {
-        return record.getWifeLastName().toString();
-    }
-
-    int getWifeSex() {
-        return record.getWifeSex().getSex();
-    }
-
-    PropertyDate getWifeBirthDate() throws Exception {
-        if (WifeBirthDate == null) {
-            WifeBirthDate = calculateBirthDate(
-                record.getWifeBirthDate()!=null ? record.getWifeBirthDate().getPropertyDate() : new PropertyDate(),
-                record.getWifeAge()!=null ? record.getWifeAge().getDelta() : new Delta(0,0,0),
-                getWifeMarriedMarriageDate() );
-        }
-        return WifeBirthDate;
-    }
-
-    PropertyDate getWifeDeathDate() throws Exception {
-        if (WifeDeathDate == null) {
-            if ( type == RecordType.Death) {
-                IndiDeathDate = getEventDate();
-            } else {
-                IndiDeathDate = new PropertyDate();
-            }
-        }
-        return WifeDeathDate;
-    }
-
-    String getWifeBirthPlace() {
-        if( record.getWifeBirthPlace() != null) {
-            return record.getWifeBirthPlace().toString();
-        } else {
-            return "";
-        }
-    }
-
-    String getWifeOccupation() {
-        return record.getWifeOccupation().toString();
-    }
-
-    String getWifeOccupationWithDate() {
-        String occupation = record.getWifeOccupation().toString();
-        if (!record.getWifeResidence().isEmpty()) {
-            if( !occupation.isEmpty()) {
-                occupation += ", ";
-            }
-            occupation += record.getWifeResidence().toString();
-        }
-        if (!occupation.isEmpty()) {
-            occupation += " (" + getEventDate().getDisplayValue()+")";
-        }
-
-        return occupation;
-    }
-
-    String getWifeResidence () {
-        return record.getWifeResidence().toString();
-    }
-
-    //  conjoint (ou ancien conjoint) //////////////////////////////////////////
-    String getWifeMarriedFirstName() {
-        return record.getWifeMarriedFirstName().toString();
-    }
-
-    String getWifeMarriedLastName() {
-        return record.getWifeMarriedLastName().toString();
-    }
-
-    PropertyDate getWifeMarriedBirthDate() throws Exception {
-        if (WifeMarriedBirthDate == null) {
-            WifeMarriedBirthDate = new PropertyDate();
-            if ( record.getWifeMarriedFirstName()!= null
-                 && record.getWifeMarriedLastName()!= null
-                 && (!record.getWifeMarriedFirstName().isEmpty() ||  !record.getWifeMarriedLastName().isEmpty())
-                 && getWifeMarriedMarriageDate().isComparable()) {
-                // l'ex conjoint existe , la naissance est minMarriageYearOld le mariage avec l'individu
-                WifeMarriedBirthDate.setValue(PropertyDate.BEFORE, getYear(getWifeMarriedMarriageDate().getStart(), -MergeQuery.minMarriageYearOld), null, "naissance avant la date du mariage -"+MergeQuery.minMarriageYearOld);
-            }
-        }
-        return WifeMarriedBirthDate;
-    }
-
-    PropertyDate getWifeMarriedMarriageDate() throws Exception {
-        if (WifeMarriedMarriageDate == null) {
-            WifeMarriedMarriageDate = new PropertyDate();
-            if ( record.getWifeMarriedFirstName()!= null  && record.getWifeMarriedLastName() != null
-                    && (!record.getWifeMarriedFirstName().isEmpty() ||  !record.getWifeMarriedLastName().isEmpty())
-                    && getEventDate().isComparable() ) {
-                // le mariage avec l'ex conjoit
-                //WifeMarriedMarriageDate.setValue(String.format("BEF %d",getEventDate().getStart().getYear()));
-                WifeMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
-            } 
-        }
-        return WifeMarriedMarriageDate;
-    }
-
-    PropertyDate getWifeMarriedDeathDate() throws Exception {
-        if (WifeMarriedDeathDate == null) {
-            WifeMarriedDeathDate = new PropertyDate();
-            if ( record.getWifeMarriedDead()!= null && record.getWifeMarriedDead().getState() ) {
-                WifeMarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "décès avant la date du relevé");
-             } else {
-                // je ne sais pas
-                //WifeMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
-            }
-        }
-        return WifeMarriedDeathDate;
-    }
-
-    String getWifeMarriedOccupation() {
-        return record.getWifeFatherOccupation().toString();
-    }
-
-    String getWifeMarriedOccupationWithDate() {
-        String occupation = record.getWifeMarriedOccupation().toString();
-        if (!record.getWifeMarriedResidence().isEmpty()) {
-            if( !occupation.isEmpty()) {
-                occupation += ", ";
-            }
-            occupation += record.getWifeMarriedResidence().toString();
-        }
-        if (!occupation.isEmpty()) {
-            occupation += " (" + getEventDate().getDisplayValue()+")";
-        }
-
-        return occupation;
-    }
-
-
-
-    //  wife father ////////////////////////////////////////////////////////////
-
-    PropertyDate getWifeParentMarriageDate() throws Exception {
-        if (WifeParentMarriageDate == null) {
-            WifeParentMarriageDate = calculateParentMariageDate(getWifeBirthDate());
-        }
-        return WifeParentMarriageDate;
-    }
-
-    String getWifeFatherFirstName() {
-        if ( record.getWifeFatherFirstName() == null) {
-            return "";
-        } else {
-            return record.getWifeFatherFirstName().toString();
-        }
-    }
-
-    String getWifeFatherLastName() {
-        if ( record.getWifeFatherLastName() == null ) {
-            return "";
-        } else {
-            return record.getWifeFatherLastName().toString();
-        }
-    }
-
-    PropertyDate getWifeFatherBirthDate() throws Exception {
-        if (WifeFatherBirthDate == null) {
-            WifeFatherBirthDate = calculateParentBirthDate(record.getWifeFatherAge().getDelta(), getWifeBirthDate());
-        }
-        return WifeFatherBirthDate;
-    }
-
-    PropertyDate getWifeFatherDeathDate() throws Exception {
-        if (WifeFatherDeathDate == null) {
-             WifeFatherDeathDate = calculateParentDeathDate(
-                   record.getWifeFatherDead()!=null ? record.getWifeFatherDead().getState() :false,
-                   getWifeBirthDate(),
-                   9 // le pere peut être decede au plus tot apres la conception, soit 9 mois avant la naissance
-               );
-        }
-        return WifeFatherDeathDate;
-    }
-
-    String getWifeFatherOccupation() {
-        if ( record.getWifeFatherOccupation() == null ) {
-            return "";
-        } else {
-            return record.getWifeFatherOccupation().toString();
-        }
-    }
-    
-    String getWifeFatherResidence() {
-        return record.getWifeFatherResidence().toString();
-    }
-
-    String getWifeFatherOccupationWithDate() {
-        String occupation = getWifeFatherOccupation();
-        if (!getWifeFatherResidence().isEmpty()) {
-            if( !occupation.isEmpty()) {
-                occupation += ", ";
-            }
-            occupation += getWifeFatherResidence();
-        }
-        if (!occupation.isEmpty()) {
-            occupation += " (" + getEventDate().getDisplayValue()+")";
-        }
-
-        return occupation;
-    }
-
-    String getWifeMotherFirstName() {
-        if( record.getWifeMotherFirstName() == null) {
-            return "";
-        } else {
-            return record.getWifeMotherFirstName().toString();
-        }
-    }
-
-    String getWifeMotherLastName() {
-        if ( record.getWifeMotherLastName() == null) {
-            return "";
-        } else {
-            return record.getWifeMotherLastName().toString();
-        }
-    }
-
-    PropertyDate getWifeMotherBirthDate() throws Exception {
-        if (WifeMotherBirthDate == null) {
-            WifeMotherBirthDate = calculateParentBirthDate(record.getWifeMotherAge().getDelta(), getWifeBirthDate());
-        }
-        return WifeMotherBirthDate;
-    }
-
-    PropertyDate getWifeMotherDeathDate() throws Exception {
-        if (WifeMotherDeathDate == null) {
-            WifeMotherDeathDate = calculateParentDeathDate(
-                   record.getWifeMotherDead()!=null ? record.getWifeMotherDead().getState() : false,
-                   getWifeBirthDate(),
-                   0 // le mere peut être decedee 0 mois avant le naissance (= juste apres la naissance)
-               );
-        }
-        return WifeMotherDeathDate;
-    }
-
-    String getWifeMotherOccupation() {
-        if ( record.getWifeMotherOccupation() == null ) {
-            return "";
-        } else {
-            return record.getWifeMotherOccupation().toString();
-        }
-    }
-
-    String getWifeMotherOccupationWithDate() {
-        String occupation = getWifeMotherOccupation();
-        if (!record.getWifeMotherResidence().isEmpty()) {
-            if( !occupation.isEmpty()) {
-                occupation += ", ";
-            }
-            occupation += record.getWifeMotherResidence().toString();
-        }
-        if (!occupation.isEmpty()) {
-            occupation += " (" + getEventDate().getDisplayValue()+")";
-        }
-
-        return occupation;
-    }
-
-    /**
-     *
-     * @return
-     */
-    String getWifeMotherResidence() {
-        String residence;
-        if (this.type == RecordType.Birth && record.getWifeMotherResidence().isEmpty() && ! record.getWifeFatherResidence().isEmpty()) {
-            residence = record.getWifeFatherResidence().toString();
-        } else {
-            residence = record.getWifeMotherResidence().toString();
-        }
-        return residence;
-    }
-  
+//    String getWifeFirstName() {
+//        return record.getWifeFirstName().toString();
+//    }
+//
+//    String getWifeLastName() {
+//        return record.getWifeLastName().toString();
+//    }
+//
+//    int getWifeSex() {
+//        return record.getWifeSex().getSex();
+//    }
+//
+//    PropertyDate getWifeBirthDate() throws Exception {
+//        if (WifeBirthDate == null) {
+//            WifeBirthDate = calculateBirthDate(
+//                record.getWifeBirthDate()!=null ? record.getWifeBirthDate().getPropertyDate() : new PropertyDate(),
+//                record.getWifeAge()!=null ? record.getWifeAge().getDelta() : new Delta(0,0,0),
+//                getWifeMarriedMarriageDate() );
+//        }
+//        return WifeBirthDate;
+//    }
+//
+//    PropertyDate getWifeDeathDate() throws Exception {
+//        if (WifeDeathDate == null) {
+//            if ( type == RecordType.Death) {
+//                IndiDeathDate = getEventDate();
+//            } else {
+//                IndiDeathDate = new PropertyDate();
+//            }
+//        }
+//        return WifeDeathDate;
+//    }
+//
+//    String getWifeBirthPlace() {
+//        if( record.getWifeBirthPlace() != null) {
+//            return record.getWifeBirthPlace().toString();
+//        } else {
+//            return "";
+//        }
+//    }
+//
+//    String getWifeOccupation() {
+//        return record.getWifeOccupation().toString();
+//    }
+//
+//    String getWifeOccupationWithDate() {
+//        String occupation = record.getWifeOccupation().toString();
+//        if (!record.getWifeResidence().isEmpty()) {
+//            if( !occupation.isEmpty()) {
+//                occupation += ", ";
+//            }
+//            occupation += record.getWifeResidence().toString();
+//        }
+//        if (!occupation.isEmpty()) {
+//            occupation += " (" + getEventDate().getDisplayValue()+")";
+//        }
+//
+//        return occupation;
+//    }
+//
+//    String getWifeResidence () {
+//        return record.getWifeResidence().toString();
+//    }
+//
+//    //  conjoint (ou ancien conjoint) //////////////////////////////////////////
+//    String getWifeMarriedFirstName() {
+//        return record.getWifeMarriedFirstName().toString();
+//    }
+//
+//    String getWifeMarriedLastName() {
+//        return record.getWifeMarriedLastName().toString();
+//    }
+//
+//    PropertyDate getWifeMarriedBirthDate() throws Exception {
+//        if (WifeMarriedBirthDate == null) {
+//            WifeMarriedBirthDate = new PropertyDate();
+//            if ( record.getWifeMarriedFirstName()!= null
+//                 && record.getWifeMarriedLastName()!= null
+//                 && (!record.getWifeMarriedFirstName().isEmpty() ||  !record.getWifeMarriedLastName().isEmpty())
+//                 && getWifeMarriedMarriageDate().isComparable()) {
+//                // l'ex conjoint existe , la naissance est minMarriageYearOld le mariage avec l'individu
+//                WifeMarriedBirthDate.setValue(PropertyDate.BEFORE, getYear(getWifeMarriedMarriageDate().getStart(), -MergeQuery.minMarriageYearOld), null, "naissance avant la date du mariage -"+MergeQuery.minMarriageYearOld);
+//            }
+//        }
+//        return WifeMarriedBirthDate;
+//    }
+//
+//    PropertyDate getWifeMarriedMarriageDate() throws Exception {
+//        if (WifeMarriedMarriageDate == null) {
+//            WifeMarriedMarriageDate = new PropertyDate();
+//            if ( record.getWifeMarriedFirstName()!= null  && record.getWifeMarriedLastName() != null
+//                    && (!record.getWifeMarriedFirstName().isEmpty() ||  !record.getWifeMarriedLastName().isEmpty())
+//                    && getEventDate().isComparable() ) {
+//                // le mariage avec l'ex conjoit
+//                //WifeMarriedMarriageDate.setValue(String.format("BEF %d",getEventDate().getStart().getYear()));
+//                WifeMarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
+//            }
+//        }
+//        return WifeMarriedMarriageDate;
+//    }
+//
+//    PropertyDate getWifeMarriedDeathDate() throws Exception {
+//        if (WifeMarriedDeathDate == null) {
+//            WifeMarriedDeathDate = new PropertyDate();
+//            if ( record.getWifeMarriedDead()!= null && record.getWifeMarriedDead().getState() ) {
+//                WifeMarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "décès avant la date du relevé");
+//             } else {
+//                // je ne sais pas
+//                //WifeMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
+//            }
+//        }
+//        return WifeMarriedDeathDate;
+//    }
+//
+//    String getWifeMarriedOccupation() {
+//        return record.getWifeFatherOccupation().toString();
+//    }
+//
+//    String getWifeMarriedOccupationWithDate() {
+//        String occupation = record.getWifeMarriedOccupation().toString();
+//        if (!record.getWifeMarriedResidence().isEmpty()) {
+//            if( !occupation.isEmpty()) {
+//                occupation += ", ";
+//            }
+//            occupation += record.getWifeMarriedResidence().toString();
+//        }
+//        if (!occupation.isEmpty()) {
+//            occupation += " (" + getEventDate().getDisplayValue()+")";
+//        }
+//
+//        return occupation;
+//    }
+//
+//
+//
+//    //  wife father ////////////////////////////////////////////////////////////
+//
+//    PropertyDate getWifeParentMarriageDate() throws Exception {
+//        if (WifeParentMarriageDate == null) {
+//            WifeParentMarriageDate = calculateParentMariageDate(getWifeBirthDate());
+//        }
+//        return WifeParentMarriageDate;
+//    }
+//
+//    String getWifeFatherFirstName() {
+//        if ( record.getWifeFatherFirstName() == null) {
+//            return "";
+//        } else {
+//            return record.getWifeFatherFirstName().toString();
+//        }
+//    }
+//
+//    String getWifeFatherLastName() {
+//        if ( record.getWifeFatherLastName() == null ) {
+//            return "";
+//        } else {
+//            return record.getWifeFatherLastName().toString();
+//        }
+//    }
+//
+//    PropertyDate getWifeFatherBirthDate() throws Exception {
+//        if (WifeFatherBirthDate == null) {
+//            WifeFatherBirthDate = calculateParentBirthDate(record.getWifeFatherAge().getDelta(), getWifeBirthDate());
+//        }
+//        return WifeFatherBirthDate;
+//    }
+//
+//    PropertyDate getWifeFatherDeathDate() throws Exception {
+//        if (WifeFatherDeathDate == null) {
+//             WifeFatherDeathDate = calculateParentDeathDate(
+//                   record.getWifeFatherDead()!=null ? record.getWifeFatherDead().getState() :false,
+//                   getWifeBirthDate(),
+//                   9 // le pere peut être decede au plus tot apres la conception, soit 9 mois avant la naissance
+//               );
+//        }
+//        return WifeFatherDeathDate;
+//    }
+//
+//    String getWifeFatherOccupation() {
+//        if ( record.getWifeFatherOccupation() == null ) {
+//            return "";
+//        } else {
+//            return record.getWifeFatherOccupation().toString();
+//        }
+//    }
+//
+//    String getWifeFatherResidence() {
+//        return record.getWifeFatherResidence().toString();
+//    }
+//
+//    String getWifeFatherOccupationWithDate() {
+//        String occupation = getWifeFatherOccupation();
+//        if (!getWifeFatherResidence().isEmpty()) {
+//            if( !occupation.isEmpty()) {
+//                occupation += ", ";
+//            }
+//            occupation += getWifeFatherResidence();
+//        }
+//        if (!occupation.isEmpty()) {
+//            occupation += " (" + getEventDate().getDisplayValue()+")";
+//        }
+//
+//        return occupation;
+//    }
+//
+//    String getWifeMotherFirstName() {
+//        if( record.getWifeMotherFirstName() == null) {
+//            return "";
+//        } else {
+//            return record.getWifeMotherFirstName().toString();
+//        }
+//    }
+//
+//    String getWifeMotherLastName() {
+//        if ( record.getWifeMotherLastName() == null) {
+//            return "";
+//        } else {
+//            return record.getWifeMotherLastName().toString();
+//        }
+//    }
+//
+//    PropertyDate getWifeMotherBirthDate() throws Exception {
+//        if (WifeMotherBirthDate == null) {
+//            WifeMotherBirthDate = calculateParentBirthDate(record.getWifeMotherAge().getDelta(), getWifeBirthDate());
+//        }
+//        return WifeMotherBirthDate;
+//    }
+//
+//    PropertyDate getWifeMotherDeathDate() throws Exception {
+//        if (WifeMotherDeathDate == null) {
+//            WifeMotherDeathDate = calculateParentDeathDate(
+//                   record.getWifeMotherDead()!=null ? record.getWifeMotherDead().getState() : false,
+//                   getWifeBirthDate(),
+//                   0 // le mere peut être decedee 0 mois avant le naissance (= juste apres la naissance)
+//               );
+//        }
+//        return WifeMotherDeathDate;
+//    }
+//
+//    String getWifeMotherOccupation() {
+//        if ( record.getWifeMotherOccupation() == null ) {
+//            return "";
+//        } else {
+//            return record.getWifeMotherOccupation().toString();
+//        }
+//    }
+//
+//    String getWifeMotherOccupationWithDate() {
+//        String occupation = getWifeMotherOccupation();
+//        if (!record.getWifeMotherResidence().isEmpty()) {
+//            if( !occupation.isEmpty()) {
+//                occupation += ", ";
+//            }
+//            occupation += record.getWifeMotherResidence().toString();
+//        }
+//        if (!occupation.isEmpty()) {
+//            occupation += " (" + getEventDate().getDisplayValue()+")";
+//        }
+//
+//        return occupation;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    String getWifeMotherResidence() {
+//        String residence;
+//        if (this.type == RecordType.Birth && record.getWifeMotherResidence().isEmpty() && ! record.getWifeFatherResidence().isEmpty()) {
+//            residence = record.getWifeFatherResidence().toString();
+//        } else {
+//            residence = record.getWifeMotherResidence().toString();
+//        }
+//        return residence;
+//    }
+//
 
     /**
      * genere le commentaire de la naissance
@@ -1043,74 +1061,128 @@ public class MergeRecord {
      * @return
      */
     private String makeMiscComment() {
-
         String comment="";
-        String indiComment = appendValue(record.getIndiComment().toString(),
-                record.getIndiAge().toString());
+        
+        // commentaire de l'intervenant 1
+        String indiComment = appendValue(
+                record.getIndiFirstName() + " " + record.getIndiLastName(),
+                record.getIndiAge().toString(),
+                makeParticipantBirthComment(record.getIndiBirthDate(), record.getIndiBirthPlace()),
+                record.getIndiOccupation().toString(),
+                record.getIndiResidence().toString(),
+                record.getIndiComment().toString()
+                );
 
        if ( !indiComment.isEmpty() ) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += "Commentaire individu"+": " +indiComment;
+            comment += "Intervenant 1"+": " +indiComment;
         }
 
-        if ( record.getIndiAge()!= null && !record.getIndiAge().isEmpty() ) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+        String indiMarriedComment = appendValue(
+                record.getIndiMarriedFirstName() + " " + record.getIndiMarriedLastName(),
+                record.getIndiMarriedDead().toString(),
+                record.getIndiMarriedOccupation().toString(),
+                record.getIndiMarriedResidence().toString(),
+                record.getIndiMarriedComment().toString()
+                );
+        if (!indiMarriedComment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
                 comment += "\n";
             }
-            comment += "Age"+": " +record.getIndiAge().toString();
+            comment += "Conjoint intervenant 1" + ": " + indiMarriedComment;
         }
 
-
         String indiFatherComment = appendValue(
-                record.getIndiFatherComment().toString(),
-                record.getIndiFatherAge().toString());
+                record.getIndiFatherFirstName() + " " + record.getIndiFatherLastName(),
+                record.getIndiFatherAge().toString(),
+                record.getIndiFatherDead().toString(),
+                record.getIndiFatherOccupation().toString(),
+                record.getIndiFatherResidence().toString(),
+                record.getIndiFatherComment().toString()
+                );
         if (!indiFatherComment.isEmpty()) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
                 comment += "\n";
             }
-            comment += "Commentaire père individu" + ": " + indiFatherComment;
+            comment += "Père intervenant 1" + ": " + indiFatherComment;
         }
 
         String indiMotherComment = appendValue(
-                record.getIndiMotherComment().toString(),
-                record.getIndiMotherAge().toString());
+                record.getIndiMotherFirstName() + " " + record.getIndiMotherLastName(),
+                record.getIndiMotherAge().toString(),
+                record.getIndiMotherDead().toString(),
+                record.getIndiMotherOccupation().toString(),
+                record.getIndiMotherResidence().toString(),
+                record.getIndiMotherComment().toString()
+                );
         if (!indiMotherComment.isEmpty()) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += "Commentaire mère individu" + ": " + indiMotherComment;
+            comment += "Mère intervenant 1" + ": " + indiMotherComment;
         }
 
-        String wifeComment = appendValue(record.getWifeComment().toString(),
-                record.getWifeAge().toString());
+        // commentaire de l'intervenant 2
+        String wifeComment = appendValue(
+                record.getWifeFirstName() + " " + record.getWifeLastName(),
+                record.getWifeAge().toString(),
+                makeParticipantBirthComment(record.getWifeBirthDate(), record.getWifeBirthPlace()),
+                record.getWifeOccupation().toString(),
+                record.getWifeResidence().toString(),
+                record.getWifeComment().toString()
+                );
 
         if ( !wifeComment.isEmpty() ) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+                comment += "\n\n";
+            }
+            comment += "Intervenant 2"+": " +wifeComment;
+        }
+
+        String wifeMarriedComment = appendValue(
+                record.getWifeMarriedFirstName() + " " + record.getWifeMarriedLastName(),
+                record.getWifeMarriedDead().toString(),
+                record.getWifeMarriedOccupation().toString(),
+                record.getWifeMarriedResidence().toString(),
+                record.getWifeMarriedComment().toString()
+                );
+        if (!wifeMarriedComment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
                 comment += "\n";
             }
-            comment += "Commentaire intervenant 2"+": " +wifeComment;
+            comment += "Conjoint intervenant 2" + ": " + wifeMarriedComment;
         }
 
         String wifeFatherComment = appendValue(
-                record.getWifeFatherComment().toString(),
-                record.getWifeFatherAge().toString());
+                record.getWifeFatherFirstName() + " " + record.getWifeFatherLastName(),
+                record.getWifeFatherAge().toString(),
+                record.getWifeFatherDead().toString(),
+                record.getWifeFatherOccupation().toString(),
+                record.getWifeFatherResidence().toString(),
+                record.getWifeFatherComment().toString()
+                );
         if (!wifeFatherComment.isEmpty()) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
                 comment += "\n";
             }
-            comment += "Commentaire père intervenant 2" + ": " + wifeFatherComment;
+            comment += "Père intervenant 2" + ": " + wifeFatherComment;
         }
 
         String wifeMotherComment = appendValue(
-                record.getWifeMotherComment().toString(),
-                record.getWifeMotherAge().toString());
+                record.getWifeMotherFirstName() + " " + record.getWifeMotherLastName(),
+                record.getWifeMotherAge().toString(),
+                record.getWifeMotherDead().toString(),
+                record.getWifeMotherOccupation().toString(),
+                record.getWifeMotherResidence().toString(),
+                record.getWifeMotherComment().toString()
+                );
         if (!wifeMotherComment.isEmpty()) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
-            comment += "Commentaire mère intervenant 2" + ": " + wifeMotherComment;
+            comment += "Mère intervenant 2" + ": " + wifeMotherComment;
         }
 
         String witness = appendValue(
@@ -1150,6 +1222,22 @@ public class MergeRecord {
             comment += "Photo"+": "+freeComment;
         }
 
+        return comment;
+    }
+
+    private String makeParticipantBirthComment(FieldDate birthDate, FieldPlace birthPlace) {
+        String comment = "";
+        if (birthDate != null && !birthDate.isEmpty()) {
+            comment = "Naissance" + ": " + birthDate.getValue();
+        }
+
+        if (birthPlace != null && !birthPlace.isEmpty()) {
+            if( comment.isEmpty() ) {
+                comment = "Naissance" + ": " + birthPlace.toString();
+            } else {
+                comment += " " + birthPlace.toString();
+            }
+        }
         return comment;
     }
 
@@ -1217,14 +1305,16 @@ public class MergeRecord {
      * @param marriedMarriageDate     date de mariage avec l'ex conjoint (null si pas d'ex conjoint
      * @return
      */
-    private PropertyDate calculateBirthDate(PropertyDate birthDate, Delta age, PropertyDate marriedMarriageDate) throws Exception {
+    private PropertyDate calculateBirthDate(PropertyDate recordBirthDate, Delta age, PropertyDate marriedMarriageDate) throws Exception {
+        PropertyDate resultDate = new PropertyDate();
+        resultDate.setValue(recordBirthDate.getValue());
         if (type == RecordType.Birth) {
-            if ( !birthDate.isComparable() ) {
-                birthDate.setValue(getEventDate().getValue());
+            if ( !recordBirthDate.isComparable() ) {
+                resultDate.setValue(getEventDate().getValue());
             }
         } else if (type == RecordType.Marriage  || (type == RecordType.Misc && eventTypeTag == EventTypeTag.MARC )) {
 
-            if ( ! birthDate.isComparable() &&  record.getEventDateProperty().isComparable()) {
+            if ( ! recordBirthDate.isComparable() &&  record.getEventDateProperty().isComparable()) {
                 // la date de naissance n'est pas valide, 
                 // je calcule la naissance a partir de l'age ou de la date de mariage
                 if (age.getYears() != 0 || age.getMonths() != 0 || age.getDays() != 0 ) {
@@ -1246,25 +1336,25 @@ public class MergeRecord {
                             end.set(record.getEventDateProperty().getEnd());
                             end.add(-age.getDays(), -age.getMonths(), -age.getYears());
                         }
-                        birthDate.setValue(record.getEventDateProperty().getFormat(),
+                        resultDate.setValue(record.getEventDateProperty().getFormat(),
                                 start, end , "Date naissance = date du releve - age");
 
                     } else {
                         // l'age n'est pas précis au jour près.
                         // date de naissance = date de mariage (arrondi a l'année) - age (arrondi à l'année)
                         ///birthDate.setValue(String.format("CAL %d", record.getEventDateProperty().getStart().getYear() -age.getYears()));
-                        birthDate.setValue(PropertyDate.CALCULATED, getYear(getEventDate().getStart(),age), null, "date naissance=date du releve - age");
+                        resultDate.setValue(PropertyDate.CALCULATED, getYear(getEventDate().getStart(),age), null, "date naissance=date du releve - age");
                     }
                 } else {
                     // l'age n'est pas valide
 
                     // date de naissance maximale BEF = date de mariage -  minMarriageYearOld
                     //birthDate= calulateDateBeforeMinusShift(record.getEventDateProperty(), MergeQuery.minMarriageYearOld, "date 15 ans avant le mariage");
-                    birthDate= calulateDateBeforeMinusShift(getEventDate(), MergeQuery.minMarriageYearOld, "=date mariage -"+ MergeQuery.minMarriageYearOld );
+                    resultDate= calulateDateBeforeMinusShift(getEventDate(), MergeQuery.minMarriageYearOld, "=date mariage -"+ MergeQuery.minMarriageYearOld );
                 }
             }
         } else if (type == RecordType.Death) {
-            if ( ! birthDate.isComparable() &&  record.getEventDateProperty().isComparable()) {
+            if ( ! recordBirthDate.isComparable() &&  record.getEventDateProperty().isComparable()) {
                 // la date de naissance n'est pas valide,
                 // je calcule la naissance a partir de l'age
                 if (age.getYears() != 0 || age.getMonths() != 0 || age.getDays() != 0 ) {
@@ -1286,13 +1376,13 @@ public class MergeRecord {
                             end.set(record.getEventDateProperty().getEnd());
                             end.add(-age.getDays(), -age.getMonths(), -age.getYears());
                         }
-                        birthDate.setValue(record.getEventDateProperty().getFormat(),
+                        resultDate.setValue(record.getEventDateProperty().getFormat(),
                                 start, end , "Date naissance = date du releve - age");
                     } else {
                         // l'age n'est pas précis au jour près.
                         // date de naissance = date de mariage (arrondi a l'année) - age (arrondi à l'année)
                         ///birthDate.setValue(String.format("CAL %d", record.getEventDateProperty().getStart().getYear() - age.getYears()));
-                        birthDate.setValue(PropertyDate.CALCULATED, getYear(getEventDate().getStart(),age), null, "date naissance=date du releve - age");
+                        resultDate.setValue(PropertyDate.CALCULATED, getYear(getEventDate().getStart(),age), null, "date naissance=date du releve - age");
                         
                     }
                 } else {
@@ -1300,18 +1390,18 @@ public class MergeRecord {
                     if (marriedMarriageDate != null && marriedMarriageDate.isComparable()) {
                         // la naissance est minMarriageYearOld avant le mariage avec l'ex conjoint
                         ///birthDate.setValue(String.format("BEF %d", marriedMarriageDate.getStart().getYear()-MergeQuery.minMarriageYearOld));
-                        birthDate.setValue(PropertyDate.BEFORE, getYear(marriedMarriageDate.getStart(),-MergeQuery.minMarriageYearOld), null, "date naissance= avant date de mariage avec ex conjoint -"+ MergeQuery.minMarriageYearOld);
+                        resultDate.setValue(PropertyDate.BEFORE, getYear(marriedMarriageDate.getStart(),-MergeQuery.minMarriageYearOld), null, "date naissance= avant date de mariage avec ex conjoint -"+ MergeQuery.minMarriageYearOld);
                     } else {
                         // la naissance est avant le deces
                         ///birthDate.setValue(String.format("BEF %d", getEventDate().getStart().getYear()));
-                        birthDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "date naissance= avant date du releve");
+                        resultDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "date naissance= avant date du releve");
                     }
                 }
             }
 
         } else {
             // releve divers
-            if ( ! birthDate.isComparable() &&  record.getEventDateProperty().isComparable()) {
+            if ( ! recordBirthDate.isComparable() &&  record.getEventDateProperty().isComparable()) {
                 // la date de naissance n'est pas valide,
                 // je calcule la naissance a partir de l'age
                 if (age.getYears() != 0 ) {
@@ -1333,31 +1423,31 @@ public class MergeRecord {
                             end.set(record.getEventDateProperty().getEnd());
                             end.add(-age.getDays(), -age.getMonths(), -age.getYears());
                         }
-                        birthDate.setValue(record.getEventDateProperty().getFormat(),
+                        resultDate.setValue(record.getEventDateProperty().getFormat(),
                                 start, end , "Date naissance = date du releve - age");
                     } else {
                         // l'age n'est pas précis au jour près.
                         // date de naissance = date de mariage (arrondi a l'année) - age (arrondi à l'année)
                         ///birthDate.setValue(String.format("CAL %d", record.getEventDateProperty().getStart().getYear() - age.getYears()));
-                        birthDate.setValue(PropertyDate.CALCULATED, getYear(record.getEventDateProperty().getStart(),age), null, "date naissance=date du releve - age");
+                        resultDate.setValue(PropertyDate.CALCULATED, getYear(record.getEventDateProperty().getStart(),age), null, "date naissance=date du releve - age");
                     }
                 } else {
                     // l'age n'est pas valide
                     if (marriedMarriageDate != null && marriedMarriageDate.isComparable()) {
                         // la naissance est minMarriageYearOld avant le mariage avec l'ex conjoint
                         ///birthDate.setValue(String.format("BEF %d", marriedMarriageDate.getStart().getYear()-MergeQuery.minMarriageYearOld));
-                        birthDate.setValue(PropertyDate.BEFORE, getYear(marriedMarriageDate.getStart(),-MergeQuery.minMarriageYearOld), null, "date naissance= avant date de mariage avec ex conjoint -"+ MergeQuery.minMarriageYearOld);
+                        resultDate.setValue(PropertyDate.BEFORE, getYear(marriedMarriageDate.getStart(),-MergeQuery.minMarriageYearOld), null, "date naissance= avant date de mariage avec ex conjoint -"+ MergeQuery.minMarriageYearOld);
                     } else {
                         // il n'y a pas d'ex conjoint
                         // la naissance est avant l'evenement qui concerne l'individu
                         ///birthDate.setValue(String.format("BEF %d", record.getEventDateProperty().getStart().getYear()));
-                        birthDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "date naissance= avant date du releve");
+                        resultDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "date naissance= avant date du releve");
                     }
                 }
             }
         }
 
-        return birthDate;
+        return resultDate;
     }
 
 
@@ -1576,4 +1666,315 @@ public class MergeRecord {
         return marriageDate;
     }
 
+    /**
+     *
+     */
+    protected class MergeParticipant  {
+
+        MergeParticipantType participantType;
+        Record.Participant participant;
+
+        // memorise les dates calculees (pour éviter de les recalculer a chaque consultation)
+        private PropertyDate BirthDate = null;
+        private PropertyDate DeathDate = null;
+        private PropertyDate FatherBirthDate = null;
+        private PropertyDate FatherDeathDate = null;
+        private PropertyDate MotherBirthDate = null;
+        private PropertyDate MotherDeathDate = null;
+        private PropertyDate ParentMarriageDate = null;
+        private PropertyDate MarriedBirthDate = null;
+        private PropertyDate MarriedDeathDate = null;
+        private PropertyDate MarriedMarriageDate = null;
+
+        MergeParticipant ( MergeParticipantType participantType, Record.Participant participant) {
+            this.participantType = participantType;
+            this.participant = participant;
+        }
+
+        String getFirstName() {
+            return participant.getFirstName().toString();
+        }
+
+        String getLastName() {
+            return participant.getLastName().toString();
+        }
+
+        int getSex() {
+            return participant.getSex().getSex();
+        }
+
+        String getSexString() {
+            return participant.getSex().getValue();
+        }
+
+        PropertyDate getBirthDate() throws Exception {
+            if (BirthDate == null) {
+                BirthDate = calculateBirthDate(
+                        participant.getBirthDate() != null ? participant.getBirthDate().getPropertyDate() : new PropertyDate(),
+                        participant.getAge() != null ? participant.getAge().getDelta() : new Delta(0, 0, 0),
+                        getMarriedMarriageDate());
+            }
+            return BirthDate;
+        }
+
+        PropertyDate getDeathDate() throws Exception {
+            if (DeathDate == null) {
+                if (type == RecordType.Death) {
+                    DeathDate = getEventDate();
+                } else {
+                    // date de deces inconnue
+                    DeathDate = new PropertyDate();
+                }
+            }
+            return DeathDate;
+        }
+
+        /**
+         * retourne le lieu de naissance .
+         * Si c'est un acte de naissance et si IndiBirthPlace est vide
+         *      retourne IndiFatherResidence ou, à dfafaut, EventPlace
+         * @return
+         */
+        String getBirthPlace() {
+            if (participant.getBirthPlace() != null && !participant.getBirthPlace().isEmpty()) {
+                return participant.getBirthPlace().toString();
+            } else {
+                if (participantType == MergeParticipantType.participant1 && type == RecordType.Birth) {
+                    if (participant.getFatherResidence() != null && !participant.getFatherResidence().isEmpty()) {
+                        return participant.getFatherResidence().toString();
+                    } else {
+                        return recordsInfoPlace.toString();
+                    }
+                } else {
+                    return "";
+                }
+            }
+        }
+
+        String getOccupation() {
+            if (participant.getOccupation() != null) {
+                return participant.getOccupation().toString();
+            } else {
+                // n'est pas renseignée pour les naissances
+                return null;
+            }
+        }
+
+        String getOccupationWithDate() {
+            String occupation = participant.getOccupation().toString();
+            if (!participant.getResidence().isEmpty()) {
+                if (!occupation.isEmpty()) {
+                    occupation += ", ";
+                }
+                occupation += participant.getResidence().toString();
+            }
+            if (!occupation.isEmpty()) {
+                occupation += " (" + getEventDate().getDisplayValue() + ")";
+            }
+
+            return occupation;
+        }
+
+        String getResidence() {
+            if (participant.getResidence() != null) {
+                return participant.getResidence().toString();
+            } else {
+                // n'est pas renseignée pour les naissances
+                return "";
+            }
+        }
+
+        //  conjoint (ou ancien conjoint) //////////////////////////////////////////
+        String getMarriedFirstName() {
+            return participant.getMarriedFirstName().toString();
+        }
+
+        String getMarriedLastName() {
+            return participant.getMarriedLastName().toString();
+        }
+
+        PropertyDate getMarriedBirthDate() throws Exception {
+            if (MarriedBirthDate == null) {
+                MarriedBirthDate = new PropertyDate();
+                if (participant.getMarriedFirstName() != null
+                        && participant.getMarriedLastName() != null
+                        && (!participant.getMarriedFirstName().isEmpty() || !participant.getMarriedLastName().isEmpty())
+                        && getMarriedMarriageDate().isComparable()) {
+                    // l'ex conjoint existe , la naissance est minMarriageYearOld le mariage avec l'individu
+                    MarriedBirthDate.setValue(PropertyDate.BEFORE, getYear(getMarriedMarriageDate().getStart(), -MergeQuery.minMarriageYearOld), null, "naissance avant la date du mariage -" + MergeQuery.minMarriageYearOld);
+                }
+            }
+            return MarriedBirthDate;
+        }
+
+        PropertyDate getMarriedMarriageDate() throws Exception {
+            if (MarriedMarriageDate == null) {
+                MarriedMarriageDate = new PropertyDate();
+                if (participant.getMarriedFirstName() != null
+                        && participant.getMarriedLastName() != null
+                        && (!participant.getMarriedFirstName().isEmpty() || !participant.getMarriedLastName().isEmpty())
+                        && getEventDate().isComparable()) {
+                    // l'ex conjoint existe , le mariage avec l'individu est avant la date l'evenement
+                    MarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
+                } else if (participantType == MergeParticipantType.participant1 && getType() == RecordType.Death) {
+                    // la date du mariage est avant le deces
+                    MarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
+                }
+            }
+            return MarriedMarriageDate;
+        }
+
+        PropertyDate getMarriedDeathDate() throws Exception {
+            if (MarriedDeathDate == null) {
+                MarriedDeathDate = new PropertyDate();
+                if (participant.getMarriedDead().getState() == true) {
+                    MarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "deces avant la date du relevé");
+                } else {
+                    // je ne sais pas
+                    //IndiMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
+                }
+            }
+            return MarriedDeathDate;
+        }
+
+        String getMarriedOccupation() {
+            return participant.getMarriedOccupation().toString();
+        }
+
+        String getMarriedOccupationWithDate() {
+            String occupation = participant.getMarriedOccupation().toString();
+            if (!participant.getMarriedResidence().isEmpty()) {
+                if (!occupation.isEmpty()) {
+                    occupation += ", ";
+                }
+                occupation += participant.getMarriedResidence().toString();
+            }
+            if (!occupation.isEmpty()) {
+                occupation += " (" + getEventDate().getDisplayValue() + ")";
+            }
+            return occupation;
+        }
+
+        String getMarriedResidence() {
+            return participant.getMarriedResidence().toString();
+        }
+
+        //  indi father ////////////////////////////////////////////////////////////
+        PropertyDate getParentMarriageDate() throws Exception {
+            if (ParentMarriageDate == null) {
+                ParentMarriageDate = calculateParentMariageDate(getBirthDate());
+            }
+            return ParentMarriageDate;
+        }
+
+        String getFatherFirstName() {
+            return participant.getFatherFirstName().toString();
+        }
+
+        String getFatherLastName() {
+            return participant.getFatherLastName().toString();
+        }
+
+        PropertyDate getFatherBirthDate() throws Exception {
+            if (FatherBirthDate == null) {
+                FatherBirthDate = calculateParentBirthDate(participant.getFatherAge().getDelta(), getBirthDate());
+            }
+            return FatherBirthDate;
+        }
+
+        PropertyDate getFatherDeathDate() throws Exception {
+            if (FatherDeathDate == null) {
+                FatherDeathDate = calculateParentDeathDate(
+                        participant.getFatherDead() != null ? participant.getFatherDead().getState() : false,
+                        getBirthDate(),
+                        9 // le pere peut être decede au plus tot apres la conception, soit 9 mois avant la naissance
+                        );
+            }
+            return FatherDeathDate;
+        }
+
+        String getFatherOccupation() {
+            return participant.getFatherOccupation().toString();
+        }
+
+        String getFatherResidence() {
+            return participant.getFatherResidence().toString();
+        }
+
+        String getFatherOccupationWithDate() {
+            String occupation = participant.getFatherOccupation().toString();
+            if (!participant.getFatherResidence().isEmpty()) {
+                if (!occupation.isEmpty()) {
+                    occupation += ", ";
+                }
+                occupation += participant.getFatherResidence().toString();
+            }
+            if (!occupation.isEmpty()) {
+                occupation += " (" + getEventDate().getDisplayValue() + ")";
+            }
+            return occupation;
+        }
+
+        String getMotherFirstName() {
+            if (participant.getMotherFirstName() == null) {
+                return "";
+            } else {
+                return participant.getMotherFirstName().toString();
+            }
+        }
+
+        String getMotherLastName() {
+            if (participant.getMotherLastName() == null) {
+                return "";
+            } else {
+                return participant.getMotherLastName().toString();
+            }
+        }
+
+        PropertyDate getMotherBirthDate() throws Exception {
+            if (MotherBirthDate == null) {
+                MotherBirthDate = calculateParentBirthDate(participant.getMotherAge().getDelta(), getBirthDate());
+            }
+            return MotherBirthDate;
+        }
+
+        PropertyDate getMotherDeathDate() throws Exception {
+            if (MotherDeathDate == null) {
+                MotherDeathDate = calculateParentDeathDate(
+                        participant.getMotherDead() != null ? participant.getMotherDead().getState() : false,
+                        getBirthDate(),
+                        0 // le mere peut être decedee au plus tot 0 mois avant le naissance (par opposition au pere qui peut etre decede 9 mois avant la naissance)
+                        );
+            }
+            return MotherDeathDate;
+        }
+
+        String getMotherOccupation() {
+            if (participant.getMotherOccupation() == null) {
+                return "";
+            } else {
+                return participant.getMotherOccupation().toString();
+            }
+        }
+
+        String getMotherOccupationWithDate() {
+            String occupation = participant.getMotherOccupation().toString();
+            if (!participant.getMotherResidence().isEmpty()) {
+                if (!occupation.isEmpty()) {
+                    occupation += ", ";
+                }
+                occupation += participant.getMotherResidence().toString();
+            }
+            if (!occupation.isEmpty()) {
+                occupation += " (" + getEventDate().getDisplayValue() + ")";
+            }
+
+            return occupation;
+        }
+
+        String getMotherResidence() {
+            return participant.getMotherResidence().toString();
+        }
+
+    }
 }

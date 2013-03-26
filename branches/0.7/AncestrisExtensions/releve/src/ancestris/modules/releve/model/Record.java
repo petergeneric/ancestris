@@ -18,91 +18,293 @@ public abstract class Record implements Cloneable{
     protected FieldComment generalComment;
     protected FieldComment notary;
     protected FieldSimpleValue parish;
+    private Participant indi;
+    private Participant wife;
+    Witness witness1;
+    Witness witness2;
+    Witness witness3;
+    Witness witness4;
 
-    protected FieldSimpleValue indiFirstName;
-    protected FieldSimpleValue indiLastName;
-    protected FieldSex indiSex;
-    protected FieldAge indiAge;
-    protected FieldDate indiBirthDate;
-    protected FieldPlace indiBirthPlace;
-    protected FieldOccupation indiOccupation;
-    protected FieldPlace indiResidence;
-    protected FieldComment indiComment;
-    
-    protected FieldSimpleValue indiMarriedFirstName;
-    protected FieldSimpleValue indiMarriedLastName;
-    //protected FieldSex indiMarriedSex;
-    protected FieldComment indiMarriedComment;
-    protected FieldOccupation indiMarriedOccupation;
-    protected FieldPlace indiMarriedResidence;
-    protected FieldDead indiMarriedDead;
+    public class Participant implements Cloneable {
+        protected FieldSimpleValue firstName;
+        protected FieldSimpleValue lastName;
+        protected FieldSex sex;
+        protected FieldAge age;
+        protected FieldDate birthDate;
+        protected FieldPlace birthPlace;
+        protected FieldOccupation occupation;
+        protected FieldPlace residence;
+        protected FieldComment comment;
+        protected FieldSimpleValue marriedFirstName;
+        protected FieldSimpleValue marriedLastName;
+        //protected FieldSex marriedSex;
+        protected FieldComment marriedComment;
+        protected FieldOccupation marriedOccupation;
+        protected FieldPlace marriedResidence;
+        protected FieldDead marriedDead;
+        protected FieldSimpleValue fatherFirstName;
+        protected FieldSimpleValue fatherLastName;
+        protected FieldOccupation fatherOccupation;
+        protected FieldPlace fatherResidence;
+        protected FieldAge fatherAge;
+        protected FieldDead fatherDead;
+        protected FieldComment fatherComment;
+        protected FieldSimpleValue motherFirstName;
+        protected FieldSimpleValue motherLastName;
+        protected FieldOccupation motherOccupation;
+        protected FieldPlace motherResidence;
+        protected FieldAge motherAge;
+        protected FieldDead motherDead;
+        protected FieldComment motherComment;
 
-    protected FieldSimpleValue indiFatherFirstName;
-    protected FieldSimpleValue indiFatherLastName;
-    protected FieldOccupation indiFatherOccupation;
-    protected FieldPlace indiFatherResidence;
-    protected FieldAge indiFatherAge;
-    protected FieldDead indiFatherDead;
-    protected FieldComment indiFatherComment;
-    
-    protected FieldSimpleValue indiMotherFirstName;
-    protected FieldSimpleValue indiMotherLastName;
-    protected FieldOccupation indiMotherOccupation;
-    protected FieldPlace indiMotherResidence;
-    protected FieldAge indiMotherAge;
-    protected FieldDead indiMotherDead;
-    protected FieldComment indiMotherComment;
+        @Override
+        public Participant clone() throws CloneNotSupportedException {
+            Participant object = (Participant) super.clone();
 
-    protected FieldSimpleValue wifeFirstName;
-    protected FieldSimpleValue wifeLastName;
-    protected FieldSex wifeSex;
-    protected FieldAge wifeAge;
-    protected FieldDate wifeBirthDate;
-    protected FieldPlace wifeBirthPlace;
-    protected FieldOccupation wifeOccupation;
-    protected FieldPlace wifeResidence;
-    protected FieldComment wifeComment;
-    
-    protected FieldSimpleValue wifeMarriedFirstName;
-    protected FieldSimpleValue wifeMarriedLastName;
-    //protected FieldSex wifeMarriedSex;
-    protected FieldComment wifeMarriedComment;
-    protected FieldOccupation wifeMarriedOccupation;
-    protected FieldPlace wifeMarriedResidence;
-    protected FieldDead wifeMarriedDead;
-    
-    protected FieldSimpleValue wifeFatherFirstName;
-    protected FieldSimpleValue wifeFatherLastName;
-    protected FieldOccupation wifeFatherOccupation;
-    protected FieldPlace wifeFatherResidence;
-    protected FieldAge wifeFatherAge;
-    protected FieldDead wifeFatherDead;
-    protected FieldComment wifeFatherComment;
-    
-    protected FieldSimpleValue wifeMotherFirstName;
-    protected FieldSimpleValue wifeMotherLastName;
-    protected FieldOccupation wifeMotherOccupation;
-    protected FieldPlace wifeMotherResidence;
-    protected FieldAge wifeMotherAge;
-    protected FieldDead wifeMotherDead;
-    protected FieldComment wifeMotherComment;
+            if (firstName != null) {
+                firstName = firstName.clone();
+            }
+            if (lastName != null) {
+                lastName = lastName.clone();
+            }
+            if (sex != null) {
+                sex = sex.clone();
+            }
+            if (age != null) {
+                age = age.clone();
+            }
+            if (birthDate != null) {
+                birthDate = birthDate.clone();
+            }
+            if (birthPlace != null) {
+                birthPlace = birthPlace.clone();
+            }
+            if (occupation != null) {
+                occupation = occupation.clone();
+            }
+            if (residence != null) {
+                residence = residence.clone();
+            }
+            if (comment != null) {
+                comment = comment.clone();
+            }
+            
+            if (marriedFirstName != null) {
+                marriedFirstName = marriedFirstName.clone();
+            }
+            if (marriedLastName != null) {
+                marriedLastName = marriedLastName.clone();
+            }
+            if (marriedDead != null) {
+                marriedDead = marriedDead.clone();
+            }
+            if (marriedOccupation != null) {
+                marriedOccupation = marriedOccupation.clone();
+            }
+            if (marriedResidence != null) {
+                marriedResidence = marriedResidence.clone();
+            }
+            if (marriedComment != null) {
+                marriedComment = marriedComment.clone();
+            }
 
-    protected FieldSimpleValue witness1FirstName;
-    protected FieldSimpleValue witness1LastName;
-    protected FieldOccupation witness1Occupation;
-    protected FieldComment witness1Comment;
-    protected FieldSimpleValue witness2FirstName;
-    protected FieldSimpleValue witness2LastName;
-    protected FieldOccupation witness2Occupation;
-    protected FieldComment witness2Comment;
-    protected FieldSimpleValue witness3FirstName;
-    protected FieldSimpleValue witness3LastName;
-    protected FieldOccupation witness3Occupation;
-    protected FieldComment witness3Comment;
-    protected FieldSimpleValue witness4FirstName;
-    protected FieldSimpleValue witness4LastName;
-    protected FieldOccupation witness4Occupation;
-    protected FieldComment witness4Comment;
+            if (fatherFirstName != null) {
+                fatherFirstName = fatherFirstName.clone();
+            }
+            if (fatherLastName != null) {
+                fatherLastName = fatherLastName.clone();
+            }
+            if (fatherAge != null) {
+                fatherAge = fatherAge.clone();
+            }
+            if (fatherDead != null) {
+                fatherDead = fatherDead.clone();
+            }
+            if (fatherOccupation != null) {
+                fatherOccupation = fatherOccupation.clone();
+            }
+            if (fatherResidence != null) {
+                fatherResidence = fatherResidence.clone();
+            }
+            if (fatherComment != null) {
+                fatherComment = fatherComment.clone();
+            }
+
+            if (motherFirstName != null) {
+                motherFirstName = motherFirstName.clone();
+            }
+            if (motherLastName != null) {
+                motherLastName = motherLastName.clone();
+            }
+            if (motherAge != null) {
+                motherAge = motherAge.clone();
+            }
+            if (motherDead != null) {
+                motherDead = motherDead.clone();
+            }
+            if (motherOccupation != null) {
+                motherOccupation = motherOccupation.clone();
+            }
+            if (motherResidence != null) {
+                motherResidence = motherResidence.clone();
+            }
+            if (motherComment != null) {
+                motherComment = motherComment.clone();
+            }
+            
+            // je renvoie le clone
+            return object;
+        }
+
+        public FieldSimpleValue getLastName() {
+            return lastName;
+        }
+
+        public FieldSimpleValue getFirstName() {
+            return firstName;
+        }
+
+        public FieldSex getSex() {
+            return sex;
+        }
+
+        public FieldAge getAge() {
+            return age;
+        }
+
+        public FieldDate getBirthDate() {
+            return birthDate;
+        }
+
+        public FieldPlace getBirthPlace() {
+            return birthPlace;
+        }
+
+        public FieldOccupation getOccupation() {
+            return occupation;
+        }
+
+        public FieldPlace getResidence() {
+            return residence;
+        }
+
+        public FieldSimpleValue getComment() {
+            return comment;
+        }
+
+        //  conjoint (ou ancien conjoint) //////////////////////////////////////////
+        public FieldSimpleValue getMarriedLastName() {
+            return marriedLastName;
+        }
+
+        public FieldSimpleValue getMarriedFirstName() {
+            return marriedFirstName;
+        }
+
+//    public FieldSex getMarriedSex() {
+//        return marriedSex;
+//    }
+        public FieldDead getMarriedDead() {
+            return marriedDead;
+        }
+
+        public FieldOccupation getMarriedOccupation() {
+            return marriedOccupation;
+        }
+
+        public FieldPlace getMarriedResidence() {
+            return marriedResidence;
+        }
+
+        public FieldSimpleValue getMarriedComment() {
+            return marriedComment;
+        }
+
+        //  indi father ////////////////////////////////////////////////////////////
+        public FieldSimpleValue getFatherLastName() {
+            return fatherLastName;
+        }
+
+        public FieldSimpleValue getFatherFirstName() {
+            return fatherFirstName;
+        }
+
+        public FieldAge getFatherAge() {
+            return fatherAge;
+        }
+
+        public FieldDead getFatherDead() {
+            return fatherDead;
+        }
+
+        public FieldOccupation getFatherOccupation() {
+            return fatherOccupation;
+        }
+
+        public FieldPlace getFatherResidence() {
+            return fatherResidence;
+        }
+
+        public FieldSimpleValue getFatherComment() {
+            return fatherComment;
+        }
+
+        public FieldSimpleValue getMotherLastName() {
+            return motherLastName;
+        }
+
+        public FieldSimpleValue getMotherFirstName() {
+            return motherFirstName;
+        }
+
+        public FieldAge getMotherAge() {
+            return motherAge;
+        }
+
+        public FieldDead getMotherDead() {
+            return motherDead;
+        }
+
+        public FieldOccupation getMotherOccupation() {
+            return motherOccupation;
+        }
+
+        public FieldPlace getMotherResidence() {
+            return motherResidence;
+        }
+
+        public FieldSimpleValue getMotherComment() {
+            return motherComment;
+        }
+    }
+
+    protected class Witness implements Cloneable {
+        protected FieldSimpleValue firstName;
+        protected FieldSimpleValue lastName;
+        protected FieldOccupation occupation;
+        protected FieldComment comment;
+
+        @Override
+        public Witness clone() throws CloneNotSupportedException {
+            Witness object = (Witness) super.clone();
+
+            if (firstName != null) {
+                object.firstName = firstName.clone();
+            }
+            if (lastName != null) {
+                object.lastName = lastName.clone();
+            }
+            if (occupation != null) {
+                object.occupation = occupation.clone();
+            }
+            if (comment != null) {
+                object.comment = comment.clone();
+            }
+            // je renvoie le clone
+            return object;
+        }
+
+    }
 
     public Record() {
         eventDate = new FieldDate();
@@ -110,28 +312,74 @@ public abstract class Record implements Cloneable{
         parish = new FieldSimpleValue(); 
         freeComment = new FieldPicture();
         generalComment = new FieldComment();
+        indi = new Participant();
+        wife = new Participant();
+        witness1 = new Witness();
+        witness2 = new Witness();
+        witness3 = new Witness();
+        witness4 = new Witness();
+
+    }
+
+    public Participant getIndi() {
+        return indi;
+    }
+
+    public Participant getWife() {
+        return wife;
     }
 
     abstract public DataManager.RecordType getType();
     
     @Override
     public Record clone() {
-	    Record object = null;
-		try {
-			object = (Record) super.clone();
-           
-            if (eventDate != null) object.eventDate = eventDate.clone();
-            if (cote != null) object.cote = cote.clone();
-            if (parish != null) object.parish = parish.clone();
-            if (freeComment != null) object.freeComment = freeComment.clone();
-            if (generalComment != null) object.generalComment = generalComment.clone();
-    
-		} catch(CloneNotSupportedException cnse) {
-			cnse.printStackTrace(System.err);
-		}
-		// je renvoie le clone
-		return object;
-  	}
+        Record object = null;
+        try {
+            object = (Record) super.clone();
+
+            if (eventDate != null) {
+                object.eventDate = eventDate.clone();
+            }
+            if (cote != null) {
+                object.cote = cote.clone();
+            }
+            if (parish != null) {
+                object.parish = parish.clone();
+            }
+            if (freeComment != null) {
+                object.freeComment = freeComment.clone();
+            }
+            if (generalComment != null) {
+                object.generalComment = generalComment.clone();
+            }
+
+            if (indi != null) {
+                object.indi = indi.clone();
+            }
+
+            if (wife != null) {
+                object.wife = wife.clone();
+            }
+
+            if (witness1 != null) {
+                object.witness1 = witness1.clone();
+            }
+            if (witness2 != null) {
+                object.witness2 = witness2.clone();
+            }
+            if (witness3 != null) {
+                object.witness3 = witness3.clone();
+            }
+            if (witness4 != null) {
+                object.witness4 = witness4.clone();
+            }
+            
+        } catch (CloneNotSupportedException cnse) {
+            cnse.printStackTrace(System.err);
+        }
+        // je renvoie le clone
+        return object;
+    }
 
     public int getRecordNo() {
         return  recordNo;
@@ -190,314 +438,314 @@ public abstract class Record implements Cloneable{
 
 
     public FieldSimpleValue getIndiLastName() {
-        return indiLastName;
+        return indi.lastName;
     }
 
     public FieldSimpleValue getIndiFirstName() {
-        return indiFirstName;
+        return indi.firstName;
     }
 
     public FieldSex getIndiSex() {
-        return indiSex;
+        return indi.sex;
     }
 
     public FieldAge getIndiAge() {
-        return indiAge;
+        return indi.age;
     }
 
     public FieldDate getIndiBirthDate() {
-        return indiBirthDate;
+        return indi.birthDate;
     }
 
     public FieldPlace getIndiBirthPlace() {
-        return indiBirthPlace;
+        return indi.birthPlace;
     }
 
     public FieldOccupation getIndiOccupation() {
-        return indiOccupation;
+        return indi.occupation;
     }
 
     public FieldPlace getIndiResidence() {
-        return indiResidence;
+        return indi.residence;
     }
     
     public FieldSimpleValue getIndiComment() {
-        return indiComment;
+        return indi.comment;
     }
 
     //  conjoint (ou ancien conjoint) //////////////////////////////////////////
     public FieldSimpleValue getIndiMarriedLastName() {
-        return indiMarriedLastName;
+        return indi.marriedLastName;
     }
 
     public FieldSimpleValue getIndiMarriedFirstName() {
-        return indiMarriedFirstName;
+        return indi.marriedFirstName;
     }
 
 //    public FieldSex getIndiMarriedSex() {
-//        return indiMarriedSex;
+//        return indi.marriedSex;
 //    }
 
     public FieldDead getIndiMarriedDead() {
-        return indiMarriedDead;
+        return indi.marriedDead;
     }
 
     public FieldOccupation getIndiMarriedOccupation() {
-        return indiMarriedOccupation;
+        return indi.marriedOccupation;
     }
 
     public FieldPlace getIndiMarriedResidence() {
-        return indiMarriedResidence;
+        return indi.marriedResidence;
     }
 
     public FieldSimpleValue getIndiMarriedComment() {
-        return indiMarriedComment;
+        return indi.marriedComment;
     }
 
     //  indi father ////////////////////////////////////////////////////////////
     public FieldSimpleValue getIndiFatherLastName() {
-        return indiFatherLastName;
+        return indi.fatherLastName;
     }
 
     public FieldSimpleValue getIndiFatherFirstName() {
-        return indiFatherFirstName;
+        return indi.fatherFirstName;
     }
 
     public FieldAge getIndiFatherAge() {
-        return indiFatherAge;
+        return indi.fatherAge;
     }
 
     public FieldDead getIndiFatherDead() {
-        return indiFatherDead;
+        return indi.fatherDead;
     }
 
     public FieldOccupation getIndiFatherOccupation() {
-        return indiFatherOccupation;
+        return indi.fatherOccupation;
     }
 
     public FieldPlace getIndiFatherResidence() {
-        return indiFatherResidence;
+        return indi.fatherResidence;
     }
 
     public FieldSimpleValue getIndiFatherComment() {
-        return indiFatherComment;
+        return indi.fatherComment;
     }
 
 
     public FieldSimpleValue getIndiMotherLastName() {
-        return indiMotherLastName;
+        return indi.motherLastName;
     }
 
     public FieldSimpleValue getIndiMotherFirstName() {
-        return indiMotherFirstName;
+        return indi.motherFirstName;
     }
 
     public FieldAge getIndiMotherAge() {
-        return indiMotherAge;
+        return indi.motherAge;
     }
 
     public FieldDead getIndiMotherDead() {
-        return indiMotherDead;
+        return indi.motherDead;
     }
 
     public FieldOccupation getIndiMotherOccupation() {
-        return indiMotherOccupation;
+        return indi.motherOccupation;
     }
 
     public FieldPlace getIndiMotherResidence() {
-        return indiMotherResidence;
+        return indi.motherResidence;
     }
 
     public FieldSimpleValue getIndiMotherComment() {
-        return indiMotherComment;
+        return indi.motherComment;
     }
 
     //  wife ///////////////////////////////////////////////////////////////////
     public FieldSimpleValue getWifeLastName() {
-        return wifeLastName;
+        return wife.lastName;
     }
 
     public FieldSimpleValue getWifeFirstName() {
-        return wifeFirstName;
+        return wife.firstName;
     }
 
     public FieldSex getWifeSex() {
-        return wifeSex;
+        return wife.sex;
     }
 
     public FieldAge getWifeAge() {
-        return wifeAge;
+        return wife.age;
     }
 
     public FieldDate getWifeBirthDate() {
-        return wifeBirthDate;
+        return wife.birthDate;
     }
 
     public FieldPlace getWifeBirthPlace() {
-        return wifeBirthPlace;
+        return wife.birthPlace;
     }
 
     public FieldOccupation getWifeOccupation() {
-        return wifeOccupation;
+        return wife.occupation;
     }
 
     public FieldPlace getWifeResidence() {
-        return wifeResidence;
+        return wife.residence;
     }
 
     public FieldSimpleValue getWifeComment() {
-        return wifeComment;
+        return wife.comment;
     }
 
-    //  wifeMarried ///////////////////////////////////////////////////////////
+    //  wife.married ///////////////////////////////////////////////////////////
     public FieldSimpleValue getWifeMarriedLastName() {
-        return wifeMarriedLastName;
+        return wife.marriedLastName;
     }
 
     public FieldSimpleValue getWifeMarriedFirstName() {
-        return wifeMarriedFirstName;
+        return wife.marriedFirstName;
     }
 
 //    public FieldSex getWifeMarriedSex() {
-//        return wifeMarriedSex;
+//        return wife.marriedSex;
 //    }
 
     public FieldDead getWifeMarriedDead() {
-        return wifeMarriedDead;
+        return wife.marriedDead;
     }
 
     public FieldOccupation getWifeMarriedOccupation() {
-        return wifeMarriedOccupation;
+        return wife.marriedOccupation;
     }
 
     public FieldPlace getWifeMarriedResidence() {
-        return wifeMarriedResidence;
+        return wife.marriedResidence;
     }
 
     public FieldSimpleValue getWifeMarriedComment() {
-        return wifeMarriedComment;
+        return wife.marriedComment;
     }
 
-    //  wifeFather ///////////////////////////////////////////////////////////
+    //  wife.father ///////////////////////////////////////////////////////////
     public FieldSimpleValue getWifeFatherLastName() {
-        return wifeFatherLastName;
+        return wife.fatherLastName;
     }
 
     public FieldSimpleValue getWifeFatherFirstName() {
-        return wifeFatherFirstName;
+        return wife.fatherFirstName;
     }
 
     public FieldAge getWifeFatherAge() {
-        return wifeFatherAge;
+        return wife.fatherAge;
     }
 
     public FieldDead getWifeFatherDead() {
-        return wifeFatherDead;
+        return wife.fatherDead;
     }
 
     public FieldOccupation getWifeFatherOccupation() {
-        return wifeFatherOccupation;
+        return wife.fatherOccupation;
     }
 
     public FieldPlace getWifeFatherResidence() {
-        return wifeFatherResidence;
+        return wife.fatherResidence;
     }
 
     public FieldSimpleValue getWifeFatherComment() {
-        return wifeFatherComment;
+        return wife.fatherComment;
     }
 
     public FieldSimpleValue getWifeMotherLastName() {
-        return wifeMotherLastName;
+        return wife.motherLastName;
     }
 
     public FieldSimpleValue getWifeMotherFirstName() {
-        return wifeMotherFirstName;
+        return wife.motherFirstName;
     }
 
     public FieldAge getWifeMotherAge() {
-        return wifeMotherAge;
+        return wife.motherAge;
     }
 
     public FieldDead getWifeMotherDead() {
-        return wifeMotherDead;
+        return wife.motherDead;
     }
 
     public FieldOccupation getWifeMotherOccupation() {
-        return wifeMotherOccupation;
+        return wife.motherOccupation;
     }
 
     public FieldPlace getWifeMotherResidence() {
-        return wifeMotherResidence;
+        return wife.motherResidence;
     }
 
     public FieldSimpleValue getWifeMotherComment() {
-        return wifeMotherComment;
+        return wife.motherComment;
     }
 
     // wintness ///////////////////////////////////////////////////////////////
     public FieldSimpleValue getWitness1LastName() {
-        return witness1LastName;
+        return witness1.lastName;
     }
 
     public FieldSimpleValue getWitness1FirstName() {
-        return witness1FirstName;
+        return witness1.firstName;
     }
 
     public FieldOccupation getWitness1Occupation() {
-        return witness1Occupation;
+        return witness1.occupation;
     }
 
     public FieldSimpleValue getWitness1Comment() {
-        return witness1Comment;
+        return witness1.comment;
     }
 
     public FieldSimpleValue getWitness2LastName() {
-        return witness2LastName;
+        return witness2.lastName;
     }
 
     public FieldSimpleValue getWitness2FirstName() {
-        return witness2FirstName;
+        return witness2.firstName;
     }
 
     public FieldOccupation getWitness2Occupation() {
-        return witness2Occupation;
+        return witness2.occupation;
     }
 
     public FieldSimpleValue getWitness2Comment() {
-        return witness2Comment;
+        return witness2.comment;
     }
 
     public FieldSimpleValue getWitness3LastName() {
-        return witness3LastName;
+        return witness3.lastName;
     }
 
     public FieldSimpleValue getWitness3FirstName() {
-        return witness3FirstName;
+        return witness3.firstName;
     }
 
     public FieldOccupation getWitness3Occupation() {
-        return witness3Occupation;
+        return witness3.occupation;
     }
 
     public FieldSimpleValue getWitness3Comment() {
-        return witness3Comment;
+        return witness3.comment;
     }
 
     public FieldSimpleValue getWitness4LastName() {
-        return witness4LastName;
+        return witness4.lastName;
     }
 
     public FieldSimpleValue getWitness4FirstName() {
-        return witness4FirstName;
+        return witness4.firstName;
     }
 
     public FieldOccupation getWitness4Occupation() {
-        return witness4Occupation;
+        return witness4.occupation;
     }
 
     public FieldSimpleValue getWitness4Comment() {
-        return witness4Comment;
+        return witness4.comment;
     }
 
 //    public void setEventPlace(String juridictions) {
@@ -534,239 +782,239 @@ public abstract class Record implements Cloneable{
                     break;
                 //indi///////////////////////////////////////////////////////////////////
                 case indiFirstName:
-                    field = indiFirstName;
+                    field = indi.firstName;
                     break;
                 case indiLastName:
-                    field = indiLastName;
+                    field = indi.lastName;
                     break;
                 case indiSex:
-                    field = indiSex;
+                    field = indi.sex;
                     break;
                 case indiAge:
-                    field = indiAge;
+                    field = indi.age;
                     break;
                 case indiBirthDate:
-                    field = indiBirthDate;
+                    field = indi.birthDate;
                     break;
                 case indiBirthPlace:
-                    field = indiBirthPlace;
+                    field = indi.birthPlace;
                     break;
                 case indiOccupation:
-                    field = indiOccupation;
+                    field = indi.occupation;
                     break;
                 case indiResidence:
-                    field = indiResidence;
+                    field = indi.residence;
                     break;
                 case indiComment:
-                    field = indiComment;
+                    field = indi.comment;
                     break;
                 //conjoint(ouancienconjoint)//////////////////////////////////////////
                 case indiMarriedFirstName:
-                    field = indiMarriedFirstName;
+                    field = indi.marriedFirstName;
                     break;
                 case indiMarriedLastName:
-                    field = indiMarriedLastName;
+                    field = indi.marriedLastName;
                     break;
-//                case indiMarriedSex:
-//                    field = indiMarriedSex;
+//                case indi.marriedSex:
+//                    field = indi.marriedSex;
 //                    break;
                 case indiMarriedDead:
-                    field = indiMarriedDead;
+                    field = indi.marriedDead;
                     break;
                 case indiMarriedOccupation:
-                    field = indiMarriedOccupation;
+                    field = indi.marriedOccupation;
                     break;
                 case indiMarriedResidence:
-                    field = indiMarriedResidence;
+                    field = indi.marriedResidence;
                     break;
                 case indiMarriedComment:
-                    field = indiMarriedComment;
+                    field = indi.marriedComment;
                     break;
                 //indifather////////////////////////////////////////////////////////////
                 case indiFatherFirstName:
-                    field = indiFatherFirstName;
+                    field = indi.fatherFirstName;
                     break;
                 case indiFatherLastName:
-                    field = indiFatherLastName;
+                    field = indi.fatherLastName;
                     break;
                 case indiFatherAge:
-                    field = indiFatherAge;
+                    field = indi.fatherAge;
                     break;
                 case indiFatherDead:
-                    field = indiFatherDead;
+                    field = indi.fatherDead;
                     break;
                 case indiFatherOccupation:
-                    field = indiFatherOccupation;
+                    field = indi.fatherOccupation;
                     break;
                 case indiFatherResidence:
-                    field = indiFatherResidence;
+                    field = indi.fatherResidence;
                     break;
                 case indiFatherComment:
-                    field = indiFatherComment;
+                    field = indi.fatherComment;
                     break;
                 case indiMotherFirstName:
-                    field = indiMotherFirstName;
+                    field = indi.motherFirstName;
                     break;
                 case indiMotherLastName:
-                    field = indiMotherLastName;
+                    field = indi.motherLastName;
                     break;
                 case indiMotherAge:
-                    field = indiMotherAge;
+                    field = indi.motherAge;
                     break;
                 case indiMotherDead:
-                    field = indiMotherDead;
+                    field = indi.motherDead;
                     break;
                 case indiMotherOccupation:
-                    field = indiMotherOccupation;
+                    field = indi.motherOccupation;
                     break;
                 case indiMotherResidence:
-                    field = indiMotherResidence;
+                    field = indi.motherResidence;
                     break;
                 case indiMotherComment:
-                    field = indiMotherComment;
+                    field = indi.motherComment;
                     break;
                 //wife///////////////////////////////////////////////////////////////////
                 case wifeFirstName:
-                    field = wifeFirstName;
+                    field = wife.firstName;
                     break;
                 case wifeLastName:
-                    field = wifeLastName;
+                    field = wife.lastName;
                     break;
                 case wifeSex:
-                    field = wifeSex;
+                    field = wife.sex;
                     break;
 //case 	wifeDead	 :	 field = wifeDead	;  break;
                 case wifeAge:
-                    field = wifeAge;
+                    field = wife.age;
                     break;
                 case wifeBirthDate:
-                    field = wifeBirthDate;
+                    field = wife.birthDate;
                     break;
                 case wifePlace:
-                    field = wifeBirthPlace;
+                    field = wife.birthPlace;
                     break;
                 case wifeOccupation:
-                    field = wifeOccupation;
+                    field = wife.occupation;
                     break;
                 case wifeResidence:
-                    field = wifeResidence;
+                    field = wife.residence;
                     break;
                 case wifeComment:
-                    field = wifeComment;
+                    field = wife.comment;
                     break;
-                //wifeMarried///////////////////////////////////////////////////////////			//wifeMarried///////////////////////////////////////////////////////////
+                //wife.married///////////////////////////////////////////////////////////			//wife.married///////////////////////////////////////////////////////////
                 case wifeMarriedFirstName:
-                    field = wifeMarriedFirstName;
+                    field = wife.marriedFirstName;
                     break;
                 case wifeMarriedLastName:
-                    field = wifeMarriedLastName;
+                    field = wife.marriedLastName;
                     break;
                 case wifeMarriedDead:
-                    field = wifeMarriedDead;
+                    field = wife.marriedDead;
                     break;
-//                case wifeMarriedSex:
-//                    field = wifeMarriedSex;
+//                case wife.marriedSex:
+//                    field = wife.marriedSex;
 //                    break;
                 case wifeMarriedOccupation:
-                    field = wifeMarriedOccupation;
+                    field = wife.marriedOccupation;
                     break;
                 case wifeMarriedResidence:
-                    field = wifeMarriedResidence;
+                    field = wife.marriedResidence;
                     break;
                 case wifeMarriedComment:
-                    field = wifeMarriedComment;
+                    field = wife.marriedComment;
                     break;
-                //wifeFather///////////////////////////////////////////////////////////
+                //wife.father///////////////////////////////////////////////////////////
                 case wifeFatherFirstName:
-                    field = wifeFatherFirstName;
+                    field = wife.fatherFirstName;
                     break;
                 case wifeFatherLastName:
-                    field = wifeFatherLastName;
+                    field = wife.fatherLastName;
                     break;
                 case wifeFatherAge:
-                    field = wifeFatherAge;
+                    field = wife.fatherAge;
                     break;
                 case wifeFatherDead:
-                    field = wifeFatherDead;
+                    field = wife.fatherDead;
                     break;
                 case wifeFatherOccupation:
-                    field = wifeFatherOccupation;
+                    field = wife.fatherOccupation;
                     break;
                 case wifeFatherResidence:
-                    field = wifeFatherResidence;
+                    field = wife.fatherResidence;
                     break;
                 case wifeFatherComment:
-                    field = wifeFatherComment;
+                    field = wife.fatherComment;
                     break;
                 case wifeMotherFirstName:
-                    field = wifeMotherFirstName;
+                    field = wife.motherFirstName;
                     break;
                 case wifeMotherLastName:
-                    field = wifeMotherLastName;
+                    field = wife.motherLastName;
                     break;
                 case wifeMotherAge:
-                    field = wifeMotherAge;
+                    field = wife.motherAge;
                     break;
                 case wifeMotherDead:
-                    field = wifeMotherDead;
+                    field = wife.motherDead;
                     break;
                 case wifeMotherOccupation:
-                    field = wifeMotherOccupation;
+                    field = wife.motherOccupation;
                     break;
                 case wifeMotherResidence:
-                    field = wifeMotherResidence;
+                    field = wife.motherResidence;
                     break;
                 case wifeMotherComment:
-                    field = wifeMotherComment;
+                    field = wife.motherComment;
                     break;
                 //wintness///////////////////////////////////////////////////////////////
                 case witness1FirstName:
-                    field = witness1FirstName;
+                    field = witness1.firstName;
                     break;
                 case witness1LastName:
-                    field = witness1LastName;
+                    field = witness1.lastName;
                     break;
                 case witness1Occupation:
-                    field = witness1Occupation;
+                    field = witness1.occupation;
                     break;
                 case witness1Comment:
-                    field = witness1Comment;
+                    field = witness1.comment;
                     break;
                 case witness2FirstName:
-                    field = witness2FirstName;
+                    field = witness2.firstName;
                     break;
                 case witness2LastName:
-                    field = witness2LastName;
+                    field = witness2.lastName;
                     break;
                 case witness2Occupation:
-                    field = witness2Occupation;
+                    field = witness2.occupation;
                     break;
                 case witness2Comment:
-                    field = witness2Comment;
+                    field = witness2.comment;
                     break;
                 case witness3FirstName:
-                    field = witness3FirstName;
+                    field = witness3.firstName;
                     break;
                 case witness3LastName:
-                    field = witness3LastName;
+                    field = witness3.lastName;
                     break;
                 case witness3Occupation:
-                    field = witness3Occupation;
+                    field = witness3.occupation;
                     break;
                 case witness3Comment:
-                    field = witness3Comment;
+                    field = witness3.comment;
                     break;
                 case witness4FirstName:
-                    field = witness4FirstName;
+                    field = witness4.firstName;
                     break;
                 case witness4LastName:
-                    field = witness4LastName;
+                    field = witness4.lastName;
                     break;
                 case witness4Occupation:
-                    field = witness4Occupation;
+                    field = witness4.occupation;
                     break;
                 case witness4Comment:
-                    field = witness4Comment;
+                    field = witness4.comment;
                     break;
             }
 
@@ -836,141 +1084,142 @@ public abstract class Record implements Cloneable{
     public void setIndi(String firstName, String lastName, String stringSexe,
             String stringAge, String stringBirthDate,
             String stringBirthPlace, String profession, String residence, String comment) {
-        indiFirstName.setValue(firstName.trim());
-        indiLastName.setValue(lastName.trim());
-        indiSex.setValue(stringSexe.trim());
-        if (indiAge != null) {
+
+        indi.firstName.setValue(firstName.trim());
+        indi.lastName.setValue(lastName.trim());
+        indi.sex.setValue(stringSexe.trim());
+        if (indi.age != null) {
             // l'age n'est pas utilisé pour une naissance
-            indiAge.setValue(stringAge.trim());
+            indi.age.setValue(stringAge.trim());
         }
-        if (indiBirthDate != null) {
+        if (indi.birthDate != null) {
             // la date de naissance n'est pas utilisée pour une naissance car c'est la même que la date de l'evenement
-            indiBirthDate.setValue(stringBirthDate.trim());
+            indi.birthDate.setValue(stringBirthDate.trim());
         }
-        if (indiBirthPlace != null) {
+        if (indi.birthPlace != null) {
             // le lieu n'est pas utilisée pour une naissance
-            indiBirthPlace.setValue(stringBirthPlace.trim());
+            indi.birthPlace.setValue(stringBirthPlace.trim());
         }
-        if (indiOccupation != null) {
+        if (indi.occupation != null) {
             // la profession n'est pas utilisée pour une naissance
-            indiOccupation.setValue(profession.trim());
+            indi.occupation.setValue(profession.trim());
         }
-        if (indiResidence != null) {
+        if (indi.residence != null) {
             // la profession n'est pas utilisée pour une naissance
-            indiResidence.setValue(residence.trim());
+            indi.residence.setValue(residence.trim());
         }
-        indiComment.setValue(comment.trim());
+        indi.comment.setValue(comment.trim());
     }
 
     public void setIndiMarried(String firstName, String lastName, /*String stringSexe, */String profession, String residence, String comment, String dead) {
-        indiMarriedFirstName.setValue(firstName.trim());
-        indiMarriedLastName.setValue(lastName.trim());
-        //indiMarriedSex.setValue(stringSexe.trim());
-        indiMarriedOccupation.setValue(profession.trim());
-        indiMarriedResidence.setValue(residence.trim());
-        indiMarriedComment.setValue(comment.trim());
-        if (indiMarriedDead != null) {
-            indiMarriedDead.setValue(dead.trim());
+        indi.marriedFirstName.setValue(firstName.trim());
+        indi.marriedLastName.setValue(lastName.trim());
+        //indi.marriedSex.setValue(stringSexe.trim());
+        indi.marriedOccupation.setValue(profession.trim());
+        indi.marriedResidence.setValue(residence.trim());
+        indi.marriedComment.setValue(comment.trim());
+        if (indi.marriedDead != null) {
+            indi.marriedDead.setValue(dead.trim());
         }
     }
 
     public void setIndiFather(String firstName, String lastName, String profession, String residence, String comment, String dead, String age) {
-        indiFatherFirstName.setValue(firstName.trim());
-        indiFatherLastName.setValue(lastName.trim());
-        indiFatherOccupation.setValue(profession.trim());
-        if (indiFatherResidence != null) {
-            indiFatherResidence.setValue(residence.trim());
+        indi.fatherFirstName.setValue(firstName.trim());
+        indi.fatherLastName.setValue(lastName.trim());
+        indi.fatherOccupation.setValue(profession.trim());
+        if (indi.fatherResidence != null) {
+            indi.fatherResidence.setValue(residence.trim());
         }
-        indiFatherComment.setValue(comment.trim());
-        indiFatherDead.setValue(dead.trim());
-        indiFatherAge.setValue(age.trim());
+        indi.fatherComment.setValue(comment.trim());
+        indi.fatherDead.setValue(dead.trim());
+        indi.fatherAge.setValue(age.trim());
     }
 
     public void setIndiMother(String firstName, String lastName, String profession, String residence, String comment, String dead, String age) {
-        indiMotherFirstName.setValue(firstName.trim());
-        indiMotherLastName.setValue(lastName.trim());
-        indiMotherOccupation.setValue(profession.trim());
-        if (indiMotherResidence != null) {
-            indiMotherResidence.setValue(residence.trim());
+        indi.motherFirstName.setValue(firstName.trim());
+        indi.motherLastName.setValue(lastName.trim());
+        indi.motherOccupation.setValue(profession.trim());
+        if (indi.motherResidence != null) {
+            indi.motherResidence.setValue(residence.trim());
         }
-        indiMotherComment.setValue(comment.trim());
-        indiMotherDead.setValue(dead.trim());
-        indiMotherAge.setValue(age.trim());
+        indi.motherComment.setValue(comment.trim());
+        indi.motherDead.setValue(dead.trim());
+        indi.motherAge.setValue(age.trim());
     }
 
     public void setWife(String firstName, String lastName, String sex,
             String stringAge, String stringBirthDate,
             String stringBirthPlace, String profession, String residence, String comment) {
-        wifeFirstName.setValue(firstName.trim());
-        wifeLastName.setValue(lastName.trim());
-        if (wifeSex != null) {
+        wife.firstName.setValue(firstName.trim());
+        wife.lastName.setValue(lastName.trim());
+        if (wife.sex != null) {
             // le sexe n'est utilise que dans les actes divers
-            wifeSex.setValue(sex.trim());
+            wife.sex.setValue(sex.trim());
         }
-        wifeAge.setValue(stringAge.trim());
-        wifeBirthDate.setValue(stringBirthDate.trim());
-        wifeBirthPlace.setValue(stringBirthPlace.trim());
-        wifeOccupation.setValue(profession.trim());
-        wifeResidence.setValue(residence.trim());
-        wifeComment.setValue(comment.trim());
+        wife.age.setValue(stringAge.trim());
+        wife.birthDate.setValue(stringBirthDate.trim());
+        wife.birthPlace.setValue(stringBirthPlace.trim());
+        wife.occupation.setValue(profession.trim());
+        wife.residence.setValue(residence.trim());
+        wife.comment.setValue(comment.trim());
     }
 
     public void setWifeMarried(String firstName, String lastName, /*String stringSexe, */String profession, String residence, String comment, String dead) {
-        wifeMarriedFirstName.setValue(firstName.trim());
-        wifeMarriedLastName.setValue(lastName.trim());
-        //wifeMarriedSex.setValue(stringSexe.trim());
-        wifeMarriedOccupation.setValue(profession.trim());
-        wifeMarriedResidence.setValue(residence.trim());
-        wifeMarriedComment.setValue(comment.trim());
-        wifeMarriedDead.setValue(dead.trim());
+        wife.marriedFirstName.setValue(firstName.trim());
+        wife.marriedLastName.setValue(lastName.trim());
+        //wife.marriedSex.setValue(stringSexe.trim());
+        wife.marriedOccupation.setValue(profession.trim());
+        wife.marriedResidence.setValue(residence.trim());
+        wife.marriedComment.setValue(comment.trim());
+        wife.marriedDead.setValue(dead.trim());
     }
 
     public void setWifeFather(String firstName, String lastName, String profession, String residence, String comment, String dead, String age) {
-        wifeFatherFirstName.setValue(firstName.trim());
-        wifeFatherLastName.setValue(lastName.trim());
-        wifeFatherOccupation.setValue(profession.trim());
-        wifeFatherResidence.setValue(residence.trim());
-        wifeFatherComment.setValue(comment.trim());
-        wifeFatherDead.setValue(dead.trim());
-        wifeFatherAge.setValue(age.trim());
+        wife.fatherFirstName.setValue(firstName.trim());
+        wife.fatherLastName.setValue(lastName.trim());
+        wife.fatherOccupation.setValue(profession.trim());
+        wife.fatherResidence.setValue(residence.trim());
+        wife.fatherComment.setValue(comment.trim());
+        wife.fatherDead.setValue(dead.trim());
+        wife.fatherAge.setValue(age.trim());
     }
 
     public void setWifeMother(String firstName, String lastName, String profession, String residence, String comment, String dead, String age) {
-        wifeMotherFirstName.setValue(firstName.trim());
-        wifeMotherLastName.setValue(lastName.trim());
-        wifeMotherOccupation.setValue(profession.trim());
-        wifeMotherResidence.setValue(residence.trim());
-        wifeMotherComment.setValue(comment.trim());
-        wifeMotherDead.setValue(dead.trim());
-        wifeMotherAge.setValue(age.trim());
+        wife.motherFirstName.setValue(firstName.trim());
+        wife.motherLastName.setValue(lastName.trim());
+        wife.motherOccupation.setValue(profession.trim());
+        wife.motherResidence.setValue(residence.trim());
+        wife.motherComment.setValue(comment.trim());
+        wife.motherDead.setValue(dead.trim());
+        wife.motherAge.setValue(age.trim());
     }
 
     public void setWitness1(String firstName, String lastName, String profession, String comment) {
-        witness1FirstName.setValue(firstName.trim());
-        witness1LastName.setValue(lastName.trim());
-        witness1Occupation.setValue(profession.trim());
-        witness1Comment.setValue(comment.trim());
+        witness1.firstName.setValue(firstName.trim());
+        witness1.lastName.setValue(lastName.trim());
+        witness1.occupation.setValue(profession.trim());
+        witness1.comment.setValue(comment.trim());
     }
 
     public void setWitness2(String firstName, String lastName, String profession, String comment) {
-        witness2FirstName.setValue(firstName.trim());
-        witness2LastName.setValue(lastName.trim());
-        witness2Occupation.setValue(profession.trim());
-        witness2Comment.setValue(comment.trim());
+        witness2.firstName.setValue(firstName.trim());
+        witness2.lastName.setValue(lastName.trim());
+        witness2.occupation.setValue(profession.trim());
+        witness2.comment.setValue(comment.trim());
     }
 
     public void setWitness3(String firstName, String lastName, String profession, String comment) {
-        witness3FirstName.setValue(firstName.trim());
-        witness3LastName.setValue(lastName.trim());
-        witness3Occupation.setValue(profession.trim());
-        witness3Comment.setValue(comment.trim());
+        witness3.firstName.setValue(firstName.trim());
+        witness3.lastName.setValue(lastName.trim());
+        witness3.occupation.setValue(profession.trim());
+        witness3.comment.setValue(comment.trim());
     }
 
     public void setWitness4(String firstName, String lastName, String profession, String comment) {
-        witness4FirstName.setValue(firstName.trim());
-        witness4LastName.setValue(lastName.trim());
-        witness4Occupation.setValue(profession.trim());
-        witness4Comment.setValue(comment.trim());
+        witness4.firstName.setValue(firstName.trim());
+        witness4.lastName.setValue(lastName.trim());
+        witness4.occupation.setValue(profession.trim());
+        witness4.comment.setValue(comment.trim());
     }
 
 }

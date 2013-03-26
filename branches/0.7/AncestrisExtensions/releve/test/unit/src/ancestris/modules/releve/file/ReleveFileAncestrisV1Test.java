@@ -132,7 +132,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         birth.setEventDate("01/01/2000");
         birth.setCote("cote");
         birth.setFreeComment("photo");
-        birth.setIndi("Élisabeth-Adélaîde", "lastname", "M", "", "", "place", "occupation", "indiResidence", "comment");
+        birth.setIndi("Élisabeth-Adélaîde", "lastname", "M", "", "5/4/1842", "place", "occupation", "indiResidence", "comment");
         birth.setIndiFather("fathername", "fatherlastname", "occupation", "fatherResidence", "comment", "dead", "70y");
         birth.setIndiMother("mothername", "motherlastname", "occupation", "motherResidence", "comment", "dead", "72y");
         birth.setWitness1("wfirstname", "wlastname", "woccupation", "wcomment");
