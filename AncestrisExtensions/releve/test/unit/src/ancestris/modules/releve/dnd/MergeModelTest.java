@@ -65,13 +65,13 @@ public class MergeModelTest extends TestCase {
             String sourceTitle = "";
             MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("sansfamille1"));
 
-            MergeModel.copyOccupation(indi, mergeRecord.getIndiFatherOccupation(), mergeRecord.getIndiFatherResidence(), mergeRecord);
+            MergeModel.copyOccupation(indi, mergeRecord.getIndi().getFatherOccupation(), mergeRecord.getIndi().getFatherResidence(), mergeRecord);
             
             assertEquals("Nombre de profession", 2, indi.getProperties("OCCU").length);
-            Property occupationProperty = indi.getProperties("OCCU")[1];
-            assertEquals("Profession de l'individu", mergeRecord.getIndiFatherOccupation(), occupationProperty.getDisplayValue());
+            Property occupationProperty = indi.getProperties("OCCU")[0];
+            assertEquals("Profession de l'individu", mergeRecord.getIndi().getFatherOccupation(), occupationProperty.getDisplayValue());
             assertEquals("Date de la profession", mergeRecord.getEventDate().getDisplayValue(), occupationProperty.getProperty("DATE").getDisplayValue());
-            assertEquals("Lieu de la profession", mergeRecord.getIndiFatherResidence(), occupationProperty.getProperty("PLAC").getDisplayValue());
+            assertEquals("Lieu de la profession", mergeRecord.getIndi().getFatherResidence(), occupationProperty.getProperty("PLAC").getDisplayValue());
             assertEquals("Note de la profession", false, occupationProperty.getProperty("NOTE").getDisplayValue().isEmpty());
 
         } catch (Exception ex) {

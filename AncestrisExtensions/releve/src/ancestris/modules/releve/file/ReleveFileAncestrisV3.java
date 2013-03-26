@@ -169,8 +169,8 @@ public class ReleveFileAncestrisV3 {
                                 fields[Field.indiFirstName.ordinal()],
                                 fields[Field.indiLastName.ordinal()],
                                 fields[Field.indiSex.ordinal()],
-                                fields[Field.indiBirthDate.ordinal()],
                                 "", // pas de d'age a la naissance
+                                fields[Field.indiBirthDate.ordinal()],
                                 fields[Field.indiBirthPlace.ordinal()],
                                 "", // pas de profession a la naissance
                                 "", // pas de residence a la naissance

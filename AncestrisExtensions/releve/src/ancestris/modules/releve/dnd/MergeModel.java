@@ -1,5 +1,7 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipant;
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -11,12 +13,14 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
+import genj.gedcom.TagPath;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -47,14 +51,16 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         NOT_APPLICABLE
     }
 
-    public enum ParticipantType { participant1, participant2 };
-    protected ParticipantType participant = ParticipantType.participant1;
-    
+    protected MergeRecord record;
+    protected Gedcom gedcom;
+    // type de participant 
+    protected MergeParticipantType participantType ;
+    protected MergeParticipant participant ;
+
     private EnumMap<RowType, MergeRow> dataMap = new EnumMap<RowType, MergeRow>(RowType.class);
     private List<MergeRow> dataList = new ArrayList<MergeRow>();
     private int nbMatch = 0;
     private int nbMatchMax = 0;
-
 
     static protected List<MergeModel> createMergeModel(MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity) throws Exception {
         return createMergeModel(mergeRecord, gedcom, selectedEntity, false);
@@ -77,7 +83,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         if( mergeRecord.getType() ==  MergeRecord.RecordType.Birth) {
             models = MergeModelBirth.createMergeModelBirth(mergeRecord, gedcom, selectedEntity, showNewParents);
         } else  if( mergeRecord.getType() ==  MergeRecord.RecordType.Marriage) {
-            models = MergeModelMarriage.createMergeModelMarriage(mergeRecord, gedcom, selectedEntity, showNewParents);            
+            models = MergeModelMarriage.createMergeModelMarriage(mergeRecord, gedcom, selectedEntity, showNewParents);
         } else if( mergeRecord.getType() ==  MergeRecord.RecordType.Death) {
             models = MergeModelDeath.createMergeModelDeath(mergeRecord, gedcom, selectedEntity, showNewParents);
         } else  if( mergeRecord.getType() ==  MergeRecord.RecordType.Misc ) {
@@ -101,6 +107,26 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
         return models;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // constructeurs
+    ///////////////////////////////////////////////////////////////////////////
+
+    MergeModel(MergeRecord record, Gedcom gedcom) {
+        this(record, MergeParticipantType.participant1, gedcom);
+    }
+
+    MergeModel(MergeRecord record, MergeParticipantType participantType, Gedcom gedcom) {
+        this.record = record;
+        this.gedcom = gedcom;
+        this.participantType = participantType;
+        this.participant = record.getParticipant(participantType);
+    }
+
+    
+   ///////////////////////////////////////////////////////////////////////////
+    // ajout de lignes dans le modele
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * ajoute une ligne dans le modele
@@ -225,7 +251,6 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.recordValue = cloneDate;
         
         if (isRowParentApplicable(rowType)) {
-
             // je compare les valeurs par defaut du releve et de l'entite
             if (recordValue == null || (recordValue != null && !recordValue.isComparable()) ) {
                 mergeRow.merge = false;
@@ -345,6 +370,45 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
 
     /**
+     * ajoute une ligne dans le modele pour comparer le type d'evenement
+     * @param rowType
+     * @param label
+     * @param recordValues
+     * @param entityValues
+     */
+    void addRow(RowType rowType, String recordEventType, Property eventProperty) {
+         MergeRow mergeRow = new MergeRow();
+        dataMap.put(rowType, mergeRow);
+        dataList.add(mergeRow);
+        mergeRow.rowType = rowType;
+        mergeRow.label = getRowTypeLabel(rowType);
+        mergeRow.recordValue = recordEventType;
+        mergeRow.entityValue = eventProperty;
+        mergeRow.entityObject = null;
+
+        if (isRowParentApplicable(rowType)) {
+
+            if (eventProperty != null ) {
+                if (eventProperty.getPropertyValue("TYPE").equals(recordEventType)) {
+                    mergeRow.merge = false;
+                    mergeRow.compareResult = CompareResult.EQUAL;
+                } else {
+                    mergeRow.merge = true;
+                    mergeRow.compareResult = CompareResult.COMPATIBLE;
+                }
+            } else {
+                mergeRow.merge = !recordEventType.isEmpty();
+                mergeRow.compareResult = mergeRow.merge ? CompareResult.COMPATIBLE : CompareResult.NOT_APPLICABLE;
+            }
+        } else {
+            // ligne parent NOT_APPLICABLE
+            mergeRow.merge = false;
+            mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
+        }
+        mergeRow.merge_initial = mergeRow.merge;
+    }
+
+    /**
      * ajoute une ligne dans le modele pour comparer la famille
      * @param rowType
      * @param label
@@ -367,8 +431,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 mergeRow.merge = true;
                 mergeRow.compareResult = CompareResult.EQUAL;
             } else {
-                if ((rowType == RowType.IndiParentFamily && record.getIndiFatherLastName().isEmpty() && record.getIndiMotherLastName().isEmpty())
-                        || (rowType == RowType.WifeParentFamily && record.getWifeFatherLastName().isEmpty() && record.getWifeMotherLastName().isEmpty())
+                if ((rowType == RowType.IndiParentFamily && record.getIndi().getFatherLastName().isEmpty() && record.getIndi().getMotherLastName().isEmpty())
+                        || (rowType == RowType.WifeParentFamily && record.getWife().getFatherLastName().isEmpty() && record.getWife().getMotherLastName().isEmpty())
                         ) {
                     // j'interdis la creation d'un nouvelle famille si le nom du pere et de la mere sont vide.
                     mergeRow.merge = false;
@@ -413,6 +477,24 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.merge_initial = mergeRow.merge;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // accesseurs
+    ///////////////////////////////////////////////////////////////////////////
+
+    public MergeParticipantType getParticipantType() {
+        return participantType;
+    }
+
+    /**
+     * retoune le gedcom associé au modele
+     * @return gedcom
+     */
+    protected Gedcom getGedcom() {
+        return gedcom;
+    }
+
+    
+
     /**
      * retourne une ligne en fonction du type
      * @param rowType
@@ -443,7 +525,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
 
     /**
-     * retourne le nombre de chmaps egaux entre le releve et l'entité
+     * retourne le nombre de champs egaux entre le releve et l'entité
      * @param rowType
      * @return
      */
@@ -461,7 +543,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
     /**
      * compare le nombre de champs egaux du modele avec celui d'un autre modele
-     * pour savoir quel est le modele qui contient l'entité la plu proche du relevé.
+     * pour savoir quel est le modele qui contient l'entité la plus proche du relevé.
      * @param object
      * @return
      */
@@ -482,15 +564,37 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
     
     // methodes abstraites
-    protected abstract void copyRecordToEntity() throws Exception;
+    protected abstract Property copyRecordToEntity() throws Exception;
     protected abstract String getTitle();
     public abstract String getSummary(Entity selectedEntity);
     protected abstract Entity getSelectedEntity();
-    protected abstract Gedcom getGedcom();
-
+    
     /**
-     * i
+     * cree une association entre associatedProperty et l'entité séelctionné dans 
+     * le modele
+     * @param associatedProperty1
+     * @throws Exception
      */
+    protected void copyAssociation(Property associatedProperty1, Property associatedProperty2) throws Exception {
+        PropertyXRef asso = (PropertyXRef)associatedProperty2.addProperty("ASSO", '@'+associatedProperty1.getEntity().getId()+'@');
+        TagPath anchor = associatedProperty1.getPath(true);
+
+        asso.addProperty("RELA", anchor==null ? "Présent" : "Présent"+'@'+anchor.toString() );
+
+        // je cree le lien à l'autre extermite de l'association
+        try {
+          asso.link();
+        } catch (GedcomException e) {
+          associatedProperty1.delProperty(asso);
+          throw e;
+        }
+    }        
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // focntions de gestion de la JTable
+    ///////////////////////////////////////////////////////////////////////////
+
     private String[] columnNames = {
         "",
         NbBundle.getMessage(MergeModel.class, "MergePanel.title.recordColumn"),
@@ -567,7 +671,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
 
     /**
-     * coche ou décoche une ligne en focntion de son numero d'ordre
+     * coche ou décoche une ligne en fonction de son numero d'ordre
      * @param rowNum
      * @param state
      */
@@ -577,8 +681,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
 
     /**
-     * coche ou décoche une ligne en fonction de sont type
-     * @param rowNum
+     * coche ou décoche une ligne en fonction de son type
+     * @param rowType 
      * @param state
      */
     void check(RowType rowType, boolean state) {
@@ -698,7 +802,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
     /**
      * ajoute la date et le lieu de naissance et une note pour indiquer la source
-     * de la naissance  dans la propriete BIRT d'un individu
+     * de la naissance dans la propriete BIRT d'un individu
+     *
      * @param indi      individu
      * @param birthDate date de naissance
      * @param place     lieu de naissance
@@ -710,10 +815,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             birthProperty = indi.addProperty("BIRT", "");
         }
         // j'ajoute (ou remplace ) la date de la naissance
-        PropertyDate propertyDate = (PropertyDate) birthProperty.getProperty("DATE");
-        if (propertyDate == null) {
-            propertyDate = (PropertyDate) birthProperty.addProperty("DATE", "");
-        }
+        PropertyDate propertyDate = indi.getBirthDate(true);
         PropertyDate birthDate = (PropertyDate) mergeRow.recordValue;
         propertyDate.setValue(birthDate.getValue());
 
@@ -732,7 +834,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
     /**
      * ajoute la date et le lieu de naissance et une note pour indiquer la source
-     * de la naissance  dans la propriete BIRT d'un individu
+     * de la naissance  dans la propriete DEATH d'un individu
+     *
      * @param indi      individu
      * @param deathDate date de naissance
      * @param place     lieu de naissance
@@ -744,10 +847,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             deathProperty = indi.addProperty("DEAT", "");
         }
         // j'ajoute (ou remplace ) la date de la naissance
-        PropertyDate propertyDate = (PropertyDate) deathProperty.getProperty("DATE");
-        if (propertyDate == null) {
-            propertyDate = (PropertyDate) deathProperty.addProperty("DATE", "");
-        }
+        PropertyDate propertyDate = indi.getDeathDate(true);
         PropertyDate deathDate = (PropertyDate) mergeRow.recordValue;
         propertyDate.setValue(deathDate.getValue());
 
@@ -760,14 +860,14 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             propertyPlace.setValue(place);
         }
 
-        // j'ajoute une note indiquant l'origine de la date de naissance
+        // j'ajoute une note indiquant l'origine de la date du deces
         copyReferenceNote(deathProperty, record);
     }
 
     /**
      * ajoute la date de marriage et une note pour indiquer la source dans
      * la propriete MARR d'une famille
-     * de de cette date .
+     * 
      * @param family            famille de mariés
      * @param marriageDate      date de marriage
      * @param occupationDate    date du releve
@@ -781,7 +881,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             marriageProperty = family.addProperty("MARR", "");
         }
         // j'ajoute (ou remplace ) la date de la naissance
-        PropertyDate propertyDate = (PropertyDate) marriageProperty.getProperty("DATE");
+        PropertyDate propertyDate = (PropertyDate) marriageProperty.getProperty("DATE",false);
         if (propertyDate == null) {
             propertyDate = (PropertyDate) marriageProperty.addProperty("DATE", "");
         }
@@ -801,16 +901,16 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param occupationDate  date du releve
      * @param record    releve servant a renseigner la note de la profession
      */
-    static protected void copyOccupation(Indi indi, String occupation, String residence, MergeRecord record ) {
+    static protected void copyOccupation(Indi indi, String occupation, String residence, MergeRecord record ) throws GedcomException {
         PropertyDate occupationDate = record.getEventDate();
         // je cherche si l'individu a deja un tag OCCU a la meme date
         Property occupationProperty = null;
         // j'ajoute la profession ou la residence
         if( !occupation.isEmpty()) {
-            occupationProperty = indi.addProperty("OCCU", "");
+            occupationProperty = indi.addProperty("OCCU", "", getPropertyBestPosition(indi, occupationDate));
             occupationProperty.setValue(occupation);
         } else if (!residence.isEmpty()) {
-            occupationProperty = indi.addProperty("RESI", "");
+            occupationProperty = indi.addProperty("RESI", "", getPropertyBestPosition(indi, occupationDate));
         }
 
         if (occupationProperty != null) {
@@ -828,6 +928,12 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         }
     }
 
+    /**
+     * ajoute une NOTE contenant les informations de reference de l'acte
+     * a une propriete.
+     * @param property
+     * @param record
+     */
     static protected void copyReferenceNote(Property property, MergeRecord record) {
         String noteText ;
         PropertyDate propertyDate = (PropertyDate)property.getProperty("DATE");
@@ -851,8 +957,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             case Birth:
                 noteText = MessageFormat.format(noteText+ " " + "l''acte de naissance de {1} {2} le {3} ({4})",
                     propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
+                    record.getIndi().getFirstName(),
+                    record.getIndi().getLastName(),
                     record.getEventDateDDMMYYYY(),
                     record.getEventPlaceCityName()
                     );
@@ -860,10 +966,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             case Marriage:
                 noteText = MessageFormat.format(noteText+ " " + "l''acte de mariage de {1} {2} et {3} {4} le {5} ({6})",
                     propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getWifeFirstName(),
-                    record.getWifeLastName(),
+                    record.getIndi().getFirstName(),
+                    record.getIndi().getLastName(),
+                    record.getWife().getFirstName(),
+                    record.getWife().getLastName(),
                     record.getEventDateDDMMYYYY(),
                     record.getEventPlaceCityName()
                     );
@@ -871,8 +977,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             case Death:
                 noteText = MessageFormat.format(noteText+ " " + "l''acte de décès de {1} {2} le {3} ({4})",
                     propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
+                    record.getIndi().getFirstName(),
+                    record.getIndi().getLastName(),
                     record.getEventDateDDMMYYYY(),
                     record.getEventPlaceCityName()
                     );
@@ -883,8 +989,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         noteText = MessageFormat.format(noteText+ " " + "l''acte de {1} de {2} {3} le {4} ({5})",
                             propertyDate.getDisplayValue(),
                             record.getEventType(),
-                            record.getIndiFirstName(),
-                            record.getIndiLastName(),
+                            record.getIndi().getFirstName(),
+                            record.getIndi().getLastName(),
                             record.getEventDateDDMMYYYY(),
                             record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
                             );
@@ -893,10 +999,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         noteText = MessageFormat.format(noteText+ " " + "l''acte de contrat de mariage entre {2} {3} et {4} {5} le {6} ({7})",
                             propertyDate.getDisplayValue(),
                             record.getEventType(),
-                            record.getIndiFirstName(),
-                            record.getIndiLastName(),
-                            record.getWifeFirstName(),
-                            record.getWifeLastName(),
+                            record.getIndi().getFirstName(),
+                            record.getIndi().getLastName(),
+                            record.getWife().getFirstName(),
+                            record.getWife().getLastName(),
                             record.getEventDateDDMMYYYY(),
                             record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
                             );
@@ -905,10 +1011,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         noteText = MessageFormat.format(noteText+ " " + "l''acte ''{1}'' entre {2} {3} et {4} {5} le {6} ({7})",
                             propertyDate.getDisplayValue(),
                             record.getEventType(),
-                            record.getIndiFirstName(),
-                            record.getIndiLastName(),
-                            record.getWifeFirstName(),
-                            record.getWifeLastName(),
+                            record.getIndi().getFirstName(),
+                            record.getIndi().getLastName(),
+                            record.getWife().getFirstName(),
+                            record.getWife().getLastName(),
                             record.getEventDateDDMMYYYY(),
                             record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
                             );
@@ -917,6 +1023,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 break;
         }
 
+        // je recherhe une NOTE deja presente dans la propriete qui
+        // contiendrait deja le texte à ajouter
         Property[] notes = property.getProperties("NOTE");
         boolean found = false;
         for( int i=0; i < notes.length ; i++ ) {
@@ -926,6 +1034,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             }
         }
 
+        // J'ajoute le commentaire si aucune note existe deja avec le texte
         if (!found) {
             Property propertyNote = property.getProperty("NOTE");
             if (propertyNote == null) {
@@ -933,7 +1042,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 propertyNote = property.addProperty("NOTE", "");
             }
 
-            // j'ajoute le commentaire du deces a la fin de la note existante.
+            // j'ajoute le commentaire a la fin de la note existante.
             String value = propertyNote.getValue();
             if (!noteText.isEmpty()) {
                 if (!value.isEmpty()) {
@@ -943,17 +1052,45 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 propertyNote.setValue(value);
             }
         }
-
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // utilitaires
-    ///////////////////////////////////////////////////////////////////////////
+    /**
+     * retourne la position du propriété
+     *  - apres BIRT
+     *  - avant DEATH
+     *
+     * @param property
+     * @param propertyDate
+     */
+    static protected int getPropertyBestPosition(Property property, PropertyDate propertyDate) {
+        int birthPosition = -1;
+        int position = 0;
+        int resultPosition =0;
+        for( Property child : property.getProperties() ) {
+            if ( child.getTag().equals("BIRT")) {
+               birthPosition = position;
+               resultPosition = birthPosition+1;
+            } else if ( child.getTag().equals("DEAT")) {
+                // rien à faire
+            } else {
+                Property[] childDates = child.getProperties("DATE");
+                if ( childDates.length > 0 ) {
+                    try {
+                        if (!MergeQuery.isRecordBeforeThanDate(propertyDate, (PropertyDate) childDates[0], 0, 0)) {
+                            resultPosition = position + 1;
+                        }
+                    } catch (GedcomException ex) {
+                        // rien a faire
+                    }
+                }
+            }
 
-    public ParticipantType getPartipant() {
-        return participant;
+            position++;
+        }
+
+        return resultPosition;
     }
-    
+
     /**
      * concatene plusieurs commentaires dans une chaine , séparés par une virgule
      */
@@ -1076,6 +1213,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      */
     static protected enum RowType {
         Separator,
+        EventType,
         EventSource,
         EventPage,
         EventDate,

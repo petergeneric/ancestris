@@ -1,5 +1,6 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -20,8 +21,6 @@ import org.openide.util.NbBundle;
 class MergeModelBirth extends MergeModel {
 
     private Indi currentIndi;
-    private MergeRecord record;
-    private Gedcom gedcom;
 
     /**
      * model factory
@@ -53,7 +52,7 @@ class MergeModelBirth extends MergeModel {
             Indi selectedIndi = (Indi) selectedEntity;
 
             // je cherche les familles compatibles avec le releve de naissance
-            List<Fam> families = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
+            List<Fam> families = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeParticipantType.participant1, gedcom);
 
             // j'ajoute l'individu selectionné par dnd
             if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
@@ -73,10 +72,10 @@ class MergeModelBirth extends MergeModel {
             List<Indi> sameIndis;
             if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
                 // l'individu est lié a une famille précise, je l'exclue de la recherche
-                sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, selectedIndi);
+                sameIndis = MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, selectedIndi);
             } else {
                 // l'individu n'est pas lié a une famille précise, je l'inclue dans la recherche
-                sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
+                sameIndis = MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, null);
             }
             // j'ajoute les individus compatibles
             for (Indi samedIndi : sameIndis) {
@@ -99,10 +98,10 @@ class MergeModelBirth extends MergeModel {
 
             // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
             // releve et avec les dates de naissance compatibles et les parents compatibles)
-            List<Indi> sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
+            List<Indi> sameIndis = MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, null);
 
             // je cherche les familles des parents compatibles avec le releve de naissance
-            List<Fam> families = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
+            List<Fam> families = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeParticipantType.participant1, gedcom);
 
             // j'ajoute un nouvel individu avec les familles compatibles
             for (Fam family : families) {
@@ -130,7 +129,7 @@ class MergeModelBirth extends MergeModel {
                 // mais qui pourraient être ses parents
                 List<Indi> fathers = new ArrayList<Indi>();
                 List<Indi> mothers = new ArrayList<Indi>();
-                MergeQuery.findFatherMotherCompatibleWithBirthRecord(mergeRecord, gedcom, families, fathers, mothers);
+                MergeQuery.findFatherMotherCompatibleWithBirthParticipant(mergeRecord, gedcom, families, fathers, mothers);
                 for (Indi father : fathers) {
                     for (Indi mother : mothers) {
                         models.add(new MergeModelBirth(mergeRecord, gedcom, father, mother));
@@ -149,9 +148,8 @@ class MergeModelBirth extends MergeModel {
      * @param record
      */
     protected MergeModelBirth(MergeRecord record, Gedcom gedcom) throws Exception {
-        this.record = record;
+        super(record, gedcom);
         this.currentIndi = null;
-        this.gedcom = gedcom;
         addRowIndi();
         addRowParents(null);
     }
@@ -164,9 +162,8 @@ class MergeModelBirth extends MergeModel {
      * @param record
      */
     protected MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi indi, Fam fam) throws Exception {
-        this.record = record;
+        super(record, gedcom);
         this.currentIndi = indi;
-        this.gedcom = gedcom;
         addRowIndi();
         addRowParents(fam);
     }
@@ -179,16 +176,15 @@ class MergeModelBirth extends MergeModel {
      * @param record
      */
     protected MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
-        this.record = record;
+        super(record, gedcom);
         this.currentIndi = null;
-        this.gedcom = gedcom;
-
+        
         // j'affiche l'individu 
         addRowIndi();
 
         // j'affiche la famille de l'enfant
         addRow(RowType.IndiParentFamily, record, null);
-        addRow(RowType.IndiParentMarriageDate, record.getIndiParentMarriageDate(), null);
+        addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), null);
 
         // j'affiche les parents
         addRowFather(father);
@@ -216,11 +212,11 @@ class MergeModelBirth extends MergeModel {
             addRowSeparator();
 
             // j'affiche le nom
-            addRow(RowType.IndiLastName, record.getIndiLastName(), currentIndi.getLastName(), currentIndi);
-            addRow(RowType.IndiFirstName, record.getIndiFirstName(), currentIndi.getFirstName());
-            addRow(RowType.IndiSex, record.getIndiSexString(), currentIndi.getPropertyValue("SEX"));
-            addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , currentIndi.getBirthDate());
-            addRow(RowType.IndiBirthPlace, record.getIndiBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiLastName, record.getIndi().getLastName(), currentIndi.getLastName(), currentIndi);
+            addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), currentIndi.getFirstName());
+            addRow(RowType.IndiSex, record.getIndi().getSexString(), currentIndi.getPropertyValue("SEX"));
+            addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , currentIndi.getBirthDate());
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.EventComment, record.getEventComment(), currentIndi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
             // j'affiche un separateur
             addRowSeparator();
@@ -236,11 +232,11 @@ class MergeModelBirth extends MergeModel {
             addRowSeparator();
 
             // j'affiche le nom
-            addRow(RowType.IndiLastName, record.getIndiLastName(), "");
-            addRow(RowType.IndiFirstName, record.getIndiFirstName(), "");
-            addRow(RowType.IndiSex, record.getIndiSexString(), "");
-            addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , null);
-            addRow(RowType.IndiBirthPlace, record.getIndiBirthPlace(), "");
+            addRow(RowType.IndiLastName, record.getIndi().getLastName(), "");
+            addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), "");
+            addRow(RowType.IndiSex, record.getIndi().getSexString(), "");
+            addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , null);
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), "");
             addRow(RowType.EventComment, record.getEventComment(), "");
             // j'affiche un separateur
             addRowSeparator();
@@ -250,12 +246,12 @@ class MergeModelBirth extends MergeModel {
     private void addRowParents( Fam fam) throws Exception {
         addRow(RowType.IndiParentFamily, record, fam);
         if (fam != null) {
-            addRow(RowType.IndiParentMarriageDate, record.getIndiParentMarriageDate(), fam.getMarriageDate());
+            addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), fam.getMarriageDate());
 
             addRowFather(fam.getHusband());
             addRowMother(fam.getWife());
         } else {
-            addRow(RowType.IndiParentMarriageDate, record.getIndiParentMarriageDate(), null);
+            addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), null);
             addRowFather(null);
             addRowMother(null);
         }
@@ -272,34 +268,34 @@ class MergeModelBirth extends MergeModel {
 
     private void addRowFather( Indi father ) throws Exception {
         if (father != null) {
-            addRow(RowType.IndiFatherLastName, record.getIndiFatherLastName(), father.getLastName(), father);
-            addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), father.getFirstName());
-            addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), father.getBirthDate());
-            addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), father.getDeathDate());
-            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(), MergeQuery.findOccupation(father, record.getEventDate()));
+            addRow(RowType.IndiFatherLastName, record.getIndi().getFatherLastName(), father.getLastName(), father);
+            addRow(RowType.IndiFatherFirstName, record.getIndi().getFatherFirstName(), father.getFirstName());
+            addRow(RowType.IndiFatherBirthDate, record.getIndi().getFatherBirthDate(), father.getBirthDate());
+            addRow(RowType.IndiFatherDeathDate, record.getIndi().getFatherDeathDate(), father.getDeathDate());
+            addRow(RowType.IndiFatherOccupation, record.getIndi().getFatherOccupationWithDate(), MergeQuery.findOccupation(father, record.getEventDate()));
 
         } else {
-            addRow(RowType.IndiFatherLastName, record.getIndiFatherLastName(), "");
-            addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), "");
-            addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), null);
-            addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), null);
-            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(), "");
+            addRow(RowType.IndiFatherLastName, record.getIndi().getFatherLastName(), "");
+            addRow(RowType.IndiFatherFirstName, record.getIndi().getFatherFirstName(), "");
+            addRow(RowType.IndiFatherBirthDate, record.getIndi().getFatherBirthDate(), null);
+            addRow(RowType.IndiFatherDeathDate, record.getIndi().getFatherDeathDate(), null);
+            addRow(RowType.IndiFatherOccupation, record.getIndi().getFatherOccupationWithDate(), "");
         }
     }
 
     private void addRowMother( Indi mother ) throws Exception {
         if (mother != null) {
-            addRow(RowType.IndiMotherLastName, record.getIndiMotherLastName(), mother.getLastName(), mother);
-            addRow(RowType.IndiMotherFirstName, record.getIndiMotherFirstName(), mother.getFirstName());
-            addRow(RowType.IndiMotherBirthDate, record.getIndiMotherBirthDate(), mother.getBirthDate());
-            addRow(RowType.IndiMotherDeathDate, record.getIndiMotherDeathDate(), mother.getDeathDate());
-            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupationWithDate(), MergeQuery.findOccupation(mother, record.getEventDate()));
+            addRow(RowType.IndiMotherLastName, record.getIndi().getMotherLastName(), mother.getLastName(), mother);
+            addRow(RowType.IndiMotherFirstName, record.getIndi().getMotherFirstName(), mother.getFirstName());
+            addRow(RowType.IndiMotherBirthDate, record.getIndi().getMotherBirthDate(), mother.getBirthDate());
+            addRow(RowType.IndiMotherDeathDate, record.getIndi().getMotherDeathDate(), mother.getDeathDate());
+            addRow(RowType.IndiMotherOccupation, record.getIndi().getMotherOccupationWithDate(), MergeQuery.findOccupation(mother, record.getEventDate()));
         } else {
-            addRow(RowType.IndiMotherLastName, record.getIndiMotherLastName(), "");
-            addRow(RowType.IndiMotherFirstName, record.getIndiMotherFirstName(), "");
-            addRow(RowType.IndiMotherBirthDate, record.getIndiMotherBirthDate(), null);
-            addRow(RowType.IndiMotherDeathDate, record.getIndiMotherDeathDate(), null);
-            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupationWithDate(), "");
+            addRow(RowType.IndiMotherLastName, record.getIndi().getMotherLastName(), "");
+            addRow(RowType.IndiMotherFirstName, record.getIndi().getMotherFirstName(), "");
+            addRow(RowType.IndiMotherBirthDate, record.getIndi().getMotherBirthDate(), null);
+            addRow(RowType.IndiMotherDeathDate, record.getIndi().getMotherDeathDate(), null);
+            addRow(RowType.IndiMotherOccupation, record.getIndi().getMotherOccupationWithDate(), "");
         }
     }
 
@@ -313,37 +309,28 @@ class MergeModelBirth extends MergeModel {
     }
 
     /**
-     * retoune le gedcom du modele
-     * @return gedcom
-     */
-    @Override
-    protected Gedcom getGedcom() {
-        return gedcom;
-    }
-
-    /**
      * copie les données du relevé dans l'entité
      */
     @Override
-    protected void copyRecordToEntity() throws Exception {
+    protected Property copyRecordToEntity() throws Exception {
         if (currentIndi == null) {
             currentIndi = (Indi) gedcom.createEntity(Gedcom.INDI);
-            currentIndi.setName(record.getIndiFirstName(), record.getIndiLastName());
-            currentIndi.setSex(record.getIndiSex());
+            currentIndi.setName(record.getIndi().getFirstName(), record.getIndi().getLastName());
+            currentIndi.setSex(record.getIndi().getSex());
         } else {
             // je copie le nom du releve dans l'individu
             if (isChecked(RowType.IndiLastName)) {
-                currentIndi.setName(currentIndi.getFirstName(), record.getIndiLastName());
+                currentIndi.setName(currentIndi.getFirstName(), record.getIndi().getLastName());
             }
 
             // je copie le prénom du releve dans l'individu
             if (isChecked(RowType.IndiFirstName)) {
-                currentIndi.setName(record.getIndiFirstName(), currentIndi.getLastName());
+                currentIndi.setName(record.getIndi().getFirstName(), currentIndi.getLastName());
             }
 
             // je copie le sexe du releve dans l'individu
             if (isChecked(RowType.IndiSex)) {
-                currentIndi.setSex(record.getIndiSex());
+                currentIndi.setSex(record.getIndi().getSex());
             }
         }
 
@@ -358,11 +345,8 @@ class MergeModelBirth extends MergeModel {
         // je copie la date de naissance du releve dans l'individu
         if (isChecked(RowType.IndiBirthDate)) {
             // j'ajoute (ou remplace) la date de la naissance
-            PropertyDate propertyDate = (PropertyDate) birthProperty.getProperty("DATE");
-            if (propertyDate == null) {
-                propertyDate = (PropertyDate) birthProperty.addProperty("DATE", "");
-            }
-            propertyDate.setValue(record.getIndiBirthDate().getValue());
+            PropertyDate propertyDate = currentIndi.getBirthDate(true);
+            propertyDate.setValue(record.getIndi().getBirthDate().getValue());
         }
 
         // je copie la source de la naissance du releve dans l'individu
@@ -372,7 +356,7 @@ class MergeModelBirth extends MergeModel {
 
         // je copie le lieu de la naissance .
         if (isChecked(RowType.IndiBirthPlace)) {
-            copyPlace(record.getIndiBirthPlace(),  birthProperty);
+            copyPlace(record.getIndi().getBirthPlace(),  birthProperty);
         }
 
         // je copie le commentaire de la naissance .
@@ -419,15 +403,15 @@ class MergeModelBirth extends MergeModel {
             if (father == null) {
                 // je cree le pere
                 father = (Indi) gedcom.createEntity(Gedcom.INDI);
-                father.setName(record.getIndiFatherFirstName(), record.getIndiFatherLastName());
+                father.setName(record.getIndi().getFatherFirstName(), record.getIndi().getFatherLastName());
                 father.setSex(PropertySex.MALE);
                 family.setHusband(father);
             } else {
                 if (isChecked(RowType.IndiFatherFirstName)) {
-                    father.setName(record.getIndiFatherFirstName(), father.getLastName());
+                    father.setName(record.getIndi().getFatherFirstName(), father.getLastName());
                 }
                 if (isChecked(RowType.IndiFatherLastName)) {
-                    father.setName(father.getFirstName(), record.getIndiFatherLastName());
+                    father.setName(father.getFirstName(), record.getIndi().getFatherLastName());
                 }
             }
 
@@ -443,7 +427,7 @@ class MergeModelBirth extends MergeModel {
 
             // je copie la profession du pere
             if (isChecked(RowType.IndiFatherOccupation)) {
-                copyOccupation(father, record.getIndiFatherOccupation(), record.getIndiFatherResidence(), record);
+                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), record);
             }            
 
             // je copie le nom et le prenom de la mere
@@ -451,15 +435,15 @@ class MergeModelBirth extends MergeModel {
             if (mother == null) {
                 // je cree la mere
                 mother = (Indi) gedcom.createEntity(Gedcom.INDI);
-                mother.setName(record.getIndiMotherFirstName(), record.getIndiMotherLastName());
+                mother.setName(record.getIndi().getMotherFirstName(), record.getIndi().getMotherLastName());
                 mother.setSex(PropertySex.FEMALE);
                 family.setWife(mother);
             } else {
                 if (isChecked(RowType.IndiMotherFirstName)) {
-                    mother.setName(record.getIndiMotherFirstName(), mother.getLastName());
+                    mother.setName(record.getIndi().getMotherFirstName(), mother.getLastName());
                 }
                 if (isChecked(RowType.IndiMotherLastName)) {
-                    mother.setName(mother.getFirstName(), record.getIndiMotherLastName());
+                    mother.setName(mother.getFirstName(), record.getIndi().getMotherLastName());
                 }
             }
 
@@ -475,11 +459,11 @@ class MergeModelBirth extends MergeModel {
 
             // je met à jour la profession de la mere
             if (isChecked(RowType.IndiMotherOccupation)) {
-                copyOccupation(mother, record.getIndiMotherOccupation(), record.getIndiMotherResidence(), record);
+                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), record);
             }
             
         }
-
+        return currentIndi;
     }
 
     /**
@@ -489,7 +473,7 @@ class MergeModelBirth extends MergeModel {
      */
     @Override
     protected String getTitle() {
-        String message = record.getIndiFirstName() + " "+ record.getIndiLastName()+ " " + record.getEventDate().getDisplayValue();
+        String message = record.getIndi().getFirstName() + " "+ record.getIndi().getLastName()+ " " + record.getEventDate().getDisplayValue();
         return MessageFormat.format(NbBundle.getMessage(MergeDialog.class, "MergeModel.title.birth"), message);
     }
 

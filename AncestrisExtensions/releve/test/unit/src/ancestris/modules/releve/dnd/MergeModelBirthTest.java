@@ -1,6 +1,7 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.RecordBirth;
 import genj.gedcom.Gedcom;
@@ -93,10 +94,10 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
             assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
 
-            assertEquals("indiBirthDate",mergeRecord.getIndiBirthDate().getValue(), indi.getBirthDate().getValue());
+            assertEquals("indiBirthDate",mergeRecord.getIndi().getBirthDate().getValue(), indi.getBirthDate().getValue());
 
             Indi father = indi.getBiologicalFather();
-            assertEquals("fatherFirstName",mergeRecord.getIndiFatherFirstName(), father.getFirstName());
+            assertEquals("fatherFirstName",mergeRecord.getIndi().getFatherFirstName(), father.getFirstName());
             // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
             assertEquals("Naissance du pere",previousFatherBirthDate, father.getBirthDate().getValue());
             assertEquals("deces du pere",   "AFT 1999", father.getDeathDate().getValue());
@@ -127,7 +128,7 @@ public class MergeModelBirthTest extends TestCase {
             models.get(0).copyRecordToEntity();
 
             String expected = "";
-            expected +="indicomment\n";
+            expected +="Acte du 01/01/2000, indicomment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
@@ -142,7 +143,7 @@ public class MergeModelBirthTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
-            expected ="indicomment\n";
+            expected ="Acte du 01/01/2000, indicomment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
@@ -173,9 +174,9 @@ public class MergeModelBirthTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
-            assertEquals("IndiFirstName",mergeRecord.getIndiFirstName(), indi.getFirstName());
-            assertEquals("IndiLastName",mergeRecord.getIndiLastName(), indi.getLastName());
-            assertEquals("IndiSex",mergeRecord.getIndiSex(), indi.getSex());
+            assertEquals("IndiFirstName",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
+            assertEquals("IndiLastName",mergeRecord.getIndi().getLastName(), indi.getLastName());
+            assertEquals("IndiSex",mergeRecord.getIndi().getSex(), indi.getSex());
             assertNotSame("IndiBirthDate",mergeRecord.getEventDate().getValue(), indi.getBirthDate().getValue());
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
             assertEquals("Nb birthsource",1,sourceLink.length );
@@ -204,9 +205,9 @@ public class MergeModelBirthTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
-            assertEquals("IndiFirstName",mergeRecord.getIndiFirstName(), indi.getFirstName());
-            assertEquals("IndiLastName",mergeRecord.getIndiLastName(), indi.getLastName());
-            assertEquals("IndiSex",mergeRecord.getIndiSex(), indi.getSex());
+            assertEquals("IndiFirstName",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
+            assertEquals("IndiLastName",mergeRecord.getIndi().getLastName(), indi.getLastName());
+            assertEquals("IndiSex",mergeRecord.getIndi().getSex(), indi.getSex());
             assertNotSame("IndiBirthDate",mergeRecord.getEventDate().getValue(), indi.getBirthDate().getValue());
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
             assertEquals("Nb birthsource",2,sourceLink.length );
@@ -237,9 +238,9 @@ public class MergeModelBirthTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
-            assertEquals("IndiFirstName",mergeRecord.getIndiFirstName(), indi.getFirstName());
-            assertEquals("IndiLastName",mergeRecord.getIndiLastName(), indi.getLastName());
-            assertEquals("IndiSex",mergeRecord.getIndiSex(), indi.getSex());
+            assertEquals("IndiFirstName",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
+            assertEquals("IndiLastName",mergeRecord.getIndi().getLastName(), indi.getLastName());
+            assertEquals("IndiSex",mergeRecord.getIndi().getSex(), indi.getSex());
             assertNotSame("IndiBirthDate",mergeRecord.getEventDate().getValue(), indi.getBirthDate().getValue());
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
             assertEquals("Nb birthsource",1,sourceLink.length );
@@ -265,14 +266,14 @@ public class MergeModelBirthTest extends TestCase {
 
             // je renseigne la meme date de naissance
             record.getEventDateProperty().setValue(indi.getBirthDate().getValue());            
-            assertEquals("otherIndi",0, MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, indi).size());
+            assertEquals("otherIndi",0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
-            assertEquals("Indi First Name",mergeRecord.getIndiFirstName(), indi.getFirstName());
-            assertEquals("Indi Last Name",mergeRecord.getIndiLastName(), indi.getLastName());
-            assertEquals("Indi Sex",mergeRecord.getIndiSex(), indi.getSex());
+            assertEquals("Indi First Name",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
+            assertEquals("Indi Last Name",mergeRecord.getIndi().getLastName(), indi.getLastName());
+            assertEquals("Indi Sex",mergeRecord.getIndi().getSex(), indi.getSex());
             assertEquals("Indi Birth Date",0, indi.getBirthDate().compareTo(mergeRecord.getEventDate()));
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
             assertEquals("Nb birthsource",1,sourceLink.length );
@@ -311,7 +312,7 @@ public class MergeModelBirthTest extends TestCase {
 
             String sourceTitle = "";
             mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
-            assertEquals("Indi Birth place=IndiFatherResidence",record.getIndiFatherResidence().toString(), mergeRecord.getIndiBirthPlace());
+            assertEquals("Indi Birth place=IndiFatherResidence",record.getIndi().getFatherResidence().toString(), mergeRecord.getIndi().getBirthPlace());
 
              // cas : indiBirthPlace = "" et indiFatherResidence = ""
             record = new RecordBirth();
@@ -328,7 +329,7 @@ public class MergeModelBirthTest extends TestCase {
             record.setGeneralComment("generalcomment");
 
             mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
-            assertEquals("Indi Birth place=eventPlace",getRecordsInfoPlace().toString(), mergeRecord.getIndiBirthPlace());
+            assertEquals("Indi Birth place=eventPlace",getRecordsInfoPlace().toString(), mergeRecord.getIndi().getBirthPlace());
 
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

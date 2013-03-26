@@ -5,7 +5,7 @@
 
 package ancestris.modules.releve.dnd;
 
-import ancestris.modules.releve.dnd.MergeModel.ParticipantType;
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import java.awt.event.ActionListener;
@@ -24,16 +24,14 @@ import org.openide.util.NbPreferences;
 public class MergePanel extends javax.swing.JPanel  {
 
     private MergeDialog mergeDialog = null;
-    protected MergeModel currentModel = null;
-    ParticipantType participant = ParticipantType.participant1;
+    private MergeModel currentModel = null;
+    private MergeParticipantType participant = null;
 
     /**
      * le construteur initialise l'affichage
      */
     public MergePanel() {        
         initComponents();
-        String splitHeight = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSplitHeight"+participant.name(), "90");
-        jSplitPane.setDividerLocation(Integer.parseInt(splitHeight));
     }
 
     /**
@@ -45,25 +43,28 @@ public class MergePanel extends javax.swing.JPanel  {
      * @param selectedEntity  entite selectonne
      * @param mergeDialog     fenetre principale
      */
-    protected int initData (final List<MergeModel> models, Entity selectedEntity, final MergeDialog mergeDialog , ParticipantType partipant) {
+    protected void initData (final List<MergeModel> models, Entity selectedEntity, final MergeDialog mergeDialog , MergeParticipantType participantType) {
         
         this.mergeDialog = mergeDialog;
-        this.participant = partipant;
+        this.participant = participantType;
         
         // je vide le panneau
         jPanelChoice.removeAll();
         jToggleButtonShowAllParents.setSelected(mergeDialog.getShowAllParents());
 
-        // j'affiche le titre
-        jLabel1.setText(MessageFormat.format(NbBundle.getMessage(MergePanel.class, "MergePanel.title"), models.size())); // NOI18N
+        // je dimensionne le panneau avec la taille choisie precedemment
+        String splitHeight = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSplitHeight"+participant.name(), "90");
+        jSplitPane.setDividerLocation(Integer.parseInt(splitHeight));
 
         // j'ajoute les modeles avec un radio bouton pour chaque modele
         buttonGroupChoiceModel=new javax.swing.ButtonGroup();
 
+        int position = 0;
         for(int i= 0; i< models.size(); i++) {
             MergeModel mergeModel = models.get(i);
-            if ( mergeModel.getPartipant() == partipant) {
-                addRadioButton(i, models.get(i), selectedEntity);
+            if ( mergeModel.getParticipantType() == participantType) {
+                addRadioButton(position, mergeModel, selectedEntity);
+                position++;
             }
         }
 
@@ -79,17 +80,19 @@ public class MergePanel extends javax.swing.JPanel  {
             jPanelChoice.add(jLabelEnd, gridBagConstraints);
 
             // je selectionne le premier modele
+            JRadioButton radioButton0 = (JRadioButton)buttonGroupChoiceModel.getElements().nextElement();
 
-            // je coche bouton associé au premier modele
-            ((JRadioButton)buttonGroupChoiceModel.getElements().nextElement()).setSelected(true);
-            selectModel(models.get(0));
+            // j'affiche le titre
+            jLabel1.setText(MessageFormat.format(NbBundle.getMessage(MergePanel.class, "MergePanel.title"), buttonGroupChoiceModel.getButtonCount())); // NOI18N
+
+            //radioButton0.setSelected(true);
+            radioButton0.doClick();
+            //selectModel(models.get(0));
         } else {
             setVisible(false);
         }
         this.revalidate();
         this.repaint();
-
-        return buttonGroupChoiceModel.getButtonCount();
     }
 
     protected void componentClosed() {
@@ -107,7 +110,7 @@ public class MergePanel extends javax.swing.JPanel  {
      * @param selected
      */
     private void addRadioButton(int position, final MergeModel model, Entity selectedEntity) {
-        //String radioButtonText;
+        // je cree le label a afficher en tete du panneau
         String labelText = Integer.toString(model.getNbMatch())+"/"+Integer.toString(model.getNbMatchMax());
         JLabel jLabelNbMatch =  new JLabel();
         jLabelNbMatch.setText(labelText);
@@ -163,19 +166,21 @@ public class MergePanel extends javax.swing.JPanel  {
         // j'affiche les données du modele dans la table
         currentModel.fireTableDataChanged();
 
-        if( participant == ParticipantType.participant1) {
-            // je renseigne le titre de la fenetre
-            mergeDialog.setTitle(currentModel.getTitle());
-            // j'affiche l'entité dans l'arbre
-            if (model.getSelectedEntity() != null) {
-                mergeDialog.showEntityInDndSource(model.getSelectedEntity(), true);
-            } else {
-                if (currentModel instanceof MergeModelBirth && currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityValue instanceof Fam) {
-                    // je centre l'arbre sur la famille des parents
-                    mergeDialog.showEntityInDndSource((Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, true);
-                }
+        // je renseigne le titre de la fenetre
+        mergeDialog.setTitle(currentModel.getTitle());
+        // j'affiche l'entité dans l'arbre
+        if (model.getSelectedEntity() != null) {
+            mergeDialog.showEntityInDndSource(model.getSelectedEntity(), true);
+        } else {
+            if (currentModel instanceof MergeModelBirth && currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityValue instanceof Fam) {
+                // je centre l'arbre sur la famille des parents
+                mergeDialog.showEntityInDndSource((Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, true);
             }
         }
+    }
+
+    MergeModel getCurrentModel() {
+        return currentModel;
     }
 
    
