@@ -23,6 +23,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.openide.awt</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.39.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.dialogs</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -35,7 +43,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.6.2</specification-version>
+                        <specification-version>8.19.2</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -50,6 +58,8 @@
             <public-packages>
                 <package>ancestris.modules.gedcom.utilities</package>
                 <package>ancestris.modules.gedcom.utilities.matchers</package>
+                <package>ancestris.modules.gedcom.utilities.resources</package>
+                <package>ancestris.modules.gedcom.utilities.swing</package>
             </public-packages>
         </data>
     </configuration>
