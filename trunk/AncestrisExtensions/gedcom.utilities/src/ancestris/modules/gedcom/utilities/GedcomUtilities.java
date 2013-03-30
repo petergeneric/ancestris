@@ -96,17 +96,17 @@ public class GedcomUtilities {
     }
 
     /*
-     * Merge 2 entities
-     * dest the final entity
-     * src the source entity
-     * properties the property list to be included in the dest entity
+     * Merge 2 entities dest the final entity src the source entity properties
+     * the property list to be included in the dest entity
      */
     public static void MergeEntities(Gedcom gedcom, Entity dest, Entity src, List<Property> properties) {
         LOG.log(Level.INFO, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
 
         for (Property rightProperty : properties) {
             try {
-                movePropertyRecursively(rightProperty, dest);
+                if (rightProperty != null) {
+                    movePropertyRecursively(rightProperty, dest);
+                }
             } catch (GedcomException ex) {
                 LOG.log(Level.SEVERE, "Unexpected Gedcom exception {0}", ex);
                 Exceptions.printStackTrace(ex);
@@ -122,11 +122,11 @@ public class GedcomUtilities {
                     propertyXRef.unlink();
                     propertyXRef.setValue(dest.getId());
 
-                    /* 
-                     * Try to cope with PropertyForeignXRef exception on link
-                     * as the visibility of the class is restricted to gedcom package
-                     * use this workaround as it  seem to be the unique Xref properties 
-                     * for which transient property true
+                    /*
+                     * Try to cope with PropertyForeignXRef exception on link as
+                     * the visibility of the class is restricted to gedcom
+                     * package use this workaround as it seem to be the unique
+                     * Xref properties for which transient property true
                      */
                     if (propertyXRef.isTransient() == false) {
                         try {
@@ -144,8 +144,8 @@ public class GedcomUtilities {
     }
 
     /*
-     * this function move property propertysrc  in parent property parentPropertyDest
-     * and update Xref properties
+     * this function move property propertysrc in parent property
+     * parentPropertyDest and update Xref properties
      */
     public static void movePropertyRecursively(Property propertySrc, Property parentPropertyDest) throws GedcomException {
         Property propertyDest;
