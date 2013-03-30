@@ -37,7 +37,7 @@ import org.openide.windows.TopComponent;
 public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileListener {
 
     private final static Logger log = Logger.getLogger(GedcomHistoryPlugin.class.getName());
-    private final static HashMap<Gedcom, GedcomHistory> gedcomHistoryMap = new <String, GedcomHistory>HashMap();
+    private final static HashMap<Gedcom, GedcomHistory> gedcomHistoryMap = new HashMap<Gedcom, GedcomHistory>();
 
     @Override
     public void commitRequested(Context context) {
