@@ -6,7 +6,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.DialogHelper.ComponentVisitor;
-import genj.view.MySelectionListener;
 import genj.view.SelectionListener;
 
 import java.awt.AWTEvent;
@@ -32,7 +31,6 @@ public interface SelectionSink {
    * @param context
    * @param isActionPerformed
    */
-  public void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed);
 
   public class Dispatcher {
 
@@ -60,11 +58,6 @@ public interface SelectionSink {
     }
 
 
-      static SelectionSink theSink;
-        public static void setSink(SelectionSink sink) {
-           theSink = sink;
-        }
-
     public static void fireSelection(AWTEvent event, Context context) {
         if (event == null)
             fireSelection((Component)null, context, false);
@@ -78,22 +71,34 @@ public interface SelectionSink {
 
     public static void fireSelection(Component source, Context context, boolean isActionPerformed) {
 
-      MySelectionListener listener = (MySelectionListener)DialogHelper.visitOwners(source, new ComponentVisitor() {
-        public Component visit(Component parent, Component child) {
-          if (parent instanceof RootPaneContainer) {
-            Container contentPane = ((RootPaneContainer)parent).getContentPane();
-            if (contentPane.getComponentCount()>0 && contentPane.getComponent(0) instanceof SelectionSink)
-              return contentPane.getComponent(0);
-          }
-          return parent instanceof MySelectionListener ? parent : null;
-        }
-      });
+// XXX: removed, selection propagation will be redesigned        
+//      MySelectionListener listener = (MySelectionListener)DialogHelper.visitOwners(source, new ComponentVisitor() {
+//        public Component visit(Component parent, Component child) {
+//          if (parent instanceof RootPaneContainer) {
+//            Container contentPane = ((RootPaneContainer)parent).getContentPane();
+//            if (contentPane.getComponentCount()>0 && contentPane.getComponent(0) instanceof SelectionSink)
+//              return contentPane.getComponent(0);
+//          }
+//          return parent instanceof MySelectionListener ? parent : null;
+//        }
+//      });
       if (!isMuted())
-        fireSelection(listener,context, isActionPerformed);
+//XXX:        fireSelection(listener,context, isActionPerformed);
+        fireSelection(context, isActionPerformed);
     }
     
     
-    private static void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed) {
+    /**
+     * Fire a selection event.
+     * @param context The seleted context. May be a property, an entity, an gedcom...
+     * @param isActionPerformed true if it is an actionn event ie if a double clic occured
+     */
+    public static void fireSelection(Context context, boolean isActionPerformed) {
+//XXX:
+//        fireSelection((Component)null, context, isActionPerformed);
+//    }
+//
+//    private static void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed) {
 //TODO: mieux controler. Devra atre refait lors du basculement total dans l'environnement NB
 //    // appropriate?
 //    if (context.getGedcom()!= this.context.getGedcom()) {
@@ -123,24 +128,13 @@ public interface SelectionSink {
         // notify
         //XXX: we must put selected nodes in global selection lookup (in fact use Explorer API)
         for (SelectionListener listener : AncestrisPlugin.lookupAll(SelectionListener.class)) {
-            if (!listener.equals(from)) {
+//            if (!listener.equals(from)) {
                 listener.setContext(context, isActionPerformed);
-            }
+//            }
         }
-        if (from != null) {
-            from.setMyContext(context, isActionPerformed);
-        }
-    }
-
-
-
-    /**
-     * Fire a selection event.
-     * @param context The seleted context. May be a property, an entity, an gedcom...
-     * @param isActionPerformed true if it is an actionn event ie if a double clic occured
-     */
-    public static void fireSelection(Context context, boolean isActionPerformed) {
-        fireSelection((Component)null, context, isActionPerformed);
+//        if (from != null) {
+//            from.setMyContext(context, isActionPerformed);
+//        }
     }
 
   }

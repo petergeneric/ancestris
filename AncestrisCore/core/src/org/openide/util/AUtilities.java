@@ -86,7 +86,7 @@ public class AUtilities {
                     actions.add(a);
                 }
             } else {
-                InstanceCookie ck = (InstanceCookie) dob.getCookie(InstanceCookie.class);
+                InstanceCookie ck = dob.getCookie(InstanceCookie.class);
                 try {
                     instanceObj = ck.instanceCreate();
                 } catch (Exception ex) {

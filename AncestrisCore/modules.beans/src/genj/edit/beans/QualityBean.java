@@ -33,11 +33,11 @@ import javax.swing.JComboBox;
 public class QualityBean extends PropertyBean {
 
   /** members */
-  private JComboBox choices;
+  private JComboBox<String> choices;
   
   public QualityBean() {
     
-    choices = new JComboBox(PropertyQuality.QUALITIES);
+    choices = new JComboBox<String>(PropertyQuality.QUALITIES);
     choices.addActionListener(changeSupport);
 
     // layout

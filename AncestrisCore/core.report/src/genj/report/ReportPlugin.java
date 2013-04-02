@@ -28,7 +28,6 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.report.ReportTopComponent;
 import ancestris.gedcom.PropertyNode;
 import ancestris.view.AncestrisTopComponent;
-import ancestris.view.GenjViewInterface;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -239,7 +238,7 @@ public class ReportPlugin implements AncestrisActionProvider {
         // XXX: quick fix to allow reoprt to be launched from right clic, Reports API must be desesigned later
         ReportView view = null;
         AncestrisTopComponent atc = null;
-        for (GenjViewInterface tc : AncestrisPlugin.lookupAll(GenjViewInterface.class)) {
+        for (ReportTopComponent tc : AncestrisPlugin.lookupAll(ReportTopComponent.class)) {
 //                    if (!((Context)context).getGedcom().equals(tc.getGedcom()))
 //                        continue;
             if (!(tc.getView() instanceof ReportView)) {
@@ -256,11 +255,11 @@ public class ReportPlugin implements AncestrisActionProvider {
         }
 
         //XXX: can't be called from ancestriscore
-        AncestrisTopComponent win = ReportTopComponent.getFactory().create(contextToOpen);
+        ReportTopComponent win = ((ReportTopComponent)ReportTopComponent.getFactory().create(contextToOpen));
         //            win.init(contextToOpen);
         win.open();
         win.requestActive();
-        return (ReportView) ((GenjViewInterface) win).getView();
+        return (ReportView) ( win.getView());
     }
 
 //XXX:    @Override
