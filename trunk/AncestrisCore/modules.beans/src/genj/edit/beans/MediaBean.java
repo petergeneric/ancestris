@@ -284,7 +284,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
   
   private class Add extends Action2 implements ListSelectionListener, ChangeListener {
     
-    private JList to;
+    private JList<Property> to;
     private Action2 ok;
     private FileChooserWidget chooser = new FileChooserWidget();
     

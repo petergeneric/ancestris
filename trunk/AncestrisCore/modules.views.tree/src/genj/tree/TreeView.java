@@ -57,7 +57,6 @@ import genj.util.swing.SliderWidget;
 import genj.util.swing.UnitGraphics;
 import genj.util.swing.ViewPortAdapter;
 import genj.util.swing.ViewPortOverview;
-import genj.view.MySelectionListener;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
 import genj.view.ToolBar;
@@ -102,7 +101,7 @@ import org.openide.util.NbBundle;
  */
 // FIXME: used to find proper TreeView component for RootAction
 //XXX: not used @ServiceProvider(service=TreeView.class)
-public class TreeView extends View implements AncestrisActionProvider,MySelectionListener, Filter {
+public class TreeView extends View implements AncestrisActionProvider,Filter {
   
   protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");      
   protected final static Registry REGISTRY = Registry.get(TreeView.class);
@@ -377,18 +376,19 @@ public class TreeView extends View implements AncestrisActionProvider,MySelectio
     return model;
   }
 
-    @Override
-    public void setMyContext(Context context, boolean isActionPerformed) {
-        if (isActionPerformed) {
-            if (context == null) {
-                return;
-            }
-            setRoot(context.getEntity());
-        } else {
-            setContext(context, isActionPerformed);
-        }
-    }
-
+  //XXX: removed as selection will be done with lookups
+//    @Override
+//    public void setMyContext(Context context, boolean isActionPerformed) {
+//        if (isActionPerformed) {
+//            if (context == null) {
+//                return;
+//            }
+//            setRoot(context.getEntity());
+//        } else {
+//            setContext(context, isActionPerformed);
+//        }
+//    }
+//
   /**
    * view callback
    */
