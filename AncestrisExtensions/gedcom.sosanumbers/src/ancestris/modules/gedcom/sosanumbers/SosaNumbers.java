@@ -162,7 +162,7 @@ public class SosaNumbers implements GedcomListener {
                     try {
                         String counter = daboCounter + (families.length > 1 ? suffix.toString() + "." : ".") + ChildOrder;
                         // Skip if indi has already a sosa_aboville tag
-                        if ((dabovilleProperty = child.getProperty(DABOVILLE_TAG)) == null) {
+                        if (child.getProperty(DABOVILLE_TAG) == null) {
                             dabovilleProperty = child.addProperty(DABOVILLE_TAG, counter, setPropertyPosition(child));
                             dabovilleProperty.setGuessed(true);
 
