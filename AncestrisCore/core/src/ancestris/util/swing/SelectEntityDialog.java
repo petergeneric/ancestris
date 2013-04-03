@@ -29,18 +29,18 @@ public class SelectEntityDialog {
     Preferences modulePreferences = NbPreferences.forModule(SelectEntityDialog.class);
     String entityTag = "";
     Gedcom gedcom;
-    SelectEntityWidget selectEntityWidget = null;
+    SelectEntityPanel selectEntityPanel = null;
     NotifyDescriptor notifyDescriptor = null;
 
     public SelectEntityDialog(String title, Gedcom gedcom, String entityTag) {
         this.gedcom = gedcom;
         this.entityTag = entityTag;
         // Create instance of your panel, extends JPanel...
-        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, null);
+        selectEntityPanel = new SelectEntityPanel(gedcom, entityTag);
 
         // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params
         notifyDescriptor = new NotifyDescriptor(
-                selectEntityWidget, // instance of your panel
+                selectEntityPanel, // instance of your panel
                 title, // title of the dialog
                 NotifyDescriptor.OK_CANCEL_OPTION, // it is Yes/No dialog ...
                 NotifyDescriptor.QUESTION_MESSAGE, // ... of a question type => a question mark icon
@@ -56,15 +56,15 @@ public class SelectEntityDialog {
         if (!selectedEntityID.isEmpty()) {
             Entity selectedEntity = gedcom.getEntity(selectedEntityID);
             if (selectedEntity != null) {
-                selectEntityWidget.setSelection(selectedEntity);
+                selectEntityPanel.setSelection(selectedEntity);
             }
         }
         
         // let's display the dialog now...
         if (DialogDisplayer.getDefault().notify(notifyDescriptor) == NotifyDescriptor.OK_OPTION) {
-            modulePreferences.put("SelectEntityDialog." + gedcom.getName() + "." + entityTag, selectEntityWidget.getSelection().getId());
+            modulePreferences.put("SelectEntityDialog." + gedcom.getName() + "." + entityTag, selectEntityPanel.getSelection().getId());
 
-            return selectEntityWidget.getSelection();
+            return selectEntityPanel.getSelection();
         }
         return null;
     }
