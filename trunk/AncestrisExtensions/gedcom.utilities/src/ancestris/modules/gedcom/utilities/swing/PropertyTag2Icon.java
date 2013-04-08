@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.utilities;
+package ancestris.modules.gedcom.utilities.swing;
 
 import java.awt.Image;
 import java.util.HashMap;
