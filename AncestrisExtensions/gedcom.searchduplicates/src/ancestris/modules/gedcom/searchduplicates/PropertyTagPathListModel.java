@@ -9,7 +9,7 @@ import javax.swing.AbstractListModel;
  *
  * @author lemovice
  */
-public class PropertyTagPathListModel extends AbstractListModel {
+public class PropertyTagPathListModel extends AbstractListModel<TagPath> {
 
     ArrayList<TagPath> propertyTagArray = new ArrayList<TagPath>();
 
@@ -37,7 +37,7 @@ public class PropertyTagPathListModel extends AbstractListModel {
     }
 
     @Override
-    public Object getElementAt(int i) {
+    public TagPath getElementAt(int i) {
         return propertyTagArray.get(i);
     }
 }
