@@ -66,7 +66,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
         }
         try {
             for (String tag : entities2Ckeck) {
-                List<? extends Entity> entities = new ArrayList(gedcom.getEntities(tag));
+                List<? extends Entity> entities = new ArrayList<Entity>(gedcom.getEntities(tag));
 
                 log.log(Level.INFO, "Checking: {0}", tag);
                 if (tag.equals(Gedcom.INDI)) {
