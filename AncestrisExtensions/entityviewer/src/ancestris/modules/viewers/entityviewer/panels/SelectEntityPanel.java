@@ -1,6 +1,6 @@
 package ancestris.modules.viewers.entityviewer.panels;
 
-import ancestris.modules.gedcom.utilities.EntityTag2Icon;
+import ancestris.modules.gedcom.utilities.swing.EntityTag2Icon;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.TagPath;
