@@ -41,7 +41,6 @@ public final class TreeTopComponent extends GenjViewTopComponent implements Filt
     private static final String PREFERRED_ID = "TreeTopComponent";
 
     public ViewFactory getViewFactory() {
-        setSizeCorrect(false);
         return viewfactory;
     }
 
