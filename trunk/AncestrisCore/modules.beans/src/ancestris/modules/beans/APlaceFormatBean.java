@@ -99,31 +99,31 @@ public final class APlaceFormatBean extends JPanel {
 
         jtJuri8.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtJuri8.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbJuri8, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri8.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbJuri8, "");
 
         jtJuri7.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtJuri7.text")); // NOI18N
 
         jtJuri3.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtJuri3.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbJuri1, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbJuri1, "");
 
         jtJuri4.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtJuri4.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbJuri2, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbJuri2, "");
 
         jtJuri1.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtJuri1.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbJuri3, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri3.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbJuri3, "");
 
         jtJuri2.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtJuri2.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbJuri4, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri4.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbJuri4, "");
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbJuri5, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri5.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbJuri5, "");
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbJuri6, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri6.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbJuri6, "");
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbJuri7, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri7.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbJuri7, "");
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel1.text")); // NOI18N
         jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel1.toolTipText")); // NOI18N
@@ -159,7 +159,7 @@ public final class APlaceFormatBean extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbSpaces, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addComponent(cbSpaces, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
@@ -197,8 +197,8 @@ public final class APlaceFormatBean extends JPanel {
                             .addComponent(jLabel9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtSortOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(jtDisplayFormat, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))))
+                            .addComponent(jtSortOrder)
+                            .addComponent(jtDisplayFormat))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
