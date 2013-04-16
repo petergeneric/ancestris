@@ -212,80 +212,53 @@ public class Installer extends ModuleInstall {
                             Exceptions.printStackTrace(ex);
                         }
                     }
-                } else if (modulePreferences.getBoolean("Check-New-File-On-Server", true)) {
-                    NotifyDescriptor checkForNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
-                    ConfirmationCheckBox confirmationCheckBox = new ConfirmationCheckBox(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server.CheckBox"));
-                    confirmationCheckBox.setSelected(true);
-
-                    checkForNewFile.setAdditionalOptions(new Object[]{confirmationCheckBox});
-
-                    DialogDisplayer.getDefault().notify(checkForNewFile);
-                    modulePreferences.putBoolean("Check-New-File-On-Server", confirmationCheckBox.isSelected());
-                    if (checkForNewFile.getValue() == NotifyDescriptor.YES_OPTION) {
-                        try {
-                            url = new URL(UrlAddress);
-                            URLConnection urlC = url.openConnection();
-                            logger.log(Level.INFO, "Use URL: {0}", urlC.getURL());
-
-                            // log info about resource
-                            Date date1 = new Date(urlC.getLastModified());
-                            Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0L));
-                            logger.log(Level.INFO, "Server date {0} local date {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
-
-                            if (date1.after(date2)) {
-                                NotifyDescriptor downLoadNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
-                                DialogDisplayer.getDefault().notify(downLoadNewFile);
-                                if (downLoadNewFile.getValue() == DialogDescriptor.YES_OPTION) {
-                                    Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
-                                    t.start();
-                                } else {
-                                    TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-                                    if (bundleFile != null) {
-                                        if (bundleFile.exists()) {
-                                            Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
-                                            Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
-                                            ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
-                                        }
-                                    }
-                                }
-                            } else {
-                                NotifyDescriptor FileUpToDate = new NotifyDescriptor.Message(NbBundle.getMessage(Installer.class, "File-Up-To-Date"), NotifyDescriptor.INFORMATION_MESSAGE);
-                                DialogDisplayer.getDefault().notify(FileUpToDate);
-                                TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-                                if (bundleFile != null) {
-                                    if (bundleFile.exists()) {
-                                        Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
-                                        Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
-                                        ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
-                                    }
-                                }
-                            }
-                        } catch (MalformedURLException ex) {
-                            Exceptions.printStackTrace(ex);
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    } else {
-                        TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-                        if (bundleFile != null) {
-                            if (bundleFile.exists()) {
-                                Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", Locale.ENGLISH.toString()));
-                                Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", Locale.getDefault().toString()));
-                                ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
-                            }
-                        }
-                    }
                 } else {
                     TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-                    if (bundleFile != null) {
-                        if (bundleFile.exists()) {
-                            Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", Locale.ENGLISH.toString()));
-                            Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", Locale.getDefault().toString()));
-                            ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
+
+                    // Open the current bundle
+                    Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", Locale.ENGLISH.toString()));
+                    Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", Locale.getDefault().toString()));
+                    ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
+
+                    if (((ZipExplorerTopComponent) tc).getBundles().hasTranslation() == false && modulePreferences.getBoolean("Check-New-File-On-Server", true) == true) {
+                        NotifyDescriptor checkForNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
+                        ConfirmationCheckBox confirmationCheckBox = new ConfirmationCheckBox(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server.CheckBox"));
+                        confirmationCheckBox.setSelected(true);
+
+                        checkForNewFile.setAdditionalOptions(new Object[]{confirmationCheckBox});
+
+                        DialogDisplayer.getDefault().notify(checkForNewFile);
+                        modulePreferences.putBoolean("Check-New-File-On-Server", confirmationCheckBox.isSelected());
+                        if (checkForNewFile.getValue() == NotifyDescriptor.YES_OPTION) {
+                            try {
+                                url = new URL(UrlAddress);
+                                URLConnection urlC = url.openConnection();
+                                logger.log(Level.INFO, "Use URL: {0}", urlC.getURL());
+
+                                // log info about resource
+                                Date date1 = new Date(urlC.getLastModified());
+                                Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0L));
+                                logger.log(Level.INFO, "Server date {0} local date {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
+
+                                if (date1.after(date2)) {
+                                    NotifyDescriptor downLoadNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
+                                    DialogDisplayer.getDefault().notify(downLoadNewFile);
+                                    if (downLoadNewFile.getValue() == DialogDescriptor.YES_OPTION) {
+                                        Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
+                                        t.start();
+                                    }
+                                } else {
+                                    NotifyDescriptor FileUpToDate = new NotifyDescriptor.Message(NbBundle.getMessage(Installer.class, "File-Up-To-Date"), NotifyDescriptor.INFORMATION_MESSAGE);
+                                    DialogDisplayer.getDefault().notify(FileUpToDate);
+                                }
+                            } catch (MalformedURLException ex) {
+                                Exceptions.printStackTrace(ex);
+                            } catch (IOException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
                         }
                     }
                 }
-
                 //Load the tips into the tip loader:
                 InputStream propertiesIn = getClass().getResourceAsStream("tips.properties");
                 new TipOfTheDay(propertiesIn);
