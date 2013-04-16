@@ -27,6 +27,7 @@ import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 /**
  * Top component which displays Genj Views.
@@ -88,11 +89,17 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent{
         }
     }
 
-    //XXX: do it in editorTC? in encestrisTC?
+
     @Override
-    public void runWhenSizeIsCorrectImpl() {
+    protected void componentActivated() {
+        super.componentActivated();
         if (getViewProxy() != null) {
-            getViewProxy().setContext(getContext(), true);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                getViewProxy().setContext(getContext(), true);
+            }
+        });
         }
     }
 

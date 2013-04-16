@@ -319,47 +319,6 @@ public class AncestrisTopComponent extends TopComponent
         }
         setToolTipText(name);
     }
-    /*
-     * lors de l'initialisation de la vue la taille du panel n'est pas correcte (0,0)
-     * donc le node n'est pas centre dans la vue. Ce flag permet de lancer un recentrage lorsque
-     * la taille a ete positionnee correctement et donc de refaire un centrage correct
-     * apres.
-     *
-     * This is specially true for GenjViewTopComponent
-     */
-    private boolean sizeCorrect = true;
-
-    public boolean isSizeCorrect() {
-        return sizeCorrect;
-    }
-
-    public void setSizeCorrect(boolean value) {
-        sizeCorrect = value;
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        if (!isSizeCorrect()) {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    runWhenSizeIsCorrect();
-                }
-            });
-            setSizeCorrect(true);
-        }
-    }
-
-    //XXX: replace with componentActivated?
-    // componentActivated is called too early => we should redesign all genjview/TC interface
-    private void runWhenSizeIsCorrect() {
-        runWhenSizeIsCorrectImpl();
-        setSizeCorrect(true);
-    }
-
-    public void runWhenSizeIsCorrectImpl() {
-    }
 
     public boolean createPanel() {
         return false;

@@ -601,7 +601,7 @@ public abstract class GedcomDirectory {
      * Exception that can be thrown by operation on
      * trying to use a non existent context
      */
-    public class ContextNotFoundException extends Exception {
+    static public class ContextNotFoundException extends Exception {
 
         public ContextNotFoundException(String message) {
             super(message);

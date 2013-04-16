@@ -28,8 +28,6 @@ public final class TableTopComponent extends GenjViewTopComponent {
 
     @Override
     public ViewFactory getViewFactory() {
-        // to call setcontext when table size panel is correct
-        setSizeCorrect(false);
         return viewfactory;
     }
 
