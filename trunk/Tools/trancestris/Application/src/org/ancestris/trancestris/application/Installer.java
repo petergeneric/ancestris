@@ -82,7 +82,7 @@ public class Installer extends ModuleInstall {
                     nd.setAdditionalOptions(new Object[]{confirmationCheckBox});
                     DialogDisplayer.getDefault().notify(nd);
                     modulePreferences.putBoolean("SendOnExit", confirmationCheckBox.isSelected());
-                    if (nd.getValue() == DialogDescriptor.OK_OPTION) {
+                    if (nd.getValue() == DialogDescriptor.YES_OPTION) {
                         archiveName = zipArchive.getName();
                         filePath = zipArchive.getZipFile().getParent();
                         prefix = archiveName.substring(0, archiveName.indexOf('.'));
