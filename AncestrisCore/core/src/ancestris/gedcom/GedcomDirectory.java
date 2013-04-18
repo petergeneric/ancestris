@@ -153,6 +153,7 @@ public abstract class GedcomDirectory {
             Indi firstIndi = (Indi) context.getGedcom().getFirstEntity(Gedcom.INDI);
             if (firstIndi == null) {
                 firstIndi = (Indi) context.getGedcom().createEntity(Gedcom.INDI);
+                firstIndi.addDefaultProperties();
             }
 
             // save gedcom file
