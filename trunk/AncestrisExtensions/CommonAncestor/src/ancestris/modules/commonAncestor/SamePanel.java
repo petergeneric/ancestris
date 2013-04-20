@@ -219,6 +219,9 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
             if (previewTopComponent == null) {
                 previewTopComponent = PreviewTopComponent.createInstance(this);
+                if (previewTopComponent == null) { 
+                    return;
+                }
                 previewTopComponent.addAncestorListener(this);
                 jCheckBoxSeparatedWindow.setSelected(previewTopComponent.getSeparatedWindowFlag()); 
                 jCheckBoxSeparatedWindow.setEnabled(true);
