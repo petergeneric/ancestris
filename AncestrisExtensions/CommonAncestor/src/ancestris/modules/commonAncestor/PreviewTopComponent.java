@@ -54,14 +54,31 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
      * factory
      */
     public static synchronized PreviewTopComponent createInstance(SamePanel samePanel) {
-        PreviewTopComponent previewTopComponent = null;
         // get current current gedcom
-        //Context currentContext = App.center.getSelectedContext(true);
-        Context currentContext = Utilities.actionsGlobalContext().lookup(Context.class);
-        previewTopComponent = new PreviewTopComponent();
-        previewTopComponent.init(currentContext, samePanel);
-        previewTopComponent.addAncestorListener(previewTopComponent);
-        return previewTopComponent;
+        Context currentContext = null;
+        if ( samePanel.getContext() != null ) {
+            currentContext = samePanel.getContext();
+        } else {
+            Context lookupContext = Utilities.actionsGlobalContext().lookup(Context.class);
+            if (lookupContext != null) {
+                if (lookupContext.getGedcom() != null) {
+                    currentContext = lookupContext;
+                }
+            }
+        }
+
+        if( currentContext != null ) {
+            if( currentContext.getGedcom() != null ) {
+                PreviewTopComponent previewTopComponent = new PreviewTopComponent();
+                previewTopComponent.init(currentContext, samePanel);
+                previewTopComponent.addAncestorListener(previewTopComponent);
+                return previewTopComponent;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     public PreviewTopComponent() {
@@ -120,7 +137,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
             isDocking = true;
             mode.dockInto(this);
             isDocking = false;
-        }
+    }
         open();
         requestActive();
     }
