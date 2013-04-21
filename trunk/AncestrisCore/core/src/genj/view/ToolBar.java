@@ -10,32 +10,70 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.view;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.Action;
+import javax.swing.Box;
 import javax.swing.JComponent;
+import javax.swing.JToolBar;
 
 /**
- * Toolbar abstraction
+ * Toolbar abstraction.
+ * FIXME: we will have to see whether this class should be only for genj views
+ * or for regular ancestrisTopComponents. 
+ * Don't forget it is used in PreviewTopCompenent
  */
-public interface ToolBar {
+public class ToolBar {
 
-	public void add(Action action);
-	
-	public void add(JComponent component);
+    AtomicBoolean notEmpty = new AtomicBoolean(false);
+    JToolBar bar = new JToolBar();
 
-        public void addGlue();
-	
-	public void addSeparator();
-	
-	public void beginUpdate();
-	
-	public void endUpdate();
+    public void add(Action action) {
+        bar.add(action);
+        bar.setVisible(true);
+        notEmpty.set(true);
+    }
+
+    public void add(JComponent component) {
+        bar.add(component);
+        bar.setVisible(true);
+        component.setFocusable(false);
+        notEmpty.set(true);
+    }
+
+    public void addSeparator() {
+        bar.addSeparator();
+        bar.setVisible(true);
+        notEmpty.set(true);
+    }
+
+    public JToolBar getToolBar() {
+        return (notEmpty.get()) ? bar : null;
+    }
+
+    public void setOrientation(int orientation) {
+        bar.setOrientation(orientation);
+    }
+
+    public void beginUpdate() {
+        notEmpty.set(false);
+        bar.removeAll();
+        bar.setVisible(false);
+//      bar.validate();
+    }
+
+    public void endUpdate() {
+    }
+
+    public void addGlue() {
+        bar.add(Box.createGlue());
+    }
 }

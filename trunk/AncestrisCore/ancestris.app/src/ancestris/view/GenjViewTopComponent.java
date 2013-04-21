@@ -11,7 +11,6 @@
  */
 package ancestris.view;
 
-import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -19,50 +18,33 @@ import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewFactory;
 import java.awt.Image;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 /**
  * Top component which displays Genj Views.
  */
-public abstract class GenjViewTopComponent extends AncestrisTopComponent{
+public abstract class GenjViewTopComponent extends AncestrisTopComponent
+        implements GedcomFileListener {
 
     private final static Logger LOG = Logger.getLogger("ancestris.view");
 
     /*
      * The following methods are used in conjunction with old Genj View classes.
-     * Il getViewFactory returns non null, then this TopComponent proxies (thru
-     * ViewProxy class) that View Class.
+     * If getViewFactory returns non null, then this TopComponent proxies
+     * that View Class.
      * If it is null, then this will be a more conventionnal TopComponent.
      */
     /**
      * Must be overiden for a Genj View TopComponent
+     *
      * @return
      */
     public abstract ViewFactory getViewFactory();
-    private GenjViewProxy viewProxy = null;
-
-    /**
-     * return Genj View proxyinstance for this view factory if applicable
-     * @return
-     */
-    private GenjViewProxy getViewProxy() {
-        if (getViewFactory() == null) {
-            viewProxy = null;
-            return null;
-        }
-        if (viewProxy == null) {
-            viewProxy = new GenjViewProxy(getViewFactory());
-        }
-        return viewProxy;
-    }
+//    private GenjViewProxy viewProxy = null;
+    private View view;
 
     @Override
     public Image getImageIcon() {
@@ -75,7 +57,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent{
     @Override
     public void setName() {
         if (getViewFactory() != null) {
-            setName(getViewProxy().getName());
+            setName(getViewFactory().getTitle());
         }
         super.setName();
     }
@@ -83,189 +65,97 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent{
     @Override
     public void setToolTipText() {
         if (getViewFactory() != null) {
-            setToolTipText(getViewProxy().getToolTipText());
+            setToolTipText(getViewFactory().getTitle());
         } else {
             super.setToolTipText();
         }
     }
 
-
     @Override
     protected void componentActivated() {
         super.componentActivated();
-        if (getViewProxy() != null) {
-        SwingUtilities.invokeLater(new Runnable() {
+        if (getViewFactory() != null) {
+            SwingUtilities.invokeLater(new Runnable() {
 
-            public void run() {
-                getViewProxy().setContext(getContext(), true);
-            }
-        });
+                public void run() {
+                    if (view != null) {
+                        view.setContext(getContext(), true);
+                    }
+                }
+            });
         }
+    }
+
+    // ToolBar support
+    @Override
+    public JToolBar getToolBar() {
+        if (view == null) {
+            return null;
+        }
+
+        final ToolBar bar = new ToolBar();
+
+        bar.beginUpdate();
+        view.populate(bar);
+        bar.endUpdate();
+
+        return bar.getToolBar();
     }
 
     //XXX: do it in editorTC? in encestrisTC?
     @Override
     public boolean createPanel() {
-        JPanel panel = getViewProxy().createPanel();
-        if (panel == null) {
+        if (view == null && getViewFactory() != null) {
+            view = getViewFactory().createView();
+        }
+        if (view == null) {
             return false;
         }
-        setPanel(panel);
+
+        setPanel(view);
         setContext(getContext(), true);
-        setToolBar(getViewProxy().createToolBar());
+        addToolBar();
         return true;
     }
 
     //XXX: do it in editorTC
     @Override
     public boolean canClose() {
-        if (getViewProxy().view != null) {
-            getViewProxy().view.closing();
+        if (view != null) {
+            view.closing();
         }
         return super.canClose();
     }
 
     @Override
     protected void setContextImpl(Context context, boolean isActionPerformed) {
-        getViewProxy().setContext(context, isActionPerformed);
+        if (view != null) {
+            view.setContext(context, isActionPerformed);
+        } else {
+            super.setContextImpl(context, isActionPerformed);
+        }
     }
 
     public View getView() {
-        return getViewProxy().view;
+        return view;
     }
 
-    /**
-     * A class that proxies Genj View class to be used by an AncestrisTopComponent.
-     * @author daniel
-     */
-    //XXX: this class will be removed in 0.8
-    private class GenjViewProxy implements GedcomFileListener {
-        //XXX:: must be private (temporarily set to public to be accessed from GenjViewTC
-
-        private View view;
-        private ViewFactory factory;
-//        private Context context;
-
-        public GenjViewProxy() {
+    @Override
+    public void commitRequested(Context context) {
+        if (!context.sameGedcom(getContext())) {
+            LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
+            return;
         }
-
-        public GenjViewProxy(ViewFactory factory) {
-            this.factory = factory;
-        }
-
-        public JPanel createPanel() {
-            if (factory == null) {
-                return null;
-            }
-            // create the view if necessary
-            if (view == null) {
-                view = factory.createView();
-                //FIXME: this is useless, it should have been 
-                //AncestrisPlugin.register(view);
-                // this must be done in each View Class that needs it
-                AncestrisPlugin.register(this);
-            }
-            return view;
-        }
-
-
-        public String getName() {
-            if (factory == null) {
-                return "";
-            }
-            return factory.getTitle();
-        }
-
-        public String getToolTipText() {
-            if (factory == null) {
-                return "";
-            }
-            return (factory.getTitle());
-        }
-
-        // ToolBar support
-        public JToolBar createToolBar() {
-            if (view == null) {
-                return null;
-            }
-
-            AToolBar bar = new AToolBar();
-
-            bar.beginUpdate();
-            view.populate(bar);
-            bar.endUpdate();
-
-            return bar.getToolBar();
-        }
-
-        protected void setContext(Context context, boolean isActionPerformed) {
-            if (view == null) {
-                return;
-            }
-            view.setContext(context, isActionPerformed);
-        }
-
-        public void commitRequested(Context context) {
-            if (!context.sameGedcom(getContext())) {
-                LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
-                return;
-            }
-            if (view != null) {
-                view.commit();
-            }
-        }
-
-        public void gedcomClosed(Gedcom gedcom) {
-        }
-
-        public void gedcomOpened(Gedcom gedcom) {
+        if (view != null) {
+            view.commit();
         }
     }
 
-    static private class AToolBar implements ToolBar {
+    @Override
+    public void gedcomClosed(Gedcom gedcom) {
+    }
 
-        AtomicBoolean notEmpty = new AtomicBoolean(false);
-        JToolBar bar = new JToolBar();
-
-        public void add(Action action) {
-            bar.add(action);
-            bar.setVisible(true);
-            notEmpty.set(true);
-        }
-
-        public void add(JComponent component) {
-            bar.add(component);
-            bar.setVisible(true);
-            component.setFocusable(false);
-            notEmpty.set(true);
-        }
-
-        public void addSeparator() {
-            bar.addSeparator();
-            bar.setVisible(true);
-            notEmpty.set(true);
-        }
-
-        public JToolBar getToolBar() {
-            return (notEmpty.get()) ? bar : null;
-        }
-
-        private void setOrientation(int orientation) {
-            bar.setOrientation(orientation);
-        }
-
-        public void beginUpdate() {
-            notEmpty.set(false);
-            bar.removeAll();
-            bar.setVisible(false);
-//      bar.validate();
-        }
-
-        public void endUpdate() {
-        }
-
-        public void addGlue() {
-            bar.add(Box.createGlue());
-        }
+    @Override
+    public void gedcomOpened(Gedcom gedcom) {
     }
 }
