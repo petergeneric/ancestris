@@ -41,7 +41,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
     private static final String SEPARATED_WINDOW = "separatedWindow";
     private static final String PREVIEW_ZOOM = "previewZoom";
     private PreviewView view;
-    AToolBar bar = null;
+    ToolBar bar = null;
     private Context context;
     IGraphicsOutput output = new ScreenOutput();
     protected genj.util.Registry registry;
@@ -105,7 +105,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         view.setZoom(Double.valueOf(registry.get(PREVIEW_ZOOM, "1.0")));
 
         // add tool bar at WEST
-        bar = new AToolBar();
+        bar = new ToolBar();
         bar.beginUpdate();
         view.populate(bar);
         bar.endUpdate();
@@ -278,61 +278,61 @@ param displayedId
         //System.out.println("ancestorMoved" + ae.paramString());
     }
 
-    /////////////////////////////////////////////////////////////////////////////
-    // AToolBar
-    /////////////////////////////////////////////////////////////////////////////
-    static private class AToolBar implements ToolBar {
-
-        AtomicBoolean notEmpty = new AtomicBoolean(false);
-        JToolBar bar = new JToolBar();
-
-        public JToolBar getToolBar() {
-            return (notEmpty.get()) ? bar : null;
-        }
-
-        @Override
-        public void add(Action action) {
-            bar.add(action);
-            bar.setVisible(true);
-            notEmpty.set(true);
-        }
-
-        @Override
-        public void add(JComponent component) {
-            bar.add(component);
-            bar.setVisible(true);
-            component.setFocusable(false);
-            notEmpty.set(true);
-        }
-
-        @Override
-        public void addSeparator() {
-            bar.addSeparator();
-            bar.setVisible(true);
-            notEmpty.set(true);
-        }
-
-        private void setOrientation(int orientation) {
-            bar.setOrientation(orientation);
-        }
-
-        @Override
-        public void beginUpdate() {
-            notEmpty.set(false);
-            bar.removeAll();
-            bar.setVisible(false);
-        }
-
-        @Override
-        public void endUpdate() {
-        }
-
-        @Override
-        public void addGlue() {
-            bar.add(Box.createGlue());
-        }
-    }
-
+//    /////////////////////////////////////////////////////////////////////////////
+//    // AToolBar
+//    /////////////////////////////////////////////////////////////////////////////
+//    static private class AToolBar implements ToolBar {
+//
+//        AtomicBoolean notEmpty = new AtomicBoolean(false);
+//        JToolBar bar = new JToolBar();
+//
+//        public JToolBar getToolBar() {
+//            return (notEmpty.get()) ? bar : null;
+//        }
+//
+//        @Override
+//        public void add(Action action) {
+//            bar.add(action);
+//            bar.setVisible(true);
+//            notEmpty.set(true);
+//        }
+//
+//        @Override
+//        public void add(JComponent component) {
+//            bar.add(component);
+//            bar.setVisible(true);
+//            component.setFocusable(false);
+//            notEmpty.set(true);
+//        }
+//
+//        @Override
+//        public void addSeparator() {
+//            bar.addSeparator();
+//            bar.setVisible(true);
+//            notEmpty.set(true);
+//        }
+//
+//        private void setOrientation(int orientation) {
+//            bar.setOrientation(orientation);
+//        }
+//
+//        @Override
+//        public void beginUpdate() {
+//            notEmpty.set(false);
+//            bar.removeAll();
+//            bar.setVisible(false);
+//        }
+//
+//        @Override
+//        public void endUpdate() {
+//        }
+//
+//        @Override
+//        public void addGlue() {
+//            bar.add(Box.createGlue());
+//        }
+//    }
+//
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 

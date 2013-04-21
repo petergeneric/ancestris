@@ -512,15 +512,27 @@ public class AncestrisTopComponent extends TopComponent
     public void setRestored(boolean b) {
         isRestored = b;
     }
+
     // ToolBar support
     private JToolBar bar = null;
 
-    public void setToolBar(JToolBar bar) {
-        this.bar = bar;
+    public void addToolBar() {
+        this.bar = getToolBar();
 
         if (bar != null) {
             add(bar, genj.util.Registry.get(this).get("toolbar", BorderLayout.NORTH));
         }
+    }
+
+    /**
+     * Return toolbar associated to this TopComponent.
+     * If no toolbar exists, this function must return null.
+     * Default value is no toolbar.
+     * 
+     * @return 
+     */
+    public JToolBar getToolBar(){
+        return null;
     }
 
     /**
