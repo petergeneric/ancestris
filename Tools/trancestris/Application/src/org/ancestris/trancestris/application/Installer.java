@@ -118,6 +118,11 @@ public class Installer extends ModuleInstall {
 
                             Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
                             t.start();
+                            try {
+                                t.join();
+                            } catch (InterruptedException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
                         }
                     }
                 }
