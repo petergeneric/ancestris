@@ -43,7 +43,7 @@ import org.openide.util.NbBundle;
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSibling")
 @ActionRegistration(displayName = "#create.sibling")
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 @NbBundle.Messages("create.sibling=Add Sibling")
 public class CreateSibling extends CreateRelationship {
 

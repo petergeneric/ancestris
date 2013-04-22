@@ -40,7 +40,7 @@ import org.openide.util.LookupEvent;
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateAlias")
 @ActionRegistration(displayName = "#create.alias")
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateAlias extends CreateRelationship {
   
   private Indi source;

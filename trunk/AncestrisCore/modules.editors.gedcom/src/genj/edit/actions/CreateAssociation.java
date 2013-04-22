@@ -41,7 +41,7 @@ import org.openide.util.LookupEvent;
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateAssociation")
 @ActionRegistration(displayName = "#create.association")
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateAssociation extends CreateRelationship {
 
     private Property target;

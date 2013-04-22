@@ -2,26 +2,34 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Ancestris">
-    <folder name="Actions">
-        <folder name="GedcomProperty">
-            <folder name="properties">
-                <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxPropertiesDisplayName"/>
-                 <attr name="position" intvalue="900"/>
-           </folder>
-            <folder name="property">
-                <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxPropertyDisplayName"/>
-                 <attr name="position" intvalue="1000"/>
-           </folder>
-            <folder name="entity">
-                <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxEntityDisplayName"/>
-                 <attr name="position" intvalue="1100"/>
-            </folder>
-            <folder name="gedcom">
-                <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxGedcomDisplayName"/>
-                 <attr name="position" intvalue="1200"/>
+        <folder name="Actions">
+            <folder name="GedcomProperty">
+                <folder name="AddIndiOrFam">
+                    <attr name="displayName" stringvalue="Add a Family link"/>
+                    <attr name="position" intvalue="500"/>
+                </folder>
+                <folder name="AddOther">
+                    <attr name="displayName" stringvalue="Add other"/>
+                    <attr name="position" intvalue="510"/>
+                </folder>
+                <folder name="properties">
+                    <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxPropertiesDisplayName"/>
+                    <attr name="position" intvalue="900"/>
+                </folder>
+                <folder name="property">
+                    <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxPropertyDisplayName"/>
+                    <attr name="position" intvalue="1000"/>
+                </folder>
+                <folder name="entity">
+                    <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxEntityDisplayName"/>
+                    <attr name="position" intvalue="1100"/>
+                </folder>
+                <folder name="gedcom">
+                    <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxGedcomDisplayName"/>
+                    <attr name="position" intvalue="1200"/>
+                </folder>
             </folder>
         </folder>
-    </folder>
     </folder>
     <folder name="Loaders">
         <folder name="text">
