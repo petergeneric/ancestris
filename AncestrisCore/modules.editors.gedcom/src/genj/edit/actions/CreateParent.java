@@ -43,7 +43,7 @@ import org.openide.awt.ActionRegistration;
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateParent")
 @ActionRegistration(displayName = "#create.parent")
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateParent extends CreateRelationship {
 
     private final static ImageIcon IMG = new ImageIcon(CreateParent.class, "Parents.png");

@@ -37,6 +37,7 @@ public class CreateXReference extends CreateRelationship {
 //    super(getName(getSource(), sourceTag), getTargetType(getSource(), sourceTag));
 //    super(getName(source, sourceTag), getTargetType(source, sourceTag));
         this.sourceTag = sourceTag;
+        setImage(Gedcom.getEntityImage(sourceTag));
         setContextProperties(getSource());
         contextChanged();
     }
@@ -129,26 +130,73 @@ public class CreateXReference extends CreateRelationship {
         return xref;
     }
 
-    //XXX: disable unapplicable entries
-    @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateXRefMenu")
-    @ActionRegistration(displayName = "#create.xref")
+//    //XXX: disable unapplicable entries
+//    @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateXRefMenu")
+//    @ActionRegistration(displayName = "#create.xref")
+//    @ActionReferences(value = {
+//        @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+//    @NbBundle.Messages("create.xref=Create XRef")
+//    public static SubMenuAction getCreateXRefMenu() {
+//        SubMenuAction menuAction = new SubMenuAction(NbBundle.getMessage(CreateEntity.class, "create.xref"));
+//        menuAction.putValue(Action.SMALL_ICON, Gedcom.getImage());
+//        if (subActions == null) {
+//            subActions = new ArrayList<CreateXReference>(6);
+//
+//            subActions.add(new CreateXReference(null, "FAMC"));
+//            subActions.add(new CreateXReference(null, "NOTE"));
+//            subActions.add(new CreateXReference(null, "REPO"));
+//            subActions.add(new CreateXReference(null, "SOUR"));
+//            subActions.add(new CreateXReference(null, "SUBM"));
+//            subActions.add(new CreateXReference(null, "OBJE"));
+//            menuAction.setActions(subActions);
+//        }
+//        return menuAction;
+//    }
+    
+        @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefFamc")
+    @ActionRegistration(displayName = "create.famc")
     @ActionReferences(value = {
-        @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
-    @NbBundle.Messages("create.xref=Create XRef")
-    public static SubMenuAction getCreateXRefMenu() {
-        SubMenuAction menuAction = new SubMenuAction(NbBundle.getMessage(CreateEntity.class, "create.xref"));
-        menuAction.putValue(Action.SMALL_ICON, Gedcom.getImage());
-        if (subActions == null) {
-            subActions = new ArrayList<CreateXReference>(6);
-
-            subActions.add(new CreateXReference(null, "FAMC"));
-            subActions.add(new CreateXReference(null, "NOTE"));
-            subActions.add(new CreateXReference(null, "REPO"));
-            subActions.add(new CreateXReference(null, "SOUR"));
-            subActions.add(new CreateXReference(null, "SUBM"));
-            subActions.add(new CreateXReference(null, "OBJE"));
-            menuAction.setActions(subActions);
-        }
-        return menuAction;
+        @ActionReference(position=900, path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    public static CreateXReference addFamcFactory() {
+        return new CreateXReference(null, "FAMC");
     }
+
+        @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefNote")
+    @ActionRegistration(displayName = "create.note")
+    @ActionReferences(value = {
+        @ActionReference(position=100, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+    public static CreateXReference addNoteFactory() {
+        return new CreateXReference(null, "NOTE");
+    }
+
+        @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefRepo")
+    @ActionRegistration(displayName = "create.repo")
+    @ActionReferences(value = {
+        @ActionReference(position=400, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+    public static CreateXReference addRepoFactory() {
+        return new CreateXReference(null, "REPO");
+    }
+        @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefSour")
+    @ActionRegistration(displayName = "create.sour")
+    @ActionReferences(value = {
+        @ActionReference(position=300, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+    public static CreateXReference addSourFactory() {
+        return new CreateXReference(null, "SOUR");
+    }
+        @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefSubm")
+    @ActionRegistration(displayName = "create.subm")
+    @ActionReferences(value = {
+        @ActionReference(position=500, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+    public static CreateXReference addSubmFactory() {
+        return new CreateXReference(null, "SUBM");
+    }
+        @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefObje")
+    @ActionRegistration(displayName = "create.obje")
+    @ActionReferences(value = {
+        @ActionReference(position=200, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+    public static CreateXReference addObjeFactory() {
+        return new CreateXReference(null, "OBJE");
+    }
+
+    
 }
