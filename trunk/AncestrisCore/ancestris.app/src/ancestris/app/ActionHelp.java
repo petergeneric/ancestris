@@ -5,14 +5,14 @@
 package ancestris.app;
 
 import ancestris.view.Images;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import org.netbeans.api.javahelp.Help;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
-public final class ActionHelp extends Action2 {
+public final class ActionHelp extends AbstractAncestrisAction {
 
 
     /** constructor */

@@ -10,7 +10,7 @@ package ancestris.reports.tools;
 import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -826,7 +826,7 @@ public class ReportToolBox extends Report {
       final List listEntitiesX = new ArrayList(entities);
       String fileName = "";
       try {
-          File file = getFileFromUser(translate("ImportTags"), Action2.TXT_OK);
+          File file = getFileFromUser(translate("ImportTags"), AbstractAncestrisAction.TXT_OK);
           if (file == null) return false; 
           // gedcom.getOrigin().getFile().getParentFile().getAbsolutePath() + File.separator + gedcom.getOrigin().getName() + "_rela.txt";
           fileName = file.getAbsolutePath(); 

@@ -7,7 +7,7 @@ package ancestris.app;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
 import genj.gedcom.Context;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -19,7 +19,7 @@ import org.openide.util.Utilities;
 /**
  * Action - Close
  */
-public class ActionClose extends Action2 {
+public class ActionClose extends AbstractAncestrisAction {
 
     private Context contextBeingClosed = null;
 

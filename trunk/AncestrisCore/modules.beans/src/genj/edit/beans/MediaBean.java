@@ -37,7 +37,7 @@ import genj.io.InputSource.FileInput;
 import genj.util.DefaultValueMap;
 import genj.util.Origin;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooserWidget;
 import genj.util.swing.NestedBlockLayout;
@@ -113,7 +113,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
     }
   };
   private ToolbarWidget actions = new ToolbarWidget();
-  private Action2 add = new Add(), del = new Del();
+  private AbstractAncestrisAction add = new Add(), del = new Del();
   
   /**
    * Constructor
@@ -282,10 +282,10 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
     return result;
   }
   
-  private class Add extends Action2 implements ListSelectionListener, ChangeListener {
+  private class Add extends AbstractAncestrisAction implements ListSelectionListener, ChangeListener {
     
     private JList<Property> to;
-    private Action2 ok;
+    private AbstractAncestrisAction ok;
     private FileChooserWidget chooser = new FileChooserWidget();
     
     Add(File file) {
@@ -347,7 +347,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       options.add(new JLabel(RES.getString("file.add", "...")));
       options.add(new JScrollPane(to));
 
-      ok = Action2.ok();
+      ok = AbstractAncestrisAction.ok();
 
       to.addListSelectionListener(this);
       chooser.addChangeListener(this);
@@ -357,7 +357,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       
       validate();
       
-      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, options, Action2.andCancel(ok), MediaBean.this))
+      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, options, AbstractAncestrisAction.andCancel(ok), MediaBean.this))
         return;
 
       // tell thumbnail widget
@@ -395,10 +395,10 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
     }
   } //Add
   
-  private class Del extends Action2 implements PropertyChangeListener,ListSelectionListener {
+  private class Del extends AbstractAncestrisAction implements PropertyChangeListener,ListSelectionListener {
     
     private JList from;
-    private Action2 ok;
+    private AbstractAncestrisAction ok;
     
     public Del() {
       setImage(ThumbnailWidget.IMG_THUMBNAIL.getGrayedOut().getOverLayed(ancestris.core.resources.Images.imgDel));
@@ -455,11 +455,11 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       options.add(new JLabel(RES.getString("file.del", "...")));
       options.add(new JScrollPane(from));
 
-      ok = Action2.ok();
+      ok = AbstractAncestrisAction.ok();
 
       from.addListSelectionListener(this);
         
-      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, options, Action2.andCancel(ok), e))
+      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, options, AbstractAncestrisAction.andCancel(ok), e))
         return;
       
       // remove props from source

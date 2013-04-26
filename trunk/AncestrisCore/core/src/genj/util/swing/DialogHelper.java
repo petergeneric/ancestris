@@ -19,6 +19,7 @@
  */
 package genj.util.swing;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -74,11 +75,11 @@ public class DialogHelper {
     private static DialogManager dialogManager = null;
   
   public static void showError(String title, String msg, Throwable t, Object source) {
-    openDialog(title, DialogHelper.ERROR_MESSAGE, msg, Action2.okOnly(), source);
+    openDialog(title, DialogHelper.ERROR_MESSAGE, msg, AbstractAncestrisAction.okOnly(), source);
   }
 
   public static void showInfo(String title, String msg, Object source) {
-    openDialog(title, DialogHelper.INFORMATION_MESSAGE, msg, Action2.okOnly(), source);
+    openDialog(title, DialogHelper.INFORMATION_MESSAGE, msg, AbstractAncestrisAction.okOnly(), source);
   }
   
   public static int openDialog(String title, int messageType,  String txt, Action[] actions, Object source) {
@@ -145,7 +146,7 @@ public class DialogHelper {
     JLabel lb = new JLabel(txt);
     final JList list = new JList(values.toArray(new String[values.size()]));
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    final Action[] actions = Action2.okCancel();
+    final Action[] actions = AbstractAncestrisAction.okCancel();
     list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent e) {
         actions[0].setEnabled(list.getSelectedIndex()>=0);
@@ -173,7 +174,7 @@ public class DialogHelper {
       // prepare text field and label
     JLabel lb = new JLabel(txt);
     final TextFieldWidget tf = new TextFieldWidget(value, 24);
-    final Action[] actions = Action2.okCancel();
+    final Action[] actions = AbstractAncestrisAction.okCancel();
     tf.getDocument().addDocumentListener(new DocumentListener() {
       public void changedUpdate(DocumentEvent e) {
       }
@@ -225,7 +226,7 @@ public class DialogHelper {
       this.title = title;
       this.messageType = messageType;
       this.content = content;
-      this.actions = actions!=null ? actions : Action2.okOnly();
+      this.actions = actions!=null ? actions : AbstractAncestrisAction.okOnly();
       
       // find window for source
       parent = null;

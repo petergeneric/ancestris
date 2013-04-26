@@ -27,22 +27,31 @@ import ancestris.core.actions.SubMenuAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.report.ReportTopComponent;
 import ancestris.gedcom.PropertyNode;
+import ancestris.util.Utilities;
 import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
+import static genj.report.Bundle.*;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
+import org.openide.util.ContextAwareAction;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -50,7 +59,17 @@ import org.openide.util.lookup.ServiceProvider;
  * Plugin
  */
 @ServiceProvider(service = AncestrisActionProvider.class)
-@NbBundle.Messages({"popup.title=Run Reports"})
+@NbBundle.Messages({
+    "report.popup.title=Run Reports",
+    "# {0} - Property Label",
+    "# {1} - Property",
+    "report.runon=Run report on {0} '{1}'",
+    "# {0} - Properties, ",
+    "# {1} - count",
+    "report.runon.group=Run report on '{0}' ({1}",
+    "# {0} - Gedcom",
+    "report.runon.gedcom=Run report on Gedcom {0}",
+})
 public class ReportPlugin implements AncestrisActionProvider {
 
     private final static Resources RESOURCES = Resources.get(ReportPlugin.class);
@@ -80,47 +99,62 @@ public class ReportPlugin implements AncestrisActionProvider {
         Context context = new Context(gedcom, null, props);
         List<Action> result = new ArrayList<Action>(5);
 
-        // props
-        List<? extends Property> properties = context.getProperties();
-        if (properties.size() > 1) {
-            SubMenuAction group = new SubMenuAction("'" + Property.getPropertyNames(properties, 5) + "' (" + properties.size() + ")");
-            getActions(properties, context.getGedcom(), group);
-            result.add(group);
-        } else if (properties.size() == 1) {
-            Property property = context.getProperty();
-            SubMenuAction group = new SubMenuAction(
-                    Property.LABEL + " '" + TagPath.get(property).getName() + '\'',
-                    property.getImage(false));
-            getActions(context.getProperty(), context.getGedcom(), group);
-            result.add(group);
-        }
-
-        // entities
-        List<? extends Entity> entities = context.getEntities();
-        if (entities.size() > 1) {
-            SubMenuAction group = new SubMenuAction("'" + Property.getPropertyNames(entities, 5) + "' (" + entities.size() + ")");
-            getActions(entities, context.getGedcom(), group);
-            result.add(group);
-        } else if (entities.size() == 1) {
-            Entity entity = context.getEntity();
-            SubMenuAction group = new SubMenuAction(
-                    Gedcom.getName(entity.getTag(), false) + " '" + entity.getId() + '\'',
-                    entity.getImage());
-            getActions(context.getEntity(), context.getGedcom(), group);
-            result.add(group);
-        }
-
-        // gedcom
-        SubMenuAction group = new SubMenuAction("Gedcom '" + gedcom.getName() + '\'', Gedcom.getImage());
-        getActions(context.getGedcom(), context.getGedcom(), group);
-        result.add(group);
+        result.add(getPropertiesMenuActions(context));
+        result.add(getEntitiesMenuActions(context));
+        result.add(getGedcomMenuActions(context));
 
         if (!result.isEmpty()){
-            result.add(0, CommonActions.createSeparatorAction(NbBundle.getMessage(ReportPlugin.class, "popup.title")));
+            result.add(0, CommonActions.createSeparatorAction(NbBundle.getMessage(ReportPlugin.class, "report.popup.title")));
             result.add(0, null);
         }
         return result;
         // done
+    }
+    
+    //XXX: replace with some interface (Action or ActionListener)
+    private SubMenuAction getPropertiesMenuActions(Context context){
+        SubMenuAction group=null;
+        // props
+        List<? extends Property> properties = context.getProperties();
+        if (properties.size() > 1) {
+            group = new SubMenuAction(
+                    report_runon_group(Property.getPropertyNames(properties, MAX_HISTORY),properties.size()));
+            getActions(properties, context.getGedcom(), group);
+        } else if (properties.size() == 1) {
+            Property property = context.getProperty();
+            group = new SubMenuAction(
+                    report_runon(Property.LABEL, TagPath.get(property).getName()),
+                    property.getImage(false));
+            getActions(context.getProperty(), context.getGedcom(), group);
+        }
+        return group;
+    }
+
+    //XXX: replace with some interface (Action or ActionListener)
+    private SubMenuAction getEntitiesMenuActions(Context context){
+        SubMenuAction group=null;
+        // entities
+        List<? extends Entity> entities = context.getEntities();
+        if (entities.size() > 1) {
+            group = new SubMenuAction(
+                    report_runon_group(Property.getPropertyNames(entities, MAX_HISTORY),entities.size()));
+            getActions(entities, context.getGedcom(), group);
+        } else if (entities.size() == 1) {
+            Entity entity = context.getEntity();
+            group = new SubMenuAction(
+                    report_runon(Gedcom.getName(entity.getTag(), false), entity.getId()),
+                    entity.getImage());
+            getActions(context.getEntity(), context.getGedcom(), group);
+        }
+        return group;
+    }
+
+    //XXX: replace with some interface (Action or ActionListener)
+    private SubMenuAction getGedcomMenuActions(Context context){
+        // gedcom
+        SubMenuAction group = new SubMenuAction("Gedcom '" + context.getGedcom().getName() + '\'', Gedcom.getImage());
+        getActions(context.getGedcom(), context.getGedcom(), group);
+        return group;
     }
 
 //    /**
@@ -182,10 +216,54 @@ public class ReportPlugin implements AncestrisActionProvider {
         // done
     }
 
+//    XXX: we should put action in layer    
+//@ActionID(category = "Reports", id = "genj.report.EntitiesAction")
+//@ActionRegistration(displayName = "SetRoot")
+//@ActionReferences({
+//    @ActionReference(path = "Ancestris/Actions/GedcomProperty", separatorBefore = 950, position = 1000)})
+//public static Action getEntityReportsActions(){
+//    return new EntitiesReportActions();
+//}
+///**
+// * ActionRoot
+// */
+//public static class ReportSubMenuActions extends SubMenuAction {
+//
+//    public @Override
+//    void actionPerformed(ActionEvent e) {
+//        assert false;
+//    }
+//
+//    public @Override
+//    Action createContextAwareInstance(org.openide.util.Lookup context) {
+//
+//
+//        
+//        // entities
+//        Collection<? extends Entity> entities = context.lookupAll(Entity.class);
+//        if (entities.size() > 1) {
+//            SubMenuAction group = new SubMenuAction(
+//                    report_runon_group(Property.getPropertyNames(entities, MAX_HISTORY),entities.size()));
+//            getActions(entities, Utilities.getGedcomFromContext(context), group);
+//            return group;
+//        } else if (entities.size() == 1) {
+//            Entity entity = context.lookup(Entity.class);
+//            SubMenuAction group = new SubMenuAction(
+//                    report_runon(Gedcom.getName(entity.getTag(), false), entity.getId()),
+//                    entity.getImage());
+//            getActions(entity, entity.getGedcom(), group);
+//            return group;
+//        }
+//        return CommonActions.NOOP;
+//    }
+//}
+//
+//    
+    
     /**
      * Run a report
      */
-    private class ActionRun extends Action2 {
+    private class ActionRun extends AbstractAncestrisAction {
 
         /** context */
         private Object context;

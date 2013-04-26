@@ -15,7 +15,7 @@ import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -47,7 +47,7 @@ public final class OpenEditorAction
         return new OpenEditor(context.lookup(Context.class));
     }
 
-    private static final class OpenEditor extends Action2 {
+    private static final class OpenEditor extends AbstractAncestrisAction {
 
         Context context;
 

@@ -5,7 +5,7 @@
 
 package ancestris.util;
 
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Action;
@@ -15,7 +15,7 @@ import org.openide.windows.TopComponent;
  *
  * @author daniel
  */
-public final class GenjAction  extends Action2 {
+public final class GenjAction  extends AbstractAncestrisAction {
 
 /** Opens a top component.
  *
@@ -81,9 +81,9 @@ public final class GenjAction  extends Action2 {
         String iconBase = (String)map.get("iconBase"); // NOI18N
         boolean noIconInMenu = (Boolean)map.get("noIconInMenu"); // NOI18N
 
-        if (delegate instanceof Action2){
-            displayName = ((Action2)delegate).getText();
-            iconBase = ((Action2)delegate).getImage().toString();
+        if (delegate instanceof AbstractAncestrisAction){
+            displayName = ((AbstractAncestrisAction)delegate).getText();
+            iconBase = ((AbstractAncestrisAction)delegate).getImage().toString();
         }
 
         return createGenjAction(delegate,displayName,iconBase,noIconInMenu);

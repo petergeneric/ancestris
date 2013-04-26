@@ -19,6 +19,7 @@
  */
 package genj.util.swing;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.Trackable;
 
 import java.awt.BorderLayout;
@@ -113,7 +114,7 @@ public class ProgressWidget extends JPanel {
     super.removeNotify();
   }
   
-  private class Cancel extends Action2 {
+  private class Cancel extends AbstractAncestrisAction {
     private Cancel() {
       setImage(IMG_CANCEL);
     }

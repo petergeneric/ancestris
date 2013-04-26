@@ -20,7 +20,7 @@
 package genj.tree;
 
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ColorsWidget;
 import genj.util.swing.FontChooser;
 import genj.util.swing.NestedBlockLayout;
@@ -51,7 +51,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * The settings component for the Tree View */
+ * The settings component for the Tree View
+ */
 public class TreeViewSettings extends JTabbedPane {
   
   private final static Resources RESOURCES = Resources.get(TreeViewSettings.class);
@@ -60,7 +61,7 @@ public class TreeViewSettings extends JTabbedPane {
   private JSpinner[] spinners = new JSpinner[5]; 
   private ColorsWidget colors;
   private JCheckBox checkBending, checkAntialiasing, checkMarrSymbols;
-  private Action2 
+  private AbstractAncestrisAction 
     up = new Move(-1), 
     down = new Move( 1), 
     delete =  new Delete(); 
@@ -216,7 +217,7 @@ public class TreeViewSettings extends JTabbedPane {
   /**
    * Action - move a bookmark
    */
-  private class Move extends Action2 {
+  private class Move extends AbstractAncestrisAction {
     /** by how much to move */
     private int by;
     private Move(int how) {
@@ -234,7 +235,7 @@ public class TreeViewSettings extends JTabbedPane {
   /**
    * Action - delete a bookmark
    */
-  private class Delete extends Action2 {
+  private class Delete extends AbstractAncestrisAction {
     private Delete() {
       setText(RESOURCES.getString("bookmark.del"));
       setEnabled(false);

@@ -5,7 +5,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
 import ancestris.view.SelectionSink;
@@ -24,6 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import org.openide.awt.ActionReference;
 import org.openide.util.actions.Presenter;
 
 public final class ActionHistory implements Presenter.Toolbar {
@@ -108,7 +109,7 @@ public final class ActionHistory implements Presenter.Toolbar {
             }
         }
 
-        private class Jump extends Action2 {
+        private class Jump extends AbstractAncestrisAction {
 
             private int i;
 
@@ -128,11 +129,12 @@ public final class ActionHistory implements Presenter.Toolbar {
         }
 
         /** back */
-        private class Back extends Action2 {
+        private class Back extends AbstractAncestrisAction {
 
             public Back() {
                 setImage(new ImageIcon(ActionHistory.class.getResource("Back.png")));
-                install(HistoryCombo.this, "alt LEFT");
+                //FIXME: should be installed with @ActionReference
+//                install(HistoryCombo.this, "alt LEFT");
             }
 
             public void actionPerformed(ActionEvent evt) {
@@ -146,10 +148,11 @@ public final class ActionHistory implements Presenter.Toolbar {
         }
 
         /** forward */
-        private class Forward extends Action2 {
+        private class Forward extends AbstractAncestrisAction {
 
             public Forward() {
-                install(HistoryCombo.this, "alt RIGHT");
+                //FIXME: should be installed with @ActionReference
+//                install(HistoryCombo.this, "alt RIGHT");
                 setImage(new ImageIcon(ActionHistory.class.getResource("Forward.png")));
             }
 

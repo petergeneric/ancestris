@@ -43,7 +43,7 @@ import genj.io.PropertyTransferable;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
@@ -374,7 +374,7 @@ import org.openide.nodes.Node;
     /**
      * Action - propagate properties
      */
-    private class Propagate extends Action2 {
+    private class Propagate extends AbstractAncestrisAction {
 
         /** selection to propagate */
         private Entity entity;
@@ -424,7 +424,7 @@ import org.openide.nodes.Node;
             select.setSelection(gedcom.getEntity(REGISTRY.get("select." + entity.getTag(), (String) null)));
 
             // show it
-            boolean cancel = 0 != DialogHelper.openDialog(getText(), DialogHelper.WARNING_MESSAGE, panel, Action2.okCancel(), AdvancedEditor.this);
+            boolean cancel = 0 != DialogHelper.openDialog(getText(), DialogHelper.WARNING_MESSAGE, panel, AbstractAncestrisAction.okCancel(), AdvancedEditor.this);
             if (cancel) {
                 return;
             }
@@ -445,7 +445,7 @@ import org.openide.nodes.Node;
                     }
                 });
             } catch (GedcomException e) {
-                DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, e.getMessage(), Action2.okOnly(), AdvancedEditor.this);
+                DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, e.getMessage(), AbstractAncestrisAction.okOnly(), AdvancedEditor.this);
             }
 
             // done
@@ -472,7 +472,7 @@ import org.openide.nodes.Node;
     /**
      * Action - cut
      */
-    private class Cut extends Action2 {
+    private class Cut extends AbstractAncestrisAction {
 
         /** selection */
         protected List<Property> presetSelection;
@@ -505,7 +505,7 @@ import org.openide.nodes.Node;
             // warn about cut
             String veto = getVeto(selection);
             if (veto.length() > 0) {
-                int rc = DialogHelper.openDialog(resources.getString("action.cut"), DialogHelper.WARNING_MESSAGE, veto, new Action[]{new Action2(resources.getString("action.cut")), Action2.cancel()}, AdvancedEditor.this);
+                int rc = DialogHelper.openDialog(resources.getString("action.cut"), DialogHelper.WARNING_MESSAGE, veto, new Action[]{new AbstractAncestrisAction(resources.getString("action.cut")), AbstractAncestrisAction.cancel()}, AdvancedEditor.this);
                 if (rc != 0) {
                     return;
                 }
@@ -560,7 +560,7 @@ import org.openide.nodes.Node;
     /**
      * Action - copy
      */
-    private class Copy extends Action2 {
+    private class Copy extends AbstractAncestrisAction {
 
         /** selection */
         protected List<Property> presetSelection;
@@ -601,7 +601,7 @@ import org.openide.nodes.Node;
     /**
      * Action - paste
      */
-    private class Paste extends Action2 {
+    private class Paste extends AbstractAncestrisAction {
 
         /** selection */
         private Property presetParent;
@@ -664,7 +664,7 @@ import org.openide.nodes.Node;
     /**
      * Action - follow
      */
-    private class Follow extends Action2 {
+    private class Follow extends AbstractAncestrisAction {
 
         private PropertyXRef xref;
 
@@ -683,7 +683,7 @@ import org.openide.nodes.Node;
     /**
      * Action - add
      */
-    private class Add extends Action2 {
+    private class Add extends AbstractAncestrisAction {
 
         /** parent */
         private Property parent;
@@ -717,7 +717,7 @@ import org.openide.nodes.Node;
                 JLabel label = new JLabel(resources.getString("add.choose"));
                 ChoosePropertyBean choose = new ChoosePropertyBean(parent);
                 JCheckBox check = new JCheckBox(resources.getString("add.default_too"), addDefaults);
-                int option = DialogHelper.openDialog(resources.getString("add.title"), DialogHelper.QUESTION_MESSAGE, new JComponent[]{label, choose, check}, Action2.okCancel(), AdvancedEditor.this);
+                int option = DialogHelper.openDialog(resources.getString("add.title"), DialogHelper.QUESTION_MESSAGE, new JComponent[]{label, choose, check}, AbstractAncestrisAction.okCancel(), AdvancedEditor.this);
                 if (option != 0) {
                     return;
                 }
@@ -725,7 +725,7 @@ import org.openide.nodes.Node;
                 tags = choose.getSelectedTags();
                 addDefaults = check.isSelected();
                 if (tags.length == 0) {
-                    DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, resources.getString("add.must_enter"), Action2.okOnly(), AdvancedEditor.this);
+                    DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, resources.getString("add.must_enter"), AbstractAncestrisAction.okOnly(), AdvancedEditor.this);
                     return;
                 }
             }
@@ -867,9 +867,10 @@ import org.openide.nodes.Node;
             // thus not killing our grabFocus functionality
             setRequestFocusEnabled(false);
             // shortcuts
-            new Cut().install(this, ACC_CUT, JComponent.WHEN_FOCUSED);
-            new Copy().install(this, ACC_COPY, JComponent.WHEN_FOCUSED);
-            new Paste().install(this, ACC_PASTE, JComponent.WHEN_FOCUSED);
+            //XXX: in layer 
+//            new Cut().install(this, ACC_CUT, JComponent.WHEN_FOCUSED);
+//            new Copy().install(this, ACC_COPY, JComponent.WHEN_FOCUSED);
+//            new Paste().install(this, ACC_PASTE, JComponent.WHEN_FOCUSED);
         }
 
         @Override
@@ -897,7 +898,7 @@ import org.openide.nodes.Node;
                     MetaProperty[] metas = prop.getNestedMetaProperties(MetaProperty.WHERE_NOT_HIDDEN | MetaProperty.WHERE_CARDINALITY_ALLOWS);
                     Arrays.sort(metas);
                     for (int i = 0; i < metas.length; i++) {
-                        if (metas[i].isInstantiated()) {
+                        if (metas[i].isInstantiated()||true) {
                             menu.addAction(new Add(prop, metas[i]));
                         }
                     }

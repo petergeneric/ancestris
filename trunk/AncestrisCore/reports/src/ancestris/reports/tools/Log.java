@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.util.Calendar;
 
 /**
@@ -35,7 +35,7 @@ public class Log {
      this.writeFile = writeFile;
      
      if (writeFile) {
-        File file = report.getFileFromUser(msg, Action2.TXT_OK,true);
+        File file = report.getFileFromUser(msg, AbstractAncestrisAction.TXT_OK,true);
         if (file == null) {
            report.println("##### "+"Cancelled by user"+" #####");
            this.writeFile = false;

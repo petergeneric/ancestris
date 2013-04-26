@@ -27,7 +27,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
@@ -192,7 +192,7 @@ public class ReportView extends View {
 
     // check if appropriate
     if (context == null || report.accepts(context) == null) {
-      DialogHelper.openDialog(report.getName(), DialogHelper.ERROR_MESSAGE, RESOURCES.getString("report.noaccept"), Action2.okOnly(), ReportView.this);
+      DialogHelper.openDialog(report.getName(), DialogHelper.ERROR_MESSAGE, RESOURCES.getString("report.noaccept"), AbstractAncestrisAction.okOnly(), ReportView.this);
       return;
     }
 
@@ -271,7 +271,7 @@ public class ReportView extends View {
     } catch (Throwable t) {
     }
 
-    if (0 != DialogHelper.openDialog(RESOURCES.getString("report.reports"), DialogHelper.QUESTION_MESSAGE, selector, Action2.okCancel(), ReportView.this))
+    if (0 != DialogHelper.openDialog(RESOURCES.getString("report.reports"), DialogHelper.QUESTION_MESSAGE, selector, AbstractAncestrisAction.okCancel(), ReportView.this))
       return;
 
     Report report = selector.getReport();
@@ -404,7 +404,7 @@ public class ReportView extends View {
 
       Registry foRegistry = Registry.get(getClass());
 
-      Action[] actions = Action2.okCancel();
+      Action[] actions = AbstractAncestrisAction.okCancel();
       FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
       options.connect(actions[0]);
       
@@ -458,10 +458,10 @@ public class ReportView extends View {
   /**
    * Action: STOP
    */
-  private class ActionStop extends Action2 {
+  private class ActionStop extends AbstractAncestrisAction {
     protected ActionStop() {
       setImage(imgStop);
-      setTip(RESOURCES, "report.stop.tip");
+      setTip(RESOURCES.getString("report.stop.tip"));
       setEnabled(false);
     }
 
@@ -473,7 +473,7 @@ public class ReportView extends View {
   /**
    * Action: START
    */
-  private class ActionStart extends Action2 {
+  private class ActionStart extends AbstractAncestrisAction {
 
     /** context to run on */
     private Object context;
@@ -488,7 +488,7 @@ public class ReportView extends View {
     protected ActionStart() {
       // show
       setImage(imgStart);
-      setTip(RESOURCES, "report.start.tip");
+      setTip(RESOURCES.getString("report.start.tip"));
     }
 
     /**
@@ -503,10 +503,10 @@ public class ReportView extends View {
   /**
    * Action: Console
    */
-  private class ActionShow extends Action2 {
+  private class ActionShow extends AbstractAncestrisAction {
     protected ActionShow() {
       setImage(imgConsole);
-      setTip(RESOURCES, "report.output");
+      setTip(RESOURCES.getString("report.output"));
       setEnabled(false);
     }
 
@@ -529,10 +529,10 @@ public class ReportView extends View {
   /**
    * Action: SAVE
    */
-  private class ActionSave extends Action2 {
+  private class ActionSave extends AbstractAncestrisAction {
     protected ActionSave() {
       setImage(imgSave);
-      setTip(RESOURCES, "report.save.tip");
+      setTip(RESOURCES.getString("report.save.tip"));
     }
 
     public void actionPerformed(ActionEvent event) {
@@ -580,7 +580,7 @@ public class ReportView extends View {
 
       // .. exits ?
       if (file.exists()) {
-        int rc = DialogHelper.openDialog(RESOURCES.getString("title"), DialogHelper.WARNING_MESSAGE, "File exists. Overwrite?", Action2.yesNo(), ReportView.this);
+        int rc = DialogHelper.openDialog(RESOURCES.getString("title"), DialogHelper.WARNING_MESSAGE, "File exists. Overwrite?", AbstractAncestrisAction.yesNo(), ReportView.this);
         if (rc != 0) 
           return;
       }
@@ -590,7 +590,7 @@ public class ReportView extends View {
       try {
         out = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF8"));
       } catch (IOException ex) {
-        DialogHelper.openDialog(RESOURCES.getString("title"), DialogHelper.ERROR_MESSAGE, "Error while saving to\n" + file.getAbsolutePath(), Action2.okOnly(), ReportView.this);
+        DialogHelper.openDialog(RESOURCES.getString("title"), DialogHelper.ERROR_MESSAGE, "Error while saving to\n" + file.getAbsolutePath(), AbstractAncestrisAction.okOnly(), ReportView.this);
         return;
       }
 

@@ -82,7 +82,7 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -191,7 +191,7 @@ public class ReportLinesCirc extends Report {
         initUserOptions();
 
         // ask for file
-        File file = getFileFromUser(translate("output.file"), Action2.TXT_OK, true);
+        File file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true);
         if (file == null) {
             return null;
         }

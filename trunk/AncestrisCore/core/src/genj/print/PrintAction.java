@@ -20,7 +20,7 @@
 package genj.print;
 
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 
@@ -34,7 +34,7 @@ import javax.swing.Action;
 /**
  * An action for printing
  */
-public abstract class PrintAction extends Action2 {
+public abstract class PrintAction extends AbstractAncestrisAction {
   
   private final static Resources RES = Resources.get(PrintAction.class);
   private final static ImageIcon IMG = new ImageIcon(PrintAction.class, "images/Print.png");
@@ -65,7 +65,7 @@ public abstract class PrintAction extends Action2 {
       task = new PrintTask(title, getRenderer());
     } catch (PrintException pe) {
       LOG.log(Level.INFO, "can't setup print task", pe);
-      DialogHelper.openDialog(title, DialogHelper.ERROR_MESSAGE, pe.getMessage(), Action2.okOnly(), e);
+      DialogHelper.openDialog(title, DialogHelper.ERROR_MESSAGE, pe.getMessage(), AbstractAncestrisAction.okOnly(), e);
       return;
     }
     
@@ -74,8 +74,8 @@ public abstract class PrintAction extends Action2 {
 
     // prepare actions
     Action[] actions = { 
-        new Action2(RES.getString("print")),
-        Action2.cancel() 
+        new AbstractAncestrisAction(RES.getString("print")),
+        AbstractAncestrisAction.cancel() 
     };
     
     // show it in dialog
@@ -94,7 +94,7 @@ public abstract class PrintAction extends Action2 {
     task.print();
 
     // FIXME setup progress dlg
-    // progress = WindowManager.getInstance(owner).openNonModalDialog(null, title, WindowManager.INFORMATION_MESSAGE, new ProgressWidget(this, getThread()), Action2.cancelOnly(), owner);
+    // progress = WindowManager.getInstance(owner).openNonModalDialog(null, title, WindowManager.INFORMATION_MESSAGE, new ProgressWidget(this, getThread()), AbstractAncestrisAction.cancelOnly(), owner);
   }
 
 }

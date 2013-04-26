@@ -8,7 +8,7 @@ import genj.gedcom.TagPath;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -77,7 +77,7 @@ public class ReportCalendar extends Report
      */
     public void start(Gedcom gedcom) throws IOException {
 
-        File file = getFileFromUser("Choose calendar file", Action2.TXT_OK, true, "ics");
+        File file = getFileFromUser("Choose calendar file", AbstractAncestrisAction.TXT_OK, true, "ics");
         if (file == null)
             return;
 

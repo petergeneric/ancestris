@@ -8,7 +8,7 @@ package ancestris.app;
 import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -17,7 +17,7 @@ import org.openide.util.Utilities;
   /**
    * Action - Save
    */
-  public class ActionSaveAs extends Action2 {
+  public class ActionSaveAs extends AbstractAncestrisAction {
     /** gedcom */
     protected Gedcom gedcomBeingSaved;
 

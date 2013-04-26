@@ -21,7 +21,7 @@ package genj.view;
 
 import genj.renderer.RenderSelectionHintKey;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 
@@ -47,7 +47,7 @@ import javax.swing.JRadioButton;
 /**
  * An action for copying to an image
  */
-public class ScreenshotAction extends Action2 {
+public class ScreenshotAction extends AbstractAncestrisAction {
   
   private final static ImageIcon IMG = new ImageIcon(ScreenshotAction.class, "images/Camera.png");
   private final static Resources RES = Resources.get(ScreenshotAction.class);
@@ -77,7 +77,7 @@ public class ScreenshotAction extends Action2 {
       choices.add(viewport);
       choices.add(all);
       
-      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, choices, Action2.okCancel(), e))
+      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, choices, AbstractAncestrisAction.okCancel(), e))
         return;
 
       if (viewport.isSelected())
@@ -100,7 +100,7 @@ public class ScreenshotAction extends Action2 {
       long max = Runtime.getRuntime().maxMemory()/1024/1000;
       String msg = RES.getString("screenshot.oom", r.width*r.height*4/1024/1000, max, String.valueOf(max));
       Logger.getLogger("genj.view").log(Level.WARNING, msg, oom);
-      DialogHelper.openDialog(getTip(), DialogHelper.ERROR_MESSAGE, msg, Action2.okOnly(), e);
+      DialogHelper.openDialog(getTip(), DialogHelper.ERROR_MESSAGE, msg, AbstractAncestrisAction.okOnly(), e);
     }
     
     

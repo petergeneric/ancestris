@@ -31,7 +31,7 @@ import genj.gedcom.PropertyNote;
 import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
@@ -47,7 +47,7 @@ import javax.swing.JTextPane;
 /**
  * Edit note for a property
  */
-public class EditNote extends Action2 {
+public class EditNote extends AbstractAncestrisAction {
   
   private final static Resources RESOURCES = Resources.get(EditNote.class);
   
@@ -116,7 +116,7 @@ public class EditNote extends Action2 {
     else if (note!=null)
       text.setText(note.getValue());
 
-    if (0!=new GedcomDialog(property.getGedcom(), property.toString() + " - " + getTip(), DialogHelper.QUESTION_MESSAGE, panel, Action2.okCancel(), e).show())
+    if (0!=new GedcomDialog(property.getGedcom(), property.toString() + " - " + getTip(), DialogHelper.QUESTION_MESSAGE, panel, AbstractAncestrisAction.okCancel(), e).show())
       return;
 
     property.getGedcom().doMuteUnitOfWork(new UnitOfWork() {

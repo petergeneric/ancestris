@@ -19,6 +19,7 @@
  */
 package genj.util.swing;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.io.InputSource;
 import genj.io.InputSource.FileInput;
 
@@ -101,7 +102,7 @@ public class ThumbnailWidget extends JComponent {
     }
   });
   private Thumbnail selection = null;
-  private Action2 
+  private AbstractAncestrisAction 
     zoomFit = new Fit(), 
     zoomAll = new All(),
     zoomOne = new One();
@@ -124,15 +125,15 @@ public class ThumbnailWidget extends JComponent {
     setBackground(Color.LIGHT_GRAY);
   }
   
-  public Action2 getFitAction() {
+  public AbstractAncestrisAction getFitAction() {
     return zoomFit;
   }
   
-  public Action2 getOneAction() {
+  public AbstractAncestrisAction getOneAction() {
     return zoomOne;
   }
   
-  public Action2 getAllAction() {
+  public AbstractAncestrisAction getAllAction() {
     return zoomAll;
   }
   
@@ -860,7 +861,7 @@ public class ThumbnailWidget extends JComponent {
   /**
    * zoom
    */
-  private class Fit extends Action2 implements PropertyChangeListener {
+  private class Fit extends AbstractAncestrisAction implements PropertyChangeListener {
     public Fit() {
       setImage(IMG_ZOOM_FIT);
       setEnabled(false);
@@ -879,7 +880,7 @@ public class ThumbnailWidget extends JComponent {
   /**
    * zoom
    */
-  private class One extends Action2 implements PropertyChangeListener {
+  private class One extends AbstractAncestrisAction implements PropertyChangeListener {
     public One() {
       setText("1:1");
       setEnabled(false);
@@ -898,7 +899,7 @@ public class ThumbnailWidget extends JComponent {
   /**
    * zoom
    */
-  private class All extends Action2 implements PropertyChangeListener {
+  private class All extends AbstractAncestrisAction implements PropertyChangeListener {
     public All() {
       setImage(IMG_ZOOM_ALL);
       setEnabled(false);

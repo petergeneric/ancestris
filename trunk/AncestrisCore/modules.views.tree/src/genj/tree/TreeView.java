@@ -47,7 +47,7 @@ import genj.renderer.RenderOptions;
 import genj.renderer.RenderSelectionHintKey;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
@@ -799,10 +799,11 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
 //      setFocusable(true);
 //      setRequestFocusEnabled(true);
 
-      new Up().install(this, "U", JComponent.WHEN_FOCUSED);
+      //XXX: actions in layer (registration)
+//      new Up().install(this, "U", JComponent.WHEN_FOCUSED);
     }
 
-    private class Up extends Action2 {
+    private class Up extends AbstractAncestrisAction {
       @Override
       public void actionPerformed(ActionEvent e) {
         System.out.println("up");
@@ -1003,16 +1004,16 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
   /**
    * Action for opening overview
    */
-  private class ActionOverview extends Action2 {
+  private class ActionOverview extends AbstractAncestrisAction {
     /**
      * Constructor
      */
     private ActionOverview() {
       setImage(Images.imgOverview);
-      setTip(RESOURCES, "overview.tip");
+      setTip(RESOURCES.getString("overview.tip"));
     }
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
         @Override
     public void actionPerformed(ActionEvent event) {
@@ -1028,7 +1029,7 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
 /**
  * ActionRoot
  */
-  private class ActionRoot extends Action2 {
+  private class ActionRoot extends AbstractAncestrisAction {
     /** entity */
     private Entity root;
     /**
@@ -1042,7 +1043,7 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
     }
     
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
     public void actionPerformed(ActionEvent event) {
       setRoot(root);
@@ -1052,16 +1053,16 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
   /**
    * Action Orientation change
    */
-  private class ActionOrientation extends Action2 {
+  private class ActionOrientation extends AbstractAncestrisAction {
     /**
      * Constructor
      */
     private ActionOrientation() {
       super.setImage(Images.imgHori);
-      super.setTip(RESOURCES, "orientation.tip");
+      super.setTip(RESOURCES.getString("orientation.tip"));
     }
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
         @Override
     public void actionPerformed(ActionEvent event) {
@@ -1073,16 +1074,16 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
   /**
    * Action Families n Spouses
    */
-  private class ActionFamsAndSpouses extends Action2 {
+  private class ActionFamsAndSpouses extends AbstractAncestrisAction {
     /**
      * Constructor
      */
     private ActionFamsAndSpouses() {
       super.setImage(Images.imgDontFams);
-      super.setTip(RESOURCES, "families.tip");
+      super.setTip(RESOURCES.getString("families.tip"));
     }
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
         @Override
     public void actionPerformed(ActionEvent event) {
@@ -1094,16 +1095,16 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
   /**
    * Action FoldSymbols on/off
    */
-  private class ActionFoldSymbols extends Action2 {
+  private class ActionFoldSymbols extends AbstractAncestrisAction {
     /**
      * Constructor
      */
     private ActionFoldSymbols() {
       super.setImage(Images.imgFoldSymbols);
-      super.setTip(RESOURCES, "foldsymbols.tip");
+      super.setTip(RESOURCES.getString("foldsymbols.tip"));
     }
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
         @Override
     public void actionPerformed(ActionEvent event) {
@@ -1115,12 +1116,12 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
   /**
    * Action - choose a root through dialog
    */
-  private class ActionChooseRoot extends Action2 {
+  private class ActionChooseRoot extends AbstractAncestrisAction {
 
     /** constructor */
     private ActionChooseRoot() {
-      setText(RESOURCES, "select.root");
-      setTip(RESOURCES, "select.root");
+      setText(RESOURCES.getString("select.root"));
+      setTip(RESOURCES.getString("select.root"));
       setImage(Images.imgView);
     }
 
@@ -1130,7 +1131,7 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
       
       // let the user choose an individual
       SelectEntityWidget select = new SelectEntityWidget(context.getGedcom(), Gedcom.INDI, null);
-      int rc = DialogHelper.openDialog(getText(), DialogHelper.QUESTION_MESSAGE, select, Action2.okCancel(), TreeView.this);
+      int rc = DialogHelper.openDialog(getText(), DialogHelper.QUESTION_MESSAGE, select, AbstractAncestrisAction.okCancel(), TreeView.this);
       if (rc==0) 
         setRoot(select.getSelection());
       
@@ -1142,11 +1143,11 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
   /**
    * Action - recenter tree to root
    */
-  private class ActionGotoRoot extends Action2 {
+  private class ActionGotoRoot extends AbstractAncestrisAction {
 
     /** constructor */
     private ActionGotoRoot() {
-      setTip(RESOURCES, "goto.root.tip");
+      setTip(RESOURCES.getString("goto.root.tip"));
       setImage(Images.imgGotoRoot);
     }
 
@@ -1161,7 +1162,7 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
 
   } //ActionChooseRoot
 
-  private class ActionGoto extends Action2 {
+  private class ActionGoto extends AbstractAncestrisAction {
     private Bookmark bookmark;
     private ActionGoto(Bookmark bookmark) {
       this.bookmark = bookmark;
@@ -1170,7 +1171,7 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
       setImage(Gedcom.getEntityImage(bookmark.getEntity().getTag()));
     }
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
         @Override
     public void actionPerformed(ActionEvent event) {
@@ -1196,7 +1197,7 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
   /**
    * Action - bookmark something
    */
-  private class ActionBookmark extends Action2 {
+  private class ActionBookmark extends AbstractAncestrisAction {
     /** the entity */
     private Entity entity;
     /** 
@@ -1207,13 +1208,13 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
       entity = e;
       setImage(BOOKMARK_ICON);
       if (local) {
-        setText(RESOURCES, "bookmark.add");
+        setText(RESOURCES.getString("bookmark.add"));
       } else {
         setText(RESOURCES.getString("bookmark.in",TITLE));
       }
     } 
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
         @Override
     public void actionPerformed(ActionEvent event) {
@@ -1267,11 +1268,11 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
     /**
    * Action - toggle sticky mode
    */
-  private class Sticky extends Action2 {
+  private class Sticky extends AbstractAncestrisAction {
     /** constructor */
     protected Sticky() {
       super.setImage(ancestris.core.resources.Images.imgStickOff);
-      super.setTip(RESOURCES, "action.stick.tip");
+      super.setTip(RESOURCES.getString("action.stick.tip"));
       super.setSelected(false);
     }
     /** run */

@@ -54,7 +54,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.report.Report;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -179,7 +179,7 @@ public class ReportGedart extends Report {
 				file = File.createTempFile("GenJ-", "-gedart");
 			}catch (IOException ioe) {file = null;}
 		else{
-			file = getFileFromUser(translate("output.file"), Action2.TXT_OK, true,extension);
+			file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true,extension);
 		}
 
 		if (file == null){

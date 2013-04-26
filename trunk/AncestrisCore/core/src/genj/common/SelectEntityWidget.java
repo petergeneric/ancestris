@@ -28,7 +28,7 @@ import genj.gedcom.TagPath;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 
@@ -336,7 +336,7 @@ public class SelectEntityWidget extends JPanel {
   /**
    * Sort action
    */
-  private class Sort extends Action2 {
+  private class Sort extends AbstractAncestrisAction {
 
     /** path */
     private TagPath tagPath;
@@ -351,7 +351,7 @@ public class SelectEntityWidget extends JPanel {
     }      
     
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
     public void actionPerformed(ActionEvent event) {
       sort(tagPath);

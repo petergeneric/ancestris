@@ -10,7 +10,7 @@ package ancestris.reports;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.report.Report;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,7 +53,7 @@ public class ReportLinesFan extends Report {
      */
     public File start(Indi indi) {
 
-        File file = getFileFromUser(translate("output.file"), Action2.TXT_OK, true);
+        File file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true);
         if (file == null) {
             return null;
         }

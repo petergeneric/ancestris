@@ -23,7 +23,7 @@ import ancestris.core.CoreOptions;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyName;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.NestedBlockLayout;
@@ -108,7 +108,7 @@ public class ShortNameBean extends PropertyBean {
       public void actionPerformed(ActionEvent e) {
         String msg = getReplaceAllMsg();
         if (msg!=null&&cAll.isSelected()) {
-          int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, msg, Action2.yesNo(), ShortNameBean.this);
+          int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, msg, AbstractAncestrisAction.yesNo(), ShortNameBean.this);
           cAll.setSelected(rc==0);
         }        
       }

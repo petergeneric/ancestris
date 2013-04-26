@@ -20,7 +20,7 @@ import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Context;
 import genj.util.EnvironmentChecker;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -449,7 +449,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             String title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/Bundle").getString("LOAD_FILE");
 
             // je demande a l'utilisateur de choisir un nom de ficher
-            File releveFile = getFileFromUserForOpen(this, title, Action2.TXT_OK, "", true, "txt");
+            File releveFile = getFileFromUserForOpen(this, title, AbstractAncestrisAction.TXT_OK, "", true, "txt");
             loadFile(releveFile, false);
         }
     }
@@ -496,7 +496,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 //                            newDataManager.getReleveDeathModel().getRowCount(),
 //                            newDataManager.getReleveMiscModel().getRowCount());
 //                    message += ("\nVoulez vous les remplacer ou les ajouter aux données existantes ?");
-//                    Object[] possibleValues = {"Remplacer", "Ajouter", Action2.TXT_CANCEL};
+//                    Object[] possibleValues = {"Remplacer", "Ajouter", AbstractAncestrisAction.TXT_CANCEL};
 //                    // j'affiche la fenetre
 //                    int addModel = JOptionPane.showOptionDialog(this, message, title,
 //                            JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, (Icon) null,
@@ -792,7 +792,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         // choose an existing file?
         if (resultFile.exists() && askForOverwrite) {
-            //rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), Action2.yesNo(), this);
+            //rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), AbstractAncestrisAction.yesNo(), this);
             if (rc != 0) {
                 return null;
             }
@@ -876,7 +876,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // choose an existing file?
         if (resultFile.exists() && askForOverwrite) {
             Toolkit.getDefaultToolkit().beep();
-            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), Action2.yesNo(), component);
+            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), AbstractAncestrisAction.yesNo(), component);
             if (rc != 0) {
                 return;
             }
@@ -911,7 +911,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         String title = NbBundle.getMessage(ReleveTopComponent.class, "LOAD_FILE");
 
         // je demande a l'utilisateur de choisir un nom de ficher
-        File releveFile = getFileFromUserForOpen(this, title, Action2.TXT_OK, "", true, "txt");
+        File releveFile = getFileFromUserForOpen(this, title, AbstractAncestrisAction.TXT_OK, "", true, "txt");
         loadFile(releveFile, true);
     }
 
@@ -1074,7 +1074,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // choose an existing file?
         if (resultFile.exists() && askForOverwrite) {
             Toolkit.getDefaultToolkit().beep();
-            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), Action2.yesNo(), component);
+            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), AbstractAncestrisAction.yesNo(), component);
             if (rc != 0) {
                 return;
             }

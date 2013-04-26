@@ -8,7 +8,7 @@ package ancestris.app;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.util.Map;
@@ -18,7 +18,7 @@ import org.openide.util.Utilities;
  *
  * @author daniel
  */
-final public class OpenGenjViewAction extends Action2  {
+final public class OpenGenjViewAction extends AbstractAncestrisAction  {
     private final Map<?,?> map;
     private final AncestrisTopComponent component;
 

@@ -9,7 +9,7 @@
 package ancestris.report.svgtree.graphics;
 
 import genj.report.Report;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class GraphicsOutputFactory {
 
             // Get filename from users
             File file = report.getFileFromUser(report.translate("output.file"),
-                    Action2.TXT_OK, true, extension);
+                    AbstractAncestrisAction.TXT_OK, true, extension);
             if (file == null)
                 return null;
 

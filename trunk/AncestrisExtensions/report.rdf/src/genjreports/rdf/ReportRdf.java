@@ -3,7 +3,7 @@ package genjreports.rdf;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.report.Report;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genjreports.rdf.gedsem.SemanticGedcomUtil;
 import genjreports.rdf.gedsem.UriFormats;
@@ -236,7 +236,7 @@ public class ReportRdf extends Report /* implements BatchCompatible */
         {
             final String format = getResources().getString("overwrite.question");
             final String prompt = MessageFormat.format(format, file.getAbsoluteFile());
-            final int rc = DialogHelper.openDialog(getName(), DialogHelper.WARNING_MESSAGE, prompt, Action2.yesNo(), null);
+            final int rc = DialogHelper.openDialog(getName(), DialogHelper.WARNING_MESSAGE, prompt, AbstractAncestrisAction.yesNo(), null);
             return (rc != 0);
         }
         return false;

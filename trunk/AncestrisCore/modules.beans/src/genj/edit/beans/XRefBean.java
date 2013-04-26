@@ -29,7 +29,7 @@ import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.UnitOfWork;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -66,7 +66,7 @@ public class XRefBean extends PropertyBean implements AncestrisActionProvider{
   /**
    * swivle a reference pointer
    */
-  private class Swivel extends Action2 {
+  private class Swivel extends AbstractAncestrisAction {
     public Swivel() {
       setText(RESOURCES.getString("xref.swivel"));
       setImage(MetaProperty.IMG_LINK);
@@ -82,7 +82,7 @@ public class XRefBean extends PropertyBean implements AncestrisActionProvider{
           getText(), 
           DialogHelper.QUESTION_MESSAGE, 
           select, 
-          Action2.okCancel(), 
+          AbstractAncestrisAction.okCancel(), 
           event))
         return;
 
@@ -110,7 +110,7 @@ public class XRefBean extends PropertyBean implements AncestrisActionProvider{
             getText(), 
             DialogHelper.WARNING_MESSAGE, 
             ge.getMessage(), 
-            Action2.okOnly(), 
+            AbstractAncestrisAction.okOnly(), 
             event);
         LOG.log(Level.FINER, ge.getMessage(), ge);
       }

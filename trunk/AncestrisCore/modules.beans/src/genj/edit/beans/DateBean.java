@@ -23,7 +23,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DateWidget;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
@@ -197,7 +197,7 @@ public class DateBean extends PropertyBean {
   /**
    * Action for format change
    */
-  private class ChangeFormat extends Action2 {
+  private class ChangeFormat extends AbstractAncestrisAction {
     
     private PropertyDate.Format formatToSet;
     

@@ -6,13 +6,13 @@ package ancestris.app;
 
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
-public class ActionOpen extends Action2 {
+public class ActionOpen extends AbstractAncestrisAction {
 
     private FileObject file = null; 
 

@@ -11,7 +11,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import ancestris.modules.commonAncestor.quicksearch.module.AbstractQuickSearchComboBar;
 import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchComboBar;
@@ -259,7 +259,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                     + individu2.getFirstName() + " " + individu2.getLastName();
             
             // ask filename
-            File outpuFile = getFileFromUser("titre", Action2.TXT_OK, defaultFileName, true, extension);
+            File outpuFile = getFileFromUser("titre", AbstractAncestrisAction.TXT_OK, defaultFileName, true, extension);
             if (outpuFile != null) {
                 // Add appropriate file extension
                 String suffix = "." + extension;
@@ -366,7 +366,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
         // choose an existing file?
         if (result.exists() && askForOverwrite) {
-            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(SamePanel.class, "SamePanel.message.fileExits"), Action2.yesNo(), this);
+            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(SamePanel.class, "SamePanel.message.fileExits"), AbstractAncestrisAction.yesNo(), this);
             if (rc != 0) {
                 return null;
             }

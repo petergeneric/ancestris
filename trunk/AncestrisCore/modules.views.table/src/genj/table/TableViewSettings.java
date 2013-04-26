@@ -25,7 +25,7 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.util.GridBagHelper;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.ListSelectionWidget;
 
@@ -131,15 +131,15 @@ public class TableViewSettings extends JPanel {
   /**
    * Action - ActionUpDown
    */
-  private class Move extends Action2 {
+  private class Move extends AbstractAncestrisAction {
     /** up or down */
     private boolean up;
     /** constructor */
     protected Move(boolean up) {
       this.up=up;
       setEnabled(false);
-      if (up) setText(resources, "info.up");
-      else setText(resources, "info.down");
+      if (up) setText(resources.getString("info.up"));
+      else setText(resources.getString("info.down"));
     }
     /** run */
     public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -154,11 +154,11 @@ public class TableViewSettings extends JPanel {
   /**
    * Action - ActionUpDown
    */
-  private class Del extends Action2 {
+  private class Del extends AbstractAncestrisAction {
     /** constructor */
     protected Del() {
       setEnabled(false);
-      setText(resources, "info.del");
+      setText(resources.getString("info.del"));
     }
     /** run */
     public void actionPerformed(java.awt.event.ActionEvent e) {

@@ -13,7 +13,7 @@ package ancestris.core.beans;
 
 import ancestris.core.AncestrisCorePlugin;
 import genj.util.Registry;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 import java.awt.FlowLayout;
@@ -84,7 +84,7 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
                     new JLabel(BUNDLE.getString("confirm.keep.changes")),
                     auto
                 },
-                Action2.yesNo(),
+                AbstractAncestrisAction.yesNo(),
                 this);
 
         if (rc != 0) {
@@ -140,11 +140,11 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
     /**
      * A ok action
      */
-    private class OK extends Action2 {
+    private class OK extends AbstractAncestrisAction {
 
         /** constructor */
         private OK() {
-            setText(Action2.TXT_OK);
+            setText(AbstractAncestrisAction.TXT_OK);
             setEnabled(false);
         }
 
@@ -160,11 +160,11 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
     /**
      * A cancel action
      */
-    private class Cancel extends Action2 {
+    private class Cancel extends AbstractAncestrisAction {
 
         /** constructor */
         private Cancel() {
-            setText(Action2.TXT_CANCEL);
+            setText(AbstractAncestrisAction.TXT_CANCEL);
             setEnabled(false);
         }
 

@@ -30,6 +30,7 @@ public class CreateXReference extends CreateRelationship {
     private String sourceTag;
     private PropertyXRef xref;
     private static List<CreateXReference> subActions;
+    private static final String CREATE_XREF_ACTION_SUBMENU = "Ancestris/Actions/GedcomProperty/AddOther";
 
     /** Constructor */
     public CreateXReference(Property source, String sourceTag) {
@@ -164,7 +165,7 @@ public class CreateXReference extends CreateRelationship {
         @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefNote")
     @ActionRegistration(displayName = "create.note")
     @ActionReferences(value = {
-        @ActionReference(position=100, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+        @ActionReference(position=100, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addNoteFactory() {
         return new CreateXReference(null, "NOTE");
     }
@@ -172,28 +173,28 @@ public class CreateXReference extends CreateRelationship {
         @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefRepo")
     @ActionRegistration(displayName = "create.repo")
     @ActionReferences(value = {
-        @ActionReference(position=400, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+        @ActionReference(position=400, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addRepoFactory() {
         return new CreateXReference(null, "REPO");
     }
         @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefSour")
     @ActionRegistration(displayName = "create.sour")
     @ActionReferences(value = {
-        @ActionReference(position=300, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+        @ActionReference(position=300, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addSourFactory() {
         return new CreateXReference(null, "SOUR");
     }
         @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefSubm")
     @ActionRegistration(displayName = "create.subm")
     @ActionReferences(value = {
-        @ActionReference(position=500, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+        @ActionReference(position=500, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addSubmFactory() {
         return new CreateXReference(null, "SUBM");
     }
         @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefObje")
     @ActionRegistration(displayName = "create.obje")
     @ActionReferences(value = {
-        @ActionReference(position=200, path = "Ancestris/Actions/GedcomProperty/AddOther")})
+        @ActionReference(position=200, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addObjeFactory() {
         return new CreateXReference(null, "OBJE");
     }
