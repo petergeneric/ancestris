@@ -7,7 +7,7 @@ package ancestris.app;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
 import genj.gedcom.Context;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -16,7 +16,7 @@ import org.openide.util.Utilities;
  * Action - Save
  */
 // FIXME: must be remove in flavour of NB Save capabilities (SaveCoockie?)
-public class ActionSave extends Action2 {
+public class ActionSave extends AbstractAncestrisAction {
 
     /** gedcom */
     private Context contextBeingSaved = null;

@@ -28,12 +28,12 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Property;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 
 /**
  * Undo on Gedcom
  */  
-public class Redo extends Action2 implements GedcomMetaListener {
+public class Redo extends AbstractAncestrisAction implements GedcomMetaListener {
   
   /** the gedcom */
   private Gedcom gedcom;

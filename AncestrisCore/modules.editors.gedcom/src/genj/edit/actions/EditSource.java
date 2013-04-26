@@ -31,7 +31,7 @@ import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
@@ -51,7 +51,7 @@ import javax.swing.JTabbedPane;
 /**
  * Edit note for a property
  */
-public class EditSource extends Action2 {
+public class EditSource extends AbstractAncestrisAction {
   
   private final static Resources RESOURCES = Resources.get(EditSource.class);
   
@@ -100,7 +100,7 @@ public class EditSource extends Action2 {
     if (!sources.isEmpty()) {
       
       final TableWidget<PropertySource> table = new TableWidget<PropertySource>();
-      Action2[] actions = new Action2[]{ Action2.ok(), new Action2(RESOURCES.getString("link", Gedcom.getName("SOUR"))) };
+      AbstractAncestrisAction[] actions = new AbstractAncestrisAction[]{ AbstractAncestrisAction.ok(), new AbstractAncestrisAction(RESOURCES.getString("link", Gedcom.getName("SOUR"))) };
       final GedcomDialog dlg = new GedcomDialog(property.getGedcom(), property.toString() + " - " + getTip(), DialogHelper.QUESTION_MESSAGE, new JScrollPane(table), actions, e);
     
       table.new Column(Gedcom.getName("SOUR")) {
@@ -123,7 +123,7 @@ public class EditSource extends Action2 {
           return source.getPropertyDisplayValue("PAGE");
         }
       };
-      table.new Column("", Action2.class) {
+      table.new Column("", AbstractAncestrisAction.class) {
         public Object getValue(PropertySource source) {
           return new Edit(source,false) {
             @Override
@@ -134,7 +134,7 @@ public class EditSource extends Action2 {
           };
         }
       };
-//      table.new Column("", Action2.class) {
+//      table.new Column("", AbstractAncestrisAction.class) {
 //        public Object getValue(PropertySource source) {
 //          return new DelProperty(source) {
 //            @Override
@@ -164,7 +164,7 @@ public class EditSource extends Action2 {
 
   }
   
-  private class Edit extends Action2 {
+  private class Edit extends AbstractAncestrisAction {
     
     private boolean deleteOnCancel;
     private PropertySource citation;
@@ -199,7 +199,7 @@ public class EditSource extends Action2 {
       sourcePanel.setRoot(citation.getTargetEntity());
       tabs.add(Gedcom.getName("SOUR"), sourcePanel);
       
-      GedcomDialog dlg = new GedcomDialog(citation.getGedcom(), getText(), DialogHelper.QUESTION_MESSAGE, tabs, Action2.okCancel(), e);
+      GedcomDialog dlg = new GedcomDialog(citation.getGedcom(), getText(), DialogHelper.QUESTION_MESSAGE, tabs, AbstractAncestrisAction.okCancel(), e);
       if (0==dlg.show())
         citation.getGedcom().doMuteUnitOfWork(new UnitOfWork() {
           public void perform(Gedcom gedcom) throws GedcomException {

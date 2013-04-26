@@ -34,7 +34,7 @@ import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.Resources.ResourcesProvider;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
 import java.awt.Component;
@@ -85,9 +85,9 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     OPTION_OK       = 2;
 
   private final static String[][] OPTION_TEXTS = {
-    new String[]{Action2.TXT_YES, Action2.TXT_NO     },
-    new String[]{Action2.TXT_OK , Action2.TXT_CANCEL },
-    new String[]{Action2.TXT_OK }
+    new String[]{AbstractAncestrisAction.TXT_YES, AbstractAncestrisAction.TXT_NO     },
+    new String[]{AbstractAncestrisAction.TXT_OK , AbstractAncestrisAction.TXT_CANCEL },
+    new String[]{AbstractAncestrisAction.TXT_OK }
   };
 
   /** alignment options */
@@ -367,7 +367,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 
     // choose an existing file?
     if (result.exists()&&askForOverwrite) {
-      rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, ReportView.RESOURCES.getString("report.file.overwrite"), Action2.yesNo(), owner);
+      rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, ReportView.RESOURCES.getString("report.file.overwrite"), AbstractAncestrisAction.yesNo(), owner);
       if (rc!=0)
         return null;
     }
@@ -415,7 +415,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
       select.setSelection(entity);
 
     // show it
-    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),select},Action2.okCancel(),owner);
+    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),select},AbstractAncestrisAction.okCancel(),owner);
     if (rc!=0)
       return null;
 
@@ -435,7 +435,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 //   * A sub-class can query the user to choose a value that is somehow represented by given component
 //   */
 //  public final boolean getValueFromUser(JComponent options) {
-//    int rc = WindowManager.openDialog(null, getName(), WindowManager.QUESTION_MESSAGE, new JComponent[]{options}, Action2.okCancel(), owner.get());
+//    int rc = WindowManager.openDialog(null, getName(), WindowManager.QUESTION_MESSAGE, new JComponent[]{options}, AbstractAncestrisAction.okCancel(), owner.get());
 //    return rc==0;
 //  }
 
@@ -447,7 +447,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     ChoiceWidget choice = new ChoiceWidget(choices, selected);
     choice.setEditable(false);
 
-    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},Action2.okCancel(),owner);
+    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},AbstractAncestrisAction.okCancel(),owner);
 
     return rc==0 ? choice.getSelectedItem() : null;
   }
@@ -475,7 +475,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 
     // show 'em
     ChoiceWidget choice = new ChoiceWidget(defaultChoices, defaultChoices.length>0 ? defaultChoices[0] : "");
-    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},Action2.okCancel(),owner);
+    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},AbstractAncestrisAction.okCancel(),owner);
     String result = rc==0 ? choice.getText() : null;
 
     // Remember?
@@ -524,7 +524,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 
     // show to user and check for non-ok
     OptionsWidget widget = new OptionsWidget(title, os);
-    int rc = DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, widget, Action2.okCancel(), owner);
+    int rc = DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, widget, AbstractAncestrisAction.okCancel(), owner);
     if (rc!=0)
       return false;
 
@@ -554,7 +554,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 
     Action[] as  = new Action[actions.length];
     for (int i=0;i<as.length;i++)
-      as[i]  = new Action2(actions[i]);
+      as[i]  = new AbstractAncestrisAction(actions[i]);
 
     return DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, msg, as, owner);
 

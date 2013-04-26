@@ -21,7 +21,7 @@
  */
 package genj.option;
 
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 
@@ -50,7 +50,7 @@ public abstract class CustomOption extends Option {
   
   protected void edit() {
     JComponent editor = getEditor();
-    int rc = DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, editor, Action2.okCancel(), widget);
+    int rc = DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, editor, AbstractAncestrisAction.okCancel(), widget);
     if (rc==0)
       commit(editor);
   }
@@ -68,7 +68,7 @@ public abstract class CustomOption extends Option {
   /** 
    * Custom UI is a button only
    */
-  private class UI extends Action2 implements OptionUI {
+  private class UI extends AbstractAncestrisAction implements OptionUI {
     
     /** callback - text representation = none */
     public String getTextRepresentation() {

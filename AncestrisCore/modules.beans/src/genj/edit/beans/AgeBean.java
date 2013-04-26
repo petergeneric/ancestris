@@ -22,7 +22,7 @@ package genj.edit.beans;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
 import genj.gedcom.time.Delta;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.NestedBlockLayout;
 
@@ -92,7 +92,7 @@ public class AgeBean extends PropertyBean {
   /**
    * Action Update age
    */
-  private class ActionUpdate extends Action2 {
+  private class ActionUpdate extends AbstractAncestrisAction {
     
     /**
      * Constructor
@@ -102,7 +102,7 @@ public class AgeBean extends PropertyBean {
       setTip(RESOURCES.getString("age.tip"));
     }
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
     public void actionPerformed(ActionEvent event) {
       choice.setText(newAge);

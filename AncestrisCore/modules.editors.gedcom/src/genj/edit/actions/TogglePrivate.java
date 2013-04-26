@@ -26,7 +26,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 
 import java.awt.event.ActionEvent;
@@ -102,7 +102,7 @@ public class TogglePrivate extends AbstractChange {
                     getText(),
                     DialogHelper.WARNING_MESSAGE,
                     "This Gedcom file contains encrypted information that has to be decrypted before changing private/public status of other information",
-                    Action2.okOnly(),
+                    AbstractAncestrisAction.okOnly(),
                     event);
             return null;
         }
@@ -128,7 +128,7 @@ public class TogglePrivate extends AbstractChange {
                 getText(),
                 DialogHelper.QUESTION_MESSAGE,
                 AbstractChange.resources.getString("recursive"),
-                Action2.yesNo(),
+                AbstractAncestrisAction.yesNo(),
                 event);
 
         // change it

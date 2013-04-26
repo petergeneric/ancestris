@@ -10,7 +10,7 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
@@ -33,8 +33,8 @@ import org.openide.util.lookup.Lookups;
 class GedcomFileNode extends AbstractNode implements ExplorerNode {
 
     Context context;
-    Action2 closeAction = null;
-    Action2 saveAction = null;
+    AbstractAncestrisAction closeAction = null;
+    AbstractAncestrisAction saveAction = null;
 
     /** Creates a new instance of GedcomFileNode */
     public GedcomFileNode(Gedcom gedcom) {

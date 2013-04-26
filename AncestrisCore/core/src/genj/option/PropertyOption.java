@@ -21,7 +21,7 @@ package genj.option;
 
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooserWidget;
 import genj.util.swing.FontChooser;
@@ -447,7 +447,7 @@ public abstract class PropertyOption extends Option {
     public void actionPerformed(ActionEvent e) {
       Object value = option.getValue();
       JComponent editor = getEditor(value);
-      int rc = DialogHelper.openDialog(option.getName(), DialogHelper.QUESTION_MESSAGE, new JScrollPane(editor), Action2.okCancel(), e);
+      int rc = DialogHelper.openDialog(option.getName(), DialogHelper.QUESTION_MESSAGE, new JScrollPane(editor), AbstractAncestrisAction.okCancel(), e);
       if (rc==0) {
         option.setValue(getValue(editor));
 

@@ -19,6 +19,7 @@
  */
 package genj.util.swing;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -62,7 +63,7 @@ public class TableWidget<ROW> extends JTable {
   @Override
   public TableCellRenderer getCellRenderer(int row, int column) {
     Object val = getValueAt(row, column);
-    if (val instanceof Action2) 
+    if (val instanceof AbstractAncestrisAction) 
       return new ActionRenderer();
     return super.getCellRenderer(row, column);
   }
@@ -74,9 +75,9 @@ public class TableWidget<ROW> extends JTable {
     if (col<0||row<0)
       return null;
     Object val = getValueAt(row, col);
-    if (!(val instanceof Action2))
+    if (!(val instanceof AbstractAncestrisAction))
       return null;
-    Action2 action = (Action2)val;
+    AbstractAncestrisAction action = (AbstractAncestrisAction)val;
     String tip = action.getTip();
     if (tip!=null)
       return tip;
@@ -167,7 +168,7 @@ public class TableWidget<ROW> extends JTable {
     protected Column(String name, Class<?> valueType) {
       columns.add(this);
       TableColumn c = new TableColumn(columns.size()-1);
-      if (Action2.class.isAssignableFrom(valueType))
+      if (AbstractAncestrisAction.class.isAssignableFrom(valueType))
         c.setMaxWidth(16);
       c.setHeaderValue(name);
       getColumnModel().addColumn(c);
@@ -221,7 +222,7 @@ public class TableWidget<ROW> extends JTable {
     @Override
     protected void setValue(Object value) {
       if (value!=null)
-        super.setIcon( ((Action2)value).getImage() );
+        super.setIcon( ((AbstractAncestrisAction)value).getImage() );
     }
   }
 

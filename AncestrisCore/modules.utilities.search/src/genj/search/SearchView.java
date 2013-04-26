@@ -28,7 +28,7 @@ import genj.util.GridBagHelper;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
@@ -110,7 +110,7 @@ public class SearchView extends View {
   private JCheckBox checkRegExp;
   private JLabel labelCount;
   
-  private Action2 actionStart = new ActionStart(), actionStop = new ActionStop();
+  private AbstractAncestrisAction actionStart = new ActionStart(), actionStop = new ActionStop();
   
   /** history */
   private LinkedList<String> oldTags, oldValues;
@@ -305,10 +305,10 @@ public class SearchView extends View {
   /**
    * Create preset Tag Actions
    */
-  private List<Action2> createTagActions() {
+  private List<AbstractAncestrisAction> createTagActions() {
     
     // loop through DEFAULT_TAGS
-    List<Action2> result = new ArrayList<Action2>();
+    List<AbstractAncestrisAction> result = new ArrayList<AbstractAncestrisAction>();
     for (int i=0;i<DEFAULT_TAGS.length;i++) {
       result.add(new ActionTag(DEFAULT_TAGS[i]));
     }
@@ -320,9 +320,9 @@ public class SearchView extends View {
   /**
    * Create RegExp Pattern Actions
    */
-  private List<Action2> createPatternActions() {
+  private List<AbstractAncestrisAction> createPatternActions() {
     // loop until ...
-    List<Action2> result = new ArrayList<Action2>();
+    List<AbstractAncestrisAction> result = new ArrayList<AbstractAncestrisAction>();
     for (int i=0;;i++) {
       // check text and pattern
       String 
@@ -356,7 +356,7 @@ public class SearchView extends View {
   /**
    * Action - select predefined paths
    */
-  private class ActionTag extends Action2 {
+  private class ActionTag extends AbstractAncestrisAction {
     
     private String tags;
     
@@ -373,7 +373,7 @@ public class SearchView extends View {
     }
     
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
     public void actionPerformed(ActionEvent event) {
       choiceTag.setText(tags);
@@ -387,7 +387,7 @@ public class SearchView extends View {
    *   {2} (selection)
    *   {3} after selection
    */
-  private class ActionPattern extends Action2 {
+  private class ActionPattern extends AbstractAncestrisAction {
     /** pattern */
     private String pattern;
     /**
@@ -403,7 +403,7 @@ public class SearchView extends View {
       pattern = pat;
     }
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
     public void actionPerformed(ActionEvent event) {
 
@@ -449,7 +449,7 @@ public class SearchView extends View {
   /**
    * Action - trigger search
    */
-  private class ActionStart extends Action2 {
+  private class ActionStart extends AbstractAncestrisAction {
     
     /** constructor */
     private ActionStart() {
@@ -468,7 +468,7 @@ public class SearchView extends View {
   /**
    * Action - stop search
    */
-  private class ActionStop extends Action2 {
+  private class ActionStop extends AbstractAncestrisAction {
     /** constructor */
     private ActionStop() {
       setImage(IMG_STOP);

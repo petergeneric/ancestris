@@ -31,7 +31,7 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.view.SettingsAction;
 import genj.view.ToolBar;
 import genj.view.View;
@@ -200,8 +200,9 @@ public class TableView extends View {
         }
 
         // shortcuts KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK)
-        new NextMode(true).install(this, "ctrl pressed LEFT");
-        new NextMode(false).install(this, "ctrl pressed RIGHT");
+        //XXX: shortcut should be placed in @Action... Annotations (layer)
+//        new NextMode(true).install(this, "ctrl pressed LEFT");
+//        new NextMode(false).install(this, "ctrl pressed RIGHT");
 
         // done
     }
@@ -387,7 +388,7 @@ public class TableView extends View {
     /**
      * Action - go to next mode
      */
-    private class NextMode extends Action2 {
+    private class NextMode extends AbstractAncestrisAction {
 
         private int dir;
 
@@ -414,12 +415,12 @@ public class TableView extends View {
     /**
      * Action - toggle sticky mode
      */
-    private class Sticky extends Action2 {
+    private class Sticky extends AbstractAncestrisAction {
 
         /** constructor */
         protected Sticky() {
             super.setImage(ancestris.core.resources.Images.imgStickOff);
-            super.setTip(resources, "action.stick.tip");
+            super.setTip(resources.getString("action.stick.tip"));
             super.setSelected(false);
         }
 
@@ -575,7 +576,7 @@ public class TableView extends View {
     /**
      * A mode is a configuration for a set of entities
      */
-    /*package*/ class Mode extends Action2 {
+    /*package*/ class Mode extends AbstractAncestrisAction {
 
         /** attributes */
         private String tag;

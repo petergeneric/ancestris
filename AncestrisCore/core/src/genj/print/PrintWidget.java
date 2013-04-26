@@ -26,7 +26,7 @@ import genj.renderer.DPI;
 import genj.renderer.RenderOptions;
 import genj.renderer.RenderPreviewHintKey;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.NestedBlockLayout;
@@ -264,7 +264,7 @@ public class PrintWidget extends JTabbedPane {
   /**
    * Action : printer settings
    */
-  private class Settings extends Action2 {
+  private class Settings extends AbstractAncestrisAction {
 
     /** constructor */
     private Settings() {

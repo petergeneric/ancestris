@@ -7,7 +7,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.report.ReportView;
 import genj.util.Registry;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
@@ -227,7 +227,7 @@ public class PreviewView extends JPanel {
 
             Registry foRegistry = Registry.get(getClass());
 
-            Action[] actions = Action2.okCancel();
+            Action[] actions = AbstractAncestrisAction.okCancel();
             FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
             options.connect(actions[0]);
 
@@ -339,7 +339,7 @@ public class PreviewView extends JPanel {
     /**
      * Action: Console
      */
-    private class ActionShow extends Action2 {
+    private class ActionShow extends AbstractAncestrisAction {
 
         protected ActionShow() {
             setImage(imgConsole);

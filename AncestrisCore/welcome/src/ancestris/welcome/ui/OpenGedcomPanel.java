@@ -19,21 +19,17 @@
  */
 package ancestris.welcome.ui;
 
-import ancestris.api.newgedcom.NewGedcom;
+import ancestris.app.ActionOpen;
+import ancestris.welcome.content.BundleSupport;
+import ancestris.welcome.content.Constants;
+import ancestris.welcome.content.LinkButton;
+import ancestris.welcome.content.Utils;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import ancestris.welcome.content.BundleSupport;
-import ancestris.welcome.content.Constants;
-import ancestris.welcome.content.LinkButton;
-import ancestris.welcome.content.Utils;
-import ancestris.app.ActionNew;
-import ancestris.app.ActionOpen;
-import javax.swing.AbstractAction;
-import org.openide.util.Lookup;
 
 /**
  *

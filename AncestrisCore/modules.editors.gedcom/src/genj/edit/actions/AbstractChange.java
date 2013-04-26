@@ -25,7 +25,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
@@ -54,7 +54,7 @@ import org.openide.util.Utilities;
 /**
  * ActionChange - change the gedcom information
  */
-public abstract class AbstractChange extends Action2 
+public abstract class AbstractChange extends AbstractAncestrisAction 
 implements LookupListener{
   
   /** resources */
@@ -213,7 +213,7 @@ implements LookupListener{
   }
   
   /**
-   * @see genj.util.swing.Action2#execute()
+   * @see genj.util.swing.AbstractAncestrisAction#execute()
    */
     @Override
   public void actionPerformed(final ActionEvent event) {
@@ -231,8 +231,8 @@ implements LookupListener{
   
       // prepare actions
       Action[] actions = { 
-          new Action2(resources.getString("confirm.proceed", getText())),
-          Action2.cancel() 
+          new AbstractAncestrisAction(resources.getString("confirm.proceed", getText())),
+          AbstractAncestrisAction.cancel() 
       };
       
       // Recheck with the user
@@ -249,7 +249,7 @@ implements LookupListener{
         }
       });
     } catch (Throwable t) {
-      DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, t.getMessage(), Action2.okOnly(), event);
+      DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, t.getMessage(), AbstractAncestrisAction.okOnly(), event);
     }
     
     // propagate selection

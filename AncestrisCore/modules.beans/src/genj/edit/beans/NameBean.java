@@ -19,6 +19,7 @@
  */
 package genj.edit.beans;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.CoreOptions;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
@@ -124,7 +125,7 @@ public class NameBean extends PropertyBean {
       public void actionPerformed(ActionEvent e) {
         String msg = getReplaceAllMsg();
         if (msg!=null&&cAll.isSelected()) {
-          int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, msg, Action2.yesNo(), NameBean.this);
+          int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, msg, AbstractAncestrisAction.yesNo(), NameBean.this);
           cAll.setSelected(rc==0);
         }        
       }

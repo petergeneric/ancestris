@@ -5,7 +5,7 @@
 
 package ancestris.util;
 
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper.DialogManager;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -74,21 +74,21 @@ public class DialogManagerImp implements DialogManager{
     private static Object[] actions2options(Action[] actions){
         Object options[] = new Object[actions.length];
         for (int i = 0; i < actions.length; i++){
-            if (actions[i] instanceof Action2){
-                Action2 a = (Action2)(actions[i]);
-                if (a.getText().equals(Action2.TXT_CANCEL)){
+            if (actions[i] instanceof AbstractAncestrisAction){
+                AbstractAncestrisAction a = (AbstractAncestrisAction)(actions[i]);
+                if (a.getText().equals(AbstractAncestrisAction.TXT_CANCEL)){
                     options[i] = NotifyDescriptor.CANCEL_OPTION;
                     continue;
                 }
-                if (a.getText().equals(Action2.TXT_OK)){
+                if (a.getText().equals(AbstractAncestrisAction.TXT_OK)){
                     options[i] = NotifyDescriptor.OK_OPTION;
                     continue;
                 }
-                if (a.getText().equals(Action2.TXT_YES)){
+                if (a.getText().equals(AbstractAncestrisAction.TXT_YES)){
                     options[i] = NotifyDescriptor.YES_OPTION;
                     continue;
                 }
-                if (a.getText().equals(Action2.TXT_NO)){
+                if (a.getText().equals(AbstractAncestrisAction.TXT_NO)){
                     options[i] = NotifyDescriptor.NO_OPTION;
                     continue;
                 }

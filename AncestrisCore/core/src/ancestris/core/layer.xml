@@ -12,6 +12,10 @@
                     <attr name="displayName" stringvalue="Add other"/>
                     <attr name="position" intvalue="510"/>
                 </folder>
+                <folder name="Tools">
+                    <attr name="displayName" stringvalue="Tools"/>
+                    <attr name="position" intvalue="520"/>
+                </folder>
                 <folder name="properties">
                     <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxPropertiesDisplayName"/>
                     <attr name="position" intvalue="900"/>

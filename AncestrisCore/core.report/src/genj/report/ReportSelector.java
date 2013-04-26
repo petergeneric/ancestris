@@ -22,7 +22,7 @@ package genj.report;
 import genj.option.Option;
 import genj.option.OptionsWidget;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ImageIcon;
 
 import java.awt.BorderLayout;

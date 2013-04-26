@@ -29,7 +29,7 @@ import genj.gedcom.PropertyName;
 import genj.gedcom.TagPath;
 import genj.io.BasicTransferable;
 import genj.util.WordBuffer;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.LinkWidget;
 import genj.util.swing.SortableTableModel;
@@ -446,8 +446,8 @@ public class PropertyTableWidget extends JPanel  {
     }
     
     /** create a shortcut */
-    Action2 createShortcut(String txt, final int y) {
-      return new Action2(txt.toUpperCase()) {
+    AbstractAncestrisAction createShortcut(String txt, final int y) {
+      return new AbstractAncestrisAction(txt.toUpperCase()) {
         public void actionPerformed(ActionEvent event) {
           int x = 0;
           try { x = ((JViewport)table.getParent()).getViewPosition().x; } catch (Throwable t) {};
@@ -466,7 +466,7 @@ public class PropertyTableWidget extends JPanel  {
       Collator collator = propertyModel.getGedcom().getCollator();
 
       // loop over rows and create actions
-      List<Action2> actions = new ArrayList<Action2>(26);
+      List<AbstractAncestrisAction> actions = new ArrayList<AbstractAncestrisAction>(26);
       
       String cursor = "";
       for (int r=0;r<model.getRowCount();r++) {
@@ -486,7 +486,7 @@ public class PropertyTableWidget extends JPanel  {
         cursor = value;
 
         // action
-        Action2 action = createShortcut(value, table.getCellRect(dir>0?r:model.getRowCount()-r-1, col, true).y);
+        AbstractAncestrisAction action = createShortcut(value, table.getCellRect(dir>0?r:model.getRowCount()-r-1, col, true).y);
         actions.add(action);
         
         // key binding

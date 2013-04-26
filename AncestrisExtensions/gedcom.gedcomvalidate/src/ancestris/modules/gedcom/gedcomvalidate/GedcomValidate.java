@@ -16,7 +16,7 @@ import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
 import genj.util.EnvironmentChecker;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.view.ViewContext;
 
 import java.awt.event.ActionEvent;
@@ -95,7 +95,7 @@ public class GedcomValidate {
 //        if (gedcom.getSubmitter() == null) {
 //            final ViewContext ctx = new ViewContext(gedcom);
 //            ctx.setText(NbBundle.getMessage(this.getClass(), "err.nosubmitter", gedcom.getName())).setImage(Gedcom.getImage());
-//            ctx.addAction(new Action2(NbBundle.getMessage(this.getClass(), "fix")) {
+//            ctx.addAction(new AbstractAncestrisAction(NbBundle.getMessage(this.getClass(), "fix")) {
 //
 //                public void actionPerformed(ActionEvent event) {
 //                    setEnabled(false);

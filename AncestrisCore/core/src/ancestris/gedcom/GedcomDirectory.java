@@ -29,7 +29,7 @@ import ancestris.view.SelectionSink;
 import genj.gedcom.*;
 import genj.io.*;
 import genj.util.*;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooser;
 import java.awt.Component;
@@ -130,7 +130,7 @@ public abstract class GedcomDirectory {
             file = new File(file.getAbsolutePath() + ".ged");
         }
         if (file.exists()) {
-            int rc = DialogHelper.openDialog(create_title(), DialogHelper.WARNING_MESSAGE, file_exists(file.getName()), Action2.yesNo(), null);
+            int rc = DialogHelper.openDialog(create_title(), DialogHelper.WARNING_MESSAGE, file_exists(file.getName()), AbstractAncestrisAction.yesNo(), null);
             if (rc != 0) {
                 return null;
             }
@@ -331,7 +331,7 @@ public abstract class GedcomDirectory {
 
         // Need confirmation if File exists?
         if (file.exists()) {
-            int rc = DialogHelper.openDialog(RES.getString("cc.save.title", context.getGedcom().toString()), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
+            int rc = DialogHelper.openDialog(RES.getString("cc.save.title", context.getGedcom().toString()), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), AbstractAncestrisAction.yesNo(), null);
             if (rc != 0) {
                 return false;
             }
@@ -384,7 +384,7 @@ public abstract class GedcomDirectory {
 
             // close file officially
             int rc = DialogHelper.openDialog(null, DialogHelper.WARNING_MESSAGE,
-                    RES.getString("cc.savechanges?", context.getGedcom().getName()), Action2.yesNoCancel(), null);
+                    RES.getString("cc.savechanges?", context.getGedcom().getName()), AbstractAncestrisAction.yesNoCancel(), null);
             // cancel - we're done
             if (rc == 2) {
                 return false;

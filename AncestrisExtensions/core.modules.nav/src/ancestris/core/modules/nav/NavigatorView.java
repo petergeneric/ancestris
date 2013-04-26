@@ -29,7 +29,7 @@ import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.util.GridBagHelper;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import genj.view.View;
@@ -379,7 +379,7 @@ public class NavigatorView extends View {
   /**
    * Jump to another indi
    */
-  private class Jump extends Action2 {
+  private class Jump extends AbstractAncestrisAction {
     /** the target */
     private Indi target;
     /** constructor */

@@ -6,11 +6,11 @@ package ancestris.app;
 
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
 
-public final class ActionNew extends Action2 {
+public final class ActionNew extends AbstractAncestrisAction {
 
     /** constructor */
     public ActionNew() {

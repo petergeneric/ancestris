@@ -24,13 +24,13 @@ import java.awt.event.ActionEvent;
 import genj.edit.EditViewFactory;
 import ancestris.core.resources.Images;
 import genj.gedcom.Context;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.view.SelectionSink;
 
 /**
  * ActionEdit - edit an entity
  */
-public class OpenForEdit extends Action2 {
+public class OpenForEdit extends AbstractAncestrisAction {
   private Context context;
   
   /**
@@ -43,7 +43,7 @@ public class OpenForEdit extends Action2 {
   }
   
   /**
-   * @see genj.util.swing.Action2#execute()
+   * @see genj.util.swing.AbstractAncestrisAction#execute()
    */
   public void actionPerformed(ActionEvent event) {
       SelectionSink.Dispatcher.fireSelection(context, false);

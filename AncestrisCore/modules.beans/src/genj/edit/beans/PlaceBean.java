@@ -24,7 +24,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.GridBagHelper;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.Updateable;
@@ -64,7 +64,7 @@ public class PlaceBean extends PropertyBean {
 
             public void actionPerformed(ActionEvent e) {
                 if (global.isSelected()) {
-                    int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, getGlobalConfirmMessage(), Action2.yesNo(), PlaceBean.this);
+                    int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, getGlobalConfirmMessage(), AbstractAncestrisAction.yesNo(), PlaceBean.this);
                     global.setSelected(rc == 0);
                 }
             }

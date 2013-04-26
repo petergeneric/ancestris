@@ -30,7 +30,7 @@ import genj.gedcom.PropertySimpleReadOnly;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 
 import java.awt.BorderLayout;
@@ -286,20 +286,20 @@ public class BlueprintEditor extends JSplitPane {
   /**
    * Insert a property
    */
-  private class Insert extends Action2 {
+  private class Insert extends AbstractAncestrisAction {
     /** constructor */
     private Insert() {
       super.setText(resources.getString("prop.insert"));
       super.setTip(resources.getString("prop.insert.tip"));
     }
-    /** @see genj.util.swing.Action2#execute() */
+    /** @see genj.util.swing.AbstractAncestrisAction#execute() */
     public void actionPerformed(ActionEvent event) {
       // create a tree of available TagPaths
       PathTreeWidget tree = new PathTreeWidget();
       TagPath[] paths = grammar.getAllPaths(blueprint.getTag(), Property.class);
       tree.setPaths(paths, new TagPath[0]);
       // Recheck with the user
-      int option = DialogHelper.openDialog(resources.getString("prop.insert.tip"),DialogHelper.QUESTION_MESSAGE,tree,Action2.okCancel(),BlueprintEditor.this);        
+      int option = DialogHelper.openDialog(resources.getString("prop.insert.tip"),DialogHelper.QUESTION_MESSAGE,tree,AbstractAncestrisAction.okCancel(),BlueprintEditor.this);        
       // .. OK?
       if (option!=0) return;
       // add those properties

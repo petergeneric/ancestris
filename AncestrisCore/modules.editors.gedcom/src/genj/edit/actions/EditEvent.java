@@ -26,7 +26,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 
 import java.awt.event.ActionEvent;
@@ -38,7 +38,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Edit an event
  */
-public class EditEvent extends Action2 {
+public class EditEvent extends AbstractAncestrisAction {
   
   private final static Resources RESOURCES = Resources.get(EditEvent.class);
   private Property property;
@@ -61,7 +61,7 @@ public class EditEvent extends Action2 {
     final BeanPanel panel = new BeanPanel();
     panel.setRoot(property);
     
-    final Action[] actions = Action2.okCancel();
+    final Action[] actions = AbstractAncestrisAction.okCancel();
     actions[0].setEnabled(false);
     
     panel.addChangeListener(new ChangeListener() {

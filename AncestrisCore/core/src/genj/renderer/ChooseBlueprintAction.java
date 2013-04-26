@@ -22,7 +22,7 @@ package genj.renderer;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
@@ -44,7 +44,7 @@ import javax.swing.event.ListSelectionListener;
 /**
  * Action for picking/editing a blueprint
  */
-public abstract class ChooseBlueprintAction extends Action2 {
+public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
   
   private final static Resources RESOURCES = Resources.get(ChooseBlueprintAction.class);
   private final static ImageIcon IMAGE = new ImageIcon(ChooseBlueprintAction.class, "Blueprint.png");
@@ -73,8 +73,8 @@ public abstract class ChooseBlueprintAction extends Action2 {
     
     blueprints = new JList(BlueprintManager.getInstance().getBlueprints(recipient.getTag()).toArray());
     blueprints.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    final Action2 add = new Add();
-    final Action2 del = new Del();
+    final AbstractAncestrisAction add = new Add();
+    final AbstractAncestrisAction del = new Del();
     blueprints.addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent e) {
         
@@ -114,7 +114,7 @@ public abstract class ChooseBlueprintAction extends Action2 {
         RESOURCES.getString("blueprint"), 
         DialogHelper.QUESTION_MESSAGE, 
         content, 
-        Action2.okOnly(), 
+        AbstractAncestrisAction.okOnly(), 
         e);
     
     editor.commit();
@@ -124,7 +124,7 @@ public abstract class ChooseBlueprintAction extends Action2 {
       commit(recipient, current);
   }
 
-  private class Add extends Action2 {
+  private class Add extends AbstractAncestrisAction {
     Add() {
       super(RESOURCES.getString("blueprint.add"));
     }
@@ -157,7 +157,7 @@ public abstract class ChooseBlueprintAction extends Action2 {
     }
   }
   
-  private class Del extends Action2 {
+  private class Del extends AbstractAncestrisAction {
     Del() {
       super(RESOURCES.getString("blueprint.del"));
       setEnabled(false);
@@ -167,7 +167,7 @@ public abstract class ChooseBlueprintAction extends Action2 {
       Blueprint selection = (Blueprint)blueprints.getSelectedValue();
       if (selection==null||selection.isReadOnly())
         return;
-      if (0!=DialogHelper.openDialog(null,DialogHelper.WARNING_MESSAGE,RESOURCES.getString("blueprint.del.confirm", selection.getName()),Action2.okCancel(),e))
+      if (0!=DialogHelper.openDialog(null,DialogHelper.WARNING_MESSAGE,RESOURCES.getString("blueprint.del.confirm", selection.getName()),AbstractAncestrisAction.okCancel(),e))
         return;
       
       try {

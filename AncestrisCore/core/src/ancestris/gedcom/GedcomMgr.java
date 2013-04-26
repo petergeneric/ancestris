@@ -34,7 +34,7 @@ import genj.io.IGedcomWriter;
 import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.view.ViewContext;
 import java.io.File;
@@ -261,7 +261,7 @@ public abstract class GedcomMgr {
 
             } catch (IOException ex) {
                 String txt = RES.getString("cc.open.no_connect_to", input) + "\n[" + ex.getMessage() + "]";
-                DialogHelper.openDialog(FileUtil.getFileDisplayName(input), DialogHelper.ERROR_MESSAGE, txt, Action2.okOnly(), null);
+                DialogHelper.openDialog(FileUtil.getFileDisplayName(input), DialogHelper.ERROR_MESSAGE, txt, AbstractAncestrisAction.okOnly(), null);
                 return null;
             }
 
@@ -286,7 +286,7 @@ public abstract class GedcomMgr {
                 }
             } catch (GedcomIOException ex) {
                 // tell the user about it
-                DialogHelper.openDialog(FileUtil.getFileDisplayName(input), DialogHelper.ERROR_MESSAGE, RES.getString("cc.open.read_error", "" + ex.getLine()) + ":\n" + ex.getMessage(), Action2.okOnly(), null);
+                DialogHelper.openDialog(FileUtil.getFileDisplayName(input), DialogHelper.ERROR_MESSAGE, RES.getString("cc.open.read_error", "" + ex.getLine()) + ":\n" + ex.getMessage(), AbstractAncestrisAction.okOnly(), null);
                 // abort
                 return null;
             } finally {
@@ -354,10 +354,10 @@ public abstract class GedcomMgr {
 
 
                 } catch (GedcomEncodingException gee) {
-                    DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.write_encoding_error", gee.getMessage()), Action2.okOnly(), null);
+                    DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.write_encoding_error", gee.getMessage()), AbstractAncestrisAction.okOnly(), null);
                     return false;
                 } catch (IOException ex) {
-                    DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.open_error", gedcom.getOrigin().getFile().getAbsolutePath()), Action2.okOnly(), null);
+                    DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.open_error", gedcom.getOrigin().getFile().getAbsolutePath()), AbstractAncestrisAction.okOnly(), null);
                     return false;
                 }
 
@@ -383,7 +383,7 @@ public abstract class GedcomMgr {
                 }
 
             } catch (GedcomIOException gioex) {
-                DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.write_error", "" + gioex.getLine()) + ":\n" + gioex.getMessage(), Action2.okOnly(), null);
+                DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.write_error", "" + gioex.getLine()) + ":\n" + gioex.getMessage(), AbstractAncestrisAction.okOnly(), null);
                 return false;
             }
 

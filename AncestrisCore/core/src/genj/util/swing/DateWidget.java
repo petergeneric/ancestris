@@ -19,6 +19,7 @@
  */
 package genj.util.swing;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.gedcom.GedcomException;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.time.Calendar;
@@ -374,7 +375,7 @@ public class DateWidget extends JPanel {
   /**
    * Action to switch calendar
    */
-  private class SwitchCalendar extends Action2 {
+  private class SwitchCalendar extends AbstractAncestrisAction {
     /** the calendar to switch to */
     private Calendar newCalendar;
 
@@ -425,7 +426,7 @@ public class DateWidget extends JPanel {
     }
 
     /**
-     * @see genj.util.swing.Action2#execute()
+     * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
     public void actionPerformed(ActionEvent event) {
       PointInTime pit = DateWidget.this.getValue();
@@ -433,7 +434,7 @@ public class DateWidget extends JPanel {
         try {
           pit.set(newCalendar);
         } catch (GedcomException e) {
-          Action[] actions = { Action2.ok(), new Action2(Calendar.TXT_CALENDAR_RESET) };
+          Action[] actions = { AbstractAncestrisAction.ok(), new AbstractAncestrisAction(Calendar.TXT_CALENDAR_RESET) };
           int rc = DialogHelper.openDialog(Calendar.TXT_CALENDAR_SWITCH, DialogHelper.ERROR_MESSAGE, e.getMessage(), actions, DateWidget.this);
           if (rc == 0)
             return;

@@ -20,7 +20,7 @@
 package genj.view;
 
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 
 import java.awt.event.ActionEvent;
@@ -30,7 +30,7 @@ import javax.swing.JComponent;
 /**
  * A base action for settings on views
  */
-public abstract class SettingsAction extends Action2 {
+public abstract class SettingsAction extends AbstractAncestrisAction {
   
   private final static Resources RESOURCES = Resources.get(SettingsAction.class);
   
@@ -48,7 +48,7 @@ public abstract class SettingsAction extends Action2 {
         RESOURCES.getString("view.settings.tip"), 
         DialogHelper.QUESTION_MESSAGE, 
         editor, 
-        Action2.okOnly(), 
+        AbstractAncestrisAction.okOnly(), 
         e);
 
   }

@@ -4,6 +4,7 @@
 package genj.util.swing;
 
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -24,7 +25,7 @@ public class LinkWidget extends JLabel {
   private boolean hover = false;
 
   /** action */
-  private Action2 action;
+  private AbstractAncestrisAction action;
   
   /** normal color */
   private Color normal;
@@ -32,7 +33,7 @@ public class LinkWidget extends JLabel {
   /**
    * Constructor
    */
-  public LinkWidget(Action2 action) {
+  public LinkWidget(AbstractAncestrisAction action) {
     this(action.getText(), action.getImage());
     setToolTipText(action.getTip());
     this.action = action;

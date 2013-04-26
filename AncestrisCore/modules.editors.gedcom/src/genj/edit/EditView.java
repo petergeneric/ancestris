@@ -33,7 +33,7 @@ import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -339,12 +339,12 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
     /**
      * Action - toggle sticky mode
      */
-    private static class Sticky extends Action2 {
+    private static class Sticky extends AbstractAncestrisAction {
 
         /** constructor */
         protected Sticky() {
             super.setImage(Images.imgStickOff);
-            super.setTip(RESOURCES, "action.stick.tip");
+            super.setTip(RESOURCES.getString("action.stick.tip"));
             super.setSelected(false);
         }
 
@@ -364,12 +364,12 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
     /**
      * Action - toggle focus mode
      */
-    private static class Focus extends Action2 {
+    private static class Focus extends AbstractAncestrisAction {
 
         /** constructor */
         protected Focus() {
             super.setImage(Images.imgFocus);
-            super.setTip(RESOURCES, "action.focus.tip");
+            super.setTip(RESOURCES.getString("action.focus.tip"));
             super.setSelected(false);
         }
 
@@ -384,11 +384,11 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
     /**
      * Action - advanced or basic
      */
-    private class Mode extends Action2 {
+    private class Mode extends AbstractAncestrisAction {
 
         private Mode() {
             setImage(Images.imgView);
-            setTip(RESOURCES, "action.mode");
+            setTip(RESOURCES.getString("action.mode"));
             super.setSelected(false);
         }
 

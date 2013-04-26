@@ -21,7 +21,6 @@ package ancestris.core.actions;
 
 import genj.gedcom.PropertyFile;
 import genj.util.Resources;
-import genj.util.swing.Action2;
 
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
@@ -32,7 +31,7 @@ import java.util.logging.Logger;
 /**
  * External action 
  */
-public class RunExternal extends Action2 {
+public class RunExternal extends AbstractAncestrisAction {
   
   /** the wrapped file */
   private File file;
@@ -51,7 +50,7 @@ public class RunExternal extends Action2 {
   }
   
   /**
-   * @see genj.util.swing.Action2#execute()
+   * @see genj.util.swing.AbstractAncestrisAction#execute()
    */
     @Override
   public void actionPerformed(ActionEvent event) {
