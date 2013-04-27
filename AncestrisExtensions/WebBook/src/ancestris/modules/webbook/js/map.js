@@ -1,4 +1,3 @@
-<script type="text/javascript">
 //<![CDATA[
     var mapXml = "map.xml";
     var map;
@@ -273,4 +272,3 @@
 
 
 //]]>
-</script>
