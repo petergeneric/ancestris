@@ -121,7 +121,9 @@ public class WebMap extends WebSection {
         String javascriptDir = "js/";
         try {
             String str = wh.readStream(javascriptDir + "map.js");
+            out.println("<script type=\"text/javascript\">");
             out.println(filter(str));
+            out.println("</script>");
         } catch (IOException e) {
             //e.printStackTrace();
             wb.log.write(wb.log.ERROR, "exportPage - " + e.getMessage());
