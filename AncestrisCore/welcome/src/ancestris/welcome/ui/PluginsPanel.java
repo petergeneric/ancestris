@@ -44,21 +44,23 @@
 
 package ancestris.welcome.ui;
 
+import ancestris.welcome.content.BundleSupport;
+import ancestris.welcome.content.Constants;
+import ancestris.welcome.content.LinkButton;
+import ancestris.welcome.content.Utils;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import ancestris.welcome.content.BundleSupport;
-import ancestris.welcome.content.Constants;
-import ancestris.welcome.content.LinkButton;
-import ancestris.welcome.content.Utils;
+import org.openide.cookies.InstanceCookie;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
-import org.openide.util.actions.CallableSystemAction;
-import org.openide.util.actions.SystemAction;
 
 /**
  *
@@ -116,13 +118,13 @@ class PluginsPanel extends JPanel implements Constants {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                ClassLoader cl = Lookup.getDefault ().lookup (ClassLoader.class);
-                CallableSystemAction a = SystemAction.get(cl.loadClass("org.netbeans.modules.autoupdate.ui.actions.PluginManagerAction").asSubclass(CallableSystemAction.class));
-                a.putValue("InitialTab", initialTab); // NOI18N
-                a.performAction ();
+                FileObject fo = FileUtil.getConfigFile( "Actions/System/org-netbeans-modules-autoupdate-ui-actions-PluginManagerAction.instance"); // NOI18N
+                Action a = (Action) DataObject.find(fo).getLookup().lookup(InstanceCookie.class).instanceCreate();
+                a.actionPerformed(new ActionEvent(e.getSource(), 100, initialTab));
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
     }
+
 }
