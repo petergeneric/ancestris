@@ -31,7 +31,7 @@ import org.openide.util.ContextAwareAction;
 @ActionID(category = "Tree", id = "genj.tree.actions.BookmarkAction")
 @ActionRegistration(displayName = "BookMark")
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1010)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", position = 1010)})
 /**
  * ActionRoot
  */

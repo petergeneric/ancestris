@@ -43,7 +43,8 @@ import org.openide.util.LookupEvent;
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.TogglePropertyPrivate")
 @ActionRegistration(displayName = "#private")
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools"
+        ,position= 3000)})
 public class TogglePrivate extends AbstractChange {
 
     /** the properties */
