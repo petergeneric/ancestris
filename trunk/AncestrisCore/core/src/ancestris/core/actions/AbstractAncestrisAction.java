@@ -54,6 +54,12 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
     setText(text);
   }
   
+  /** constructor */
+  public AbstractAncestrisAction(String text, Icon icon) {
+    setText(text);
+    setImage(icon);
+  }
+
   /** default noop implementation of action invocation */
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -78,7 +84,7 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
    * accessor - image 
    */
     @Override
-  public AncestrisAction setImage(Icon icon) {
+  public final AncestrisAction setImage(Icon icon) {
     super.putValue(KEY_ICON, icon);
     return this;
   }
@@ -87,7 +93,7 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
    * accessor - text
    */
     @Override
-  public AncestrisAction setText(String txt) {
+  public final AncestrisAction setText(String txt) {
     super.putValue(KEY_TEXT, txt);
     
     return this;

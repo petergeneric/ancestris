@@ -14,12 +14,12 @@ package ancestris.core.actions;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JMenu;
@@ -39,7 +39,7 @@ import org.openide.util.actions.Presenter;
  * @author daniel
  */
 public class SubMenuAction
-        extends AbstractAction
+        extends AbstractAncestrisAction
         // This action is a context aware action so we get the context from getContextAction
         // This context will then be used in Presenter.Popup to get the 
         // correct submenu for this context
@@ -47,15 +47,20 @@ public class SubMenuAction
 
     private List<Action> actions = new ArrayList<Action>(5);
 
-    public SubMenuAction(String displayName) {
-        super(displayName);
+    public SubMenuAction() {
         putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
     }
 
-        public SubMenuAction(String displayName,Icon icon) {
-        super(displayName,icon);
-        putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
-        }
+    public SubMenuAction(String displayName) {
+        this();
+        setText(displayName);
+    }
+
+    public SubMenuAction(String displayName, Icon icon) {
+        this(displayName);
+        setImage(icon);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         JPopupMenu menu = Utilities.actionsToPopup(actions.toArray(new Action[]{}), Lookup.EMPTY);
@@ -63,7 +68,16 @@ public class SubMenuAction
         menu.show(source, 0, source.getHeight());
     }
 
-    public void setActions(List<? extends Action> actions) {
+    /**
+     * Removes all of the elements from this SubMenu.
+     * The list of actions this menu contains will be empty after this call returns.
+     * Usually called before {@link #addActions(java.util.Collection) to get a 
+     * new context.
+     */
+    public void clearActions() {
+        this.actions.clear();
+    }
+    public void addActions(Collection<? extends Action> actions) {
         this.actions.addAll(actions);
     }
 

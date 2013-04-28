@@ -13,7 +13,6 @@ package ancestris.gedcom;
 
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import genj.gedcom.Context;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
@@ -29,6 +28,7 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author daniel
  */
+//XXX: this class is buggy when context.getProperties().size()>1
 public class PropertyNode extends AbstractNode {
 
     private final InstanceContent lookupContents;

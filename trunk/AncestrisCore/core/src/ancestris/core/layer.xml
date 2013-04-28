@@ -13,7 +13,7 @@
                     <attr name="position" intvalue="510"/>
                 </folder>
                 <folder name="Tools">
-                    <attr name="displayName" stringvalue="Tools"/>
+                    <attr name="displayName" stringvalue="Tools and Reports"/>
                     <attr name="position" intvalue="520"/>
                 </folder>
                 <folder name="properties">

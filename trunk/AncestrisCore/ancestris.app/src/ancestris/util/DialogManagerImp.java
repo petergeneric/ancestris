@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
+//XXX: we must redesign this class and DialogManager in a more NB integrated manner
 package ancestris.util;
 
 import ancestris.core.actions.AbstractAncestrisAction;
@@ -71,6 +71,7 @@ public class DialogManagerImp implements DialogManager{
       return -1;
     }
 
+    // XXX: don't test against TXT_xx text
     private static Object[] actions2options(Action[] actions){
         Object options[] = new Object[actions.length];
         for (int i = 0; i < actions.length; i++){

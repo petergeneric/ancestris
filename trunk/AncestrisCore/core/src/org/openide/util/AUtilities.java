@@ -82,7 +82,7 @@ public class AUtilities {
 
                 if (!subActions.isEmpty()) {
                     SubMenuAction a = new SubMenuAction(dob.getNodeDelegate().getDisplayName());
-                    a.setActions(subActions);
+                    a.addActions(subActions);
                     actions.add(a);
                 }
             } else {

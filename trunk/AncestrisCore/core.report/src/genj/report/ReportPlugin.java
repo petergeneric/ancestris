@@ -21,13 +21,10 @@
  */
 package genj.report;
 
-import ancestris.core.actions.AncestrisActionProvider;
-import ancestris.core.actions.CommonActions;
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.report.ReportTopComponent;
-import ancestris.gedcom.PropertyNode;
-import ancestris.util.Utilities;
 import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -36,132 +33,52 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import static genj.report.Bundle.*;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.nodes.Node;
-import org.openide.util.ContextAwareAction;
 import org.openide.util.NbBundle;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Plugin
  */
-@ServiceProvider(service = AncestrisActionProvider.class)
 @NbBundle.Messages({
     "report.popup.title=Run Reports",
     "# {0} - Property Label",
     "# {1} - Property",
-    "report.runon=Run report on {0} '{1}'",
+    "report.runon=Run report on {0} ''{1}''",
     "# {0} - Properties, ",
     "# {1} - count",
-    "report.runon.group=Run report on '{0}' ({1}",
+    "report.runon.group=Run report on ''{0}'' ({1}",
     "# {0} - Gedcom",
-    "report.runon.gedcom=Run report on Gedcom {0}",
+    "report.runon.gedcom=Run report on Gedcom ''{0}''",
 })
-public class ReportPlugin implements AncestrisActionProvider {
+public class ReportPlugin{
 
     private final static Resources RESOURCES = Resources.get(ReportPlugin.class);
     private final static int MAX_HISTORY = 5;
     private boolean showReportPickerOnOpen = true;
+    //XXX: maybe we could put this value in a more gloally scope
+    private static final int POSITION = 2000;
 
     public ReportPlugin() {
         AncestrisPlugin.register(this);
 
     }
 
-    @Override
-    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
-        if (hasFocus){
-            return new ArrayList<Action>();
-        }
-        List<Property> props = new ArrayList<Property>();
-        for (Node node : nodes) {
-            if (node instanceof PropertyNode) {
-                props.add(((PropertyNode) node).getProperty());
-            }
-        }
-        if (props.isEmpty()) {
-            return new ArrayList<Action>();
-        }
-        Gedcom gedcom = props.get(0).getGedcom();
-        Context context = new Context(gedcom, null, props);
-        List<Action> result = new ArrayList<Action>(5);
-
-        result.add(getPropertiesMenuActions(context));
-        result.add(getEntitiesMenuActions(context));
-        result.add(getGedcomMenuActions(context));
-
-        if (!result.isEmpty()){
-            result.add(0, CommonActions.createSeparatorAction(NbBundle.getMessage(ReportPlugin.class, "report.popup.title")));
-            result.add(0, null);
-        }
-        return result;
-        // done
-    }
-    
-    //XXX: replace with some interface (Action or ActionListener)
-    private SubMenuAction getPropertiesMenuActions(Context context){
-        SubMenuAction group=null;
-        // props
-        List<? extends Property> properties = context.getProperties();
-        if (properties.size() > 1) {
-            group = new SubMenuAction(
-                    report_runon_group(Property.getPropertyNames(properties, MAX_HISTORY),properties.size()));
-            getActions(properties, context.getGedcom(), group);
-        } else if (properties.size() == 1) {
-            Property property = context.getProperty();
-            group = new SubMenuAction(
-                    report_runon(Property.LABEL, TagPath.get(property).getName()),
-                    property.getImage(false));
-            getActions(context.getProperty(), context.getGedcom(), group);
-        }
-        return group;
-    }
-
-    //XXX: replace with some interface (Action or ActionListener)
-    private SubMenuAction getEntitiesMenuActions(Context context){
-        SubMenuAction group=null;
-        // entities
-        List<? extends Entity> entities = context.getEntities();
-        if (entities.size() > 1) {
-            group = new SubMenuAction(
-                    report_runon_group(Property.getPropertyNames(entities, MAX_HISTORY),entities.size()));
-            getActions(entities, context.getGedcom(), group);
-        } else if (entities.size() == 1) {
-            Entity entity = context.getEntity();
-            group = new SubMenuAction(
-                    report_runon(Gedcom.getName(entity.getTag(), false), entity.getId()),
-                    entity.getImage());
-            getActions(context.getEntity(), context.getGedcom(), group);
-        }
-        return group;
-    }
-
-    //XXX: replace with some interface (Action or ActionListener)
-    private SubMenuAction getGedcomMenuActions(Context context){
-        // gedcom
-        SubMenuAction group = new SubMenuAction("Gedcom '" + context.getGedcom().getName() + '\'', Gedcom.getImage());
-        getActions(context.getGedcom(), context.getGedcom(), group);
-        return group;
-    }
-
 //    /**
 //     * collects actions for reports valid for given context
 //     */
 //        @Override
-//    public List<Action> getActions(Node[] nodes) {
+//    public List<Action> getReportActions(Node[] nodes) {
 //            List<Property> properties = new ArrayList<Property>();
 //            for (Node node:nodes){
 //                if (node instanceof PropertyNode){
@@ -175,19 +92,20 @@ public class ReportPlugin implements AncestrisActionProvider {
 //            Context context = new Context(gedcom, null, properties);
 //
 //        SubMenuAction action = new SubMenuAction("Reports", ReportViewFactory.IMG);
-//        getActions(context, gedcom, action);
+//        getReportActions(context, gedcom, action);
 //        List<Action> result = new ArrayList<Action>();
-//        if (!action.getActions().isEmpty()) {
+//        if (!action.getReportActions().isEmpty()) {
 //            result.add(action);
 //        }
 //        return result;
 //
 //    }
 //
-    private void getActions(Object context, Gedcom gedcom, SubMenuAction group) {
+    private static Collection<Action> getReportActions(Object context, Gedcom gedcom) {
 
         // Look through reports
-        Map<String, SubMenuAction> categories = new HashMap<String, SubMenuAction>();
+        Map<String, SubMenuAction> categories = new TreeMap<String, SubMenuAction>();
+        List<Action> result = new ArrayList<Action>(5);
         for (Report report : ReportLoader.getInstance().getReports()) {
             try {
                 String accept = report.accepts(context);
@@ -195,7 +113,7 @@ public class ReportPlugin implements AncestrisActionProvider {
                     ActionRun run = new ActionRun(accept, context, report, gedcom);
                     String cat = report.getCategory();
                     if (cat == null) {
-                        group.addAction(run);
+                        result.add(run);
                     } else {
                         SubMenuAction catgroup = categories.get(cat);
                         if (catgroup == null) {
@@ -209,67 +127,131 @@ public class ReportPlugin implements AncestrisActionProvider {
                 ReportView.LOG.log(Level.WARNING, "Report " + report.getClass().getName() + " failed in accept()", t);
             }
         }
-
-        for (SubMenuAction cat : categories.values()) {
-            group.addAction(cat);
-        }
+        result.addAll(categories.values());
+        return result;
         // done
     }
 
-//    XXX: we should put action in layer    
-//@ActionID(category = "Reports", id = "genj.report.EntitiesAction")
-//@ActionRegistration(displayName = "SetRoot")
-//@ActionReferences({
-//    @ActionReference(path = "Ancestris/Actions/GedcomProperty", separatorBefore = 950, position = 1000)})
-//public static Action getEntityReportsActions(){
-//    return new EntitiesReportActions();
-//}
-///**
-// * ActionRoot
-// */
-//public static class ReportSubMenuActions extends SubMenuAction {
-//
-//    public @Override
-//    void actionPerformed(ActionEvent e) {
-//        assert false;
-//    }
-//
-//    public @Override
-//    Action createContextAwareInstance(org.openide.util.Lookup context) {
-//
-//
-//        
-//        // entities
-//        Collection<? extends Entity> entities = context.lookupAll(Entity.class);
-//        if (entities.size() > 1) {
-//            SubMenuAction group = new SubMenuAction(
-//                    report_runon_group(Property.getPropertyNames(entities, MAX_HISTORY),entities.size()));
-//            getActions(entities, Utilities.getGedcomFromContext(context), group);
-//            return group;
-//        } else if (entities.size() == 1) {
-//            Entity entity = context.lookup(Entity.class);
-//            SubMenuAction group = new SubMenuAction(
-//                    report_runon(Gedcom.getName(entity.getTag(), false), entity.getId()),
-//                    entity.getImage());
-//            getActions(entity, entity.getGedcom(), group);
-//            return group;
-//        }
-//        return CommonActions.NOOP;
-//    }
-//}
-//
-//    
+    /**
+     * get all Properties in Lookup lookup and return Gedcom Context 
+     * associated to these properties.
+     * If no properties are found, returns an empty Context (returned value is
+     * never null)
+     * @param lookup
+     * @return 
+     */
+    private static Context getContextFromLookup(org.openide.util.Lookup lookup){
+        Collection<? extends Property> properties = lookup.lookupAll(Property.class);
+        Context ctx;
+        if (properties.isEmpty()){
+            ctx = new Context();
+        } else {
+            Gedcom gedcom = properties.iterator().next().getGedcom();
+            ctx = new Context(gedcom, null, properties);
+        }
+        return ctx;
+    }
+
+@ActionID(category = "Reports", id = "genj.report.PropertiesReportSubMenu")
+@ActionRegistration(displayName = "Properties Reports")
+@ActionReferences({
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", separatorBefore = POSITION-1, position = POSITION)})
+public static class PropertiesReportSubMenu extends SubMenuAction {
+
+    public @Override
+    void actionPerformed(ActionEvent e) {
+        assert false;
+    }
+
+    public @Override
+    Action createContextAwareInstance(org.openide.util.Lookup context) {
+        Context ctx = getContextFromLookup(context);
+        Collection<? extends Property> properties = ctx.getProperties();
+
+        clearActions();
+        if (properties.size() > 1) {
+            setText(report_runon_group(Property.getPropertyNames(properties, MAX_HISTORY),properties.size()));
+            addActions(getReportActions(properties, ctx.getGedcom()));
+//            getReportActions(entities, Utilities.getGedcomFromContext(context), group);
+        } else if (properties.size() == 1) {
+            Property property = properties.iterator().next();
+            setText(report_runon(Property.LABEL, TagPath.get(property).getName()));
+            setImage(property.getImage(false));
+            addActions(getReportActions(property, property.getGedcom()));
+        }
+        return super.createContextAwareInstance(context);
+    }
+}
+
+@ActionID(category = "Reports", id = "genj.report.EntitiesAction")
+@ActionRegistration(displayName = "Entities Reports")
+@ActionReferences({
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", position = POSITION+10)})
+public static class EntitiesReportSubMenu extends SubMenuAction {
+
+    public @Override
+    void actionPerformed(ActionEvent e) {
+        assert false;
+    }
+
+    public @Override
+    Action createContextAwareInstance(org.openide.util.Lookup context) {
+        Context ctx = getContextFromLookup(context);
+       // entities
+        Collection<? extends Entity> entities = ctx.getEntities();
+
+        clearActions();
+        if (entities.size() > 1) {
+            setText(report_runon_group(Property.getPropertyNames(entities, MAX_HISTORY),entities.size()));
+            addActions(getReportActions(entities, ctx.getGedcom()));
+        } else if (entities.size() == 1) {
+            Entity entity = entities.iterator().next();
+            setText(report_runon(Gedcom.getName(entity.getTag(), false), entity.getId()));
+            setImage(entity.getImage());
+            addActions(getReportActions(entity, entity.getGedcom()));
+        }
+        return super.createContextAwareInstance(context);
+    }
+}
+
+@ActionID(category = "Reports", id = "genj.report.GedcomReportSubMenu")
+@ActionRegistration(displayName = "Gedcom Reports")
+@ActionReferences({
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", position = POSITION+20, separatorAfter = POSITION+99 )})
+public static class GedcomReportSubMenu extends SubMenuAction {
+
+    public @Override
+    void actionPerformed(ActionEvent e) {
+        assert false;
+    }
+
+    public @Override
+    Action createContextAwareInstance(org.openide.util.Lookup context) {
+        Gedcom gedcom = getContextFromLookup(context).getGedcom();
+        
+        clearActions();
+        if (gedcom != null) {
+            setText(report_runon_gedcom(gedcom.getName()));
+            setImage(Gedcom.getImage());
+            addActions(getReportActions(gedcom,gedcom));
+        }
+        return super.createContextAwareInstance(context);
+    }
+}
+
+
     
     /**
      * Run a report
      */
-    private class ActionRun extends AbstractAncestrisAction {
+    private static class ActionRun extends AbstractAncestrisAction {
 
         /** context */
         private Object context;
         /** report */
         private Report report;
         /** gedcom */
+        //XXX: will be removed
         private Gedcom gedcom;
 
 //        /** constructor */
