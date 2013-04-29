@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+arborescence de l'aide ?
+-->
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+  <tocitem image="toplevelfolder" text="Your Genealogy with Ancestris">
+    <tocitem target="ancestris.app.intro">Preliminärt råd
+    </tocitem>
+    <tocitem expand="true" text="Ancestris - Innehåll" target="ancestris.app.about">
+        <tocitem expand="true" text="Grundläggande användning" target="ancestris.app.discovering">
+              <tocitem expand="false" text="Första parametrarna" target="ancestris.app.basic">
+              </tocitem>
+              <tocitem text="Hantera fönstret" target="ancestris.app.windows" />
+              <tocitem text="Platsers hierariska ordning" target="ancestris.app.place.management" />
+              <tocitem text="Gedcom-läsare" target="ancestris.app.gedcoms.manager" />
+              <tocitem expand="false" text="Tillägg - Översiktsvy" target="ancestris.app.plugins" />
+              <tocitem expand="false" text="Källor och Förråd" target="ancestris.app.repo.source.management">
+              </tocitem>
+        </tocitem>
+        <tocitem expand="true" text="Importera din genealogi" target="ancestris.app.genealogy.import">
+                  <tocitem text="Gör dina data Gedcom-kompatibla" target="ancestris.app.conform.genealogy" />
+                  <tocitem text="Eventuella problem" target="ancestris.app.import.issue" />
+        </tocitem>
+        <tocitem expand="true" text="Jag börjar mina anor" target="ancestris.app.new.genealogy">
+                  <tocitem text="Skapa din första person" target="ancestris.app.new.entity" />
+                  <tocitem text="Lägg till en make/maka" target="ancestris.app.new.spouse" />
+                  <tocitem text="Skapa en familj" target="ancestris.app.new.family" />
+                  <tocitem text="Lägg till barn" target="ancestris.app.new.child" />
+                  <tocitem text="Lägg till anfäder" target="ancestris.app.new.parent" />
+        </tocitem>
+        <tocitem expand="true" text="Ett annat fönster" target="ancestris.app.views">
+            <tocitem text="Trädvy" target="ancestris.app.view.tree" />
+            <tocitem text="Tabellvyn" target="ancestris.app.view.table" />
+            <tocitem text="Ancestris redigerare" target="ancestris.app.view.editors.ancestris" />
+            <tocitem text="Gedcom redigerare" target="ancestris.app.view.editors.gedcom" />
+            <tocitem text="Tidslinjevy" target="ancestris.app.view.chrono" />
+            <tocitem text="Navigatorn" target="ancestris.app.view.navigator" />
+            <tocitem text="Enhetsvy" target="ancestris.app.view.entity" />
+            <tocitem text="Sökmotor" target="ancestris.app.view.search" />
+            <tocitem text="Listor och rapporter" target="ancestris.app.view.reports" />
+            <tocitem text="Tillgängliga tillägg" target="ancestris.app.plugins.liste" />
+            <tocitem text="Geografisk vy" target="ancestris.app.view.geo" />
+            <tocitem text="Platslista" target="ancestris.app.juridictions.list" />
+        </tocitem>
+        <tocitem expand="true" text="Avancerad användning" target="ancestris.app.advanced">
+            <tocitem text="Inställningar - Konfiguration" target="ancestris.app.options.menu1" />
+            <tocitem text="Gedcom-specifikationer" target="ancestris.app.gedcom.standard" />
+            <tocitem text="Blåkopior - Lager" target="ancestris.app.blueprints" />
+            <tocitem text="Ancestris roaming" target="ancestris.app.nomade" />
+            <tocitem text="Skriv ditt första tillägg" target="ancestris.app.plugins.development" />
+        </tocitem>
+        <tocitem expand="true" text="Fråga om hjälp" target="ancestris.app.aids">
+        </tocitem>
+    </tocitem>
+  </tocitem>
+</toc>
