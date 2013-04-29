@@ -18,7 +18,6 @@
     <folder name="Menu">
         <folder name="Tools">
             <folder name="Multimedia">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.modules.exports.website.Bundle"/>
                 <file name="ancestris-modules-exports-website-WebSiteAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-exports-website-WebSiteAction.instance"/>
                     <attr name="position" intvalue="-90"/>
