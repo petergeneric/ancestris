@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Menu">
+        <folder name="File">
+            <folder name="Export">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.menus.Bundle"/>
+            </folder>
+            <folder name="Import">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.menus.Bundle"/>
+            </folder>
+        </folder>
+        <folder name="Tools">
+            <folder name="Multimedia">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.menus.Bundle"/>
+                <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Menu/Tools/Multimedia"/>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Ancestris">
+        <folder name="Actions">
+            <folder name="GedcomProperty">
+                <folder name="AddIndiOrFam">
+                    <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddIndiOrFam"/>
+                    <attr name="position" intvalue="500"/>
+                </folder>
+                <folder name="AddOther">
+                    <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddOther"/>
+                    <attr name="position" intvalue="510"/>
+                </folder>
+                <folder name="Tools">
+                    <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools"/>
+                    <attr name="position" intvalue="520"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
