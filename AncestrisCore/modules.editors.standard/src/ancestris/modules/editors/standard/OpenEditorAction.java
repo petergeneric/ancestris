@@ -11,28 +11,26 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.core.actions.AbstractAncestrisAction;
+import static ancestris.modules.editors.standard.Bundle.*;
 import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import ancestris.core.actions.AbstractAncestrisAction;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
-import org.openide.awt.ActionRegistration;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(category = "Edit",
 id = "ancestris.modules.editors.standard.OpenEditorAction")
-@ActionRegistration(displayName = "#CTL_OpenEditorAction")
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
-@Messages("CTL_OpenEditorAction=Open in Editor")
 public final class OpenEditorAction
         extends AbstractAction
         implements ContextAwareAction {
@@ -47,13 +45,14 @@ public final class OpenEditorAction
         return new OpenEditor(context.lookup(Context.class));
     }
 
+    @Messages("OpenInEditor.title=Edit/Modify")
     private static final class OpenEditor extends AbstractAncestrisAction {
 
         Context context;
 
         public OpenEditor(Context context) {
             this.context = context;
-            setText(ResourcesSupport.getTitle("OpenInEditor"));  // NOI18N
+            setText(OpenInEditor_title());  // NOI18N
             setImage(ResourcesSupport.editorIcon);
         }
 
