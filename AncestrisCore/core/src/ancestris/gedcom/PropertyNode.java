@@ -12,6 +12,7 @@
 package ancestris.gedcom;
 
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
+import ancestris.util.AUtilities;
 import genj.gedcom.Context;
 import java.util.List;
 import javax.swing.Action;
@@ -81,7 +82,7 @@ public class PropertyNode extends AbstractNode {
     @Override
     public Action[] getActions(boolean context) {
         // global actions
-        List<? extends Action> myActions = org.openide.util.AUtilities.actionsForPath("Ancestris/Actions/GedcomProperty");
+        List<? extends Action> myActions = AUtilities.actionsForPath("Ancestris/Actions/GedcomProperty");
 
         return myActions.toArray(new Action[myActions.size()]);
     }

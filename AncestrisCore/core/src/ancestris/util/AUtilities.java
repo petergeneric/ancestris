@@ -9,7 +9,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package org.openide.util;
+package ancestris.util;
 
 import ancestris.core.actions.CommonActions;
 import ancestris.core.actions.SubMenuAction;
@@ -28,6 +28,8 @@ import org.openide.util.lookup.Lookups;
  * This class provides extension to {@link org.openide.util.Utilities} to handle
  * subMenus in context menus.
  * Each folder in System FileSystem from root path provided is shown as submenu.
+ * As of version 7.3 of NetBeans plateform, there is no means to handle 
+ * context submenus if layer.xml.
  *
  * @author daniel
  */
@@ -82,6 +84,10 @@ public class AUtilities {
 
                 if (!subActions.isEmpty()) {
                     SubMenuAction a = new SubMenuAction(dob.getNodeDelegate().getDisplayName());
+                    Object tip = childFo.getAttribute("shortDescription");
+                    if (tip != null){
+                        a.setTip(tip.toString());
+                    }
                     a.addActions(subActions);
                     actions.add(a);
                 }

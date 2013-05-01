@@ -8,6 +8,7 @@ import ancestris.app.ActionClose;
 import ancestris.app.ActionSave;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
+import ancestris.util.AUtilities;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.Image;
@@ -93,7 +94,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
         nodeactions.add(saveAction);
         nodeactions.add(closeAction);
 //        nodeactions.addAll(vcontext.getPopupActions());
-        nodeactions.addAll(org.openide.util.AUtilities.actionsForPath("Ancestris/Actions/GedcomProperty"));
+        nodeactions.addAll(AUtilities.actionsForPath("Ancestris/Actions/GedcomProperty"));
 
         // done
         return nodeactions.toArray(new Action[0]);

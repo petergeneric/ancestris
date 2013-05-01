@@ -22,14 +22,17 @@
             <folder name="GedcomProperty">
                 <folder name="AddIndiOrFam">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddIndiOrFam"/>
+                    <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddIndiOrFam.short"/>
                     <attr name="position" intvalue="500"/>
                 </folder>
                 <folder name="AddOther">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddOther"/>
+                    <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddOther.short"/>
                     <attr name="position" intvalue="510"/>
                 </folder>
                 <folder name="Tools">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools"/>
+                    <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools.short"/>
                     <attr name="position" intvalue="520"/>
                 </folder>
             </folder>

@@ -153,7 +153,7 @@ public class ReportPlugin{
     }
 
 @ActionID(category = "Reports", id = "genj.report.PropertiesReportSubMenu")
-@ActionRegistration(displayName = "Properties Reports")
+@ActionRegistration(displayName = "Properties Reports",iconBase="View.png")
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", separatorBefore = POSITION-1, position = POSITION)})
 public static class PropertiesReportSubMenu extends SubMenuAction {
@@ -177,7 +177,8 @@ public static class PropertiesReportSubMenu extends SubMenuAction {
             Property property = properties.iterator().next();
             setText(report_runon(Property.LABEL, TagPath.get(property).getName()));
             setImage(property.getImage(false));
-            addActions(getReportActions(property, property.getGedcom()));
+            setImage(ReportViewFactory.IMG);
+        addActions(getReportActions(property, property.getGedcom()));
         }
         return super.createContextAwareInstance(context);
     }
@@ -208,6 +209,7 @@ public static class EntitiesReportSubMenu extends SubMenuAction {
             Entity entity = entities.iterator().next();
             setText(report_runon(Gedcom.getName(entity.getTag(), false), entity.getId()));
             setImage(entity.getImage());
+            setImage(ReportViewFactory.IMG);
             addActions(getReportActions(entity, entity.getGedcom()));
         }
         return super.createContextAwareInstance(context);
@@ -233,6 +235,7 @@ public static class GedcomReportSubMenu extends SubMenuAction {
         if (gedcom != null) {
             setText(report_runon_gedcom(gedcom.getName()));
             setImage(Gedcom.getImage());
+            setImage(ReportViewFactory.IMG);
             addActions(getReportActions(gedcom,gedcom));
         }
         return super.createContextAwareInstance(context);
