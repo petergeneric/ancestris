@@ -28,7 +28,6 @@ import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeOp;
-import org.openide.util.AUtilities;
 import org.openide.util.Utilities;
 import org.openide.windows.Mode;
 import org.openide.windows.RetainLocation;

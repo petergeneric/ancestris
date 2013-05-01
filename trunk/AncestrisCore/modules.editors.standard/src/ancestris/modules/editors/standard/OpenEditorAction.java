@@ -17,20 +17,27 @@ import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import ancestris.core.actions.AbstractAncestrisAction;
+import genj.gedcom.Entity;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import static ancestris.modules.editors.standard.Bundle.*;
 
 @ActionID(category = "Edit",
 id = "ancestris.modules.editors.standard.OpenEditorAction")
+@ActionRegistration(displayName="#OpenInEditor.title"
+        )
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+@Messages("OpenInEditor.title=Edit/Modify")
 public final class OpenEditorAction
         extends AbstractAction
         implements ContextAwareAction {
@@ -42,16 +49,15 @@ public final class OpenEditorAction
 
     public @Override
     Action createContextAwareInstance(Lookup context) {
-        return new OpenEditor(context.lookup(Context.class));
+        return new OpenEditor(context.lookup(Entity.class));
     }
 
-    @Messages("OpenInEditor.title=Edit/Modify")
     private static final class OpenEditor extends AbstractAncestrisAction {
 
-        Context context;
+        Entity entity;
 
-        public OpenEditor(Context context) {
-            this.context = context;
+        public OpenEditor(Entity context) {
+            this.entity = context;
             setText(OpenInEditor_title());  // NOI18N
             setImage(ResourcesSupport.editorIcon);
         }
@@ -59,11 +65,11 @@ public final class OpenEditorAction
         @Override
         public void actionPerformed(ActionEvent e) {
             SelectionSink.Dispatcher.muteSelection(true);
-            if (context.getEntity() instanceof Indi) {
-                EntityEditor.editEntity((Indi) (context.getEntity()), false);
+            if (entity instanceof Indi) {
+                EntityEditor.editEntity( (Indi) (entity), false);
             }
-            if (context.getEntity() instanceof Fam) {
-                EntityEditor.editEntity((Fam) (context.getEntity()), false);
+            if (entity instanceof Fam) {
+                EntityEditor.editEntity((Fam) (entity), false);
             }
             SelectionSink.Dispatcher.muteSelection(false);
         }
