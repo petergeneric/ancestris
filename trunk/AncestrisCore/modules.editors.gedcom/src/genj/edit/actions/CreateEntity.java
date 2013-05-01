@@ -191,7 +191,7 @@ public class CreateEntity extends AbstractChange {
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateEntityMenu")
     @ActionRegistration(displayName = "#create.entity")
-    @NbBundle.Messages("create.entity=Create Entity")
+    @NbBundle.Messages("create.entity=Create Gedcom Entity")
     public static SubMenuAction getCreateEntityMenu() {
         SubMenuAction menuAction = new SubMenuAction(NbBundle.getMessage(CreateEntity.class, "create.entity"));
         menuAction.putValue(Action.SMALL_ICON, Gedcom.getImage());
