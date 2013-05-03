@@ -14,23 +14,40 @@
  */
 package ancestris.modules.reports.relatives;
 
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.actions.SubMenuAction;
 import genj.fo.Document;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
+import genj.report.Report;
+import java.awt.event.ActionEvent;
 import java.util.*;
+import javax.swing.Action;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.awt.DynamicMenuContent;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
+import static ancestris.modules.reports.relatives.Bundle.*;
+import ancestris.view.SelectionSink;
 
 /**
  *
  * @author dominique
  */
-public class ReportRelatives {
+@ServiceProvider(service = Report.class)
+public class ReportRelatives extends Report {
 
     /**
      *
      */
+    //FIXME: expand Relative API and put this class in core
     static class Relative {
 
         /** how to get to it */
@@ -78,6 +95,14 @@ public class ReportRelatives {
         new Relative("cousine.paternal", "uncle.paternal+daughter"),
         new Relative("cousine.maternal", "uncle.maternal+daughter")
     };
+    // prepare map of relationships
+    static private final Map<String, Relative> KEY2RELATIVE = new HashMap<String, Relative>();
+
+    static {
+        for (Relative relative : RELATIVES) {
+            KEY2RELATIVE.put(relative.key, relative);
+        }
+    }
 
     /**
      * the report's entry point Our main logic
@@ -126,7 +151,7 @@ public class ReportRelatives {
     /**
      * Find all relatives of given roots and expression
      */
-    private List<Indi> find(List<Indi> roots, String expression, int sex, Map<String, Relative> key2relative) {
+    private static List<Indi> find(List<Indi> roots, String expression, int sex, Map<String, Relative> key2relative) {
 
         List<Indi> result = new ArrayList<Indi>();
         for (int i = 0; i < roots.size(); i++) {
@@ -137,10 +162,14 @@ public class ReportRelatives {
 
     }
 
+    private static List<Indi> find(Property root, String relative) {
+        return find(root, KEY2RELATIVE.get(relative).expression, KEY2RELATIVE.get(relative).sex, KEY2RELATIVE);
+    }
+
     /**
      * Find all relatives of given root and expression
      */
-    private List<Indi> find(Property root, String expression, int sex, Map<String, Relative> key2relative) {
+    private static List<Indi> find(Property root, String expression, int sex, Map<String, Relative> key2relative) {
 
         // any 'OR's?
         int or = expression.indexOf('|');
@@ -186,5 +215,92 @@ public class ReportRelatives {
 
         // done
         return result;
+    }
+    static private final int POSITION = 1500;
+
+    @ActionID(category = "Navigate", id = "ancestris.modules.reports.relatives.SiblingNavigateAction")
+    @ActionRegistration(displayName = "Sibling")
+    @ActionReferences({
+        @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 30)})
+    @NbBundle.Messages({
+            "sibling.menu={0} siblings"
+            ,"father.menu=Father"
+            ,"mother.menu=Mother"
+    })
+    public static class SiblingNavigateAction extends NavigateAction{
+        public SiblingNavigateAction() {
+            super(new Relative("sibling", "brother|sister"));
+        }
+    }
+    public static Action getSiblingNavigateAction(){
+        Action navAction = new NavigateAction(new Relative("sibling", "brother|sister"));
+        return navAction;
+    }
+
+    @ActionID(category = "Navigate", id = "ancestris.modules.reports.relatives.FatherNavigateAction")
+    @ActionRegistration(displayName = "Father")
+    @ActionReferences({
+        @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 10)})
+    public static class FatherNavigateAction extends NavigateAction{
+        public FatherNavigateAction() {
+            super(KEY2RELATIVE.get("father"));
+        }
+    }
+
+    @ActionID(category = "Navigate", id = "ancestris.modules.reports.relatives.MotherNavigateAction")
+    @ActionRegistration(displayName = "Mother")
+    @ActionReferences({
+        @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 10)})
+    public static class MotherNavigateAction extends NavigateAction{
+        public MotherNavigateAction() {
+            super(KEY2RELATIVE.get("mother"));
+        }
+    }
+
+    
+    private static class NavigateAction extends SubMenuAction {
+
+        Relative relative;
+        public NavigateAction(Relative relative) {
+            super();
+            this.relative=relative;
+            putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, false);
+        }
+
+        public @Override
+        void actionPerformed(ActionEvent e) {
+            assert false;
+        }
+
+        public @Override
+        Action createContextAwareInstance(org.openide.util.Lookup context) {
+            Entity entity = context.lookup(Entity.class);
+            if (entity != null) {
+                List<Indi> find = find(entity, relative.expression, relative.sex, KEY2RELATIVE);
+
+                clearActions();
+                setText(NbBundle.getMessage(ReportRelatives.class, relative.key+".menu",find.size()));
+                for (Entity e : find) {
+                    addAction(new Jump(e));
+                }
+            }
+            return super.createContextAwareInstance(context);
+        }
+    }
+
+    private static class Jump extends AbstractAncestrisAction {
+
+        private Entity entity;
+
+        public Jump(Entity entity) {
+            this.entity = entity;
+            setImage(entity.getImage());
+            setText(entity.toString());
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            SelectionSink.Dispatcher.fireSelection(null, new Context(entity), true);
+        }
     }
 }
