@@ -98,7 +98,7 @@ public class SubMenuAction
 
     public JMenuItem getPopupPresenter() {
         JMenuItem item = actionsToMenu(context);
-        item.putClientProperty(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
+        item.putClientProperty(DynamicMenuContent.HIDE_WHEN_DISABLED,getValue(DynamicMenuContent.HIDE_WHEN_DISABLED));
         return item;
     }
 
