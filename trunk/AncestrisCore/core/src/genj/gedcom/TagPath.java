@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
  * @version 0.1 04/21/98
  * @version 2004/08/25 made immutable
  */
+//XXX: Add desciption for advanced usage
 public class TagPath implements Comparable{
   
   /** a logical name */
