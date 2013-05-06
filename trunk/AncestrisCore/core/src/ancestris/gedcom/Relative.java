@@ -343,11 +343,22 @@ public class Relative {
     @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.GreatParentNavigateAction")
     @ActionRegistration(displayName = "Mother")
     @ActionReferences(value = {
-        @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 10)})
+        @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 70)})
     public static class GreatParentNavigateAction extends NavigateAction {
 
         public GreatParentNavigateAction() {
             super(Relative.get(Relative.GREATPARENT));
+        }
+    }
+
+    @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.GrandChildNavigateAction")
+    @ActionRegistration(displayName = "Grand Children")
+    @ActionReferences(value = {
+        @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 80)})
+    public static class GrandChildNavigateAction extends NavigateAction {
+
+        public GrandChildNavigateAction() {
+            super(Relative.get(Relative.GRANDCHILD));
         }
     }
 
