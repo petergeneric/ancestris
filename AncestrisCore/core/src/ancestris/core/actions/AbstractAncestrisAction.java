@@ -22,212 +22,229 @@ import org.openide.awt.Actions;
 
 /**
  * A base class for Ancestris Action (simplified Action2 Class).
+ *
  * @author daniel
  */
-public class AbstractAncestrisAction extends AbstractAction implements AncestrisAction{
-  
-  private final static String 
-    KEY_TEXT = Action.NAME,
-    KEY_OLDTEXT = Action.NAME+".old",
-    KEY_SHORT_TEXT = "shortname",
-    KEY_TIP = Action.SHORT_DESCRIPTION,
-    KEY_ENABLED = "enabled",
-    KEY_MNEMONIC = Action.MNEMONIC_KEY,
-    KEY_ICON = Action.SMALL_ICON
-    ,KEY_SELECTED = "SwingSelectedKey"; // XXX: maybe we can remove this by using BooleanStateAction
-    
-  private final static Logger LOG = Logger.getLogger("genj.actions");
-  
-  /** predefined strings */
-  public final static String
-    TXT_YES         = UIManager.getString("OptionPane.yesButtonText"),
-    TXT_NO          = UIManager.getString("OptionPane.noButtonText"),
-    TXT_OK          = UIManager.getString("OptionPane.okButtonText"),
-    TXT_CANCEL  = UIManager.getString("OptionPane.cancelButtonText");
+//XXX: we must do some cleanup
+public class AbstractAncestrisAction extends AbstractAction implements AncestrisAction {
 
-  /** constructor */
-  public AbstractAncestrisAction() {
-  }
-  
-  /** constructor */
-  public AbstractAncestrisAction(String text) {
-    setText(text);
-  }
-  
-  /** constructor */
-  public AbstractAncestrisAction(String text, Icon icon) {
-    setText(text);
-    setImage(icon);
-  }
+    private final static String KEY_TEXT = Action.NAME,
+            KEY_OLDTEXT = Action.NAME + ".old",
+            KEY_SHORT_TEXT = "shortname",
+            KEY_TIP = Action.SHORT_DESCRIPTION,
+            KEY_ENABLED = "enabled",
+            KEY_MNEMONIC = Action.MNEMONIC_KEY,
+            KEY_ICON = Action.SMALL_ICON, KEY_SELECTED = "SwingSelectedKey"; // XXX: maybe we can remove this by using BooleanStateAction
+    private final static Logger LOG = Logger.getLogger("genj.actions");
+    /** predefined strings */
+    public final static String TXT_YES = UIManager.getString("OptionPane.yesButtonText"),
+            TXT_NO = UIManager.getString("OptionPane.noButtonText"),
+            TXT_OK = UIManager.getString("OptionPane.okButtonText"),
+            TXT_CANCEL = UIManager.getString("OptionPane.cancelButtonText");
 
-  /** default noop implementation of action invocation */
-  @Override
-  public void actionPerformed(ActionEvent e) {
-  }
-  
-  /**
-   * Intercepted super class getter - delegate calls to getters so they can be overridden. this
-   * method is not supposed to be called from sub-types to avoid a potential endless-loop
-   */
-    @Override
-  public Object getValue(String key) {
-    if (KEY_TEXT.equals(key))
-      return getText();
-    if (KEY_ICON.equals(key))
-      return getImage();
-    if (KEY_TIP.equals(key))
-      return getTip();
-    return super.getValue(key);
-  }
-  
-  /**
-   * accessor - image 
-   */
-    @Override
-  public final AncestrisAction setImage(Icon icon) {
-    super.putValue(KEY_ICON, icon);
-    return this;
-  }
-  
-  /**
-   * accessor - text
-   */
-    @Override
-  public final AncestrisAction setText(String txt) {
-    super.putValue(KEY_TEXT, txt);
-    
-    return this;
-  }
-  
-  /**
-   * accessor - text
-   */
-    @Override
-  public String getText() {
-    return (String)super.getValue(KEY_TEXT);
-  }
-  
-  /**
-   * accessor - tip
-   */
-    @Override
-  public AbstractAncestrisAction setTip(String tip) {
-    super.putValue(KEY_TIP, tip);
-    return this;
-  }
-  
-  /**
-   * accessor - tip
-   */
-    @Override
-  public String getTip() {
-    return (String)super.getValue(KEY_TIP);
-  }
+    /** constructor */
+    public AbstractAncestrisAction() {
+    }
 
-  /**
-   * accessor - image 
-   */
+    /** constructor */
+    public AbstractAncestrisAction(String text) {
+        setText(text);
+    }
+
+    /** constructor */
+    public AbstractAncestrisAction(String text, Icon icon) {
+        setText(text);
+        setImage(icon);
+    }
+
+    /** default noop implementation of action invocation */
     @Override
-  public Icon getImage() {
-    return (Icon)super.getValue(KEY_ICON);
-  }
+    public void actionPerformed(ActionEvent e) {
+    }
+
+    /**
+     * Intercepted super class getter - delegate calls to getters so they can be overridden. this
+     * method is not supposed to be called from sub-types to avoid a potential endless-loop
+     */
+    @Override
+    public Object getValue(String key) {
+        if (KEY_TEXT.equals(key)) {
+            return getText();
+        }
+        if (KEY_ICON.equals(key)) {
+            return getImage();
+        }
+        if (KEY_TIP.equals(key)) {
+            return getTip();
+        }
+        return super.getValue(key);
+    }
+
+    /**
+     * accessor - image
+     */
+    @Override
+    public final AncestrisAction setImage(Icon icon) {
+        super.putValue(KEY_ICON, icon);
+        return this;
+    }
+
+    /**
+     * accessor - text
+     */
+    @Override
+    public final AncestrisAction setText(String txt) {
+        super.putValue(KEY_TEXT, txt);
+
+        return this;
+    }
+
+    /**
+     * accessor - text
+     */
+    @Override
+    public String getText() {
+        return (String) super.getValue(KEY_TEXT);
+    }
+
+    /**
+     * accessor - tip
+     */
+    @Override
+    public AbstractAncestrisAction setTip(String tip) {
+        super.putValue(KEY_TIP, tip);
+        return this;
+    }
+
+    /**
+     * accessor - tip
+     */
+    @Override
+    public String getTip() {
+        return (String) super.getValue(KEY_TIP);
+    }
+
+    /**
+     * accessor - image
+     */
+    @Override
+    public Icon getImage() {
+        return (Icon) super.getValue(KEY_ICON);
+    }
 
     public JMenuItem getPopupPresenter() {
         JMenuItem m;
-         m = new Actions.MenuItem(this, true);
+        m = new Actions.MenuItem(this, true);
         return m;
     }
-  
-  /** convenience factory 
-   * @deprecated
-    */
-    @Deprecated
-  public static AbstractAncestrisAction yes() {
-    return new Constant(AbstractAncestrisAction.TXT_YES);
-  }
 
-  /** convenience factory 
-   * @deprecated
-    */
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  public static AbstractAncestrisAction no() {
-    return new Constant(AbstractAncestrisAction.TXT_NO);
-  }
+    public static AbstractAncestrisAction yes() {
+        return new Constant(AbstractAncestrisAction.TXT_YES);
+    }
 
-  /** convenience factory 
-   * @deprecated
-    */
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  public static AbstractAncestrisAction ok() {
-    return new Constant(AbstractAncestrisAction.TXT_OK);
-  }
+    public static AbstractAncestrisAction no() {
+        return new Constant(AbstractAncestrisAction.TXT_NO);
+    }
 
-  /** convenience factory 
-   * @deprecated
-    */
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  public static AbstractAncestrisAction cancel() {
-    return new Constant(AbstractAncestrisAction.TXT_CANCEL);
-  }
+    public static AbstractAncestrisAction ok() {
+        return new Constant(AbstractAncestrisAction.TXT_OK);
+    }
 
-  /** convenience factory 
-   * @deprecated
-    */
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  public static AbstractAncestrisAction[] yesNo() {
-    return new AbstractAncestrisAction[]{ yes(), no() };
-  }
-  
-  /** convenience factory 
-   * @deprecated
-    */
+    public static AbstractAncestrisAction cancel() {
+        return new Constant(AbstractAncestrisAction.TXT_CANCEL);
+    }
+
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  public static AbstractAncestrisAction[] yesNoCancel() {
-    return new AbstractAncestrisAction[]{ yes(), no(), cancel() };
-  }
-  
-  /** convenience factory 
-   * @deprecated
-    */
+    public static AbstractAncestrisAction[] yesNo() {
+        return new AbstractAncestrisAction[]{yes(), no()};
+    }
+
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  public static AbstractAncestrisAction[] okCancel() {
-    return new AbstractAncestrisAction[]{ ok(), cancel() };
-  }
-  
-  /** convenience factory 
-   * @deprecated
-    */
+    public static AbstractAncestrisAction[] yesNoCancel() {
+        return new AbstractAncestrisAction[]{yes(), no(), cancel()};
+    }
+
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  public static AbstractAncestrisAction[] andCancel(AbstractAncestrisAction ok) {
-    return new AbstractAncestrisAction[]{ ok, cancel() };
-  }
-  
+    public static AbstractAncestrisAction[] okCancel() {
+        return new AbstractAncestrisAction[]{ok(), cancel()};
+    }
+
+    /** convenience factory
+     *
+     * @deprecated
+     */
+    @Deprecated
+    public static AbstractAncestrisAction[] andCancel(AbstractAncestrisAction ok) {
+        return new AbstractAncestrisAction[]{ok, cancel()};
+    }
+
 //  /** convenience factory */
 //  public static AbstractAncestrisAction[] okAnd(AbstractAncestrisAction action) {
 //    return new AbstractAncestrisAction[]{ ok(), action };
 //  }
 //  
-  /** convenience factory 
-   * @deprecated
-    */
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  public static AbstractAncestrisAction[] okOnly() {
-    return new AbstractAncestrisAction[]{ ok() };
-  }
-  
+    public static AbstractAncestrisAction[] okOnly() {
+        return new AbstractAncestrisAction[]{ok()};
+    }
+
 //  /** convenience factory */
 //  public static AbstractAncestrisAction[] cancelOnly() {
 //    return new AbstractAncestrisAction[]{ cancel() };
 //  }
 //
-  /** convenience factory 
-   * @deprecated
-    */
+    /** convenience factory
+     *
+     * @deprecated
+     */
     @Deprecated
-  private static class Constant extends AbstractAncestrisAction {
-    private Constant(String txt) { super(txt); }
-    public void actionPerformed(ActionEvent e) {};
-  };
+    private static class Constant extends AbstractAncestrisAction {
+
+        private Constant(String txt) {
+            super(txt);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+        }
+    ;
+
+    };
   
 //  public AbstractAncestrisAction install(JComponent component, String shortcut) {
 //    return install(component,shortcut,JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -258,14 +275,13 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
  // XXX: maybe we can remove this by using BooleanStateAction
     @Override
     public boolean isSelected() {
-    return Boolean.TRUE.equals((Boolean)getValue(KEY_SELECTED));
-  }
-  
+        return Boolean.TRUE.equals((Boolean) getValue(KEY_SELECTED));
+    }
+
     @Override
-  public boolean setSelected(boolean selected) {
-    boolean old = isSelected();
-    putValue(KEY_SELECTED, selected ? Boolean.TRUE : Boolean.FALSE);
-    return old;
-  }
-  
-} 
+    public boolean setSelected(boolean selected) {
+        boolean old = isSelected();
+        putValue(KEY_SELECTED, selected ? Boolean.TRUE : Boolean.FALSE);
+        return old;
+    }
+}

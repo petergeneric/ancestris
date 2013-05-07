@@ -14,13 +14,13 @@
  */
 package ancestris.modules.reports.relatives;
 
+import static ancestris.gedcom.PropertyFinder.Constants.*;
 import ancestris.gedcom.Relative;
 import genj.fo.Document;
+import genj.gedcom.Entity;
 import genj.gedcom.Indi;
 import genj.report.Report;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -32,32 +32,34 @@ import org.openide.util.lookup.ServiceProvider;
 public class ReportRelatives extends Report {
 
     private final static Relative[] RELATIVES = {
-        Relative.get(Relative.FATHER),
-        Relative.get(Relative.MOTHER),
-        Relative.create("farfar", "father+father"),
-        Relative.create("farmor", "father+mother"),
-        Relative.create("morfar", "mother+father"),
-        Relative.create("mormor", "mother+mother"),
-        Relative.get(Relative.BROTHER),
-        Relative.get(Relative.SISTER),
-        Relative.get(Relative.HUSBAND),
-        Relative.get(Relative.WIFE),
-        Relative.get(Relative.DAUGHTER),
-        Relative.get(Relative.SON),
-        Relative.get(Relative.GRANDSON),
-        Relative.get(Relative.GRANDDAUGHTER),
-        Relative.get(Relative.PUNCLE),
-        Relative.get(Relative.MUNCLE),
-        Relative.get(Relative.PAUNT),
-        Relative.get(Relative.MAUNT),
-        Relative.get(Relative.FNEPHEW),
-        Relative.get(Relative.FNIECE),
-        Relative.get(Relative.SNEPHEW),
-        Relative.get(Relative.SNIECE),
-        Relative.create("cousin.paternal", "uncle.paternal+son"),
-        Relative.create("cousin.maternal", "uncle.maternal+son"),
-        Relative.create("cousine.paternal", "uncle.paternal+daughter"),
-        Relative.create("cousine.maternal", "uncle.maternal+daughter")
+        Relative.get(FATHER),
+        Relative.get(MOTHER),
+        Relative.get(GRANDPARENT),
+//XXX:        Relative.create("farfar", "father+father"),
+//        Relative.create("farmor", "father+mother"),
+//        Relative.create("morfar", "mother+father"),
+//        Relative.create("mormor", "mother+mother"),
+        Relative.get(BROTHER),
+        Relative.get(SISTER),
+        Relative.get(HUSBAND),
+        Relative.get(WIFE),
+        Relative.get(DAUGHTER),
+        Relative.get(SON),
+        Relative.get(GRANDSON),
+        Relative.get(GRANDDAUGHTER),
+        Relative.get(UNCLE_AUNT),
+//        Relative.get(PUNCLE),
+//        Relative.get(MUNCLE),
+//        Relative.get(PAUNT),
+//        Relative.get(MAUNT),
+//        Relative.get(FNEPHEW),
+//        Relative.get(FNIECE),
+//        Relative.get(SNEPHEW),
+//        Relative.get(SNIECE),
+//        Relative.create("cousin.paternal", "uncle.paternal+son"),
+//        Relative.create("cousin.maternal", "uncle.maternal+son"),
+//        Relative.create("cousine.paternal", "uncle.paternal+daughter"),
+//        Relative.create("cousine.maternal", "uncle.maternal+daughter")
     };
 
     /**
@@ -70,7 +72,7 @@ public class ReportRelatives extends Report {
 
         for (int i = 0; i < RELATIVES.length; i++) {
             Relative relative = RELATIVES[i];
-            Collection<Indi> find = relative.find(indiDeCujus);
+            Collection<Entity> find = relative.find(indiDeCujus);
 
             if (!find.isEmpty()) {
                 document.startSection(relative.getDescription(), 3);
@@ -83,10 +85,12 @@ public class ReportRelatives extends Report {
                 document.addText(NbBundle.getMessage(this.getClass(), "indi.name"));
                 document.nextTableRow("font-weight=normal");
 
-                for (Indi found : find) {
+                for (Entity found : find) {
                     document.addLink(found.getId(), found.getAnchor());
                     document.nextTableCell();
-                    document.addText(found.getName());
+                    if (found instanceof Indi){
+                        document.addText(((Indi)found).getName());
+                    }
                     document.nextTableRow("font-weight=normal");
                 }
 
