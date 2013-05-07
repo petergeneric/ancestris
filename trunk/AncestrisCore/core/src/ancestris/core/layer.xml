@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="Actions">
-        <folder name="Navigate">
-            <file name="ancestris-gedcom-Relative-GrandParentNavigateAction.instance">
-                <attr name="displayName" stringvalue="Mother"/>
-            </file>
-            <file name="ancestris-gedcom-Relative-GreatParentNavigateAction.instance_hidden"/>
-        </folder>
-    </folder>
     <folder name="Ancestris">
         <folder name="Actions">
             <folder name="GedcomProperty">

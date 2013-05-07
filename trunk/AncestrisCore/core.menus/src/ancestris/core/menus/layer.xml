@@ -30,10 +30,15 @@
                     <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddOther.short"/>
                     <attr name="position" intvalue="510"/>
                 </folder>
+                <folder name="Navigate">
+                    <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Navigate"/>
+                    <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Navigate.short"/>
+                    <attr name="position" intvalue="520"/>
+                </folder>
                 <folder name="Tools">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools"/>
                     <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools.short"/>
-                    <attr name="position" intvalue="520"/>
+                    <attr name="position" intvalue="530"/>
                 </folder>
             </folder>
         </folder>
