@@ -20,7 +20,9 @@ import java.awt.event.ActionEvent;
  *
  * @author daniel
  */
+//XXX: write javadoc
 public class JumpToEntityAction extends AbstractAncestrisAction {
+
     private Entity entity;
 
     public JumpToEntityAction(Entity entity) {
@@ -33,5 +35,4 @@ public class JumpToEntityAction extends AbstractAncestrisAction {
     public void actionPerformed(ActionEvent e) {
         SelectionSink.Dispatcher.fireSelection(null, new Context(entity), true);
     }
-    
 }
