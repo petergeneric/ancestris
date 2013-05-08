@@ -21,10 +21,10 @@ package genj.tree;
 //XXX: genj.tree is publically exported as plugin set a dependancy on TreeView
 // We must remove this like (redesign DnD logic or write some Interface API)
 
-import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.actions.CommonActions;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.gedcom.PropertyNode;
 import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionSink;
 import genj.common.SelectEntityWidget;
@@ -47,8 +47,6 @@ import genj.renderer.RenderOptions;
 import genj.renderer.RenderSelectionHintKey;
 import genj.util.Registry;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
@@ -78,7 +76,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -95,8 +92,6 @@ import javax.swing.JViewport;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.awt.DynamicMenuContent;
-import org.openide.nodes.Node;
-import org.openide.util.ContextAwareAction;
 import org.openide.util.NbBundle;
 
 /**
