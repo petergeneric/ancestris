@@ -13,10 +13,11 @@ and open the template in the editor.
         <h2><b><u>Configuration - Send Translation</u></b></h2>
       </center>
       <p>
-          Select Tools -> Options Menu
+          Select from the main menu: Tools -> Options.
       </p>
       <p>
-          Once the option dialog is displayed select "Send Translation" Tab.
+          Once the option dialog is displayed, select the "Send 
+          Translation" Tab.
       </p>
       
       <br>
@@ -30,13 +31,18 @@ and open the template in the editor.
       <ul>
           <li>Your Name and First Name.</li>
           <li>Your email address.</li>
-          <li>The SMTP outgoing server address (eg. for the ISP Free, it's 
-              "smtp.free.fr", for Gmail, it's "gmail.smtp.com").</li>
-          <li>The connection encryption type (eg. for free it's None, for Gmail 
-              it's SSL), the SMTP port will change according to the encryption 
+          <li>The SMTP outgoing server address. These are some examples:<br /> 
+              - ISP Free: "smtp.free.fr"<br />
+              - GMail: "gmail.smtp.com". Using Imap, you might have to 
+              write "imap.googlemail.com".</li>
+          <li>The connection encryption type. Examples:<br />
+              - ISP Free: None,<br />
+              - GMail: SSL.<br />
+              The SMTP port will change according to the encryption 
               type (usually 25 for None, 587 for TLS and 465 for SSL), however 
               if your provider requests a specific port number, fill the SMTP 
-              port field with the one requested.</li>
+              port field with the one requested. It has been reported to 
+              take port 993 with imap.googlemail.com.</li>
           <li>Does the server need an authentification? if so (for Gmail for 
               example, it requires an authentification), fullfill the two 
               fields with the appropriate information.</li>
