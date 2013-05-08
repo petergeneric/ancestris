@@ -1,23 +1,15 @@
-/**
- * GenJ - GenealogyJ
- *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
- *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+/*
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2012 Ancestris
+ * 
+ * Author: Daniel Andre (daniel@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package genj.edit.actions;
+package ancestris.core.actions;
 
 import ancestris.core.resources.Images;
 import genj.gedcom.Context;
@@ -54,13 +46,9 @@ import org.openide.util.Utilities;
 /**
  * ActionChange - change the gedcom information
  */
-//XXX: we could certainly extends from AbstratcAncestrisContextAction
-public abstract class AbstractChange extends AbstractAncestrisAction 
+public abstract class AbstractAncestrisContextAction extends AbstractAncestrisAction 
 implements LookupListener{
   
-  /** resources */
-  /*package*/ final static Resources resources = Resources.get(AbstractChange.class);
-   
   /** Lookup Context */
     protected Lookup context;
     
@@ -71,29 +59,19 @@ implements LookupListener{
     /** Properties in lookup */
     protected List<Property> contextProperties = new ArrayList<Property>(5);
 
-  private Context selection;
-  
-  /** image *new* */
-  protected final static ImageIcon imgNew = Images.imgNew;
-  
-  private JTextArea confirm;
 
   /**
    * Constructor
    */
-    private AbstractChange(Lookup context) {
-            putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
-        this.context = context;
-    }
-    
-    public AbstractChange(){
-        this(Utilities.actionsGlobalContext());
+    public AbstractAncestrisContextAction(){
+        putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
+        this.context = Utilities.actionsGlobalContext();
     }
 
   /**
    * Constructor
    */
-  public AbstractChange(Gedcom ged, ImageIcon img, String text) {
+  public AbstractAncestrisContextAction(Gedcom ged, ImageIcon img, String text) {
       this();
       setImageText(img, text);
   }
@@ -178,41 +156,6 @@ implements LookupListener{
     protected void contextChanged(){
     }
     
-  /** 
-   * Returns the confirmation message - null if none
-   */
-  protected String getConfirmMessage() {
-    return null;
-  }
-  
-  /**
-   * Return the dialog content to show to the user
-   */
-  protected JPanel getDialogContent() {
-    JPanel result = new JPanel(new NestedBlockLayout("<col><text wx=\"1\" wy=\"1\"/></col>"));
-    result.add(getConfirmComponent());
-    return result;
-  }
-  
-  protected JComponent getConfirmComponent() {
-    if (confirm==null) {
-      confirm = new TextAreaWidget(getConfirmMessage(), 6, 40);
-      confirm.setWrapStyleWord(true);
-      confirm.setLineWrap(true);
-      confirm.setEditable(false);
-    }
-    return new JScrollPane(confirm);
-  }
-  
-  /** 
-   * Callback to update confirm text
-   */
-  protected void refresh() {
-    // might be no confirmation showing
-    if (confirm!=null)
-      confirm.setText(getConfirmMessage());
-  }
-  
   /**
    * @see genj.util.swing.AbstractAncestrisAction#execute()
    */
@@ -223,50 +166,13 @@ implements LookupListener{
 
         initLookupListner();
     
-    // cleanup first
-    confirm = null;
-	  
-    // prepare confirmation message for user
-    String msg = getConfirmMessage();
-    if (msg!=null) {
-  
-      // prepare actions
-      Action[] actions = { 
-          new AbstractAncestrisAction(resources.getString("confirm.proceed", getText())),
-          AbstractAncestrisAction.cancel() 
-      };
-      
-      // Recheck with the user
-      int rc = DialogHelper.openDialog(getText(), DialogHelper.QUESTION_MESSAGE, getDialogContent(), actions, event) ;
-      if (rc!=0)
-        return;
-    }
-        
-    // do the change
-    try {
-      getGedcom().doUnitOfWork(new UnitOfWork() {
-        public void perform(Gedcom gedcom) throws GedcomException {
-          selection = execute(gedcom, event);
-        }
-      });
-    } catch (Throwable t) {
-      DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, t.getMessage(), AbstractAncestrisAction.okOnly(), event);
-    }
-    
-    // propagate selection
-    if (selection!=null)
-    	SelectionSink.Dispatcher.fireSelection(event, selection);
+        actionPerformedImpl();
 
-    // Propagate changes in lookup too
+        // Propagate changes in lookup too
     resultChanged(null);
     
     // done
   }
+    protected abstract void actionPerformedImpl();
   
-  /**
-   * perform the actual change
-   */
-  protected abstract Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException;
-
-} //Change
-
+} 

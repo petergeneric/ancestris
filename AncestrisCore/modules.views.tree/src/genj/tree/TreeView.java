@@ -48,6 +48,7 @@ import genj.renderer.RenderSelectionHintKey;
 import genj.util.Registry;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
@@ -77,6 +78,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -94,6 +96,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.nodes.Node;
+import org.openide.util.ContextAwareAction;
 import org.openide.util.NbBundle;
 
 /**
@@ -101,7 +104,7 @@ import org.openide.util.NbBundle;
  */
 // FIXME: used to find proper TreeView component for RootAction
 //XXX: not used @ServiceProvider(service=TreeView.class)
-public class TreeView extends View implements AncestrisActionProvider,Filter {
+public class TreeView extends View implements Filter {
   
   protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");      
   protected final static Registry REGISTRY = Registry.get(TreeView.class);
@@ -574,34 +577,10 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
 //    toolbar.addGlue();
     toolbar.addSeparator();
     toolbar.add(new Settings());
+    toolbar.add(new ActionBluePrint());
     
     // done
   }
-  
-    @Override
-    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
-        if (!hasFocus){
-            return new ArrayList<Action>();
-        }
-        List<Action> actions = new ArrayList<Action>();
-        if (nodes.length == 1) {
-            if (nodes[0] instanceof PropertyNode) {
-                PropertyNode node = (PropertyNode) nodes[0];
-                Entity entity = node.getProperty().getEntity();
-                actions.add(new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
-
-                    @Override
-                    protected void commit(Entity recipient, Blueprint blueprint) {
-                        tag2blueprint.put(recipient.getTag(), blueprint.getName());
-                        tag2renderer.remove(recipient.getTag());
-                        repaint();
-                    }
-                });
-            }
-        }
-//        actions.add(new ActionChooseRoot());
-        return actions;
-    }
   
   /**
    * // XXX: we will have to check this API when we will deal wil global drag and
@@ -1286,6 +1265,31 @@ public class TreeView extends View implements AncestrisActionProvider,Filter {
       return super.setSelected(selected);
     }
   } //Sticky
+  
+  private class ActionBluePrint extends AbstractAncestrisContextAction{
+
+        public ActionBluePrint() {
+            super();
+            setImage( new ImageIcon(ChooseBlueprintAction.class, "Blueprint.png"));
+        }
+
+        @Override
+        protected void actionPerformedImpl() {
+            if (!contextProperties.isEmpty() && contextProperties.get(0) instanceof Entity){
+            Entity entity = (Entity)(contextProperties.get(0));
+            
+            new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
+
+                    @Override
+                    protected void commit(Entity recipient, Blueprint blueprint) {
+                        tag2blueprint.put(recipient.getTag(), blueprint.getName());
+                        tag2renderer.remove(recipient.getTag());
+                        repaint();
+                    }
+                }.actionPerformed(null);
+        }
+        }
+  }
 
   private class TreeContext extends ViewContext {
     public TreeContext(Context context) {
