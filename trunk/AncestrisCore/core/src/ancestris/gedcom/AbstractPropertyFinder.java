@@ -122,7 +122,9 @@ public abstract class AbstractPropertyFinder implements PropertyFinder {
             Collection<Entity> result = new ArrayList<Entity>();
             if (entity.getClass().isAssignableFrom(applyOn)) {
                 for (Property p : entity.getProperties(path)) {
-                    result.add(p.getEntity());
+                    if (!entity.equals(p.getEntity())) {
+                        result.add(p.getEntity());
+                    }
                 }
             }
             return result;
