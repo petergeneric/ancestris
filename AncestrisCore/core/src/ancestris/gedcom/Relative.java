@@ -48,7 +48,7 @@ import org.openide.util.NbBundle;
  * where key1... are key value for that Relative.
  */
 //XXX: update javadoc
-@NbBundle.Messages({"child=Child","grandchild=Grand-Child"})
+@NbBundle.Messages({"child=Children","grandchild=Grandchildren"})
 public class Relative {
     // Relative cache
 
@@ -244,7 +244,7 @@ public class Relative {
     @ActionRegistration(displayName = "Uncles")
     @ActionReferences(value = {
         @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 50)})
-    @NbBundle.Messages({"uncle.aunt=Uncle and Aunt"})
+    @NbBundle.Messages({"uncle.aunt=Uncles and Aunts"})
     public static class UncleAuntNavigateAction extends NavigateAction {
 
         public UncleAuntNavigateAction() {
