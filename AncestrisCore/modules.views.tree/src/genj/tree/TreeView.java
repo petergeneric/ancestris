@@ -1261,13 +1261,27 @@ public class TreeView extends View implements Filter {
     }
   } //Sticky
   
+  //FIXME: ToolTip is not updated at first run
   private class ActionBluePrint extends AbstractAncestrisContextAction{
+      private final ImageIcon IMAGE = new ImageIcon(ChooseBlueprintAction.class, "Blueprint.png");
 
         public ActionBluePrint() {
             super();
             setImage( new ImageIcon(ChooseBlueprintAction.class, "Blueprint.png"));
         }
 
+        @Override
+        protected void contextChanged() {
+            if (!contextProperties.isEmpty() && contextProperties.get(0) instanceof Entity){
+                Entity entity = (Entity)(contextProperties.get(0));
+                setImageText(IMAGE.getOverLayed(entity.getImage(false)),
+                        NbBundle.getMessage(ChooseBlueprintAction.class, "blueprint.select.for",Gedcom.getName(entity.getTag())));
+                setImage(IMAGE.getOverLayed(entity.getImage(false)));
+            }
+            super.contextChanged();
+        }
+
+        
         @Override
         protected void actionPerformedImpl() {
             if (!contextProperties.isEmpty() && contextProperties.get(0) instanceof Entity){
