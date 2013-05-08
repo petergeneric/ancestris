@@ -210,6 +210,11 @@ public class Relative {
         }
 
         @Override
+        @NbBundle.Messages({
+            "parents.law=Parents in Law",
+            "sibling.law=Brothers/Sisters in Law",
+            "child.law=Son/Daughter in Law"
+        })
         protected List<Action> buildActions(Entity entity, Collection<Entity> entities) {
             if (!(entity instanceof Indi))
                 return super.buildActions(entity,entities);
@@ -217,10 +222,14 @@ public class Relative {
             for (Entity e:entities){
                 Fam fams = (Fam)e;
                 Indi spouse = fams.getOtherSpouse((Indi)entity);
-                if (spouse != null)
+                if (spouse != null){
                     result.add(new JumpToEntityAction(spouse));
+                    result.add(createSubmenuAction(parents_law(), null, PARENT.find(spouse)));
+                    result.add(createSubmenuAction(sibling_law(), null, SIBLING.find(spouse)));
+                }
                 List<Entity> children = new ArrayList<Entity>(Arrays.asList(fams.getChildren()));
                 result.add(createSubmenuAction(child(), null, children));
+                result.add(createSubmenuAction(child_law(), null, SPOUSE.find(children)));
                 result.add(createSubmenuAction(grandchild(), null, new ArrayList<Entity>(CHILD.find(children))));
                 result.add(null);
             }
@@ -277,7 +286,7 @@ public class Relative {
     @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.GrandParentNavigateAction")
     @ActionRegistration(displayName = "Mother")
     @ActionReferences(value = {
-        @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 70)})
+        @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 5)})
     public static class GrandParentNavigateAction extends NavigateAction {
 
         public GrandParentNavigateAction() {
@@ -382,7 +391,7 @@ public class Relative {
             return super.createContextAwareInstance(context);
         }
     }
-    private static SubMenuAction createSubmenuAction(String description, Icon icon, List<Entity> entities){
+    private static SubMenuAction createSubmenuAction(String description, Icon icon, Collection<Entity> entities){
         SubMenuAction result = new SubMenuAction();
         if (entities != null){
             for (Entity entity:entities){
