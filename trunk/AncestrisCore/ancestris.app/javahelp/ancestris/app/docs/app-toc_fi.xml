@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+arborescence de l'aide ?
+-->
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+  <tocitem image="toplevelfolder" text="Your Genealogy with Ancestris">
+    <tocitem target="ancestris.app.intro">Alustava neuvo
+    </tocitem>
+    <tocitem expand="true" text="Ancestris - Sisältää" target="ancestris.app.about">
+        <tocitem expand="true" text="Perus käyttö" target="ancestris.app.discovering">
+              <tocitem expand="false" text="Ensimmäiset parametrit" target="ancestris.app.basic">
+              </tocitem>
+              <tocitem text="Ikkunan hallinta" target="ancestris.app.windows" />
+              <tocitem text="Paikkojen hierarkia" target="ancestris.app.place.management" />
+              <tocitem text="Gedcom selain" target="ancestris.app.gedcoms.manager" />
+              <tocitem expand="false" text="Plugit - Kokonais kuva" target="ancestris.app.plugins" />
+              <tocitem expand="false" text="Lähteet ja Säilöt" target="ancestris.app.repo.source.management">
+              </tocitem>
+        </tocitem>
+        <tocitem expand="true" text="Tuo sukututkimus" target="ancestris.app.genealogy.import">
+                  <tocitem text="Muokkaa yhteen sopivaksi" target="ancestris.app.conform.genealogy" />
+                  <tocitem text="Mahdolliset ongelmat" target="ancestris.app.import.issue" />
+        </tocitem>
+        <tocitem expand="true" text="Aloitan oman sukututkimuksen" target="ancestris.app.new.genealogy">
+                  <tocitem text="Luo ensimmäinen henkilösi" target="ancestris.app.new.entity" />
+                  <tocitem text="Lisää puoliso" target="ancestris.app.new.spouse" />
+                  <tocitem text="Lisää perhe" target="ancestris.app.new.family" />
+                  <tocitem text="Lisää lapsi" target="ancestris.app.new.child" />
+                  <tocitem text="Lisää isovanhempi" target="ancestris.app.new.parent" />
+        </tocitem>
+        <tocitem expand="true" text="Toisessa ikkunassa" target="ancestris.app.views">
+            <tocitem text="Puu näkymä" target="ancestris.app.view.tree" />
+            <tocitem text="Pöytä näkymä" target="ancestris.app.view.table" />
+            <tocitem text="Ancestris muokkain" target="ancestris.app.view.editors.ancestris" />
+            <tocitem text="Gedcom Muokkain" target="ancestris.app.view.editors.gedcom" />
+            <tocitem text="Aikajana näkymä" target="ancestris.app.view.chrono" />
+            <tocitem text="Navigaattori" target="ancestris.app.view.navigator" />
+            <tocitem text="Kokonaisuus näkymä" target="ancestris.app.view.entity" />
+            <tocitem text="Haku kone" target="ancestris.app.view.search" />
+            <tocitem text="Listat ja Raportit" target="ancestris.app.view.reports" />
+            <tocitem text="Saatavilla olevat Plugit" target="ancestris.app.plugins.liste" />
+            <tocitem text="Geo näkymä" target="ancestris.app.view.geo" />
+            <tocitem text="Sijoitus lista" target="ancestris.app.juridictions.list" />
+        </tocitem>
+        <tocitem expand="true" text="Kehittynyt käyttö" target="ancestris.app.advanced">
+            <tocitem text="Ominaisuudet - Asetukset" target="ancestris.app.options.menu1" />
+            <tocitem text="Gedcom spesifikaatio" target="ancestris.app.gedcom.standard" />
+            <tocitem text="Suunnitelmat - Tasot" target="ancestris.app.blueprints" />
+            <tocitem text="Ancestris kannettavuus" target="ancestris.app.nomade" />
+            <tocitem text="Tee oma soveluksesi" target="ancestris.app.plugins.development" />
+        </tocitem>
+        <tocitem expand="true" text="Miten saada apua" target="ancestris.app.aids">
+        </tocitem>
+    </tocitem>
+  </tocitem>
+</toc>
