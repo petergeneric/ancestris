@@ -67,7 +67,7 @@ public abstract class AbstractAncestrisContextAction extends AbstractAncestrisAc
         super.setTip(text);
     }
 
-    Gedcom getGedcom() {
+    public Gedcom getGedcom() {
         return ancestris.util.Utilities.getGedcomFromContext(context);
     }
 
@@ -149,7 +149,7 @@ public abstract class AbstractAncestrisContextAction extends AbstractAncestrisAc
 
         initLookupListner();
 
-        actionPerformedImpl();
+        actionPerformedImpl(event);
 
         // Propagate changes in lookup too
         resultChanged(null);
@@ -157,5 +157,5 @@ public abstract class AbstractAncestrisContextAction extends AbstractAncestrisAc
         // done
     }
 
-    protected abstract void actionPerformedImpl();
+    protected abstract void actionPerformedImpl(final ActionEvent event);
 }
