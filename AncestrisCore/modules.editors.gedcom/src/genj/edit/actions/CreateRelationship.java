@@ -10,12 +10,12 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.edit.actions;
 
@@ -28,12 +28,10 @@ import genj.gedcom.Property;
 import genj.util.Registry;
 import genj.util.WordBuffer;
 import genj.util.swing.NestedBlockLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -41,9 +39,9 @@ import javax.swing.JTextField;
 /**
  * Base type for all relationships we create - it always uses the same pattern
  * <il>
- *  <li>ask the user for a new or existing entity based on the target type of the relationship and
- *  <li>explain what is going to happen
- *  <li>perform the necessary actions in a concrete implementation
+ * <li>ask the user for a new or existing entity based on the target type of the relationship and
+ * <li>explain what is going to happen
+ * <li>perform the necessary actions in a concrete implementation
  * </il>
  */
 public abstract class CreateRelationship extends AbstractChange {
@@ -63,19 +61,21 @@ public abstract class CreateRelationship extends AbstractChange {
     /**
      * Constructor
      */
-    //FIXME: remove all other constructors?
-    public CreateRelationship(String targetType) {
+    public CreateRelationship() {
         super();
-        setImage(Gedcom.getEntityImage(targetType));
-        this.targetType = targetType;
     }
+
     public CreateRelationship(String name, String targetType) {
-        super();
-        setImageText(Gedcom.getEntityImage(targetType),name);
-        this.targetType = targetType;
+        this();
+        setTargetType(targetType);
+        setText(name);
     }
-    public CreateRelationship(String name, Gedcom gedcom, String targetType) {
-        this(name,targetType);
+
+    public final void setTargetType(String targetType) {
+        if (targetType != null) {
+            setImage(Gedcom.getEntityImage(targetType));
+        }
+        this.targetType = targetType;
     }
 
     /**
@@ -221,8 +221,10 @@ public abstract class CreateRelationship extends AbstractChange {
 
     /**
      * Apply the relationship
-     * @param target the entity that the resulting relationship has to point to
+     *
+     * @param target      the entity that the resulting relationship has to point to
      * @param targetIsNew whether the target was newly created for this relationship
+     *
      * @return the property that should receive focus after this action
      */
     protected abstract Property change(Entity target, boolean targetIsNew) throws GedcomException;
