@@ -264,9 +264,6 @@ public class Installer extends ModuleInstall {
                         }
                     }
                 }
-                //Load the tips into the tip loader:
-                InputStream propertiesIn = getClass().getResourceAsStream("tips.properties");
-                new TipOfTheDay(propertiesIn);
 
                 // set mail properties
                 if (modulePreferences.get("mail.host", "").equals("")) {
@@ -275,6 +272,18 @@ public class Installer extends ModuleInstall {
                     OptionsDisplayer.getDefault().open("SendTranslation");
                 }
 
+                //Load the tips into the tip loader:
+                String selectedLocale = Locale.getDefault().getLanguage();
+                String tipsFileName = "tips.properties";
+                if (selectedLocale.equals("en") == false) {
+                    tipsFileName = "tips_" + selectedLocale + ".properties";
+                }
+                InputStream propertiesIn = getClass().getResourceAsStream(tipsFileName);
+                if (propertiesIn == null) {
+                    propertiesIn = getClass().getResourceAsStream("tips.properties");
+                }
+
+                new TipOfTheDay(propertiesIn);
             }
         });
     }
