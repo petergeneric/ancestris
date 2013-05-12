@@ -24,6 +24,7 @@ import ancestris.report.svgtree.graphics.GraphicsRenderer;
 import ancestris.report.svgtree.output.RendererFactory;
 import ancestris.report.svgtree.output.TreeElements;
 import ancestris.report.svgtree.output.TreeElementsFactory;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * GenJ - ReportGraphicalTree.
@@ -38,6 +39,7 @@ import ancestris.report.svgtree.output.TreeElementsFactory;
  * @author Przemek Wiech <pwiech@losthive.org>
  * @version 0.24
  */
+@ServiceProvider(service = Report.class)
 public class ReportGraphicalTree extends Report
 {
     /**
