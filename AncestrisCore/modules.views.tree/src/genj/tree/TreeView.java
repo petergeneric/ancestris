@@ -1283,7 +1283,7 @@ public class TreeView extends View implements Filter {
 
         
         @Override
-        protected void actionPerformedImpl() {
+        protected void actionPerformedImpl(final ActionEvent event) {
             if (!contextProperties.isEmpty() && contextProperties.get(0) instanceof Entity){
             Entity entity = (Entity)(contextProperties.get(0));
             
