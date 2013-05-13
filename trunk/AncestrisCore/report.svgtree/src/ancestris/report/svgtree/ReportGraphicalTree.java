@@ -117,7 +117,7 @@ public class ReportGraphicalTree extends Report
         } catch (OutOfMemoryError e) {
             println("ERROR! The report ran out of memory.\n");
             println("You can try to do the following things:");
-            println("  * Increase the memory limit for GenJ");
+            println("  * Increase the memory limit for Ancestris");
             println("  * Build a smaller tree");
             println("  * Choose SVG output (requires the least memory)");
         } catch (IOException e) {
