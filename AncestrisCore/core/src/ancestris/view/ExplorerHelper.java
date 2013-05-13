@@ -12,6 +12,8 @@
 package ancestris.view;
 
 import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.core.actions.CommonActions;
+import ancestris.gedcom.PropertyNode;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -122,9 +124,23 @@ public class ExplorerHelper {
             }
             actions.addAll(aactions);
             if (actions.size() > 0) {
-                createPopup(p, Utilities.actionsToPopup(actions.toArray(new Action[0]), source));
+                String title = getTitleFromNodes(selNodes);
+                if (title != null){
+                    actions.add(0,CommonActions.createSeparatorAction(title));
+                    actions.add(1,null);
+                }
+                JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), source);
+                createPopup(p, popup);
             }
         }
+    }
+
+    private static String getTitleFromNodes(Node[] nodes){
+        String result = null;
+        if (nodes != null && nodes.length == 1 && nodes[0] instanceof PropertyNode){
+            result = ((PropertyNode)nodes[0]).getProperty().toString();
+        }
+        return result;
     }
 
     /**
