@@ -60,7 +60,9 @@ public class CommonActions {
         }
 
         public JMenuItem getPopupPresenter() {
-            JMenuItem item = new JMenuItem("<html><b><font size=+1>"+title+"</font></b></html>");
+//            JMenuItem item = new JMenuItem("<html><b><font size=+1>"+title+"</font></b></html>");
+            JMenuItem item = new JMenuItem("<html><b>"+title+"</b></html>");
+            item.setEnabled(false);
             return item;
         }
     }
