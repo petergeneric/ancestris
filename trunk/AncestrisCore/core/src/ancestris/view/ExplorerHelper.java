@@ -14,6 +14,8 @@ package ancestris.view;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.CommonActions;
 import ancestris.gedcom.PropertyNode;
+import genj.gedcom.Entity;
+import genj.gedcom.Property;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -110,24 +112,24 @@ public class ExplorerHelper {
             List<AncestrisActionProvider> providers = AncestrisActionProvider.Lookup.lookupAll(source);
 
             List<Action> actions = new ArrayList<Action>();
-            for (AncestrisActionProvider provider:providers) {
+            for (AncestrisActionProvider provider : providers) {
                 actions.addAll(provider.getActions(true, selNodes));
                 actions.add(null);
             }
             if (selNodes.length > 0) {
                 actions.addAll(Arrays.asList(NodeOp.findActions(selNodes)));
             }
-            
+
             List<Action> aactions = new ArrayList<Action>();
-            for (AncestrisActionProvider aap:Lookup.getDefault().lookupAll(AncestrisActionProvider.class)){
+            for (AncestrisActionProvider aap : Lookup.getDefault().lookupAll(AncestrisActionProvider.class)) {
                 aactions.addAll(aap.getActions(false, selNodes));
             }
             actions.addAll(aactions);
             if (actions.size() > 0) {
                 String title = getTitleFromNodes(selNodes);
-                if (title != null){
-                    actions.add(0,CommonActions.createSeparatorAction(title));
-                    actions.add(1,null);
+                if (title != null) {
+                    actions.add(0, CommonActions.createSeparatorAction(title));
+                    actions.add(1, null);
                 }
                 JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), source);
                 createPopup(p, popup);
@@ -135,10 +137,22 @@ public class ExplorerHelper {
         }
     }
 
-    private static String getTitleFromNodes(Node[] nodes){
+    private static String getTitleFromNodes(Node[] nodes) {
         String result = null;
-        if (nodes != null && nodes.length == 1 && nodes[0] instanceof PropertyNode){
-            result = ((PropertyNode)nodes[0]).getProperty().toString();
+        if (nodes != null && nodes.length == 1 && nodes[0] instanceof PropertyNode) {
+            Property prop = ((PropertyNode) nodes[0]).getProperty();
+
+            result = prop.getDisplayValue();
+            if (!result.isEmpty()) {
+                result = prop.getPropertyName() + ": " + result;
+            }
+
+            if (result.isEmpty() && prop instanceof Entity) {
+                result = ((Entity) prop).toString(false);
+            }
+            if (result.isEmpty()) {
+                result = prop.getEntity().toString(false) + " (" + prop.getPropertyName() + ")";
+            }
         }
         return result;
     }
