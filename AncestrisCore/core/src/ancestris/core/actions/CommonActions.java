@@ -14,7 +14,10 @@ package ancestris.core.actions;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.UIManager;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.util.actions.Presenter;
 
@@ -39,21 +42,23 @@ public class CommonActions {
             //noop
         }
     }
-    
-    public static SeparatorAction createSeparatorAction(String title){
+
+    public static SeparatorAction createSeparatorAction(String title) {
         SeparatorAction result = new SeparatorAction(title);
         return result;
     }
-    
-    private static class SeparatorAction extends AbstractAction implements Presenter.Popup{
+
+    private static class SeparatorAction extends AbstractAction implements Presenter.Popup {
+
         private String title;
+
         public SeparatorAction(String title) {
             this.title = title;
             setEnabled(true);
             putValue(NAME, title);
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             //nothing to do
@@ -61,9 +66,29 @@ public class CommonActions {
 
         public JMenuItem getPopupPresenter() {
 //            JMenuItem item = new JMenuItem("<html><b><font size=+1>"+title+"</font></b></html>");
-            JMenuItem item = new JMenuItem("<html><b>"+title+"</b></html>");
+            JMenuItem item = new TitleMenuItem("<html><b>" + title + "</b></html>");
             item.setEnabled(false);
             return item;
+        }
+    }
+
+    static private class TitleMenuItem extends JMenuItem implements DynamicMenuContent {
+
+        private JLabel title;
+
+        public TitleMenuItem(String title) {
+            this.title = new JLabel(title);
+            this.title.setBackground(UIManager.getColor("MenuItem.selectionBackground"));
+            this.title.setForeground(UIManager.getColor("MenuItem.selectionForeground"));
+            this.title.setOpaque(true);
+        }
+
+        public JComponent[] getMenuPresenters() {
+            return new JComponent[]{title};
+        }
+
+        public JComponent[] synchMenuPresenters(JComponent[] items) {
+            return getMenuPresenters();
         }
     }
 }
