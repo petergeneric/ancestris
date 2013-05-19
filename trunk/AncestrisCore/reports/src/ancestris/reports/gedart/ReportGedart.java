@@ -62,6 +62,7 @@ import java.net.MalformedURLException;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * GenJ - Report
@@ -78,6 +79,7 @@ import javax.swing.ImageIcon;
  *   - limiter aux todos
  * 
  */
+@ServiceProvider(service = Report.class)
 public class ReportGedart extends Report {
 	private GedartTemplates gedartTemplates = new GedartTemplates();
 	private GedartTemplate[] gedartTemplatesOption = gedartTemplates.toArray();
@@ -137,13 +139,24 @@ public class ReportGedart extends Report {
 		return process(new Indi[0], fams,template);
 	}
 
-//TODO:	public Object accepts(Object context) {
+	public String accepts(Object context) {
+            return (getName());
 //		return (gedartTemplates.toArray(context));
-//	}
+	}
 
-//	public void start(Object context) throws Throwable{
-//		start(context,null);
-//	}
+	public File start(Object context) throws Throwable{
+            if (context instanceof Gedcom)
+		return start((Gedcom)context,null);
+            if (context instanceof Indi)
+		return start((Indi)context,null);
+            if (context instanceof Fam)
+		return start((Fam)context,null);
+            if (context instanceof Indi[])
+		return start((Indi[])context,null);
+            if (context instanceof Fam[])
+		return start((Fam[])context,null);
+            return null;
+	}
 	
 
 		/**
