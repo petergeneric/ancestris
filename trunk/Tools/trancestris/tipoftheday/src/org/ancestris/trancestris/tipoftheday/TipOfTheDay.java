@@ -8,6 +8,8 @@ import java.awt.Dialog;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.jdesktop.swingx.tips.DefaultTipOfTheDayModel;
 import org.jdesktop.swingx.tips.TipLoader;
@@ -22,6 +24,7 @@ import org.openide.util.NbPreferences;
 public class TipOfTheDay {
 
     public static final String PREFERENCE_KEY = "ShowTipOnStartup";
+    private static final Logger logger = Logger.getLogger(TipOfTheDay.class.getName());
     TipOfTheDayDialog tipOfTheDayDialog;
 
     public TipOfTheDay(InputStream propertiesIn) {
@@ -56,7 +59,7 @@ public class TipOfTheDay {
     //Store whether the tip dialog should be shown at start up:
     private static void setStartupChoiceOption(boolean val) {
         NbPreferences.forModule(TipOfTheDay.class).putBoolean("StartUpPref", val);
-        System.out.println("Show Tips on Startup: " + val);
+        logger.log(Level.INFO, "Show Tips on Startup: ", val);
     }
 
     //Return whether the tip dialog should be shown at start up:
@@ -97,8 +100,8 @@ public class TipOfTheDay {
         //so that it will be stored in the NetBeans user directory:
         NbPreferences.forModule(TipOfTheDay.class).putInt("StartTipPref", nextTip);
 
-        System.out.println("Total tips: " + tot);
-        System.out.println("Current tip location: " + loc);
-        System.out.println("Future tip location: " + nextTip);
+        logger.log(Level.INFO, "Total number of tips: {0}", tot);
+        logger.log(Level.INFO, "Current tip location: ", loc);
+        logger.log(Level.INFO, "Future tip location: ", nextTip);
     }
 }
