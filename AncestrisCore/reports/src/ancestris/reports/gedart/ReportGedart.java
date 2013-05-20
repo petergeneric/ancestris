@@ -168,8 +168,11 @@ public class ReportGedart extends Report {
 	private File process(Entity[] indis, Entity[] fams, GedartTemplate  usetemplate) {
 		String thetemplate;
 		String extension =null;
-		if (usetemplate == null)
+		if (usetemplate == null && gedartTemplates.size()>template)
 			usetemplate = gedartTemplatesOption[template];
+                if (usetemplate == null){
+                    return null;
+                }
 		
 		thetemplate = usetemplate.getPath();
 		LOG.log(Level.INFO,"template:"+thetemplate );
