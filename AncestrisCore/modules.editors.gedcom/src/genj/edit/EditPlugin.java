@@ -104,10 +104,6 @@ public class EditPlugin
    */
   private void createActions(Property property, SubMenuAction group) {
     
-    // FileAssociationActions for PropertyFile
-    if (property instanceof PropertyFile)  
-      createActions(group, (PropertyFile)property); 
-      
 //    // Place format for PropertyFile
 //    if (property instanceof PropertyPlace)  
 //      group.add(new SetPlaceHierarchy((PropertyPlace)property)); 
@@ -178,14 +174,6 @@ public class EditPlugin
           }
     
     // done
-  }
-
-  /**  
-   * Create actions for PropertyFile
-   */
-  private void createActions(SubMenuAction group, PropertyFile file) {
-    if (file.getFile()!=null)
-      group.addAction(new RunExternal(file.getFile()));
   }
 
 }

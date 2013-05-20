@@ -19,6 +19,7 @@
  */
 package ancestris.core.actions;
 
+import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.util.Resources;
 
@@ -27,17 +28,52 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.LookupEvent;
+import org.openide.util.NbBundle;
 
 /**
  * External action 
  */
-public class RunExternal extends AbstractAncestrisAction {
+@ActionID(category = "Edit", id = "ancestris.core.actions.RunExternal")
+@ActionRegistration(displayName = "Run External")
+@ActionReferences({
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1000)})
+@NbBundle.Messages({"file.open=Open..."})
+public class RunExternal extends AbstractAncestrisContextAction {
   
   /** the wrapped file */
   private File file;
 
 
   private final static Resources RESOURCES = Resources.get(RunExternal.class);
+  
+  public RunExternal() {
+      super();
+  }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        file=null;
+        for (Property prop:lkpInfo.allInstances()){
+            if (prop instanceof PropertyFile){
+                file = ((PropertyFile)prop).getFile();
+            }
+        }
+        super.resultChanged(ev);
+    }
+
+    @Override
+    protected void contextChanged() {
+        super.contextChanged();
+    setImage(PropertyFile.DEFAULT_IMAGE);
+    setText(RESOURCES.getString("file.open"));
+    setEnabled(file.exists());
+    }
+  
   
   /**
    * Constructor
@@ -49,11 +85,8 @@ public class RunExternal extends AbstractAncestrisAction {
     setEnabled(file.exists());
   }
   
-  /**
-   * @see genj.util.swing.AbstractAncestrisAction#execute()
-   */
     @Override
-  public void actionPerformed(ActionEvent event) {
+    protected void actionPerformedImpl(ActionEvent event) {
     if (file==null)
       return;
     try {
@@ -61,6 +94,6 @@ public class RunExternal extends AbstractAncestrisAction {
     } catch (Throwable t) {
       Logger.getLogger("genj.edit.actions").log(Level.INFO, "can't open "+file, t);
     }
-  }
+    }
   
 } //RunExternal
