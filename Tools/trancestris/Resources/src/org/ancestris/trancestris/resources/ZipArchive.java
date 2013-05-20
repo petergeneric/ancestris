@@ -80,10 +80,19 @@ public class ZipArchive implements PropertyChangeListener {
     public boolean saveTranslation(File outputFile) {
         if (hasTranslation() == true) {
             try {
-                logger.log(Level.INFO, "Create archive {0}", outputFile.getName());
-                ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
-                root.saveTranslation(outputStream, "");
-                outputStream.close();
+                logger.log(Level.INFO, "Create translation archive {0}", outputFile.getName());
+                ZipOutputStream translationOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
+                root.saveTranslation(translationOutputStream, "");
+                translationOutputStream.close();
+                
+                /*
+                 * directory structure has change and need to be saved.
+                 * modified.xx file has been removed during translation saving
+                 */
+                logger.log(Level.INFO, "Save archive {0}", zipFile.getName());
+                ZipOutputStream archiveOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
+                root.writeTo(archiveOutputStream, "");
+                archiveOutputStream.close();
                 return true;
             } catch (IOException ioe) {
                 logger.log(Level.SEVERE, null, ioe);
