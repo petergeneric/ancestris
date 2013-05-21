@@ -10,19 +10,18 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package ancestris.core.actions;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.util.Resources;
-
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -36,7 +35,7 @@ import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 
 /**
- * External action 
+ * External action
  */
 @ActionID(category = "Edit", id = "ancestris.core.actions.RunExternal")
 @ActionRegistration(displayName = "Run External")
@@ -44,56 +43,56 @@ import org.openide.util.NbBundle;
     @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1000)})
 @NbBundle.Messages({"file.open=Open..."})
 public class RunExternal extends AbstractAncestrisContextAction {
-  
-  /** the wrapped file */
-  private File file;
 
+    /** the wrapped file */
+    private File file;
+    private final static Resources RESOURCES = Resources.get(RunExternal.class);
 
-  private final static Resources RESOURCES = Resources.get(RunExternal.class);
-  
-  public RunExternal() {
-      super();
-  }
+    public RunExternal() {
+        super();
+    }
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        file=null;
-        for (Property prop:lkpInfo.allInstances()){
-            if (prop instanceof PropertyFile){
-                file = ((PropertyFile)prop).getFile();
+        // valid only for context aware action
+        if (lkpInfo != null) {
+            file = null;
+            for (Property prop : lkpInfo.allInstances()) {
+                if (prop instanceof PropertyFile) {
+                    file = ((PropertyFile) prop).getFile();
+                }
             }
+            super.resultChanged(ev);
         }
-        super.resultChanged(ev);
     }
 
     @Override
     protected void contextChanged() {
         super.contextChanged();
-    setImage(PropertyFile.DEFAULT_IMAGE);
-    setText(RESOURCES.getString("file.open"));
-    setEnabled(file.exists());
+        setImage(PropertyFile.DEFAULT_IMAGE);
+        setText(RESOURCES.getString("file.open"));
+        setEnabled(file != null && file.exists());
     }
-  
-  
-  /**
-   * Constructor
-   */
-  public RunExternal(File file) {
-    this.file = file;
-    super.setImage(PropertyFile.DEFAULT_IMAGE);
-    super.setText(RESOURCES.getString("file.open"));
-    setEnabled(file.exists());
-  }
-  
+
+    /**
+     * Constructor
+     */
+    public RunExternal(File file) {
+        this.file = file;
+        super.setImage(PropertyFile.DEFAULT_IMAGE);
+        super.setText(RESOURCES.getString("file.open"));
+        setEnabled(file != null && file.exists());
+    }
+
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
-    if (file==null)
-      return;
-    try {
-      Desktop.getDesktop().open(file);
-    } catch (Throwable t) {
-      Logger.getLogger("genj.edit.actions").log(Level.INFO, "can't open "+file, t);
+        if (file == null) {
+            return;
+        }
+        try {
+            Desktop.getDesktop().open(file);
+        } catch (Throwable t) {
+            Logger.getLogger("genj.edit.actions").log(Level.INFO, "can't open " + file, t);
+        }
     }
-    }
-  
 } //RunExternal
