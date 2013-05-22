@@ -16,7 +16,6 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,7 +59,7 @@ import java.util.Map;
  * @author Yann L'Henoret <yann.lhenoret@gmail.com>
  * @version 0.6
  */
-@SuppressWarnings("unchecked")
+//@SuppressWarnings("unchecked")
 public class ReportGedcom2Geneanet extends Report {
 
     /** Map with Location elements codes as keys and index of the corresponding element in gedcom file as value <br/>
@@ -102,19 +101,19 @@ public class ReportGedcom2Geneanet extends Report {
     /** options used in the first window opened when the report is launched*/
 	  public class Config {
 		  public int townIndex = 0;
-		  public String townIndexs[];
+		  public String townIndexs[]={""};
 		  
 		  public int townIdIndex = 0;
-		  public String townIdIndexs[];
+		  public String townIdIndexs[]={""};
 		  
 		  public int subRegionIndex = 0;
-		  public String subRegionIndexs[] ;
+		  public String subRegionIndexs[]={""} ;
 		  
 		  public int regionIndex = 0;
-		  public String regionIndexs[] ;
+		  public String regionIndexs[]={""} ;
 		  
 		  public int countryIndex = 0;
-		  public String countryIndexs[];
+		  public String countryIndexs[]={""};
 	     }
 	  public Config conf = new Config();
 
