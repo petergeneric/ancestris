@@ -22,6 +22,7 @@
 package genj.edit;
 
 import ancestris.api.editor.Editor;
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.resources.Images;
@@ -43,7 +44,6 @@ import genj.io.PropertyTransferable;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
@@ -166,6 +166,7 @@ import org.openide.nodes.Node;
         splitPane.setContinuousLayout(true);
         splitPane.addPropertyChangeListener(new PropertyChangeListener() {
 
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (JSplitPane.DIVIDER_LOCATION_PROPERTY.equals(evt.getPropertyName())) {
                     REGISTRY.put("divider", splitPane.getDividerLocation());
@@ -292,7 +293,7 @@ import org.openide.nodes.Node;
         ignoreTreeSelection = false;
 
         // show bean for single selection
-        if (props.size() == 0) {
+        if (props.isEmpty()) {
             return;
         }
 
@@ -348,7 +349,6 @@ import org.openide.nodes.Node;
         if (root == null) {
             return;
         }
-        Gedcom gedcom = root.getGedcom();
 
         if (bean != null) {
             bean.commit();
@@ -398,6 +398,7 @@ import org.openide.nodes.Node;
         }
 
         /** apply it */
+        @Override
         public void actionPerformed(ActionEvent event) {
 
             // prepare options
@@ -405,6 +406,7 @@ import org.openide.nodes.Node;
             final SelectEntityWidget select = new SelectEntityWidget(gedcom, entity.getTag(), resources.getString("action.propagate.toall"));
             select.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     Entity target = select.getSelection();
                     String string = target == null ? resources.getString("action.propagate.all", new Object[]{what, "" + select.getEntityCount(), Gedcom.getName(entity.getTag())})
@@ -438,6 +440,7 @@ import org.openide.nodes.Node;
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
+                    @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         for (Entity to : selection != null ? Collections.singletonList(selection) : gedcom.getEntities(entity.getTag())) {
                             Propagate.this.copy(properties, entity, to, check.isSelected());
@@ -488,6 +491,7 @@ import org.openide.nodes.Node;
         }
 
         /** run */
+        @Override
         public void actionPerformed(ActionEvent event) {
 
             // available
@@ -522,8 +526,9 @@ import org.openide.nodes.Node;
             // now cut
             gedcom.doMuteUnitOfWork(new UnitOfWork() {
 
+                @Override
                 public void perform(Gedcom gedcom) {
-                    Property parent = null;;
+                    Property parent = null;
                     for (Property prop : selection) {
                         parent = prop.getParent();
                         parent.delProperty(prop);
@@ -542,7 +547,7 @@ import org.openide.nodes.Node;
         /** assemble a list of vetos for cutting properties */
         private String getVeto(List<Property> properties) {
 
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             for (Property p : properties) {
 
                 String veto = p.getDeleteVeto();
@@ -577,6 +582,7 @@ import org.openide.nodes.Node;
         }
 
         /** run */
+        @Override
         public void actionPerformed(ActionEvent event) {
 
             // check selection
@@ -622,6 +628,7 @@ import org.openide.nodes.Node;
         }
 
         /** run */
+        @Override
         public void actionPerformed(ActionEvent event) {
 
             // grab the clipboard content now
@@ -629,7 +636,7 @@ import org.openide.nodes.Node;
             try {
                 content = clipboard.getContents(this).getTransferData(DataFlavor.stringFlavor).toString();
             } catch (Throwable t) {
-                EditView.LOG.log(Level.INFO, "Accessing system clipboard as stringFlavor failed (" + t.getMessage() + ")");
+                EditView.LOG.log(Level.INFO, "Accessing system clipboard as stringFlavor failed ({0})", t.getMessage());
                 return;
             }
 
@@ -646,6 +653,7 @@ import org.openide.nodes.Node;
             // grab from clipboard
             gedcom.doMuteUnitOfWork(new UnitOfWork() {
 
+                @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     PropertyReader reader = new PropertyReader(new StringReader(content), null, true);
                     reader.setMerge(true);
@@ -710,6 +718,7 @@ import org.openide.nodes.Node;
         }
 
         /** run */
+        @Override
         public void actionPerformed(ActionEvent event) {
 
             // need to let user select tags to add?
@@ -737,6 +746,7 @@ import org.openide.nodes.Node;
             final List<Property> newProps = new ArrayList<Property>();
             gedcom.doMuteUnitOfWork(new UnitOfWork() {
 
+                @Override
                 public void perform(Gedcom gedcom) {
                     for (int i = 0; i < tags.length; i++) {
                         Property prop = parent.addProperty(tags[i], "");
@@ -772,6 +782,7 @@ import org.openide.nodes.Node;
         /**
          * callback - selection in tree has changed
          */
+        @Override
         public void valueChanged(TreeSelectionEvent e) {
             // ignore override + model change check
             if (ignoreTreeSelection || tree.getRoot() == null) {
@@ -787,6 +798,7 @@ import org.openide.nodes.Node;
             }
         }
 
+        @Override
         public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
             TreePath path = event.getPath();
             int len = path.getPathCount();
@@ -800,6 +812,7 @@ import org.openide.nodes.Node;
             expands.remove(new TagPath(tags, null));
         }
 
+        @Override
         public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
             TreePath path = event.getPath();
             int len = path.getPathCount();
@@ -819,6 +832,7 @@ import org.openide.nodes.Node;
      */
     private class FocusPolicy extends LayoutFocusTraversalPolicy {
 
+        @Override
         public Component getComponentAfter(Container focusCycleRoot, Component aComponent) {
             // let super find out who's getting focus - this might be null!
             Component result = super.getComponentAfter(focusCycleRoot, aComponent);
@@ -838,6 +852,7 @@ import org.openide.nodes.Node;
             return result;
         }
 
+        @Override
         public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
             // let super find out who's getting focus - this might be null!
             Component result = super.getComponentBefore(focusCycleRoot, aComponent);
@@ -875,14 +890,14 @@ import org.openide.nodes.Node;
 
         @Override
         public List<Action> getActions(boolean hasFocus, Node[] nodes) {
-            if (!hasFocus){
+            if (!hasFocus) {
                 return new ArrayList<Action>();
             }
             List<Property> selection = tree.getSelection();
             List<Action> result = new ArrayList<Action>();
 
             // cut copy paste
-            if (nodes.length !=0) {
+            if (nodes.length != 0) {
                 result.add(new Cut(selection));
                 result.add(new Copy(selection));
             }
@@ -898,7 +913,7 @@ import org.openide.nodes.Node;
                     MetaProperty[] metas = prop.getNestedMetaProperties(MetaProperty.WHERE_NOT_HIDDEN | MetaProperty.WHERE_CARDINALITY_ALLOWS);
                     Arrays.sort(metas);
                     for (int i = 0; i < metas.length; i++) {
-                        if (metas[i].isInstantiated()||true) {
+                        if (metas[i].isInstantiated() || true) {
                             menu.addAction(new Add(prop, metas[i]));
                         }
                     }
@@ -912,6 +927,5 @@ import org.openide.nodes.Node;
 
             return result;
         }
-
     } //Tree
 } //AdvancedEditor
