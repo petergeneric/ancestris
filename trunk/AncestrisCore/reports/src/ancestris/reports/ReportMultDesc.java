@@ -18,6 +18,7 @@ import genj.gedcom.PropertyMultilineValue;
 import genj.report.Report;
 
 import java.util.HashMap;
+import org.openide.util.lookup.ServiceProvider;
 
 
 /*
@@ -27,6 +28,7 @@ import java.util.HashMap;
  * TODO Daniel: Add table output (for csv)
  * TODO Daniel: reenable global privacy disabling
  */
+@ServiceProvider(service=Report.class)
 public class ReportMultDesc extends Report {
 
     private final static String FORMAT_STRONG = "font-weight=bold";

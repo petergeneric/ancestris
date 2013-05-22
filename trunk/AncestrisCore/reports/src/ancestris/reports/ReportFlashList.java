@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.ImageIcon;
+import org.openide.util.lookup.ServiceProvider;
 
     //
     // Flash lists are structured lists with locations and individual lastnames
@@ -104,6 +105,7 @@ import javax.swing.ImageIcon;
  * @version 2.2
  */
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportFlashList extends Report {
 
   private final static TagPath CITY = new TagPath(".:ADDR:CITY");

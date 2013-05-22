@@ -5,12 +5,14 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
 
  
 
 */
+@ServiceProvider(service=Report.class)
 public class ReportTopNames extends Report {
 	 
 	public boolean showAllNames = true;

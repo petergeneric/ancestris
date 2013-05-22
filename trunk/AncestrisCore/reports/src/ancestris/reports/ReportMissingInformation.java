@@ -9,6 +9,7 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
 
@@ -16,6 +17,7 @@ import genj.report.Report;
 
 
 */
+@ServiceProvider(service=Report.class)
 public class ReportMissingInformation extends Report {
 	 
 	// check all relevant tags by default	

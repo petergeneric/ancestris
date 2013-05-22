@@ -13,6 +13,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.TagPath;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author   = Ekran, based on work of Carsten Muessig <carsten.muessig@gmx.net>
@@ -21,6 +22,7 @@ import genj.report.Report;
  * updated   = $Date: 2010-01-16 11:06:32 $
  * Modified by Paul Robinson 2010/01/16
  */
+@ServiceProvider(service=Report.class)
 public class ReportNames extends Report {
 
     public boolean reportOutputBirth = true;

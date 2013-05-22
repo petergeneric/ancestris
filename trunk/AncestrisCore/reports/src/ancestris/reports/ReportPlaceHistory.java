@@ -25,11 +25,13 @@ import genj.util.DirectAccessTokenizer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Show a chart of places over time
  */
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportPlaceHistory extends Report {
 
   private final static String

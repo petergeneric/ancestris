@@ -15,6 +15,7 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
 import javax.swing.JOptionPane;
+import org.openide.util.lookup.ServiceProvider;
 
 
 /**
@@ -25,6 +26,7 @@ import javax.swing.JOptionPane;
  */
 // FIXME: remove @suppresswranings
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportToolBox extends Report {
 
   /** option - Tool to run */

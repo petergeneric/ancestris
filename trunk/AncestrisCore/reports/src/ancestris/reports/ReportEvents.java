@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * GenJ - Report
@@ -39,6 +40,7 @@ import java.util.TimeZone;
  * @author Carsten Muessig carsten.muessig@gmx.net
  */
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportEvents extends Report {
   
     /** whether we sort by day-of-month or date */
