@@ -23,10 +23,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author NMeier
  */
+@ServiceProvider(service=Report.class)
 public class ReportAlmanac extends Report {
   
   public boolean groupByYear = false;

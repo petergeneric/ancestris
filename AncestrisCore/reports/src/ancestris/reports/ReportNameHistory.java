@@ -22,11 +22,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Chart names and their usage in a gedcom file
  */
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportNameHistory extends Report {
 
     /** how to treat a lower case prefix of the last name (such as "van der")  */

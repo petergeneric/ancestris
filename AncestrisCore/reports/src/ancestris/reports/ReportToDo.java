@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * GenJ - Report
@@ -39,6 +40,7 @@ import javax.swing.ImageIcon;
  * @author Daniel ANDRE <daniel.andre@free.fr>
  * @version 1.0
  */
+@ServiceProvider(service=Report.class)
 public class ReportToDo extends Report {
 
   private final static String PLACE_AND_DATE_FORMAT = "{$V }{$D}{ $P}";

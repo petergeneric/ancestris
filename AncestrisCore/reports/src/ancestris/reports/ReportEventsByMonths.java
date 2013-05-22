@@ -28,10 +28,12 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A report that shows pie charts with events by months
  */
+@ServiceProvider(service=Report.class)
 public class ReportEventsByMonths extends Report {
 
   /** whether we give a Chart for births - default is true */
