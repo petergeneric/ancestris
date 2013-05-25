@@ -9,7 +9,7 @@ arborescence de l'aide ?
     </tocitem>
     <tocitem expand="true" text="Ancestris - Contents" target="ancestris.app.about">
         <tocitem expand="true" text="Basic Use" target="ancestris.app.discovering">
-              <tocitem expand="false" text="First parameters" target="ancestris.app.basic">
+              <tocitem expand="false" text="First settings" target="ancestris.app.basic">
               </tocitem>
               <tocitem text="Managing the windows" target="ancestris.app.windows" />
               <tocitem text="Places hierarchy" target="ancestris.app.place.management" />
