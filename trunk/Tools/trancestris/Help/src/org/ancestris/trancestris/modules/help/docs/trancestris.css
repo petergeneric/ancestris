@@ -147,7 +147,7 @@ th {
 
 small {font-size: x-small}
 
-/* Specific style for the Help section of Ancestris - Start */
+/* Specific style for the Help section of Trancestris - Start */
 
 /* Page */
 
@@ -193,7 +193,7 @@ p.warning   {
 
 /* Titles */
 
-h1.ancestris_help_title   {
+h1.trancestris_help_title   {
     color: #000000;
     background: #ffffff;
     font-size: 14pt;
@@ -201,7 +201,7 @@ h1.ancestris_help_title   {
     text-decoration: underline;
     }
 
-h2.ancestris_help_title   {
+h2.trancestris_help_title   {
     color: #000000;
     background: #ffffff;
     font-size: 13pt;
@@ -209,7 +209,7 @@ h2.ancestris_help_title   {
     text-decoration: underline;
     }
 
-h2.ancestris_back_section   {
+h2.trancestris_back_section   {
     color: #000000;
     background: #ffffff;
     font-size: 12pt;
@@ -218,7 +218,7 @@ h2.ancestris_back_section   {
     text-decoration: underline;
     }
 
-h3.ancestris_help_title   {
+h3.trancestris_help_title   {
     color: #000000;
     background: #ffffff;
     font-size: 12pt;
@@ -226,7 +226,7 @@ h3.ancestris_help_title   {
     text-decoration: underline;
     }
 
-h4.ancestris_help_title   {
+h4.trancestris_help_title   {
     color: #000000;
     background: #ffffff;
     font-size: 10pt;
@@ -259,14 +259,14 @@ div.section1    {
 
 /* Specific Texts */
 
-.ancestris_stop_tip {
+.trancestris_stop_tip {
     background-color:#abeee2;
     font-size: 11px;
     text-align: justify;
     text-justify: newspaper;
 }
 
-.ancestris_info_image {
+.trancestris_info_image {
     color: #24006b;
     font-style: italic;
     font-size: 10px;
@@ -296,4 +296,4 @@ div.section1    {
     -webkit-border-radius: 4px;
 }
 
-/* Specific style for the Help section of Ancestris - End */
+/* Specific style for the Help section of Trancestris - End */
