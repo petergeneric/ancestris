@@ -30,10 +30,12 @@
 /* Lists */
 
 li {margin-top: 0;
+    text-align: justify;
     margin-bottom: 5;
  }
         
 li p{margin-top: 5;
+     text-align: justify;
      margin-bottom: 0}
 
 /* Ordered lists */
