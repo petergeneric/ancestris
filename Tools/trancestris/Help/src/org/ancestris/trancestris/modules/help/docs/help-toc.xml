@@ -9,7 +9,8 @@ and open the template in the editor.
         <tocitem text="Overview" target="org.ancestris.trancestris.modules.help.about"/>
         <tocitem expand="true" text="First Steps" target="org.ancestris.trancestris.modules.help.first-steps">
             <tocitem text="Starting with Trancestris" target="org.ancestris.trancestris.modules.help.first-steps-1"/>
-            <tocitem text="Search Function" target="org.ancestris.trancestris.modules.help.first-steps-2"/>
+            <tocitem text="My first words, sentences" target="org.ancestris.trancestris.modules.help.first-steps-2"/>
+            <tocitem text="Search Function" target="org.ancestris.trancestris.modules.help.first-steps-3"/>
         </tocitem>
         <tocitem expand="true" text="Configuration" target="org.ancestris.trancestris.modules.help.configuration">
             <tocitem text="Mail" target="org.ancestris.trancestris.modules.help.configuration.mail"/>

@@ -9,7 +9,8 @@ and open the template in the editor.
     <indexitem text="Overview" target="org.ancestris.trancestris.modules.help.about"/>
     <indexitem text="First Steps" target="org.ancestris.trancestris.modules.help.first-steps">
         <indexitem text="Starting with Trancestris" target="org.ancestris.trancestris.modules.help.first-steps-1"/>
-        <indexitem text="Search Function" target="org.ancestris.trancestris.modules.help.first-steps-2"/>
+        <indexitem text="My first words, sentences" target="org.ancestris.trancestris.modules.help.first-steps-2"/>
+        <indexitem text="Search Function" target="org.ancestris.trancestris.modules.help.first-steps-3"/>
     </indexitem>
     <indexitem text="Configuration" target="org.ancestris.trancestris.modules.help.configuration">
         <indexitem text="Mail configuration" target="org.ancestris.trancestris.modules.help.configuration.mail"/>
