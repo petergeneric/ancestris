@@ -10,6 +10,7 @@ and open the template in the editor.
     <mapID target="org.ancestris.trancestris.modules.help.first-steps" url="trancestris-first_steps.html"/>
     <mapID target="org.ancestris.trancestris.modules.help.first-steps-1" url="trancestris-first_steps1.html"/>
     <mapID target="org.ancestris.trancestris.modules.help.first-steps-2" url="trancestris-first_steps2.html"/>
+    <mapID target="org.ancestris.trancestris.modules.help.first-steps-3" url="trancestris-first_steps3.html"/>
     <mapID target="org.ancestris.trancestris.modules.help.configuration" url="trancestris-configuration.html"/>
     <mapID target="org.ancestris.trancestris.modules.help.configuration.mail" url="trancestris-configuration-mail.html"/>
 </map>
