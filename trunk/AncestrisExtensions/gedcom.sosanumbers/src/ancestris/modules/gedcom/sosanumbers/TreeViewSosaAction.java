@@ -46,19 +46,15 @@ public class TreeViewSosaAction
     @Override
     public Action createContextAwareInstance(org.openide.util.Lookup context) {
         Entity e = context.lookup(Entity.class);
-        if (e == null) {
+        if (e == null || !(e instanceof Indi)) {
             return CommonActions.NOOP;
-        }
-
-        if (e instanceof Indi) {
+        } else {
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
             putValue(Action.NAME, NbBundle.getMessage(this.getClass(), "CTL_GenerateSosaAction"));
             putValue(Action.SMALL_ICON, new ImageIcon("ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png"));
             indiDeCujus = (Indi) e;
             myGedcom = e.getGedcom();
             return this;
-        } else {
-            return CommonActions.NOOP;
         }
     }
 }
