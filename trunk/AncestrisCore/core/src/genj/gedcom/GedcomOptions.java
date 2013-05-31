@@ -160,11 +160,16 @@ public enum GedcomDateFormat{
       NUMERIC("option.dateFormat.numeric");
       private final String description;
       private GedcomDateFormat(String desc){
-          description = desc;
+          description = RESOURCES.getString(desc);
       }
       public String getDescription(){
           return RESOURCES.getString(description);
       }
+
+        @Override
+        public String toString() {
+            return description;
+        }      
 }
 
   /** option - maximum image files size to be loaded */  
