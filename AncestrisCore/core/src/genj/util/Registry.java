@@ -296,8 +296,12 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
      * @return
      */
     public <T extends Enum<T>> T get(String key, T def) {
+        String enumValue = get (key,(String)null);
+        if (enumValue == null){
+            return def;
+        }
         try {
-            return Enum.valueOf(def.getDeclaringClass(), key);
+            return Enum.valueOf(def.getDeclaringClass(), enumValue);
         } catch (Exception e) {
             return def;
         }

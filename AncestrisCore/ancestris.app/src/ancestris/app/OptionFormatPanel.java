@@ -5,6 +5,7 @@
 package ancestris.app;
 
 import ancestris.core.TextOptions;
+import genj.gedcom.GedcomOptions;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import javax.swing.SpinnerNumberModel;
@@ -20,11 +21,12 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         NbBundle.getMessage(OptionFormatPanel.class, "name.format1"),
         NbBundle.getMessage(OptionFormatPanel.class, "name.format2")};
 
-    String[] dates = new String[]{
-        NbBundle.getMessage(OptionFormatPanel.class, "date.format.gedcom"),
-        NbBundle.getMessage(OptionFormatPanel.class, "date.format.short"),
-        NbBundle.getMessage(OptionFormatPanel.class, "date.format.long"),
-        NbBundle.getMessage(OptionFormatPanel.class, "date.format.num")};
+    GedcomOptions.GedcomDateFormat[] dates = new GedcomOptions.GedcomDateFormat[]{
+        GedcomOptions.GedcomDateFormat.GEDCOM,
+        GedcomOptions.GedcomDateFormat.SHORT,
+        GedcomOptions.GedcomDateFormat.LONG,
+        GedcomOptions.GedcomDateFormat.NUMERIC
+    };
 
     OptionFormatPanel(OptionFormatOptionsPanelController controller) {
         this.controller = controller;
@@ -305,7 +307,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         jSpinner3.setValue(genj.gedcom.GedcomOptions.getInstance().getValueLineBreak());
         setImageSize(gedcomPrefs.get("maxImageFileSizeKB", ""));
         setDisplayNames(gedcomPrefs.get("nameFormat", ""));
-        setDisplayDates(gedcomPrefs.get("dateFormat", ""));
+        jComboBox3.setSelectedItem(GedcomOptions.getInstance().getDateFormat());
     }
 
     void store() {
@@ -325,7 +327,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         genj.gedcom.GedcomOptions.getInstance().setValueLineBreak(Integer.valueOf(jSpinner3.getValue().toString()));
         gedcomPrefs.put("maxImageFileSizeKB", getImageSize());
         gedcomPrefs.put("nameFormat", getDisplayNames());
-        gedcomPrefs.put("dateFormat", getDisplayDates());
+        genj.gedcom.GedcomOptions.getInstance().setDateFormat((GedcomOptions.GedcomDateFormat)jComboBox3.getSelectedItem());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFormatPanel.class, "OptionPanel.saved.statustext"));
     }
