@@ -38,7 +38,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("pt"),
         new Locale("ru"),
         new Locale("fi"),
-        new Locale("sv")
+        new Locale("sv"),
+        new Locale("cs")
     };
 
     private static LookAndFeelProvider[] skins = LookAndFeelProvider.getProviders();
@@ -297,7 +298,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         CoreOptions.getInstance().setSplitJurisdictions(cbSplitJuridictions.isSelected());
 
 //XXX:        editPrefs.put("isOpenEditor", getOpenEditor());
-//XXX:        TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
+//XXX:        TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());// XXX: must be put in some TreeOption
 //XXX:        TableView.setFollowEntity(cbTableFollowEntity.isSelected());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
