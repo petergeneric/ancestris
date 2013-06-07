@@ -14,6 +14,7 @@ final class LanguagePanel extends javax.swing.JPanel {
     // Values
     Locale[] locales = {
         new Locale("br"),
+        new Locale("cs"),
         new Locale("da"),
         Locale.GERMAN,
         Locale.ENGLISH,
