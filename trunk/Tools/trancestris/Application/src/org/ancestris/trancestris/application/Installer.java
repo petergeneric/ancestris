@@ -275,13 +275,14 @@ public class Installer extends ModuleInstall {
                 //Load the tips into the tip loader:
                 String tipsFileName = "resources/tips.properties";
                 String selectedLocale = Locale.getDefault().getLanguage();
-                
-                logger.log(Level.INFO, "selectedLocale: {0}", selectedLocale);
+
                 if (selectedLocale.equals("en") == false) {
                     tipsFileName = "resources/tips_" + selectedLocale + ".properties";
                 }
+                logger.log(Level.INFO, "selected tips {0}", tipsFileName);
                 InputStream propertiesIn = getClass().getResourceAsStream(tipsFileName);
                 if (propertiesIn == null) {
+                    logger.log(Level.INFO, "selected tips {0}", "resources/tips.properties");
                     propertiesIn = getClass().getResourceAsStream("resources/tips.properties");
                 }
 
