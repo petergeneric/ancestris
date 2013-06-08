@@ -26,6 +26,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     // Values
     Locale[] locales = {
         new Locale("br"),
+        new Locale("cs"),
         new Locale("da"),
         Locale.GERMAN,
         Locale.ENGLISH,
@@ -38,8 +39,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("pt"),
         new Locale("ru"),
         new Locale("fi"),
-        new Locale("sv"),
-        new Locale("cs")
+        new Locale("sv")
     };
 
     private static LookAndFeelProvider[] skins = LookAndFeelProvider.getProviders();
