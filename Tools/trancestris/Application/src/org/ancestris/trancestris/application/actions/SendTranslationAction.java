@@ -57,29 +57,30 @@ public final class SendTranslationAction implements ActionListener {
                     toLocale = zipArchive.getToLocale().getLanguage();
                     fromLocale = zipArchive.getFromLocale().getLanguage();
 
-                    zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
-                    if (!zipOutputFile.exists()) {
-                        try {
-                            zipOutputFile.createNewFile();
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-                    zipArchive.saveTranslation(zipOutputFile);
-
                     setDefaultValues(sendTranslationPanel);
                     DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
                     dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
                     DialogDisplayer.getDefault().createDialog(dd);
                     DialogDisplayer.getDefault().notify(dd);
                     if (dd.getValue().equals(SEND)) {
+                        zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
+                        if (!zipOutputFile.exists()) {
+                            try {
+                                zipOutputFile.createNewFile();
+                            } catch (IOException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                        }
+                        
+                        int nbTranslatedFiles = zipArchive.saveTranslation(zipOutputFile);
+                        
                         saveValues(sendTranslationPanel);
                         String subject = sendTranslationPanel.getSubjectFormattedTextField();
                         String name = sendTranslationPanel.getNameFormattedTextField();
                         String from = sendTranslationPanel.getEmailFormattedTextField();
                         String message = sendTranslationPanel.getMessageTextArea();
                         String to = sendTranslationPanel.getMailToFormattedTextField();
-
+                        message += "\n there is " + nbTranslatedFiles + " in the bundle";
                         Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
                         t.start();
                     }
