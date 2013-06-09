@@ -77,12 +77,12 @@ public class ZipArchive implements PropertyChangeListener {
         return root.hasTranslation();
     }
 
-    public boolean saveTranslation(File outputFile) {
+    public int saveTranslation(File outputFile) {
         if (hasTranslation() == true) {
             try {
                 logger.log(Level.INFO, "Create translation archive {0}", outputFile.getName());
                 ZipOutputStream translationOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
-                root.saveTranslation(translationOutputStream, "");
+                int nbTransaltedFiles = root.saveTranslation(translationOutputStream, "");
                 translationOutputStream.close();
                 
                 /*
@@ -93,13 +93,13 @@ public class ZipArchive implements PropertyChangeListener {
                 ZipOutputStream archiveOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
                 root.writeTo(archiveOutputStream, "");
                 archiveOutputStream.close();
-                return true;
+                return nbTransaltedFiles;
             } catch (IOException ioe) {
                 logger.log(Level.SEVERE, null, ioe);
-                return false;
+                return -1;
             }
         } else {
-            return false;
+            return -1;
         }
     }
 

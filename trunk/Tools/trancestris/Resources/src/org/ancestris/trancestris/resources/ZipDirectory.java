@@ -45,18 +45,23 @@ public class ZipDirectory implements PropertyChangeListener {
         }
     }
 
-    public void saveTranslation(ZipOutputStream zipoutputstream, String path) throws IOException {
+    public int saveTranslation(ZipOutputStream zipoutputstream, String path) throws IOException {
+        int nbTranslatedFiles = 0;
         if (resourceFile != null) {
-            resourceFile.saveTranslation(zipoutputstream);
+            if (resourceFile.saveTranslation(zipoutputstream) == true) {
+                nbTranslatedFiles = 1;
+            }
         }
 
         for (ZipDirectory zipDirectory : dirs.values()) {
             if (path.isEmpty() == true) {
-                zipDirectory.saveTranslation(zipoutputstream, directoryName);
+                nbTranslatedFiles += zipDirectory.saveTranslation(zipoutputstream, directoryName);
             } else {
-                zipDirectory.saveTranslation(zipoutputstream, path + "/" + directoryName);
+                nbTranslatedFiles += zipDirectory.saveTranslation(zipoutputstream, path + "/" + directoryName);
             }
         }
+
+        return nbTranslatedFiles;
     }
 
     public void put(ZipEntry zipEntry, InputStream inputstream) throws IOException {

@@ -157,7 +157,7 @@ public class ResourceFile {
         return false;
     }
 
-    public void saveTranslation(ZipOutputStream zipOutputStream) throws IOException {
+    public boolean saveTranslation(ZipOutputStream zipOutputStream) throws IOException {
         if (defaultLanguage != null) {
             for (String bundleName : getFiles()) {
                 if (bundleName.equals(toBundleName)) {
@@ -175,12 +175,13 @@ public class ResourceFile {
                             }
                             resourceFiles.remove(toModifiedName);
                             logger.log(Level.INFO, "Done");
+                            return true;
                         }
                     }
-                    break;
                 }
             }
         }
+        return false;
     }
 
     void setTranslation(Locale fromLocale, Locale toLocale) {
