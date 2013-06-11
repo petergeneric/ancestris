@@ -26,57 +26,27 @@ import genj.util.swing.ImageIcon;
  */
 final public class Images {
 
-  private static Images instance = new Images();
-
-    public static Images getInstance() {
-        return ImagesHolder.INSTANCE;
-    }
-
-    public static ImageIcon
-  
-    imgView,
+    public static ImageIcon imgView = new ImageIcon(Images.class,"images/View");
     
-    imgStickOn,
-    imgStickOff,
-    imgFocus,
+    public static ImageIcon imgStickOn = new ImageIcon(Images.class,"images/StickOn");
+    public static ImageIcon imgStickOff = new ImageIcon(Images.class,"images/StickOff");
+    public static ImageIcon imgFocus = new ImageIcon(Images.class,"images/Focus");
     
-    imgUndo,
-    imgRedo,
+    public static ImageIcon imgUndo = new ImageIcon(Images.class,"images/Undo");
+    public static ImageIcon imgRedo = new ImageIcon(Images.class,"images/Redo");
     
-    imgCut,
-    imgCopy, 
-    imgPaste,
+    public static ImageIcon imgCut = new ImageIcon(Images.class,"images/Cut");
+    public static ImageIcon imgCopy = new ImageIcon(Images.class,"images/Copy");
+    public static ImageIcon imgPaste = new ImageIcon(Images.class,"images/Paste");
     
-    imgAdd,
+    public static ImageIcon imgAdd = new ImageIcon(Images.class,"images/Add");
 	
-    imgDel,
-    imgNew;
+    public static ImageIcon imgDel = new ImageIcon(Images.class,"images/Delete");
+    public static ImageIcon imgNew = new ImageIcon(Images.class,"images/New");
+    public static ImageIcon imgSave = new ImageIcon(Images.class,"images/Save");
 
   /**
-   * Constructor which pre-loads all images
+   * Static class only
    */
-  private Images() {
-    
-    imgView      = new ImageIcon(this,"images/View");
-
-    imgStickOn   = new ImageIcon(this,"images/StickOn");
-    imgStickOff  = new ImageIcon(this,"images/StickOff");
-    imgFocus     = new ImageIcon(this,"images/Focus");
-
-    imgUndo      = new ImageIcon(this,"images/Undo");
-    imgRedo      = new ImageIcon(this,"images/Redo");
-    
-    imgCut       = new ImageIcon(this,"images/Cut");
-    imgCopy      = new ImageIcon(this,"images/Copy");
-    imgPaste     = new ImageIcon(this,"images/Paste");
-    
-    imgAdd       = new ImageIcon(this,"images/Add");
-    
-    imgNew       = new ImageIcon(this,"images/New");
-    imgDel       = new ImageIcon(this,"images/Delete");
-  }
-    private static class ImagesHolder {
-
-        private static final Images INSTANCE = new Images();
-    }
+  private Images() {}
 }
