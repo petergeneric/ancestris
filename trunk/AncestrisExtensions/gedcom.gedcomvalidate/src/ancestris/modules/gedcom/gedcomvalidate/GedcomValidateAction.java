@@ -1,6 +1,6 @@
 package ancestris.modules.gedcom.gedcomvalidate;
 
-import ancestris.modules.document.view.DocumentViewTopComponent;
+import ancestris.modules.document.view.FopDocumentView;
 import genj.gedcom.Context;
 import genj.view.ViewContext;
 import java.awt.event.ActionEvent;
@@ -28,12 +28,10 @@ iconBase = "ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png")
 public final class GedcomValidateAction implements ActionListener {
 
     private Context context;
-    private DocumentViewTopComponent window = null;
     private List<ViewContext> result;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        window = DocumentViewTopComponent.findInstance();
         Preferences modulePreferences = NbPreferences.forModule(GedcomValidate.class);
 
         context = Utilities.actionsGlobalContext().lookup(Context.class);
@@ -72,9 +70,9 @@ public final class GedcomValidateAction implements ActionListener {
                     doc.addText(NbBundle.getMessage(GedcomValidate.class, "noissues"));
                 }
 
+                FopDocumentView window = new FopDocumentView(context, NbBundle.getMessage(GedcomValidate.class, "name"));
+
                 window.displayDocument(doc, modulePreferences);
-                window.open();
-                window.requestActive();
             }
         }
     }

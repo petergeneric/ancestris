@@ -1,6 +1,7 @@
 package ancestris.modules.familygroups;
 
-import ancestris.modules.document.view.DocumentViewTopComponent;
+import ancestris.modules.document.view.FopDocumentView;
+import static ancestris.modules.familygroups.Bundle.*;
 import genj.fo.Document;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
@@ -19,16 +20,15 @@ import org.openide.util.Utilities;
 @ActionID(id = "ancestris.modules.familygroups.OpenFamilyGroupsAction", category = "Tools")
 @ActionRegistration(iconInMenu = true, displayName = "#CTL_OpenFamilyGroups", iconBase = "ancestris/modules/familygroups/FamilyGroups.png")
 @ActionReference(path = "Menu/Tools", name = "ancestris-modules-familygroups-OpenFamilyGroups", position = 82)
+@NbBundle.Messages("title=Family Groups")
 public final class OpenFamilyGroupsAction implements ActionListener {
 
-    private DocumentViewTopComponent window = null;
     private Context context;
     Preferences modulePreferences = NbPreferences.forModule(FamilyGroupsPlugin.class);
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-        window = DocumentViewTopComponent.findInstance();
+
         context = Utilities.actionsGlobalContext().lookup(Context.class);
         if (context != null) {
             if (modulePreferences.getInt("minGroupSize", -1) == -1) {
@@ -39,9 +39,8 @@ public final class OpenFamilyGroupsAction implements ActionListener {
             } else {
                 Document doc = new FamilyGroupsPlugin().start(context.getGedcom());
                 if (doc != null) {
+                    FopDocumentView window = new FopDocumentView(context, title());
                     window.displayDocument(doc, modulePreferences);
-                    window.open();
-                    window.requestActive();
                 }
             }
         }

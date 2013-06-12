@@ -19,6 +19,9 @@
  */
 package genj.report;
 
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.modules.document.view.HyperLinkTextDocumentView;
+import ancestris.modules.document.view.WidgetDocumentView;
 import genj.common.ContextListWidget;
 import genj.fo.Format;
 import genj.fo.FormatOptionsWidget;
@@ -27,25 +30,14 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
-import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
-import genj.util.swing.NestedBlockLayout;
-import ancestris.view.SelectionSink;
 import genj.view.ToolBar;
 import genj.view.View;
-import genj.view.ViewContext;
-
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
 import java.io.CharArrayWriter;
 import java.io.File;
@@ -59,35 +51,20 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
-import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.text.BadLocationException;
-
 import spin.Spin;
 
 /**
  * Component for running reports on genealogic data
  */
+//XXX: needs to be refactored in depth
 public class ReportView extends View {
 
   /* package */static Logger LOG = Logger.getLogger("genj.report");
-
-  /** pages to switch between */
-  private final static String
-    WELCOME = "welcome",
-    CONSOLE = "console",
-    RESULT = "result";
-  private String currentPage = WELCOME;
 
   /** time between flush of output writer to output text area */
   private final static String EOL = System.getProperty("line.separator");
@@ -104,11 +81,10 @@ public class ReportView extends View {
   private Gedcom gedcom;
 
   /** components to show report info */
-  private Console output;
-  private JScrollPane result;
+  private HyperLinkTextDocumentView output;
+//  private HyperText output;
   private ActionStart actionStart = new ActionStart();
   private ActionStop actionStop = new ActionStop();
-  private ActionShow actionShow = new ActionShow();
 
   /** registry for settings */
   private final static Registry REGISTRY = Registry.get(ReportView.class);
@@ -116,38 +92,21 @@ public class ReportView extends View {
   /** resources */
   /* package */static final Resources RESOURCES = Resources.get(ReportView.class);
 
+  private ReportSelector selector;
   /**
    * Constructor
    */
   public ReportView() {
     
-    setLayout(new CardLayout());
-    
-    // Output
-    output = new Console();
-    add(new JScrollPane(output), CONSOLE);
-    
-    // result
-    result = new JScrollPane();
-    add(result, RESULT);
+//    setLayout(new CardLayout());
+//    
+//    JButton b = new JButton(new ActionStart());
+//    b.setRequestFocusEnabled(false);
+//    b.setOpaque(false);
 
-    // welcome panel
-    String msg = RESOURCES.getString("report.welcome");
-    int i = msg.indexOf('*');
-    String pre = i<0 ? "" : msg.substring(0, i);
-    String post = i<0 ? "" : msg.substring(i+1);
-    
-    JButton b = new JButton(new ActionStart());
-    b.setRequestFocusEnabled(false);
-    b.setOpaque(false);
-    
-    JPanel welcome = new JPanel(new NestedBlockLayout("<col><row><a wx=\"1\" ax=\"1\" wy=\"1\"/><b/><c wx=\"1\"/></row></col>"));
-    welcome.setBackground(output.getBackground());
-    welcome.setOpaque(true);
-    welcome.add(new JLabel(pre, SwingConstants.RIGHT));
-    welcome.add(b);
-    welcome.add(new JLabel(post));
-    add(welcome, WELCOME);
+    selector = new ReportSelector();
+    setLayout(new BorderLayout());
+    add (selector,BorderLayout.CENTER);
 
     // done
   }
@@ -155,6 +114,7 @@ public class ReportView extends View {
   /**
    * @see javax.swing.JComponent#removeNotify()
    */
+    @Override
   public void removeNotify() {
     // continue
     super.removeNotify();
@@ -169,6 +129,7 @@ public class ReportView extends View {
 
     if (!actionStart.isEnabled())
       return;
+    output = new HyperLinkTextDocumentView(new Context(gedcom),gedcom.getName()+": "+report.getName());
 
     if (report.getStartMethod(context) == null) {
       for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
@@ -203,8 +164,8 @@ public class ReportView extends View {
     report.setOwner(this);
 
     // clear the current output and show coming
-    clear();
-    show(CONSOLE);
+    output.clear();
+    output.show();
     
     // set running
     actionStart.setEnabled(false);
@@ -217,28 +178,27 @@ public class ReportView extends View {
 
   }
   
-  private void clear() {
-    output.clear();
-    output.setContentType("text/plain");
-    result.setViewportView(null);
-    actionShow.setSelected(false);
-    actionShow.setEnabled(false);
-    show(gedcom!=null ? WELCOME : CONSOLE);
-  }
+//  private void clear() {
+//    output.clear();
+//    output.setContentType("text/plain");
+//    result.setViewportView(null);
+//    actionShow.setSelected(false);
+//    actionShow.setEnabled(false);
+//    show(gedcom!=null ? WELCOME : CONSOLE);
+//  }
 
   /**
    * callback for runner
    */
   private class RunnerCallback implements Runner.Callback {
 
+        @Override
     public void handleOutput(Report report, String s) {
-      
-      if (currentPage!=CONSOLE)
-        show(CONSOLE);
-      
+            
       output.add(s);
     }
 
+        @Override
     public void handleResult(Report report, Object result) {
 
       LOG.fine("Result of report " + report.getName() + " = " + result);
@@ -264,21 +224,21 @@ public class ReportView extends View {
     if (gedcom==null)
       return;
 
-    // let user pick
-    ReportSelector selector = new ReportSelector();
-    try {
-      selector.select(ReportLoader.getInstance().getReportByName(REGISTRY.get("lastreport", (String) null)));
-    } catch (Throwable t) {
-    }
-
-    if (0 != DialogHelper.openDialog(RESOURCES.getString("report.reports"), DialogHelper.QUESTION_MESSAGE, selector, AbstractAncestrisAction.okCancel(), ReportView.this))
-      return;
-
+//    // let user pick
+//    ReportSelector selector = new ReportSelector();
+//    try {
+//      selector.select(ReportLoader.getInstance().getReportByName(REGISTRY.get("lastreport", (String) null)));
+//    } catch (Throwable t) {
+//    }
+//
+//    if (0 != DialogHelper.openDialog(RESOURCES.getString("report.reports"), DialogHelper.QUESTION_MESSAGE, selector, AbstractAncestrisAction.okCancel(), ReportView.this))
+//      return;
+//
     Report report = selector.getReport();
     if (report == null)
       return;
 
-    REGISTRY.put("lastreport", report.getClass().getName());
+//    REGISTRY.put("lastreport", report.getClass().getName());
 
     startReport(report, gedcom);
 
@@ -288,30 +248,21 @@ public class ReportView extends View {
    * stop any running report
    */
   public void stopReport() {
-    // TODO there's no way to stop a running java report atm
+    // TODO: there's no way to stop a running java report atm
   }
 
   @Override
   public void setContext(Context context, boolean isActionPerformed) {
 
     // keep
-    if (gedcom!=context.getGedcom())
-      clear();
+//    if (gedcom!=context.getGedcom())
+//      clear();
+      
     gedcom = context.getGedcom();
     
     // enable if none running and data available
     actionStart.setEnabled(!actionStop.isEnabled() && gedcom != null);
 
-  }
-  
-  /**
-   * show welcome/console/output
-   */
-  /* package */void show(String page) {
-    if (currentPage!=page) {
-      ((CardLayout) getLayout()).show(this, page);
-      currentPage = page;
-    }
   }
   
   @SuppressWarnings("unchecked")
@@ -322,10 +273,8 @@ public class ReportView extends View {
 
     // none?
     if (object == null) {
-      
-      // go back to welcome if there was nothing dumped to console
-      if (output.getDocument().getLength()==0)
-        show(WELCOME);
+        if (output.isEmpty())
+        output.add("*** No Result");
       return;
     }
 
@@ -342,6 +291,12 @@ public class ReportView extends View {
       
       LOG.log(Level.WARNING, "Exception caught ", (Throwable)object);
       return;
+    }
+    
+    // remember title for next document view creation
+    String tabName = output.getName();
+    if (output.isEmpty()) {
+        output.close();
     }
 
     // File?
@@ -371,9 +326,9 @@ public class ReportView extends View {
       } catch (IOException e) {
         output.add("*** can't open URL " + object + ": " + e.getMessage());
       }
-      actionShow.setEnabled(false);
-      actionShow.setSelected(false);
-      show(CONSOLE);
+//      actionShow.setEnabled(false);
+//      actionShow.setSelected(false);
+      output.show();
       return;
     }
 
@@ -387,12 +342,8 @@ public class ReportView extends View {
 
     // component?
     if (object instanceof JComponent) {
-      JComponent c = (JComponent) object;
-      c.setMinimumSize(new Dimension(0, 0));
-      result.setViewportView(c);
-      actionShow.setEnabled(true);
-      actionShow.setSelected(true);
-      show(RESULT);
+        new WidgetDocumentView(new Context(gedcom), tabName, ((JComponent)object));
+      
       return;
     }
     
@@ -449,7 +400,7 @@ public class ReportView extends View {
     // TODO stopping report doesn't really work anyways
     //toolbar.add(actionStop);
     
-    toolbar.add(new JToggleButton(actionShow));
+//    toolbar.add(new JToggleButton(actionShow));
     toolbar.add(new ActionSave());
 
     // done
@@ -501,32 +452,6 @@ public class ReportView extends View {
   } // ActionStart
 
   /**
-   * Action: Console
-   */
-  private class ActionShow extends AbstractAncestrisAction {
-    protected ActionShow() {
-      setImage(imgConsole);
-      setTip(RESOURCES.getString("report.output"));
-      setEnabled(false);
-    }
-
-    public void actionPerformed(ActionEvent event) {
-      setSelected(isSelected());
-    }
-    
-    @Override
-    public boolean setSelected(boolean selected) {
-      setImage(selected ? imgGui : imgConsole);
-      if (selected)
-        show(RESULT);
-      else
-        show(CONSOLE);
-      return super.setSelected(selected);
-    }
-      
-  }
-
-  /**
    * Action: SAVE
    */
   private class ActionSave extends AbstractAncestrisAction {
@@ -535,227 +460,29 @@ public class ReportView extends View {
       setTip(RESOURCES.getString("report.save.tip"));
     }
 
+        @Override
     public void actionPerformed(ActionEvent event) {
       
       // user looking at a context-list?
-      if (result.isVisible() && result.getViewport().getView() instanceof ContextListWidget) {
-        ContextListWidget list = (ContextListWidget)result.getViewport().getView();
-        String title = REGISTRY.get("lastreport", "Report");
-                genj.fo.Document doc = new genj.fo.Document(title);
-        doc.startSection(title);
-        for (Context c : list.getContexts()) {
-          if (c instanceof ViewContext)
-            doc.addText(c.getEntity()+":"+((ViewContext)c).getText());
-          else
-            doc.addText(c.toString());
-          doc.nextParagraph();
+//      if (result.isVisible() && result.getViewport().getView() instanceof ContextListWidget) {
+//        ContextListWidget list = (ContextListWidget)result.getViewport().getView();
+//        String title = REGISTRY.get("lastreport", "Report");
+//                genj.fo.Document doc = new genj.fo.Document(title);
+//        doc.startSection(title);
+//        for (Context c : list.getContexts()) {
+//          if (c instanceof ViewContext)
+//            doc.addText(c.getEntity()+":"+((ViewContext)c).getText());
+//          else
+//            doc.addText(c.toString());
+//          doc.nextParagraph();
+//        }
+//        showResult(doc);
+//        // done
+//        return;
+//      }
         }
-        showResult(doc);
-        // done
-        return;
-      }
-
-      // .. choose file
-      JFileChooser chooser = new JFileChooser(".");
-      chooser.setDialogTitle(getTip());
-      chooser.setFileFilter(new FileFilter() {
-        @Override
-        public boolean accept(File f) {
-          return f.isDirectory() || f.getName().endsWith(".txt");
-        }
-
-        @Override
-        public String getDescription() {
-          return "*.txt (Text)";
-        }
-      });
-
-      if (JFileChooser.APPROVE_OPTION != chooser.showDialog(ReportView.this, "Save")) 
-        return;
-      File file = chooser.getSelectedFile();
-      if (file == null) 
-        return;
-      if (!file.getName().endsWith("*.txt"))
-        file = new File(file.getAbsolutePath()+".txt");
-
-      // .. exits ?
-      if (file.exists()) {
-        int rc = DialogHelper.openDialog(RESOURCES.getString("title"), DialogHelper.WARNING_MESSAGE, "File exists. Overwrite?", AbstractAncestrisAction.yesNo(), ReportView.this);
-        if (rc != 0) 
-          return;
-      }
-
-      // .. open file
-      final OutputStreamWriter out;
-      try {
-        out = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF8"));
-      } catch (IOException ex) {
-        DialogHelper.openDialog(RESOURCES.getString("title"), DialogHelper.ERROR_MESSAGE, "Error while saving to\n" + file.getAbsolutePath(), AbstractAncestrisAction.okOnly(), ReportView.this);
-        return;
-      }
-
-      // .. save data
-      try {
-        String newline = System.getProperty("line.separator");
-        BufferedReader in = new BufferedReader(new StringReader(output.getText()));
-        while (true) {
-          String line = in.readLine();
-          if (line == null)
-            break;
-          out.write(line);
-          out.write(newline);
-        }
-        in.close();
-        out.close();
-
-      } catch (Exception ex) {
-      }
-
-      // .. done
-    }
-
   } // ActionSave
 
-  /**
-   * console output
-   */
-  private class Console extends JEditorPane implements MouseListener, MouseMotionListener {
-
-    /** the currently found entity id */
-    private String id = null;
-
-    /** constructor */
-    private Console() {
-      setContentType("text/plain");
-      setFont(new Font("Monospaced", Font.PLAIN, 12));
-      setEditable(false);
-      addHyperlinkListener(new EditorHyperlinkSupport(this));
-      addMouseMotionListener(this);
-      addMouseListener(this);
-    }
-
-    /**
-     * Check if user moves mouse above something recognizeable in output
-     */
-    public void mouseMoved(MouseEvent e) {
-
-      // try to find id at location
-      id = markIDat(e.getPoint());
-
-      // done
-    }
-
-    /**
-     * Check if user clicks on marked ID
-     */
-    public void mouseClicked(MouseEvent e) {
-      if (id != null && gedcom != null) {
-        Entity entity = gedcom.getEntity(id);
-        if (entity != null)
-          SelectionSink.Dispatcher.fireSelection(e, new Context(entity));
-      }
-    }
-
-    /**
-     * Tries to find an entity id at given position in output
-     */
-    private String markIDat(Point loc) {
-
-      try {
-        // do we get a position in the model?
-        int pos = viewToModel(loc);
-        if (pos < 0)
-          return null;
-
-        // scan doc
-        javax.swing.text.Document doc = getDocument();
-
-        // find ' ' to the left
-        for (int i = 0;; i++) {
-          // stop looking after 10
-          if (i == 10)
-            return null;
-          // check for starting line or non digit/character
-          if (pos == 0 || !Character.isLetterOrDigit(doc.getText(pos - 1, 1).charAt(0)))
-            break;
-          // continue
-          pos--;
-        }
-
-        // find ' ' to the right
-        int len = 0;
-        while (true) {
-          // stop looking after 10
-          if (len == 10)
-            return null;
-          // stop at end of doc
-          if (pos + len == doc.getLength())
-            break;
-          // or non digit/character
-          if (!Character.isLetterOrDigit(doc.getText(pos + len, 1).charAt(0)))
-            break;
-          // continue
-          len++;
-        }
-
-        // check if it's an ID
-        if (len < 2)
-          return null;
-        String id = doc.getText(pos, len);
-        if (gedcom == null || gedcom.getEntity(id) == null)
-          return null;
-
-        // mark it
-        // requestFocusInWindow();
-        setCaretPosition(pos);
-        moveCaretPosition(pos + len);
-
-        // return in between
-        return id;
-
-        // done
-      } catch (BadLocationException ble) {
-      }
-
-      // not found
-      return null;
-    }
-
-    /**
-     * have to implement MouseMotionListener.mouseDragger()
-     * 
-     * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
-     */
-    public void mouseDragged(MouseEvent e) {
-      // ignored
-    }
-
-    void clear() {
-      setContentType("text/plain");
-      setText("");
-    }
-
-    void add(String txt) {
-      javax.swing.text.Document doc = getDocument();
-      try {
-        doc.insertString(doc.getLength(), txt, null);
-      } catch (Throwable t) {
-      }
-    }
-
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    public void mouseExited(MouseEvent e) {
-    }
-
-    public void mousePressed(MouseEvent e) {
-    }
-
-    public void mouseReleased(MouseEvent e) {
-    }
-
-  } // Output
 
 } // ReportView
 
