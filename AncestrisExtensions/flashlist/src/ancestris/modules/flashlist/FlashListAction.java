@@ -1,7 +1,7 @@
 package ancestris.modules.flashlist;
 
-import ancestris.gedcom.GedcomDirectory;
-import ancestris.modules.document.view.DocumentViewTopComponent;
+import ancestris.modules.document.view.FopDocumentView;
+import static ancestris.modules.flashlist.Bundle.*;
 import genj.fo.Document;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
@@ -14,14 +14,13 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
+@NbBundle.Messages("title=Flash Lists")
 public final class FlashListAction implements ActionListener {
 
     private Context context;
-    private DocumentViewTopComponent window = null;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        window = DocumentViewTopComponent.findInstance();
         Preferences modulePreferences = NbPreferences.forModule(ReportFlashList.class);
 
         context = Utilities.actionsGlobalContext().lookup(Context.class);
@@ -34,9 +33,8 @@ public final class FlashListAction implements ActionListener {
             } else {
                 Document doc = new ReportFlashList().start(context.getGedcom(), modulePreferences.get("reportFilename", "flash-list"));
                 if (doc != null) {
+                    FopDocumentView window = new FopDocumentView(context, title());
                     window.displayDocument(doc, modulePreferences);
-                    window.open();
-                    window.requestActive();
                 }
             }
         }

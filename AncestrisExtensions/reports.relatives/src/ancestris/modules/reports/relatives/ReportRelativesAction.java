@@ -11,8 +11,7 @@
  */
 package ancestris.modules.reports.relatives;
 
-import ancestris.gedcom.GedcomDirectory;
-import ancestris.modules.document.view.DocumentViewTopComponent;
+import ancestris.modules.document.view.FopDocumentView;
 import ancestris.util.swing.SelectEntityDialog;
 import genj.fo.Document;
 import genj.gedcom.Context;
@@ -35,16 +34,14 @@ public final class ReportRelativesAction implements ActionListener {
 
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom myGedcom = context.getGedcom();
-            DocumentViewTopComponent window = DocumentViewTopComponent.findInstance();
 
             SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "ReportRelatives.AskDeCujus"), myGedcom, Gedcom.INDI);
             Indi indiDeCujus = (Indi) selectEntityDialog.getEntity();
             if (indiDeCujus != null) {
                 Document document = new ReportRelatives().start(indiDeCujus);
                 if (document != null) {
+                    FopDocumentView window = new FopDocumentView(context, "relatives");//XXX: bundle
                     window.displayDocument(document, modulePreferences);
-                    window.open();
-                    window.requestActive();
                 }
             }
         }
