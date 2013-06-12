@@ -55,7 +55,6 @@ public class GedcomUtilities {
         LOG.log(Level.INFO, "deleting_tag {0}", tagToRemove);
 
         Collection<? extends Entity> entities;
-        Entity entity;
         int iCounter = 0;
 
         if (entityType == ENT_ALL) {
@@ -64,10 +63,10 @@ public class GedcomUtilities {
             entities = gedcom.getEntities(entityTypes[entityType]);
         }
 
-        List<Property> propsToDelete = new ArrayList<Property>();
+        List<Property> propsToDelete;
         for (Iterator<? extends Entity> it = entities.iterator(); it.hasNext();) {
-            entity = it.next();
-            getPropertiesRecursively(entity, propsToDelete, tagToRemove);
+            Entity entity = it.next();
+            propsToDelete = getPropertiesRecursively(entity, tagToRemove);
             for (Iterator<Property> props = propsToDelete.iterator(); props.hasNext();) {
                 Property prop = props.next();
                 if (prop != null) {
@@ -81,18 +80,24 @@ public class GedcomUtilities {
                 }
             }
         }
+
         LOG.log(Level.INFO, "DeletedNb {0}", iCounter);
     }
 
-    private static void getPropertiesRecursively(Property parent, List<Property> props, String tag) {
+    private static List<Property> getPropertiesRecursively(Property parent, String tag) {
         Property[] children = parent.getProperties();
+        List<Property> propertiesList = new ArrayList<Property>();
+
+        if (parent.getTag().compareTo(tag) == 0) {
+            propertiesList.add(parent);
+        }
+
         for (int c = 0; c < children.length; c++) {
             Property child = children[c];
-            if (child.getTag().compareTo(tag) == 0) {
-                props.add(child);
-            }
-            getPropertiesRecursively(child, props, tag);
+            propertiesList.addAll(getPropertiesRecursively(child, tag));
         }
+
+        return propertiesList;
     }
 
     /*
@@ -166,5 +171,39 @@ public class GedcomUtilities {
         if (propertyDest instanceof PropertyXRef) {
             ((PropertyXRef) propertyDest).link();
         }
+    }
+
+    public static <T> List<T> searchProperties(Gedcom gedcom, Class<T> type, int entityType) {
+
+        Collection<? extends Entity> entities;
+
+        LOG.log(Level.INFO, "Searching for property {0}", type.getClass());
+
+        if (entityType == ENT_ALL) {
+            entities = gedcom.getEntities();
+        } else {
+            entities = gedcom.getEntities(entityTypes[entityType]);
+        }
+
+        List<T> foundProperties = new ArrayList<T>();
+        for (Iterator<? extends Entity> it = entities.iterator(); it.hasNext();) {
+            Entity entity = it.next();
+            foundProperties.addAll(searchPropertiesRecursively(entity, type));
+        }
+
+        LOG.log(Level.INFO, "found  {0}", foundProperties.size());
+
+        return foundProperties;
+    }
+
+    private static <T> List<T> searchPropertiesRecursively(Property parent, Class<T> type) {
+        List<T> foundProperties = new ArrayList<T>();
+        for (Property child : parent.getProperties()) {
+            if (type.isAssignableFrom(child.getClass())) {
+                foundProperties.add((T) child);
+            }
+            foundProperties.addAll(searchPropertiesRecursively(child, type));
+        }
+        return foundProperties;
     }
 }
