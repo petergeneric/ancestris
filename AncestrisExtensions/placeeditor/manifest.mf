@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.modules.editors.placeeditor
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/editors/placeeditor/Bundle.properties
+OpenIDE-Module-Specification-Version: 0.1
+
