@@ -26,11 +26,12 @@ public class WidgetDocumentView extends AbstractDocumentView {
      *
      * @param context Gedcom context for this view
      * @param title   tab title
+     * @param tooltip tooltip for tab
      * @param widget  component to be displayed. As any {@link AbstractDocumentView}
      * the component is embedded in a JScollPane.
      */
-    public WidgetDocumentView(Context context, String title, JComponent widget) {
-        super(context, title);
+    public WidgetDocumentView(Context context, String title, String tooltip, JComponent widget) {
+        super(context, title, tooltip);
         setView(widget);
     }
 }

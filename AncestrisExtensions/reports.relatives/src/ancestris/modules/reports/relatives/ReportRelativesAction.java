@@ -12,6 +12,7 @@
 package ancestris.modules.reports.relatives;
 
 import ancestris.modules.document.view.FopDocumentView;
+import static ancestris.modules.reports.relatives.Bundle.*;
 import ancestris.util.swing.SelectEntityDialog;
 import genj.fo.Document;
 import genj.gedcom.Context;
@@ -23,7 +24,10 @@ import java.util.prefs.Preferences;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
-
+@NbBundle.Messages({
+    "tabtitle.short=Relatives",
+    "tabtitle={0}: Close Relatives"
+})
 public final class ReportRelativesAction implements ActionListener {
 
     private final Preferences modulePreferences = NbPreferences.forModule(ReportRelatives.class);
@@ -40,7 +44,7 @@ public final class ReportRelativesAction implements ActionListener {
             if (indiDeCujus != null) {
                 Document document = new ReportRelatives().start(indiDeCujus);
                 if (document != null) {
-                    FopDocumentView window = new FopDocumentView(context, "relatives");//XXX: bundle
+                    FopDocumentView window = new FopDocumentView(context,  tabtitle_short(),tabtitle(context.toString()));
                     window.displayDocument(document, modulePreferences);
                 }
             }

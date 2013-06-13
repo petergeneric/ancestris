@@ -66,10 +66,10 @@ class ReportSelector extends JPanel {
     detail.setPreferredSize(new Dimension(320,200));
     options.setPreferredSize(new Dimension(320,200));
     
-    JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    top.add(new JLabel(res.getString("report.reports")));
-    
-    add(top, BorderLayout.NORTH);
+//    JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//    top.add(new JLabel(res.getString("report.reports")));
+//    
+//    add(top, BorderLayout.NORTH);
     add(new JScrollPane(list), BorderLayout.WEST);
     add(right, BorderLayout.CENTER);
 

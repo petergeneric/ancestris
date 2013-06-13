@@ -10,12 +10,12 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.report;
 
@@ -35,27 +35,18 @@ import genj.util.swing.ImageIcon;
 import genj.view.ToolBar;
 import genj.view.View;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
 import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import spin.Spin;
 
 /**
@@ -64,425 +55,365 @@ import spin.Spin;
 //XXX: needs to be refactored in depth
 public class ReportView extends View {
 
-  /* package */static Logger LOG = Logger.getLogger("genj.report");
+    /* package */
+    static Logger LOG = Logger.getLogger("genj.report");
+    /** statics */
+    private final static ImageIcon imgStart = new ImageIcon(ReportView.class, "Start"),
+            imgStop = new ImageIcon(ReportView.class, "Stop");
+    /** gedcom this view is for */
+    private Gedcom gedcom;
+    /** components to show report info */
+    private HyperLinkTextDocumentView output;
+    private ActionStart actionStart = new ActionStart();
+    private ActionStop actionStop = new ActionStop();
+    /** registry for settings */
+    private final static Registry REGISTRY = Registry.get(ReportView.class);
+    /** resources */
+    /* package */
+    static final Resources RESOURCES = Resources.get(ReportView.class);
+    private ReportSelector selector;
 
-  /** time between flush of output writer to output text area */
-  private final static String EOL = System.getProperty("line.separator");
-
-  /** statics */
-  private final static ImageIcon 
-    imgStart = new ImageIcon(ReportView.class, "Start"), 
-    imgStop = new ImageIcon(ReportView.class, "Stop"), 
-    imgSave = new ImageIcon(ReportView.class, "Save"), 
-    imgConsole = new ImageIcon(ReportView.class, "ReportShell"), 
-    imgGui = new ImageIcon(ReportView.class, "ReportGui");
-
-  /** gedcom this view is for */
-  private Gedcom gedcom;
-
-  /** components to show report info */
-  private HyperLinkTextDocumentView output;
-//  private HyperText output;
-  private ActionStart actionStart = new ActionStart();
-  private ActionStop actionStop = new ActionStop();
-
-  /** registry for settings */
-  private final static Registry REGISTRY = Registry.get(ReportView.class);
-
-  /** resources */
-  /* package */static final Resources RESOURCES = Resources.get(ReportView.class);
-
-  private ReportSelector selector;
-  /**
-   * Constructor
-   */
-  public ReportView() {
-    
-//    setLayout(new CardLayout());
-//    
-//    JButton b = new JButton(new ActionStart());
-//    b.setRequestFocusEnabled(false);
-//    b.setOpaque(false);
-
-    selector = new ReportSelector();
-    setLayout(new BorderLayout());
-    add (selector,BorderLayout.CENTER);
-
-    // done
-  }
-
-  /**
-   * @see javax.swing.JComponent#removeNotify()
-   */
-    @Override
-  public void removeNotify() {
-    // continue
-    super.removeNotify();
-    // save report options
-    ReportLoader.getInstance().saveOptions();
-  }
-
-  /**
-   * start a report
-   */
-  public void startReport(final Report report, Object context) {
-
-    if (!actionStart.isEnabled())
-      return;
-    output = new HyperLinkTextDocumentView(new Context(gedcom),gedcom.getName()+": "+report.getName());
-
-    if (report.getStartMethod(context) == null) {
-      for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
-        String tag = Gedcom.ENTITIES[i];
-        Entity sample = gedcom.getFirstEntity(tag);
-        if (sample != null && report.accepts(sample) != null) {
-
-          // give the report a chance to name our dialog
-          String txt = report.accepts(sample.getClass());
-          if (txt == null)
-            Gedcom.getName(tag);
-
-          // ask user for context now
-          context = report.getEntityFromUser(txt, gedcom, tag);
-          if (context == null)
-            return;
-          break;
-        }
-      }
-    }
-
-    // check if appropriate
-    if (context == null || report.accepts(context) == null) {
-      DialogHelper.openDialog(report.getName(), DialogHelper.ERROR_MESSAGE, RESOURCES.getString("report.noaccept"), AbstractAncestrisAction.okOnly(), ReportView.this);
-      return;
-    }
-
-    // remember
-    REGISTRY.put("lastreport", report.getClass().getName());
-    
-    // set report ui context
-    report.setOwner(this);
-
-    // clear the current output and show coming
-    output.clear();
-    output.show();
-    
-    // set running
-    actionStart.setEnabled(false);
-    actionStop.setEnabled(true);
-    
-//XXX: to be deleted    ReportPluginFactory.getInstance().setEnabled(false);
-
-    // kick it off
-    new Thread(new Runner(gedcom, context, report, (Runner.Callback) Spin.over(new RunnerCallback()))).start();
-
-  }
-  
-//  private void clear() {
-//    output.clear();
-//    output.setContentType("text/plain");
-//    result.setViewportView(null);
-//    actionShow.setSelected(false);
-//    actionShow.setEnabled(false);
-//    show(gedcom!=null ? WELCOME : CONSOLE);
-//  }
-
-  /**
-   * callback for runner
-   */
-  private class RunnerCallback implements Runner.Callback {
-
-        @Override
-    public void handleOutput(Report report, String s) {
-            
-      output.add(s);
-    }
-
-        @Override
-    public void handleResult(Report report, Object result) {
-
-      LOG.fine("Result of report " + report.getName() + " = " + result);
-
-      // let report happend again
-      actionStart.setEnabled(gedcom != null);
-      actionStop.setEnabled(false);
-//XXX: to be deleted      ReportPluginFactory.getInstance().setEnabled(true);
-
-      // handle result
-      showResult(result);
-
-    }
-
-  }
-
-  /**
-   * Start a report after selection
-   */
-  public void startReport() {
-    
-    // minimum we can work on?
-    if (gedcom==null)
-      return;
-
-//    // let user pick
-//    ReportSelector selector = new ReportSelector();
-//    try {
-//      selector.select(ReportLoader.getInstance().getReportByName(REGISTRY.get("lastreport", (String) null)));
-//    } catch (Throwable t) {
-//    }
-//
-//    if (0 != DialogHelper.openDialog(RESOURCES.getString("report.reports"), DialogHelper.QUESTION_MESSAGE, selector, AbstractAncestrisAction.okCancel(), ReportView.this))
-//      return;
-//
-    Report report = selector.getReport();
-    if (report == null)
-      return;
-
-//    REGISTRY.put("lastreport", report.getClass().getName());
-
-    startReport(report, gedcom);
-
-  }
-
-  /**
-   * stop any running report
-   */
-  public void stopReport() {
-    // TODO: there's no way to stop a running java report atm
-  }
-
-  @Override
-  public void setContext(Context context, boolean isActionPerformed) {
-
-    // keep
-//    if (gedcom!=context.getGedcom())
-//      clear();
-      
-    gedcom = context.getGedcom();
-    
-    // enable if none running and data available
-    actionStart.setEnabled(!actionStop.isEnabled() && gedcom != null);
-
-  }
-  
-  @SuppressWarnings("unchecked")
-  /**
-   * show result of a report run
-   */
-  /* package */void showResult(Object object) {
-
-    // none?
-    if (object == null) {
-        if (output.isEmpty())
-        output.add("*** No Result");
-      return;
-    }
-
-    // Exception?
-    if (object instanceof InterruptedException) {
-      output.add("*** cancelled");
-      return;
-    }
-
-    if (object instanceof Throwable) {
-      CharArrayWriter buf = new CharArrayWriter(256);
-      ((Throwable) object).printStackTrace(new PrintWriter(buf));
-      output.add("*** exception caught" + '\n' + buf);
-      
-      LOG.log(Level.WARNING, "Exception caught ", (Throwable)object);
-      return;
-    }
-    
-    // remember title for next document view creation
-    String tabName = output.getName();
-    if (output.isEmpty()) {
-        output.close();
-    }
-
-    // File?
-    if (object instanceof File) {
-      File file = (File) object;
-      if (file.getName().endsWith(".htm") || file.getName().endsWith(".html")) {
-        try {
-          object = file.toURI().toURL();
-        } catch (Throwable t) {
-          // can't happen
-        }
-      } else {
-        try {
-          Desktop.getDesktop().open(file);
-        } catch (Throwable t) {
-          Logger.getLogger("genj.report").log(Level.INFO, "can't open "+file, t);
-          output.add("*** can't open file "+file);
-        }
-        return;
-      }
-    }
-
-    // URL?
-    if (object instanceof URL) {
-      try {
-        output.setPage((URL) object);
-      } catch (IOException e) {
-        output.add("*** can't open URL " + object + ": " + e.getMessage());
-      }
-//      actionShow.setEnabled(false);
-//      actionShow.setSelected(false);
-      output.show();
-      return;
-    }
-
-    // context list?
-    if (object instanceof List<?>) {
-      try {
-        object = new ContextListWidget((List<Context>)object);
-      } catch (Throwable t) {
-      }
-    }
-
-    // component?
-    if (object instanceof JComponent) {
-        new WidgetDocumentView(new Context(gedcom), tabName, ((JComponent)object));
-      
-      return;
-    }
-    
-    // document
-    if (object instanceof genj.fo.Document) {
-
-            genj.fo.Document doc = (genj.fo.Document) object;
-      String title = "Document " + doc.getTitle();
-
-      Registry foRegistry = Registry.get(getClass());
-
-      Action[] actions = AbstractAncestrisAction.okCancel();
-      FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
-      options.connect(actions[0]);
-      
-      int rc = DialogHelper.openDialog(title, DialogHelper.QUESTION_MESSAGE, options, actions, this);
-      Format formatter = options.getFormat();
-      File file = options.getFile();
-      if (rc!=0 || formatter.getFileExtension() == null || file == null) {
-        showResult(null);
-        return;
-      }
-      
-      // store options
-      options.remember(foRegistry);
-
-      // format and write
-      try {
-        file.getParentFile().mkdirs();
-        formatter.format(doc, file);
-      } catch (Throwable t) {
-        LOG.log(Level.WARNING, "formatting " + doc + " failed", t);
-        output.add("*** formatting " + doc + " failed");
-        return;
-      }
-
-      // go back to document's file
-      showResult(file);
-
-      return;
-    }
-
-    // unknown
-    output.add("*** report returned unknown result " + object);
-  }
-
-  /**
-   * @see genj.view.ToolBarSupport#populate(javax.swing.JToolBar)
-   */
-  public void populate(ToolBar toolbar) {
-
-    toolbar.add(actionStart);
-    
-    // TODO stopping report doesn't really work anyways
-    //toolbar.add(actionStop);
-    
-//    toolbar.add(new JToggleButton(actionShow));
-    toolbar.add(new ActionSave());
-
-    // done
-  }
-
-  /**
-   * Action: STOP
-   */
-  private class ActionStop extends AbstractAncestrisAction {
-    protected ActionStop() {
-      setImage(imgStop);
-      setTip(RESOURCES.getString("report.stop.tip"));
-      setEnabled(false);
-    }
-
-    public void actionPerformed(ActionEvent event) {
-      stopReport();
-    }
-  } // ActionStop
-
-  /**
-   * Action: START
-   */
-  private class ActionStart extends AbstractAncestrisAction {
-
-    /** context to run on */
-    private Object context;
-
-    /** the running report */
-    private Report report;
-
-    /** an output writer */
-    private PrintWriter out;
-
-    /** constructor */
-    protected ActionStart() {
-      // show
-      setImage(imgStart);
-      setTip(RESOURCES.getString("report.start.tip"));
+    /**
+     * Constructor
+     */
+    public ReportView() {
+        selector = new ReportSelector();
+        setLayout(new BorderLayout());
+        add(selector, BorderLayout.CENTER);
     }
 
     /**
-     * execute
+     * @see javax.swing.JComponent#removeNotify()
      */
-    public void actionPerformed(ActionEvent event) {
-      startReport();
+    @Override
+    public void removeNotify() {
+        // continue
+        super.removeNotify();
+        // save report options
+        ReportLoader.getInstance().saveOptions();
     }
 
-  } // ActionStart
+    /**
+     * start a report
+     */
+    public void startReport(final Report report, Object context) {
 
-  /**
-   * Action: SAVE
-   */
-  private class ActionSave extends AbstractAncestrisAction {
-    protected ActionSave() {
-      setImage(imgSave);
-      setTip(RESOURCES.getString("report.save.tip"));
+        if (!actionStart.isEnabled()) {
+            return;
+        }
+        // create a new tab for this run
+        output = new HyperLinkTextDocumentView(
+                new Context(gedcom),
+                report.getShortName(),
+                gedcom.getName() + ": " + report.getName());
+
+        if (report.getStartMethod(context) == null) {
+            for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
+                String tag = Gedcom.ENTITIES[i];
+                Entity sample = gedcom.getFirstEntity(tag);
+                if (sample != null && report.accepts(sample) != null) {
+
+                    // give the report a chance to name our dialog
+                    String txt = report.accepts(sample.getClass());
+                    if (txt == null) {
+                        Gedcom.getName(tag);
+                    }
+
+                    // ask user for context now
+                    context = report.getEntityFromUser(txt, gedcom, tag);
+                    if (context == null) {
+                        return;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // check if appropriate
+        if (context == null || report.accepts(context) == null) {
+            DialogHelper.openDialog(report.getName(), DialogHelper.ERROR_MESSAGE, RESOURCES.getString("report.noaccept"), AbstractAncestrisAction.okOnly(), ReportView.this);
+            return;
+        }
+
+        // remember
+        REGISTRY.put("lastreport", report.getClass().getName());
+
+        // set report ui context
+        report.setOwner(this);
+
+        // clear the current output and show coming
+        output.clear();
+//XXX:    output.show();
+
+        // set running
+        actionStart.setEnabled(false);
+        actionStop.setEnabled(true);
+
+        // kick it off
+        new Thread(new Runner(gedcom, context, report, (Runner.Callback) Spin.over(new RunnerCallback()))).start();
+
     }
+
+    /**
+     * callback for runner
+     */
+    private class RunnerCallback implements Runner.Callback {
 
         @Override
-    public void actionPerformed(ActionEvent event) {
-      
-      // user looking at a context-list?
-//      if (result.isVisible() && result.getViewport().getView() instanceof ContextListWidget) {
-//        ContextListWidget list = (ContextListWidget)result.getViewport().getView();
-//        String title = REGISTRY.get("lastreport", "Report");
-//                genj.fo.Document doc = new genj.fo.Document(title);
-//        doc.startSection(title);
-//        for (Context c : list.getContexts()) {
-//          if (c instanceof ViewContext)
-//            doc.addText(c.getEntity()+":"+((ViewContext)c).getText());
-//          else
-//            doc.addText(c.toString());
-//          doc.nextParagraph();
-//        }
-//        showResult(doc);
-//        // done
-//        return;
-//      }
+        public void handleOutput(Report report, String s) {
+
+            output.add(s);
         }
-  } // ActionSave
 
+        @Override
+        public void handleResult(Report report, Object result) {
 
+            LOG.log(Level.FINE, "Result of report {0} = {1}", new Object[]{report.getName(), result});
+
+            // let report happend again
+            actionStart.setEnabled(gedcom != null);
+            actionStop.setEnabled(false);
+
+            // handle result
+            showResult(result);
+        }
+    }
+
+    /**
+     * Start a report after selection
+     */
+    public void startReport() {
+        // minimum we can work on?
+        if (gedcom == null) {
+            return;
+        }
+        Report report = selector.getReport();
+        if (report == null) {
+            return;
+        }
+        startReport(report, gedcom);
+    }
+
+    /**
+     * stop any running report
+     */
+    public void stopReport() {
+        // TODO: there's no way to stop a running java report atm
+    }
+
+    @Override
+    public void setContext(Context context, boolean isActionPerformed) {
+        gedcom = context.getGedcom();
+        // enable if none running and data available
+        actionStart.setEnabled(!actionStop.isEnabled() && gedcom != null);
+    }
+
+    /**
+     * show result of a report run
+     */
+    /* package */
+    void showResult(Object object) {
+
+        // none?
+        if (object == null) {
+            if (output.isEmpty()) {
+                output.add("*** No Result");
+            }
+            return;
+        }
+
+        // Exception?
+        if (object instanceof InterruptedException) {
+            output.add("*** cancelled");
+            return;
+        }
+
+        if (object instanceof Throwable) {
+            CharArrayWriter buf = new CharArrayWriter(256);
+            ((Throwable) object).printStackTrace(new PrintWriter(buf));
+            output.add("*** exception caught" + '\n' + buf);
+
+            LOG.log(Level.WARNING, "Exception caught ", (Throwable) object);
+            return;
+        }
+
+        // remember title for next document view creation
+        String tabName = output.getName();
+        String tabToolTip = output.getToolTipText();
+        if (output.isEmpty()) {
+            output.close();
+        }
+
+        // File?
+        if (object instanceof File) {
+            File file = (File) object;
+            if (file.getName().endsWith(".htm") || file.getName().endsWith(".html")) {
+                try {
+                    object = file.toURI().toURL();
+                } catch (Throwable t) {
+                    // can't happen
+                }
+            } else {
+                try {
+                    Desktop.getDesktop().open(file);
+                } catch (Throwable t) {
+                    Logger.getLogger("genj.report").log(Level.INFO, "can't open " + file, t);
+                    output.add("*** can't open file " + file);
+                }
+                return;
+            }
+        }
+
+        // URL?
+        if (object instanceof URL) {
+            try {
+                output.setPage((URL) object);
+            } catch (IOException e) {
+                output.add("*** can't open URL " + object + ": " + e.getMessage());
+            }
+//XXX:      output.show();
+            return;
+        }
+
+        // context list?
+        if (object instanceof List<?>) {
+            try {
+                object = new ContextListWidget((List<Context>) object);
+            } catch (Throwable t) {
+            }
+        }
+
+        // component?
+        if (object instanceof JComponent) {
+            new WidgetDocumentView(new Context(gedcom), tabName, tabToolTip, ((JComponent) object));
+
+            return;
+        }
+
+        // document
+        if (object instanceof genj.fo.Document) {
+
+            genj.fo.Document doc = (genj.fo.Document) object;
+            String title = "Document " + doc.getTitle();
+
+            Registry foRegistry = Registry.get(getClass());
+
+            Action[] actions = AbstractAncestrisAction.okCancel();
+            FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
+            options.connect(actions[0]);
+
+            int rc = DialogHelper.openDialog(title, DialogHelper.QUESTION_MESSAGE, options, actions, this);
+            Format formatter = options.getFormat();
+            File file = options.getFile();
+            if (rc != 0 || formatter.getFileExtension() == null || file == null) {
+                showResult(null);
+                return;
+            }
+
+            // store options
+            options.remember(foRegistry);
+
+            // format and write
+            try {
+                file.getParentFile().mkdirs();
+                formatter.format(doc, file);
+            } catch (Throwable t) {
+                LOG.log(Level.WARNING, "formatting " + doc + " failed", t);
+                output.add("*** formatting " + doc + " failed");
+                return;
+            }
+
+            // go back to document's file
+            showResult(file);
+
+            return;
+        }
+
+        // unknown
+        output.add("*** report returned unknown result " + object);
+    }
+
+    /**
+     * @see genj.view.ToolBarSupport#populate(javax.swing.JToolBar)
+     */
+    public void populate(ToolBar toolbar) {
+
+        toolbar.add(actionStart);
+
+        // TODO stopping report doesn't really work anyways
+        toolbar.add(actionStop);
+
+        // done
+    }
+
+    /**
+     * Action: STOP
+     */
+    private class ActionStop extends AbstractAncestrisAction {
+
+        protected ActionStop() {
+            setImage(imgStop);
+            setTip(RESOURCES.getString("report.stop.tip"));
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            stopReport();
+        }
+    } // ActionStop
+
+    /**
+     * Action: START
+     */
+    private class ActionStart extends AbstractAncestrisAction {
+
+        /** constructor */
+        protected ActionStart() {
+            // show
+            setImage(imgStart);
+            setTip(RESOURCES.getString("report.start.tip"));
+        }
+
+        /**
+         * execute
+         */
+        public void actionPerformed(ActionEvent event) {
+            startReport();
+        }
+    } // ActionStart
+//XXX: ActionSave is now in AbstractDocumentViewer. We must recode ContextWidget save
+//  /**
+//   * Action: SAVE
+//   */
+//  private class ActionSave extends AbstractAncestrisAction {
+//    protected ActionSave() {
+//      setImage(Images.imgSave);
+//      setTip(RESOURCES.getString("report.save.tip"));
+//    }
+//
+//        @Override
+//    public void actionPerformed(ActionEvent event) {
+//      
+//      // user looking at a context-list?
+////      if (result.isVisible() && result.getViewport().getView() instanceof ContextListWidget) {
+////        ContextListWidget list = (ContextListWidget)result.getViewport().getView();
+////        String title = REGISTRY.get("lastreport", "Report");
+////                genj.fo.Document doc = new genj.fo.Document(title);
+////        doc.startSection(title);
+////        for (Context c : list.getContexts()) {
+////          if (c instanceof ViewContext)
+////            doc.addText(c.getEntity()+":"+((ViewContext)c).getText());
+////          else
+////            doc.addText(c.toString());
+////          doc.nextParagraph();
+////        }
+////        showResult(doc);
+////        // done
+////        return;
+////      }
+//        }
+//  } // ActionSave
+//
 } // ReportView
 

@@ -52,9 +52,10 @@ public class FopDocumentView extends AbstractDocumentView {
      *
      * @param context Gedcom Context
      * @param title   Tab title
+     * @param tooltip tooltip for tab
      */
-    public FopDocumentView(Context context, String title) {
-        super(context, title);
+    public FopDocumentView(Context context, String title, String tooltip) {
+        super(context, title, tooltip);
         editorPane = new JEditorPane();
         editorPane.setEditable(false);
         editorPane.setName(title);
