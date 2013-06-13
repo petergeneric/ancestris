@@ -45,9 +45,10 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
      *
      * @param context Gedcom Context
      * @param title   Tab title
+     * @param tooltip tooltip for tab
      */
-    public HyperLinkTextDocumentView(Context context, String title) {
-        super(context, title);
+    public HyperLinkTextDocumentView(Context context, String title, String tooltip) {
+        super(context, title, tooltip);
         textOutput = new HyperLinkTextPane();
         textOutput.setGedcom(context.getGedcom());
         setView(textOutput);

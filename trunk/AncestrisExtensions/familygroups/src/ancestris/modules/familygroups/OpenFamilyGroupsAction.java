@@ -20,7 +20,9 @@ import org.openide.util.Utilities;
 @ActionID(id = "ancestris.modules.familygroups.OpenFamilyGroupsAction", category = "Tools")
 @ActionRegistration(iconInMenu = true, displayName = "#CTL_OpenFamilyGroups", iconBase = "ancestris/modules/familygroups/FamilyGroups.png")
 @ActionReference(path = "Menu/Tools", name = "ancestris-modules-familygroups-OpenFamilyGroups", position = 82)
-@NbBundle.Messages("title=Family Groups")
+@NbBundle.Messages({
+        "title={0}: Family Groups",
+        "title.short=Family Groups"})
 public final class OpenFamilyGroupsAction implements ActionListener {
 
     private Context context;
@@ -39,7 +41,7 @@ public final class OpenFamilyGroupsAction implements ActionListener {
             } else {
                 Document doc = new FamilyGroupsPlugin().start(context.getGedcom());
                 if (doc != null) {
-                    FopDocumentView window = new FopDocumentView(context, title());
+                    FopDocumentView window = new FopDocumentView(context, title_short(),title(context.getGedcom().getName()));
                     window.displayDocument(doc, modulePreferences);
                 }
             }

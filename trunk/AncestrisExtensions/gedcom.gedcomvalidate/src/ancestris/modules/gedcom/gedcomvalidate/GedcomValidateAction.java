@@ -70,7 +70,10 @@ public final class GedcomValidateAction implements ActionListener {
                     doc.addText(NbBundle.getMessage(GedcomValidate.class, "noissues"));
                 }
 
-                FopDocumentView window = new FopDocumentView(context, NbBundle.getMessage(GedcomValidate.class, "name"));
+                FopDocumentView window = new FopDocumentView(
+                        context, 
+                        NbBundle.getMessage(GedcomValidate.class, "name.short"),
+                        NbBundle.getMessage(GedcomValidate.class, "name"));
 
                 window.displayDocument(doc, modulePreferences);
             }

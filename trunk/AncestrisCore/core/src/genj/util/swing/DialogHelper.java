@@ -60,6 +60,7 @@ import javax.swing.event.ListSelectionListener;
 /**
  * Helper for interacting with Dialogs and Windows
  */
+// XXX: will have to refactor this class and use NB API
 public class DialogHelper {
 
   /** screen we're dealing with */

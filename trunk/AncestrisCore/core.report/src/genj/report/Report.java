@@ -745,6 +745,20 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   }
 
   /**
+   * Returns the short name of a report - this by default is the value of key "name.short"
+   * in the file [ReportName].properties. This shortname is intended to be displayed in tabs.
+   * A report has to override this method
+   * to provide a localized name if that file doesn't exist.
+   * If name.short key is not available, revert to {@link #getName() }
+   * @return short name of the report
+   */
+  public String getShortName() {
+    String name =  translateGUI("name.short");
+    if (name.length()==0||name.equals("name.short")) name = getName();
+    return name;
+  }
+
+  /**
    * Returns the author of a report - this by default is the value of key "author"
    * in the file [ReportName].properties. A report has to override this method
    * to provide the author if that file doesn't exist.

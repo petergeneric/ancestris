@@ -14,7 +14,10 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
-@NbBundle.Messages("title=Flash Lists")
+@NbBundle.Messages({
+    "title={0}: Flash Lists",
+    "title.short=Flash Lists",
+})
 public final class FlashListAction implements ActionListener {
 
     private Context context;
@@ -33,7 +36,7 @@ public final class FlashListAction implements ActionListener {
             } else {
                 Document doc = new ReportFlashList().start(context.getGedcom(), modulePreferences.get("reportFilename", "flash-list"));
                 if (doc != null) {
-                    FopDocumentView window = new FopDocumentView(context, title());
+                    FopDocumentView window = new FopDocumentView(context, title_short(),title(context.getGedcom().getName()));
                     window.displayDocument(doc, modulePreferences);
                 }
             }

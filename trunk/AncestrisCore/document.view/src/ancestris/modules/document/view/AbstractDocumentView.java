@@ -52,11 +52,13 @@ public class AbstractDocumentView extends JPanel {
      *
      * @param context Gedcom Context
      * @param title   Tab title
+     * @param tooltip Tooltip for tab
      */
-    public AbstractDocumentView(Context context, String title) {
+    public AbstractDocumentView(Context context, String title, String tooltip) {
         this();
         this.context = context;
         setName(title);
+        setToolTipText(tooltip);
         setView(null);
         setToolbarActions(null);
         init();
