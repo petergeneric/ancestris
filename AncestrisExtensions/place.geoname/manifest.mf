@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.place.geonames
+OpenIDE-Module-Localizing-Bundle: ancestris/place/geonames/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
