@@ -22,6 +22,7 @@
 package genj.report;
 
 import ancestris.core.TextOptions;
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -34,19 +35,33 @@ import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.Resources.ResourcesProvider;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
+import genj.util.swing.ImageIcon;
 import java.awt.Component;
 import java.awt.Graphics;
-import java.io.*;
+import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.filechooser.FileFilter;
 
 
@@ -235,48 +250,26 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     // got it?
     if (icon!=null)
       return icon;
+    icon = getCategory().getImage();
 
-    // find category in report settings
-    String cat = translateGUI("category");
-    if (cat.equals("category")||cat.length()==0) {
-      icon = DEFAULT_ICON;
-    } else {
-      // resolve an image
-      String file = "Category"+Character.toUpperCase(cat.charAt(0))+cat.substring(1)+".png";
-      InputStream in = null;
-      try {
-        in = Report.class.getResourceAsStream(file);
-        icon = new genj.util.swing.ImageIcon(file, in);
-      } catch (Throwable t) {
-        icon = DEFAULT_ICON;
-      } finally {
-        if (in!=null) try { in.close(); } catch (IOException e) {}
-      }
-    }
-    
     // done
     return icon;
   }
 
   /**
-   * Returns the report category
+   * Returns the report category. If the category is not defined in the report's
+   * properties file, the category is set to "Other".
    */
-  public final String getCategory() {
-    // find category in report settings
-    String cat = translateGUI("category");
-    if (cat.equals("category")||cat.length()==0)
-      return "";
-    
-    // try to translate
-    String result = COMMON_RESOURCES.getString("category."+cat, false);
-    if (result==null) {
-      LOG.fine("report's category "+cat+" doesn't exist");
-      return COMMON_RESOURCES.getString("category.utility");
-    }    
-    
-    return result;
+  public Category getCategory() {
+      //XXX: category names must not be translated
+      String name = translateGUI("category");
+      if (name.equals("category")||name.length()==0)
+          return Category.DEFAULT_CATEGORY;
+      //XXX: see how to set translated display text for non "standard" categories
+      // ie new categories set by a report. Maybe we could add this in ReportLoader
+      return Category.get(name);
   }
-
+  
   /**
    * When a report is executed all its text output is gathered and
    * shown to the user (if run through ReportView). A sub-class can
@@ -881,9 +874,109 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     }
 
     /**
+     * Represents the report category.
+     */
+    public static class Category {
+
+        private static final ImageIcon DEFAULT_ICON = new ImageIcon(Report.DEFAULT_ICON);
+        private static final Category DEFAULT_CATEGORY = new Category("Other", DEFAULT_ICON);
+        private String name;
+        private String displayName;
+        private ImageIcon image;
+
+        private Category(String name, ImageIcon image) {
+            this.name = name.toLowerCase();
+            this.image = image;
+            // try to translate
+            String result = COMMON_RESOURCES.getString("category." + this.name, false);
+            if (result != null) {
+                displayName = result;
+            }
+        }
+
+        private static Category createCategory(String name) {
+            if (name == null) {
+                return DEFAULT_CATEGORY;
+            }
+            // get image from name
+            ImageIcon image;
+            String file = "Category" + Category.UcFirst(name) + ".png";
+
+            InputStream in = null;
+            try {
+                in = Report.class.getResourceAsStream(file);
+                image = new genj.util.swing.ImageIcon(file, in);
+            } catch (Throwable t) {
+                image = DEFAULT_ICON;
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
+            return new Category(name, image);
+        }
+
+        /**
+         * Return this category name (non translated).
+         *
+         * @return
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Returns the translated category name.
+         */
+        public String getDisplayName() {
+            if (displayName == null) {
+                return name;
+            }
+            return displayName;
+        }
+
+        /**
+         * return this category icon.
+         * @return 
+         */
+        public ImageIcon getImage() {
+            return image == null ? new genj.util.swing.ImageIcon(DEFAULT_ICON) : image;
+        }
+
+        /**
+         * UcFisrt utility.
+         */
+        private static String UcFirst(String s) {
+            String out = s;
+            if (s != null && !s.isEmpty()) {
+                out = Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
+            }
+            return out;
+        }
+        private static final TreeMap<String, Category> categories = new TreeMap<String, Category>();
+
+        static {
+            // Default category when category isn't defined in properties file
+            categories.put(DEFAULT_CATEGORY.name, DEFAULT_CATEGORY);
+        }
+
+        private static Category get(String name) {
+            Category category = (Category) categories.get(name);
+            if (category == null) {
+                category = createCategory(name);
+                categories.put(name, category);
+            }
+            return category;
+        }
+    }
+
+    /**
      * Filters files using a specified extension.
      */
-    private class FileExtensionFilter extends FileFilter {
+    private static class FileExtensionFilter extends FileFilter {
 
         private String extension;
 
@@ -894,6 +987,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
         /**
          * Returns true if file name has the right extension.
          */
+        @Override
         public boolean accept(File f) {
             if (f == null)
                 return false;
@@ -902,6 +996,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
             return f.getName().toLowerCase().endsWith("." + extension);
         }
 
+        @Override
         public String getDescription() {
             return extension.toUpperCase() + " files";
         }

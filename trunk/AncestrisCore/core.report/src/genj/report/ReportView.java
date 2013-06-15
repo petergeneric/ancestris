@@ -342,6 +342,7 @@ public class ReportView extends View {
 
         // TODO stopping report doesn't really work anyways
         toolbar.add(actionStop);
+        toolbar.add(selector.getActionGroup());
 
         // done
     }
