@@ -111,7 +111,7 @@ public class ReportPlugin{
                 String accept = report.accepts(context);
                 if (accept != null) {
                     ActionRun run = new ActionRun(accept, context, report, gedcom);
-                    String cat = report.getCategory();
+                    String cat = report.getCategory().getDisplayName();
                     if (cat == null) {
                         result.add(run);
                     } else {
