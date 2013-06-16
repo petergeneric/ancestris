@@ -53,6 +53,7 @@ import javax.swing.event.ListSelectionListener;
 /**
  * The settings component for the Tree View
  */
+//XXX: All these settings must be moved to preferences
 public class TreeViewSettings extends JTabbedPane {
   
   private final static Resources RESOURCES = Resources.get(TreeViewSettings.class);
@@ -61,6 +62,7 @@ public class TreeViewSettings extends JTabbedPane {
   private JSpinner[] spinners = new JSpinner[5]; 
   private ColorsWidget colors;
   private JCheckBox checkBending, checkAntialiasing, checkMarrSymbols;
+  private JCheckBox cbTreeFollowSelection;
   private AbstractAncestrisAction 
     up = new Move(-1), 
     down = new Move( 1), 
@@ -84,6 +86,7 @@ public class TreeViewSettings extends JTabbedPane {
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
+         "<check gx=\"1\"/>"+
          "<font gx=\"1\"/>"+
          "<row><label/><spinner/></row>"+
          "<row><label/><spinner/></row>"+
@@ -96,10 +99,12 @@ public class TreeViewSettings extends JTabbedPane {
     checkBending = createCheck("bend", view.getModel().isBendArcs());
     checkAntialiasing = createCheck("antialiasing", view.isAntialising());
     checkMarrSymbols = createCheck("marrsymbols", view.getModel().isMarrSymbols());
+    cbTreeFollowSelection = createCheck("followselection", TreeView.isFollowSelection());
     font = new FontChooser();
     font.setSelectedFont(view.getContentFont());
     font.addChangeListener(commit);
     
+    options.add(cbTreeFollowSelection);
     options.add(checkBending);
     options.add(checkAntialiasing);
     options.add(checkMarrSymbols);
@@ -260,6 +265,7 @@ public class TreeViewSettings extends JTabbedPane {
     
     public void actionPerformed(ActionEvent e) {
       // options
+        TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
       view.getModel().setBendArcs(checkBending.isSelected());
       view.setAntialiasing(checkAntialiasing.isSelected());
       view.setContentFont(font.getSelectedFont());
