@@ -23,6 +23,7 @@ package genj.report;
 
 import ancestris.core.TextOptions;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.resources.Images;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -77,17 +78,6 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   private final static PrintWriter NUL = new PrintWriter(new OutputStream() { @Override public void write(int b) { }} );
 
   protected final static Logger LOG = Logger.getLogger("genj.report");
-
-  protected final static Icon DEFAULT_ICON = new Icon() {
-    public int getIconHeight() {
-      return 16;
-    }
-    public int getIconWidth() {
-      return 16;
-    }
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-    }
-  };
 
   /** global report options */
   protected TextOptions OPTIONS = TextOptions.getInstance();
@@ -878,9 +868,8 @@ public abstract class Report implements Cloneable,ResourcesProvider {
      */
     public static class Category {
 
-        private static final ImageIcon DEFAULT_ICON = new ImageIcon(Report.DEFAULT_ICON);
+        private static final ImageIcon DEFAULT_ICON = Images.imgQuestion;
         private static final Category DEFAULT_CATEGORY = createCategory("Other");
-//        private static final Category DEFAULT_CATEGORY = new Category("Other", DEFAULT_ICON);
         private String name;
         private String displayName;
         private ImageIcon image;

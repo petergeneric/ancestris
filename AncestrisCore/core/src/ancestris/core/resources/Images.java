@@ -44,6 +44,7 @@ final public class Images {
     public static ImageIcon imgDel = new ImageIcon(Images.class,"images/Delete");
     public static ImageIcon imgNew = new ImageIcon(Images.class,"images/New");
     public static ImageIcon imgSave = new ImageIcon(Images.class,"images/Save");
+    public static ImageIcon imgQuestion = new ImageIcon(Images.class,"images/Question");
 
   /**
    * Static class only
