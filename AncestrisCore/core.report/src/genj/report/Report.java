@@ -879,7 +879,8 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     public static class Category {
 
         private static final ImageIcon DEFAULT_ICON = new ImageIcon(Report.DEFAULT_ICON);
-        private static final Category DEFAULT_CATEGORY = new Category("Other", DEFAULT_ICON);
+        private static final Category DEFAULT_CATEGORY = createCategory("Other");
+//        private static final Category DEFAULT_CATEGORY = new Category("Other", DEFAULT_ICON);
         private String name;
         private String displayName;
         private ImageIcon image;
