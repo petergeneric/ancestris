@@ -94,7 +94,10 @@ public class Almanac {
                     if ("fr".equals(Locale.getDefault().getLanguage())) {
                         new AlmanacLoader().load();
                     } else {
-                        new WikipediaLoader().load();
+                        // XXX: All events are loaded from files. We will modify this by
+                        // XXX: we will have to create some API for Almanac provider and rewrites WikipediaLoader
+//                        new WikipediaLoader().load();
+                        new AlmanacLoader().load();
                     }
                 } catch (Throwable t) {
                 }
