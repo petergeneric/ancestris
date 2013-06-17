@@ -158,7 +158,7 @@ public class TreeViewSettings extends JTabbedPane {
 
   private JCheckBox createCheck(String key, boolean checked) {
     JCheckBox result = new JCheckBox(RESOURCES.getString(key), checked);
-    result.setToolTipText(RESOURCES.getString(key+".tip"));
+    result.setToolTipText(RESOURCES.getString(key+".tip",false));
     result.addActionListener(commit);
     return result;
   }
