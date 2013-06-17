@@ -71,16 +71,20 @@ public final class SendTranslationAction implements ActionListener {
                                 Exceptions.printStackTrace(ex);
                             }
                         }
-                        
+
                         int nbTranslatedFiles = zipArchive.saveTranslation(zipOutputFile);
-                        
+
                         saveValues(sendTranslationPanel);
                         String subject = sendTranslationPanel.getSubjectFormattedTextField();
                         String name = sendTranslationPanel.getNameFormattedTextField();
                         String from = sendTranslationPanel.getEmailFormattedTextField();
                         String message = sendTranslationPanel.getMessageTextArea();
                         String to = sendTranslationPanel.getMailToFormattedTextField();
-                        message += "\n there is " + nbTranslatedFiles + " in the bundle";
+                        if (nbTranslatedFiles > 1) {
+                            message += "\n there are " + nbTranslatedFiles + " files in the bundle";
+                        } else {
+                            message += "\n there is one file in the bundle";
+                        }
                         Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
                         t.start();
                     }
