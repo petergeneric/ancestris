@@ -18,7 +18,7 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(location = "Advanced",
+@OptionsPanelController.SubRegistration(location = "Extensions",
 displayName = "#AdvancedOption_DisplayName_WebSite",
 keywords = "#AdvancedOption_Keywords_WebSite",
 keywordsCategory = "General/WebSite")
