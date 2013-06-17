@@ -32,6 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
  * GenJ - ReportSosa
  */
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportSosa extends Report {
 
     /** option - our report types defined, the value and choices */
