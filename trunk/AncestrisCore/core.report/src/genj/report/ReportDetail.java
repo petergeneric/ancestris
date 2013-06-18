@@ -53,7 +53,7 @@ class ReportDetail extends JPanel {
     gh.setParameter(GridBagHelper.FILL_HORIZONTAL);
     gh.setInsets(new Insets(0, 0, 0, 5));
 
-    lFile = new JLabel("");
+    lFile = new JLabel(""); //NOI18N
     lFile.setForeground(Color.black);
 
     gh.add(new JLabel(res.getString("report.file")),2,0);
@@ -61,7 +61,7 @@ class ReportDetail extends JPanel {
     
     // ... Report's author
 
-    lAuthor = new JLabel("");
+    lAuthor = new JLabel(""); //NOI18N
     lAuthor.setForeground(Color.black);
 
     gh.add(new JLabel(res.getString("report.author")),2,1);
@@ -84,23 +84,23 @@ class ReportDetail extends JPanel {
     JScrollPane spInfo = new JScrollPane(tpInfo);
     gh.add(spInfo,2,4,2,1,GridBagHelper.GROWFILL_BOTH);
 
-    tpInfo.setText("Some very long info on report from file");
+    tpInfo.setText(res.getString("report.detail.long"));
 
   }
   
   public void setReport(Report report) {
     // update info
     if (report == null) {
-      lFile    .setText("");
-      lAuthor  .setText("");
-      lVersion .setText("");
-      tpInfo   .setText("");
+      lFile    .setText(""); //NOI18N
+      lAuthor  .setText(""); //NOI18N
+      lVersion .setText(""); //NOI18N
+      tpInfo   .setText(""); //NOI18N
     } else {
       editorKit.setFrom(report.getClass());
       lFile    .setText(report.getClass().getSimpleName());
       lAuthor  .setText(report.getAuthor());
       lVersion .setText(getReportVersion(report));
-      tpInfo   .setText(report.getInfo().replaceAll("\n", "<br>"));
+      tpInfo   .setText(report.getInfo().replaceAll("\n", "<br>")); //NOI18N
       tpInfo   .setCaretPosition(0);
     }
   }
@@ -114,7 +114,7 @@ class ReportDetail extends JPanel {
     String version = report.getVersion();
     String update = report.getLastUpdate();
     if (update != null)
-      version += " - " + Resources.get(this).getString("report.updated") + ": " + update;
+      version += " - " + Resources.get(this).getString("report.updated") + ": " + update; //NOI18N
     return version;
   }
     
