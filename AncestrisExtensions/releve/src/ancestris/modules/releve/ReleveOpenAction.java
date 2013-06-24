@@ -6,13 +6,8 @@ import javax.swing.ImageIcon;
 import org.openide.awt.Actions;
 
 /**
- * Action pour creer une intance de TodoTopComponent.
+ * Action pour creer une intance de ReleveTopComponent.
  * 
- * TodoOpenAction est associee au menu ancestris-modules-todoreport-TodoOpenActionNew.shadow"
- * dans layer.xml .
- *
- * Une instance de TodoOpenAction est cree par layer.xml au chargement de la librairie (voir attribut delegate)
- *
  * @author Michel
  */
 public final class ReleveOpenAction extends AbstractAction {

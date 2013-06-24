@@ -8,25 +8,26 @@ package ancestris.modules.releve.editor;
 import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.model.PlaceListener;
 import ancestris.modules.releve.model.PlaceManager;
-import ancestris.modules.releve.model.BeanField;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldSex;
-import ancestris.modules.releve.model.FieldTitle;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.ReleveEditorListener;
 import ancestris.modules.releve.TableSelectionListener;
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.DataManager.ModelType;
 import ancestris.modules.releve.model.FieldEventType;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -35,6 +36,7 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -70,9 +72,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         jButtonPrevious.setVisible(false);
         jTextFielRecordNo.setVisible(false);
         jButtonNext.setVisible(false);
+
         jButtonDelete.setEnabled(false);
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(20);
+        //jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0));
+        //jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0));
+        jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_UP,InputEvent.ALT_MASK));
+        jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,InputEvent.ALT_MASK));
 
         // je crée les raccourcis pour créer les nouveaux relevés
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt S"), this);
@@ -88,15 +95,16 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt B"), this);
         // je crée le racourci pour copier la meme valeur que celle de l'enregistrement précédent
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS , InputEvent.ALT_MASK), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke(KeyEvent.VK_PLUS , InputEvent.ALT_MASK ) , this);
 
         getActionMap().put(this, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( actionEvent.getActionCommand().equals("c") ) {
+                if ( actionEvent.getActionCommand().toUpperCase().equals("C") ) {
                     jButtonNewActionPerformed(actionEvent);
-                } else if ( actionEvent.getActionCommand().equals("s") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("S") ) {
                     jButtonDeleteActionPerformed(actionEvent);
-                } else if ( actionEvent.getActionCommand().equals("z") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("Z") ) {
                     Record record = recordModel.undo();
                     if (record != null ) {
                         selectRecord(recordModel.getIndex(record));
@@ -104,15 +112,17 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                         selectRecord(-1);
                     }
                     recordModel.fireTableDataChanged();
-                } else if ( actionEvent.getActionCommand().equals("x") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("X") ) {
                     copyIndiNameToIndiFatherName();
-                } else if ( actionEvent.getActionCommand().equals("y") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("Y") ) {
                     copyWifeNameToWifeFatherName();
-                } else if ( actionEvent.getActionCommand().equals("a") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("A") ) {
                     giveFocusToIndiAge();
-                } else if ( actionEvent.getActionCommand().equals("b") ) {
+                } else if ( actionEvent.getActionCommand().toUpperCase().equals("B") ) {
                     copyEventDateToIndiBirthDate();
-                } else if ( actionEvent.getActionCommand().equals("=") ) {
+                } else if ( actionEvent.getActionCommand().toLowerCase().equals("=") ) {
+                    copyPreviousRecordField();
+                } else if ( actionEvent.getActionCommand().toLowerCase().equals("+") ) {
                     copyPreviousRecordField();
                 }
             }
@@ -160,7 +170,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 break;
              case all:
                 jButtonNew.setVisible(false);
-                jButtonStandalone.setVisible(false);
+                jButtonStandalone.setVisible(true);
                 break;
         }
     }
@@ -176,7 +186,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
-                if ( bean.getBeanField().getFieldType() == Field.FieldType.indiAge ) {
+                if ( bean.getFieldType() == Field.FieldType.indiAge ) {
                     indiAge = bean;
                     break;
                 }
@@ -207,8 +217,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
-                if ( bean.getBeanField().getFieldType() == Field.FieldType.indiLastName ) {
-                    indiLastNameField = bean.getBeanField().getField();
+                if ( bean.getFieldType() == Field.FieldType.indiLastName ) {
+                    indiLastNameField = bean.getField();
                     break;
                 }
             }
@@ -218,8 +228,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                Bean bean = ((Bean) component);
-               if ( bean.getBeanField().getFieldType() == Field.FieldType.indiFatherLastName ) {
-                    indiFatherLastNameField = bean.getBeanField().getField();
+               if ( bean.getFieldType() == Field.FieldType.indiFatherLastName ) {
+                    indiFatherLastNameField = bean.getField();
                     indiFatherNameBean = bean;
                     break;
                 }
@@ -228,10 +238,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         // je copie le nom
         if ( indiLastNameField != null && indiFatherLastNameField != null ) {
-            recordModel.fieldChanged(indiFatherNameBean.getBeanField().getRecord(), indiFatherLastNameField, indiLastNameField.getValue());
+            recordModel.fieldChanged(indiFatherNameBean.getRecord(), indiFatherLastNameField, indiLastNameField.getValue());
             indiFatherLastNameField.setValue(indiLastNameField.getValue());
             // je refraichis l'affichage
-            indiFatherNameBean.setContext(indiFatherNameBean.getBeanField());
+            indiFatherNameBean.refresh();
             // je donne le focus au bean indiFatherNameBean
             indiFatherNameBean.requestFocusInWindow();
         } else {
@@ -254,8 +264,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
-                if ( bean.getBeanField().getFieldType() == Field.FieldType.wifeLastName ) {
-                    wifeLastNameField = bean.getBeanField().getField();
+                if ( bean.getFieldType() == Field.FieldType.wifeLastName ) {
+                    wifeLastNameField = bean.getField();
                     break;
                 }
             }
@@ -265,8 +275,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
-               if ( bean.getBeanField().getFieldType() == Field.FieldType.wifeFatherLastName ) {
-                    wifeFatherLastNameField = bean.getBeanField().getField();
+               if ( bean.getFieldType() == Field.FieldType.wifeFatherLastName ) {
+                    wifeFatherLastNameField = bean.getField();
                     wifeFatherNameBean = bean;
                     break;
                 }
@@ -275,11 +285,11 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         // je copie le nom
         if ( wifeLastNameField != null && wifeFatherLastNameField != null ) {
-            recordModel.fieldChanged(wifeFatherNameBean.getBeanField().getRecord(), wifeFatherLastNameField, wifeLastNameField.getValue());
+            recordModel.fieldChanged(wifeFatherNameBean.getRecord(), wifeFatherLastNameField, wifeLastNameField.getValue());
             wifeFatherLastNameField.setValue(wifeLastNameField.getValue());
         
             // je refraichis l'affichage
-            wifeFatherNameBean.setContext(wifeFatherNameBean.getBeanField());
+            wifeFatherNameBean.refresh();
 
             // je donne le focus au bean wifeFatherNameBean
             wifeFatherNameBean.requestFocusInWindow();
@@ -303,8 +313,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
-                if ( bean.getBeanField().getFieldType() == Field.FieldType.eventDate ) {
-                    eventDate = bean.getBeanField().getField();
+                if ( bean.getFieldType() == Field.FieldType.eventDate ) {
+                    eventDate = bean.getField();
                     break;
                 }
             }
@@ -314,8 +324,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
-               if ( bean.getBeanField().getFieldType() == Field.FieldType.indiBirthDate ) {
-                    indiBirthDate = bean.getBeanField().getField();
+               if ( bean.getFieldType() == Field.FieldType.indiBirthDate ) {
+                    indiBirthDate = bean.getField();
                     indiBirthDateBean = bean;
                     break;
                 }
@@ -324,11 +334,11 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         // je copie le nom
         if ( eventDate != null && indiBirthDate != null ) {
-            recordModel.fieldChanged(indiBirthDateBean.getBeanField().getRecord(), eventDate, indiBirthDate.getValue());
+            recordModel.fieldChanged(indiBirthDateBean.getRecord(), eventDate, indiBirthDate.getValue());
             indiBirthDate.setValue(eventDate.getValue());
         
             // je refraichis l'affichage
-            indiBirthDateBean.setContext(indiBirthDateBean.getBeanField());
+            indiBirthDateBean.refresh();
 
             // je donne le focus au bean wifeFatherNameBean
             indiBirthDateBean.requestFocusInWindow();
@@ -368,7 +378,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         }
         Bean bean = (Bean) parent;
         // je recupere le champ qui a le focus
-        Field previousField = previousRecord.getField(bean.getBeanField().getFieldType());
+        Field previousField = previousRecord.getField(bean.getFieldType());
         // je copie la donnée du meme champ du releve precedent dans le bean
         // Attention : je ne copie pas la donnée dans le champ du releve courant pour
         // que les controles puissent s'effectuer comme si l'utilisateur avait saisi
@@ -421,164 +431,183 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         int lineNo = 0;
         
         if (recordModel != null) {
-            BeanField[] beanFields = recordModel.getFieldList(recordIndex);
+            //BeanField[] beanFields = recordModel.getFieldList(recordIndex);
+            // j'affiche les beans en fonction du type de champ
+//            for (int fieldNo = 0; fieldNo < beanFields.length; fieldNo++) {
+//                BeanField beanField = beanFields[fieldNo];
+//                Field field = beanField.getField();
+//                String label = beanField.getLabel();
+
             KeyStroke keyStroke = null;
             defaultBeanFocus = null;
-
-            // j'affiche les beans en fonction du type de champ
-            for (int recordNo = 0; recordNo < beanFields.length; recordNo++) {
-                BeanField beanField = beanFields[recordNo];
-                Field field = beanField.getField();
-                String label = beanField.getLabel();
-                Bean bean = null;
-
-                switch (beanField.getFieldType()) {
-                    case title:
-                        // label separateur de rubrique
-                        keyStroke = ((FieldTitle) field).getKeyStroke();
-                        break;
-
-                    case eventType:
-                        bean = new BeanEventType(dataManager.getCompletionProvider());
-                        break;
-
-                    case indiBirthDate:
-                        label = label.substring(0,5)+". (Alt-B)";
-                        bean = new BeanDate();
-                        break;
-                    case eventDate:
-                    case wifeBirthDate:
-                        bean = new BeanDate();
-                        break;
-
-                    case indiLastName:
-                    case indiMarriedLastName:
-                    case indiMotherLastName:
-                    case wifeLastName:
-                    case wifeMarriedLastName:
-                    case wifeMotherLastName:
-                    case witness1LastName:
-                    case witness2LastName:
-                    case witness3LastName:
-                    case witness4LastName:
-                        // j'affiche le bean d'edition du nom
-                        bean = new BeanLastName(dataManager.getCompletionProvider());
-                        break;
-                    case indiFatherLastName:
-                        label += " (Alt-X)";
-                        bean = new BeanLastName(dataManager.getCompletionProvider());
-                        break;
-                    case wifeFatherLastName:
-                        label += " (Alt-Y)";
-                        bean = new BeanLastName(dataManager.getCompletionProvider());
-                        break;
-
-                    case indiFirstName:
-                    case indiMarriedFirstName:
-                    case indiFatherFirstName:
-                    case indiMotherFirstName:
-                    case wifeFirstName:
-                    case wifeMarriedFirstName:
-                    case wifeFatherFirstName:
-                    case wifeMotherFirstName:
-                    case witness1FirstName:
-                    case witness2FirstName:
-                    case witness3FirstName:
-                    case witness4FirstName:
-                        bean = new BeanFirstName(dataManager.getCompletionProvider());
-                        break;
-
-                    case indiSex:
-                    //case indiMarriedSex:
-                    case wifeSex:
-                    //case wifeMarriedSex:
-                        bean = new BeanSex();
-                        break;
-
-                    case indiAge:
-                        label += " (Alt-A)";
-                        bean = new BeanAge();
-                        break;
-
-                    case indiFatherAge:
-                    case indiMotherAge:
-                    case wifeAge:
-                    case wifeFatherAge:
-                    case wifeMotherAge:
-                        bean = new BeanAge();
-                        break;
-
-                    case indiMarriedDead:
-                    case indiFatherDead:
-                    case indiMotherDead:
-                    case wifeMarriedDead:
-                    case wifeFatherDead:
-                    case wifeMotherDead:
-                        bean = new BeanDead();
-                        break;
-
-                    case indiOccupation:
-                    case indiMarriedOccupation:
-                    case indiFatherOccupation:
-                    case indiMotherOccupation:
-                    case wifeOccupation:
-                    case wifeMarriedOccupation:
-                    case wifeFatherOccupation:
-                    case wifeMotherOccupation:
-                    case witness1Occupation:
-                    case witness2Occupation:
-                    case witness3Occupation:
-                    case witness4Occupation:
-                        bean = new BeanOccupation(dataManager.getCompletionProvider());
-                        break;
-
-                    case indiPlace:
-                    case wifePlace:
-                    case indiResidence:
-                    case indiMarriedResidence:
-                    case indiFatherResidence:
-                    case indiMotherResidence:
-                    case wifeResidence:
-                    case wifeMarriedResidence:
-                    case wifeFatherResidence:
-                    case wifeMotherResidence:                    
-                        bean = new BeanPlace(dataManager.getCompletionProvider());
-                        break;
-
-                    case indiComment:
-                    case indiMarriedComment:
-                    case indiFatherComment:
-                    case indiMotherComment:
-                    case wifeComment:
-                    case wifeMarriedComment:
-                    case wifeFatherComment:
-                    case wifeMotherComment:
-                    case witness1Comment:
-                    case witness2Comment:
-                    case witness3Comment:
-                    case witness4Comment:
-                    case cote:
-                    case parish:
-                    case generalComment:
-                        bean = new BeanSimpleValue();
-                        break;
-
-                    case freeComment:
-                        bean = new BeanFreeComment();
-                        break;
-
-                    case notary:
-                        bean = new BeanSimpleValue();
-                        break;
+            Record record = recordModel.getRecord(recordIndex);
+            if (record != null) {
+            for (Iterator<EditorBeanGroup> groupIter =  EditorBeanGroup.getGroups(record.getType()).iterator() ; groupIter.hasNext(); ) {
+                EditorBeanGroup group =groupIter.next();
+                if( ! group.isVisible() ) {
+                        continue;
                 }
-
-                addRow(lineNo, label, bean, keyStroke);
-                
-                if (beanField.getFieldType() != FieldType.title) {
-                    bean.setContext(beanField);
-                    keyStroke = null;
-                }
+                // le raccourci sera associé du premier champ du groupe qui va être créé
+                keyStroke = group.getKeystroke();
+                addRow(lineNo, group.getTitle(), null, keyStroke);
                 lineNo++;
+                
+                for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext(); ) {
+                    EditorBeanField editorBeanField = fieldIter.next();
+                    if( ! editorBeanField.isVisible() ) {
+                        continue;
+                    }
+                    String label = editorBeanField.getLabel();
+            
+                    Bean bean = null;
+
+                    switch (editorBeanField.getFieldType()) {
+    //                    case title:
+    //                        // label separateur de rubrique
+    //                        keyStroke = ((FieldTitle) field).getKeyStroke();
+    //                        break;
+    //
+                        case eventType:
+                            bean = new BeanEventType(dataManager.getCompletionProvider());
+                            break;
+
+                        case indiBirthDate:
+                            label = label.substring(0,5)+". (Alt-B)";
+                            bean = new BeanDate();
+                            break;
+                        case eventDate:
+                        case wifeBirthDate:
+                            bean = new BeanDate();
+                            break;
+
+                        case indiLastName:
+                        case indiMarriedLastName:
+                        case indiMotherLastName:
+                        case wifeLastName:
+                        case wifeMarriedLastName:
+                        case wifeMotherLastName:
+                        case witness1LastName:
+                        case witness2LastName:
+                        case witness3LastName:
+                        case witness4LastName:
+                            // j'affiche le bean d'edition du nom
+                            bean = new BeanLastName(dataManager.getCompletionProvider());
+                            break;
+                        case indiFatherLastName:
+                            label += " (Alt-X)";
+                            bean = new BeanLastName(dataManager.getCompletionProvider());
+                            break;
+                        case wifeFatherLastName:
+                            label += " (Alt-Y)";
+                            bean = new BeanLastName(dataManager.getCompletionProvider());
+                            break;
+
+                        case indiFirstName:
+                        case indiMarriedFirstName:
+                        case indiFatherFirstName:
+                        case indiMotherFirstName:
+                        case wifeFirstName:
+                        case wifeMarriedFirstName:
+                        case wifeFatherFirstName:
+                        case wifeMotherFirstName:
+                        case witness1FirstName:
+                        case witness2FirstName:
+                        case witness3FirstName:
+                        case witness4FirstName:
+                            bean = new BeanFirstName(dataManager.getCompletionProvider());
+                            break;
+
+                        case indiSex:
+                        //case indiMarriedSex:
+                        case wifeSex:
+                        //case wifeMarriedSex:
+                            bean = new BeanSex();
+                            break;
+
+                        case indiAge:
+                            label += " (Alt-A)";
+                            bean = new BeanAge();
+                            break;
+
+                        case indiFatherAge:
+                        case indiMotherAge:
+                        case wifeAge:
+                        case wifeFatherAge:
+                        case wifeMotherAge:
+                            bean = new BeanAge();
+                            break;
+
+                        case indiMarriedDead:
+                        case indiFatherDead:
+                        case indiMotherDead:
+                        case wifeMarriedDead:
+                        case wifeFatherDead:
+                        case wifeMotherDead:
+                            bean = new BeanDead();
+                            break;
+
+                        case indiOccupation:
+                        case indiMarriedOccupation:
+                        case indiFatherOccupation:
+                        case indiMotherOccupation:
+                        case wifeOccupation:
+                        case wifeMarriedOccupation:
+                        case wifeFatherOccupation:
+                        case wifeMotherOccupation:
+                        case witness1Occupation:
+                        case witness2Occupation:
+                        case witness3Occupation:
+                        case witness4Occupation:
+                            bean = new BeanOccupation(dataManager.getCompletionProvider());
+                            break;
+
+                        case indiBirthPlace:
+                        case wifePlace:
+                        case indiResidence:
+                        case indiMarriedResidence:
+                        case indiFatherResidence:
+                        case indiMotherResidence:
+                        case wifeResidence:
+                        case wifeMarriedResidence:
+                        case wifeFatherResidence:
+                        case wifeMotherResidence:
+                            bean = new BeanPlace(dataManager.getCompletionProvider());
+                            break;
+
+                        case indiComment:
+                        case indiMarriedComment:
+                        case indiFatherComment:
+                        case indiMotherComment:
+                        case wifeComment:
+                        case wifeMarriedComment:
+                        case wifeFatherComment:
+                        case wifeMotherComment:
+                        case witness1Comment:
+                        case witness2Comment:
+                        case witness3Comment:
+                        case witness4Comment:
+                        case cote:
+                        case parish:
+                        case generalComment:
+                            bean = new BeanSimpleValue();
+                            break;
+
+                        case freeComment:
+                            bean = new BeanFreeComment();
+                            break;
+
+                        case notary:
+                            bean = new BeanSimpleValue();
+                            break;
+                    }
+
+                    addRow(lineNo, label, bean, keyStroke);
+                    bean.setContext(record, editorBeanField.getFieldType());
+                    keyStroke = null;
+                    lineNo++;
+                }
+                
+            }
             }
 
             // j'ajoute un label pour occuper le bas du panel
@@ -600,7 +629,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             } else {
                 jButtonDelete.setEnabled(true);               
             }
-            Record record = recordModel.getRecord(currentRecordIndex);
+            //Record record = recordModel.getRecord(currentRecordIndex);
             if (record!= null) {
                 jTextFielRecordNo.setText(String.valueOf(record.recordNo));
             } else {
@@ -823,17 +852,17 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         // j'applique les modifications
         if (bean.hasChanged()) {
 
-            Record record = bean.getBeanField().getRecord();
-            FieldType fieldType =  bean.getBeanField().getFieldType();
+            Record record = bean.getRecord();
+            FieldType fieldType =  bean.getFieldType();
 
             // je memorise l'ancienne valeur
-            String oldValue = bean.getBeanField().getField().toString();
+            String oldValue = bean.getField().toString();
             
             // je commite le champ modifié (mise a jour du modele)
             bean.commit();
 
             // je demande confirmation à l'utilisateur si c'est un nouveau nom, prénom, profession ou TypeEventTag
-            String newValue = bean.getBeanField().getField().toString();
+            String newValue = bean.getField().toString();
             if (dataManager.getNewValueControlEnabled() && !newValue.isEmpty()) {
                 List<String> completionList = null;
                 // je determine la liste de completion qui doit etre utilisee
@@ -894,7 +923,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     // je demande à l'utilisateur s'il veut enregistrer cette nouvelle valeur
                     Toolkit.getDefaultToolkit().beep();
                     int choice = JOptionPane.showConfirmDialog(this,
-                            String.format(NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.confirmNewValue"), bean.getBeanField().getLabel(), newValue),
+                            String.format(NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.confirmNewValue"), EditorBeanField.getLabel(bean.getFieldType()), newValue),
                             NbBundle.getMessage(ReleveTopComponent.class, "ReleveOptionsPanel.jCheckBoxNewValueControl.text"),
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
@@ -904,9 +933,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     if (choice == 1 || choice == -1) {
                         // l'utisateur a refusé de confirmer la nouvelle valeur
                         // j'annule le commit
-                        bean.getBeanField().getField().setValue(oldValue);
+                        bean.getField().setValue(oldValue);
                         // je rafraichis l'affichage
-                        bean.setContext(bean.getBeanField());
+                        bean.refresh();
                         // je redonne le focus au champ
                         bean.requestFocusInWindow();
                         // j'interromps le tratitement
@@ -920,79 +949,47 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 recordModel.fieldChanged(record, bean.getField(), oldValue);
             }
 
-            // je mets a jour les statistiques des sexes/prénoms
+            //je mets à jour la liste de completion des noms, prénoms, professions et type d'évènements
+            // et les statistiques des sexes/prénoms
             switch (fieldType) {
+                //je mets à jour la completion des prénoms
                 case indiFirstName :
                     if ( record.getIndiFirstName() != null &&  !record.getIndiFirstName().isEmpty()) {
                         record.getIndiSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiFirstName().getValue())) ;
                         refreshBeanField(FieldType.indiSex);
                     }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
-                    break;
-                case indiSex :
-                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiFirstName().getValue(), oldValue, record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getIndiSex().getValue(), oldValue, record.getIndiSex().getValue());
                     break;
                 case indiMarriedFirstName :
-//                    if ( record.getIndiMarriedFirstName() != null &&  !record.getIndiMarriedFirstName().isEmpty() && record.getIndiMarriedSex().getFirstNameSex() == FieldSex.UNKNOWN) {
-//                        record.getIndiMarriedSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiMarriedFirstName())) ;
-//                        refreshBeanField(fieldType.indiMarriedSex);
-//                    }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiMarriedFirstName().getValue(), record.getIndiSex().getOppositeString());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getIndiSex().getOppositeString(), oldValue, record.getIndiSex().getOppositeString());
                     break;
-//                case indiMarriedSex :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiMarriedFirstName(), oldValue, record.getIndiMarriedFirstName(), record.getIndiMarriedSex().getValue());
-//                    break;
                 case indiFatherFirstName :
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.MALE_STRING, record.getIndiFatherFirstName().getValue(), FieldSex.MALE_STRING);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);
                     break;
                 case indiMotherFirstName :
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.FEMALE_STRING, record.getIndiFirstName().getValue(), FieldSex.FEMALE_STRING);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);
                     break;
                 case wifeFirstName :
                     if ( record.getWifeFirstName() != null &&  !record.getWifeFirstName().isEmpty() ) {
                         record.getWifeSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeFirstName().getValue())) ;
                         refreshBeanField(FieldType.wifeSex);
                     }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getValue(), record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
-                    break;
-                case wifeSex :
-                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeFirstName().getValue(), oldValue, record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getWifeSex().getValue(), oldValue, record.getWifeSex().getValue());
                     break;
                 case wifeMarriedFirstName :
-//                    if ( record.getWifeMarriedFirstName() != null &&  !record.getWifeMarriedFirstName().isEmpty() && record.getWifeMarriedSex().getFirstNameSex() == FieldSex.UNKNOWN) {
-//                        record.getWifeMarriedSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeMarriedFirstName())) ;
-//                        refreshBeanField(fieldType.wifeMarriedSex);
-//                    }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getOppositeString(), record.getWifeMarriedFirstName().getValue(), record.getWifeSex().getOppositeString());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getWifeSex().getOppositeString(), oldValue, record.getWifeSex().getOppositeString());
                     break;
-//                case wifeMarriedSex :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeMarriedFirstName(), oldValue, record.getWifeMarriedFirstName(), record.getWifeMarriedSex().getValue());
-//                    break;
                 case wifeFatherFirstName :
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.MALE_STRING, record.getWifeFatherFirstName().getValue(),  FieldSex.MALE_STRING);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);
                     break;
                 case wifeMotherFirstName :
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.FEMALE_STRING, record.getWifeMotherFirstName().getValue(), FieldSex.FEMALE_STRING);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), FieldSex.FEMALE_STRING, oldValue, FieldSex.FEMALE_STRING);
                     break;
-            }
-
-
-            //je mets à jour la liste de completion des noms, prénoms, professions et type d'évènements
-            switch (fieldType) {
-                case indiFirstName :
-                case indiMarriedFirstName :
-                case indiFatherFirstName :
-                case indiMotherFirstName :
-                case wifeFirstName :
-                case wifeMarriedFirstName :
-                case wifeFatherFirstName :
-                case wifeMotherFirstName :
                 case witness1FirstName :
                 case witness2FirstName :
                 case witness3FirstName :
                 case witness4FirstName :
-                    //je mets à jour la completion des prénoms
-                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), oldValue);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), FieldSex.UNKNOWN_STRING, oldValue, FieldSex.UNKNOWN_STRING);
                     break;
                 case indiLastName :
                 case indiMarriedLastName :
@@ -1007,7 +1004,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 case witness3LastName :
                 case witness4LastName :
                     //je mets à jour la completion des noms
-                    dataManager.getCompletionProvider().updateLastName(bean.getBeanField().getField(), oldValue);
+                    dataManager.getCompletionProvider().updateLastName(bean.getField(), oldValue);
                     break;
                 case indiOccupation:
                 case indiMarriedOccupation:
@@ -1022,16 +1019,17 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 case witness3Occupation:
                 case witness4Occupation:
                     //je mets à jour la completion des professions
-                    dataManager.getCompletionProvider().updateOccupation(bean.getBeanField().getField(), oldValue);
+                    dataManager.getCompletionProvider().updateOccupation(bean.getField(), oldValue);
                     break;
                 case eventType:
                     //je mets à jour la completion des types d'évènement
-                    dataManager.getCompletionProvider().updateEventType((FieldEventType)bean.getBeanField().getField(), oldValue);
+                    dataManager.getCompletionProvider().updateEventType((FieldEventType)bean.getField(), oldValue);
                     break;
             }
 
             // Si l'utilisateur vient de changer la date ou le nom de l'individu
             // je vérifie s'il y a un nouveau doublon.
+            // et j'affiche un message d'avertissement si un doublon existe
             if ( fieldType.equals(Field.FieldType.eventDate)
                 ||fieldType.equals(Field.FieldType.indiFirstName)
                 ||fieldType.equals(Field.FieldType.indiLastName) ) {
@@ -1057,8 +1055,15 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             // je memorise la nouvelle valeur du numero de photo
             if (fieldType == Field.FieldType.freeComment && dataManager.getCopyFreeCommentEnabled() == true  ) {
                 // je copie le numero de photo dans la valeur par defaut
-                String defaultValue = bean.getField().toString();
-                dataManager.setDefaultFreeComment(defaultValue);
+                dataManager.setDefaultFreeComment(bean.getField().toString());
+            }
+            if ( fieldType == Field.FieldType.notary  && dataManager.getCopyFreeCommentEnabled() == true  ) {
+                // je copie le notaire dans la valeur par defaut
+                dataManager.setDefaultNotary(bean.getField().toString());
+            }
+            if ( fieldType == Field.FieldType.cote  && dataManager.getCopyFreeCommentEnabled() == true  ) {
+                // je copie la cote dans la valeur par defaut
+                dataManager.setDefaultCote(bean.getField().toString());
             }
 
             if (recordModel != null) {
@@ -1204,13 +1209,13 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         jLabelPlace.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelPlace.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabelPlace.setName("");
+        jLabelPlace.setName(""); // NOI18N
         jLabelPlace.setOpaque(true);
         jPanelPlace.add(jLabelPlace, java.awt.BorderLayout.CENTER);
 
         jButtonPlace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/registre.png"))); // NOI18N
         jButtonPlace.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.toolTipText")); // NOI18N
-        jButtonPlace.setName("");
+        jButtonPlace.setName(""); // NOI18N
         jButtonPlace.setPreferredSize(new java.awt.Dimension(29, 25));
         jButtonPlace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1339,7 +1344,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
-                if ( bean.getBeanField().getFieldType() == fieldType ) {
+                if ( bean.getFieldType() == fieldType ) {
                     bean.requestFocusInWindow();
                     break;
                 }
@@ -1357,31 +1362,15 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
-                if ( bean.getBeanField().getFieldType() == fieldType ) {
-                    bean.setContext(bean.getBeanField());
+                if ( bean.getFieldType() == fieldType ) {
+                    bean.refresh();
                     break;
                 }
             }
         }
     }
 
-    public int getEditorWidth() {
-        if (recordModel != null) {
-            return Integer.valueOf(NbPreferences.forModule(ReleveEditor.class).get(
-                    recordModel.getClass().getSimpleName()+"Width",
-                    "270"));
-        } else {
-            return 270;
-        }
-    }
-
-    public void putEditorWidth(int width) {
-        if (recordModel != null) {
-            NbPreferences.forModule(ReleveEditor.class).put(
-                    recordModel.getClass().getSimpleName()+"Width",
-                    String.valueOf(width));
-        }
-    }
+    
 
     /**
      * met a jour le lieu en tete de l'editeur
@@ -1391,5 +1380,5 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     public void updatePlace(String place) {
         jLabelPlace.setText(place);
     }
-
+    
 }

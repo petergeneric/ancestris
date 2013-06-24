@@ -15,4 +15,6 @@ public interface PlaceManager {
     public String getCountyName();
     public String getStateName();
     public String getCountryName();
+    public String getSourceTitle();
+
 }

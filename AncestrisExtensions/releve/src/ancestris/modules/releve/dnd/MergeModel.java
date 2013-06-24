@@ -1,5 +1,7 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipant;
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -8,17 +10,17 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
-import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
+import genj.gedcom.TagPath;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -49,11 +51,16 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         NOT_APPLICABLE
     }
 
+    protected MergeRecord record;
+    protected Gedcom gedcom;
+    // type de participant 
+    protected MergeParticipantType participantType ;
+    protected MergeParticipant participant ;
+
     private EnumMap<RowType, MergeRow> dataMap = new EnumMap<RowType, MergeRow>(RowType.class);
     private List<MergeRow> dataList = new ArrayList<MergeRow>();
     private int nbMatch = 0;
     private int nbMatchMax = 0;
-
 
     static protected List<MergeModel> createMergeModel(MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity) throws Exception {
         return createMergeModel(mergeRecord, gedcom, selectedEntity, false);
@@ -61,435 +68,37 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
     /**
      * model factory
-     * cree un model qui compare un releve et une entité selectionnée dans le
-     * gedcom.
-     * Si selectedEntity = null , le modele recherche les entités compatibles dans
-     * le gedcom.
+     * cree un liste contenant un modele comparant le releve et l'entité
+     * selectionnée dans le gedcom.
+     * Si selectedEntity = null, la liste contient les modeles comparant le relevé
+     * avec les entités du gedcom dont les noms, prenoms, et dates de naissance,
+     * mariage et décès sont compatibles avec le relevé.
      * @param mergeRecord   releve
      * @param gedcom
-     * @param selectedEntity
+     * @param selectedEntity entité sélectionnée dans le gedcom
      * @return
      */
     static protected List<MergeModel> createMergeModel(MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
-        List<MergeModel> models = new ArrayList<MergeModel>();
+        List<MergeModel> models;
         if( mergeRecord.getType() ==  MergeRecord.RecordType.Birth) {
-            if ( selectedEntity instanceof Fam ) {
-                // 1.1) Record Birth : l'entité selectionnée est une famille
-                Fam family = (Fam) selectedEntity;
-                // j'ajoute un nouvel individu
-                models.add(new MergeModelBirth(mergeRecord, gedcom, null, family));
-                // je recherche les enfants de la famille sélectionnée compatibles avec le releve
-                List<Indi> sameChildren = MergeQuery.findSameChild(mergeRecord, gedcom, family);
-                // j'ajoute les enfants compatibles
-                for(Indi samedIndi : sameChildren) {
-                    models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
-                }
-            } else if ( selectedEntity instanceof Indi ) {
-                // 1.2) Record Birth : l'entité selectionnée est un individu
-                Indi selectedIndi = (Indi) selectedEntity;
-
-                // je cherche les familles compatibles avec le releve de naissance
-                List<Fam> families = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-
-                // j'ajoute l'individu selectionné par dnd 
-                if (selectedIndi.getFamilyWhereBiologicalChild() != null ) {
-                    // j'ajoute l'individu selectionné par dnd
-                    models.add(new MergeModelBirth(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
-                } else {
-                    models.add(new MergeModelBirth(mergeRecord, gedcom, selectedIndi ,(Fam) null));
-                    // j'ajoute l'individu selectionné par dnd avec les familles compatibles
-                    for(Fam family : families) {
-                        models.add(new MergeModelBirth(mergeRecord, gedcom, selectedIndi, family));
-                    }
-                }
-                
-                // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
-                // releve et avec les dates de naissance compatibles et les parents compatibles)
-                // en excluant l'individu selectionne s'il a deja une famille
-                List<Indi> sameIndis ;
-                if ( selectedIndi.getFamilyWhereBiologicalChild() != null ) {
-                    // l'individu est lié a une famille précise, je l'exclue de la recherche
-                    sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, selectedIndi);
-                } else {
-                    // l'individu n'est pas lié a une famille précise, je l'inclue dans la recherche
-                    sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
-                }
-                // j'ajoute les individus compatibles
-                for(Indi samedIndi : sameIndis) {
-                    // j'ajoute les familles compatibles
-                    Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild() ;
-                    if ( sameIndiFamily != null) {
-                        models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, sameIndiFamily));
-                    } else {
-                        for(Fam family : families) {
-                            models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, family));
-                        }
-                    }
-                }
-              
-            } else {
-                // 1.3) Record Birth : pas d'entité selectionnee
-
-                // j'ajoute un nouvel individu , sans famille associée
-                models.add(new MergeModelBirth(mergeRecord, gedcom));
-
-                // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
-                // releve et avec les dates de naissance compatibles et les parents compatibles)
-                List<Indi> sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
-
-                // je cherche les familles compatibles avec le releve de naissance
-                List<Fam> families = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-
-                // j'ajoute un nouvel individu avec les familles compatibles
-                for(Fam family : families) {
-                    models.add(new MergeModelBirth(mergeRecord, gedcom, null, family));
-                }
-
-                // j'ajoute les individus compatibles avec la famille de chacun
-                for(Indi samedIndi : sameIndis) {
-                    Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild() ;
-                    if ( sameIndiFamily != null) {
-                        // j'ajoute l'individus compatible avec sa famille
-                        models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, sameIndiFamily));
-                    } else {
-                        // j'ajoute l'individus compatible sans famille
-                        models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, (Fam) null));
-                        // j'ajoute l'individus compatible avec les familles compatibles
-                        for(Fam family : families) {
-                            models.add(new MergeModelBirth(mergeRecord, gedcom, samedIndi, family));
-                        }
-                    }
-                }
-
-                if (showNewParents) {
-                    // j'ajoute un nouvel individu avec les couples qui ne sont pas des familles
-                    // mais qui pourraient être ses parents
-                    List<Indi> fathers = new ArrayList<Indi>();
-                    List<Indi> mothers = new ArrayList<Indi>();
-                    MergeQuery.findFatherMotherCompatibleWithBirthRecord(mergeRecord, gedcom, families, fathers, mothers);
-                    for(Indi father : fathers) {
-                        for(Indi mother : mothers) {
-                            models.add(new MergeModelBirth(mergeRecord, gedcom, father, mother));
-                        }
-                    }
-                }
-            }
-           
+            models = MergeModelBirth.createMergeModelBirth(mergeRecord, gedcom, selectedEntity, showNewParents);
         } else  if( mergeRecord.getType() ==  MergeRecord.RecordType.Marriage) {
-            if ( selectedEntity instanceof Fam ) {
-                // 2.1) Record Marriage : l'entité selectionnée est une famille
-                Fam selectedFamily = (Fam) selectedEntity;
-
-                // j'ajoute un modele avec la famille selectionne
-                models.add(new MergeModelMarriage(mergeRecord, gedcom, selectedFamily));
-
-            } else if ( selectedEntity instanceof Indi ) {
-                // 2.2) Record Marriage : l'entité selectionnée est un individu
-                Indi selectedIndi = (Indi) selectedEntity;
-
-                // je cherche les familles avec l'individu selectionné
-                Fam[] families = selectedIndi.getFamiliesWhereSpouse();
-                // j'ajoute les familles compatibles
-                for(Fam family : families) {
-                    models.add(new MergeModelMarriage(mergeRecord, gedcom, family));
-                }
-
-                if (showNewParents) {
-                    // j'ajoute les parents possibles non maries entre eux
-                    List<Indi> husbands = new ArrayList<Indi>();
-                    List<Indi> wifes = new ArrayList<Indi>();
-                    if (selectedIndi.getSex() == PropertySex.MALE) {
-                        models.add(new MergeModelMarriage(mergeRecord, gedcom, selectedIndi, null));
-                        husbands.add(selectedIndi);
-                    } else if (selectedIndi.getSex() == PropertySex.FEMALE) {
-                        models.add(new MergeModelMarriage(mergeRecord, gedcom, null, selectedIndi));
-                        wifes.add(selectedIndi);
-                    }
-                    MergeQuery.findHusbanWifeCompatibleWithMarriageRecord(mergeRecord, gedcom, Arrays.asList(families), husbands, wifes);
-                    for (Indi husband : husbands) {
-                        for (Indi wife : wifes) {
-                            //TODO  rechercher la famille de l'epoux et la famille de l'epouse et la prendre en compte si elle existe
-                            models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wife));
-                        }
-                    }
-                }
-
-
-            } else {
-                // 2.3) Record Marriage : pas d'entité selectionnee
-
-                // j'ajoute une nouvelle famille
-                models.add(new MergeModelMarriage(mergeRecord, gedcom));
-
-                // je recherche les familles compatibles
-                List<Fam> families = MergeQuery.findFamilyCompatibleWithMarriageRecord(mergeRecord, gedcom, null);
-                // j'ajoute les familles compatibles
-                for(Fam family : families) {
-                    models.add(new MergeModelMarriage(mergeRecord, gedcom, family));
-                }
-
-                // je recherche les individus compatibles avec l'epoux et l'epouse
-                List<Indi> husbands = new ArrayList<Indi>();
-                List<Indi> wifes = new ArrayList<Indi>();
-                MergeQuery.findHusbanWifeCompatibleWithMarriageRecord(mergeRecord, gedcom, families, husbands, wifes);
-                for(Indi husband : husbands) {
-                    for(Indi wife : wifes) {
-                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wife));
-                    }
-                    models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, null));
-                }
-                for(Indi wife : wifes) {
-                    models.add(new MergeModelMarriage(mergeRecord, gedcom, null, wife));
-                }
-
-                // je recherche les familles des parents compatibles qui ne sont pas
-                // dans les modeles precedents
-                if (showNewParents ||
-                    (showNewParents
-                       && !mergeRecord.getIndiFatherFirstName().isEmpty()
-                       && !mergeRecord.getIndiMotherFirstName().isEmpty()
-                       && !mergeRecord.getIndiMotherLastName().isEmpty()
-                       
-                       ) ) {
-
-                    List<Fam> husbandFamilies = new ArrayList<Fam>();
-                    List<Fam> wifeFamilies = new ArrayList<Fam>();
-
-                    for (Fam husbandFamily : MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom) ) {
-                        Indi[] children = husbandFamily.getChildren();
-
-                        boolean foundHusband = false;
-
-                        for (int i = 0; i < children.length; i++) {
-                            // l'enfant ne doit pas être dans husbands déjà retenus
-                            if (husbands.contains(children[i])) {
-                                foundHusband = true;
-                            }
-                            // l'enfant ne doit pas être un epoux dans une famile déjà retenue
-                            for (Fam family : families) {
-                                if (family.getHusband().equals(children[i])) {
-                                    foundHusband = true;
-                                }
-                            }
-                        }
-                        if (!foundHusband ) {
-                           husbandFamilies.add(husbandFamily);
-                        }
-                    }
-
-                    for (Fam wifeFamily : MergeQuery.findFamilyCompatibleWithWifeParents(mergeRecord, gedcom) ) {
-                        Indi[] children = wifeFamily.getChildren();
-
-                        boolean foundWife = false;
-
-                        for (int i = 0; i < children.length; i++) {
-                            // l'enfant ne doit pas être dans husbands
-                            if (wifes.contains(children[i])) {
-                                foundWife = true;
-                            }
-                            // l'enfant ne doit pas être un epoux dasn une famile
-                            for (Fam family : families) {
-                                if (family.getWife().equals(children[i])) {
-                                    foundWife = true;
-                                }
-                            }
-                        }
-                        if (!foundWife ) {
-                           wifeFamilies.add(wifeFamily);
-                        }
-                    }
-
-                    for(Fam husbandFamily : husbandFamilies) {
-                        for(Fam wifeFamily : wifeFamilies) {
-                            models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, wifeFamily));
-                        }
-                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, (Fam)null));
-                    }
-                    for(Fam wifeFamily : wifeFamilies) {
-                        models.add(new MergeModelMarriage(mergeRecord, gedcom, (Fam)null, wifeFamily));
-                    }
-                }
-            }
-            
+            models = MergeModelMarriage.createMergeModelMarriage(mergeRecord, gedcom, selectedEntity, showNewParents);
         } else if( mergeRecord.getType() ==  MergeRecord.RecordType.Death) {
-            if ( selectedEntity instanceof Fam ) {
-                // 1.1) Record Death : l'entité selectionnée est une famille
-                Fam family = (Fam) selectedEntity;
-                // j'ajoute un nouvel individu
-                models.add(new MergeModelDeath(mergeRecord, gedcom, null, family));
-                // je recherche les enfants de la famille sélectionnée compatibles avec le releve
-                List<Indi> sameChildren = MergeQuery.findSameChild(mergeRecord, gedcom, family);
-                // j'ajoute les enfants compatibles
-                for(Indi samedIndi : sameChildren) {
-                    models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
-                }
-            } else if ( selectedEntity instanceof Indi ) {
-                // 1.2) Record Death : l'entité selectionnée est un individu
-                Indi selectedIndi = (Indi) selectedEntity;
-
-                // je recherche la famille avec l'ex conjoint
-                List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithMarried(mergeRecord, gedcom);
-
-                // je cherche les familles des parents compatibles avec le releve
-                List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-
-                 if ( !marriedFamilies.isEmpty()) {
-                    for(Fam family : marriedFamilies) {
-                        if (mergeRecord.getIndiSex() == PropertySex.MALE) {
-                            Indi husband = family.getHusband();
-                            if ( selectedIndi.compareTo(husband)==0) {
-                                Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, husbandParentFamily ));
-
-                                if ( husbandParentFamily == null ) {
-                                    // j'ajoute un nouvel individu avec les familles compatibles
-                                    for(Fam parentFamily : parentFamilies) {
-                                        models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, parentFamily ));
-                                    }
-                                }
-                            }
-                        } else {
-                            Indi wife = family.getWife();
-                            if ( selectedIndi.compareTo(wife)==0) {
-                                Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, wifeParentFamily));
-
-                                if ( wifeParentFamily == null ) {
-                                    // j'ajoute un nouvel individu avec les familles compatibles
-                                    for(Fam parentFamily : parentFamilies) {
-                                        models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, parentFamily ));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    // l'individu n'a pas d'ex conjoint
-
-                    // je cherche les familles compatibles avec le releve de deces
-                    List<Fam> families = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-
-                    // j'ajoute l'individu selectionné par dnd
-                    if (selectedIndi.getFamilyWhereBiologicalChild() != null ) {
-                        // j'ajoute l'individu selectionné par dnd
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
-                    } else {
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi ,(Fam) null));
-                        // j'ajoute l'individu selectionné par dnd avec les familles compatibles
-                        for(Fam family : families) {
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, family));
-                        }
-                    }
-
-                    // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
-                    // releve et avec les dates de naissance compatibles et les parents compatibles)
-                    // en excluant l'individu selectionne s'il a deja une famille
-                    List<Indi> sameIndis ;
-                    if ( selectedIndi.getFamilyWhereBiologicalChild() != null ) {
-                        // l'individu est lié a une famille précise, je l'exclue de la recherche
-                        sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, selectedIndi);
-                    } else {
-                        // l'individu n'est pas lié a une famille précise, je l'inclue dans la recherche
-                        sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
-                    }
-                    // j'ajoute les individus compatibles
-                    for(Indi samedIndi : sameIndis) {
-                        // j'ajoute les familles compatibles
-                        Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild() ;
-                        if ( sameIndiFamily != null) {
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, sameIndiFamily));
-                        } else {
-                            for(Fam family : families) {
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, family));
-                            }
-                        }
-                    }
-                }
-
+            models = MergeModelDeath.createMergeModelDeath(mergeRecord, gedcom, selectedEntity, showNewParents);
+        } else  if( mergeRecord.getType() ==  MergeRecord.RecordType.Misc ) {
+            if ( mergeRecord.getEventTypeTag()== MergeRecord.EventTypeTag.MARC ) {
+                // Contrat de mariage
+                models = MergeModelMiscMarc.createMergeModelMiscMarc(mergeRecord, gedcom, selectedEntity, showNewParents);
+            } else if ( mergeRecord.getEventTypeTag()== MergeRecord.EventTypeTag.WILL ) {
+                // Testament
+                models = MergeModelMiscWill.createMergeModelMiscWill(mergeRecord, gedcom, selectedEntity, showNewParents);
             } else {
-                // 1.3) Record Death : pas d'entité selectionnee
-
-                // j'ajoute un nouvel individu , sans famille associée
-                models.add(new MergeModelDeath(mergeRecord, gedcom));
-
-                // je recherche la famille avec l'ex conjoint
-                List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithMarried(mergeRecord, gedcom);
-
-                // je cherche les familles des parents compatibles avec le releve
-                List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithIndiParents(mergeRecord, gedcom);
-
-                if ( !marriedFamilies.isEmpty()) {
-                    for(Fam family : marriedFamilies) {
-                        if (mergeRecord.getIndiSex() == PropertySex.MALE) {
-                            Indi husband = family.getHusband();
-                            Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, husbandParentFamily ));
-
-                            if ( husbandParentFamily == null ) {
-                                // j'ajoute un nouvel individu avec les familles compatibles
-                                for(Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, parentFamily ));
-                                }
-                            }
-                        } else {
-                            Indi wife = family.getWife();
-                            Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, wifeParentFamily));
-
-                            if ( wifeParentFamily == null ) {
-                                // j'ajoute un nouvel individu avec les familles compatibles
-                                for(Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, parentFamily ));
-                                }
-                            }
-                        }
-                    }
-
-                } else {
-                    // il n'y a pas de famille pour de l'ex conjoint
-                    
-                    // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
-                    // releve et avec les dates de naissance compatibles et les parents compatibles)
-                    List<Indi> sameIndis = MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, null);
-
-                    // j'ajoute un nouvel individu avec les familles compatibles
-                    for(Fam family : parentFamilies) {
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, null, family));
-                    }
-
-                    // j'ajoute les individus compatibles avec la famille de chacun
-                    for(Indi samedIndi : sameIndis) {
-                        Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild() ;
-                        if ( sameIndiFamily != null) {
-                            // j'ajoute l'individus compatible avec sa famille
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, sameIndiFamily));
-                        } else {
-                            // j'ajoute l'individus compatible sans famille
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, (Fam) null));
-                            // j'ajoute l'individus compatible avec les familles compatibles
-                            for(Fam family : parentFamilies) {
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, family));
-                            }
-                        }
-                    }
-                }
-
-                if (showNewParents) {
-                    // j'ajoute un nouvel individu avec les couples qui ne sont pas des familles
-                    // mais qui pourraient être ses parents
-                    List<Indi> fathers = new ArrayList<Indi>();
-                    List<Indi> mothers = new ArrayList<Indi>();
-                    MergeQuery.findFatherMotherCompatibleWithBirthRecord(mergeRecord, gedcom, parentFamilies, fathers, mothers);
-                    for(Indi father : fathers) {
-                        for(Indi mother : mothers) {
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, father, mother));
-                        }
-                    }
-                }
-
+                // Autre evenement (quittance, obligation, emancipation ...;
+                models = MergeModelMiscOther.createMergeModelMiscOther(mergeRecord, gedcom, selectedEntity, showNewParents);
             }
-
         } else {
+            // je retourne une liste de modeles vide.
              models = new ArrayList<MergeModel>();
         }
 
@@ -498,6 +107,26 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
         return models;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // constructeurs
+    ///////////////////////////////////////////////////////////////////////////
+
+    MergeModel(MergeRecord record, Gedcom gedcom) {
+        this(record, MergeParticipantType.participant1, gedcom);
+    }
+
+    MergeModel(MergeRecord record, MergeParticipantType participantType, Gedcom gedcom) {
+        this.record = record;
+        this.gedcom = gedcom;
+        this.participantType = participantType;
+        this.participant = record.getParticipant(participantType);
+    }
+
+    
+   ///////////////////////////////////////////////////////////////////////////
+    // ajout de lignes dans le modele
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * ajoute une ligne dans le modele
@@ -533,12 +162,40 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 mergeRow.merge = false;
                 mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
             } else {
-                if ( rowType== RowType.IndiFirstName || rowType == RowType.IndiLastName
-                     || rowType== RowType.IndiFatherFirstName || rowType == RowType.IndiFatherLastName
-                     || rowType== RowType.IndiMotherFirstName || rowType == RowType.IndiMotherLastName
-                     || rowType== RowType.WifeFirstName || rowType == RowType.WifeLastName
-                     || rowType== RowType.WifeFatherFirstName || rowType == RowType.WifeFatherLastName
-                     || rowType== RowType.WifeMotherFirstName || rowType == RowType.WifeMotherLastName
+                if ( rowType == RowType.IndiLastName
+                     || rowType == RowType.IndiMarriedLastName
+                     || rowType == RowType.IndiFatherLastName
+                     || rowType == RowType.IndiMotherLastName
+                     || rowType == RowType.WifeLastName
+                     || rowType == RowType.WifeMarriedLastName
+                     || rowType == RowType.WifeFatherLastName
+                     || rowType == RowType.WifeMotherLastName
+                   ) {
+                    if ( entityValue.isEmpty()) {
+                        mergeRow.merge = !recordValue.equals(entityValue);
+                        mergeRow.compareResult = mergeRow.merge ? CompareResult.COMPATIBLE : CompareResult.EQUAL;
+                    } else {
+                        mergeRow.merge = false;
+                        // il suffit que l'un des noms soit identique 
+                        String[] names1 = recordValue.split(",");
+                        String[] names2 = entityValue.split(",");
+                        boolean result = false;
+                        for (String name1 : names1) {
+                            for (String name2 : names2) {
+                                result |= name1.trim().equals(name2.trim());
+                            }
+                        }
+                        mergeRow.compareResult = !result ? CompareResult.CONFLIT : CompareResult.EQUAL;
+                    }
+
+                } else if ( rowType== RowType.IndiFirstName
+                     || rowType== RowType.IndiMarriedFirstName
+                     || rowType== RowType.IndiFatherFirstName
+                     || rowType== RowType.IndiMotherFirstName
+                     || rowType== RowType.WifeFirstName
+                     || rowType== RowType.WifeMarriedFirstName
+                     || rowType== RowType.WifeFatherFirstName
+                     || rowType== RowType.WifeMotherFirstName
                    ) {
                     if ( entityValue.isEmpty()) {
                         mergeRow.merge = !recordValue.equals(entityValue);
@@ -549,7 +206,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     }
 
                 } else if (rowType== RowType.EventComment) {
-                    // merge actif si le commenatire existant dans l'entité ne contient pas deja le commentaire du relevé.
+                    // merge actif si le commentaire existant dans l'entité ne contient pas deja le commentaire du relevé.
                     mergeRow.merge = !entityValue.contains(recordValue);
                     mergeRow.compareResult = !entityValue.equals(recordValue) ? CompareResult.COMPATIBLE : CompareResult.EQUAL;
                 } else {
@@ -588,11 +245,12 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.rowType = rowType;
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.entityValue = entityValue;
-        mergeRow.recordValue = recordValue;
-        recordValue.getPhrase();
-
+        // je clone la valeur , y compris la phase
+        PropertyDate cloneDate = new PropertyDate();
+        cloneDate.setValue(recordValue.getFormat(), recordValue.getStart(), recordValue.getEnd(), recordValue.getPhrase());
+        mergeRow.recordValue = cloneDate;
+        
         if (isRowParentApplicable(rowType)) {
-
             // je compare les valeurs par defaut du releve et de l'entite
             if (recordValue == null || (recordValue != null && !recordValue.isComparable()) ) {
                 mergeRow.merge = false;
@@ -607,6 +265,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
                     case IndiBirthDate:
                     case IndiDeathDate:
+                    case IndiMarriedMarriageDate:
                     case IndiMarriedBirthDate:
                     case IndiMarriedDeathDate:
                     case IndiFatherBirthDate:
@@ -617,6 +276,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
                     case WifeBirthDate:
                     case WifeDeathDate:
+                    case WifeMarriedMarriageDate:
                     case WifeMarriedBirthDate:
                     case WifeMarriedDeathDate:
                     case WifeFatherBirthDate:
@@ -630,16 +290,21 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                             mergeRow.merge = false;
                             mergeRow.compareResult = CompareResult.EQUAL;
                         } else {
-                            // la valeur ne sont pas egales
-                            // je verifie si la date du releve est plus précise
-                            mergeRow.merge = MergeQuery.isBestBirthDate(recordValue, entityValue);
-                            // TODO traiter le cas ou les dates sont incompatibles
-                            //if (rowType==RowType.EventDate && (this instanceof MergeModelMarriage) ) {
+                            PropertyDate bestDate = MergeQuery.getMostAccurateDate(recordValue, entityValue);
+                            if( bestDate == null) {
+                                mergeRow.merge = false;
+                                mergeRow.compareResult = CompareResult.CONFLIT;
+                            } else if (bestDate == entityValue ) {
+                                mergeRow.merge = false;
                                 mergeRow.compareResult = MergeQuery.isCompatible(recordValue, entityValue) ? CompareResult.COMPATIBLE : CompareResult.CONFLIT;
-                            //} else {
-                            //    mergeRow.compareResult = CompareResult.COMPATIBLE;
-                            //}
+                            } else {
+                                // je propose une date plus precise que celle du releve
+                                cloneDate.setValue(bestDate.getFormat(), bestDate.getStart(), bestDate.getEnd(), bestDate.getPhrase());
+                                mergeRow.merge = true;
+                                mergeRow.compareResult = CompareResult.COMPATIBLE;
+                            } 
                         }
+
                         break;
                     default:
                         mergeRow.merge = recordValue.compareTo(entityValue) == 0;
@@ -705,6 +370,45 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
 
     /**
+     * ajoute une ligne dans le modele pour comparer le type d'evenement
+     * @param rowType
+     * @param label
+     * @param recordValues
+     * @param entityValues
+     */
+    void addRow(RowType rowType, String recordEventType, Property eventProperty) {
+         MergeRow mergeRow = new MergeRow();
+        dataMap.put(rowType, mergeRow);
+        dataList.add(mergeRow);
+        mergeRow.rowType = rowType;
+        mergeRow.label = getRowTypeLabel(rowType);
+        mergeRow.recordValue = recordEventType;
+        mergeRow.entityValue = eventProperty;
+        mergeRow.entityObject = null;
+
+        if (isRowParentApplicable(rowType)) {
+
+            if (eventProperty != null ) {
+                if (eventProperty.getPropertyValue("TYPE").equals(recordEventType)) {
+                    mergeRow.merge = false;
+                    mergeRow.compareResult = CompareResult.EQUAL;
+                } else {
+                    mergeRow.merge = true;
+                    mergeRow.compareResult = CompareResult.COMPATIBLE;
+                }
+            } else {
+                mergeRow.merge = !recordEventType.isEmpty();
+                mergeRow.compareResult = mergeRow.merge ? CompareResult.COMPATIBLE : CompareResult.NOT_APPLICABLE;
+            }
+        } else {
+            // ligne parent NOT_APPLICABLE
+            mergeRow.merge = false;
+            mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
+        }
+        mergeRow.merge_initial = mergeRow.merge;
+    }
+
+    /**
      * ajoute une ligne dans le modele pour comparer la famille
      * @param rowType
      * @param label
@@ -727,8 +431,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 mergeRow.merge = true;
                 mergeRow.compareResult = CompareResult.EQUAL;
             } else {
-                if ((rowType == RowType.IndiParentFamily && record.getIndiFatherLastName().isEmpty() && record.getIndiMotherLastName().isEmpty())
-                        || (rowType == RowType.WifeParentFamily && record.getWifeFatherLastName().isEmpty() && record.getWifeMotherLastName().isEmpty())
+                if ((rowType == RowType.IndiParentFamily && record.getIndi().getFatherLastName().isEmpty() && record.getIndi().getMotherLastName().isEmpty())
+                        || (rowType == RowType.WifeParentFamily && record.getWife().getFatherLastName().isEmpty() && record.getWife().getMotherLastName().isEmpty())
                         ) {
                     // j'interdis la creation d'un nouvelle famille si le nom du pere et de la mere sont vide.
                     mergeRow.merge = false;
@@ -773,6 +477,24 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.merge_initial = mergeRow.merge;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // accesseurs
+    ///////////////////////////////////////////////////////////////////////////
+
+    public MergeParticipantType getParticipantType() {
+        return participantType;
+    }
+
+    /**
+     * retoune le gedcom associé au modele
+     * @return gedcom
+     */
+    protected Gedcom getGedcom() {
+        return gedcom;
+    }
+
+    
+
     /**
      * retourne une ligne en fonction du type
      * @param rowType
@@ -803,7 +525,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
 
     /**
-     * retourne le nombre de chmaps egaux entre le releve et l'entité
+     * retourne le nombre de champs egaux entre le releve et l'entité
      * @param rowType
      * @return
      */
@@ -821,7 +543,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
     /**
      * compare le nombre de champs egaux du modele avec celui d'un autre modele
-     * pour savoir quel est le modele qui contient l'entité la plu proche du relevé.
+     * pour savoir quel est le modele qui contient l'entité la plus proche du relevé.
      * @param object
      * @return
      */
@@ -842,15 +564,37 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
     
     // methodes abstraites
-    protected abstract void copyRecordToEntity() throws Exception;
+    protected abstract Property copyRecordToEntity() throws Exception;
     protected abstract String getTitle();
-    protected abstract String getSummary(Entity selectedEntity);
+    public abstract String getSummary(Entity selectedEntity);
     protected abstract Entity getSelectedEntity();
-    protected abstract Gedcom getGedcom();
-
+    
     /**
-     * i
+     * cree une association entre associatedProperty et l'entité séelctionné dans 
+     * le modele
+     * @param associatedProperty1
+     * @throws Exception
      */
+    protected void copyAssociation(Property associatedProperty1, Property associatedProperty2) throws Exception {
+        PropertyXRef asso = (PropertyXRef)associatedProperty2.addProperty("ASSO", '@'+associatedProperty1.getEntity().getId()+'@');
+        TagPath anchor = associatedProperty1.getPath(true);
+
+        asso.addProperty("RELA", anchor==null ? "Présent" : "Présent"+'@'+anchor.toString() );
+
+        // je cree le lien à l'autre extermite de l'association
+        try {
+          asso.link();
+        } catch (GedcomException e) {
+          associatedProperty1.delProperty(asso);
+          throw e;
+        }
+    }        
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // focntions de gestion de la JTable
+    ///////////////////////////////////////////////////////////////////////////
+
     private String[] columnNames = {
         "",
         NbBundle.getMessage(MergeModel.class, "MergePanel.title.recordColumn"),
@@ -927,7 +671,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
 
     /**
-     * coche ou décoche une ligne en focntion de son numero d'ordre
+     * coche ou décoche une ligne en fonction de son numero d'ordre
      * @param rowNum
      * @param state
      */
@@ -937,8 +681,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
 
     /**
-     * coche ou décoche une ligne en fonction de sont type
-     * @param rowNum
+     * coche ou décoche une ligne en fonction de son type
+     * @param rowType 
      * @param state
      */
     void check(RowType rowType, boolean state) {
@@ -1049,31 +793,30 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         }
 
         // j'ajoute la page
-        if (sourcexref!=null )  {
+        if (sourcexref!=null && !record.getEventPage().isEmpty())  {
             String value = record.getEventPage();
-            Property pageProperty = sourcexref.addProperty("PAGE", value);
+            sourcexref.addProperty("PAGE", value);
         }
 
     }
 
     /**
      * ajoute la date et le lieu de naissance et une note pour indiquer la source
-     * de la naissance  dans la propriete BIRT d'un individu
+     * de la naissance dans la propriete BIRT d'un individu
+     *
      * @param indi      individu
      * @param birthDate date de naissance
      * @param place     lieu de naissance
      * @param record    releve servant a renseigner la note
      */
-    static protected void copyBirthDate(Indi indi, PropertyDate birthDate, String place, MergeRecord record ) {
+    static protected void copyBirthDate(Indi indi, MergeRow mergeRow, String place, MergeRecord record ) {
         Property birthProperty = indi.getProperty("BIRT");
         if (birthProperty == null) {
             birthProperty = indi.addProperty("BIRT", "");
         }
         // j'ajoute (ou remplace ) la date de la naissance
-        PropertyDate propertyDate = (PropertyDate) birthProperty.getProperty("DATE");
-        if (propertyDate == null) {
-            propertyDate = (PropertyDate) birthProperty.addProperty("DATE", "");
-        }
+        PropertyDate propertyDate = indi.getBirthDate(true);
+        PropertyDate birthDate = (PropertyDate) mergeRow.recordValue;
         propertyDate.setValue(birthDate.getValue());
 
         // j'ajoute le lieu
@@ -1086,98 +829,26 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         }
 
         // j'ajoute une note indiquant l'origine de la date de naissance
-        String noteText ;
-        switch ( record.getType()) {
-            case Birth:
-                noteText = MessageFormat.format("Naissance {0} déduite de  l''acte de naissance de {1} {2} le {3} ({4})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-                break;
-            case Marriage:
-                noteText = MessageFormat.format("Naissance {0} déduite de l''acte de mariage de {1} {2} et {3} {4} le {5} ({6})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getWifeFirstName(),
-                    record.getWifeLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-                break;
-            case Death:
-                noteText = MessageFormat.format("Naissance {0} déduite de l''acte de décès de {1} {2} le {3} ({4})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-                break;
-            default:
-                noteText = MessageFormat.format("Naissance {0} déduite de  l''acte {1} entre {2} {3} et {4} {5} le {6} ( {7}, {8})",
-                    propertyDate.getDisplayValue(),
-                    record.getEventType(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getWifeFirstName(),
-                    record.getWifeLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName(),
-                    record.getNotary()
-                    );
-        
-        }
-        
-        Property[] notes = birthProperty.getProperties("NOTE");
-        boolean found = false;
-        for( int i=0; i < notes.length ; i++ ) {
-            if( notes[i].getValue().contains(noteText)) {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            Property propertyNote = birthProperty.getProperty("NOTE");
-            if (propertyNote == null) {
-                // je cree une note .
-                propertyNote = birthProperty.addProperty("NOTE", "");
-            }
-
-            // j'ajoute le commentaire du deces a la fin de la note existante.
-            String value = propertyNote.getValue();
-            if (!noteText.isEmpty()) {
-                if (!value.isEmpty()) {
-                    value += "\n";
-                }
-                value += noteText;
-                propertyNote.setValue(value);
-            }
-        }
+        copyReferenceNote(birthProperty, record);
     }
 
     /**
      * ajoute la date et le lieu de naissance et une note pour indiquer la source
-     * de la naissance  dans la propriete BIRT d'un individu
+     * de la naissance  dans la propriete DEATH d'un individu
+     *
      * @param indi      individu
      * @param deathDate date de naissance
      * @param place     lieu de naissance
      * @param record    releve servant a renseigner la note
      */
-    static protected void copyDeathDate(Indi indi, PropertyDate deathDate, String place, MergeRecord record ) {
+    static protected void copyDeathDate(Indi indi, MergeRow mergeRow, String place, MergeRecord record ) {
         Property deathProperty = indi.getProperty("DEAT");
         if (deathProperty == null) {
             deathProperty = indi.addProperty("DEAT", "");
         }
         // j'ajoute (ou remplace ) la date de la naissance
-        PropertyDate propertyDate = (PropertyDate) deathProperty.getProperty("DATE");
-        if (propertyDate == null) {
-            propertyDate = (PropertyDate) deathProperty.addProperty("DATE", "");
-        }
+        PropertyDate propertyDate = indi.getDeathDate(true);
+        PropertyDate deathDate = (PropertyDate) mergeRow.recordValue;
         propertyDate.setValue(deathDate.getValue());
 
         // j'ajoute le lieu
@@ -1189,92 +860,20 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             propertyPlace.setValue(place);
         }
 
-        // j'ajoute une note indiquant l'origine de la date de naissance
-        String noteText ;
-        switch ( record.getType()) {
-            case Birth:
-                noteText = MessageFormat.format("Décès {0} déduit de  l''acte de naissance de {1} {2} le {3} ({4})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-                break;
-            case Marriage:
-                noteText = MessageFormat.format("Décès {0} déduit de l''acte de mariage de {1} {2} et {3} {4} le {5} ({6})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getWifeFirstName(),
-                    record.getWifeLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-                break;
-            case Death:
-                noteText = MessageFormat.format("Décès {0} déduit de l''acte de décès de {1} {2} le {3} ({4})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-                break;
-            default:
-                noteText = MessageFormat.format("Décès {0} déduits de  l''acte {1} entre {2} {3} et {4} {5} le {6} ( {7}, {8})",
-                    propertyDate.getDisplayValue(),
-                    record.getEventType(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getWifeFirstName(),
-                    record.getWifeLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName(),
-                    record.getNotary()
-                    );
-
-        }
-        
-        Property[] notes = deathProperty.getProperties("NOTE");
-        boolean found = false;
-        for( int i=0; i < notes.length ; i++ ) {
-            if( notes[i].getValue().contains(noteText)) {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {            
-            Property propertyNote = deathProperty.getProperty("NOTE");
-            if (propertyNote == null) {
-                // je cree une note .
-                propertyNote = deathProperty.addProperty("NOTE", "");
-            }
-
-            // j'ajoute le commentaire du deces a la fin de la note existante.
-            String value = propertyNote.getValue();
-            if (!noteText.isEmpty()) {
-                if (!value.isEmpty()) {
-                    value += "\n";
-                }
-                value += noteText;
-                propertyNote.setValue(value);
-            }
-        }
+        // j'ajoute une note indiquant l'origine de la date du deces
+        copyReferenceNote(deathProperty, record);
     }
-
 
     /**
      * ajoute la date de marriage et une note pour indiquer la source dans
      * la propriete MARR d'une famille
-     * de de cette date .
+     * 
      * @param family            famille de mariés
      * @param marriageDate      date de marriage
      * @param occupationDate    date du releve
      * @param record            releve servant a renseigner la note 
      */
-    static protected void copyMarriageDate(Fam family, PropertyDate marriageDate, MergeRecord record ) {
+    static protected void copyMarriageDate(Fam family, MergeRow mergeRow, MergeRecord record ) {
         // j'ajoute (ou remplace) la date du mariage des parents
         // je crée la propriété MARR
         Property marriageProperty = family.getProperty("MARR");
@@ -1282,72 +881,15 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             marriageProperty = family.addProperty("MARR", "");
         }
         // j'ajoute (ou remplace ) la date de la naissance
-        PropertyDate propertyDate = (PropertyDate) marriageProperty.getProperty("DATE");
+        PropertyDate propertyDate = (PropertyDate) marriageProperty.getProperty("DATE",false);
         if (propertyDate == null) {
             propertyDate = (PropertyDate) marriageProperty.addProperty("DATE", "");
         }
+        PropertyDate marriageDate = (PropertyDate) mergeRow.recordValue;
         propertyDate.setValue(marriageDate.getValue());
 
         // j'ajoute une note indiquant l'origine de la date de naissance
-        String noteText ;
-        switch ( record.getType()) {
-            case Birth:
-                noteText = MessageFormat.format("Date de mariage {0} déduite de l''acte de naissance de {1} {2} le {3} ({4})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-               break;
-            case Marriage:
-             noteText = MessageFormat.format("Date de mariage {0} déduite de l''acte de mariage de {1} {2} et {3} {4} le {5} ({6})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getWifeFirstName(),
-                    record.getWifeLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-                break;
-            case Death:
-            noteText = MessageFormat.format("Date de mariage {0} déduite de l''acte de décès de {1} {2} le {3} ({4})",
-                    propertyDate.getDisplayValue(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName()
-                    );
-                break;
-            default:
-             noteText = MessageFormat.format("Date de mariage {0} déduite de l''acte {0} entre {1} {2} et {3} {4} le {6} ({7}, {8})",
-                    propertyDate.getDisplayValue(),
-                    record.getEventType(),
-                    record.getIndiFirstName(),
-                    record.getIndiLastName(),
-                    record.getWifeFirstName(),
-                    record.getWifeLastName(),
-                    record.getEventDateDDMMYYYY(),
-                    record.getEventPlaceCityName(),
-                    record.getNotary()
-                    );
-        }
-        Property[] notes = marriageProperty.getProperties("NOTE");
-        boolean found = false;
-        for( int i=0; i < notes.length ; i++ ) {
-            if( notes[i].getValue().contains(noteText)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            if ( notes.length > 0 ) {
-                notes[0].setValue(notes[0].getValue()+ "\n" +noteText );
-            } else {
-                marriageProperty.addProperty("NOTE",noteText);
-            }
-        } 
+        copyReferenceNote(marriageProperty, record);
     }
 
     /**
@@ -1359,72 +901,195 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param occupationDate  date du releve
      * @param record    releve servant a renseigner la note de la profession
      */
-    static protected void copyOccupation(Indi indi, String occupation, MergeRecord record ) {
+    static protected void copyOccupation(Indi indi, String occupation, String residence, MergeRecord record ) throws GedcomException {
         PropertyDate occupationDate = record.getEventDate();
         // je cherche si l'individu a deja un tag OCCU a la meme date
-        Property occupationProperty = null ;  // = MergeQuery.findOccupation(indi, occupation, occupationDate);
-        if (occupationProperty == null) {
-            // j'ajoute la profession 
-            occupationProperty = indi.addProperty("OCCU", "");
+        Property occupationProperty = null;
+        // j'ajoute la profession ou la residence
+        if( !occupation.isEmpty()) {
+            occupationProperty = indi.addProperty("OCCU", "", getPropertyBestPosition(indi, occupationDate));
             occupationProperty.setValue(occupation);
+        } else if (!residence.isEmpty()) {
+            occupationProperty = indi.addProperty("RESI", "", getPropertyBestPosition(indi, occupationDate));
+        }
+
+        if (occupationProperty != null) {
             // j'ajoute la date
             PropertyDate date = (PropertyDate) occupationProperty.addProperty("DATE", "");
             date.setValue(occupationDate.getValue());
             // j'ajoute le lieu
-            if (!record.getEventPlace().isEmpty()) {
+            if (!residence.isEmpty()) {
                 PropertyPlace place = (PropertyPlace) occupationProperty.addProperty("PLAC", "");
-                place.setValue(record.getEventPlace());
+                place.setValue(residence);
             }
             
-            // j'ajoute une note indiqunt la source
-            String noteText ;
-            switch ( record.getType()) {
-                case Birth:
-                noteText = MessageFormat.format("Profession indiquée dans l''acte de naissance de {0} {1} le {2} ( {3} ) ",
-                        record.getIndiFirstName(),
-                        record.getIndiLastName(),
-                        record.getEventDateDDMMYYYY(),
-                        record.getEventPlaceCityName()
-                        );
-                    break;
-                case Marriage:
-                    noteText = MessageFormat.format("Profession indiquée dans l''acte de mariage de {0} {1} et {2} {3} le {4} ( {5} ) ",
-                        record.getIndiFirstName(),
-                        record.getIndiLastName(),
-                        record.getWifeFirstName(),
-                        record.getWifeLastName(),
-                        record.getEventDateDDMMYYYY(),
-                        record.getEventPlaceCityName()
-                        );
-                    break;
-                case Death:
-                    noteText = MessageFormat.format("Profession indiquée dans l''acte de décès de {0} {1} le {1} ( {2} ) ",
-                        record.getIndiFirstName(),
-                        record.getIndiLastName(),
-                        record.getEventDateDDMMYYYY(),
-                        record.getEventPlaceCityName()
-                        );
-                    break;
-                default:
-                    noteText = MessageFormat.format("Profession indiquée dans l''acte {0} entre {1} {2} et {3} {4} le {5} ( {6}, {7}) ",
-                        record.getEventType(),
-                        record.getIndiFirstName(),
-                        record.getIndiLastName(),
-                        record.getWifeFirstName(),
-                        record.getWifeLastName(),
-                        record.getEventDateDDMMYYYY(),
-                        record.getEventPlaceCityName(),
-                        record.getNotary()
-                        );
-            }
-            occupationProperty.addProperty("NOTE", noteText);
+            // j'ajoute une note indiquant la source
+            copyReferenceNote(occupationProperty, record);
         }
     }
 
-    
-    ///////////////////////////////////////////////////////////////////////////
-    // utilitaires
-    ///////////////////////////////////////////////////////////////////////////
+    /**
+     * ajoute une NOTE contenant les informations de reference de l'acte
+     * a une propriete.
+     * @param property
+     * @param record
+     */
+    static protected void copyReferenceNote(Property property, MergeRecord record) {
+        String noteText ;
+        PropertyDate propertyDate = (PropertyDate)property.getProperty("DATE");
+        String targetTagName = property.getTag();
+
+        if(targetTagName.equals("BIRT")) {
+            noteText = "Date de naissance {0} déduite de";
+        } else if(targetTagName.equals("DEAT")) {
+            noteText = "Date de décès {0} déduite de";
+        } else if(targetTagName.equals("MARR")) {
+            noteText = "Date de mariage {0} déduite de";
+        } else if(targetTagName.equals("OCCU")) {
+            noteText = "Profession indiquée dans";
+        } else if(targetTagName.equals("RESI")) {
+            noteText = "Domicile indiqué dans";
+        } else {
+            noteText = "Information indiquée dans";
+        }
+
+        switch ( record.getType()) {
+            case Birth:
+                noteText = MessageFormat.format(noteText+ " " + "l''acte de naissance de {1} {2} le {3} ({4})",
+                    propertyDate.getDisplayValue(),
+                    record.getIndi().getFirstName(),
+                    record.getIndi().getLastName(),
+                    record.getEventDateDDMMYYYY(),
+                    record.getEventPlaceCityName()
+                    );
+               break;
+            case Marriage:
+                noteText = MessageFormat.format(noteText+ " " + "l''acte de mariage de {1} {2} et {3} {4} le {5} ({6})",
+                    propertyDate.getDisplayValue(),
+                    record.getIndi().getFirstName(),
+                    record.getIndi().getLastName(),
+                    record.getWife().getFirstName(),
+                    record.getWife().getLastName(),
+                    record.getEventDateDDMMYYYY(),
+                    record.getEventPlaceCityName()
+                    );
+                break;
+            case Death:
+                noteText = MessageFormat.format(noteText+ " " + "l''acte de décès de {1} {2} le {3} ({4})",
+                    propertyDate.getDisplayValue(),
+                    record.getIndi().getFirstName(),
+                    record.getIndi().getLastName(),
+                    record.getEventDateDDMMYYYY(),
+                    record.getEventPlaceCityName()
+                    );
+                break;
+            default:
+                switch(record.getEventTypeTag()) {
+                    case WILL:
+                        noteText = MessageFormat.format(noteText+ " " + "l''acte de {1} de {2} {3} le {4} ({5})",
+                            propertyDate.getDisplayValue(),
+                            record.getEventType(),
+                            record.getIndi().getFirstName(),
+                            record.getIndi().getLastName(),
+                            record.getEventDateDDMMYYYY(),
+                            record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
+                            );
+                        break;
+                    case MARC:
+                        noteText = MessageFormat.format(noteText+ " " + "l''acte de contrat de mariage entre {2} {3} et {4} {5} le {6} ({7})",
+                            propertyDate.getDisplayValue(),
+                            record.getEventType(),
+                            record.getIndi().getFirstName(),
+                            record.getIndi().getLastName(),
+                            record.getWife().getFirstName(),
+                            record.getWife().getLastName(),
+                            record.getEventDateDDMMYYYY(),
+                            record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
+                            );
+                        break;
+                    default:
+                        noteText = MessageFormat.format(noteText+ " " + "l''acte ''{1}'' entre {2} {3} et {4} {5} le {6} ({7})",
+                            propertyDate.getDisplayValue(),
+                            record.getEventType(),
+                            record.getIndi().getFirstName(),
+                            record.getIndi().getLastName(),
+                            record.getWife().getFirstName(),
+                            record.getWife().getLastName(),
+                            record.getEventDateDDMMYYYY(),
+                            record.getEventPlaceCityName()+ (record.getNotary().isEmpty() ? "" : ", "+ record.getNotary() )
+                            );
+                        break;
+                }
+                break;
+        }
+
+        // je recherhe une NOTE deja presente dans la propriete qui
+        // contiendrait deja le texte à ajouter
+        Property[] notes = property.getProperties("NOTE");
+        boolean found = false;
+        for( int i=0; i < notes.length ; i++ ) {
+            if( notes[i].getValue().contains(noteText)) {
+                found = true;
+                break;
+            }
+        }
+
+        // J'ajoute le commentaire si aucune note existe deja avec le texte
+        if (!found) {
+            Property propertyNote = property.getProperty("NOTE");
+            if (propertyNote == null) {
+                // je cree une note .
+                propertyNote = property.addProperty("NOTE", "");
+            }
+
+            // j'ajoute le commentaire a la fin de la note existante.
+            String value = propertyNote.getValue();
+            if (!noteText.isEmpty()) {
+                if (!value.isEmpty()) {
+                    value += "\n";
+                }
+                value += noteText;
+                propertyNote.setValue(value);
+            }
+        }
+    }
+
+    /**
+     * retourne la position du propriété
+     *  - apres BIRT
+     *  - avant DEATH
+     *
+     * @param property
+     * @param propertyDate
+     */
+    static protected int getPropertyBestPosition(Property property, PropertyDate propertyDate) {
+        int birthPosition = -1;
+        int position = 0;
+        int resultPosition =0;
+        for( Property child : property.getProperties() ) {
+            if ( child.getTag().equals("BIRT")) {
+               birthPosition = position;
+               resultPosition = birthPosition+1;
+            } else if ( child.getTag().equals("DEAT")) {
+                // rien à faire
+            } else {
+                Property[] childDates = child.getProperties("DATE");
+                if ( childDates.length > 0 ) {
+                    try {
+                        if (!MergeQuery.isRecordBeforeThanDate(propertyDate, (PropertyDate) childDates[0], 0, 0)) {
+                            resultPosition = position + 1;
+                        }
+                    } catch (GedcomException ex) {
+                        // rien a faire
+                    }
+                }
+            }
+
+            position++;
+        }
+
+        return resultPosition;
+    }
 
     /**
      * concatene plusieurs commentaires dans une chaine , séparés par une virgule
@@ -1445,7 +1110,6 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 fieldSize += otherValue.length();
             }
         }
-
         return sb.toString();
     }
 
@@ -1549,12 +1213,14 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      */
     static protected enum RowType {
         Separator,
+        EventType,
         EventSource,
         EventPage,
         EventDate,
         EventPlace,
         EventComment,
         MarriageFamily,
+        MarriageDate,
         //  indi ///////////////////////////////////////////////////////////////////
         IndiFirstName,
         IndiLastName,
@@ -1562,7 +1228,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         IndiAge,
         IndiBirthDate,
         IndiDeathDate,
-        IndiPlace,
+        IndiBirthPlace,
+        IndiResidence,
         IndiOccupation,
         //  conjoint (ou ancien conjoint) //////////////////////////////////////////
         IndiMarriedFamily,

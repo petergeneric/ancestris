@@ -23,7 +23,7 @@ public class FieldPlace extends Field {
         if (isEmpty()) {
             return "";
         } else {
-            return locality+","+cityName+ ","+ cityCode+ ","+ countyName+ ","+stateName+ ","+countryName;
+            return cityName+ ","+ cityCode+ ","+ countyName+ ","+stateName+ ","+countryName+","+locality;
         }        
     }
 
@@ -31,34 +31,34 @@ public class FieldPlace extends Field {
     public void setValue(Object value) {
             String[] juridictions =  value.toString().split(",");
             if (juridictions.length > 0 ) {
-                locality = juridictions[0];
-            } else {
-                locality = "";
-            }
-            if (juridictions.length > 1 ) {
-                cityName = juridictions[1];
+                cityName = juridictions[0];
             } else {
                 cityName = "";
             }
-            if (juridictions.length > 2 ) {
-                cityCode = juridictions[2];
+            if (juridictions.length > 1 ) {
+                cityCode = juridictions[1];
             } else {
                 cityCode = "";
             }
-            if (juridictions.length > 3 ) {
-                countyName = juridictions[3];
+            if (juridictions.length > 2 ) {
+                countyName = juridictions[2];
             } else {
                 countyName = "";
             }
-            if (juridictions.length > 4 ) {
-                stateName = juridictions[4];
+            if (juridictions.length > 3 ) {
+                stateName = juridictions[3];
             } else {
                 stateName = "";
             }
-            if (juridictions.length > 5 ) {
-                countryName = juridictions[5];
+            if (juridictions.length > 4 ) {
+                countryName = juridictions[4];
             } else {
                 countryName = "";
+            }
+            if (juridictions.length > 5 ) {
+                locality = juridictions[5];
+            } else {
+                locality = "";
             }
         } 
 

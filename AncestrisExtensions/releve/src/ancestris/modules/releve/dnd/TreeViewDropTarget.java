@@ -13,6 +13,7 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import org.openide.util.Exceptions;
 
 /**
  * Cette classe contient les methode pour permmettre a un arbre dynamique d'etre
@@ -124,12 +125,13 @@ public class TreeViewDropTarget {
                     try {
                         if ( treeView.getGedcom() != null ) {
                             TransferableRecord.TransferableData data = (TransferableData) t.getTransferData(TransferableRecord.recordFlavor);
-                            MergeDialog.show(treeView, treeView.getGedcom(), entity, data.record, true);
+                            MergeDialog.show(treeView, treeView.getGedcom(), entity, data.recordsInfoPlace, data.sourceTitle, data.record, true);
                             dropTargetDropEvent.dropComplete(true);
                         } else {
                             dropTargetDropEvent.dropComplete(false);
                         }
                     } catch (Exception ex) {
+                         Exceptions.printStackTrace(ex);
                         dropTargetDropEvent.dropComplete(false);
                     }
                 }

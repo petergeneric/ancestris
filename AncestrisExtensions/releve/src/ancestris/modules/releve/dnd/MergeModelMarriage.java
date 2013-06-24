@@ -10,6 +10,9 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.openide.util.NbBundle;
 
 /**
@@ -19,8 +22,169 @@ import org.openide.util.NbBundle;
 public class MergeModelMarriage extends MergeModel {
 
     private Fam currentFamily;
-    private MergeRecord record;
-    private Gedcom gedcom;
+    
+    /**
+     * model factory
+     * cree un liste contenant un modele comparant le releve et l'entité
+     * selectionnée dans le gedcom.
+     * Si selectedEntity = null, la liste contient les modeles comparant le relevé
+     * avec les entités du gedcom dont les noms, prenoms, et dates de naissance,
+     * mariage et décès sont compatibles avec le relevé.
+     * @param mergeRecord   releve
+     * @param gedcom
+     * @param selectedEntity entité sélectionnée dans le gedcom
+     * @return
+     */
+    static protected List<MergeModel> createMergeModelMarriage (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+        List<MergeModel> models = new ArrayList<MergeModel>();
+        if (selectedEntity instanceof Fam) {
+            // 2.1) Record Marriage : l'entité selectionnée est une famille
+            Fam selectedFamily = (Fam) selectedEntity;
+
+            // j'ajoute un modele avec la famille selectionne
+            models.add(new MergeModelMarriage(mergeRecord, gedcom, selectedFamily));
+
+        } else if (selectedEntity instanceof Indi) {
+            // 2.2) Record Marriage : l'entité selectionnée est un individu
+            Indi selectedIndi = (Indi) selectedEntity;
+
+            // je cherche les familles avec l'individu selectionné
+            Fam[] families = selectedIndi.getFamiliesWhereSpouse();
+            // j'ajoute les familles compatibles
+            for (Fam family : families) {
+                models.add(new MergeModelMarriage(mergeRecord, gedcom, family));
+            }
+
+            if (showNewParents) {
+                // j'ajoute les parents possibles non maries entre eux
+                List<Indi> husbands = new ArrayList<Indi>();
+                List<Indi> wifes = new ArrayList<Indi>();
+                if (selectedIndi.getSex() == PropertySex.MALE) {
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, selectedIndi, (Indi) null));
+                    husbands.add(selectedIndi);
+                } else if (selectedIndi.getSex() == PropertySex.FEMALE) {
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, (Indi) null, selectedIndi));
+                    wifes.add(selectedIndi);
+                }
+                MergeQuery.findHusbanWifeCompatibleWithMarriageRecord(mergeRecord, gedcom, Arrays.asList(families), husbands, wifes);
+                for (Indi husband : husbands) {
+                    for (Indi wife : wifes) {
+                        //TODO  rechercher la famille de l'epoux et la famille de l'epouse et la prendre en compte si elle existe
+                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wife));
+                    }
+                }
+            }
+        } else {
+            // 2.3) Record Marriage : pas d'entité selectionnee
+
+            // j'ajoute une nouvelle famille
+            models.add(new MergeModelMarriage(mergeRecord, gedcom));
+
+            // je recherche les familles compatibles
+            List<Fam> families = MergeQuery.findFamilyCompatibleWithMarriageRecord(mergeRecord, gedcom, null);
+            // j'ajoute les familles compatibles
+            for (Fam family : families) {
+                models.add(new MergeModelMarriage(mergeRecord, gedcom, family));
+            }
+
+            // je recherche les individus compatibles avec l'epoux et l'epouse du releve
+            List<Indi> husbands = new ArrayList<Indi>();
+            List<Indi> wifes = new ArrayList<Indi>();
+            MergeQuery.findHusbanWifeCompatibleWithMarriageRecord(mergeRecord, gedcom, families, husbands, wifes);
+            for (Indi husband : husbands) {
+                for (Indi wife : wifes) {
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wife));
+                }
+                models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, (Indi) null));
+            }
+            for (Indi wife : wifes) {
+                models.add(new MergeModelMarriage(mergeRecord, gedcom, (Indi) null, wife));
+            }
+
+            // je recherche les familles des parents compatibles qui ne sont pas
+            // dans les modeles precedents
+            if (showNewParents
+                    || (showNewParents
+                    && !mergeRecord.getIndi().getFatherFirstName().isEmpty()
+                    && !mergeRecord.getIndi().getMotherFirstName().isEmpty()
+                    && !mergeRecord.getIndi().getMotherLastName().isEmpty())) {
+
+                List<Fam> husbandFamilies = new ArrayList<Fam>();
+                List<Fam> wifeFamilies = new ArrayList<Fam>();
+
+                for (Fam husbandFamily : MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1,  gedcom)) {
+                    Indi[] children = husbandFamily.getChildren();
+
+                    boolean foundHusband = false;
+
+                    for (int i = 0; i < children.length; i++) {
+                        // l'enfant ne doit pas être dans husbands déjà retenus
+                        if (husbands.contains(children[i])) {
+                            foundHusband = true;
+                        }
+                        // l'enfant ne doit pas être un epoux dans une famile déjà retenue
+                        for (Fam family : families) {
+                            if (family.getHusband() != null) {
+                                if (family.getHusband().equals(children[i])) {
+                                    foundHusband = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!foundHusband) {
+                        husbandFamilies.add(husbandFamily);
+                    }
+                }
+
+                for (Fam wifeFamily : MergeQuery.findFamilyCompatibleWithWifeParents(mergeRecord, gedcom)) {
+                    Indi[] children = wifeFamily.getChildren();
+
+                    boolean foundWife = false;
+
+                    for (int i = 0; i < children.length; i++) {
+                        // l'enfant ne doit pas être dans husbands
+                        if (wifes.contains(children[i])) {
+                            foundWife = true;
+                        }
+                        // l'enfant ne doit pas être un epoux dans une famile
+                        for (Fam family : families) {
+                            if (family.getWife() != null) {
+                                if (family.getWife().equals(children[i])) {
+                                    foundWife = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!foundWife) {
+                        wifeFamilies.add(wifeFamily);
+                    }
+                }
+
+                for (Fam husbandFamily : husbandFamilies) {
+                    for (Fam wifeFamily : wifeFamilies) {
+                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, wifeFamily));
+                    }
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, (Fam) null));
+                }
+                for (Fam wifeFamily : wifeFamilies) {
+                    models.add(new MergeModelMarriage(mergeRecord, gedcom, (Fam) null, wifeFamily));
+                }
+
+                // j'ajoute les combinaisons entre les epoux précedents et les familles
+                for (Indi husband : husbands) {
+                    for (Fam wifeFamily : wifeFamilies) {
+                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wifeFamily));
+                    }
+                }
+                for (Indi wife : wifes) {
+                    for (Fam husbandFamily : husbandFamilies) {
+                        models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, wife));
+                    }
+                }
+            }
+        }
+        return models;
+    }
 
     /**
      * le constucteur initialise les données du modele
@@ -30,9 +194,9 @@ public class MergeModelMarriage extends MergeModel {
      * @param record
      */
     MergeModelMarriage(MergeRecord record, Gedcom gedcom) throws Exception {
-        this.record = record;
+        super(record, gedcom);
         this.currentFamily = null;
-        this.gedcom = gedcom;
+
         addRowFamily();
         addRowHusband(null);
         //TODO ajouter l'ex conjoint de l'epoux
@@ -44,9 +208,9 @@ public class MergeModelMarriage extends MergeModel {
     }
 
     MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam selectedFamily) throws Exception {
-        this.record = record;
+        super(record, gedcom);
         this.currentFamily = selectedFamily;
-        this.gedcom = gedcom;
+
         addRowFamily();
         if ( selectedFamily != null ) {
             addRowHusband(selectedFamily.getHusband());
@@ -72,9 +236,8 @@ public class MergeModelMarriage extends MergeModel {
     }
 
     MergeModelMarriage(MergeRecord record, Gedcom gedcom, Indi husband, Indi wife) throws Exception {
-        this.record = record;
+        super(record, gedcom);
         this.currentFamily = null;
-        this.gedcom = gedcom;
         addRowFamily();
         addRowHusband(husband);
         if ( husband!= null ) {
@@ -92,10 +255,40 @@ public class MergeModelMarriage extends MergeModel {
         }
     }
 
-    MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Fam wifeParentFamily) throws Exception {
-        this.record = record;
+    MergeModelMarriage(MergeRecord record, Gedcom gedcom, Indi husband, Fam wifeParentFamily) throws Exception {
+        super(record, gedcom);
         this.currentFamily = null;
-        this.gedcom = gedcom;
+        addRowFamily();
+        addRowHusband(husband);
+        if ( husband!= null ) {
+            addRowHusbandFamily(husband.getFamilyWhereBiologicalChild());
+        } else {
+            addRowHusbandFamily(null);
+        }
+        addRowSeparator();
+        addRowWife(null);
+        addRowWifeFamily(wifeParentFamily);
+    }
+
+    MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Indi wife) throws Exception {
+        super(record, gedcom);
+        this.currentFamily = null;
+        addRowFamily();
+        addRowHusband(null);
+        addRowHusbandFamily(husbandParentFamily);
+
+        addRowSeparator();
+        addRowWife(wife);
+        if ( wife!= null) {
+            addRowWifeFamily(wife.getFamilyWhereBiologicalChild());
+        } else {
+            addRowWifeFamily(null);
+        }
+    }
+
+    MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Fam wifeParentFamily) throws Exception {
+        super(record, gedcom);
+        this.currentFamily = null;
         addRowFamily();
         addRowHusband(null);
         addRowHusbandFamily(husbandParentFamily);
@@ -110,7 +303,7 @@ public class MergeModelMarriage extends MergeModel {
             Property marriageProperty = currentFamily.getProperty("MARR");
 
             // j'affiche la source du mariage
-            Property sourceProperty = MergeQuery.findSource(record, gedcom, marriageProperty);
+            Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, marriageProperty);
             addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
             addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
 
@@ -156,18 +349,18 @@ public class MergeModelMarriage extends MergeModel {
     private void addRowHusband(Indi husband) throws Exception {
         if (husband != null) {
             // j'affiche les informations de l'epoux
-            addRow(RowType.IndiLastName,   record.getIndiLastName(),  husband.getLastName(), husband);
-            addRow(RowType.IndiFirstName,  record.getIndiFirstName(), husband.getFirstName());
-            addRow(RowType.IndiBirthDate,  record.getIndiBirthDate(), husband.getBirthDate(false));
-            addRow(RowType.IndiPlace,      record.getIndiPlace(),     husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(),  MergeQuery.findOccupation(husband, record.getEventDate()));
+            addRow(RowType.IndiLastName,   record.getIndi().getLastName(),  husband.getLastName(), husband);
+            addRow(RowType.IndiFirstName,  record.getIndi().getFirstName(), husband.getFirstName());
+            addRow(RowType.IndiBirthDate,  record.getIndi().getBirthDate(), husband.getBirthDate(false));
+            addRow(RowType.IndiBirthPlace,      record.getIndi().getBirthPlace(),     husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiOccupation, record.getIndi().getOccupationWithDate(),  MergeQuery.findOccupation(husband, record.getEventDate()));
         } else {
             // j'affiche les informations de l'epoux
-            addRow(RowType.IndiLastName,   record.getIndiLastName(),  "", null);
-            addRow(RowType.IndiFirstName,  record.getIndiFirstName(), "");
-            addRow(RowType.IndiBirthDate,  record.getIndiBirthDate(), null);
-            addRow(RowType.IndiPlace,      record.getIndiPlace(),     "");
-            addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(), "");
+            addRow(RowType.IndiLastName,   record.getIndi().getLastName(),  "", null);
+            addRow(RowType.IndiFirstName,  record.getIndi().getFirstName(), "");
+            addRow(RowType.IndiBirthDate,  record.getIndi().getBirthDate(), null);
+            addRow(RowType.IndiBirthPlace,      record.getIndi().getBirthPlace(),     "");
+            addRow(RowType.IndiOccupation, record.getIndi().getOccupationWithDate(), "");
         }
 
     }
@@ -181,13 +374,13 @@ public class MergeModelMarriage extends MergeModel {
             // j'affiche la famille de l'epoux
             addRow(RowType.IndiParentFamily, record, husbandFamily);
             // j'affiche une estimation de la date de mariage des parents a partir du relevé
-            addRow(RowType.IndiParentMarriageDate, record.getIndiParentMarriageDate(),  husbandFamily != null ? husbandFamily.getMarriageDate() : null );
+            addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(),  husbandFamily != null ? husbandFamily.getMarriageDate() : null );
             addRowHusbandFather( husbandFamily.getHusband());
             addRowHusbandMother( husbandFamily.getWife());
         } else {
             addRow(RowType.IndiParentFamily, record, null);
             // je recherche une estimation de la date de mariage des parents a partir du relevé
-            addRow(RowType.IndiParentMarriageDate, record.getIndiParentMarriageDate(), null);
+            addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), null);
             addRowHusbandFather( null);
             addRowHusbandMother( null);
         }
@@ -201,17 +394,17 @@ public class MergeModelMarriage extends MergeModel {
     private void addRowWife(Indi wife) throws Exception {
         if (wife != null) {
             // j'affiche les informations de l'epouse
-            addRow(RowType.WifeLastName,   record.getWifeLastName(), wife.getLastName(), wife);
-            addRow(RowType.WifeFirstName,  record.getWifeFirstName(), wife.getFirstName());
-            addRow(RowType.WifeBirthDate,  record.getWifeBirthDate(), wife.getBirthDate(false));
-            addRow(RowType.WifePlace,      record.getWifePlace(),      wife.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            addRow(RowType.WifeOccupation, record.getWifeOccupationWithDate(), MergeQuery.findOccupation(wife, record.getEventDate()));
+            addRow(RowType.WifeLastName,   record.getWife().getLastName(), wife.getLastName(), wife);
+            addRow(RowType.WifeFirstName,  record.getWife().getFirstName(), wife.getFirstName());
+            addRow(RowType.WifeBirthDate,  record.getWife().getBirthDate(), wife.getBirthDate(false));
+            addRow(RowType.WifePlace,      record.getWife().getBirthPlace(),      wife.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.WifeOccupation, record.getWife().getOccupationWithDate(), MergeQuery.findOccupation(wife, record.getEventDate()));
         } else {
-            addRow(RowType.WifeLastName,   record.getWifeLastName(), "", null);
-            addRow(RowType.WifeFirstName,  record.getWifeFirstName(), "");
-            addRow(RowType.WifeBirthDate,  record.getWifeBirthDate(), null);
-            addRow(RowType.WifePlace,      record.getWifePlace(), "");
-            addRow(RowType.WifeOccupation, record.getWifeOccupationWithDate(), "");
+            addRow(RowType.WifeLastName,   record.getWife().getLastName(), "", null);
+            addRow(RowType.WifeFirstName,  record.getWife().getFirstName(), "");
+            addRow(RowType.WifeBirthDate,  record.getWife().getBirthDate(), null);
+            addRow(RowType.WifePlace,      record.getWife().getBirthPlace(), "");
+            addRow(RowType.WifeOccupation, record.getWife().getOccupationWithDate(), "");
         }
     }
 
@@ -223,13 +416,13 @@ public class MergeModelMarriage extends MergeModel {
         if (wifeFamily != null) {
             addRow(RowType.WifeParentFamily, record, wifeFamily);
             // j'affiche une estimation de la date de mariage des parents a partir du relevé
-            addRow(RowType.WifeParentMarriageDate, record.getWifeParentMarriageDate(), wifeFamily != null ? wifeFamily.getMarriageDate() : null);
+            addRow(RowType.WifeParentMarriageDate, record.getWife().getParentMarriageDate(), wifeFamily != null ? wifeFamily.getMarriageDate() : null);
             addRowWifeFather( wifeFamily.getHusband());
             addRowWifeMother( wifeFamily.getWife());
         } else {
             addRow(RowType.WifeParentFamily, record, null);
             // j'affiche une estimation de la date de mariage des parents a partir du relevé
-            addRow(RowType.WifeParentMarriageDate, record.getWifeParentMarriageDate(), null);
+            addRow(RowType.WifeParentMarriageDate, record.getWife().getParentMarriageDate(), null);
             addRowWifeFather( null);
             addRowWifeMother( null);
         }
@@ -241,17 +434,17 @@ public class MergeModelMarriage extends MergeModel {
      */
     private void addRowHusbandFather(Indi husbandFather) throws Exception {
         if (husbandFather != null) {
-            addRow(RowType.IndiFatherLastName,  record.getIndiFatherLastName(), husbandFather.getLastName(), husbandFather);
-            addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), husbandFather.getFirstName());
-            addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), husbandFather.getBirthDate());
-            addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), husbandFather.getDeathDate());
-            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(),  MergeQuery.findOccupation(husbandFather, record.getEventDate()));
+            addRow(RowType.IndiFatherLastName,  record.getIndi().getFatherLastName(), husbandFather.getLastName(), husbandFather);
+            addRow(RowType.IndiFatherFirstName, record.getIndi().getFatherFirstName(), husbandFather.getFirstName());
+            addRow(RowType.IndiFatherBirthDate, record.getIndi().getFatherBirthDate(), husbandFather.getBirthDate());
+            addRow(RowType.IndiFatherDeathDate, record.getIndi().getFatherDeathDate(), husbandFather.getDeathDate());
+            addRow(RowType.IndiFatherOccupation, record.getIndi().getFatherOccupationWithDate(),  MergeQuery.findOccupation(husbandFather, record.getEventDate()));
         } else {
-            addRow(RowType.IndiFatherLastName,  record.getIndiFatherLastName(), "", null);
-            addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), "");
-            addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), null);
-            addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), null);
-            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(), "");
+            addRow(RowType.IndiFatherLastName,  record.getIndi().getFatherLastName(), "", null);
+            addRow(RowType.IndiFatherFirstName, record.getIndi().getFatherFirstName(), "");
+            addRow(RowType.IndiFatherBirthDate, record.getIndi().getFatherBirthDate(), null);
+            addRow(RowType.IndiFatherDeathDate, record.getIndi().getFatherDeathDate(), null);
+            addRow(RowType.IndiFatherOccupation, record.getIndi().getFatherOccupationWithDate(), "");
         }
     }
 
@@ -261,17 +454,17 @@ public class MergeModelMarriage extends MergeModel {
      */
     private void addRowHusbandMother(Indi husbandMother) throws Exception {
         if (husbandMother != null) {
-            addRow(RowType.IndiMotherLastName, record.getIndiMotherLastName(), husbandMother.getLastName(), husbandMother);
-            addRow(RowType.IndiMotherFirstName, record.getIndiMotherFirstName(), husbandMother.getFirstName());
-            addRow(RowType.IndiMotherBirthDate, record.getIndiMotherBirthDate(), husbandMother.getBirthDate(false));
-            addRow(RowType.IndiMotherDeathDate, record.getIndiMotherDeathDate(), husbandMother.getDeathDate(false));
-            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupationWithDate(),  MergeQuery.findOccupation(husbandMother, record.getEventDate()));
+            addRow(RowType.IndiMotherLastName, record.getIndi().getMotherLastName(), husbandMother.getLastName(), husbandMother);
+            addRow(RowType.IndiMotherFirstName, record.getIndi().getMotherFirstName(), husbandMother.getFirstName());
+            addRow(RowType.IndiMotherBirthDate, record.getIndi().getMotherBirthDate(), husbandMother.getBirthDate(false));
+            addRow(RowType.IndiMotherDeathDate, record.getIndi().getMotherDeathDate(), husbandMother.getDeathDate(false));
+            addRow(RowType.IndiMotherOccupation, record.getIndi().getMotherOccupationWithDate(),  MergeQuery.findOccupation(husbandMother, record.getEventDate()));
         } else {
-            addRow(RowType.IndiMotherLastName, record.getIndiMotherLastName(), "", null);
-            addRow(RowType.IndiMotherFirstName, record.getIndiMotherFirstName(), "");
-            addRow(RowType.IndiMotherBirthDate, record.getIndiMotherBirthDate(), null);
-            addRow(RowType.IndiMotherDeathDate, record.getIndiMotherDeathDate(), null);
-            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupationWithDate(), "");
+            addRow(RowType.IndiMotherLastName, record.getIndi().getMotherLastName(), "", null);
+            addRow(RowType.IndiMotherFirstName, record.getIndi().getMotherFirstName(), "");
+            addRow(RowType.IndiMotherBirthDate, record.getIndi().getMotherBirthDate(), null);
+            addRow(RowType.IndiMotherDeathDate, record.getIndi().getMotherDeathDate(), null);
+            addRow(RowType.IndiMotherOccupation, record.getIndi().getMotherOccupationWithDate(), "");
         }
     }
 
@@ -281,17 +474,17 @@ public class MergeModelMarriage extends MergeModel {
      */
     private void addRowWifeFather(Indi wifeFather) throws Exception {
         if (wifeFather != null) {
-            addRow(RowType.WifeFatherLastName,  record.getWifeFatherLastName(), wifeFather.getLastName(), wifeFather);
-            addRow(RowType.WifeFatherFirstName, record.getWifeFatherFirstName(), wifeFather.getFirstName());
-            addRow(RowType.WifeFatherBirthDate, record.getWifeFatherBirthDate(), wifeFather.getBirthDate());
-            addRow(RowType.WifeFatherDeathDate, record.getWifeFatherDeathDate(), wifeFather.getDeathDate());
-            addRow(RowType.WifeFatherOccupation, record.getWifeFatherOccupationWithDate(), MergeQuery.findOccupation(wifeFather, record.getEventDate()));
+            addRow(RowType.WifeFatherLastName,  record.getWife().getFatherLastName(), wifeFather.getLastName(), wifeFather);
+            addRow(RowType.WifeFatherFirstName, record.getWife().getFatherFirstName(), wifeFather.getFirstName());
+            addRow(RowType.WifeFatherBirthDate, record.getWife().getFatherBirthDate(), wifeFather.getBirthDate());
+            addRow(RowType.WifeFatherDeathDate, record.getWife().getFatherDeathDate(), wifeFather.getDeathDate());
+            addRow(RowType.WifeFatherOccupation, record.getWife().getFatherOccupationWithDate(), MergeQuery.findOccupation(wifeFather, record.getEventDate()));
         } else {
-            addRow(RowType.WifeFatherLastName,  record.getWifeFatherLastName(), "", null);
-            addRow(RowType.WifeFatherFirstName, record.getWifeFatherFirstName(), "");
-            addRow(RowType.WifeFatherBirthDate, record.getWifeFatherBirthDate(), null);
-            addRow(RowType.WifeFatherDeathDate, record.getWifeFatherDeathDate(), null);
-            addRow(RowType.WifeFatherOccupation, record.getWifeFatherOccupationWithDate(), "");
+            addRow(RowType.WifeFatherLastName,  record.getWife().getFatherLastName(), "", null);
+            addRow(RowType.WifeFatherFirstName, record.getWife().getFatherFirstName(), "");
+            addRow(RowType.WifeFatherBirthDate, record.getWife().getFatherBirthDate(), null);
+            addRow(RowType.WifeFatherDeathDate, record.getWife().getFatherDeathDate(), null);
+            addRow(RowType.WifeFatherOccupation, record.getWife().getFatherOccupationWithDate(), "");
         }
     }
 
@@ -301,17 +494,17 @@ public class MergeModelMarriage extends MergeModel {
      */
     private void addRowWifeMother(Indi wifeMother) throws Exception {
         if (wifeMother != null) {
-            addRow(RowType.WifeMotherLastName,  record.getWifeMotherLastName(), wifeMother.getLastName(), wifeMother);
-            addRow(RowType.WifeMotherFirstName, record.getWifeMotherFirstName(), wifeMother.getFirstName());
-            addRow(RowType.WifeMotherBirthDate, record.getWifeMotherBirthDate(), wifeMother.getBirthDate(false));
-            addRow(RowType.WifeMotherDeathDate, record.getWifeMotherDeathDate(), wifeMother.getDeathDate(false));
-            addRow(RowType.WifeMotherOccupation, record.getWifeMotherOccupationWithDate(), MergeQuery.findOccupation(wifeMother, record.getEventDate()));
+            addRow(RowType.WifeMotherLastName,  record.getWife().getMotherLastName(), wifeMother.getLastName(), wifeMother);
+            addRow(RowType.WifeMotherFirstName, record.getWife().getMotherFirstName(), wifeMother.getFirstName());
+            addRow(RowType.WifeMotherBirthDate, record.getWife().getMotherBirthDate(), wifeMother.getBirthDate(false));
+            addRow(RowType.WifeMotherDeathDate, record.getWife().getMotherDeathDate(), wifeMother.getDeathDate(false));
+            addRow(RowType.WifeMotherOccupation, record.getWife().getMotherOccupationWithDate(), MergeQuery.findOccupation(wifeMother, record.getEventDate()));
         } else {
-            addRow(RowType.WifeMotherLastName,  record.getWifeMotherLastName(), "", null);
-            addRow(RowType.WifeMotherFirstName, record.getWifeMotherFirstName(), "");
-            addRow(RowType.WifeMotherBirthDate, record.getWifeMotherBirthDate(), null);
-            addRow(RowType.WifeMotherDeathDate, record.getWifeMotherDeathDate(), null);
-            addRow(RowType.WifeMotherOccupation, record.getWifeMotherOccupationWithDate(), "");
+            addRow(RowType.WifeMotherLastName,  record.getWife().getMotherLastName(), "", null);
+            addRow(RowType.WifeMotherFirstName, record.getWife().getMotherFirstName(), "");
+            addRow(RowType.WifeMotherBirthDate, record.getWife().getMotherBirthDate(), null);
+            addRow(RowType.WifeMotherDeathDate, record.getWife().getMotherDeathDate(), null);
+            addRow(RowType.WifeMotherOccupation, record.getWife().getMotherOccupationWithDate(), "");
         }
     }
 
@@ -319,7 +512,7 @@ public class MergeModelMarriage extends MergeModel {
      * copie les données du relevé dans l'entité
      */
     @Override
-    protected void copyRecordToEntity() throws Exception {
+    protected Property copyRecordToEntity() throws Exception {
 
         //PropertyDate eventDate = (PropertyDate) getRow(RowType.EventDate).recordValue;
 
@@ -327,28 +520,28 @@ public class MergeModelMarriage extends MergeModel {
         if (husband == null) {
             // je cree l'individu
             husband = (Indi) gedcom.createEntity(Gedcom.INDI);
-            husband.setName(record.getIndiFirstName(), record.getIndiLastName());
+            husband.setName(record.getIndi().getFirstName(), record.getIndi().getLastName());
             husband.setSex(PropertySex.MALE);
         } else {
             // je copie le nom de l'epoux
             if (isChecked(RowType.IndiLastName)) {
-                husband.setName(husband.getFirstName(), record.getIndiLastName());
+                husband.setName(husband.getFirstName(), record.getIndi().getLastName());
             }
 
             // je copie le prénom de l'epoux
             if (isChecked(RowType.IndiFirstName)) {
-                husband.setName(record.getIndiFirstName(), husband.getLastName());
+                husband.setName(record.getIndi().getFirstName(), husband.getLastName());
             }
         }
 
         // je copie la date, le lieu et commentaire de naissance de l'epoux
         if (isChecked(RowType.IndiBirthDate)) {
-            copyBirthDate(husband, record.getIndiBirthDate(), record.getIndiPlace(), record);
+            copyBirthDate(husband, getRow(RowType.IndiBirthDate), record.getIndi().getBirthPlace(), record);
         }
 
         // je copie la profession de l'epoux
-        if (isChecked(RowType.IndiOccupation) && !record.getIndiOccupation().isEmpty()) {
-            copyOccupation(husband, record.getIndiOccupation(), record);
+        if (isChecked(RowType.IndiOccupation)) {
+            copyOccupation(husband, record.getIndi().getOccupation(), record.getIndi().getResidence(), record);
         }
 
         // je copie les données des parents de l'epoux
@@ -367,7 +560,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la date du mariage des parents et une note indiquant l'origine de cette date
             if (isChecked(RowType.IndiParentMarriageDate)) {
-                copyMarriageDate(parentfamily, record.getIndiParentMarriageDate(), record );
+                copyMarriageDate(parentfamily, getRow(RowType.IndiParentMarriageDate), record );
             }
             
 
@@ -376,31 +569,31 @@ public class MergeModelMarriage extends MergeModel {
             if (father == null) {
                 // je cree le pere
                 father = (Indi) gedcom.createEntity(Gedcom.INDI);
-                father.setName(record.getIndiFatherFirstName(), record.getIndiFatherLastName());
+                father.setName(record.getIndi().getFatherFirstName(), record.getIndi().getFatherLastName());
                 father.setSex(PropertySex.MALE);
                 parentfamily.setHusband(father);
             } else {
                 if (isChecked(RowType.IndiFatherFirstName)) {
-                    father.setName(record.getIndiFatherFirstName(), father.getLastName());
+                    father.setName(record.getIndi().getFatherFirstName(), father.getLastName());
                 }
                 if (isChecked(RowType.IndiFatherLastName)) {
-                    father.setName(father.getFirstName(), record.getIndiFatherLastName());
+                    father.setName(father.getFirstName(), record.getIndi().getFatherLastName());
                 }
             }
 
             // je copie la date de naissance du pere de l'epoux
             if (isChecked(RowType.IndiFatherBirthDate)) {
-                copyBirthDate(father, record.getIndiFatherBirthDate(), "", record);
+                copyBirthDate(father, getRow(RowType.IndiFatherBirthDate), "", record);
             }
 
             //je copie la date de décès du pere de l'epoux
             if (isChecked(RowType.IndiFatherDeathDate)) {
-                copyDeathDate(father, record.getIndiFatherDeathDate(), "", record);
+                copyDeathDate(father, getRow(RowType.IndiFatherDeathDate), "", record);
             }
 
             // je copie la profession du pere
             if (isChecked(RowType.IndiFatherOccupation)) {
-                copyOccupation(father, record.getIndiFatherOccupation(), record);
+                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), record);
             }
 
             // je copie le nom et le prenom de la mere de l'epoux
@@ -408,31 +601,31 @@ public class MergeModelMarriage extends MergeModel {
             if (mother == null) {
                 // je cree le pere
                 mother = (Indi) gedcom.createEntity(Gedcom.INDI);
-                mother.setName(record.getIndiMotherFirstName(), record.getIndiMotherLastName());
+                mother.setName(record.getIndi().getMotherFirstName(), record.getIndi().getMotherLastName());
                 mother.setSex(PropertySex.FEMALE);
                 parentfamily.setWife(mother);
             } else {
                 if (isChecked(RowType.IndiMotherFirstName)) {
-                    mother.setName(record.getIndiMotherFirstName(), mother.getLastName());
+                    mother.setName(record.getIndi().getMotherFirstName(), mother.getLastName());
                 }
                 if (isChecked(RowType.IndiMotherLastName)) {
-                    mother.setName(mother.getFirstName(), record.getIndiMotherLastName());
+                    mother.setName(mother.getFirstName(), record.getIndi().getMotherLastName());
                 }
             }
 
             // je copie la date de naissance de la mere de l'epoux
             if (isChecked(RowType.IndiMotherBirthDate)) {
-                copyBirthDate(mother, record.getIndiMotherBirthDate(), "", record);
+                copyBirthDate(mother, getRow(RowType.IndiMotherBirthDate), "", record);
             }
 
             // je copie la date de décès de la mere de l'epoux
             if (isChecked(RowType.IndiMotherDeathDate)) {
-                copyDeathDate(mother, record.getIndiMotherDeathDate(), "", record);
+                copyDeathDate(mother, getRow(RowType.IndiMotherDeathDate), "", record);
             }
 
             // je copie la profession de la mere de l'epoux
             if (isChecked(RowType.IndiMotherOccupation) ) {
-                copyOccupation(mother, record.getIndiMotherOccupation(), record);
+                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), record);
             }
 
         } // parents de l'epoux
@@ -445,28 +638,28 @@ public class MergeModelMarriage extends MergeModel {
         if (wife == null) {
             // je cree l'indivis
             wife = (Indi) gedcom.createEntity(Gedcom.INDI);
-            wife.setName(record.getWifeFirstName(), record.getWifeLastName());
+            wife.setName(record.getWife().getFirstName(), record.getWife().getLastName());
             wife.setSex(PropertySex.FEMALE);
         } else {
             // je copie le nom de l'epouse
             if (isChecked(RowType.WifeLastName)) {
-                wife.setName(wife.getFirstName(), record.getWifeLastName());
+                wife.setName(wife.getFirstName(), record.getWife().getLastName());
             }
 
             // je copie le prénom de l'epouse
             if (isChecked(RowType.WifeFirstName)) {
-                wife.setName(record.getWifeFirstName(), wife.getLastName());
+                wife.setName(record.getWife().getFirstName(), wife.getLastName());
             }
         }
 
         // je copie la date, le lieu et le commentaire de naissance de l'epouse
         if (isChecked(RowType.WifeBirthDate)) {
-            copyBirthDate(wife, record.getWifeBirthDate(), record.getWifePlace(), record);
+            copyBirthDate(wife, getRow(RowType.WifeBirthDate), record.getWife().getBirthPlace(), record);
         }
 
         // je copie la profession de l'epouse
-        if (isChecked(RowType.WifeOccupation) && !record.getWifeOccupation().isEmpty()) {
-            copyOccupation(wife, record.getWifeOccupation(), record);
+        if (isChecked(RowType.WifeOccupation)) {
+            copyOccupation(wife, record.getWife().getOccupation(), record.getWife().getResidence(), record);
         }
 
 
@@ -486,7 +679,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la date du mariage des parents et une note indiquant l'origine de cette date
             if (isChecked(RowType.WifeParentMarriageDate)) {
-                copyMarriageDate(parentfamily, record.getWifeParentMarriageDate(), record );
+                copyMarriageDate(parentfamily, getRow(RowType.WifeParentMarriageDate), record );
             }
 
 
@@ -495,31 +688,31 @@ public class MergeModelMarriage extends MergeModel {
             if (father == null) {
                 // je cree le pere
                 father = (Indi) gedcom.createEntity(Gedcom.INDI);
-                father.setName(record.getWifeFatherFirstName(), record.getWifeFatherLastName());
+                father.setName(record.getWife().getFatherFirstName(), record.getWife().getFatherLastName());
                 father.setSex(PropertySex.MALE);
                 parentfamily.setHusband(father);
             } else {
                 if (isChecked(RowType.WifeFatherFirstName)) {
-                    father.setName(record.getWifeFatherFirstName(), father.getLastName());
+                    father.setName(record.getWife().getFatherFirstName(), father.getLastName());
                 }
                 if (isChecked(RowType.WifeFatherLastName)) {
-                    father.setName(father.getFirstName(), record.getWifeFatherLastName());
+                    father.setName(father.getFirstName(), record.getWife().getFatherLastName());
                 }
             }
 
             // je copie la date de naissance du pere de l'epouse
             if (isChecked(RowType.WifeFatherBirthDate)) {
-                copyBirthDate(father, record.getWifeFatherBirthDate(), "", record);
+                copyBirthDate(father, getRow(RowType.WifeFatherBirthDate), "", record);
             }
 
             //je copie la date de décès du pere de l'epouse
             if (isChecked(RowType.WifeFatherDeathDate)) {
-                copyDeathDate(father, record.getWifeFatherDeathDate(), "", record);
+                copyDeathDate(father, getRow(RowType.WifeFatherDeathDate), "", record);
             }
 
             // je copie la profession du pere de l'epouse
             if (isChecked(RowType.WifeFatherOccupation) ) {
-                copyOccupation(father, record.getWifeFatherOccupation(), record);
+                copyOccupation(father, record.getWife().getFatherOccupation(), record.getWife().getFatherResidence(), record);
             }
 
             // je copie le nom et le prenom de la mere de l'epouse
@@ -527,31 +720,31 @@ public class MergeModelMarriage extends MergeModel {
             if (mother == null) {
                 // je cree le pere
                 mother = (Indi) gedcom.createEntity(Gedcom.INDI);
-                mother.setName(record.getWifeMotherFirstName(), record.getWifeMotherLastName());
+                mother.setName(record.getWife().getMotherFirstName(), record.getWife().getMotherLastName());
                 mother.setSex(PropertySex.FEMALE);
                 parentfamily.setWife(mother);
             } else {
                 if (isChecked(RowType.WifeMotherFirstName)) {
-                    mother.setName(record.getWifeMotherFirstName(), mother.getLastName());
+                    mother.setName(record.getWife().getMotherFirstName(), mother.getLastName());
                 }
                 if (isChecked(RowType.WifeMotherLastName)) {
-                    mother.setName(mother.getFirstName(), record.getWifeMotherLastName());
+                    mother.setName(mother.getFirstName(), record.getWife().getMotherLastName());
                 }
             }
 
             // je copie la date de naissance de la mere e l'epouse
             if (isChecked(RowType.WifeMotherBirthDate)) {
-                copyBirthDate(mother, record.getWifeMotherBirthDate(), "", record);
+                copyBirthDate(mother, getRow(RowType.WifeMotherBirthDate), "", record);
             }
 
             // je copie la date de décès de la mere e l'epouse
             if (isChecked(RowType.WifeMotherDeathDate)) {
-                copyDeathDate(mother, record.getWifeMotherDeathDate(), "", record);
+                copyDeathDate(mother, getRow(RowType.WifeMotherDeathDate), "", record);
             }
 
             // je copie la profession de la mere de l'epouse
             if (isChecked(RowType.WifeMotherOccupation) ) {
-                copyOccupation(mother, record.getWifeMotherOccupation(), record);
+                copyOccupation(mother, record.getWife().getMotherOccupation(), record.getWife().getMotherResidence(), record);
             }
 
         } // parents de l'epouse
@@ -565,9 +758,17 @@ public class MergeModelMarriage extends MergeModel {
         //je cree la famille si necessaire
         if (currentFamily == null) {
             currentFamily = (Fam) gedcom.createEntity(Gedcom.FAM);
-            // je lie le mari a la famille
+            // je lie le mari et la femme a la famille
             currentFamily.setHusband(husband);
             currentFamily.setWife(wife);
+        } else {
+            // j'ajoute les epoux si l'un d'eux est nouveau
+            if (currentFamily.getHusband() != husband) {
+                currentFamily.setHusband(husband);
+            }
+            if (currentFamily.getWife() != wife) {
+                currentFamily.setWife(wife);
+            }
         }
 
         // je crée la propriété MARR
@@ -584,10 +785,7 @@ public class MergeModelMarriage extends MergeModel {
         // je copie la date de mariage
         if (isChecked(RowType.EventDate)) {
             // j'ajoute (ou remplace ) la date de la naissance
-            PropertyDate propertyDate = (PropertyDate) marriageProperty.getProperty("DATE");
-            if (propertyDate == null) {
-                propertyDate = (PropertyDate) marriageProperty.addProperty("DATE", "");
-            }
+            PropertyDate propertyDate = currentFamily.getMarriageDate(true);
             propertyDate.setValue(record.getEventDate().getValue());
         }
 
@@ -621,6 +819,8 @@ public class MergeModelMarriage extends MergeModel {
             }
         }
 
+        return currentFamily;
+
     }
 
     
@@ -634,22 +834,13 @@ public class MergeModelMarriage extends MergeModel {
     }
 
     /**
-     * retoune le gedcom du modele
-     * @return gedcom
-     */
-    @Override
-    protected Gedcom getGedcom() {
-        return gedcom;
-    }
-
-    /**
      * retourne les noms des epoux pour constituer le titre de la fenetre principale
      * @return
      */
     @Override
     protected String getTitle() {
-        String husband = record.getIndiFirstName() + " "+ record.getIndiLastName();
-        String wife = record.getWifeFirstName() + " "+ record.getWifeLastName()+ " " + record.getEventDate().getDisplayValue();
+        String husband = record.getIndi().getFirstName() + " "+ record.getIndi().getLastName();
+        String wife = record.getWife().getFirstName() + " "+ record.getWife().getLastName()+ " " + record.getEventDate().getDisplayValue();
         return MessageFormat.format(NbBundle.getMessage(MergeDialog.class, "MergeModel.title.marriage"), husband, wife);
     }
 
@@ -659,7 +850,7 @@ public class MergeModelMarriage extends MergeModel {
      * @return
      */
     @Override
-    protected String getSummary(Entity selectedEntity) {
+    public String getSummary(Entity selectedEntity) {
 
         String summary;
 
@@ -687,7 +878,7 @@ public class MergeModelMarriage extends MergeModel {
                 } else {
                     indiParents = ((Indi)getRow(RowType.IndiFatherLastName).entityObject).getDisplayValue();
                 }
-                indiParents += "+";
+                indiParents += " x ";
                 if ( getRow(RowType.IndiFatherLastName).entityObject == null ) {
                     indiParents += "Nouvelle mère";
                 } else {
@@ -705,7 +896,7 @@ public class MergeModelMarriage extends MergeModel {
                 } else {
                     wifeParents = ((Indi)getRow(RowType.WifeFatherLastName).entityObject).getDisplayValue();
                 }
-                wifeParents += "+";
+                wifeParents += " x ";
                 if ( getRow(RowType.WifeFatherLastName).entityObject == null ) {
                     wifeParents += "Nouvelle mère";
                 } else {
@@ -718,16 +909,24 @@ public class MergeModelMarriage extends MergeModel {
 
             //summary = MessageFormat.format(summaryFormat, spouses, indiParents, wifeParents);
 
-            summary = husband + " + " + wife + "; ";
+            summary = husband + " x " + wife + "; ";
             summary += indiParents;
             summary += "; ";
             summary += wifeParents;
 
         } else {
             summary =  "Modifier le mariage" + " ";
-            summary += currentFamily.getHusband().toString(false);
-            summary += " ";
-            summary += currentFamily.getWife().toString(false);
+            if (currentFamily.getHusband() != null) {
+                summary += currentFamily.getHusband().toString(false);
+            } else {
+                summary += "---";
+            }
+            summary += " x ";
+            if (currentFamily.getWife() != null) {
+                summary += currentFamily.getWife().toString(false);
+            } else {
+                summary += "---";
+            }
         }
         return summary;
     }

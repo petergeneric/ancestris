@@ -31,11 +31,19 @@ public class ReleveFileGedcom {
      */
     public static FileBuffer loadFile(Gedcom gedcom) throws Exception {
 
-        FileBuffer buffer = new FileBuffer();
+        FileBuffer fileBuffer = new FileBuffer();
         try {
 
             //create BufferedReader to read file
             int lineNumber = 0;
+
+            fileBuffer.setRegisterInfoPlace(
+                    //birthProperty.getProperty("PLAC") != null ? birthProperty.getProperty("PLAC").getValue() : "",
+                    "",
+                    "", // cityCode
+                    "", // countyName
+                    "", // stateName
+                    ""); // countryName
 
             //read comma separated file line by line
             for (Iterator<Entity> it = gedcom.getEntities().iterator(); it.hasNext();) {
@@ -48,12 +56,6 @@ public class ReleveFileGedcom {
                     if (birthProperty != null) {
                         RecordBirth record = new RecordBirth();
 
-                        record.setEventPlace(
-                                birthProperty.getProperty("PLAC") != null ? birthProperty.getProperty("PLAC").getValue() : "",
-                                "", // cityCode
-                                "", // countyName
-                                "", // stateName
-                                "" ); // countryName
                         record.setParish("");
                         //record.setEventDate( birthProperty.getProperty("DATE")!=null ? birthProperty.getProperty("DATE").toString() : "" );
                         record.getEventDateProperty().setValue(birthProperty.getProperty("DATE") != null ? birthProperty.getProperty("DATE").getValue() : "");
@@ -142,19 +144,13 @@ public class ReleveFileGedcom {
 
                         record.setGeneralComment(indi.getProperty("NOTE") != null ? indi.getProperty("NOTE").toString() : "");
                         record.recordNo = lineNumber++;
-                        buffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
                     }
 
                     Property deathProperty = indi.getProperty("DEAT");
                     if (deathProperty != null) {
                         RecordDeath record = new RecordDeath();
 
-                        record.setEventPlace(
-                                deathProperty.getProperty("PLAC") != null ? deathProperty.getProperty("PLAC").getValue() : "",
-                                "", // cityCode
-                                "", // countyName
-                                "", // stateName
-                                "" ); // countryName
                         record.setParish("");
                         //record.setEventDate( deathProperty.getProperty("DATE")!=null ? deathProperty.getProperty("DATE").toString() : "" );
                         record.getEventDateProperty().setValue(deathProperty.getProperty("DATE") != null ? deathProperty.getProperty("DATE").getValue() : "");
@@ -232,7 +228,7 @@ public class ReleveFileGedcom {
                                     "" ); // age;
                         }
                         record.recordNo = lineNumber++;
-                        buffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
                     }
                 } else if (entity instanceof Fam) {
                     Fam fam = (Fam) entity;
@@ -245,12 +241,6 @@ public class ReleveFileGedcom {
 
                     RecordMarriage record = new RecordMarriage();
 
-                    record.setEventPlace(
-                            marriagePlace != null ? marriagePlace.getCity() : "",
-                            "", // cityCode
-                            "", // countyName
-                            "", // stateName
-                            ""); // countryName
                     record.setParish("");
                     record.getEventDateProperty().setValue(marriageDate != null ? marriageDate.getValue() : "");
                     record.setCote("");
@@ -409,7 +399,7 @@ public class ReleveFileGedcom {
                         }
                     }
                     record.recordNo = lineNumber++;
-                    buffer.loadRecord(record);
+                    fileBuffer.addRecord(record);
                 }
 
             } // for
@@ -419,6 +409,6 @@ public class ReleveFileGedcom {
             throw e;
         }
 
-        return buffer;
+        return fileBuffer;
     }
 }

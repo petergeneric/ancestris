@@ -123,7 +123,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
     public void testSaveFileBirthUtf8() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile.txt");
         
-        String place = ",cityname,citycode,county,state,country";
+        String place = "cityname,citycode,county,state,country,";
         
         DataManager dataManager = new DataManager();
         dataManager.setPlace(place);
@@ -132,7 +132,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         birth.setEventDate("01/01/2000");
         birth.setCote("cote");
         birth.setFreeComment("photo");
-        birth.setIndi("Élisabeth-Adélaîde", "lastname", "M", "", "", "place", "occupation", "indiResidence",  "comment");
+        birth.setIndi("Élisabeth-Adélaîde", "lastname", "M", "", "5/4/1842", "place", "occupation", "indiResidence",  "comment");
         birth.setIndiFather("fathername", "fatherlastname", "occupation", "indiFatherResidence", "comment", "dead", "70y");
         birth.setIndiMother("mothername", "motherlastname", "occupation", "indiMotherResidence", "comment", "dead", "72y");
         birth.setWitness1("wfirstname", "wlastname", "woccupation", "wcomment");
@@ -180,7 +180,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
     public void testSaveFileMarriage() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
         
-        String place = ",cityname,citycode,county,state,country";
+        String place = "cityname,citycode,county,state,country,";
         
         DataManager dataManager = new DataManager();
         dataManager.setPlace(place);
@@ -242,7 +242,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
     public void testSaveFileDeath() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        String place = ",cityname,citycode,county,state,country";
+        String place = "cityname,citycode,county,state,country,";
         
         DataManager dataManager = new DataManager();
         dataManager.setPlace(place);
@@ -301,7 +301,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
     public void testSaveFileMisc() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        String place = ",cityname,citycode,county,state,country";
+        String place = "cityname,citycode,county,state,country,";
         DataManager dataManager = new DataManager();
         dataManager.setPlace(place);
 

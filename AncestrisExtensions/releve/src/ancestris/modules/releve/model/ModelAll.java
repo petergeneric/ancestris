@@ -75,7 +75,8 @@ public class ModelAll extends ModelAbstract {
     }
 
     @Override
-    public Class<?> getColumnClass(int column) {
+    @SuppressWarnings("unchecked")
+    public Class<Class> getColumnClass(int column) {
         return columnType[column];
     }
     
@@ -128,29 +129,29 @@ public class ModelAll extends ModelAbstract {
     }
 
     
-    /**
-     * retourne la liste des champs affichables
-     * @return
-     */
-
-    @Override
-    public BeanField[] getFieldList( int recordIndex ) {
-        
-        Record record = getRecord(recordIndex);
-
-        if( record == null)  {
-            return new BeanField[0];
-        }
-
-         if (record instanceof RecordBirth) {
-             return ModelBirth.getFieldList(record);
-        } else if (record instanceof RecordMarriage) {
-            return ModelMarriage.getFieldList(record);
-        } else if (record instanceof RecordDeath) {
-            return ModelDeath.getFieldList(record);
-        } else {
-            return ModelMisc.getFieldList(record);
-        }
-    }
+//    /**
+//     * retourne la liste des champs affichables
+//     * @return
+//     */
+//
+//    @Override
+//    public BeanField[] getFieldList( int recordIndex ) {
+//
+//        Record record = getRecord(recordIndex);
+//
+//        if( record == null)  {
+//            return new BeanField[0];
+//        }
+//
+//         if (record instanceof RecordBirth) {
+//             return ModelBirth.getFieldList(record);
+//        } else if (record instanceof RecordMarriage) {
+//            return ModelMarriage.getFieldList(record);
+//        } else if (record instanceof RecordDeath) {
+//            return ModelDeath.getFieldList(record);
+//        } else {
+//            return ModelMisc.getFieldList(record);
+//        }
+//    }
 
 }

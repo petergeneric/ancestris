@@ -43,16 +43,16 @@ public class TestUtility {
     public static Gedcom createGedcom() throws GedcomException, MalformedURLException {
 
         Gedcom gedcom;
-            gedcom = new Gedcom(Origin.create("file:://test.txt"));
+        gedcom = new Gedcom(Origin.create("file:://test.txt"));
         gedcom.setGrammar(Grammar.V55);
         Property birth;
         
         Source source1 = (Source) gedcom.createEntity(Gedcom.SOUR, "S1");
-        source1.addProperty("TITL", "75000 Paris BMS");
+        source1.addProperty("TITL", "BMS Paris");
         Source source2 = (Source) gedcom.createEntity(Gedcom.SOUR, "S2");
-        source2.addProperty("TITL", "75000 Paris Etat civil");
+        source2.addProperty("TITL", "Etat civil Paris");
         Source source3 = (Source) gedcom.createEntity(Gedcom.SOUR, "S3");
-        source3.addProperty("TITL", "35000 Brest Etat civil");
+        source3.addProperty("TITL", "Etat civil Brest");
 
 
         Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "I1");
@@ -60,7 +60,7 @@ public class TestUtility {
         husband.setSex(PropertySex.MALE);
         birth = husband.addProperty("BIRT","" );
         birth.addProperty("DATE","01 JAN 1970", 1);
-        birth.addProperty("PLACE","Paris", 2);
+        birth.addProperty("PLAC","Paris", 2);
         birth.addProperty("SOUR","@S1@",3);
         husband.addProperty("OCCU", "I1occupation");
         
@@ -73,7 +73,7 @@ public class TestUtility {
         child1.setSex(PropertySex.FEMALE);
         birth = child1.addProperty("BIRT", "");
         birth.addProperty("DATE","01 JAN 2000");
-        birth.addProperty("PLACE","Brest");
+        birth.addProperty("PLAC","Brest");
         birth.addProperty("SOUR","@S2@");
         
         Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "child2");
@@ -81,7 +81,7 @@ public class TestUtility {
         child2.setSex(PropertySex.FEMALE);
         birth = child2.addProperty("BIRT", "");
         birth.addProperty("DATE","03 MAR 2003");
-        birth.addProperty("PLACE","Brest");
+        birth.addProperty("PLAC","Brest");
         Property sourcexref = birth.addProperty("SOUR","@S2@");
         //((PropertyXRef)sourcexref).link();
 
@@ -102,7 +102,7 @@ public class TestUtility {
         cousin.setSex(PropertySex.MALE);
         birth = cousin.addProperty("BIRT","" );
         birth.addProperty("DATE","02 FEB 1972", 1);
-        birth.addProperty("PLACE","Paris", 2);
+        birth.addProperty("PLAC","Paris", 2);
         birth.addProperty("SOUR","@S1@",3);
 
         Indi sansfamille1 = (Indi) gedcom.createEntity(Gedcom.INDI, "sansfamille1");
@@ -120,7 +120,7 @@ public class TestUtility {
     }
 
     /**
-     * creation 'un gedcom minimal
+     * creation d'un gedcom minimal
      * @return
      * @throws GedcomException
      */
@@ -138,12 +138,12 @@ public class TestUtility {
         Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "I2");
         wife.setName("MotherFirstName", "MOTHERLASTNAME");
         wife.setSex(PropertySex.FEMALE);
-        husband.addProperty("OCCU", "profession mere");
+        wife.addProperty("OCCU", "profession mere");
 
         Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "I3");
         child1.setName("firstname1", "FATHERLASTNAME");
         child1.setSex(PropertySex.FEMALE);
-        husband.addProperty("OCCU", "profession1");
+        child1.addProperty("OCCU", "profession1");
 
         Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "I4");
         child2.setName("firstname2", "FATHERLASTNAME");
@@ -161,6 +161,8 @@ public class TestUtility {
         family.addChild(child3);
         return gedcom;
     }
+
+
 
     
     protected static Component getComponentByName(Component parent, String name) {

@@ -1,21 +1,10 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.model.PlaceManager;
-import ancestris.modules.releve.model.ModelAbstract;
-import ancestris.modules.releve.model.RecordMisc;
-import ancestris.modules.releve.model.RecordBirth;
-import ancestris.modules.releve.model.RecordMarriage;
-import ancestris.modules.releve.model.RecordDeath;
-import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.file.FileManager.Line;
 import ancestris.modules.releve.model.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -35,7 +24,8 @@ public class ReleveFileEgmt {
     public static boolean isValidFile(File inputFile, StringBuilder sb) {
         BufferedReader br = null;
         try {
-            br = new BufferedReader( new InputStreamReader(new FileInputStream(inputFile),"UTF-8"));
+            //br = new BufferedReader( new InputStreamReader(new FileInputStream(inputFile),"UTF-8"));
+            br = new BufferedReader(new FileReader(inputFile));
             String[] fields = splitLine(br);
 
             if (fields == null) {
@@ -80,10 +70,10 @@ public class ReleveFileEgmt {
         typeActe,
         codeDepartement, nomCommune, paroisse, notaire, cote, folio,
         day,month,year,
-        indiLastName, indiFirstName, indiSex, indiAge, indiBirthPlace, indiComment,
+        indiLastName, indiFirstName, indiSex, indiAge, indiPlace, indiComment,
         indiFatherFirstName, indiFatherDead, indiFatherComment,
         indiMotherLastName, indiMotherFirstName, indiMotherDead, indiMotherComment,
-        wifeLastName, wifeFirstName, wifeDead, wifeAge, wifeBirthPlace, wifeComment,
+        wifeLastName, wifeFirstName, wifeDead, wifeAge, wifePlace, wifeComment,
         wifeFatherFirstName, wifeFatherDead, wifeFatherComment,
         wifeMotherLastName, wifeMotherFirstName, wifeMotherDead, wifeMotherComment,
         heirComment,
@@ -103,7 +93,8 @@ public class ReleveFileEgmt {
         try {
 
             //create BufferedReader to read file
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile),"UTF-8"));
+            //BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile),"UTF-8"));
+            BufferedReader br = new BufferedReader(new FileReader(inputFile));
             String strLine = "";
             int lineNumber = 0;
 
@@ -112,15 +103,17 @@ public class ReleveFileEgmt {
             while ((fields = splitLine(br)) != null) {
                 lineNumber++;
                 try {
+                    if ( lineNumber == 1) {
+                        fileBuffer.setRegisterInfoPlace(
+                            fields[EgmtField.nomCommune.ordinal()],
+                            "", // codecommune
+                            fields[EgmtField.codeDepartement.ordinal()],
+                            "", // stateName
+                            "" ); // countryName
+                    }
                     if (fields != null) {
                         if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("naissance")) {
                             RecordBirth record = new RecordBirth();
-                            record.setEventPlace(
-                                    fields[EgmtField.nomCommune.ordinal()],
-                                    "", // codecommune
-                                    fields[EgmtField.codeDepartement.ordinal()],
-                                    "", // stateName
-                                    "" ); // countryName
                             record.setCote(fields[EgmtField.cote.ordinal()]);
                             record.setParish(fields[EgmtField.paroisse.ordinal()]);
                             record.setFreeComment(fields[EgmtField.folio.ordinal()]);
@@ -136,13 +129,13 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiSex.ordinal()],
                                     "", // pas d'age a la naissance
                                     "", // pas de date de naissance 
-                                    "", // pas de lieu a la naissance
+                                    fields[EgmtField.indiPlace.ordinal()],
                                     "", // pas de profession a la naissance
                                     "", // pas de residence dans ce format                                
                                     fields[EgmtField.indiComment.ordinal()]);
                             record.setIndiFather(
                                     fields[EgmtField.indiFatherFirstName.ordinal()],
-                                    fields[EgmtField.indiLastName.ordinal()], // meme nom que Indi
+                                    getFatherLastName(fields), // meme nom que Indi
                                     "", // profession
                                     "", // pas de residence dans ce format                                
                                     fields[EgmtField.indiFatherComment.ordinal()],
@@ -179,16 +172,10 @@ public class ReleveFileEgmt {
                                 record.setGeneralComment(fields[EgmtField.generalComment.ordinal()]);
                             }
                             record.recordNo = lineNumber;
-                            fileBuffer.loadRecord(record);
+                            fileBuffer.addRecord(record);
 
                         } else if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("mariage")) {
                             RecordMarriage record = new RecordMarriage();
-                            record.setEventPlace(
-                                    fields[EgmtField.nomCommune.ordinal()],
-                                    "", // codecommune
-                                    fields[EgmtField.codeDepartement.ordinal()],
-                                    "", // stateName
-                                    "" ); // countryName
                             record.setCote(fields[EgmtField.cote.ordinal()]);
                             record.setParish(fields[EgmtField.paroisse.ordinal()]);
                             record.setFreeComment(fields[EgmtField.folio.ordinal()]);
@@ -202,16 +189,16 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiFirstName.ordinal()],
                                     fields[EgmtField.indiLastName.ordinal()],
                                     fields[EgmtField.indiSex.ordinal()],
-                                    fields[EgmtField.indiAge.ordinal()],
+                                    formatAgeToField(fields[EgmtField.indiAge.ordinal()]),
                                     "", // pas de date de naissance a la naissance
-                                    fields[EgmtField.indiBirthPlace.ordinal()],
-                                    "", // pas de profession dans ce format 
-                                    "", // pas de residence dans ce format                                
+                                    "", // pas de lieu de naissance dans ce format
+                                    "", // pas de profession dans ce format
+                                    fields[EgmtField.indiPlace.ordinal()],
                                     fields[EgmtField.indiComment.ordinal()]);
 
                             record.setIndiFather(
                                     fields[EgmtField.indiFatherFirstName.ordinal()],
-                                    fields[EgmtField.indiLastName.ordinal()], // meme nom que Indi
+                                    getFatherLastName(fields), // meme nom que Indi
                                     "", // profession
                                     "", // pas de residence dans ce format                                
                                     fields[EgmtField.indiFatherComment.ordinal()],
@@ -231,11 +218,11 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.wifeFirstName.ordinal()],
                                     fields[EgmtField.wifeLastName.ordinal()],
                                     fields[EgmtField.indiSex.ordinal()].equals("M") ? "F" : "M",
-                                    fields[EgmtField.wifeAge.ordinal()],
+                                    formatAgeToField(fields[EgmtField.wifeAge.ordinal()]),
                                     "" , // date de naissance
-                                    fields[EgmtField.wifeBirthPlace.ordinal()],
-                                    "" , // pas de profession dans ce format 
-                                    "", // pas de residence dans ce format                                
+                                    "", // pas de lieu de naissance dans ce format
+                                    "" , // pas de profession dans ce format
+                                    fields[EgmtField.wifePlace.ordinal()],
                                     fields[EgmtField.wifeComment.ordinal()]);
                             //TODO : deces de l'epouse est ignoré , fields[EgmtField.wifeDead.ordinal()]
                                 
@@ -278,16 +265,10 @@ public class ReleveFileEgmt {
                                 record.setGeneralComment(fields[EgmtField.generalComment.ordinal()]);
                             }
                             record.recordNo = lineNumber;
-                            fileBuffer.loadRecord(record);
+                            fileBuffer.addRecord(record);
 
                         } else if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("décès")) {
                             RecordDeath record = new RecordDeath();
-                            record.setEventPlace(
-                                    fields[EgmtField.nomCommune.ordinal()],
-                                    "", // codecommune
-                                    fields[EgmtField.codeDepartement.ordinal()],
-                                    "", // stateName
-                                    "" ); // countryName
                             record.setCote(fields[EgmtField.cote.ordinal()]);
                             record.setParish(fields[EgmtField.paroisse.ordinal()]);
                             record.setFreeComment(fields[EgmtField.folio.ordinal()]);
@@ -301,16 +282,16 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiFirstName.ordinal()],
                                     fields[EgmtField.indiLastName.ordinal()],
                                     fields[EgmtField.indiSex.ordinal()],
-                                    fields[EgmtField.indiAge.ordinal()],
+                                    formatAgeToField(fields[EgmtField.indiAge.ordinal()]),
                                     "", // date de naissance
-                                    fields[EgmtField.indiBirthPlace.ordinal()],
+                                    "", // pas de lieu de naissance dans ce format
                                     "", // pas de profession dans ce format
-                                    "", // pas de residence dans ce format                                
+                                    fields[EgmtField.indiPlace.ordinal()],
                                     fields[EgmtField.indiComment.ordinal()]);
 
                              record.setIndiFather(
                                     fields[EgmtField.indiFatherFirstName.ordinal()],
-                                    fields[EgmtField.indiLastName.ordinal()], // meme nom que Indi
+                                    getFatherLastName(fields), // meme nom que Indi
                                     "", // profession
                                     "", // pas de residence dans ce format                                
                                     fields[EgmtField.indiFatherComment.ordinal()],
@@ -356,7 +337,7 @@ public class ReleveFileEgmt {
                                 record.setGeneralComment(fields[EgmtField.generalComment.ordinal()]);
                             }
                             record.recordNo = lineNumber;
-                            fileBuffer.loadRecord(record);
+                            fileBuffer.addRecord(record);
 
                         } else  {
                             RecordMisc record = new RecordMisc();
@@ -367,17 +348,15 @@ public class ReleveFileEgmt {
                             } else if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("evenement")) {
                                 // j'ignore la ligne d'entete
                                 continue;
+                            } else if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("type d'acte")) {
+                                // j'ignore la ligne d'entete
+                                continue;
+                            } else if (fields[EgmtField.typeActe.ordinal()].isEmpty()) {
+                                // j'ignore une ligne vide
+                                continue;
                             } else {
                                 record.setEventType(fields[EgmtField.typeActe.ordinal()]);
                             }
-
-
-                            record.setEventPlace(
-                                    fields[EgmtField.nomCommune.ordinal()],
-                                    "", // codecommune
-                                    fields[EgmtField.codeDepartement.ordinal()],
-                                    "", // stateName
-                                    "" ); // countryName
 
                             record.setParish(fields[EgmtField.paroisse.ordinal()]);
                             // le notaire est utilisé seelement pour les actes divers
@@ -394,16 +373,16 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiFirstName.ordinal()],
                                     fields[EgmtField.indiLastName.ordinal()],
                                     fields[EgmtField.indiSex.ordinal()],
-                                    fields[EgmtField.indiAge.ordinal()],
+                                    formatAgeToField(fields[EgmtField.indiAge.ordinal()]),
                                     "", // date de naissance
-                                    fields[EgmtField.indiBirthPlace.ordinal()],
+                                    "", // pas de lieu de naissance dans ce format
                                     "", // pas de profession dans ce format
-                                    "", // pas de residence dans ce format                                
+                                    fields[EgmtField.indiPlace.ordinal()],
                                     fields[EgmtField.indiComment.ordinal()]);
                             
                             record.setIndiFather(
                                     fields[EgmtField.indiFatherFirstName.ordinal()],
-                                    fields[EgmtField.indiLastName.ordinal()], // meme nom que Indi
+                                    getFatherLastName(fields), // meme nom que Indi
                                     "", // profession
                                     "", // pas de residence dans ce format                                
                                     fields[EgmtField.indiFatherComment.ordinal()],
@@ -423,11 +402,11 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.wifeFirstName.ordinal()],
                                     fields[EgmtField.wifeLastName.ordinal()],
                                     fields[EgmtField.indiSex.ordinal()].equals("M") ? "F" : "M",
-                                    fields[EgmtField.wifeAge.ordinal()],
+                                    formatAgeToField(fields[EgmtField.wifeAge.ordinal()]),
                                     "", // date de naissance
-                                    fields[EgmtField.wifeBirthPlace.ordinal()],
+                                    "", // pas de lei de naissance dans ce format
                                     "" , // profession
-                                    "", // pas de residence dans ce format                                
+                                    fields[EgmtField.wifePlace.ordinal()],
                                     fields[EgmtField.wifeComment.ordinal()]);
                                 
                             record.setWifeFather(
@@ -469,7 +448,7 @@ public class ReleveFileEgmt {
                                 record.setGeneralComment(fields[EgmtField.generalComment.ordinal()]);
                             }
                             record.recordNo = lineNumber;
-                            fileBuffer.loadRecord(record);
+                            fileBuffer.addRecord(record);
 
                         }
 
@@ -503,7 +482,8 @@ public class ReleveFileEgmt {
 
         try {
             //create BufferedReader to read csv file
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(fileName, append), "UTF-8") ;
+            //OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(fileName, append), "UTF-8") ;
+            FileWriter writer = new FileWriter(fileName, append);
             
             // j'ajoute l'entete si le mode append n'est pas demandé
             if( ! append) {
@@ -524,7 +504,7 @@ public class ReleveFileEgmt {
                     } else {
                         line.appendCsvFn(record.getEventType().getName());
                     }
-                    line.appendCsvFn(placeManager.getCountryName());
+                    line.appendCsvFn(placeManager.getCountyName());
                     line.appendCsvFn(placeManager.getCityName());
                     line.appendCsvFn(record.getParish().toString());
                     if ( record instanceof RecordMisc ) {
@@ -541,32 +521,31 @@ public class ReleveFileEgmt {
                     line.appendCsvFn(record.getIndiLastName().getValue());
                     line.appendCsvFn(record.getIndiFirstName().getValue());
                     line.appendCsvFn(record.getIndiSex().toString());
-                    if (!(record instanceof RecordBirth)) {
-                        
-                        line.appendCsvFn(formatAge(record.getIndiAge()));
-                        line.appendCsvFn(record.getIndiPlace().toString());
+                    line.appendCsvFn(formatAgeToAge(record.getIndiAge()));
+                    if ( record instanceof RecordBirth) {
+                        line.appendCsvFn(record.getIndiBirthPlace().toString());
                     } else {
-                        line.appendCsvFn("");
-                        line.appendCsvFn("");
+                        line.appendCsvFn(record.getIndiResidence().toString());
                     }
-
+                    
                     if ( record instanceof RecordBirth) {
                         line.appendCsvFn(record.getIndiComment().toString());
                     } else {
                         String birthDate = "";
-                        if (!record.getIndiBirthDate().toString().isEmpty() ) {
-                            birthDate = "né le "+record.getIndiBirthDate().toString();
+                        if ( ! record.getIndiBirthDate().isEmpty()){
+                            birthDate = "né le " + record.getIndiBirthDate();
                         }
                         String marriedName = "";
                         if ( ! record.getIndiMarriedLastName().toString().isEmpty()){
-                            marriedName = "conjoint: " + record.getIndiMarriedLastName()
+                            marriedName = "conjoint: " + record.getIndiMarriedLastName() + " "
                                     + record.getIndiMarriedFirstName() +" "
                                     + record.getIndiMarriedComment();
                         }
-                        line.appendCsvFn(record.getIndiComment().toString(),
+                        line.appendCsvFn(
+                            record.getIndiComment().toString(),
+                            birthDate,
+                            record.getIndiBirthPlace().toString(),
                             record.getIndiOccupation().toString(),
-                            record.getIndiResidence().toString(),
-                            birthDate.toString(),
                             marriedName,
                             record.getIndiMarriedOccupation().toString(),
                             record.getIndiMarriedResidence().toString(),
@@ -578,37 +557,38 @@ public class ReleveFileEgmt {
                     line.appendCsvFn(record.getIndiFatherDead().toString());
                     line.appendCsvFn(record.getIndiFatherComment().toString(),
                             record.getIndiFatherOccupation().toString(),
-                            record.getIndiFatherResidence().toString(),
-                            formatAge(record.getIndiFatherAge()));
+                            record.getIndiFatherResidence() != null ? record.getIndiFatherResidence().toString() : "",
+                            formatAgeToComment(record.getIndiFatherAge()));
                     line.appendCsvFn(record.getIndiMotherLastName().toString());
                     line.appendCsvFn(record.getIndiMotherFirstName().toString());
                     line.appendCsvFn(record.getIndiMotherDead().toString());
                     line.appendCsvFn(record.getIndiMotherComment().toString(),
                             record.getIndiMotherOccupation().toString(),
-                            record.getIndiMotherResidence().toString(),
-                            formatAge(record.getIndiMotherAge()));
+                            record.getIndiMotherResidence() != null ? record.getIndiMotherResidence().toString() : "",
+                            formatAgeToComment(record.getIndiMotherAge()));
                     
                     if ((record instanceof RecordMarriage) || (record instanceof RecordMisc)) {
                         line.appendCsvFn(record.getWifeLastName().toString());
                         line.appendCsvFn(record.getWifeFirstName().toString());
                         line.appendCsvFn(""); //wifeDead
-                        line.appendCsvFn(formatAge(record.getWifeAge()));
-                        line.appendCsvFn(record.getWifePlace().toString());
+                        line.appendCsvFn(formatAgeToAge(record.getWifeAge()));
+                        line.appendCsvFn(record.getWifeResidence().toString());
                         
                         String birthDate = "";
-                        if (!record.getWifeBirthDate().toString().isEmpty() ) {
+                        if (!record.getWifeBirthDate().isEmpty() ) {
                             birthDate = "né le "+record.getWifeBirthDate().toString();
                         }
                         String marriedName = "";
                         if ( ! record.getWifeMarriedLastName().toString().isEmpty()){
-                            marriedName = "conjoint: " + record.getWifeMarriedLastName()
+                            marriedName = "conjoint: " + record.getWifeMarriedLastName()+ " "
                                     + record.getWifeMarriedFirstName() +" "
                                     + record.getWifeMarriedComment();
                         }
-                        line.appendCsvFn(record.getWifeComment().toString(),
+                        line.appendCsvFn(
+                            record.getWifeComment().toString(),
+                            birthDate,
+                            record.getWifeBirthPlace().toString(),
                             record.getWifeOccupation().toString(),
-                            record.getWifeResidence().toString(),
-                            birthDate.toString(),
                             marriedName,
                             record.getWifeMarriedOccupation().toString(),
                             record.getWifeMarriedResidence().toString(),
@@ -620,21 +600,21 @@ public class ReleveFileEgmt {
                         line.appendCsvFn(record.getWifeFatherComment().toString(), 
                             record.getWifeFatherOccupation().toString(),
                             record.getWifeFatherResidence().toString(),
-                            formatAge(record.getWifeFatherAge()));
+                            formatAgeToComment(record.getWifeFatherAge()));
                         line.appendCsvFn(record.getWifeMotherLastName().toString());
                         line.appendCsvFn(record.getWifeMotherFirstName().toString());
                         line.appendCsvFn(record.getWifeMotherDead().toString());
                         line.appendCsvFn(record.getWifeMotherComment().toString(), 
                             record.getWifeMotherOccupation().toString(),
                             record.getWifeMotherResidence().toString(),
-                            formatAge(record.getWifeMotherAge()));
+                            formatAgeToComment(record.getWifeMotherAge()));
 
                     } else  if (record instanceof RecordDeath ) {
                         line.appendCsvFn(record.getIndiMarriedLastName().toString());
                         line.appendCsvFn(record.getIndiMarriedFirstName().toString());
                         line.appendCsvFn(record.getIndiMarriedDead().toString()); //wifeDead
                         line.appendCsvFn(""); // age
-                        line.appendCsvFn(""); //place
+                        line.appendCsvFn(""); // birth place
                         line.appendCsvFn(record.getIndiMarriedComment().toString());
 
                         line.appendCsvFn("");
@@ -704,18 +684,72 @@ public class ReleveFileEgmt {
     }
 
     /**
-     * 
+     * Convertit l'age normalisé "9y 9m 9d"
+     * en une expression française "9a 9m 9d"
      * @param agedField
      * @return 
      */
-    static private String formatAge(FieldAge agedField) {
-        String age;
+    static private String formatAgeToComment(FieldAge agedField) {
+        String ageString;
         if (agedField.getValue().equals("0d")) {
-            age = "";
+            ageString = "";
         } else {
-            age = "Age:" + agedField.getValue().replace('y', 'a').replace('d', 'j');
+            ageString = "Age:"+agedField.getValue().replace('y', 'a').replace('d', 'j');
         }
-        return age;
+        return ageString;
+    }
+    
+    /**
+     * Convertit l'age normalisé "9y 9m 9d"
+     * en une expression française "9a 9m 9d"
+     * @param agedField
+     * @return 
+     */
+    static private String formatAgeToAge(FieldAge agedField) {
+        String ageString;
+        if (agedField != null) {
+            if (agedField.getValue().equals("0d")) {
+                ageString = "";
+            } else {
+                ageString = agedField.getValue().replace('y', 'a').replace('d', 'j');
+            }
+        } else {
+            ageString = "";
+        }
+        return ageString;
+    }
+    
+    static private String getFatherLastName( String[] fields ) {
+        String fatherLastName ;
+        if( fields[EgmtField.indiFatherFirstName.ordinal()].isEmpty()) {
+            fatherLastName = "";
+        } else {
+            fatherLastName = fields[EgmtField.indiLastName.ordinal()];
+        }
+                
+        return fatherLastName;
+        
+    }
+    
+    
+    /**
+     * Convertit une chaine de caractere contenant l'age 
+     * en une chaine normalisée "9y 9m 9d"
+     * @param ageString
+     * @return 
+     */
+    static Pattern agePattern = Pattern.compile( "([0-9]*)" );
+    static private String formatAgeToField(String ageString) {
+        String ageField;
+        ageString = ageString.trim();
+        Matcher m = agePattern.matcher(ageString);
+        if( m.matches() ) {
+            // je considere qu'un nombre seul (sans unité) est un nombre d'années
+            ageField = ageString.concat("y");
+        } else {
+            ageField = ageString.replace('a', 'y').replace('j', 'd');        
+        }
+        return ageField;
     }
     
     /**
@@ -739,42 +773,42 @@ public class ReleveFileEgmt {
         line.appendCsvFn("Prenom");
         line.appendCsvFn("Sexe");
         line.appendCsvFn("Age"); 
-        line.appendCsvFn("Lieu naissance"); 
-        line.appendCsvFn("Commentaire individu");
+        line.appendCsvFn("Lieu"); 
+        line.appendCsvFn("Infos");
         
         line.appendCsvFn("Prenom pere"); 
         line.appendCsvFn("Pere decede"); 
-        line.appendCsvFn("Commentaire pere");
+        line.appendCsvFn("Info pere");
 
         line.appendCsvFn("Nom mere"); 
         line.appendCsvFn("Prenom mere"); 
         line.appendCsvFn("Mere decede");
-        line.appendCsvFn("Commenaire mere");
+        line.appendCsvFn("Info mere");
         
-        line.appendCsvFn("Nom epouse"); 
-        line.appendCsvFn("Prenom epouse"); 
-        line.appendCsvFn("Epouse decedee");
-        line.appendCsvFn("Age epouse");
-        line.appendCsvFn("Lieu naissance");
-        line.appendCsvFn("Commentaire epouse");
+        line.appendCsvFn("Nom conjoint");
+        line.appendCsvFn("Prenom conjoint");
+        line.appendCsvFn("Deces conjoint");
+        line.appendCsvFn("Age conjoint");
+        line.appendCsvFn("Lieu conjoint");
+        line.appendCsvFn("Info conjoint");
         
-        line.appendCsvFn("Prenom pere epouse");
-        line.appendCsvFn("Pere decede"); 
-        line.appendCsvFn("Commentaire pere epouse");
+        line.appendCsvFn("Prenom pere conjoint");
+        line.appendCsvFn("Deces pere conjoint");
+        line.appendCsvFn("Info pere conjoint");
         
-        line.appendCsvFn("Nom mere epouse");
-        line.appendCsvFn("Prenom mere epouse");
-        line.appendCsvFn("Mere epouse decedee");
-        line.appendCsvFn("Commentaire mere epouse");
+        line.appendCsvFn("Nom mere conjoint");
+        line.appendCsvFn("Prenom mere conjoint");
+        line.appendCsvFn("Deces mere conjoint");
+        line.appendCsvFn("Info mere conjoint");
         
         line.appendCsvFn("Heritiers");
-        line.appendCsvFn("Nom temoin 1");
-        line.appendCsvFn("Prenom temoin 1");
-        line.appendCsvFn("Commentaire temoin 1");
-        line.appendCsvFn("Nom temoin 2");
-        line.appendCsvFn("Prenom temoin 2");
-        line.appendCsvFn("Commentaire temoin 2");
-        line.appendCsv("Commentaire general");
+        line.appendCsvFn("Nom parrain");
+        line.appendCsvFn("Prenom parrain");
+        line.appendCsvFn("Commentaire parrain");
+        line.appendCsvFn("Nom marrraine");
+        line.appendCsvFn("Prenom marrraine");
+        line.appendCsvFn("Infos marrraine");
+        line.appendCsv("Infos diverses");
 
         line.appendCsv("\n");
         return line;

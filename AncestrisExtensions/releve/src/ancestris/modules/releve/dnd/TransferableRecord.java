@@ -1,5 +1,6 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
@@ -27,11 +28,13 @@ public class TransferableRecord  implements Transferable {
      * Remarque : la connaissance de la source permettra de verifier si le
      * destinataire du DnD est bien différent de la source du DnD
      * @param record
-     * @param source
+     * @param sourceComponent
      */
-    public TransferableRecord(Record record, Component source) {
+    public TransferableRecord(FieldPlace recordsInfoPlace, String sourceTitle, Record record, Component sourceComponent) {
+        this.data.recordsInfoPlace = recordsInfoPlace;
+        this.data.sourceTitle = sourceTitle;
         this.data.record = record;
-        this.data.source = source;
+        this.data.sourceComponent = sourceComponent;
     }
 
     /**
@@ -60,7 +63,9 @@ public class TransferableRecord  implements Transferable {
      * necessaire parce que  getTransferData() ne peut retourner qu'un objet
      */
     protected class TransferableData {
+        protected FieldPlace recordsInfoPlace;
+        protected String sourceTitle;
         protected Record record;
-        protected Component source;
+        protected Component sourceComponent;
     }
 }

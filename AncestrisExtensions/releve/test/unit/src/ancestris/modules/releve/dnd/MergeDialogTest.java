@@ -1,6 +1,7 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
@@ -23,7 +24,7 @@ public class MergeDialogTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             RecordMarriage record = MergeModelMarriageTest.createMarriageRecord("M1");
 
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, record, false);
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, MergeModelMarriageTest.getRecordsInfoPlace(), MergeModelMarriageTest.getSourceTitle(), record, false);
             dialog.copyRecordToEntity();
             dialog.componentClosed();
             dialog.dispose();
@@ -51,9 +52,10 @@ public class MergeDialogTest extends TestCase {
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setEventPlace("Paris","75000","","state","country");
-
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, false);
+            FieldPlace recordsInfoPlace = new FieldPlace();
+            recordsInfoPlace.setValue("Paris,75000,,state,country");
+            String sourceTitle = "";
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, recordsInfoPlace, sourceTitle, record, false);
             dialog.copyRecordToEntity();
             dialog.componentClosed();
             dialog.dispose();
@@ -81,9 +83,11 @@ public class MergeDialogTest extends TestCase {
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setEventPlace("Paris","75000","","state","country");
 
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, false);
+            FieldPlace recordsInfoPlace = new FieldPlace();
+            recordsInfoPlace.setValue("Paris,75000,,state,country");
+            String sourceTitle = "";
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, recordsInfoPlace, sourceTitle, record, false);
             dialog.copyRecordToEntity();
             dialog.componentClosed();
             dialog.dispose();
@@ -111,9 +115,11 @@ public class MergeDialogTest extends TestCase {
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setEventPlace("Paris","75000","","state","country");
-
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, false);
+            
+            FieldPlace recordsInfoPlace = new FieldPlace();
+            recordsInfoPlace.setValue("Paris,75000,,state,country");
+            String sourceTitle = "";
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, recordsInfoPlace, sourceTitle, record, false);
             dialog.copyRecordToEntity();
             dialog.componentClosed();
             dialog.dispose();

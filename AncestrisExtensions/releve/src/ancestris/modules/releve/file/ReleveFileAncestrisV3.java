@@ -145,16 +145,21 @@ public class ReleveFileAncestrisV3 {
                     if ( fields == null) {
                         break;
                     }
-                    
-                    if (fields[Field.eventType.ordinal()].equals("N")) {
-                        RecordBirth record = new RecordBirth();
-
-                        record.setEventPlace(
-                                fields[Field.nomCommune.ordinal()],
+                    if (fields[Field.eventType.ordinal()].equals("N/M/D/V")) {
+                        // je decompte l'entete
+                        lineNumber--;
+                        continue;
+                    }
+                    if ( lineNumber == 1) {
+                        fileBuffer.setRegisterInfoPlace(fields[Field.nomCommune.ordinal()],
                                 fields[Field.codeCommune.ordinal()],
                                 fields[Field.nomDepartement.ordinal()],
                                 fields[Field.stateName.ordinal()],
                                 fields[Field.countryName.ordinal()] );
+                    }
+                    if (fields[Field.eventType.ordinal()].equals("N")) {
+                        RecordBirth record = new RecordBirth();
+                       
                         record.setParish(fields[Field.parish.ordinal()]);
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
                         record.setCote(fields[Field.cote.ordinal()]);
@@ -164,9 +169,9 @@ public class ReleveFileAncestrisV3 {
                                 fields[Field.indiFirstName.ordinal()],
                                 fields[Field.indiLastName.ordinal()],
                                 fields[Field.indiSex.ordinal()],
+                                "", // pas de d'age a la naissance
                                 fields[Field.indiBirthDate.ordinal()],
-                                "", // pas de date de naissance a la naissance
-                                "", // pas de lieu a la naissance
+                                fields[Field.indiBirthPlace.ordinal()],
                                 "", // pas de profession a la naissance
                                 "", // pas de residence a la naissance
                                 fields[Field.indiComment.ordinal()]);
@@ -216,17 +221,11 @@ public class ReleveFileAncestrisV3 {
                         } catch ( NumberFormatException ex ) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("M")) {
                         RecordMarriage record = new RecordMarriage();
 
-                        record.setEventPlace(
-                                fields[Field.nomCommune.ordinal()],
-                                fields[Field.codeCommune.ordinal()],
-                                fields[Field.nomDepartement.ordinal()],
-                                fields[Field.stateName.ordinal()],
-                                fields[Field.countryName.ordinal()] );
                         record.setParish(fields[Field.parish.ordinal()]);
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
                         record.setCote(fields[Field.cote.ordinal()]);
@@ -337,17 +336,11 @@ public class ReleveFileAncestrisV3 {
                         } catch (NumberFormatException ex) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("D")) {
                         RecordDeath record = new RecordDeath();
 
-                        record.setEventPlace(
-                                fields[Field.nomCommune.ordinal()],
-                                fields[Field.codeCommune.ordinal()],
-                                fields[Field.nomDepartement.ordinal()],
-                                fields[Field.stateName.ordinal()],
-                                fields[Field.countryName.ordinal()] );
                         record.setParish(fields[Field.parish.ordinal()]);
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
                         record.setCote(fields[Field.cote.ordinal()]);
@@ -421,19 +414,13 @@ public class ReleveFileAncestrisV3 {
                         } catch (NumberFormatException ex) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("V")) {
                         RecordMisc record = new RecordMisc();
                         record.setEventType(fields[Field.eventTypeName.ordinal()]);
                         record.setNotary(fields[Field.notaryComment.ordinal()]);
 
-                        record.setEventPlace(
-                                fields[Field.nomCommune.ordinal()],
-                                fields[Field.codeCommune.ordinal()],
-                                fields[Field.nomDepartement.ordinal()],
-                                fields[Field.stateName.ordinal()],
-                                fields[Field.countryName.ordinal()] );
                         record.setParish(fields[Field.parish.ordinal()]);
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
                         record.setCote(fields[Field.cote.ordinal()]);
@@ -545,12 +532,8 @@ public class ReleveFileAncestrisV3 {
                         } catch (NumberFormatException ex) {
                             record.recordNo = 0;
                         }
-                        fileBuffer.loadRecord(record);
+                        fileBuffer.addRecord(record);
                         
-                    } else if (fields[Field.eventType.ordinal()].equals("N/M/D/V")) {
-                        // je decompte l'entete
-                        lineNumber--;
-                        continue;
                     } else {
                         fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
                         fileBuffer.append("\n");
@@ -621,7 +604,7 @@ public class ReleveFileAncestrisV3 {
                         line.appendCsvFn(record.getIndiLastName().getValue());
                         line.appendCsvFn(record.getIndiFirstName().getValue());
                         line.appendCsvFn(record.getIndiSex().toString());
-                        line.appendCsvFn(""); // place
+                        line.appendCsvFn(record.getIndiBirthPlace().toString()); // place
                         line.appendCsvFn(record.getIndiBirthDate().toString()); // IndiBirthDate
                         line.appendCsvFn(""); // age
                         line.appendCsvFn(""); // occupation
@@ -725,7 +708,7 @@ public class ReleveFileAncestrisV3 {
                         line.appendCsvFn(record.getIndiLastName().getValue());
                         line.appendCsvFn(record.getIndiFirstName().getValue());
                         line.appendCsvFn(""); // IndiSex
-                        line.appendCsvFn(record.getIndiPlace().toString());
+                        line.appendCsvFn(record.getIndiBirthPlace().toString());
                         line.appendCsvFn(record.getIndiBirthDate().toString());
                         line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
@@ -758,7 +741,7 @@ public class ReleveFileAncestrisV3 {
                         line.appendCsvFn(record.getWifeLastName().toString());
                         line.appendCsvFn(record.getWifeFirstName().toString());
                         line.appendCsvFn(""); //WifeSex
-                        line.appendCsvFn(record.getWifePlace().toString());
+                        line.appendCsvFn(record.getWifeBirthPlace().toString());
                         line.appendCsvFn(record.getWifeBirthDate().toString());
                         line.appendCsvFn(record.getWifeAge().getValue());
                         line.appendCsvFn(record.getWifeOccupation().toString());
@@ -830,7 +813,7 @@ public class ReleveFileAncestrisV3 {
                         line.appendCsvFn(record.getIndiLastName().toString());
                         line.appendCsvFn(record.getIndiFirstName().toString());
                         line.appendCsvFn(record.getIndiSex().toString());
-                        line.appendCsvFn(record.getIndiPlace().toString());
+                        line.appendCsvFn(record.getIndiBirthPlace().toString());
                         line.appendCsvFn(record.getIndiBirthDate().toString());
                         line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
@@ -934,7 +917,7 @@ public class ReleveFileAncestrisV3 {
                         line.appendCsvFn(record.getIndiLastName().toString());
                         line.appendCsvFn(record.getIndiFirstName().toString());
                         line.appendCsvFn(record.getIndiSex().toString());
-                        line.appendCsvFn(record.getIndiPlace().toString());
+                        line.appendCsvFn(record.getIndiBirthPlace().toString());
                         line.appendCsvFn(record.getIndiBirthDate().toString());
                         line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
@@ -967,7 +950,7 @@ public class ReleveFileAncestrisV3 {
                         line.appendCsvFn(record.getWifeLastName().toString());
                         line.appendCsvFn(record.getWifeFirstName().toString());
                         line.appendCsvFn(record.getWifeSex().toString());
-                        line.appendCsvFn(record.getWifePlace().toString());
+                        line.appendCsvFn(record.getWifeBirthPlace().toString());
                         line.appendCsvFn(record.getWifeBirthDate().toString());
                         line.appendCsvFn(record.getWifeAge().getValue());
                         line.appendCsvFn(record.getWifeOccupation().toString());
