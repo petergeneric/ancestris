@@ -40,6 +40,9 @@ import javax.swing.JTextField;
 import javax.swing.text.*;
 
 import genj.util.ChangeSupport;
+import java.awt.AWTEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.event.ChangeListener;
 
 public class Java2sAutoTextField extends JTextField {
@@ -74,7 +77,7 @@ public class Java2sAutoTextField extends JTextField {
                 for( int j = 0 ; j < s.length(); j++) {
                     if ( (i+j == 0 )
                         || (( i>0 && j==0) && ((s1.charAt(i-1) == ' ') || (s1.charAt(i-1) == '-') || (s1.charAt(i-1) == ',') ))
-                        || (( j>0) && ((s.charAt(j-1) == ' ') || (s.charAt(j-1) == '-') || (s.charAt(j-1) == '-') ))
+                        || (( j>0) && ((s.charAt(j-1) == ' ') || (s.charAt(j-1) == '-') || (s.charAt(j-1) == ',') ))
                         ) {
                         s3.append( s.substring(j,j+1).toUpperCase(getLocale()));
                     } else {
@@ -287,6 +290,20 @@ public class Java2sAutoTextField extends JTextField {
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
+
+    @Override
+    public void processKeyEvent(KeyEvent e) {
+        if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP) && (e.getModifiers() & InputEvent.ALT_MASK)!= 0 ) {
+            if( autoComboBox != null) {
+                autoComboBox.getParent().dispatchEvent((AWTEvent)e);
+            } else {
+                getParent().dispatchEvent((AWTEvent)e);
+            }
+            return; //don't process the event
+        }
+        super.processKeyEvent(e);
+    }
+
     private List<String> dataList;
     private boolean isCaseSensitive;
     private boolean isStrict;

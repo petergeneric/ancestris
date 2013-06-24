@@ -15,4 +15,5 @@ public interface MenuCommandProvider {
     public void showOptionPanel();
     public void showToFront();
     public void standaloneEditorClosed();
+    public void setBrowserVisible(boolean visible);
 }

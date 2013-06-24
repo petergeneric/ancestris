@@ -80,7 +80,7 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         indiSex,
         indiAge,
         indiBirthDate,
-        indiPlace,
+        indiBirthPlace,
         indiOccupation,
         indiResidence,
         indiComment,

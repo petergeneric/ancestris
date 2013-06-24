@@ -2,6 +2,7 @@ package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.dnd.TransferableRecord.TransferableData;
 import ancestris.modules.releve.ReleveTable;
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.Record;
 import java.awt.datatransfer.Transferable;
@@ -25,17 +26,14 @@ public class RecordTransferHandle extends TransferHandler {
     public Transferable createTransferable(JComponent c) {
         if (c instanceof ReleveTable ) {
             ReleveTable table = (ReleveTable) c ;
+
             // je recupere le clone du releve 
             Record record = ((ModelAbstract)table.getModel()).getRecord(table.convertRowIndexToModel(table.getSelectedRow()));
-            record = record.clone();
+            Record clonedRecord = record.clone();
             // je complete le lieu dans le releve
-            record.setEventPlace(
-                    table.getPlaceManager().getCityName(),
-                    table.getPlaceManager().getCityCode(),
-                    table.getPlaceManager().getCountyName(),
-                    table.getPlaceManager().getStateName(),
-                    table.getPlaceManager().getCountryName());
-            return new TransferableRecord(record, c);
+            FieldPlace recordsInfoPlace = new FieldPlace();
+            recordsInfoPlace.setValue(table.getPlaceManager().getPlace());
+            return new TransferableRecord(recordsInfoPlace, table.getPlaceManager().getSourceTitle(), clonedRecord, c);
         } else {
             return null;
         }
@@ -50,7 +48,7 @@ public class RecordTransferHandle extends TransferHandler {
 
         try {
             TransferableData data = (TransferableData)  support.getTransferable().getTransferData(TransferableRecord.recordFlavor);
-            if ( data.source.equals(support.getComponent())){
+            if ( data.sourceComponent.equals(support.getComponent())){
                 // je refuse d'importer un releve si la destination est identique a la source
                 return false;
             }

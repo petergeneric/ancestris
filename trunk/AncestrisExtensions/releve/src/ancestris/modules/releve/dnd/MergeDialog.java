@@ -6,12 +6,14 @@
 
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
+import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
-import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import genj.tree.TreeView;
 import ancestris.view.SelectionSink;
@@ -31,7 +33,6 @@ import org.openide.util.NbPreferences;
  */
 public class MergeDialog extends javax.swing.JFrame implements EntityActionManager {
 
-    protected MergeModel currentModel = null;
     private Component dndSourceComponent = null;
     private Entity selectedEntity = null;
     private Gedcom gedcom=null;
@@ -44,9 +45,9 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     * @param selectedEntity
     * @param record
     */
-    public static MergeDialog show(Component parent, final Gedcom gedcom, final Entity selectedEntity, final Record record, boolean visible) {
+    public static MergeDialog show(Component parent, final Gedcom gedcom, final Entity selectedEntity, final FieldPlace recordsInfoPlace , final String sourceTitle, final Record record, boolean visible) {
 
-        final MergeDialog dialog = new MergeDialog(parent);
+        final MergeDialog dialog = new MergeDialog();
         try {
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
@@ -57,7 +58,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                 }
             });
             dialog.setVisible(visible);
-            dialog.initData(record, gedcom, selectedEntity);
+            dialog.initData(parent, recordsInfoPlace, sourceTitle, record, gedcom, selectedEntity);
             return dialog;
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
@@ -78,9 +79,8 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     /**
      * Constructeur d'une fenetre
      */
-    protected MergeDialog(Component parent) {
+    protected MergeDialog() {
         //super(SwingUtilities.windowForComponent(parent));
-        this.dndSourceComponent = parent;
         setLayout(new java.awt.BorderLayout());
         initComponents();
         setAlwaysOnTop(true);
@@ -111,8 +111,8 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
             setBounds(screen.width / 2 -100, screen.height / 2- 100, 300, 450);
         }
 
-        String splitHeight = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSplitHeight", "90");
-        jSplitPane1.setDividerLocation(Integer.parseInt(splitHeight));
+        //String splitHeight = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSplitHeight", "90");
+        //jSplitPane0.setDividerLocation(Integer.parseInt(splitHeight));
         showAllParents =  Boolean.parseBoolean(NbPreferences.forModule(MergeDialog.class).get("MergeDialogShowAllParents", "false"));
     }
 
@@ -122,7 +122,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
      */
     protected void componentClosed() {
         // j'enregistre les preferences de la table
-        mergeTable.componentClosed();
+        mergePanel1.componentClosed();
 
         // j'enregistre la taille et la position
         String size;
@@ -132,7 +132,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                 + String.valueOf(getLocation().y));
 
         NbPreferences.forModule(MergeDialog.class).put("MergeDialogSize", size);
-        NbPreferences.forModule(MergeDialog.class).put("MergeDialogSplitHeight", String.valueOf(jSplitPane1.getDividerLocation()));
+        NbPreferences.forModule(MergeDialog.class).put("MergeDialogSplitHeight", String.valueOf(jSplitPane0.getDividerLocation()));
         NbPreferences.forModule(MergeDialog.class).put("MergeDialogShowAllParents", String.valueOf(showAllParents));
     }
 
@@ -141,19 +141,14 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
      * @param selectedEntity
      * @param record
      */
-    protected void initData(Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
+    protected void initData(Component parent, FieldPlace recordsInfoPlace, String sourceTitle, Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
         List<MergeModel> models;
-        this.mergeRecord = new MergeRecord(record);
+        this.dndSourceComponent = parent;
+        this.mergeRecord = new MergeRecord(recordsInfoPlace, sourceTitle, record);
         this.gedcom = gedcom;
         this.selectedEntity = selectedEntity;
 
-
-        // je recupere les modeles contenant les entites compatibles avec le relevé
-        models = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showAllParents);
-        // j'affiche les modeles et selectionne le premier modele de la liste
-        mergePanel1.initData(models, selectedEntity, this);
-
-        // j'affiche l'icone de la fenetre
+        // j'affiche l'icone correspondant type de relevé de la fenetre
         String ressourceName ;
         switch (mergeRecord.getType()) {
             case Birth:
@@ -168,10 +163,23 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
             default:
                 ressourceName="/ancestris/modules/releve/images/misc.png";
                 break;
-
         }
         ImageIcon icon = new ImageIcon(MergeDialog.class.getResource(ressourceName));
         setIconImage(icon.getImage());
+
+        // je recupere les modeles contenant les entites compatibles avec le relevé
+        models = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showAllParents);
+        // j'affiche les modeles et selectionne le premier modele de la liste
+        // (j'affiche le panel1 en dernier pour que le partipant 1 soit selectionné dans l'arbre)
+        mergePanel2.initData( models, selectedEntity, this, MergeParticipantType.participant2);
+        mergePanel1.initData( models, selectedEntity, this, MergeParticipantType.participant1);
+        if (mergePanel2.getCurrentModel() == null ) {
+            // si le deuxième panneau est vide , j'affiche le premier panneau dans toute la fenetre.
+            jSplitPane0.setDividerLocation(getHeight());
+        } else {
+            // j'affiche chaque panneau dans chaque moitié de la fenetre
+            jSplitPane0.setDividerLocation((getHeight()-jPanelButton.getHeight()*2)/2);
+        }
         
     }
 
@@ -187,7 +195,13 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
         // je recupere les modeles contenant les entites compatibles avec le relevé
         models = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showNewParents);
         // j'affiche les modeles et selectionne le premier modele de la liste
-        mergePanel1.initData(models, selectedEntity, this);
+        mergePanel1.initData(models, selectedEntity, this, MergeParticipantType.participant1);
+        mergePanel2.initData( models, selectedEntity, this, MergeParticipantType.participant2);
+        if (mergePanel2.getCurrentModel() == null ) {
+            jSplitPane0.setDividerLocation(getHeight());
+        } else {
+            jSplitPane0.setDividerLocation((getHeight()-jPanelButton.getHeight())/2);
+        }
     }
 
     /**
@@ -200,73 +214,53 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
 
 
 
-    /**
-     * selectionne le modele de données et l'affiche dans la fenetre
-     * Cette methode est appelee par le panneau de choix des individus
-     * @param entity
-     * @param record
-     */
-    protected void selectModel(MergeModel model) {
-        this.currentModel = model;
-        mergeTable.setModel(currentModel);
-        mergeTable.setEntityActionManager(this);
-        // j'affiche les données du modele dans la table
-        currentModel.fireTableDataChanged();
-        // je renseigne le titre de la fenetre
-        setTitle(currentModel.getTitle());
-        // j'affiche l'entité dans l'arbre
-        if ( dndSourceComponent instanceof TreeView ) {
-            if (model.getSelectedEntity() != null ) {
-                showEntityInDndSource(model.getSelectedEntity(), true);
-            } else {
-                if( currentModel instanceof MergeModelBirth && currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityValue instanceof Fam) {
-                    // je centre l'arbre sur la famille des parents
-                    showEntityInDndSource((Fam)currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, true);
-                } 
-            }
-        }
-    }
-
-
+    
     /**
      * afffiche l'entité dans le dnd source
      * @param entity
      * @param setRoot positionne l'entité comme racine de l'arbre si la source de Dnd est un arbre
-     */@Override
+     */
+    @Override
     public void showEntityInDndSource(Entity entity, boolean setRoot) {
-         if ( dndSourceComponent instanceof TreeView ) {
-            TreeView treeView = (TreeView)dndSourceComponent;
-            if( setRoot) {
+        if (dndSourceComponent instanceof TreeView) {
+            TreeView treeView = (TreeView) dndSourceComponent;
+            if (setRoot) {
                 // je declare l'entité comme racine de l'arbre
                 treeView.setRoot(entity);
             } else {
                 // je centre la vue sur l'entité
-                treeView.setContext(new Context(entity),false);
+                treeView.setContext(new Context(entity), false);
             }
             treeView.show(entity);
         }
     }
-
+    
     /**
      * pour lancer le test avec junit
      * @throws Exception
      */
     protected void copyRecordToEntity() throws Exception {
+        final MergeModel currentModel1 = mergePanel1.getCurrentModel();
+        final MergeModel currentModel2 = mergePanel2.getCurrentModel();
         
-        currentModel.getGedcom().doUnitOfWork(new UnitOfWork() {
+        currentModel1.getGedcom().doUnitOfWork(new UnitOfWork() {
             @Override
             public void perform(Gedcom gedcom) {
-                long beforeChange = currentModel.getGedcom().getLastChange()!=null ? currentModel.getGedcom().getLastChange().getTime() : 0;
+                long beforeChange = currentModel1.getGedcom().getLastChange()!=null ? currentModel1.getGedcom().getLastChange().getTime() : 0;
                 try {
-                    currentModel.copyRecordToEntity();
+                    Property associatedProperty1 = currentModel1.copyRecordToEntity();
+                    if (currentModel2 != null ) {
+                        Property associatedProperty2 = currentModel2.copyRecordToEntity();
+                        currentModel2.copyAssociation(associatedProperty1, associatedProperty2);
+                    }
                 } catch (Throwable t) {
-                    // je constitue la comande pour annuler les modifications
-                    long afterChange = currentModel.getGedcom().getLastChange()!=null ? currentModel.getGedcom().getLastChange().getTime() : 0;
+                    // je constitue la commande pour annuler les modifications
+                    long afterChange = currentModel1.getGedcom().getLastChange()!=null ? currentModel1.getGedcom().getLastChange().getTime() : 0;
                     if ( afterChange > beforeChange ) {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                currentModel.getGedcom().undoUnitOfWork(false);
+                                currentModel1.getGedcom().undoUnitOfWork(false);
                             }
                         });
                         
@@ -287,44 +281,25 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
+        jSplitPane0 = new javax.swing.JSplitPane();
         mergePanel1 = new ancestris.modules.releve.dnd.MergePanel();
-        jPanelTable = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        mergeTable = new ancestris.modules.releve.dnd.MergeTable();
+        mergePanel2 = new ancestris.modules.releve.dnd.MergePanel();
         jPanelButton = new javax.swing.JPanel();
         jButtonOK = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setMaximumSize(null);
+        jSplitPane0.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane0.setMaximumSize(null);
 
         mergePanel1.setPreferredSize(new java.awt.Dimension(300, 100));
-        jSplitPane1.setLeftComponent(mergePanel1);
+        jSplitPane0.setTopComponent(mergePanel1);
 
-        jPanelTable.setPreferredSize(new java.awt.Dimension(400, 300));
-        jPanelTable.setLayout(new java.awt.BorderLayout());
+        mergePanel2.setPreferredSize(new java.awt.Dimension(300, 100));
+        jSplitPane0.setBottomComponent(mergePanel2);
 
-        jScrollPane2.setPreferredSize(null);
-
-        mergeTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        mergeTable.setPreferredScrollableViewportSize(null);
-        jScrollPane2.setViewportView(mergeTable);
-
-        jPanelTable.add(jScrollPane2, java.awt.BorderLayout.CENTER);
-
-        jSplitPane1.setRightComponent(jPanelTable);
-
-        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jSplitPane0, java.awt.BorderLayout.CENTER);
 
         jButtonOK.setText(org.openide.util.NbBundle.getMessage(MergeDialog.class, "MergeDialog.jButtonOK.text")); // NOI18N
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
@@ -368,6 +343,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
             // j'affiche l'entité dans l'arbre dynamic
             if (dndSourceComponent instanceof TreeView) {
                 TreeView treeView = (TreeView) dndSourceComponent;
+                final MergeModel currentModel = mergePanel1.getCurrentModel();
                 if (currentModel.getSelectedEntity() != null) {
                     if (currentModel.getSelectedEntity() instanceof Indi) {
                         Indi selectedIndi = (Indi) currentModel.getSelectedEntity();
@@ -375,7 +351,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                             showEntityInDndSource(selectedIndi.getFamilyWhereBiologicalChild(), true);
                             // propagate to others
                             try {
-//XXX: temporarilly disabled                                SelectionSink.Dispatcher.fireSelection(null, treeView.getContext());
+                                SelectionSink.Dispatcher.fireSelection(null, new Context(selectedIndi));
                             } catch (Exception ex) {
                             } finally {
                             }
@@ -413,11 +389,9 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOK;
     private javax.swing.JPanel jPanelButton;
-    private javax.swing.JPanel jPanelTable;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane0;
     private ancestris.modules.releve.dnd.MergePanel mergePanel1;
-    private ancestris.modules.releve.dnd.MergeTable mergeTable;
+    private ancestris.modules.releve.dnd.MergePanel mergePanel2;
     // End of variables declaration//GEN-END:variables
 
    

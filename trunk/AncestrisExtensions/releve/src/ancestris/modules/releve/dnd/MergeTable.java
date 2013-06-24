@@ -3,13 +3,19 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.MergeModel.CompareResult;
 import ancestris.modules.releve.dnd.MergeModel.RowType;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyEvent;
 import genj.gedcom.Source;
 import genj.util.WordBuffer;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -31,6 +37,7 @@ public class MergeTable extends JTable {
     static private Color yellowColor = new Color(240, 240, 10);
     static private Color blueColor = new Color(200, 255, 255);
     static private Color greyColor = new Color(240, 240, 240);
+    static private String entityCursorToolTip = "<html>Simple clic: centrer dans l'arbre.<br>Double clic: racine de l'arbre</html>";
 
     public  MergeTable() {
         setPreferredSize(null);
@@ -45,7 +52,7 @@ public class MergeTable extends JTable {
     public void setModel(MergeModel model) {
         super.setModel(model);
         loadColumnLayout();
-        
+
         addMouseListener(new MouseAdapter() {
 
             @Override
@@ -55,16 +62,37 @@ public class MergeTable extends JTable {
                 int column = target.columnAtPoint(e.getPoint());
 
                 if (column == 4) {
-                    Entity entity = (Entity) ((MergeModel)getModel()).getValueAt(row, column);
-                    if ( entityActionManager != null && entity != null) {
-                        if ( e.getClickCount() == 2 ) {
+                    Entity entity = (Entity) ((MergeModel) getModel()).getValueAt(row, column);
+                    if (entityActionManager != null && entity != null) {
+                        if (e.getClickCount() == 2) {
                             entityActionManager.showEntityInDndSource(entity, true);
                         } else {
                             entityActionManager.showEntityInDndSource(entity, false);
                         }
                     }
                 }
+            }        
+        });
 
+        addMouseMotionListener(new MouseAdapter() {
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                JTable target = (JTable) e.getSource();
+                //int cModel = target.columnAtPoint(e.getPoint());
+                //int column = target.convertColumnIndexToView(cModel);
+                int row = target.rowAtPoint(e.getPoint());
+                int column = target.columnAtPoint(e.getPoint());
+                Object value = ((MergeModel) getModel()).getValueAt(row, column);
+                if (entityActionManager != null && value != null) {
+                    if (value instanceof Indi || value instanceof Fam) {
+                        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    } else {
+                        setCursor(Cursor.getDefaultCursor());
+                    }
+                } else {
+                    setCursor(Cursor.getDefaultCursor());
+                }
             }
         });
     }
@@ -172,7 +200,7 @@ public class MergeTable extends JTable {
 
 
     /**
-     * Cette classe gère l'affichage des celleules de la table
+     * Cette classe gère l'affichage des cellules de la table
      */
     private class MergeTableRenderer extends JLabel implements TableCellRenderer {
 
@@ -196,13 +224,16 @@ public class MergeTable extends JTable {
             MergeModel model = (MergeModel) table.getModel();
             MergeModel.MergeRow mergeRow = model.getRow(row);
             setFont(table.getFont());
+            setToolTipText(null);
             // je choisis le format d'affichage du texte
             int modelColumn = column;
             if ( value != null ) {
                 if (value instanceof PropertyDate) {
-                    setText(((PropertyDate)value).getDisplayValue());
-                    if ( column==1) {
-                        setToolTipText(((PropertyDate)value).getPhrase());
+                    PropertyDate date = (PropertyDate)value;
+                    setText(date.getDisplayValue());
+                    if ( column==1 && date.getPhrase() != null && !date.getPhrase().isEmpty()) {
+                        //setToolTipText(((PropertyDate)value).getPhrase());
+                        setToolTipText(wrapToolTip(date.getPhrase(), 80));
                     }
                 } else if (value instanceof Source) {
                     if ( column == 4 ) {
@@ -213,17 +244,32 @@ public class MergeTable extends JTable {
                 } else if (value instanceof Entity) {
                     if ( column == 4 ) {
                         setText(((Entity)value).getId());
+                        // j'affiche un tooltip pour
+                        setToolTipText(entityCursorToolTip);
                     } else {
                         setText(((Entity)value).getDisplayValue());
                     }
+                } else if (value instanceof PropertyEvent) {
+                    setText(((PropertyEvent)value).getPropertyValue("TYPE"));                    
                 } else {
-                    if ( mergeRow.rowType == RowType.EventComment && (column == 1 || column==3) ) {
-                        String tooltipText = "<html>";
-                        tooltipText += value.toString().replace("\n", "<br>");
-                        tooltipText += "</html>";
-                        setToolTipText(tooltipText);
+                    // j'affiche un tooltip pour les commentaires et les professions
+                    if ( (mergeRow.rowType == RowType.EventComment
+                          ||  mergeRow.rowType == RowType.IndiOccupation
+                          ||  mergeRow.rowType == RowType.IndiMarriedOccupation
+                          ||  mergeRow.rowType == RowType.IndiFatherOccupation
+                          ||  mergeRow.rowType == RowType.IndiMotherOccupation
+                          ||  mergeRow.rowType == RowType.WifeOccupation
+                          ||  mergeRow.rowType == RowType.WifeMarriedOccupation
+                          ||  mergeRow.rowType == RowType.WifeFatherOccupation
+                          ||  mergeRow.rowType == RowType.WifeMotherOccupation )
+                          && (column == 1 || column==3) && !value.toString().isEmpty()) {
+                        //String tooltipText = "<html>";
+                        //tooltipText += value.toString().replace("\n", "<br>");
+                        //tooltipText += "</html>";
+
+                        setToolTipText(wrapToolTip(value.toString(), 80));
                     }
-                    setText(value.toString());
+                    setText(value.toString().replace('\n', ' '));
                 }
             } else {
                 // la valeur est nulle
@@ -295,7 +341,12 @@ public class MergeTable extends JTable {
                         }
                         break;
                     case 4:
-                        setForeground(Color.blue);
+                        if (entityActionManager != null && value != null && (value instanceof Fam || value instanceof Indi)) {
+                            // j'affiche en bleu pour signaler une action possible avec la souris
+                            setForeground(Color.blue);
+                        } else {
+                            setForeground(table.getForeground());
+                        }
                         setBackground(table.getBackground());
                         break;
                     default:
@@ -309,31 +360,60 @@ public class MergeTable extends JTable {
         }
     }
 
-//    private class MergeCellComboRenderer extends JLabel implements ListCellRenderer {
-//
-//        public MergeCellComboRenderer() {
-//            setOpaque(true);
-//        }
-//
-//        @Override
-//        public Component getListCellRendererComponent(JList list,
-//                Object value,
-//                int index,
-//                boolean isSelected,
-//                boolean cellHasFocus) {
-//
-//            if (value != null) {
-//                if (value instanceof Source) {
-//                    setText(((Source) value).toString());
-//                } else {
-//                    setText(value.toString());
-//                }
-//            } else {
-//                setText("");
-//            }
-//            return this;
-//        }
-//    }
+    /**
+     * convertit en HTML et "wrappe" le texte d'un tooltip
+     * @param tip
+     * @param length
+     * @return
+     */
+    public static String wrapToolTip(String tip, int length) {
+        // marge de detection d'un espace pour wrapper
+        final int SPACE_BUFFER = 20;
+        List<String> lines = new ArrayList<String>();
+        int maxLength = 0;
+        while (maxLength < tip.length()) {
+            String overLong;
+            if (maxLength + length + SPACE_BUFFER < tip.length()) {
+                overLong = tip.substring(maxLength, maxLength + length + SPACE_BUFFER);
+            } else {
+                overLong = tip.substring(maxLength);
+            }
+                int firstReturn = overLong.indexOf('\n');
+                if ( firstReturn > -1 ) {
+                    // je decoupe au niveau du caractere '\n'
+                    lines.add(tip.substring(maxLength, maxLength + firstReturn)+ "</br>");
+                    maxLength = maxLength + firstReturn + 1;
+                } else {
+                    int lastSpace = overLong.lastIndexOf(' ');
+                    if (lastSpace >= length) {
+                        // je decoupe au niveau dernier espace
+                        lines.add(tip.substring(maxLength, maxLength + lastSpace)+ "</br>");
+                        maxLength = maxLength + lastSpace + 1;
+                    } else {
+                        // je prends toute la ligne
+                        if (maxLength + length + SPACE_BUFFER < tip.length()) {
+                            lines.add(tip.substring(maxLength, length));
+                            maxLength = maxLength + length;
+                        } else {
+                            // je prends toute la ligne
+                            lines.add(tip.substring(maxLength));
+                            break;
+                        }
+                    }
+                }
+            //} else {
+            //    // je prends toute la ligne
+            //    lines.add(tip.substring(maxLength));
+            //    break;
+            //}
+        }
 
-
+        StringBuilder sb = new StringBuilder("<html>");
+        for (int i = 0; i < lines.size() - 1; i++) {
+            sb.append(lines.get(i)).append("<br>");
+        }
+        sb.append(lines.get(lines.size() - 1));
+        sb.append(("</html>"));
+        return sb.toString();
+    }
 }

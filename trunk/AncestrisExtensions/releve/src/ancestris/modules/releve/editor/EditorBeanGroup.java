@@ -1,0 +1,237 @@
+package ancestris.modules.releve.editor;
+
+import ancestris.modules.releve.ReleveTopComponent;
+import ancestris.modules.releve.model.DataManager.RecordType;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import javax.swing.KeyStroke;
+import org.openide.util.NbPreferences;
+
+/**
+ *
+ * @author Michel
+ */
+public class EditorBeanGroup {
+
+    public static enum GroupId {
+        general,
+        indi,
+        indiMarried,
+        indiFather,
+        indiMother,
+        wife,
+        wifeMarried,
+        wifeFather,
+        wifeMother,
+        witness1,
+        witness2,
+        witness3,
+        witness4,
+        generalComment
+    }
+
+    private GroupId id ;
+    //private RecordType recordType;
+    private boolean visible;
+    private  KeyStroke keystroke;
+    private String title;
+    private Vector<EditorBeanField> fields = null;
+
+    private final static HashMap<RecordType,ArrayList<EditorBeanGroup>> groupArray = new HashMap<RecordType,ArrayList<EditorBeanGroup>>(4);
+    private final static HashMap<RecordType,HashMap<GroupId,EditorBeanGroup>> groupMap = new HashMap<RecordType,HashMap<GroupId,EditorBeanGroup>>(4);
+
+
+    final static KeyStroke ks1 = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK);
+    final static KeyStroke ks2 = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK);
+    final static KeyStroke ks3 = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK);
+    final static KeyStroke ks4 = KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.ALT_DOWN_MASK);
+    final static KeyStroke ks5 = KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.ALT_DOWN_MASK);
+    final static KeyStroke ks6 = KeyStroke.getKeyStroke(KeyEvent.VK_6, InputEvent.ALT_DOWN_MASK);
+    final static KeyStroke ks7 = KeyStroke.getKeyStroke(KeyEvent.VK_7, InputEvent.ALT_DOWN_MASK);
+    final static KeyStroke ks8 = KeyStroke.getKeyStroke(KeyEvent.VK_8, InputEvent.ALT_DOWN_MASK);
+    final static KeyStroke ks9 = KeyStroke.getKeyStroke(KeyEvent.VK_9, InputEvent.ALT_DOWN_MASK);
+
+    /**
+     * visibilité par défaut des groupes et des champs
+     */
+    static {
+        groupMap.put(RecordType.birth,   new HashMap<GroupId,EditorBeanGroup>());
+        groupMap.put(RecordType.marriage,new HashMap<GroupId,EditorBeanGroup>());
+        groupMap.put(RecordType.death,   new HashMap<GroupId,EditorBeanGroup>());
+        groupMap.put(RecordType.misc,    new HashMap<GroupId,EditorBeanGroup>());
+
+        groupArray.put(RecordType.birth,   new ArrayList<EditorBeanGroup>());
+        groupArray.put(RecordType.marriage,new ArrayList<EditorBeanGroup>());
+        groupArray.put(RecordType.death,   new ArrayList<EditorBeanGroup>());
+        groupArray.put(RecordType.misc,    new ArrayList<EditorBeanGroup>());
+
+        //   groupe               Birth        Marriage      Death       Misc
+	init(GroupId.general,     "Birth",     "Marriage",   "Death",    "Misc" ,         ks1 );
+        init(GroupId.indi,        "Child",     "Husband",    "Deceased", "Participant1" , ks2 );
+        init(GroupId.indiMarried, "Married",   "ExWife",     "Married",  "Married" ,      null );
+        init(GroupId.indiFather,  "Father",    "IndiFather", "Father",   "Father" ,       ks3 );
+        init(GroupId.indiMother,  "Mother",    "IndiMother", "Mother",   "Mother" ,       ks4);
+        init(GroupId.wife,        "Wife",      "Wife",       "Wife",     "Participant2" , ks5 );
+        init(GroupId.wifeMarried, "Married",   "ExHusband",  "",         "Married" ,      null);
+        init(GroupId.wifeFather,  "WifeFather","WifeFather", "Father",   "Father" ,       ks6 );
+        init(GroupId.wifeMother,  "WifeMother","WifeMother", "Mother",   "Mother" ,       ks7 );
+        init(GroupId.witness1,    "GodFather", "Witness1",   "Witness1", "Witness1" ,     ks8 );
+        init(GroupId.witness2,    "GodMother", "Witness2",   "Witness2", "Witness2" ,     null);
+        init(GroupId.witness3,    "Witness3",  "Witness3",   "Witness3", "Witness3" ,     null);
+        init(GroupId.witness4,    "Witness4",  "Witness4",   "Witness4", "Witness4" ,     null);
+        init(GroupId.generalComment, "GeneralComment",  "GeneralComment",   "GeneralComment", "GeneralComment" ,     ks9);
+
+        // j'intialise avec les valeurs par defaut
+        EditorBeanField.init();
+        // je met a jour avec les preferences
+        loadPreferences();
+    }
+
+
+    /**
+     *
+     */
+    static public void init(GroupId id, String birthTitle, String marriageTitle,
+            String deathTitle, String miscTitle,  KeyStroke ks  ) {
+            
+            String title ="";
+            if ( birthTitle!= null && !birthTitle.isEmpty() ) {
+                title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row."+birthTitle);
+            }
+            EditorBeanGroup group;
+            group = new EditorBeanGroup( id, title, ks );
+            groupMap.get(RecordType.birth).put(id, group);
+            groupArray.get(RecordType.birth).add( group);
+
+            if ( marriageTitle!= null && !marriageTitle.isEmpty() ) {
+                title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row."+marriageTitle);
+            } else {
+                title = "";
+            }
+            group = new EditorBeanGroup( id, title, ks );
+            groupMap.get(RecordType.marriage).put(id, group);
+            groupArray.get(RecordType.marriage).add( group);
+
+            if ( deathTitle!= null && !deathTitle.isEmpty() ) {
+                title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row."+deathTitle);
+            } else {
+                title = "";
+            }
+            group = new EditorBeanGroup( id, title, ks );
+            groupMap.get(RecordType.death).put(id, group);
+            groupArray.get(RecordType.death).add( group);
+
+            if ( miscTitle!= null && !miscTitle.isEmpty() ) {
+                title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row."+miscTitle);
+            } else {
+                title = "";
+            }
+            group = new EditorBeanGroup( id, title, ks );
+            groupMap.get(RecordType.misc).put(id, group);
+            groupArray.get(RecordType.misc).add( group);
+    }
+
+    static public void init(RecordType recordType, GroupId id, EditorBeanField field) {
+        EditorBeanGroup group = groupMap.get(recordType).get(id);
+        group.add(field);
+    }
+
+
+    static public Collection<EditorBeanGroup> getGroups(RecordType recordType) {
+        return groupArray.get(recordType);
+    }
+
+    static public EditorBeanGroup getGroup(RecordType recordType, GroupId groupId) {
+        return groupMap.get(recordType).get(groupId);
+    }
+
+    static public void loadPreferences() {
+        for (RecordType recordType : RecordType.values()) {
+            for (Iterator<EditorBeanGroup> groupIter = EditorBeanGroup.getGroups(recordType).iterator(); groupIter.hasNext();) {
+                EditorBeanGroup group = groupIter.next();
+                for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext();) {
+                    EditorBeanField field = fieldIter.next();
+                    String preferenceKey = "Editor." + group.id.name() + "." + field.getFieldType().name() + "." + recordType.name();
+                    String defaultValue = field.isUsed() + ";" + field.isVisible();
+                    String preferenceValue = NbPreferences.forModule(ReleveTopComponent.class).get(preferenceKey, defaultValue);
+                    try {
+                        StringTokenizer tokens = new StringTokenizer(preferenceValue, ";");
+                        if (tokens.countTokens() == 2) {
+                            field.setUsed(Boolean.valueOf(tokens.nextToken()));
+                            field.setVisible(Boolean.valueOf(tokens.nextToken()));
+                        }
+
+                    } catch (Throwable t) {
+                        // ignore
+                    }
+                }
+            }
+        }
+    }
+
+    static public void savePreferences() {
+        for (RecordType recordType : RecordType.values()) {
+            for (Iterator<EditorBeanGroup> groupIter = EditorBeanGroup.getGroups(recordType).iterator(); groupIter.hasNext();) {
+                EditorBeanGroup group = groupIter.next();
+                for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext();) {
+                    EditorBeanField field = fieldIter.next();
+                    String preferenceKey = "Editor."+group.id.name()+"."+field.getFieldType().name()+"."+recordType.name();
+                    String preferenceValue = field.isUsed()+";"+field.isVisible();
+                    NbPreferences.forModule(EditorBeanGroup.class).put( preferenceKey, preferenceValue);
+                }
+            }
+        }
+    }
+
+    /**
+     * instance 
+     */
+
+    public EditorBeanGroup(GroupId id, String title, KeyStroke ks) {
+        this.id = id;
+        //this.recordType =recordType;
+        this.visible = false; // sera mis a jour lors de l'ajout des champs
+        this.title = title;
+        this.keystroke = ks;
+
+        fields=new Vector<EditorBeanField>();                    
+    }
+
+    private void add(EditorBeanField field) {
+        fields.add(field);
+        visible = false;
+        for (Iterator<EditorBeanField> fieldIter = fields.iterator(); fieldIter.hasNext() && ! visible; ) {
+           visible |= fieldIter.next().isVisible();
+        }
+    }
+
+    public GroupId getId() {
+        return id;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Collection<EditorBeanField> getFields() {
+        return fields;
+    }
+
+    /**
+     * @return the keystroke
+     */
+    public KeyStroke getKeystroke() {
+        return keystroke;
+    }   
+
+}

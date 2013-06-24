@@ -1,5 +1,7 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipant;
+import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import ancestris.modules.releve.model.FieldSex;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -8,6 +10,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Source;
@@ -26,8 +29,8 @@ import java.util.regex.Pattern;
  */
 public class MergeQuery {
 
-    protected static int minMarriageYearOld = 15; // age minimum pour etre marié
-    protected static int minParentYearOld = 15;   // age minimum pour etre parent
+    protected static int minMarriageYearOld = 18; // age minimum pour etre marié
+    protected static int minParentYearOld = 18;   // age minimum pour etre parent
     protected static int indiMaxYearOld = 100;    // age maximum d'un individu
     protected static int aboutYear = 5;           // marge d'incertitude ( date ABOUT ou ESTMATED ou CALCULATED)
     protected static int maxParentYearOld = 60;    // age maximum d'un parent
@@ -46,17 +49,18 @@ public class MergeQuery {
      * @param selectedIndi individu selectionné
      * @return Liste des fmailles
      */
-    static protected List<Fam> findFamilyCompatibleWithIndiParents(MergeRecord record, Gedcom gedcom) throws Exception {
+    static protected List<Fam> findFamilyCompatibleWithParticipantParents(MergeRecord record, MergeParticipantType participantType, Gedcom gedcom) throws Exception {
         List<Fam> parentFamilies = new ArrayList<Fam>();
 
-        // j'arret la recherche si le nom des parents n'est pas renseigné
-        if ( record.getIndiFatherLastName().isEmpty() && record.getIndiFatherFirstName().isEmpty()
-                && record.getWifeFatherLastName().isEmpty() && record.getWifeFatherFirstName().isEmpty() ) {
+        MergeParticipant participant = record.getParticipant(participantType);
+        // j'arrete la recherche si aucun nom et prenom des parents de l'individu n'est renseigné
+        if ( participant.getFatherLastName().isEmpty() && participant.getFatherFirstName().isEmpty()
+                && participant.getMotherLastName().isEmpty() && participant.getMotherFirstName().isEmpty() ) {
             return parentFamilies;
         }
 
         // je recupere la date de naissance du releve
-        PropertyDate recordBirthDate = record.getIndiBirthDate();
+        PropertyDate recordBirthDate = participant.getBirthDate();
         
         // Je recherche une famille avec un pere et une mere qui portent le même nom
         // et dont les dates de naissance, de deces et de mariage sont compatibles
@@ -77,7 +81,7 @@ public class MergeQuery {
                 }
 
                 // le deces doit être après la date mariage des parents
-                if (!isRecordAfterThanDate(record.getIndiDeathDate(), marriageDate, 0, 0)) {
+                if (!isRecordAfterThanDate(participant.getDeathDate(), marriageDate, 0, 0)) {
                     continue;
                 }
             } 
@@ -85,20 +89,20 @@ public class MergeQuery {
             if (father != null) {
 
                 // meme nom du pere
-                if (!record.getIndiFatherLastName().isEmpty() ) {
-                    if ( !isSameName(record.getIndiFatherLastName(), father.getLastName())) {
+                if (!participant.getFatherLastName().isEmpty() ) {
+                    if ( !isSameLastName(participant.getFatherLastName(), father.getLastName())) {
                         continue;
                     }
                 } else {
                     // si le nom du pere est vide dans le releve, je verifie que le nom de l'individu est identique
                     // au nom du pere de la famille (pour eviter de trop nombreuses réponses sans rapport)
-                    if ( !isSameName(record.getIndiLastName(), father.getLastName())) {
+                    if ( !isSameLastName(participant.getLastName(), father.getLastName())) {
                         continue;
                     }
                 }
                 //meme prénom du pere
-                if (!record.getIndiFatherFirstName().isEmpty()
-                        && !isSameName(record.getIndiFatherFirstName(), father.getFirstName())) {
+                if (!participant.getFatherFirstName().isEmpty()
+                        && !isSameFirstName(participant.getFatherFirstName(), father.getFirstName())) {
                     continue;
                 }
 
@@ -123,13 +127,13 @@ public class MergeQuery {
 
             if (mother != null) {
                 // meme nom de la mere
-                if (!record.getIndiMotherLastName().isEmpty()
-                        && !isSameName(record.getIndiMotherLastName(), mother.getLastName())) {
+                if (!participant.getMotherLastName().isEmpty()
+                        && !isSameLastName(participant.getMotherLastName(), mother.getLastName())) {
                     continue;
                 }
                 //meme prénom de la mere
-                if (!record.getIndiMotherFirstName().isEmpty()
-                        && !isSameName(record.getIndiMotherFirstName(), mother.getFirstName())) {
+                if (!participant.getMotherFirstName().isEmpty()
+                        && !isSameFirstName(participant.getMotherFirstName(), mother.getFirstName())) {
                     continue;
                 }
                 
@@ -159,7 +163,7 @@ public class MergeQuery {
             for( int i = 0 ; i< children.length && foundChild == false ; i++ ) {
                 PropertyDate childBirth = children[i].getBirthDate();
                 PointInTime maxChildPith = new PointInTime();
-                PointInTime minChildPith = new PointInTime();;
+                PointInTime minChildPith = new PointInTime();
                 if( childBirth != null && childBirth.isComparable()) {
                     if( childBirth.getFormat() == PropertyDate.DATE) {
                         minChildPith.set(childBirth.getStart());
@@ -206,18 +210,20 @@ public class MergeQuery {
     }
 
     /**
-     * Recherche les familles de de l'individu avec l'ex conjoint
+     * Recherche les familles de l'individu avec l'ex conjoint
      *
      * @param RecordBirth  relevé de naissance
      * @param gedcom
      * @param selectedIndi individu selectionné
      * @return Liste des fmailles
      */
-    static protected List<Fam> findFamilyCompatibleWithMarried(MergeRecord record, Gedcom gedcom) throws Exception {
+    static protected List<Fam> findFamilyCompatibleWithParticipantMarried(MergeRecord record, MergeParticipantType participantType, Gedcom gedcom) throws Exception {
         List<Fam> parentFamilies = new ArrayList<Fam>();
 
+        MergeParticipant participant = record.getParticipant(participantType);
+        
         // j'arrete la recherche si le nom de l'ex conjoint n'est pas renseigné.
-        if ( record.getIndiMarriedLastName().isEmpty() ) {
+        if ( participant.getMarriedLastName().isEmpty() ) {
             return parentFamilies;
         }
 
@@ -231,19 +237,19 @@ public class MergeQuery {
                 continue;
             }
 
-            if ( record.getIndiSex() == PropertySex.MALE) {
+            if ( participant.getSex() == PropertySex.MALE) {
                 // je verifie si l'epoux est compatible avec currentIndi
 
                 // meme nom de l'epoux
-                if (!record.getIndiLastName().isEmpty() ) {
-                    if ( !isSameName(record.getIndiLastName(), husband.getLastName())) {
+                if (!participant.getLastName().isEmpty() ) {
+                    if ( !isSameLastName(participant.getLastName(), husband.getLastName())) {
                         continue;
                     }
                 }
 
                 //meme prénom de l'epoux
-                if (!record.getIndiFirstName().isEmpty()
-                        && !isSameName(record.getIndiFirstName(), husband.getFirstName())) {
+                if (!participant.getFirstName().isEmpty()
+                        && !isSameFirstName(participant.getFirstName(), husband.getFirstName())) {
                     continue;
                 }
 
@@ -253,7 +259,7 @@ public class MergeQuery {
                 }
 
                 // naissance de l'epoux
-                if (!isCompatible(record.getIndiBirthDate(), husband.getBirthDate() )) {
+                if (!isCompatible(participant.getBirthDate(), husband.getBirthDate() )) {
                     continue;
                 }
 
@@ -263,14 +269,24 @@ public class MergeQuery {
                 }
 
                 // meme nom de l'ex epouse
-                if (!record.getIndiMarriedLastName().isEmpty()
-                        && !isSameName(record.getIndiMarriedLastName(), wife.getLastName())) {
+                if (!participant.getMarriedLastName().isEmpty()
+                        && !isSameLastName(participant.getMarriedLastName(), wife.getLastName())) {
                     continue;
                 }
                 
-                //meme prénom de l'ex epouse
-                if (!record.getIndiMarriedFirstName().isEmpty()
-                        && !isSameName(record.getIndiMarriedFirstName(), wife.getFirstName())) {
+                // meme prénom de l'ex epouse
+                if (!participant.getMarriedFirstName().isEmpty()
+                        && !isSameFirstName(participant.getMarriedFirstName(), wife.getFirstName())) {
+                    continue;
+                }
+
+                // le releve doit etre apres le mariage (=naissance + minMarriageYearOld)
+                if (!isRecordAfterThanDate(record.getEventDate(), wife.getBirthDate(), 0, minMarriageYearOld)) {
+                    continue;
+                }
+
+                // le releve doit etre apres la date de mariage
+                if (!isRecordAfterThanDate(record.getEventDate(), fam.getMarriageDate(), 0, 0)) {
                     continue;
                 }
 
@@ -279,24 +295,37 @@ public class MergeQuery {
                     continue;
                 }
 
-
-                 // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
-                if (!isCompatible(record.getIndiMarriedDeathDate(), wife.getDeathDate() )) {
+                // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
+                if (!isCompatible(participant.getMarriedDeathDate(), wife.getDeathDate() )) {
                     continue;
                 }
+
+                // si l'epouse est decedee dans le gedcom avant la date du relevé,
+                // alors la date deces du releve doit être aussi avant la date du releve
+                if( isRecordAfterThanDate(record.getEventDate(), wife.getDeathDate(), 0, 0)) {
+                    if (!isRecordAfterThanDate(record.getEventDate(), participant.getMarriedDeathDate(), 0, 0)) {
+                        continue;
+                    }
+                } else {
+                    // si l'epouse n'est pas decedee dans le gedcom, le releve doit etre avant son deces
+                    if (!isRecordBeforeThanDate(record.getEventDate(), participant.getMarriedDeathDate(), 0, 0)) {
+                        continue;
+                    }
+                }
+
             } else {
                 // je verifie si l'individu est compatible avec l'epouse
 
                 // meme nom de l'epoux
-                if (!record.getIndiLastName().isEmpty() ) {
-                    if ( !isSameName(record.getIndiLastName(), wife.getLastName())) {
+                if (!participant.getLastName().isEmpty() ) {
+                    if ( !isSameLastName(participant.getLastName(), wife.getLastName())) {
                         continue;
                     }
                 }
 
                 //meme prénom de l'epoux
-                if (!record.getIndiFirstName().isEmpty()
-                        && !isSameName(record.getIndiFirstName(), wife.getFirstName())) {
+                if (!participant.getFirstName().isEmpty()
+                        && !isSameFirstName(participant.getFirstName(), wife.getFirstName())) {
                     continue;
                 }
 
@@ -306,7 +335,7 @@ public class MergeQuery {
                 }
 
                 // naissance de l'epoux
-                if (!isCompatible(record.getIndiBirthDate(), wife.getBirthDate() )) {
+                if (!isCompatible(participant.getBirthDate(), wife.getBirthDate() )) {
                     continue;
                 }
 
@@ -317,33 +346,45 @@ public class MergeQuery {
 
 
                 // meme nom de l'ex epoux
-                if (!record.getIndiMarriedLastName().isEmpty()
-                        && !isSameName(record.getIndiMarriedLastName(), husband.getLastName())) {
+                if (!participant.getMarriedLastName().isEmpty()
+                        && !isSameLastName(participant.getMarriedLastName(), husband.getLastName())) {
                     continue;
                 }
 
                 //meme prénom de l'ex epoux
-                if (!record.getIndiMarriedFirstName().isEmpty()
-                        && !isSameName(record.getIndiMarriedFirstName(), husband.getFirstName())) {
+                if (!participant.getMarriedFirstName().isEmpty()
+                        && !isSameFirstName(participant.getMarriedFirstName(), husband.getFirstName())) {
                     continue;
                 }
 
-                // l'ex epoux doit avoir au moins minMarriageYearOld
+                // le releve doit etre apres le mariage (=naissance + minMarriageYearOld)
                 if (!isRecordAfterThanDate(record.getEventDate(), husband.getBirthDate(), 0, minMarriageYearOld)) {
                     continue;
                 }
-
-
-                 // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
-                if (!isCompatible(record.getIndiMarriedDeathDate(), husband.getDeathDate() )) {
+                
+                // le releve doit etre apres la date de mariage
+                if (!isRecordAfterThanDate(record.getEventDate(), fam.getMarriageDate(), 0, 0)) {
                     continue;
                 }
 
+                // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
+                if (!isCompatible(participant.getMarriedDeathDate(), husband.getDeathDate() )) {
+                    continue;
+                }
 
+                // si l'epoux est decede dans le gedcom avant le releve,
+                // alors la date deces du releve doit être aussi avant la date du releve
+                if( isRecordAfterThanDate(record.getEventDate(), husband.getDeathDate(), 0, 0)) {
+                    if (!isRecordAfterThanDate(record.getEventDate(), participant.getMarriedDeathDate(), 0, 0)) {
+                        continue;
+                    }
+                } else {
+                    // si l'epoux n'est pas decede dans le gedcom, le releve doit etre avant son deces
+                    if (!isRecordBeforeThanDate(record.getEventDate(), participant.getMarriedDeathDate(), 0, 0)) {
+                        continue;
+                    }
+                }
             }
-
-          
-
 
             // j'ajoute la famille dans la liste résultat si elle n'y est pas déjà
             if (!parentFamilies.contains(fam)) {
@@ -353,8 +394,7 @@ public class MergeQuery {
 
         return parentFamilies;
     }
-
-
+    
     /**
      * Recherche les familles de parents compatibles avec les parents de l'individu 1 du releve
      *
@@ -366,8 +406,13 @@ public class MergeQuery {
     static protected List<Fam> findFamilyCompatibleWithWifeParents(MergeRecord record, Gedcom gedcom) throws Exception {
         List<Fam> parentFamilies = new ArrayList<Fam>();
 
+        // j'arrete la recherche si aucun nom et prenom des parents de la femme n'est renseigné
+        if ( record.getWife().getFatherLastName().isEmpty() && record.getWife().getFatherFirstName().isEmpty()
+                && record.getWife().getMotherLastName().isEmpty() && record.getWife().getMotherFirstName().isEmpty() ) {
+            return parentFamilies;
+        }
         // je recupere la date de naissance du releve
-        PropertyDate recordBirthDate = record.getWifeBirthDate();
+        PropertyDate recordBirthDate = record.getWife().getBirthDate();
 
         // Je recherche une famille avec un pere et une mere qui portent le même nom
         // et dont les dates de naissance, de deces et de mariage sont compatibles
@@ -391,20 +436,20 @@ public class MergeQuery {
             if (father != null) {
 
                 // meme nom du pere
-                if (!record.getWifeFatherLastName().isEmpty() ) {
-                    if ( !isSameName(record.getWifeFatherLastName(), father.getLastName())) {
+                if (!record.getWife().getFatherLastName().isEmpty() ) {
+                    if ( !isSameLastName(record.getWife().getFatherLastName(), father.getLastName())) {
                         continue;
                     }
                 } else {
                     // si le nom du pere est vide dans le releve, je verifie que le nom de l'individu est identique
                     // au nom du pere de la famille (pour eviter de trop nombreuses réponses sans rapport)
-                    if ( !isSameName(record.getWifeLastName(), father.getLastName())) {
+                    if ( record.getWife().getLastName().isEmpty() || !isSameLastName(record.getWife().getLastName(), father.getLastName())) {
                         continue;
                     }
                 }
                 //meme prénom du pere
-                if (!record.getWifeFatherFirstName().isEmpty()
-                        && !isSameName(record.getWifeFatherFirstName(), father.getFirstName())) {
+                if (!record.getWife().getFatherFirstName().isEmpty()
+                        && !isSameFirstName(record.getWife().getFatherFirstName(), father.getFirstName())) {
                     continue;
                 }
 
@@ -429,13 +474,13 @@ public class MergeQuery {
 
             if (mother != null) {
                 // meme nom de la mere
-                if (!record.getWifeMotherLastName().isEmpty()
-                        && !isSameName(record.getWifeMotherLastName(), mother.getLastName())) {
+                if (!record.getWife().getMotherLastName().isEmpty()
+                        && !isSameLastName(record.getWife().getMotherLastName(), mother.getLastName())) {
                     continue;
                 }
                 //meme prénom de la mere
-                if (!record.getWifeMotherFirstName().isEmpty()
-                        && !isSameName(record.getWifeMotherFirstName(), mother.getFirstName())) {
+                if (!record.getWife().getMotherFirstName().isEmpty()
+                        && !isSameFirstName(record.getWife().getMotherFirstName(), mother.getFirstName())) {
                     continue;
                 }
 
@@ -499,22 +544,22 @@ public class MergeQuery {
 
             if (husband != null) {
 
-                if (!marriageRecord.getIndiFatherLastName().isEmpty() ) {
-                    if ( !isSameName(marriageRecord.getIndiFatherLastName(), husband.getLastName())) {
+                if (!marriageRecord.getIndi().getFatherLastName().isEmpty() ) {
+                    if ( !isSameLastName(marriageRecord.getIndi().getFatherLastName(), husband.getLastName())) {
                         continue;
                     }
                 } else {
                     // si le nom du pere est vide dans le releve, je verifie que le nom du pere du gedcom est identique
                     // au nom de l'individu du releve bien qu'ne theorie le nom de l'enfant peut etre diffrent de celui du pere
                     // (ceci pour eviter de trop nombreuses réponses sans rapport)
-                    if ( !isSameName(marriageRecord.getIndiLastName(), husband.getLastName())) {
+                    if ( !isSameLastName(marriageRecord.getIndi().getLastName(), husband.getLastName())) {
                         continue;
                     }
                 }
 
                 //meme prénom de l'epoux
-                if (!marriageRecord.getIndiFirstName().isEmpty()
-                        && !isSameName(marriageRecord.getIndiFirstName(), husband.getFirstName())) {
+                if (!marriageRecord.getIndi().getFirstName().isEmpty()
+                        && !isSameFirstName(marriageRecord.getIndi().getFirstName(), husband.getFirstName())) {
                     continue;
                 }
                 // l'epoux doit avoir au moins minMarriageYearOld
@@ -525,18 +570,29 @@ public class MergeQuery {
                 if (!isRecordBeforeThanDate(marriageDate, husband.getDeathDate(), 0, 0)) {
                     continue;
                 }
+
+                // l'epoux doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate())) {
+                    continue;
+                }
+
+                // l'epoux doit avoir une date de deces compatible
+                if (!isCompatible(marriageRecord.getIndi().getDeathDate(), husband.getDeathDate())) {
+                    continue;
+                }
+
                 // je verifie les parents de l'epoux
                 Indi indiFather = husband.getBiologicalFather();
                 if (indiFather != null) {
                     // meme nom du pere de l'epoux
-                    if (!marriageRecord.getIndiFatherLastName().isEmpty()
-                            && !isSameName(marriageRecord.getIndiFatherLastName(), indiFather.getLastName())) {
+                    if (!marriageRecord.getIndi().getFatherLastName().isEmpty()
+                            && !isSameLastName(marriageRecord.getIndi().getFatherLastName(), indiFather.getLastName())) {
                         continue;
                     }
 
                     //meme prénom du pere de l'epoux
-                    if (!marriageRecord.getIndiFatherFirstName().isEmpty()
-                            && !isSameName(marriageRecord.getIndiFatherFirstName(), indiFather.getFirstName())) {
+                    if (!marriageRecord.getIndi().getFatherFirstName().isEmpty()
+                            && !isSameFirstName(marriageRecord.getIndi().getFatherFirstName(), indiFather.getFirstName())) {
                         continue;
                     }
 
@@ -546,7 +602,7 @@ public class MergeQuery {
                     }
 
                     // le pere ne doit pas etre decede 9 mois avant la date de naissance de l'epoux
-                    if (!isRecordBeforeThanDate(marriageRecord.getIndiBirthDate(), indiFather.getDeathDate(), 9, 0)) {
+                    if (!isRecordBeforeThanDate(marriageRecord.getIndi().getBirthDate(), indiFather.getDeathDate(), 9, 0)) {
                         continue;
                     }
                 }
@@ -554,14 +610,14 @@ public class MergeQuery {
                 Indi indiMother = husband.getBiologicalMother();
                 if (indiMother != null) {
                     // meme nom de la mere de l'epoux
-                    if (!marriageRecord.getIndiMotherLastName().isEmpty()
-                            && !isSameName(marriageRecord.getIndiMotherLastName(), indiMother.getLastName())) {
+                    if (!marriageRecord.getIndi().getMotherLastName().isEmpty()
+                            && !isSameLastName(marriageRecord.getIndi().getMotherLastName(), indiMother.getLastName())) {
                         continue;
                     }
 
                     //meme prénom de la mere de l'epoux
-                    if (!marriageRecord.getIndiMotherFirstName().isEmpty()
-                            && !isSameName(marriageRecord.getIndiMotherFirstName(), indiMother.getFirstName())) {
+                    if (!marriageRecord.getIndi().getMotherFirstName().isEmpty()
+                            && !isSameFirstName(marriageRecord.getIndi().getMotherFirstName(), indiMother.getFirstName())) {
                         continue;
                     }
 
@@ -571,7 +627,7 @@ public class MergeQuery {
                     }
 
                     // la mere ne doit pas etre decedee avant la date de naissance
-                    if (!isRecordBeforeThanDate(marriageRecord.getIndiBirthDate(), indiMother.getDeathDate(), 0, 0)) {
+                    if (!isRecordBeforeThanDate(marriageRecord.getIndi().getBirthDate(), indiMother.getDeathDate(), 0, 0)) {
                         continue;
                     }
                 }                
@@ -579,13 +635,13 @@ public class MergeQuery {
 
             if (wife != null) {
                 // meme nom de l'epouse
-                if (!marriageRecord.getWifeLastName().isEmpty()
-                        && !isSameName(marriageRecord.getWifeLastName(), wife.getLastName())) {
+                if (!marriageRecord.getWife().getLastName().isEmpty()
+                        && !isSameLastName(marriageRecord.getWife().getLastName(), wife.getLastName())) {
                     continue;
                 }
                 //meme prénom de l'epouse
-                if (!marriageRecord.getWifeFirstName().isEmpty()
-                        && !isSameName(marriageRecord.getWifeFirstName(), wife.getFirstName())) {
+                if (!marriageRecord.getWife().getFirstName().isEmpty()
+                        && !isSameFirstName(marriageRecord.getWife().getFirstName(), wife.getFirstName())) {
                     continue;
                 }
 
@@ -599,18 +655,28 @@ public class MergeQuery {
                     continue;
                 }
 
+                // l'epouse doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate())) {
+                    continue;
+                }
+
+                // l'epouse doit avoir une date de deces compatible
+                if (!isCompatible(marriageRecord.getWife().getDeathDate(), wife.getDeathDate())) {
+                    continue;
+                }
+
                 // je verifie les parents de l'epoux
                 Indi wifeFather = wife.getBiologicalFather();
                 if (wifeFather != null) {
                     // meme nom du pere de l'epouse
-                    if (!marriageRecord.getWifeFatherLastName().isEmpty()
-                            && !isSameName(marriageRecord.getWifeFatherLastName(), wifeFather.getLastName())) {
+                    if (!marriageRecord.getWife().getFatherLastName().isEmpty()
+                            && !isSameLastName(marriageRecord.getWife().getFatherLastName(), wifeFather.getLastName())) {
                         continue;
                     }
 
                     //meme prénom du pere de l'epouse
-                    if (!marriageRecord.getWifeFatherFirstName().isEmpty()
-                            && !isSameName(marriageRecord.getWifeFatherFirstName(), wifeFather.getFirstName())) {
+                    if (!marriageRecord.getWife().getFatherFirstName().isEmpty()
+                            && !isSameFirstName(marriageRecord.getWife().getFatherFirstName(), wifeFather.getFirstName())) {
                         continue;
                     }
 
@@ -620,7 +686,7 @@ public class MergeQuery {
                     }
 
                     // le pere ne doit pas etre decede 9 mois avant la date de naissance de l'epouse
-                    if (!isRecordBeforeThanDate(marriageRecord.getWifeBirthDate(), wifeFather.getDeathDate(), 9, 0)) {
+                    if (!isRecordBeforeThanDate(marriageRecord.getWife().getBirthDate(), wifeFather.getDeathDate(), 9, 0)) {
                         continue;
                     }
                 }
@@ -628,14 +694,14 @@ public class MergeQuery {
                 Indi wifeMother = wife.getBiologicalMother();
                 if (wifeMother != null) {
                     // meme nom de la mere de l'epouse
-                    if (!marriageRecord.getWifeMotherLastName().isEmpty()
-                            && !isSameName(marriageRecord.getWifeMotherLastName(), wifeMother.getLastName())) {
+                    if (!marriageRecord.getWife().getMotherLastName().isEmpty()
+                            && !isSameLastName(marriageRecord.getWife().getMotherLastName(), wifeMother.getLastName())) {
                         continue;
                     }
 
                     //meme prénom de la mere de l'epouse
-                    if (!marriageRecord.getWifeMotherFirstName().isEmpty()
-                            && !isSameName(marriageRecord.getWifeMotherFirstName(), wifeMother.getFirstName())) {
+                    if (!marriageRecord.getWife().getMotherFirstName().isEmpty()
+                            && !isSameFirstName(marriageRecord.getWife().getMotherFirstName(), wifeMother.getFirstName())) {
                         continue;
                     }
 
@@ -645,7 +711,7 @@ public class MergeQuery {
                     }
 
                     // la mer ne doit pas etre decede avant la date de naissance de l'epouse
-                    if (!isRecordBeforeThanDate(marriageRecord.getWifeBirthDate(), wifeMother.getDeathDate(), 9, 0)) {
+                    if (!isRecordBeforeThanDate(marriageRecord.getWife().getBirthDate(), wifeMother.getDeathDate(), 9, 0)) {
                         continue;
                     }
                 }
@@ -670,9 +736,9 @@ public class MergeQuery {
      * @param fathers  (OUT) liste des hommes qui pourraient être le père
      * @param mothers  (OUT) liste des femmes qui pourraient être la mère
      */
-    static protected void findFatherMotherCompatibleWithBirthRecord(MergeRecord record, Gedcom gedcom, List<Fam> families, List<Indi> fathers, List<Indi> mothers) throws Exception {
+    static protected void findFatherMotherCompatibleWithBirthParticipant(MergeRecord record, Gedcom gedcom, List<Fam> families, List<Indi> fathers, List<Indi> mothers) throws Exception {
         // je recupere la date de naissance du releve
-        PropertyDate recordBirthDate = record.getIndiBirthDate();
+        PropertyDate recordBirthDate = record.getIndi().getBirthDate();
         if (!recordBirthDate.isComparable()) {
             recordBirthDate = record.getEventDate();
         }
@@ -700,21 +766,21 @@ public class MergeQuery {
 
             if (indi.getSex() == PropertySex.MALE) {
                 // meme nom du pere
-                if (!record.getIndiFatherLastName().isEmpty() ) {
-                    if ( !isSameName(record.getIndiFatherLastName(), indi.getLastName())) {
+                if (!record.getIndi().getFatherLastName().isEmpty() ) {
+                    if ( !isSameFirstName(record.getIndi().getFatherLastName(), indi.getLastName())) {
                         continue;
                     }
                 } else {
                     // si le nom du pere est vide dans le releve, je verifie que le nom du pere du gedcom est identique
                     // au nom de l'individu du releve (pour eviter de trop nombreuses réponses sans rapport)
-                    if ( !isSameName(record.getIndiLastName(), indi.getLastName())) {
+                    if ( !isSameLastName(record.getIndi().getLastName(), indi.getLastName())) {
                         continue;
                     }
                 }
 
                 //  le prénom du pere ne doit pas vide et identique au nom du pere dans le releve
-                if (record.getIndiFatherFirstName().isEmpty() || indi.getFirstName().isEmpty()
-                        || !isSameName(record.getIndiFatherFirstName(), indi.getFirstName())) {
+                if (record.getIndi().getFatherFirstName().isEmpty() || indi.getFirstName().isEmpty()
+                        || !isSameFirstName(record.getIndi().getFatherFirstName(), indi.getFirstName())) {
                     continue;
                 }
 
@@ -748,10 +814,10 @@ public class MergeQuery {
                          ) {
                         Indi wife = fam.getWife();
                         if ( wife != null) {
-                            if ( !record.getIndiMotherLastName().isEmpty()
-                                    &&!isSameName(record.getIndiMotherLastName(), wife.getLastName())
-                                    && !record.getIndiMotherFirstName().isEmpty()
-                                    && !isSameName(record.getIndiMotherFirstName(), wife.getFirstName() )
+                            if ( !record.getIndi().getMotherLastName().isEmpty()
+                                    &&!isSameLastName(record.getIndi().getMotherLastName(), wife.getLastName())
+                                    && !record.getIndi().getMotherFirstName().isEmpty()
+                                    && !isSameFirstName(record.getIndi().getMotherFirstName(), wife.getFirstName() )
                                  ) {
                                     incompatible = true;
                                     break;
@@ -769,14 +835,14 @@ public class MergeQuery {
             } else if (indi.getSex() == PropertySex.FEMALE) {
 
                 // meme nom de la mere , le nom de la mere ne doit pas être vide
-                if ( record.getIndiMotherLastName().isEmpty() || indi.getLastName().isEmpty()
-                        || !isSameName(record.getIndiMotherLastName(), indi.getLastName())) {
+                if ( record.getIndi().getMotherLastName().isEmpty() || indi.getLastName().isEmpty()
+                        || !isSameLastName(record.getIndi().getMotherLastName(), indi.getLastName())) {
                     continue;
                 }
 
                 //meme prénom de la mere, le prenom de la mere ne doit pas etre vide
-                if (record.getIndiMotherFirstName().isEmpty() ||  !indi.getFirstName().isEmpty()
-                        && !isSameName(record.getIndiMotherFirstName(), indi.getFirstName())) {
+                if (record.getIndi().getMotherFirstName().isEmpty() ||  !indi.getFirstName().isEmpty()
+                        && !isSameFirstName(record.getIndi().getMotherFirstName(), indi.getFirstName())) {
                     continue;
                 }
 
@@ -808,10 +874,10 @@ public class MergeQuery {
                     if ( !isRecordBeforeThanDate(recordBirthDate, marriageDate,0, 0)
                          && !isRecordBeforeThanDate(recordBirthDate, firtChildBirthDate,0, 0)
                          && !isRecordAfterThanDate(recordBirthDate, lastChildBirthDate,0, 0)
-                         && !record.getIndiFatherLastName().isEmpty()
-                         && !isSameName(record.getIndiFatherLastName(), fam.getHusband().getLastName())
-                         && !record.getIndiFatherFirstName().isEmpty()
-                         && !isSameName(record.getIndiFatherFirstName(), fam.getHusband().getFirstName())
+                         && !record.getIndi().getFatherLastName().isEmpty()
+                         && !isSameLastName(record.getIndi().getFatherLastName(), fam.getHusband().getLastName())
+                         && !record.getIndi().getFatherFirstName().isEmpty()
+                         && !isSameFirstName(record.getIndi().getFatherFirstName(), fam.getHusband().getFirstName())
                          ) {
                         incompatible = true;
                         break;
@@ -868,13 +934,13 @@ public class MergeQuery {
                 Indi husband = indi;
 
                 // meme nom de l'epoux
-                if (!marriageRecord.getIndiLastName().isEmpty()
-                        && !isSameName(marriageRecord.getIndiLastName(), husband.getLastName())) {
+                if (!marriageRecord.getIndi().getLastName().isEmpty()
+                        && !isSameLastName(marriageRecord.getIndi().getLastName(), husband.getLastName())) {
                     continue;
                 }
                 //meme prénom de l'epoux
-                if (!marriageRecord.getIndiFirstName().isEmpty()
-                        && !isSameName(marriageRecord.getIndiFirstName(), husband.getFirstName())) {
+                if (!marriageRecord.getIndi().getFirstName().isEmpty()
+                        && !isSameFirstName(marriageRecord.getIndi().getFirstName(), husband.getFirstName())) {
                     continue;
                 }
                 // l'epoux doit avoir au moins minMarriageYearOld
@@ -882,8 +948,18 @@ public class MergeQuery {
                     continue;
                 }
 
-                // l'epoux ne doit pas etre decede  avant le mariage
+                // l'epoux ne doit pas etre decede avant le mariage
                 if (!isRecordBeforeThanDate(marriageDate, husband.getDeathDate(), 0, 0)) {
+                    continue;
+                }
+
+                // l'epoux doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate())) {
+                    continue;
+                }
+
+                // l'epoux doit avoir une date de deces compatible
+                if (!isCompatible(marriageRecord.getIndi().getDeathDate(), husband.getDeathDate())) {
                     continue;
                 }
 
@@ -891,14 +967,14 @@ public class MergeQuery {
                 Indi indiFather = husband.getBiologicalFather();
                 if (indiFather != null) {
                     // meme nom du pere de l'epoux
-                    if (!marriageRecord.getIndiFatherLastName().isEmpty()
-                            && !isSameName(marriageRecord.getIndiFatherLastName(), indiFather.getLastName())) {
+                    if (!marriageRecord.getIndi().getFatherLastName().isEmpty()
+                            && !isSameLastName(marriageRecord.getIndi().getFatherLastName(), indiFather.getLastName())) {
                         continue;
                     }
 
                     //meme prénom du pere de l'epoux
-                    if (!marriageRecord.getIndiFatherFirstName().isEmpty()
-                            && !isSameName(marriageRecord.getIndiFatherFirstName(), indiFather.getFirstName())) {
+                    if (!marriageRecord.getIndi().getFatherFirstName().isEmpty()
+                            && !isSameFirstName(marriageRecord.getIndi().getFatherFirstName(), indiFather.getFirstName())) {
                         continue;
                     }
 
@@ -907,7 +983,7 @@ public class MergeQuery {
                         continue;
                     }
                     // le pere ne doit pas etre decede 9 mois avant la date de naissance de l'epoux
-                    if (!isRecordBeforeThanDate(marriageRecord.getIndiBirthDate(), indiFather.getDeathDate(), 9, 0)) {
+                    if (!isRecordBeforeThanDate(marriageRecord.getIndi().getBirthDate(), indiFather.getDeathDate(), 9, 0)) {
                         continue;
                     }
                 }
@@ -915,14 +991,14 @@ public class MergeQuery {
                 Indi indiMother = husband.getBiologicalMother();
                 if (indiMother != null) {
                     // meme nom de la mere de l'epoux
-                    if (!marriageRecord.getIndiMotherLastName().isEmpty()
-                            && !isSameName(marriageRecord.getIndiMotherLastName(), indiMother.getLastName())) {
+                    if (!marriageRecord.getIndi().getMotherLastName().isEmpty()
+                            && !isSameLastName(marriageRecord.getIndi().getMotherLastName(), indiMother.getLastName())) {
                         continue;
                     }
 
                     //meme prénom de la mere  de l'epoux
-                    if (!marriageRecord.getIndiMotherFirstName().isEmpty()
-                            && !isSameName(marriageRecord.getIndiMotherFirstName(), indiMother.getFirstName())) {
+                    if (!marriageRecord.getIndi().getMotherFirstName().isEmpty()
+                            && !isSameFirstName(marriageRecord.getIndi().getMotherFirstName(), indiMother.getFirstName())) {
                         continue;
                     }
 
@@ -932,7 +1008,7 @@ public class MergeQuery {
                     }
 
                     // la mere ne doit pas etre decede avant la date de naissance de l'epoux
-                    if (!isRecordBeforeThanDate(marriageRecord.getIndiBirthDate(), indiFather.getDeathDate(), 0, 0)) {
+                    if (!isRecordBeforeThanDate(marriageRecord.getIndi().getBirthDate(), indiFather.getDeathDate(), 0, 0)) {
                         continue;
                     }
                 }
@@ -944,13 +1020,13 @@ public class MergeQuery {
                 Indi wife = indi;
 
                 // meme nom de l'epouse
-                if (!marriageRecord.getWifeLastName().isEmpty()
-                        && !isSameName(marriageRecord.getWifeLastName(), wife.getLastName())) {
+                if (!marriageRecord.getWife().getLastName().isEmpty()
+                        && !isSameLastName(marriageRecord.getWife().getLastName(), wife.getLastName())) {
                     continue;
                 }
                 //meme prénom de l'epouse
-                if (!marriageRecord.getWifeFirstName().isEmpty()
-                        && !isSameName(marriageRecord.getWifeFirstName(), wife.getFirstName())) {
+                if (!marriageRecord.getWife().getFirstName().isEmpty()
+                        && !isSameFirstName(marriageRecord.getWife().getFirstName(), wife.getFirstName())) {
                     continue;
                 }
                 // l'epouse ne doit pas etre decedee avant  le mariage
@@ -958,18 +1034,28 @@ public class MergeQuery {
                     continue;
                 }
 
+                // l'epouse doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate())) {
+                    continue;
+                }
+
+                // l'epouse doit avoir une date de deces compatible
+                if (!isCompatible(marriageRecord.getWife().getDeathDate(), wife.getDeathDate())) {
+                    continue;
+                }
+
                 // je verifie les parents de l'epouse
                 Indi wifeFather = wife.getBiologicalFather();
                 if (wifeFather != null) {
                     // meme nom du pere de l'epouse
-                    if (!marriageRecord.getWifeFatherLastName().isEmpty()
-                            && !isSameName(marriageRecord.getWifeFatherLastName(), wifeFather.getLastName())) {
+                    if (!marriageRecord.getWife().getFatherLastName().isEmpty()
+                            && !isSameLastName(marriageRecord.getWife().getFatherLastName(), wifeFather.getLastName())) {
                         continue;
                     }
 
                     //meme prénom du pere de l'epouse
-                    if (!marriageRecord.getWifeFatherFirstName().isEmpty()
-                            && !isSameName(marriageRecord.getWifeFatherFirstName(), wifeFather.getFirstName())) {
+                    if (!marriageRecord.getWife().getFatherFirstName().isEmpty()
+                            && !isSameFirstName(marriageRecord.getWife().getFatherFirstName(), wifeFather.getFirstName())) {
                         continue;
                     }
 
@@ -978,7 +1064,7 @@ public class MergeQuery {
                         continue;
                     }
                     // le pere ne doit pas etre decede 9 mois avant la date de naissance de l'epouse
-                    if (!isRecordBeforeThanDate(marriageRecord.getWifeBirthDate(), wifeFather.getDeathDate(), 9, 0)) {
+                    if (!isRecordBeforeThanDate(marriageRecord.getWife().getBirthDate(), wifeFather.getDeathDate(), 9, 0)) {
                         continue;
                     }
 
@@ -994,14 +1080,14 @@ public class MergeQuery {
                 Indi wifeMother = wife.getBiologicalMother();
                 if (wifeMother != null) {
                     // meme nom de la mere de l'epouse
-                    if (!marriageRecord.getWifeMotherLastName().isEmpty()
-                            && !isSameName(marriageRecord.getWifeMotherLastName(), wifeMother.getLastName())) {
+                    if (!marriageRecord.getWife().getMotherLastName().isEmpty()
+                            && !isSameLastName(marriageRecord.getWife().getMotherLastName(), wifeMother.getLastName())) {
                         continue;
                     }
 
                     //meme prénom de la mere de l'epouse
-                    if (!marriageRecord.getWifeMotherFirstName().isEmpty()
-                            && !isSameName(marriageRecord.getWifeMotherFirstName(), wifeMother.getFirstName())) {
+                    if (!marriageRecord.getWife().getMotherFirstName().isEmpty()
+                            && !isSameFirstName(marriageRecord.getWife().getMotherFirstName(), wifeMother.getFirstName())) {
                         continue;
                     }
 
@@ -1011,7 +1097,7 @@ public class MergeQuery {
                     }
 
                     // la mere ne doit pas etre decede avant la date de naissance de l'epouse
-                    if (!isRecordBeforeThanDate(marriageRecord.getWifeBirthDate(), wifeMother.getDeathDate(), 0, 0)) {
+                    if (!isRecordBeforeThanDate(marriageRecord.getWife().getBirthDate(), wifeMother.getDeathDate(), 0, 0)) {
                         continue;
                     }
 
@@ -1034,37 +1120,37 @@ public class MergeQuery {
      * @param excludeIndi
      * @return liste des individus
      */
-    static protected List<Indi> findIndiCompatibleWithRecord(MergeRecord record,  Gedcom gedcom, Indi excludeIndi) throws Exception {
+    static protected List<Indi> findIndiCompatibleWithParticipant(MergeRecord record,  MergeParticipantType participantType, Gedcom gedcom, Indi excludeIndi) throws Exception {
         List<Indi> sameIndis = new ArrayList<Indi>();
-
+        MergeParticipant participant = record.getParticipant(participantType);
         for (Indi indi : gedcom.getIndis()) {
 
-            // individu a exlure
+            // individu a exclure
             if (excludeIndi != null && excludeIndi.compareTo(indi) == 0) {
                 continue;
             }
 
             // meme sexe de l'individu
-            if (record.getIndiSex() != FieldSex.UNKNOWN
+            if (participant.getSex() != FieldSex.UNKNOWN
                     && indi.getSex() != PropertySex.UNKNOWN
-                    && record.getIndiSex() != indi.getSex()) {
+                    && participant.getSex() != indi.getSex()) {
                 continue;
             }
 
             // meme nom de l'individu
-            if (!record.getIndiLastName().isEmpty()
-                    && !isSameName(record.getIndiLastName(), indi.getLastName())) {
+            if (!participant.getLastName().isEmpty()
+                    && !isSameLastName(participant.getLastName(), indi.getLastName())) {
                 continue;
             }
 
             // meme prenom de l'individu
-            if (!record.getIndiFirstName().isEmpty()
-                    && !isSameName(record.getIndiFirstName(), indi.getFirstName())) {
+            if (!participant.getFirstName().isEmpty()
+                    && !isSameFirstName(participant.getFirstName(), indi.getFirstName())) {
                 continue;
             }
 
             // la date de naissance doit etre renseignee
-            if (!record.getIndiBirthDate().isComparable()) {
+            if (!participant.getBirthDate().isComparable()) {
                 // j'abandonne si la date de naissance du relevé n'est pas renseignée
                 continue;
             }
@@ -1073,7 +1159,7 @@ public class MergeQuery {
             // petit raccourci pour gagner du temps
             PropertyDate indiBirtDate = indi.getBirthDate();
             if (indiBirtDate != null) {
-                if (!isCompatible(record.getIndiBirthDate(), indiBirtDate)) {
+                if (!isCompatible(participant.getBirthDate(), indiBirtDate)) {
                     // la date de naissance de l'individu n'est pas compatible avec la date du relevé
                     continue;
                 }
@@ -1083,22 +1169,34 @@ public class MergeQuery {
             // petit raccourci pour gagner du temps
             PropertyDate indiDeathDate = indi.getDeathDate();
             if (indiDeathDate != null) {
-                if (!isCompatible(record.getIndiDeathDate(), indiDeathDate)) {
+                if (!isCompatible(participant.getDeathDate(), indiDeathDate)) {
                     continue;
                 }
             }
 
+            // la date de décès du relevé doit être après le mariage de l'individu
+            Fam[] sameIndiFamiliesWhereSpouse = indi.getFamiliesWhereSpouse();
+            boolean foundConflict = false;
+            for (Fam fam : sameIndiFamiliesWhereSpouse) {
+                if (!MergeQuery.isRecordAfterThanDate(participant.getDeathDate(), fam.getMarriageDate(), 0, 0)) {
+                    foundConflict = true;
+                }
+            }
+            if (foundConflict) {
+                // il a conflit , je ne retiens pas cet individu
+                continue;
+            }
 
             Fam parentFamily = indi.getFamilyWhereBiologicalChild();
             if (parentFamily != null) {
-                PropertyDate marriageDate = parentFamily.getMarriageDate();
-                if (marriageDate != null) {
-                    // la naissance doit être après la date mariage.
-                    if (!isRecordAfterThanDate(record.getIndiBirthDate(), marriageDate, 0, 0)) {
+                PropertyDate parentMarriageDate = parentFamily.getMarriageDate();
+                if (parentMarriageDate != null) {
+                    // la naissance doit être après la date mariage des parents.
+                    if (!isRecordAfterThanDate(participant.getBirthDate(), parentMarriageDate, 0, 0)) {
                         continue;
                     }
-                    // le deces doit être après la date mariage.
-                    if (!isRecordAfterThanDate(record.getIndiDeathDate(), marriageDate, 0, 0)) {
+                    // le deces doit être après la date mariage des parents.
+                    if (!isRecordAfterThanDate(participant.getDeathDate(), parentMarriageDate, 0, 0)) {
                         continue;
                     }
                 }
@@ -1107,22 +1205,22 @@ public class MergeQuery {
                 if (father != null) {
 
                     // meme nom du pere
-                    if (!record.getIndiFatherLastName().isEmpty()
-                            && !isSameName(record.getIndiFatherLastName(), father.getLastName())) {
+                    if (!participant.getFatherLastName().isEmpty()
+                            && !isSameLastName(participant.getFatherLastName(), father.getLastName())) {
                         continue;
                     }
                     //meme prénom du pere
-                    if (!record.getIndiFatherFirstName().isEmpty()
-                            && !isSameName(record.getIndiFatherFirstName(), father.getFirstName())) {
+                    if (!participant.getFatherFirstName().isEmpty()
+                            && !isSameFirstName(participant.getFatherFirstName(), father.getFirstName())) {
                         continue;
                     }
 
                     // le pere doit avoir au moins minParentYearOld
-                    if (!isRecordAfterThanDate(record.getIndiBirthDate(), father.getBirthDate(), 0, minParentYearOld)) {
+                    if (!isRecordAfterThanDate(participant.getBirthDate(), father.getBirthDate(), 0, minParentYearOld)) {
                         continue;
                     }
                     // le pere ne doit pas etre decede 9 mois avant la date de naissance
-                    if (!isRecordBeforeThanDate(record.getIndiBirthDate(), father.getDeathDate(), 9, 0)) {
+                    if (!isRecordBeforeThanDate(participant.getBirthDate(), father.getDeathDate(), 9, 0)) {
                         continue;
                     }
                 }
@@ -1130,21 +1228,21 @@ public class MergeQuery {
                 Indi mother = parentFamily.getWife();
                 if (mother != null) {
                     // meme nom de la mere
-                    if (!record.getIndiMotherLastName().isEmpty()
-                            && !isSameName(record.getIndiMotherLastName(), mother.getLastName())) {
+                    if (!participant.getMotherLastName().isEmpty()
+                            && !isSameLastName(participant.getMotherLastName(), mother.getLastName())) {
                         continue;
                     }
                     //meme prénom de la mere
-                    if (!record.getIndiMotherFirstName().isEmpty()
-                            && !isSameName(record.getIndiMotherFirstName(), mother.getFirstName())) {
+                    if (!participant.getMotherFirstName().isEmpty()
+                            && !isSameFirstName(participant.getMotherFirstName(), mother.getFirstName())) {
                         continue;
                     }
                     // la mere doit avoir au moins minParentYearOld
-                    if (!isRecordAfterThanDate(record.getIndiBirthDate(), mother.getBirthDate(), 0, minParentYearOld)) {
+                    if (!isRecordAfterThanDate(participant.getBirthDate(), mother.getBirthDate(), 0, minParentYearOld)) {
                         continue;
                     }
                     // la mere ne doit pas etre decedee avant la date de naissance
-                    if (!isRecordBeforeThanDate(record.getIndiBirthDate(), mother.getDeathDate(), 0, 0)) {
+                    if (!isRecordBeforeThanDate(participant.getBirthDate(), mother.getDeathDate(), 0, 0)) {
                         continue;
                     }
                 }
@@ -1172,7 +1270,7 @@ public class MergeQuery {
         List<Indi> sameChildren = new ArrayList<Indi>();
 
         // je recupere la date de naissance du releve
-        PropertyDate recordBirthDate = birthRecord.getIndiBirthDate();
+        PropertyDate recordBirthDate = birthRecord.getIndi().getBirthDate();
         
         if (selectedFamily != null) {
 //            PropertyDate marriageDate = selectedFamily.getMarriageDate();
@@ -1187,13 +1285,13 @@ public class MergeQuery {
 //            if (father != null) {
 //
 //                // meme nom du pere
-//                if (!birthRecord.getIndiFatherLastName().isEmpty()
-//                        && !isSameName(birthRecord.getIndiFatherLastName(), father.getLastName())) {
+//                if (!birthRecord.getIndi().getFatherLastName().isEmpty()
+//                        && !isSameName(birthRecord.getIndi().getFatherLastName(), father.getLastName())) {
 //                    //throw new Exception("le nom du pere est different");
 //                }
 //                //meme prénom du pere
-//                if (!birthRecord.getIndiFatherFirstName().isEmpty()
-//                        && !isSameName(birthRecord.getIndiFatherFirstName(), father.getFirstName())) {
+//                if (!birthRecord.getIndi().getFatherFirstName().isEmpty()
+//                        && !isSameName(birthRecord.getIndi().getFatherFirstName(), father.getFirstName())) {
 //                    //throw new Exception("le prenom du pere est different");
 //                }
 //
@@ -1210,13 +1308,13 @@ public class MergeQuery {
 //            Indi mother = selectedFamily.getWife();
 //            if (mother != null) {
 //                // meme nom de la mere
-//                if (!birthRecord.getIndiMotherLastName().isEmpty()
-//                        && !isSameName(birthRecord.getIndiMotherLastName(), mother.getLastName())) {
+//                if (!birthRecord.getIndi().getMotherLastName().isEmpty()
+//                        && !isSameName(birthRecord.getIndi().getMotherLastName(), mother.getLastName())) {
 //                    //throw new Exception("le nom de la mere est different");
 //                }
 //                //meme prénom de la mere
-//                if (!birthRecord.getIndiMotherFirstName().isEmpty()
-//                        && !isSameName(birthRecord.getIndiMotherFirstName(), mother.getFirstName())) {
+//                if (!birthRecord.getIndi().getMotherFirstName().isEmpty()
+//                        && !isSameName(birthRecord.getIndi().getMotherFirstName(), mother.getFirstName())) {
 //                    //throw new Exception("le prénom de la mere est different");
 //                }
 //                // la mere doit avoir au moins minParentYearOld
@@ -1233,28 +1331,29 @@ public class MergeQuery {
             for (Indi child : selectedFamily.getChildren()) {
 
                 // meme sexe de l'enfant
-                if (birthRecord.getIndiSex() != FieldSex.UNKNOWN
+                if (birthRecord.getIndi().getSex() != FieldSex.UNKNOWN
                         && child.getSex() != PropertySex.UNKNOWN
-                        && birthRecord.getIndiSex() != child.getSex()) {
+                        && birthRecord.getIndi().getSex() != child.getSex()) {
                     continue;
                 }
 
                 // meme nom de l'enfant
-                if (!birthRecord.getIndiLastName().isEmpty()
-                        && !isSameName(birthRecord.getIndiLastName(), child.getLastName())) {
+                if (!birthRecord.getIndi().getLastName().isEmpty()
+                        && !isSameLastName(birthRecord.getIndi().getLastName(), child.getLastName())) {
                     continue;
                 }
 
                 // meme prenom de l'enfant
-                if (!birthRecord.getIndiFirstName().isEmpty()
-                        && !isSameName(birthRecord.getIndiFirstName(), child.getFirstName())) {
+                if (!birthRecord.getIndi().getFirstName().isEmpty()
+                        && !isSameFirstName(birthRecord.getIndi().getFirstName(), child.getFirstName())) {
                     continue;
                 }
 
                 
-                // date de naissance compatible
                 // petit raccourci pour gagner du temps
                 PropertyDate indiBirtDate = child.getBirthDate();
+                
+                // date de naissance compatible
                 if (indiBirtDate != null) {
                     if (!isCompatible(recordBirthDate, indiBirtDate)) {
                         // la date de naissance de l'individu n'est pas compatible avec la date du relevé
@@ -1262,10 +1361,26 @@ public class MergeQuery {
                     }
                 }
 
+                // date de naissance apres la date de naissance des parents
+                Indi father = selectedFamily.getHusband();
+                if (father != null ) {
+                    if (!isRecordAfterThanDate(recordBirthDate, father.getBirthDate(), 0, minParentYearOld)) {
+                        // la date de naissance de l'individu n'est pas apres avec la date de naissance du pere
+                        continue;
+                    }
+                }
+                Indi mother = selectedFamily.getWife();
+                if (mother != null ) {
+                    if (!isRecordAfterThanDate(recordBirthDate, mother.getBirthDate(), 0, minParentYearOld)) {
+                        // la date de naissance de l'individu n'est pas apres avec la date de naissance de la mere
+                        continue;
+                    }
+                }
+
                 // date de décés compatible
                 PropertyDate childDeathDate = child.getDeathDate();
                 if (childDeathDate != null) {
-                    if (!isCompatible(birthRecord.getIndiDeathDate(), childDeathDate)) {
+                    if (!isCompatible(birthRecord.getIndi().getDeathDate(), childDeathDate)) {
                         // la date de décès de l'individu n'est pas compatible avec la date du relevé
                         continue;
                     }
@@ -1382,7 +1497,7 @@ public class MergeQuery {
                    result = false;
                 }
             } else {
-                result = false;
+                   result = false;
 
             }
         } catch (GedcomException ex) {
@@ -1416,12 +1531,33 @@ public class MergeQuery {
 
 
     /**
-     * retounr true si str1 est égal ou se prononce comme str2
+     * retourne true si str1 est égal ou se prononce comme str2
      * @param str1
      * @param str2
      * @return
      */
-    static protected boolean isSameName(String str1, String str2) {        
+    static protected boolean isSameLastName(String str1, String str2) {
+        String[] names1 = str1.split(",");
+        String[] names2 = str2.split(",");
+        boolean result = false;
+
+        for( String name1 : names1) {
+            for( String name2 : names2) {
+                result |= dm.encode(name1).equals(dm.encode(name2));
+            }
+        }
+        return result;
+        //return dm.encode(str1).equals(dm.encode(str2));
+        //return str1.equals(str2);
+    }
+
+    /**
+     * retourne true si str1 est égal ou se prononce comme str2
+     * @param str1
+     * @param str2
+     * @return
+     */
+    static protected boolean isSameFirstName(String str1, String str2) {
         return dm.encode(str1).equals(dm.encode(str2));
         //return str1.equals(str2);
     }
@@ -1429,7 +1565,7 @@ public class MergeQuery {
     /**
      * retourne true si la date de naissance du parent est inférieure à la date
      * du relevé (diminuée de l'age minimum pour être parent)
-     * et si le parent a moins de 100 ans à la date du relevé.
+     * et si le parent a moins de indiMaxYearOld (=100 ans) à la date du relevé.
      * Autrement dit :
      *   recordDate - indiMaxYearOld <  parentBirthDate  < recordDate - (minMonthShift + minYearShift)
      *
@@ -1674,8 +1810,7 @@ public class MergeQuery {
 
 
     /**
-     *  retourne vrai si la date de naissance du releve est plus precise
-     *  que la date de naissance de l'entité
+     *  retourne la date la plus précise entre la date du releve la date de l'entité
      *
      *  record      birth
      *  date        date    vrai si record est plus precis que birth
@@ -1699,46 +1834,67 @@ public class MergeQuery {
      *  range       range   vrai si l'intersection des intervalles n'est pas vide
 
      * @param recordDate date du releve
-     * @param birthDate date de naissance
+     * @param gedcomDate  date de l'individu Gedcom
      * @return
+     *      null si les dates sont incompatibles
+     *      recordDate si la date du relevé est plus précise
+     *      gedcomDate si la date de l'entité est plus précise
+     *      mergeDate  si une intersection plus precise existe entre les deux dates
      */
-    static protected boolean isBestBirthDate(PropertyDate recordDate, PropertyDate birthDate) {
-        boolean result;
+    static protected PropertyDate getMostAccurateDate(PropertyDate recordDate, PropertyDate gedcomDate) {
+        PropertyDate result;
         try {
-            if ( !birthDate.isValid() ) {
-                result = true;
-            } else if (birthDate.getFormat() == PropertyDate.DATE) {
+
+            if ( !gedcomDate.isValid() ) {
+                result = recordDate;
+            } else if (gedcomDate.getFormat() == PropertyDate.DATE) {
                 if (recordDate.getFormat() == PropertyDate.DATE) {
                     // je compare l'année , puis le mois , puis le jour
-                    if ( birthDate.getStart().getYear() == PointInTime.UNKNOWN ) {
+                    if ( gedcomDate.getStart().getYear() == PointInTime.UNKNOWN ) {
                         if ( recordDate.getStart().getYear() != PointInTime.UNKNOWN ) {
-                           result = true;
+                           result = recordDate;
                         } else {
-                           result = false;
+                           result = gedcomDate;
                         }
-                    } else if ( birthDate.getStart().getMonth() == PointInTime.UNKNOWN ) {
+                    } else if ( gedcomDate.getStart().getMonth() == PointInTime.UNKNOWN ) {
                         if ( recordDate.getStart().getMonth() != PointInTime.UNKNOWN ) {
-                           result = true;
+                           result = recordDate;
                         } else {
-                           result = false;
+                           result = gedcomDate;
                         }
-                    } else  if ( birthDate.getStart().getDay() == PointInTime.UNKNOWN ) {
+                    } else  if ( gedcomDate.getStart().getDay() == PointInTime.UNKNOWN ) {
                         if ( recordDate.getStart().getDay() != PointInTime.UNKNOWN ) {
-                           result = true;
+                           result = recordDate;
                         } else {
-                           result = false;
+                           result = gedcomDate;
                         }
                     } else {
-                        result = false;
+                        if ( recordDate.getStart().getYear() != PointInTime.UNKNOWN
+                                && recordDate.getStart().getMonth() != PointInTime.UNKNOWN
+                                && recordDate.getStart().getDay() != PointInTime.UNKNOWN) {
+                            if ( recordDate.getStart().getYear() == gedcomDate.getStart().getYear()
+                                    && recordDate.getStart().getMonth() == gedcomDate.getStart().getMonth()
+                                    && recordDate.getStart().getDay() == gedcomDate.getStart().getDay()) {
+                                // dates precises egales
+                                return gedcomDate;
+                            } else {
+                                // dates precises incompatibles
+                                result = null;
+                            }
+                        } else {
+                            result = gedcomDate;
+                        }
                     }
                 } else {
-                    result = false;
+                    result = gedcomDate;
                 }
             } else {
                 int start1;
                 int start2;
                 int end1;
                 int end2;
+                boolean about1 = false;
+                boolean about2 = false;
                 if (recordDate.getFormat() == PropertyDate.DATE) {
                     start1 = recordDate.getStart().getJulianDay();
                     end1 = start1;
@@ -1748,6 +1904,9 @@ public class MergeQuery {
                 } else if (recordDate.getFormat() == PropertyDate.AFTER || recordDate.getFormat() == PropertyDate.FROM) {
                     start1 = recordDate.getStart().getJulianDay();
                     end1 = Integer.MAX_VALUE;
+                } else if (recordDate.getFormat() == PropertyDate.BETWEEN_AND || recordDate.getFormat() == PropertyDate.FROM_TO ) {
+                    start1 = recordDate.getStart().getJulianDay();
+                    end1 = recordDate.getEnd().getJulianDay();
                 } else {
                     // ABOUT, ESTIMATED, CALCULATED
                     PointInTime startPit = new PointInTime();
@@ -1756,78 +1915,236 @@ public class MergeQuery {
                     PointInTime endPit = new PointInTime();
                     endPit.set(recordDate.getStart());
                     end1 = startPit.add(0, 0, +aboutYear).getJulianDay();
+                    about1 = true;
                 } 
 
-                if (birthDate.getFormat() == PropertyDate.DATE) {
+                if (gedcomDate.getFormat() == PropertyDate.DATE) {
                     // intervalle [start2 , start2]
-                    start2 = birthDate.getStart().getJulianDay();
+                    start2 = gedcomDate.getStart().getJulianDay();
                     end2 = start2;
-                } else if (birthDate.getFormat() == PropertyDate.BEFORE || birthDate.getFormat() == PropertyDate.TO) {
+                } else if (gedcomDate.getFormat() == PropertyDate.BEFORE || gedcomDate.getFormat() == PropertyDate.TO) {
                     // intervalle [start2 - 100 ans , start2]
                     PointInTime startPit = new PointInTime();
-                    startPit.set(birthDate.getStart());
+                    startPit.set(gedcomDate.getStart());
                     start2 = Integer.MIN_VALUE; 
-                    end2 = birthDate.getStart().getJulianDay();
-                } else if (birthDate.getFormat() == PropertyDate.AFTER || birthDate.getFormat() == PropertyDate.FROM) {
-                    start2 = birthDate.getStart().getJulianDay();
+                    end2 = gedcomDate.getStart().getJulianDay();
+                } else if (gedcomDate.getFormat() == PropertyDate.AFTER || gedcomDate.getFormat() == PropertyDate.FROM) {
+                    start2 = gedcomDate.getStart().getJulianDay();
                     PointInTime startPit = new PointInTime();
-                    startPit.set(birthDate.getStart());
+                    startPit.set(gedcomDate.getStart());
                     end2 = Integer.MAX_VALUE;
+                } else if (gedcomDate.getFormat() == PropertyDate.BETWEEN_AND || gedcomDate.getFormat() == PropertyDate.FROM_TO ) {
+                    start2 = gedcomDate.getStart().getJulianDay();
+                    end2 = gedcomDate.getEnd().getJulianDay();
                 } else {
                     // ABOUT, ESTIMATED, CALCULATED
                     // intervalle [start2 , end2]
                     PointInTime startPit = new PointInTime();
-                    startPit.set(birthDate.getStart());
+                    startPit.set(gedcomDate.getStart());
                     start2 = startPit.add(0, 0, -aboutYear).getJulianDay();
                     PointInTime endPit = new PointInTime();
-                    endPit.set(birthDate.getStart());
-                    end2 = startPit.add(0, 0, +aboutYear).getJulianDay();
+                    endPit.set(gedcomDate.getStart());
+                    end2 = endPit.add(0, 0, +aboutYear).getJulianDay();
+                    about2 = true;
                 } 
 
-                // je verifie si l'intervalle 1 est inclus dans l'intervalle 2
-                if (start1 >= start2  && end1 <= end2 ) {
-                    result = true;
+                
+                int start;
+                int end;
+                boolean aboutStart = false;
+                boolean aboutEnd = false;
+                // start = max (start1, start2)
+                if( start1 > start2) {
+                    start = start1;
+                    aboutStart = about1;
                 } else {
-                    // l'intersection entre les intervalles est nulle
-                    result = false;
+                    start = start2;
+                    aboutStart = about2;
                 }
+                // end = min (end1, end2)
+                if( end1 > end2) {
+                    end = end2;
+                    aboutEnd = about2;
+                } else {
+                    end = end1;
+                    aboutEnd = about1;
+                }
+
+                if (start <= end) {
+                    if (start == start1 && end == end1) {
+                        result = recordDate;
+                    } else if (start == start2 && end == end2) {
+                        result = gedcomDate;
+                    } else if (start != Integer.MIN_VALUE && end != Integer.MAX_VALUE) {
+                        if ((aboutEnd == true && end == end2) || (aboutStart == true && start == start2)) {
+                            result = gedcomDate;
+                        } else {
+                            result = new PropertyDate();
+                            result.setValue(PropertyDate.BETWEEN_AND, toPointInTime(start), toPointInTime(end), "intersection entre la date du releve et la date du gedcom");
+                        }
+
+                    } else if (start == Integer.MIN_VALUE && end != Integer.MAX_VALUE) {
+                        result = new PropertyDate();
+                        result.setValue(PropertyDate.BEFORE, toPointInTime(end), null, "");
+                    } else if (start != Integer.MIN_VALUE && end == Integer.MAX_VALUE) {
+                        result = new PropertyDate();
+                        result.setValue(PropertyDate.AFTER, toPointInTime(start), null, "");
+                    } else {
+                        result = null;
+                    }
+                } else {
+                    result = null;
+                }
+
+                // je verifie si l'intervalle 1 (record) est inclus dans l'intervalle 2 (gedcom)
+                /*
+                 if (start1 >= start2  && end1 <= end2 ) {
+                    //recordDate est inclus dans gedcomDate
+                    result = recordDate;
+                } else if (start1 < start2  && end1 <= end2 ) {
+                    PropertyDate mergeDate = new PropertyDate();
+                    mergeDate.setValue(PropertyDate.BETWEEN_AND, toPointInTime(start1), toPointInTime(end2), "intersection entre la date du releve et la date du gedcom" );
+                    result = mergeDate;
+                } else {
+                    if( start2 == Integer.MIN_VALUE && end1 == Integer.MAX_VALUE && start1 <= end2 ) {
+                        // recouvrement partiel  1=AFT et 2=BEF                        
+                        if ( start1 != Integer.MIN_VALUE) {
+                            PropertyDate mergeDate = new PropertyDate();
+                            mergeDate.setValue(PropertyDate.BETWEEN_AND, toPointInTime(start1), toPointInTime(end2), "intersection entre la date du releve et la date du gedcom" );
+                            result = mergeDate;
+                        } else {
+                            result = gedcomDate;
+                        }
+                    } else if ( start1 == Integer.MIN_VALUE && (end2 == Integer.MAX_VALUE || end2 <= end1) && start2 <= end1 ) {
+                        if ( start2 != Integer.MIN_VALUE) {
+                            // recouvrement partiel  1=BEF (min , end1)   et 2=AFT (start2 , max) => (start2 , end1)
+                            PropertyDate mergeDate = new PropertyDate();
+                            mergeDate.setValue(PropertyDate.BETWEEN_AND, toPointInTime(start2), toPointInTime(end1), "intersection entre la date du releve et la date du gedcom" );
+                            result = mergeDate;
+                        } else {
+                            result = gedcomDate;
+                        }
+                    } else {
+                        if( start1 <= start2 && end1 == Integer.MAX_VALUE  && end2 == Integer.MAX_VALUE ) {
+                            result = gedcomDate;
+                        } else {
+                            // l'intersection entre les intervalles est nulle
+                            // les dates sont incompatibles
+                            result = null;
+                        }
+                    }
+                }
+                */
             }
         } catch (GedcomException ex) {
-            result = false;
+            result = null;
         }
 
         return result;
     }
 
 
+     static protected PointInTime toPointInTime(int julianDay) {
+
+        // see toJulianDay
+        int l = julianDay + 68569;
+        int n = (4 * l) / 146097;
+        l = l - (146097 * n + 3) / 4;
+        int i = (4000 * (l + 1)) / 1461001;
+        l = l - (1461 * i) / 4 + 31;
+        int j = (80 * l) / 2447;
+        int d = l - (2447 * j) / 80;
+        l = j / 11;
+        int m = j + 2 - (12 * l);
+        int y = 100 * (n - 49) + i + l;
+
+        return new PointInTime(PointInTime.UNKNOWN, PointInTime.UNKNOWN, y <= 0 ? y - 1 : y);
+    }
+
 
     /**
-     * retourne la profession d'un individu.
-     * S'il ya plusieurs profession, retourne celle qui a la date la plus proche de
-     * la date donnée en paramètre
+     * retourne la profession d'un individu, avec le lieu et la date
+     * S'il y a plusieurs profession, retourne celle qui a la date la plus proche de
+     * la date donnée en paramètre.
+     * Si audune profession n'est trouvée, retourne le domicile
      * @param indi
-     * @param occupation
      * @param occupationDate
-     * @return occution property or null
+     * @return occupation+residence+date or empty string
      */   
     static protected String findOccupation(Indi indi, PropertyDate occupationDate) {
-        Property occupationProperty = null;
-        for (Property occu : indi.getProperties("OCCU")) {
-            for (Property occuDate : occu.getProperties("DATE")) {
-                if (occupationProperty == null) {
-                    occupationProperty = occu;
+        Property foundOccupation = null;
+        Property foundDate = null;
+        for (Property iterationOccupation : indi.getProperties("OCCU")) {
+            // je recherche les dates meme si elles ne sont pas valides
+            for (Property iterationDate : iterationOccupation.getProperties("DATE",false)) {
+                if (foundOccupation == null) {
+                    foundOccupation = iterationOccupation;
+                    foundDate = iterationDate;
                 } else {
-                    if (Math.abs(occupationDate.compareTo((PropertyDate) occuDate)) <= Math.abs(occupationDate.compareTo( occupationDate))) {
-                        occupationProperty = occu;
+                    if (Math.abs(occupationDate.compareTo((PropertyDate) iterationDate)) <= Math.abs(occupationDate.compareTo(foundDate))) {
+                        foundOccupation = iterationOccupation;
+                        foundDate = iterationDate;
                     }
                 }
 
             }
         }
         String result = "";
-        if (occupationProperty != null) {
-            result = occupationProperty.getValue();
-            String date = occupationProperty.getPropertyDisplayValue("DATE");
+        if (foundOccupation != null) {
+            result = foundOccupation.getValue();
+            Property place = foundOccupation.getProperty("PLAC");
+            if ( place != null && !place.getValue().isEmpty()) {
+                if (!result.isEmpty()) {
+                    result += ", ";
+                }
+                result += place.getValue();
+            }
+            String date = foundOccupation.getPropertyDisplayValue("DATE");
+            if (!date.isEmpty()) {
+                result += " (" + date + ")";
+            }
+        } else {
+            result = findResidence(indi, occupationDate);
+        }
+        return result;
+    }
+
+    /**
+     * retourne le domicile d'un individu.
+     * S'il y a plusieurs domiciles, retourne celui qui a la date la plus proche de
+     * la date donnée en paramètre
+     * @param indi
+     * @param residenceDate
+     * @return residence+date or empty string
+     */
+    static protected String findResidence(Indi indi, PropertyDate residenceDate) {
+        Property foundResidence = null;
+        Property foundDate = null;
+        for (Property iterationResidence : indi.getProperties("RESI")) {
+            // je recherche les dates meme si elles ne sont pas valides
+            for (Property iterationDate : iterationResidence.getProperties("DATE",false)) {
+                if (foundResidence == null) {
+                    foundResidence = iterationResidence;
+                    foundDate = iterationDate;
+                } else {
+                    if (Math.abs(residenceDate.compareTo((PropertyDate) iterationDate)) <= Math.abs(residenceDate.compareTo( foundDate))) {
+                        foundResidence = iterationResidence;
+                        foundDate = iterationDate;
+                    }
+                }
+            }
+        }
+        String result = "";
+        if (foundResidence != null) {
+            result = foundResidence.getValue();
+            Property place = foundResidence.getProperty("PLAC");
+            if ( place != null && !place.getValue().isEmpty()) {
+                if (!result.isEmpty()) {
+                    result += ", ";
+                }
+                result += place.getValue();
+            }
+            String date = foundResidence.getPropertyDisplayValue("DATE");
             if (!date.isEmpty()) {
                 result += " (" + date + ")";
             }
@@ -1835,8 +2152,41 @@ public class MergeQuery {
         return result;
     }
 
+
+     /**
+     * retourne un evenement du meme type et a la meme date s'il existe
+     * @param indi
+     * @param eventType
+     * @param eventDate
+     * @return evenement ou null
+     */
+    static protected PropertyEvent findPropertyEvent(Indi indi, String eventType, PropertyDate eventDate) {
+        PropertyEvent foundEvent = null;
+        //Property foundDate = null;
+        for (Property iterationEvent : indi.getProperties("EVEN")) {
+            if (iterationEvent.getPropertyValue("TYPE").equals(eventType)) {
+                PropertyDate iterationDate =  (PropertyDate) iterationEvent.getProperty("DATE",false);
+                if (iterationDate != null) {
+                    if ( MergeQuery.isCompatible(eventDate, iterationDate)) {
+                        foundEvent = (PropertyEvent) iterationEvent;
+                        //foundDate = iterationDate;
+                    }
+                } else { 
+                    
+                    if (foundEvent == null) {
+                        foundEvent = (PropertyEvent) iterationEvent;
+                        //foundDate = iterationDate;
+                    } 
+                }
+            }
+        }
+        
+        return foundEvent;
+    }
+
     /**
      * retourne la source d'un releve
+     *   "(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName
      * @param entityProperty
      * @param gedcom
      * @return
@@ -1844,15 +2194,27 @@ public class MergeQuery {
     static protected Source findSource(MergeRecord record, Gedcom gedcom) {
         Source source = null;
 
+        /*
         // je verifie si la source existe deja dans le gescom
         String cityName = record.getEventPlaceCityName();
         String cityCode = record.getEventPlaceCityCode();
         String countyName = record.getEventPlaceCountyName();
-        String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
+        //String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
+        String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);        
         Pattern pattern = Pattern.compile(stringPatter);
         Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
         for (Entity gedComSource : sources) {
             if (pattern.matcher(((Source)gedComSource).getTitle()).matches()) {
+                source = (Source)gedComSource;
+            }
+        }
+         */
+
+        String sourceTitle = record.getEventSource();
+        Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
+        for (Entity gedComSource : sources) {
+
+            if (((Source)gedComSource).getTitle().startsWith(sourceTitle)) {
                 source = (Source)gedComSource;
             }
         }
@@ -1866,16 +2228,20 @@ public class MergeQuery {
      * @param gedcom
      * @return
      */
-    static protected Property findSource(MergeRecord record, Gedcom gedcom, Property eventProperty) {
+    static protected Property findPropertySource(MergeRecord record, Gedcom gedcom, Property eventProperty) {
         Property sourceProperty = null;
 
         if (eventProperty != null) {
             Property[] sourceProperties = eventProperty.getProperties("SOUR", false);
             for (int i = 0; i < sourceProperties.length; i++) {
-                Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
-                if (record.getEventSource().compareTo(eventSource.getTitle()) == 0) {
-                    sourceProperty = sourceProperties[i];
-                    break;
+                // remarque : verification de classe PropertySource avant de faire le cast en PropertySource pour eliminer
+                // les cas anormaux , par exemple une source "multiline"
+                if ( sourceProperties[i] instanceof PropertySource) {
+                    Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
+                    if (record.getEventSource().compareTo(eventSource.getTitle()) == 0) {
+                        sourceProperty = sourceProperties[i];
+                        break;
+                    }
                 }
             }
         }

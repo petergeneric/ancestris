@@ -1,9 +1,11 @@
 package ancestris.modules.releve.model;
 
+import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.file.FileBuffer;
 import genj.gedcom.Context;
 import java.util.ArrayList;
+import java.util.Collection;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
@@ -28,11 +30,11 @@ public class DataManager implements PlaceManager {
     // données volatiles
     private int lastRecordNo = 0;
     private String freeComment = "";
-
-    
+    private String defaultCote = "";
+    private String defaultNotary = "";
 
     // previous record
-
+    public enum RecordType { birth, marriage, death, misc }
     public enum ModelType { birth, marriage, death, misc, all }
 
     public DataManager () {
@@ -74,6 +76,8 @@ public class DataManager implements PlaceManager {
             // je valorise le numero de photo avec la valeur par defaut
             String defaultValue = this.getDefaultFreeComment();
             record.setFreeComment(defaultValue);
+            record.setCote(defaultCote);
+            record.setNotary(defaultNotary);
         }
         
         return addRecord(record, true);
@@ -140,21 +144,7 @@ public class DataManager implements PlaceManager {
 
         // j'ajoute les releves
         for (Record record : fileBuffer.getRecords()) {
-            FieldPlace fieldPlace = record.getEventPlace();
-            String place = fieldPlace.getValue();
-            if (!place.equals(defaultPlace)) {
-                if (forceDefaultPlace == 1) {
-                    // je supprime le lieu pour gagner de la place en mémoire
-                    record.eventPlace = null;
-                    this.addRecord(record, false);
-                } else {
-                    // j'ignore le releve
-                }
-            } else {
-                // je supprime le lieu pour gagner de la place en mémoire
-                record.eventPlace = null;
-                this.addRecord(record, false);
-            }
+            this.addRecord(record, false);
         }
 
         // si des lignes ont été ajoutées , je previens les listeners
@@ -240,7 +230,7 @@ public class DataManager implements PlaceManager {
              completionProvider.removeGedcomCompletion();
         }
     }
-
+     
     public boolean getDuplicateControlEnabled() {
         return duplicateControlEnabled;
     }
@@ -263,6 +253,14 @@ public class DataManager implements PlaceManager {
 
     public void setDefaultFreeComment(String text) {
         freeComment = text;
+    }
+
+    public void setDefaultCote(String text) {
+        defaultCote = text;
+    }
+
+    public void setDefaultNotary(String text) {
+        defaultNotary = text;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -367,11 +365,9 @@ public class DataManager implements PlaceManager {
 
     // listeners devant être prevenus du changement de lieu
     private ArrayList<PlaceListener> placeListeners = new ArrayList<PlaceListener>(1);
-    private String cityName = "";
-    private String cityCode = "";
-    private String county = "";
-    private String state = "";
-    private String country = "";
+    private FieldPlace recordsInfoPlace = new FieldPlace();
+    private String sourceTitle = "";
+    
     
     private boolean placeChanged = false;
     
@@ -394,66 +390,39 @@ public class DataManager implements PlaceManager {
     @Override
     public void setPlace(String cityName, String cityCode, String county, String state, String country) {
        
-       if (!cityName.equals(this.cityName) || 
-               !cityCode.equals(this.cityCode) || 
-               !county.equals(this.county) || 
-               !state.equals(this.state) || 
-               !country.equals(this.country)
+       if (!cityName.equals(this.recordsInfoPlace.getCityName()) ||
+               !cityCode.equals(this.recordsInfoPlace.getCityCode()) ||
+               !county.equals(this.recordsInfoPlace.getCountyName()) ||
+               !state.equals(this.recordsInfoPlace.getStateName()) ||
+               !country.equals(this.recordsInfoPlace.getCountryName())
           )
        {
-           this.cityName = cityName;
-           this.cityCode = cityCode;
-           this.county = county;
-           this.state = state;
-           this.country = country;
+           String oldValue = recordsInfoPlace.getValue();
+           this.recordsInfoPlace.setCityName(cityName);
+           this.recordsInfoPlace.setCityCode(cityCode);
+           this.recordsInfoPlace.setCountyName(county);
+           this.recordsInfoPlace.setStateName(state);
+           this.recordsInfoPlace.setCountryName(country);
+           completionProvider.updatePlaces(recordsInfoPlace, oldValue);
            
            placeChanged = true;
             // je notifie les listeners
             for(PlaceListener placeListener : placeListeners) {
                 placeListener.updatePlace(getPlace());
             }
-       }
-      
+       }      
     }
 
     @Override
     public void setPlace(String value) {
-       
-        if (!value.equals(getPlace())) {
+        String oldValue = recordsInfoPlace.getValue();
+        recordsInfoPlace.setValue(value);
+        placeChanged = true;
+        completionProvider.updatePlaces(recordsInfoPlace, oldValue);
 
-            String[] juridictions = value.split(",");
-            if (juridictions.length > 1) {
-                cityName = juridictions[1];
-            } else {
-                cityName = "";
-            }
-            if (juridictions.length > 2) {
-                cityCode = juridictions[2];
-            } else {
-                cityCode = "";
-            }
-            if (juridictions.length > 3) {
-                county = juridictions[3];
-            } else {
-                county = "";
-            }
-            if (juridictions.length > 4) {
-                state = juridictions[4];
-            } else {
-                state = "";
-            }
-            if (juridictions.length > 5) {
-                country = juridictions[5];
-            } else {
-                country = "";
-            }
-
-            placeChanged = true;
-
-            // je notifie les listeners
-            for (PlaceListener placeListener : placeListeners) {
-                placeListener.updatePlace(getPlace());
-            }
+        // je notifie les listeners
+        for (PlaceListener placeListener : placeListeners) {
+            placeListener.updatePlace(getPlace());
         }
     }
 
@@ -463,31 +432,49 @@ public class DataManager implements PlaceManager {
      */
     @Override
     public String getPlace() {
-        return ","+getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName();
+        return recordsInfoPlace.getValue();
     }
 
     @Override
     public String getCityName() {
-        return cityName;
+        return recordsInfoPlace.getCityName();
     }
 
     @Override
     public String getCityCode() {
-        return cityCode;
+        return recordsInfoPlace.getCityCode();
     }
 
     @Override
     public String getCountyName() {
-        return county;
+        return recordsInfoPlace.getCountyName();
     }
 
     @Override
     public String getStateName() {
-        return state;
+        return recordsInfoPlace.getStateName();
     }
 
     @Override
     public String getCountryName() {
-        return country;
+        return recordsInfoPlace.getCountryName();
     }
+
+    /**
+     * @return the sourceTitle
+     */
+    @Override
+    public String getSourceTitle() {
+        return sourceTitle;
+    }
+
+    /**
+     * @param sourceTitle the sourceTitle to set
+     */
+    public void setSourceTitle(String sourceTitle) {
+        this.sourceTitle = sourceTitle;
+    }
+
+
+
 }

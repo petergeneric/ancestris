@@ -1,56 +1,89 @@
 package ancestris.modules.releve;
 
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.model.DataManager;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.Source;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.List;
+import javax.swing.JOptionPane;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 /**
+ * Affiche une fenetre pour configurer le le lieu du relevé (cityName etc...)
  *
  * @author Michel
  */
-
-
-public class ReleveConfig extends javax.swing.JDialog {
+public class ReleveConfigDialog extends javax.swing.JDialog {
 
     DataManager dataManager;
     
+    /**
+     * affiche la fenetre de configuration du relevé
+     * @param parent
+     * @param dataManager
+     */
     public static void show(java.awt.Frame parent, DataManager dataManager) {
-        final ReleveConfig dialog = new ReleveConfig(parent, dataManager);
+        final ReleveConfigDialog dialog = new ReleveConfigDialog(parent, dataManager);
         
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
+                dialog.saveDialogBounds();
                 dialog.setVisible(false);
                 dialog.dispose();
             }
         });
+
         dialog.setVisible(true);
     }
     
     /**
      * Creates new form ReleveConfig
      */
-    public ReleveConfig(java.awt.Frame parent, DataManager dataManager) {
+    public ReleveConfigDialog(java.awt.Frame parent, DataManager dataManager) {
         super(parent, true);
         initComponents();
-        setTitle(NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.Title"));
+        setTitle(NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfig.Title"));
         this.dataManager = dataManager;
         
         cityNameEntry.setText(dataManager.getCityName());
         cityCodeEntry.setText(dataManager.getCityCode());
         countyNameEntry.setText(dataManager.getCountyName());
         stateEntry.setText(dataManager.getStateName());
-        countryEntry.setText(dataManager.getCountryName());   
+        countryEntry.setText(dataManager.getCountryName());
+        jTextFieldSourceTitle.setText(dataManager.getSourceTitle());
         
-        final int width = getWidth();
-        final int height = getHeight();
-        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screenSize.width / 2) - (width / 2);
-        int y = (screenSize.height / 2) - (height / 2);
-        setLocation(x, y);
-
+        // je configure la taille de la fenetre
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        String size = NbPreferences.forModule(ReleveConfigDialog.class).get("ReleveConfigDialogSize", "400,300,0,0");
+        String[] dimensions = size.split(",");
+        if ( dimensions.length >= 4 ) {
+            int width = Integer.parseInt(dimensions[0]);
+            int height = Integer.parseInt(dimensions[1]);
+            int x = Integer.parseInt(dimensions[2]);
+            int y = Integer.parseInt(dimensions[3]);
+            if ( width < 100 ) {
+                width = 100;
+            }
+            if ( height < 100 ) {
+                height = 100;
+            }
+            if ( x < 10 || x > screen.width -10) {
+                x = (screen.width / 2) - (width / 2);
+            }
+            if ( y < 10 || y > screen.height -10) {
+                y = (screen.height / 2) - (height / 2);
+            }
+            setBounds(x, y, width, height);
+        } else {
+            setBounds(screen.width / 2 -100, screen.height / 2- 100, 300, 450);
+        }        
     }
 
     /**
@@ -74,20 +107,23 @@ public class ReleveConfig extends javax.swing.JDialog {
         stateEntry = new javax.swing.JTextField();
         countryLabel = new javax.swing.JLabel();
         countryEntry = new javax.swing.JTextField();
-        jTextArea1 = new javax.swing.JTextArea();
+        sourcePanel = new javax.swing.JPanel();
+        jTextFieldSourceTitle = new javax.swing.JTextField();
+        jButtonSelectSource = new javax.swing.JButton();
+        jLabelSourceTitle = new javax.swing.JLabel();
         jPanelButton = new javax.swing.JPanel();
         jButtonOk = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.placePanel.border.title"))); // NOI18N
+        placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.placePanel.border.title"))); // NOI18N
         placePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        placePanel.setPreferredSize(null);
         placePanel.setRequestFocusEnabled(false);
         placePanel.setLayout(new java.awt.GridBagLayout());
 
-        cityNameLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.cityNameLabel.text")); // NOI18N
+        cityNameLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.cityNameLabel.text")); // NOI18N
         cityNameLabel.setFocusable(false);
         cityNameLabel.setPreferredSize(null);
         cityNameLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
@@ -108,7 +144,7 @@ public class ReleveConfig extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(cityNameEntry, gridBagConstraints);
 
-        cityCodeLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.cityCodeLabel.text")); // NOI18N
+        cityCodeLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.cityCodeLabel.text")); // NOI18N
         cityCodeLabel.setFocusable(false);
         cityCodeLabel.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -128,7 +164,7 @@ public class ReleveConfig extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(cityCodeEntry, gridBagConstraints);
 
-        countyNameLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.countyNameLabel.text")); // NOI18N
+        countyNameLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.countyNameLabel.text")); // NOI18N
         countyNameLabel.setFocusable(false);
         countyNameLabel.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -150,7 +186,7 @@ public class ReleveConfig extends javax.swing.JDialog {
         placePanel.add(countyNameEntry, gridBagConstraints);
 
         stateLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        stateLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.stateLabel.text")); // NOI18N
+        stateLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.stateLabel.text")); // NOI18N
         stateLabel.setFocusable(false);
         stateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         stateLabel.setPreferredSize(null);
@@ -173,7 +209,7 @@ public class ReleveConfig extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(stateEntry, gridBagConstraints);
 
-        countryLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.countryLabel.text")); // NOI18N
+        countryLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.countryLabel.text")); // NOI18N
         countryLabel.setFocusable(false);
         countryLabel.setPreferredSize(null);
         countryLabel.setRequestFocusEnabled(false);
@@ -193,31 +229,51 @@ public class ReleveConfig extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(countryEntry, gridBagConstraints);
 
-        jTextArea1.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
-        jTextArea1.setColumns(20);
-        jTextArea1.setEditable(false);
-        jTextArea1.setRows(3);
-        jTextArea1.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.jTextArea1.text")); // NOI18N
-        jTextArea1.setWrapStyleWord(true);
-        jTextArea1.setAutoscrolls(false);
-        jTextArea1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTextArea1.setFocusable(false);
-        jTextArea1.setMinimumSize(new java.awt.Dimension(200, 22));
-        jTextArea1.setPreferredSize(new java.awt.Dimension(460, 58));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        placePanel.add(jTextArea1, gridBagConstraints);
+        getContentPane().add(placePanel, gridBagConstraints);
 
-        getContentPane().add(placePanel, java.awt.BorderLayout.CENTER);
+        sourcePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.sourcePanel.border.title"))); // NOI18N
+        sourcePanel.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 10);
+        sourcePanel.add(jTextFieldSourceTitle, gridBagConstraints);
 
-        jPanelButton.setPreferredSize(null);
+        jButtonSelectSource.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.jButtonSelectSource.text")); // NOI18N
+        jButtonSelectSource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSelectSourceActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        sourcePanel.add(jButtonSelectSource, gridBagConstraints);
 
-        jButtonOk.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.jButtonOk.text")); // NOI18N
+        jLabelSourceTitle.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.jLabelSourceTitle.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        sourcePanel.add(jLabelSourceTitle, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        getContentPane().add(sourcePanel, gridBagConstraints);
+
+        jButtonOk.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.jButtonOk.text")); // NOI18N
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
@@ -225,7 +281,7 @@ public class ReleveConfig extends javax.swing.JDialog {
         });
         jPanelButton.add(jButtonOk);
 
-        jButtonCancel.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.jButtonCancel.text")); // NOI18N
+        jButtonCancel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.jButtonCancel.text")); // NOI18N
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
@@ -233,7 +289,13 @@ public class ReleveConfig extends javax.swing.JDialog {
         });
         jPanelButton.add(jButtonCancel);
 
-        getContentPane().add(jPanelButton, java.awt.BorderLayout.SOUTH);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        getContentPane().add(jPanelButton, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -251,15 +313,67 @@ public class ReleveConfig extends javax.swing.JDialog {
                 stateEntry.getText().trim(),
                 countryEntry.getText().trim()
             );
-        setVisible(false);
+        dataManager.setSourceTitle(jTextFieldSourceTitle.getText());
+        saveDialogBounds();
         dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        setVisible(false);
+        saveDialogBounds();
         dispose();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
+    private void jButtonSelectSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSourceActionPerformed
+        // je recupere le fichier gedcom
+        List<Context> contexts = GedcomDirectory.getDefault().getContexts();
+        Gedcom gedcom = null;
+        Entity source = null;
+        if ( contexts.isEmpty()) {
+            // j'affiche un message d'erreur
+        } else if ( contexts.size() == 1) {
+            gedcom = contexts.get(0).getGedcom();
+        } else {
+            // je demande de choisir un gedcom
+            Gedcom[] gedcoms = new Gedcom[contexts.size()];
+            for( int i = 0 ; i < contexts.size(); i++ ) {
+                gedcoms[i] = contexts.get(i).getGedcom();
+            }
+            // j'affiche la fenetre de selection du gedcom
+            gedcom = (Gedcom) JOptionPane.showInputDialog(this,
+                    "Associer une source au relevé",
+                    "Choisir un fichier gedcom", JOptionPane.QUESTION_MESSAGE,
+                    null, gedcoms, gedcoms[0]);
+        }
+
+        if (gedcom != null) {
+            Entity[] sources = gedcom.getEntities("SOUR", "SOUR:TITL");
+            // j'affiche la fenetre de selection de la source
+            source = (Source) JOptionPane.showInputDialog(this,
+                    "Associer une source au relevé",
+                    "Choisir une source", JOptionPane.QUESTION_MESSAGE,
+                    null, sources, null);
+
+            if (source != null) {
+                jTextFieldSourceTitle.setText(((Source)source).getTitle());
+            }
+        }
+    }//GEN-LAST:event_jButtonSelectSourceActionPerformed
+
+    /**
+     * e
+     */
+    private void saveDialogBounds() {
+
+        // j'enregistre la taille dans les preferences
+        String size;
+        size = String.valueOf((int)getBounds().getWidth()) + ","
+                + String.valueOf((int)getBounds().getHeight()) + ","
+                + String.valueOf(getBounds().getLocation().x + ","
+                + String.valueOf(getBounds().getLocation().y));
+
+        NbPreferences.forModule(ReleveConfigDialog.class).put("ReleveConfigDialogSize", size);
+
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField cityCodeEntry;
@@ -272,9 +386,12 @@ public class ReleveConfig extends javax.swing.JDialog {
     private javax.swing.JLabel countyNameLabel;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOk;
+    private javax.swing.JButton jButtonSelectSource;
+    private javax.swing.JLabel jLabelSourceTitle;
     private javax.swing.JPanel jPanelButton;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextFieldSourceTitle;
     private javax.swing.JPanel placePanel;
+    private javax.swing.JPanel sourcePanel;
     private javax.swing.JTextField stateEntry;
     private javax.swing.JLabel stateLabel;
     // End of variables declaration//GEN-END:variables

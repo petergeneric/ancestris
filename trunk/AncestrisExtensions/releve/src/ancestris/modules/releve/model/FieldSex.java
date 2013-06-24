@@ -121,4 +121,13 @@ public class FieldSex extends Field {
         return false;
     }
 
+    static public String convertValue( int intValue) {
+        if (intValue == MALE) {
+            return MALE_STRING;
+        }
+        if (intValue == FEMALE) {
+            return FEMALE_STRING;
+        }
+        return UNKNOWN_STRING;
+    }
 }
