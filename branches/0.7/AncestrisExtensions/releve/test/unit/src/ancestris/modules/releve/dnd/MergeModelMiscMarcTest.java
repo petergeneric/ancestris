@@ -27,7 +27,7 @@ public class MergeModelMiscMarcTest extends TestCase {
         RecordMisc record = new RecordMisc();
         if (id.equals("CM1")) {
             record.setEventDate("01/03/1999");
-            record.setEventType("CM");
+            record.setEventType("Contrat de mariage");
             record.setNotary("notaire_marc");
             record.setCote("cote");
             record.setGeneralComment("generalcomment");

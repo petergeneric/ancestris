@@ -14,6 +14,8 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -26,6 +28,8 @@ public class RelevePanel extends javax.swing.JPanel  {
     /** Creates new form RelevePanel */
     public RelevePanel() {
         initComponents();
+        // J'applique un poids=1 pour que seule la largeur du composant de gauche soit mdofiées quand on change la taille de la fenetre
+        jSplitPane1.setResizeWeight(1.0);
         // j'ajoute l'editeur a l'ecoute de la selection de ligne dans la table
         releveTable.setTableSelectionListener(releveEditor);
     }
@@ -43,17 +47,23 @@ public class RelevePanel extends javax.swing.JPanel  {
 
         // j'initialise la largeur de l'editeur avec la largeur de la session precedente
         // Remarque : il faut differer le changement de taille car sinon jSplitPane1.getSize() est nul
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
 //                jSplitPane1.setDividerLocation(jSplitPane1.getSize().width
 //                             - jSplitPane1.getInsets().right
 //                             - jSplitPane1.getDividerSize()
 //                             - releveEditor.getEditorWidth());
-//
-//            }
-//        });
-        jSplitPane1.setDividerLocation(releveEditor.getEditorWidth());
+
+                int editorWidth = getEditorWidth(releveModel);
+                // je dimensionne le panneau droit de jSplitPane1
+                if (jSplitPane1.getWidth() > editorWidth) {
+                jSplitPane1.setDividerLocation(jSplitPane1.getWidth() - editorWidth - jSplitPane1.getDividerSize());
+                }
+
+            }
+        });
         
     }
 
@@ -79,7 +89,9 @@ public class RelevePanel extends javax.swing.JPanel  {
 //                - jSplitPane1.getInsets().right
 //                - jSplitPane1.getDividerSize()
 //                - jSplitPane1.getDividerLocation() );
-        releveEditor.putEditorWidth(jSplitPane1.getDividerLocation() );
+
+        int editorWidth = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation() - jSplitPane1.getDividerSize();
+        putEditorWidth(releveModel, editorWidth );
     }
 
     /**
@@ -175,24 +187,15 @@ public class RelevePanel extends javax.swing.JPanel  {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        editorPanel = new javax.swing.JPanel();
-        releveEditor = new ancestris.modules.releve.editor.ReleveEditor();
         tablePanel = new javax.swing.JPanel();
         jScrollPaneTable = new javax.swing.JScrollPane();
         releveTable = new ancestris.modules.releve.ReleveTable();
+        editorPanel = new javax.swing.JPanel();
+        releveEditor = new ancestris.modules.releve.editor.ReleveEditor();
 
         setLayout(new java.awt.BorderLayout());
 
-        jSplitPane1.setRequestFocusEnabled(false);
-
-        editorPanel.setPreferredSize(new java.awt.Dimension(270, 100));
-        editorPanel.setLayout(new java.awt.BorderLayout(4, 4));
-
-        releveEditor.setFont(new java.awt.Font("Arial", 2, 11)); // NOI18N
-        releveEditor.setMinimumSize(new java.awt.Dimension(100, 300));
-        editorPanel.add(releveEditor, java.awt.BorderLayout.CENTER);
-
-        jSplitPane1.setLeftComponent(editorPanel);
+        jSplitPane1.setResizeWeight(1.0);
 
         tablePanel.setPreferredSize(new java.awt.Dimension(0, 0));
         tablePanel.setLayout(new java.awt.BorderLayout());
@@ -209,7 +212,16 @@ public class RelevePanel extends javax.swing.JPanel  {
 
         tablePanel.add(jScrollPaneTable, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setRightComponent(tablePanel);
+        jSplitPane1.setLeftComponent(tablePanel);
+
+        editorPanel.setPreferredSize(new java.awt.Dimension(270, 100));
+        editorPanel.setLayout(new java.awt.BorderLayout(4, 4));
+
+        releveEditor.setFont(new java.awt.Font("Arial", 2, 11));
+        releveEditor.setMinimumSize(new java.awt.Dimension(100, 300));
+        editorPanel.add(releveEditor, java.awt.BorderLayout.CENTER);
+
+        jSplitPane1.setRightComponent(editorPanel);
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -224,9 +236,9 @@ public class RelevePanel extends javax.swing.JPanel  {
     private javax.swing.JPanel tablePanel;
     // End of variables declaration//GEN-END:variables
 
-    public int getEditorWidth() {
-        return editorPanel.getWidth();
-    }
+//    private int getEditorWidth() {
+//        return editorPanel.getWidth();
+//    }
 
     void selectField(Field.FieldType fieldType) {
         releveEditor.selectField(fieldType);
@@ -236,5 +248,22 @@ public class RelevePanel extends javax.swing.JPanel  {
         releveEditor.createRecord();
     }
 
+    public int getEditorWidth(ModelAbstract model) {
+        if (model != null) {
+            return Integer.valueOf(NbPreferences.forModule(RelevePanel.class).get(
+                    model.getClass().getSimpleName()+"Width",
+                    "270"));
+        } else {
+            return 270;
+        }
+    }
+
+    public void putEditorWidth(ModelAbstract model, int width) {
+        if (model != null) {
+            NbPreferences.forModule(RelevePanel.class).put(
+                    model.getClass().getSimpleName()+"Width",
+                    String.valueOf(width));
+        }
+    }
 
 }

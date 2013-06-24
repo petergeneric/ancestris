@@ -9,6 +9,7 @@ package ancestris.modules.releve;
 import ancestris.app.TreeTopComponent;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.dnd.TreeViewDropTarget;
+import ancestris.modules.releve.editor.StandaloneEditor;
 import genj.tree.TreeView;
 import org.openide.util.NbPreferences;
 
@@ -32,6 +33,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jCheckBoxDuplicateRecord.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("DuplicateRecordControlEnabled", "true")));
         jCheckBoxNewValueControl.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("ValueControlEnabled", "true")));
         jCheckBoxGedcomCompletion.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("GedcomCompletionEnabled", "true")));
+        jCheckBoxBrowser.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("ImgageBrowserVisible", "false")));
     }
 
     void store() {
@@ -39,6 +41,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         NbPreferences.forModule(ReleveTopComponent.class).put("DuplicateRecordControlEnabled", String.valueOf(jCheckBoxDuplicateRecord.isSelected()));
         NbPreferences.forModule(ReleveTopComponent.class).put("ValueControlEnabled", String.valueOf(jCheckBoxNewValueControl.isSelected()));
         NbPreferences.forModule(ReleveTopComponent.class).put("GedcomCompletionEnabled", String.valueOf(jCheckBoxGedcomCompletion.isSelected()));
+        NbPreferences.forModule(ReleveTopComponent.class).put("ImgageBrowserVisible", String.valueOf(jCheckBoxBrowser.isSelected()));
 
         // je notifie les composants pour rafraichir les options
         for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
@@ -70,9 +73,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 //        return jCheckBoxNewValueControl.isSelected();
 //    }
 
-
     
-
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -95,6 +96,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jPanelExludeCompletion = new javax.swing.JPanel();
         jButtonFirstNameCompletion = new javax.swing.JButton();
         jButtonLastNameCompletion = new javax.swing.JButton();
+        jCheckBoxBrowser = new javax.swing.JCheckBox();
         fillerPanelHorizontal = new javax.swing.JPanel();
         fillerPanelVertical = new javax.swing.JPanel();
 
@@ -194,6 +196,18 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.gridy = 3;
         OptionsPanel.add(jPanelExludeCompletion, gridBagConstraints);
 
+        jCheckBoxBrowser.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxBrowser.text")); // NOI18N
+        jCheckBoxBrowser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxBrowserActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        OptionsPanel.add(jCheckBoxBrowser, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -269,18 +283,17 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         ReleveEditorConfigDialog.showEditorConfigPanel();
     }//GEN-LAST:event_jButtonConfigEditorActionPerformed
 
-    /**
-     * charge le fichier de démo
-     * @param evt
-     */
-    /**
-     * crée un nouveau relevé
-     * @param evt
-     */
-    /**
-     * ouvre un fichier de relevé
-     * @param evt
-     */
+    private void jCheckBoxBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxBrowserActionPerformed
+        // je notifie les editeurs pour rafraichir l'affichage
+        for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
+            tc.setBrowserVisible(jCheckBoxBrowser.isSelected());
+        }
+
+        // j'enregistre immediatement la nouvelle valeur pour qu'elle soit disponible pour les nouveaux editeurs
+        NbPreferences.forModule(ReleveTopComponent.class).put("ImgageBrowserVisible", String.valueOf(jCheckBoxBrowser.isSelected()));
+
+    }//GEN-LAST:event_jCheckBoxBrowserActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel OptionsPanel;
     private javax.swing.JCheckBox copyFreeComment;
@@ -290,6 +303,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JButton jButtonConfigEditor;
     private javax.swing.JButton jButtonFirstNameCompletion;
     private javax.swing.JButton jButtonLastNameCompletion;
+    private javax.swing.JCheckBox jCheckBoxBrowser;
     private javax.swing.JCheckBox jCheckBoxDuplicateRecord;
     private javax.swing.JCheckBox jCheckBoxGedcomCompletion;
     private javax.swing.JCheckBox jCheckBoxNewValueControl;

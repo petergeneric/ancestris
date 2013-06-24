@@ -676,7 +676,7 @@ public class CompletionProvider implements GedcomFileListener {
                return;
         }
         for (Iterator<String> it = excludeList.iterator(); it.hasNext(); ) {
-            exludedString += it.next() + ";" ;
+            exludedString += it.next().trim() + ";" ;
         }
 
         NbPreferences.forModule(ReleveTopComponent.class).put(
@@ -771,14 +771,14 @@ public class CompletionProvider implements GedcomFileListener {
         /**
          * ajoute le prenom dans la lsite de completion
          * et met a jour le sexe correspondant au prénom
-         * @param firstNameField
+         * @param gedcomField
          * @param sexField
          */
-        public void addGedcom( Field firstNameField, String firstName, String sex) {
+        public void addGedcom( Field gedcomField, String firstName, String sex) {
             boolean excluded = exludedList.contains(firstName);
-            if ( firstNameField != null && firstNameField.isEmpty()==false && !excluded) {
+            if ( gedcomField != null && gedcomField.isEmpty()==false && !excluded) {
                 if ( !excluded ) {
-                    super.add(firstName, firstNameField, false);
+                    super.add(firstName, gedcomField, false);
                     updateFirstNameSex(null, null, firstName, sex);
                 }
             }
@@ -840,9 +840,9 @@ public class CompletionProvider implements GedcomFileListener {
             }
         }
 
-        public void addGedcom( Field lastNameField, String lastName) {
-            if ( lastNameField != null && lastNameField.isEmpty()==false && !excluded.contains(lastNameField.toString())) {
-                super.add(lastName, lastNameField, false);
+        public void addGedcom( Field gedcomField, String lastName) {
+            if ( gedcomField != null && gedcomField.isEmpty()==false && !excluded.contains(lastName)) {
+                super.add(lastName, gedcomField, false);
             }
         }
 

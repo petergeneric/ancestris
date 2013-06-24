@@ -71,7 +71,7 @@ public class MergeRecord {
             type = RecordType.Death;
         } else {
             type = RecordType.Misc;
-            if (record.getEventType().toString().equals("CM")) {
+            if (record.getEventType().toString().equals("CM") || record.getEventType().toString().toLowerCase().indexOf("mariage") != -1) {
                 eventTypeTag = EventTypeTag.MARC;
             } else if (record.getEventType().toString().equals("Testament")) {
                 eventTypeTag = EventTypeTag.WILL;
