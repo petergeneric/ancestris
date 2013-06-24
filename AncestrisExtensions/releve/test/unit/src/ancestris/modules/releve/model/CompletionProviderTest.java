@@ -148,7 +148,7 @@ public class CompletionProviderTest extends TestCase {
 
 
     /**
-     * test ajout d'une naissance
+     * test exlusion de prenom et de nom
      */
     public void testExludeFirstName() {
         try {

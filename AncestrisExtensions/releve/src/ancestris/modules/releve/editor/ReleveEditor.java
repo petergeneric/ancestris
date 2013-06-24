@@ -22,6 +22,7 @@ import ancestris.modules.releve.model.FieldEventType;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -35,6 +36,7 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -70,9 +72,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         jButtonPrevious.setVisible(false);
         jTextFielRecordNo.setVisible(false);
         jButtonNext.setVisible(false);
+
         jButtonDelete.setEnabled(false);
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(20);
+        //jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0));
+        //jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0));
+        jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_UP,InputEvent.ALT_MASK));
+        jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,InputEvent.ALT_MASK));
 
         // je crée les raccourcis pour créer les nouveaux relevés
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt S"), this);
@@ -1202,13 +1209,13 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         jLabelPlace.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelPlace.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabelPlace.setName("");
+        jLabelPlace.setName(""); // NOI18N
         jLabelPlace.setOpaque(true);
         jPanelPlace.add(jLabelPlace, java.awt.BorderLayout.CENTER);
 
         jButtonPlace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/registre.png"))); // NOI18N
         jButtonPlace.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.toolTipText")); // NOI18N
-        jButtonPlace.setName("");
+        jButtonPlace.setName(""); // NOI18N
         jButtonPlace.setPreferredSize(new java.awt.Dimension(29, 25));
         jButtonPlace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1363,23 +1370,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         }
     }
 
-    public int getEditorWidth() {
-        if (recordModel != null) {
-            return Integer.valueOf(NbPreferences.forModule(ReleveEditor.class).get(
-                    recordModel.getClass().getSimpleName()+"Width",
-                    "270"));
-        } else {
-            return 270;
-        }
-    }
-
-    public void putEditorWidth(int width) {
-        if (recordModel != null) {
-            NbPreferences.forModule(ReleveEditor.class).put(
-                    recordModel.getClass().getSimpleName()+"Width",
-                    String.valueOf(width));
-        }
-    }
+    
 
     /**
      * met a jour le lieu en tete de l'editeur
@@ -1389,5 +1380,5 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     public void updatePlace(String place) {
         jLabelPlace.setText(place);
     }
-
+    
 }

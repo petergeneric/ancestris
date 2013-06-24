@@ -1414,6 +1414,17 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
          standaloneEditor = null;
     }
 
+    /**
+     * Affiche/masque le browser d'image dans l'editeur standalone
+     * (transmets la commande a l'editeur standealaone)
+     * @param visible
+     */
+    @Override
+    public void setBrowserVisible(boolean visible) {
+        if ( standaloneEditor != null) {
+            standaloneEditor.setBrowserVisible(visible);
+        }
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.

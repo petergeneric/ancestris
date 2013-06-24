@@ -361,7 +361,8 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
 
     /**
      * e
-     */private void saveDialogBounds() {
+     */
+    private void saveDialogBounds() {
 
         // j'enregistre la taille dans les preferences
         String size;

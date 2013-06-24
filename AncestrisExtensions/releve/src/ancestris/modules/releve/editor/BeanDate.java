@@ -7,6 +7,13 @@ import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import genj.util.swing.DateWidget;
 import genj.util.swing.NestedBlockLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 
 
@@ -33,34 +40,10 @@ public class BeanDate extends Bean {
         setLayout(V.copy());
         setAlignmentX(0);
 
-        // prepare format change actions
-//        List<ChangeFormat> actions = new ArrayList<ChangeFormat>(10);
-//        for (int i = 0; i < PropertyDate.FORMATS.length; i++) {
-//            actions.add(new ChangeFormat(PropertyDate.FORMATS[i]));
-//        }
-
-        // .. the chooser (making sure the preferred size is pre-computed to fit-it-all)
-//        choose = new PopupWidget();
-//        choose.addItems(actions);
-//        add(choose);
-
         // .. first date
         date1 = new DateWidget();
         date1.addChangeListener(changeSupport);
         add(date1);
-
-        // .. second date
-//        label2 = new JLabel();
-//        add(label2);
-//
-//        date2 = new DateWidget();
-//        date2.addChangeListener(changeSupport);
-//        add(date2);
-
-        // phrase
-//        phrase = new TextFieldWidget("", 10);
-//        phrase.addChangeListener(changeSupport);
-//        add(phrase);
 
         // do the layout and format
         setPreferHorizontal(false);
@@ -69,6 +52,33 @@ public class BeanDate extends Bean {
 
         // setup default focus
         defaultFocus = date1;
+
+        // je configure le raccourci des touches de direction haut et bas pour increment ou decrementer la date d'un jour
+        JComponent date2 = (JComponent) date1.getComponent(0);
+        if ( date2 instanceof JTextField) {
+            // je desactive les touches haut et pas pour supprimer l'action du scrollbar parent
+            date2.getInputMap(JComponent.WHEN_FOCUSED).remove( KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
+            date2.getInputMap(JComponent.WHEN_FOCUSED).remove( KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+            // j'associe les touches et les actions
+            date2.getInputMap(JComponent.WHEN_FOCUSED).put( KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Increase");
+            date2.getInputMap(JComponent.WHEN_FOCUSED).put( KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Decrease");
+            // j'ajoute les nouvelles actions
+            date2.getActionMap().put("Increase", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    // restaure la valeur
+                    date1.setValue(date1.getValue().add(1, 0, 0));
+                }
+            });
+
+            date2.getActionMap().put("Decrease", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    // restaure la valeur
+                    date1.setValue(date1.getValue().add(-1, 0, 0));
+                }
+            });
+        }
     }
 
     public final void setPreferedCalendar(Calendar prefered, Calendar alternate) {
