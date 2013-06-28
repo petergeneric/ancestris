@@ -14,13 +14,12 @@ package ancestris.explorer;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.PropertyNode;
 import ancestris.view.AncestrisTopComponent;
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Note;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -109,7 +108,7 @@ class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<En
 
         public void actionPerformed(ActionEvent e) {
             // ancestris way
-            SelectionSink.Dispatcher.fireSelection((Component) null, getContext(), true);
+            SelectionDispatcher.fireSelection(getContext());
         }
     }
 }

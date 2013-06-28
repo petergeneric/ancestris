@@ -12,7 +12,6 @@ import genj.util.swing.DialogHelper;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.SliderWidget;
-import ancestris.view.SelectionSink;
 import genj.view.ToolBar;
 import java.awt.CardLayout;
 import java.awt.Desktop;
@@ -39,6 +38,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 
 import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
+import ancestris.view.SelectionDispatcher;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
@@ -407,7 +407,7 @@ public class PreviewView extends JPanel {
             if (id != null && gedcom != null) {
                 Entity entity = gedcom.getEntity(id);
                 if (entity != null) {
-                    SelectionSink.Dispatcher.fireSelection(e, new Context(entity));
+                    SelectionDispatcher.fireSelection(e, new Context(entity));
                 }
             }
         }

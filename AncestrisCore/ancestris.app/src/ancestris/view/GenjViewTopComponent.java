@@ -72,14 +72,14 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
     }
 
     @Override
-    protected void componentActivated() {
-        super.componentActivated();
+    protected void componentOpened() {
+        super.componentOpened();
         if (getViewFactory() != null) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 public void run() {
                     if (view != null) {
-                        view.setContext(getContext(), true);
+                        view.setContext(getContext(), false);
                     }
                 }
             });
@@ -113,7 +113,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
         }
 
         setPanel(view);
-        setContext(getContext(), true);
+        setContext(getContext(), false);
         addToolBar();
         return true;
     }

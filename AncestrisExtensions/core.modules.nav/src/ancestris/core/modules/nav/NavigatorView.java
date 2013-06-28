@@ -19,7 +19,6 @@
  */
 package ancestris.core.modules.nav;
 
-import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -30,6 +29,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.util.GridBagHelper;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.view.SelectionDispatcher;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import genj.view.View;
@@ -393,7 +393,7 @@ public class NavigatorView extends View {
     /** do it */
     public void actionPerformed(ActionEvent event) {
       // propagate to others (do this before event.getSource() gets disconnected)
-      SelectionSink.Dispatcher.fireSelection(event, new Context(target));
+            SelectionDispatcher.fireSelection(event, new Context(target));
       // follow immediately
       setContext(new Context(target),true);
     }

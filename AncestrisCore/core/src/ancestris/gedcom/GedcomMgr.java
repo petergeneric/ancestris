@@ -15,7 +15,6 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.util.ProgressListener;
 import ancestris.util.TimingUtility;
 import ancestris.view.AncestrisViewInterface;
-import ancestris.view.SelectionSink;
 import genj.common.ContextListWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -323,7 +322,7 @@ public abstract class GedcomMgr {
 
             LOG.log(Level.FINE, "{0}: fireSelection", TimingUtility.geInstance().getTime());
             //FIXME: done also in GedcomDirectory. Must not be done here as this class is general purpose
-            SelectionSink.Dispatcher.fireSelection(null, context, true);
+            //SelectionSink.Dispatcher.fireSelection(null, context, true);
             return context;
 
             // done

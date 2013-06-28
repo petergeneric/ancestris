@@ -19,7 +19,8 @@
  */
 package genj.common;
 
-import ancestris.view.SelectionSink;
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -29,7 +30,6 @@ import genj.gedcom.PropertyName;
 import genj.gedcom.TagPath;
 import genj.io.BasicTransferable;
 import genj.util.WordBuffer;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.LinkWidget;
 import genj.util.swing.SortableTableModel;
@@ -390,6 +390,7 @@ public class PropertyTableWidget extends JPanel  {
       
       // patch selecting
       addMouseListener(new MouseAdapter() {
+                @Override
         public void mousePressed(MouseEvent e) {
           // make sure something is selected but don't screw current multi-selection
           int row = rowAtPoint(e.getPoint());
@@ -402,6 +403,11 @@ public class PropertyTableWidget extends JPanel  {
               getColumnModel().getSelectionModel().setSelectionInterval(col, col);
             }
           }
+          // FIXME: action is handled here and selection is handled in changeSelection
+            Object cell = getValueAt(row, col);
+            if (cell != null && cell instanceof Property){
+                        SelectionDispatcher.fireAction(e,new Context((Property)cell));
+            }
         }
       });
       
@@ -412,6 +418,7 @@ public class PropertyTableWidget extends JPanel  {
         }
       });
       panelShortcuts.addComponentListener(new ComponentAdapter() {
+                @Override
         public void componentResized(ComponentEvent e) {
           createShortcuts();
         }
@@ -448,6 +455,7 @@ public class PropertyTableWidget extends JPanel  {
     /** create a shortcut */
     AbstractAncestrisAction createShortcut(String txt, final int y) {
       return new AbstractAncestrisAction(txt.toUpperCase()) {
+                @Override
         public void actionPerformed(ActionEvent event) {
           int x = 0;
           try { x = ((JViewport)table.getParent()).getViewPosition().x; } catch (Throwable t) {};
@@ -638,7 +646,7 @@ public class PropertyTableWidget extends JPanel  {
       // tell about it
       if (!properties.isEmpty()) {
         ignoreSelection = true;
-        SelectionSink.Dispatcher.fireSelection(PropertyTableWidget.this, new Context(properties.get(0).getGedcom(), new ArrayList<Entity>(), properties), false);	
+                SelectionDispatcher.fireSelection(new Context(properties.get(0).getGedcom(), new ArrayList<Entity>(), properties));	
         ignoreSelection = false;
       }
       
@@ -648,6 +656,7 @@ public class PropertyTableWidget extends JPanel  {
     /** 
      * 
      */ 
+        @Override
     public Dimension getPreferredScrollableViewportSize() {
       Dimension d = super.getPreferredScrollableViewportSize();
       if (visibleRowCount>0) {
@@ -762,6 +771,7 @@ public class PropertyTableWidget extends JPanel  {
       }
       
       /** someone interested in us */
+            @Override
       public void addTableModelListener(TableModelListener l) {
         super.addTableModelListener(l);
         // start listening ?
@@ -770,6 +780,7 @@ public class PropertyTableWidget extends JPanel  {
       }
       
       /** someone lost interest */
+            @Override
       public void removeTableModelListener(TableModelListener l) {
         super.removeTableModelListener(l);
         // stop listening ?
@@ -787,6 +798,7 @@ public class PropertyTableWidget extends JPanel  {
       /**
        *  patched column name
        */
+            @Override
       public String getColumnName(int col) {
         return model!=null ? model.getColName(col) : "";
       }
@@ -907,6 +919,7 @@ public class PropertyTableWidget extends JPanel  {
        * @return The representation of the data to be transfered.
        * 
        */
+            @Override
       protected Transferable createTransferable(JComponent c) {
         
         // ourselves?
@@ -920,8 +933,8 @@ public class PropertyTableWidget extends JPanel  {
         if (rows == null || cols == null || rows.length == 0 || cols.length == 0) 
           return null;
 
-        StringBuffer plainBuf = new StringBuffer();
-        StringBuffer htmlBuf = new StringBuffer();
+        StringBuilder plainBuf = new StringBuilder();
+        StringBuilder htmlBuf = new StringBuilder();
 
         htmlBuf.append("<html>\n<body>\n<table>\n");
         
@@ -930,8 +943,8 @@ public class PropertyTableWidget extends JPanel  {
           for (int col = 0; col < cols.length; col++) { 
             Property obj = (Property)table.getValueAt(sortableModel.viewIndex(rows[row]), cols[col]);
             String val = AbstractPropertyTableModel.getDefaultCellValue(obj, row, col);
-            plainBuf.append(val + "\t");
-            htmlBuf.append("  <td>" + val + "</td>\n");
+                        plainBuf.append(val).append("\t");
+                        htmlBuf.append("  <td>").append(val).append("</td>\n");
           }
           // we want a newline at the end of each line and not a tab
           plainBuf.deleteCharAt(plainBuf.length() - 1).append("\n");
@@ -945,6 +958,7 @@ public class PropertyTableWidget extends JPanel  {
         return new BasicTransferable(plainBuf.toString(), htmlBuf.toString());
       }
 
+            @Override
       public int getSourceActions(JComponent c) {
         return c==Table.this ? COPY : NONE;
       }

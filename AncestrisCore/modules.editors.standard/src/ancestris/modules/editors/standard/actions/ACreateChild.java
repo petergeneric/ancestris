@@ -1,7 +1,7 @@
 package ancestris.modules.editors.standard.actions;
 
 import ancestris.api.editor.AncestrisEditor;
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.edit.actions.CreateChild;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -33,7 +33,7 @@ public class ACreateChild extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
         try {
-            SelectionSink.Dispatcher.muteSelection(true);
+            SelectionDispatcher.muteSelection(true);
             if (parent == null && famc == null) {
                 return;
             }
@@ -61,7 +61,7 @@ public class ACreateChild extends AbstractAction {
                 }
             }
         } finally {
-            SelectionSink.Dispatcher.muteSelection(false);
+            SelectionDispatcher.muteSelection(false);
         }
     }
 }

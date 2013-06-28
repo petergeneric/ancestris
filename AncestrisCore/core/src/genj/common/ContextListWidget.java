@@ -19,7 +19,7 @@
  */
 package genj.common;
 
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -188,7 +188,7 @@ public class ContextListWidget extends JList {
         return;
       Context context = getContext();
       if (context!=null)
-    	  SelectionSink.Dispatcher.fireSelection(ContextListWidget.this,context, false);
+    	    SelectionDispatcher.fireSelection(context);
     }
     
     /** our patched rendering */

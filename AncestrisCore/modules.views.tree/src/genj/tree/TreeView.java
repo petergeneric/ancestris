@@ -26,7 +26,7 @@ import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.actions.CommonActions;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.view.ExplorerHelper;
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -919,14 +919,14 @@ public class TreeView extends View implements Filter {
         } else {
           context = new Context(entity);
         }
-        repaint();
-        overview.repaint();
+//        repaint();
+//        overview.repaint();
         // propagate to others
         try {
-          ignoreContextChange = true;
-          SelectionSink.Dispatcher.fireSelection(e, context);
+//          ignoreContextChange = true;
+                    SelectionDispatcher.fireSelection(e, context);
         } finally {
-          ignoreContextChange = false;
+//          ignoreContextChange = false;
         }
         return;
       }
@@ -1154,7 +1154,7 @@ public class TreeView extends View implements Filter {
 
       try {
         ignoreContextChange = true;
-        SelectionSink.Dispatcher.fireSelection(TreeView.this, newContext, false);
+                SelectionDispatcher.fireSelection(newContext);
       } finally {
         ignoreContextChange = false;
       }

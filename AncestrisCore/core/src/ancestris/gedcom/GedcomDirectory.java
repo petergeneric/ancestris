@@ -25,14 +25,13 @@ import ancestris.core.pluginservice.PluginInterface;
 import static ancestris.gedcom.Bundle.*;
 import ancestris.util.TimingUtility;
 import ancestris.view.AncestrisViewInterface;
-import ancestris.view.SelectionSink;
 import genj.gedcom.*;
 import genj.io.*;
 import genj.util.*;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.view.SelectionDispatcher;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooser;
-import java.awt.Component;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -248,10 +247,7 @@ public abstract class GedcomDirectory {
             registerGedcom(gdao);
             context = gdao.getContext();
             openDefaultViews(context);
-            //FIXME: etait true. Cela faisait changer le root dans l'arbre
-            // bizarre car cela ne devrait pas etre le cas meme avec true...
-            // Voir si avec false il n'y a pas d'effet de bord et si cela corrige le pb de prise en compte du root
-            SelectionSink.Dispatcher.fireSelection((Component) null, context, false);
+            SelectionDispatcher.fireSelection(context);
             return gdao.getContext();
         } catch (Exception e) {
             LOG.info(e.toString());

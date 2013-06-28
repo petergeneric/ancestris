@@ -29,11 +29,11 @@ import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.view.SelectionDispatcher;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
-import ancestris.view.SelectionSink;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -644,7 +644,7 @@ public class SearchView extends View {
     public void valueChanged(ListSelectionEvent e) {
       int row = listResults.getSelectedIndex();
       if (row>=0)
-    	  SelectionSink.Dispatcher.fireSelection(SearchView.this, new Context(results.getHit(row).getProperty()), false);
+    	    SelectionDispatcher.fireSelection(new Context(results.getHit(row).getProperty()));
     }
 
     

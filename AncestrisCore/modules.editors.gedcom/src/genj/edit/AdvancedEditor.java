@@ -26,7 +26,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.resources.Images;
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.common.SelectEntityWidget;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
@@ -534,7 +534,7 @@ import org.openide.nodes.Node;
                         parent.delProperty(prop);
                     }
                     if (parent != null) {
-                        SelectionSink.Dispatcher.fireSelection(new Context(parent), false);
+                        SelectionDispatcher.fireSelection(new Context(parent));
                         // FIXME: probablement pas necessaire puisque le expande est deja fait par le setContext
                         // Mais on assure au cas ou...
                         expand(parent.getPath());
@@ -684,7 +684,7 @@ import org.openide.nodes.Node;
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            SelectionSink.Dispatcher.fireSelection(AdvancedEditor.this, new Context(xref), true);
+            SelectionDispatcher.fireSelection(new Context(xref));
         }
     }
 
@@ -791,7 +791,7 @@ import org.openide.nodes.Node;
             List<Property> selection = tree.getSelection();
             Context ctx = new Context(gedcom, Collections.singletonList((Entity) tree.getRoot()), selection);
             if (!selection.isEmpty()) {
-                SelectionSink.Dispatcher.fireSelection(AdvancedEditor.this, ctx, false);
+                SelectionDispatcher.fireSelection(ctx);
             }
             if (ctx.getProperties().size() != 1) {
                 setContextImpl(ctx, false);

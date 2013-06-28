@@ -15,28 +15,23 @@ import ancestris.api.editor.AncestrisEditor;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
-import genj.gedcom.UnitOfWork;
-import ancestris.view.SelectionSink;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import java.util.ArrayList;
 import org.openide.awt.MouseUtils;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 public final class FamilyPanel extends JPanel {
@@ -631,7 +626,7 @@ public final class FamilyPanel extends JPanel {
                 bean = (ABluePrintBeans) src;
             }
             if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getProperty() == null) {
-                SelectionSink.Dispatcher.muteSelection(true);
+                SelectionDispatcher.muteSelection(true);
                 try {
                     if (bean != null && bean.getProperty() != null) {
                         AncestrisEditor editor = AncestrisEditor.findEditor(bean.getProperty());
@@ -643,13 +638,13 @@ public final class FamilyPanel extends JPanel {
                     }
                     refresh();
                 } finally {
-                    SelectionSink.Dispatcher.muteSelection(false);
+                    SelectionDispatcher.muteSelection(false);
                 }
             } else if (evt.getClickCount() == 1) {
                 // FIXME: test click count necessaire?
                 Property prop = bean.getProperty();
                 if (prop instanceof Entity) {
-                    SelectionSink.Dispatcher.fireSelection(new Context(prop), false);
+                    SelectionDispatcher.fireSelection(new Context(prop));
                 }
             }
         }

@@ -16,7 +16,6 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import genj.tree.TreeView;
-import ancestris.view.SelectionSink;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;

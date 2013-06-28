@@ -11,7 +11,7 @@
  */
 package ancestris.modules.document.view;
 
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -65,7 +65,7 @@ class HyperLinkTextPane extends JEditorPane implements MouseListener, MouseMotio
         if (id != null && gedcom != null) {
             Entity entity = gedcom.getEntity(id);
             if (entity != null) {
-                SelectionSink.Dispatcher.fireSelection(e, new Context(entity));
+                SelectionDispatcher.fireSelection(e, new Context(entity));
             }
         }
     }

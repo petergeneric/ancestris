@@ -19,13 +19,20 @@ import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Node.Cookie;
 import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
 //XXX: change GedcomListener to pcl?
@@ -33,7 +40,11 @@ import org.openide.windows.TopComponent;
 public class GedcomDataObject extends MultiDataObject implements SelectionListener,GedcomMetaListener {
     private Context context;
     private GedcomUndoRedo undoredo;
+    
+    private final Lookup lookup;
+    private final InstanceContent lookupContents = new InstanceContent();
 
+        private static Lookup.Result<Context> result;
 
 //    private GedcomMgr gedcomMgr;
     /**
@@ -54,8 +65,34 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     //XXX: will have to rework on this
     //XXX: FileObject are saved in a pool by DataOject loader. So if the same fo is loaded twice
     // gedcomMgr is not called again. Progress bar is not shown and may be other dysfunction
+    /*
+     * Note: we use this faq: http://wiki.netbeans.org/DevFaqNodesCustomLookup
+     * to have a custom lookup updated using an InstanceContent. That way this lookup may contain
+     * selected context use for SelectionSink replacement logic
+     */
     public GedcomDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
+        // associatelookup is 1 so super.getlookup is getCookieSet().getLookup()
+        //lookup = new ProxyLookup(getCookieSet().getLookup(), new AbstractLookup(lookupContents));
+        lookup = new ProxyLookup(super.getLookup(), new AbstractLookup(lookupContents));
+        
+        // register listener
+        result = lookup.lookupResult(Context.class);
+            result.addLookupListener(new LookupListener() {
+
+            public void resultChanged(LookupEvent ev) {
+                // notify
+                //XXX: we must put selected nodes in global selection lookup (in fact use Explorer API)
+                Context context = lookup.lookup(Context.class);
+                if (context != null)
+                for (SelectionListener listener : AncestrisPlugin.lookupAll(SelectionListener.class)) {
+                    listener.setContext(context, false);
+                }
+            }
+        });
+        
+        
+        
         registerEditor("text/x-gedcom", true);
         //XXX: fix it
         this.context = GedcomMgr.getDefault().openGedcom(pf);
@@ -66,19 +103,47 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
         AncestrisPlugin.register(this);
     }
 
-    public GedcomUndoRedo getUndoRedo() {
-        return undoredo; 
-    }
-
+  @Override
+  public Lookup getLookup() {
+    return lookup;
+  }
+ 
     @Override
     protected Node createNodeDelegate() {
-        return super.createNodeDelegate();
+//        return super.createNodeDelegate();
+        //FIXME: overidden as stated in http://wiki.netbeans.org/DevFaqNodesCustomLookup
+        // FIXME: is this the same as super.createNodeDelegate()?
+        return new DataNode (this, Children.LEAF, getLookup());
     }
 
     
     @Override
     protected int associateLookup() {
         return 1;
+    }
+
+    public InstanceContent getLookupContents() {
+        return lookupContents;
+    }
+    
+    /**
+     * replace all instances of type clazz in lookup by new instances.
+     * FIXME: There may be some optimization to do here...
+     * @param <T>
+     * @param clazz
+     * @param instances 
+     */
+    public <T> void assign(Class<? extends T> clazz, T... instances) {
+        for (T ic:lookup.lookupAll(clazz)){
+            lookupContents.remove(ic);
+        }
+        for (T ic : instances){
+            lookupContents.add(ic);
+        }
+    }
+
+            public GedcomUndoRedo getUndoRedo() {
+        return undoredo; 
     }
 
     @MultiViewElement.Registration(displayName = "#LBL_Gedcom_EDITOR",
