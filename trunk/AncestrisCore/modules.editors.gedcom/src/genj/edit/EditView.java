@@ -107,6 +107,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
             editor.removeChangeListener(confirmPanel);
             editor.setContext(new Context());
             remove(editor);
+            editor.getExplorerHelper().setPopupAllowed(false);
             editor = null;
         }
 
@@ -114,12 +115,15 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         editor = set;
         if (editor != null) {
             add(editor, BorderLayout.CENTER);
-            // XXX: quickfix: don't create new explorerhelper each time
-            setExplorerHelper(new ExplorerHelper(editor.getEditorComponent()));
+            setExplorerHelper(editor.getExplorerHelper());
             if (old != null) {
                 editor.setContext(old);
             }
             editor.addChangeListener(confirmPanel);
+            //FIXME:explorerHelper.setPopupEnalbled() is called in addNotify(). 
+            // but it is not set before this notification so no popup menu is showne
+            // so must setup the correct helper at each editor switch
+            editor.getExplorerHelper().setPopupAllowed(true);
         }
 
         // show

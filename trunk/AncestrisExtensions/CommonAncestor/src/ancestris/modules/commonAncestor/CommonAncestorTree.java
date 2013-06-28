@@ -2,9 +2,9 @@ package ancestris.modules.commonAncestor;
 
 import ancestris.modules.commonAncestor.graphics.IGraphicsOutput;
 import ancestris.modules.commonAncestor.graphics.GraphicsOutputFactory;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import ancestris.view.SelectionSink;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -34,7 +34,7 @@ public class CommonAncestorTree {
      */
     public Set<Indi> findCommonAncestors(Indi indi1, Indi indi2) {
         try {
-            SelectionSink.Dispatcher.muteSelection(true);
+            SelectionDispatcher.muteSelection(true);
             Set<Indi> ancestorList = new LinkedHashSet<Indi>();
             if (indi1 == null || indi2 == null) {
                 return ancestorList;
@@ -56,7 +56,7 @@ public class CommonAncestorTree {
 
             return ancestorList;
         } finally {
-            SelectionSink.Dispatcher.muteSelection(false);
+            SelectionDispatcher.muteSelection(false);
         }
     }
 

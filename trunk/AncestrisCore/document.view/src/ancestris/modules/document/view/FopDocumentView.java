@@ -14,8 +14,8 @@ package ancestris.modules.document.view;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
+import ancestris.view.SelectionDispatcher;
 import static ancestris.modules.document.view.Bundle.*;
-import ancestris.view.SelectionSink;
 import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.HTMLFormat;
@@ -135,7 +135,7 @@ public class FopDocumentView extends AbstractDocumentView {
                             if (CurrentId != null && myGedcom != null) {
                                 Entity entity = myGedcom.getEntity(CurrentId);
                                 if (entity != null) {
-                                    SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
+                                    SelectionDispatcher.fireSelection(new Context(entity));
                                 }
                             }
                         }

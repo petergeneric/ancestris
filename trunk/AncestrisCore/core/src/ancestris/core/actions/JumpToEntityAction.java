@@ -11,7 +11,7 @@
  */
 package ancestris.core.actions;
 
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import java.awt.event.ActionEvent;
@@ -33,6 +33,6 @@ public class JumpToEntityAction extends AbstractAncestrisAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        SelectionSink.Dispatcher.fireSelection(null, new Context(entity), true);
+        SelectionDispatcher.fireSelection(null, new Context(entity));
     }
 }

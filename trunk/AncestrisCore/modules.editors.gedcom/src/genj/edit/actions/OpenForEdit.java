@@ -25,7 +25,7 @@ import genj.edit.EditViewFactory;
 import ancestris.core.resources.Images;
 import genj.gedcom.Context;
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 
 /**
  * ActionEdit - edit an entity
@@ -46,7 +46,7 @@ public class OpenForEdit extends AbstractAncestrisAction {
    * @see genj.util.swing.AbstractAncestrisAction#execute()
    */
   public void actionPerformed(ActionEvent event) {
-      SelectionSink.Dispatcher.fireSelection(context, false);
+        SelectionDispatcher.fireSelection(context);
 //    Workbench.getInstance().openView(EditViewFactory.class, context);
   }
   

@@ -22,7 +22,7 @@
 package genj.edit.actions;
 
 import ancestris.core.resources.Images;
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -142,7 +142,7 @@ public class DelProperty extends AbstractChange {
             }
         }
         if (parent != null) {
-            SelectionSink.Dispatcher.fireSelection(new Context(parent), false);
+            SelectionDispatcher.fireSelection(new Context(parent));
         }
         // nothing to go to
         return null;

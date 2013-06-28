@@ -8,9 +8,8 @@ import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Indi;
-import ancestris.view.SelectionSink;
 import ancestris.util.Utilities;
-import java.awt.Component;
+import ancestris.view.SelectionDispatcher;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;
@@ -44,7 +43,7 @@ public class IndiQuickSearch implements SearchProvider {
         return new Runnable() {
 
             public void run() {
-                SelectionSink.Dispatcher.fireSelection((Component) null, new Context(entity), true);
+                SelectionDispatcher.fireSelection(new Context(entity));
             }
         };
     }

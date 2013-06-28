@@ -19,7 +19,7 @@ package ancestris.modules.gedcom.history;
 
 import ancestris.core.pluginservice.PluginInterface;
 import ancestris.view.AncestrisDockModes;
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -66,7 +66,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
             if (currentId != null && getGedcom() != null) {
                 Entity entity = getGedcom().getEntity(currentId);
                 if (entity != null) {
-                    SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
+                    SelectionDispatcher.fireSelection(new Context(entity));
                 }
             }
         }

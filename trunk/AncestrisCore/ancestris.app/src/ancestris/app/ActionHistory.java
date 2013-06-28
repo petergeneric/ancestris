@@ -1,16 +1,16 @@
 package ancestris.app;
 
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomFileListener;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
-import ancestris.view.SelectionSink;
-import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.gedcom.GedcomFileListener;
 import genj.view.SelectionListener;
 import java.awt.Color;
 import java.awt.Component;
@@ -24,7 +24,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import org.openide.awt.ActionReference;
 import org.openide.util.actions.Presenter;
 
 public final class ActionHistory implements Presenter.Toolbar {
@@ -66,7 +65,7 @@ public final class ActionHistory implements Presenter.Toolbar {
         }
 
         private void fireSelection(Entity e) {
-            SelectionSink.Dispatcher.fireSelection(this, new Context(e), true);
+            SelectionDispatcher.fireSelection(new Context(e));
         }
 
         private void update() {

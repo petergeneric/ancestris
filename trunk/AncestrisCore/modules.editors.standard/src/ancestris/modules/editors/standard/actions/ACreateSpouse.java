@@ -1,9 +1,9 @@
 package ancestris.modules.editors.standard.actions;
 
 import ancestris.api.editor.AncestrisEditor;
+import ancestris.view.SelectionDispatcher;
 import genj.edit.actions.CreateSpouse;
 import genj.gedcom.Indi;
-import ancestris.view.SelectionSink;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -20,7 +20,7 @@ public class ACreateSpouse extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
         try {
-            SelectionSink.Dispatcher.muteSelection(true);
+            SelectionDispatcher.muteSelection(true);
             if (other == null) {
                 return;
             }
@@ -33,7 +33,7 @@ public class ACreateSpouse extends AbstractAction {
                 }
             }
         } finally {
-            SelectionSink.Dispatcher.muteSelection(false);
+            SelectionDispatcher.muteSelection(false);
         }
     }
 }

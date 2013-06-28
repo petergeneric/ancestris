@@ -19,7 +19,7 @@
  */
 package genj.timeline;
 
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.almanac.Almanac;
 import genj.almanac.Event;
 import genj.gedcom.Context;
@@ -65,6 +65,7 @@ import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -645,7 +646,7 @@ public class TimelineView extends View {
         selection.add(hit);
         
         // tell about it
-        SelectionSink.Dispatcher.fireSelection(e, getContext());
+                SelectionDispatcher.fireSelection(e, getContext());
       }
       
       // show

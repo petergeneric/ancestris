@@ -11,13 +11,10 @@
  */
 package ancestris.modules.editors.standard;
 
-import ancestris.core.actions.AbstractAncestrisAction;
-import static ancestris.modules.editors.standard.Bundle.*;
-import ancestris.view.SelectionSink;
-import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Entity;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -64,14 +61,14 @@ public final class OpenEditorAction
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            SelectionSink.Dispatcher.muteSelection(true);
+            SelectionDispatcher.muteSelection(true);
             if (entity instanceof Indi) {
                 EntityEditor.editEntity( (Indi) (entity), false);
             }
             if (entity instanceof Fam) {
                 EntityEditor.editEntity((Fam) (entity), false);
             }
-            SelectionSink.Dispatcher.muteSelection(false);
+            SelectionDispatcher.muteSelection(false);
         }
     }
 }

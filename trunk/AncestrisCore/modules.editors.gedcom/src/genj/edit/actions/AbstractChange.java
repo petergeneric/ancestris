@@ -22,7 +22,7 @@ package genj.edit.actions;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.resources.Images;
-import ancestris.view.SelectionSink;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -38,7 +38,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import org.openide.util.LookupListener;
 
 /**
  * ActionChange - change the gedcom information
@@ -128,7 +127,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
 
         // propagate selection
         if (selection != null) {
-            SelectionSink.Dispatcher.fireSelection(event, selection);
+            SelectionDispatcher.fireSelection(event, selection);
         }
 
     }

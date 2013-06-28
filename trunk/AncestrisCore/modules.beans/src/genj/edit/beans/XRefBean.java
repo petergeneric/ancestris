@@ -20,7 +20,6 @@
 package genj.edit.beans;
 
 import ancestris.core.actions.AncestrisActionProvider;
-import ancestris.view.SelectionSink;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -30,6 +29,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.UnitOfWork;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.view.SelectionDispatcher;
 import genj.util.swing.DialogHelper;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -135,7 +135,7 @@ public class XRefBean extends PropertyBean implements AncestrisActionProvider{
         if (xref==null)
           return;
         // tell about it
-        SelectionSink.Dispatcher.fireSelection(e, new ViewContext(xref));
+                SelectionDispatcher.fireSelection(e, new ViewContext(xref));
       }
     });
   }

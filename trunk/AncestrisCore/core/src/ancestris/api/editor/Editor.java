@@ -11,6 +11,7 @@
  */
 package ancestris.api.editor;
 
+import ancestris.view.ExplorerHelper;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -37,6 +38,7 @@ public abstract class Editor extends JPanel {
     protected ChangeSupport changes = new ChangeSupport(this);
     protected List<Action> actions = new ArrayList<Action>();
     private String title = null;
+    private ExplorerHelper helper;
 
     /**
      * Accessor - current
@@ -44,6 +46,13 @@ public abstract class Editor extends JPanel {
     public abstract ViewContext getContext();
 
     public abstract Component getEditorComponent();
+    
+    //FIXME: we should specify what explorerHelper is in detail and this method too
+    public ExplorerHelper getExplorerHelper(){
+        if (helper == null)
+            helper = new ExplorerHelper(getEditorComponent());
+        return helper;
+    }
 
     public void setContext(Context context) {
         if (context == null) {
