@@ -9,6 +9,7 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -350,7 +351,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                             showEntityInDndSource(selectedIndi.getFamilyWhereBiologicalChild(), true);
                             // propagate to others
                             try {
-                                SelectionSink.Dispatcher.fireSelection(null, new Context(selectedIndi));
+                                SelectionDispatcher.fireSelection(new Context(selectedIndi));
                             } catch (Exception ex) {
                             } finally {
                             }
