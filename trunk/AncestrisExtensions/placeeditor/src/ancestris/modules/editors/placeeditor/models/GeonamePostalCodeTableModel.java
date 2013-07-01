@@ -1,4 +1,4 @@
-package ancestris.modules.editors.placeeditor;
+package ancestris.modules.editors.placeeditor.models;
 
 import ancestris.api.place.Place;
 import java.util.List;
