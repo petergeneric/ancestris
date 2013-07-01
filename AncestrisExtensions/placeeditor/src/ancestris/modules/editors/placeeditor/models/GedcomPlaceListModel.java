@@ -1,4 +1,4 @@
-package ancestris.modules.editors.placeeditor.gedcom;
+package ancestris.modules.editors.placeeditor.models;
 
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.Gedcom;

@@ -1,5 +1,6 @@
 package ancestris.modules.editors.placeeditor;
 
+import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeTableModel;
 import ancestris.api.place.Place;
 import ancestris.place.geonames.GeonamesPlacesList;
 import java.awt.BorderLayout;
