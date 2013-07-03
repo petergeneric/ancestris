@@ -22,9 +22,9 @@
 package genj.edit;
 
 import ancestris.api.editor.Editor;
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.core.resources.Images;
-import ancestris.view.ExplorerHelper;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -33,7 +33,6 @@ import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -199,7 +198,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
     }
 
     @Override
-    public void setContext(Context context, boolean isActionPerformed) {
+    public void setContext(Context context) {
 
         // ignore it?
         if (isIgnoreSetContext) {
@@ -242,7 +241,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
                 }
             }
 
-            if (!sticky.isSelected() || isActionPerformed) {
+            if (!sticky.isSelected()) {
                 editor.setContext(context);
             }
 

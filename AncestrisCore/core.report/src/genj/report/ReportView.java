@@ -202,7 +202,7 @@ public class ReportView extends View {
     }
 
     @Override
-    public void setContext(Context context, boolean isActionPerformed) {
+    public void setContext(Context context) {
         gedcom = context.getGedcom();
         // enable if none running and data available
         actionStart.setEnabled(!actionStop.isEnabled() && gedcom != null);

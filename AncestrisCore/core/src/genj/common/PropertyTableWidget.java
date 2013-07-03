@@ -406,7 +406,8 @@ public class PropertyTableWidget extends JPanel  {
           // FIXME: action is handled here and selection is handled in changeSelection
             Object cell = getValueAt(row, col);
             if (cell != null && cell instanceof Property){
-                        SelectionDispatcher.fireAction(e,new Context((Property)cell));
+//XXX:                        SelectionDispatcher.fireAction(e,new Context((Property)cell));
+                        SelectionDispatcher.fireSelection(e,new Context((Property)cell));
             }
         }
       });

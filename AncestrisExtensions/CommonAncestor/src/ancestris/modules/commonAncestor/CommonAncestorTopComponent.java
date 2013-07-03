@@ -1,7 +1,6 @@
 package ancestris.modules.commonAncestor;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -53,7 +52,7 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
             if (commonAncestorTopComponent == null) {
                 // create a new componenet
                 commonAncestorTopComponent = new CommonAncestorTopComponent();
-                commonAncestorTopComponent.setContext(currentContext);
+                commonAncestorTopComponent.initContext(currentContext);
                 // set default dock mode
                 Mode mode = WindowManager.getDefault().findMode("ancestris-nav");
                 if (mode != null) {
@@ -81,7 +80,7 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
      * setContext widgets inside panel
      * @param context 
      */
-    public void setContext(Context context) {
+    public void initContext(Context context) {
         this.context = context;
     }
 
@@ -131,10 +130,9 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
     /**
      * 
      * @param context
-     * @param isActionPerformed 
      */
     @Override
-    public void setContext(Context context, boolean isActionPerformed) {
+    public void setContext(Context context) {
         if (context != null && context.getGedcom() != null) {
             if (context.getGedcom().equals(this.context.getGedcom()) && samePanel != null) {
                 samePanel.updateCurrentIndividu(context.getEntity());

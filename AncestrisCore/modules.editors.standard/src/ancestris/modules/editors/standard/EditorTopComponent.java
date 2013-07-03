@@ -36,7 +36,6 @@ import net.miginfocom.layout.AC;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
-import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -53,7 +52,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     private static final String PREFERRED_ID = "AncestrisEditor";  // NOI18N
     private static EditorTopComponent factory;
 
-    /*package*/ final static Logger LOG = Logger.getLogger("ancestris.edit");
+    /* package */ final static Logger LOG = Logger.getLogger("ancestris.edit");
     private final Map<Class<? extends Property>, Editor> panels = new HashMap<Class<? extends Property>, Editor>();
     private Callback callback = new Callback();
     private boolean isIgnoreSetContext = false;
@@ -77,7 +76,8 @@ public class EditorTopComponent extends AncestrisTopComponent
         confirmPanel = new ConfirmChangeWidget(this);
         confirmPanel.setChanged(false);
 
-        setContext(getContext(), true);
+        //FIXME: was setContext(getContext(), true);
+        setContext(getContext());
 
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         editorContainer.add(titleLabel, new CC().dockNorth());
@@ -154,8 +154,9 @@ public class EditorTopComponent extends AncestrisTopComponent
         // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume
         // that the containing window was closed and we're not going to throw a dialog out there or do a change
         // behind the covers - we really would need a about-to-close hook for contained components here :(
-        if (!isOpened())
+        if (!isOpened()) {
             return;
+        }
 
         // check for auto commit
         if (ask && !confirmPanel.isCommitChanges()) {
@@ -191,7 +192,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     }
 
     @Override
-    public void setContextImpl(Context context, boolean isActionPerformed) {
+    public void setContextImpl(Context context) {
         // see also EditView
         if (context == null) {
             return;
@@ -249,10 +250,12 @@ public class EditorTopComponent extends AncestrisTopComponent
         if (editor != null) {
             icon = editor.getImageIcon();
         }
-        if (icon == null)
+        if (icon == null) {
             icon = getImageIcon("ancestris/modules/editors/standard/editeur_standard.png");
-        if (icon == null)
+        }
+        if (icon == null) {
             icon = super.getImageIcon();
+        }
         return icon;
     }
 
@@ -295,7 +298,6 @@ public class EditorTopComponent extends AncestrisTopComponent
             }
 
         }
-
 //        @Override
 //        //XXX: this is commented out to help finding a race condition in toolbox
 //        public void gedcomWriteLockReleased(Gedcom gedcom) {

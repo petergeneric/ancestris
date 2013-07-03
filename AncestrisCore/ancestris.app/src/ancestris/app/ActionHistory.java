@@ -188,7 +188,7 @@ public final class ActionHistory implements Presenter.Toolbar {
             }
 
             @Override
-            public void setContext(Context context, boolean isActionPerformed) {
+            public void setContext(Context context) {
 
                 Entity e = context.getEntity();
                 if (e == null) {

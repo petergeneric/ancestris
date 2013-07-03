@@ -172,6 +172,7 @@
             <public-packages>
                 <package>ancestris.api.core</package>
                 <package>ancestris.api.editor</package>
+                <package>ancestris.awt</package>
                 <package>ancestris.core</package>
                 <package>ancestris.core.actions</package>
                 <package>ancestris.core.beans</package>
@@ -194,7 +195,6 @@
                 <package>genj.util</package>
                 <package>genj.util.swing</package>
                 <package>genj.view</package>
-                <package>org.openide.util</package>
                 <package>swingx.dnd.tree</package>
                 <package>swingx.tree</package>
             </public-packages>

@@ -79,7 +79,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
 
                 public void run() {
                     if (view != null) {
-                        view.setContext(getContext(), false);
+                        view.setContext(getContext());
                     }
                 }
             });
@@ -113,7 +113,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
         }
 
         setPanel(view);
-        setContext(getContext(), false);
+        setContext(getContext());
         addToolBar();
         return true;
     }
@@ -128,11 +128,11 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
     }
 
     @Override
-    protected void setContextImpl(Context context, boolean isActionPerformed) {
+    protected void setContextImpl(Context context) {
         if (view != null) {
-            view.setContext(context, isActionPerformed);
+            view.setContext(context);
         } else {
-            super.setContextImpl(context, isActionPerformed);
+            super.setContextImpl(context);
         }
     }
 
