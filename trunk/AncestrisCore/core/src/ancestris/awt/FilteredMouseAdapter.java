@@ -9,7 +9,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.util;
+package ancestris.awt;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -22,10 +22,16 @@ import javax.swing.Timer;
 import org.openide.awt.MouseUtils;
 
 /**
- * MouseAdapter "filtrant" cad:
- * <ul><li> si simple click => fonctionnement normal</li>
- * <li> si double clic: le simple clic n'est pas envoyé</li>
- * </ul><p/>Il faut surcharger filteredMouseClicked à la place de mouseClicked
+ * "Filtered" MouseAdapter.
+ * <ul><li/> If event is single click, the behaviour is unchanged from
+ * {@link MouseAdapter}
+ * <li/> If double click is detected, then single click event is never
+ * processed
+ * </ul>
+ * <p/>
+ * <b>Note:</b>this behaviour is available only by overriding {@link #mouseClickedFiltered(java.awt.event.MouseEvent) }
+ * instead of {@link MouseAdapter#mouseClicked(java.awt.event.MouseEvent) }
+ *
  * @author daniel
  */
 public class FilteredMouseAdapter extends MouseAdapter implements ActionListener {
@@ -48,17 +54,23 @@ public class FilteredMouseAdapter extends MouseAdapter implements ActionListener
             if (timer != null) {
                 timer.stop();
             }
-            filteredMouseClicked(me);
+            mouseClickedFiltered(me);
         } else {
             timer.restart();
         }
     }
 
     public void actionPerformed(ActionEvent e) {
-        filteredMouseClicked(lastEvent);
+        mouseClickedFiltered(lastEvent);
     }
 
-    public void filteredMouseClicked(MouseEvent me) {
+    /**
+     * Invoked when the mouse button has been clicked (pressed and released) on a component.
+     * it is not called for single click event if double clic occured
+     *
+     * @param me Mouse Event
+     */
+    public void mouseClickedFiltered(MouseEvent me) {
         super.mouseClicked(me);
     }
 }

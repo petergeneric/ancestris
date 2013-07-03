@@ -24,7 +24,6 @@ import genj.gedcom.Gedcom;
 import genj.view.SelectionListener;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ComponentAdapter;
@@ -212,7 +211,7 @@ public class AncestrisTopComponent extends TopComponent
         return context == null ? null : context.getGedcom();
     }
 
-    final public void setContext(Context context, boolean isActionPerformed) {
+    final public void setContext(Context context) {
         // appropriate?
         if (this.context != null && !this.context.sameGedcom(context)) {
             LOG.log(Level.FINER, "context selection on unknown gedcom");
@@ -220,11 +219,11 @@ public class AncestrisTopComponent extends TopComponent
         }
 
         // already known?
-        if (!isActionPerformed && this.context != null && this.context.equals(context)) {
+        if (this.context != null && this.context.equals(context)) {
             return;
         }
 
-        LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context, isActionPerformed});
+        LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context});
 
         // remember
         this.context = context;
@@ -257,10 +256,10 @@ public class AncestrisTopComponent extends TopComponent
         }
 
 
-        setContextImpl(context, isActionPerformed);
+        setContextImpl(context);
     }
 
-    protected void setContextImpl(Context context, boolean isActionPerformed) {
+    protected void setContextImpl(Context context) {
     }
 
     public Context getContext() {
@@ -426,9 +425,9 @@ public class AncestrisTopComponent extends TopComponent
      * Gets an action to display a GenjTopComponent. Used in layer.xml
      *
      * @param component
-   param displayName
- param iconBase
-    param noIconInMenu
+param displayName
+     * param iconBase
+     * param noIconInMenu
      *
      * @return the action
      */
@@ -449,7 +448,7 @@ public class AncestrisTopComponent extends TopComponent
     public void init(Context context) {
         setName();
         setToolTipText();
-        setContext(context, false);
+        setContext(context);
         if (getImageIcon() != null) {
             setIcon(getImageIcon());
         }
@@ -512,7 +511,6 @@ public class AncestrisTopComponent extends TopComponent
     public void setRestored(boolean b) {
         isRestored = b;
     }
-
     // ToolBar support
     private JToolBar bar = null;
 
@@ -528,10 +526,10 @@ public class AncestrisTopComponent extends TopComponent
      * Return toolbar associated to this TopComponent.
      * If no toolbar exists, this function must return null.
      * Default value is no toolbar.
-     * 
-     * @return 
+     *
+     * @return
      */
-    public JToolBar getToolBar(){
+    public JToolBar getToolBar() {
         return null;
     }
 

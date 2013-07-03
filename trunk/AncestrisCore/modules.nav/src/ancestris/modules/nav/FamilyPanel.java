@@ -12,7 +12,7 @@
 package ancestris.modules.nav;
 
 import ancestris.api.editor.AncestrisEditor;
-import ancestris.util.FilteredMouseAdapter;
+import ancestris.awt.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
 import ancestris.view.SelectionDispatcher;
@@ -613,7 +613,7 @@ public final class FamilyPanel extends JPanel {
         }
 
         @Override
-        public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
+        public void mouseClickedFiltered(java.awt.event.MouseEvent evt) {
             if (evt.getButton() != MouseEvent.BUTTON1 || evt.getID() != MouseEvent.MOUSE_CLICKED) {
                 return;
             }
@@ -652,8 +652,6 @@ public final class FamilyPanel extends JPanel {
         public ActionListener getCreateAction() {
             return action;
         }
-
-        ;
     }
 
     private class SpouseHandler extends ABeanHandler {

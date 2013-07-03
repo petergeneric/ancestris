@@ -12,9 +12,9 @@
 package ancestris.modules.nav;
 
 import ancestris.view.AncestrisDockModes;
-import genj.gedcom.Context;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
+import genj.gedcom.Context;
 import java.awt.Image;
 import javax.swing.JScrollPane;
 import org.openide.util.ImageUtilities;
@@ -35,7 +35,7 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
 
     @Override
     public boolean createPanel() {
-        setContext(getContext(), true);
+        setContext(getContext());
         return true;
     }
 
@@ -62,7 +62,7 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
     }
 
     @Override
-    public void setContextImpl(Context context, boolean isActionPerformed) {
+    public void setContextImpl(Context context) {
         if (context == null) {
             return;
         }

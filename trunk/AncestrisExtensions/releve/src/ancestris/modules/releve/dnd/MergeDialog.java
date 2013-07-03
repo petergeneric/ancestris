@@ -229,7 +229,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                 treeView.setRoot(entity);
             } else {
                 // je centre la vue sur l'entité
-                treeView.setContext(new Context(entity), false);
+                treeView.setContext(new Context(entity));
             }
             treeView.show(entity);
         }

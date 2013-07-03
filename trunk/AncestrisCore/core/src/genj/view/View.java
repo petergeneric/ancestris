@@ -10,12 +10,12 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.view;
 
@@ -33,102 +33,107 @@ import javax.swing.JPopupMenu;
  * A baseclass for all our views
  */
 public abstract class View extends JPanel implements SelectionListener {
+
     ExplorerHelper explorerHelper;
 
-  /**
-   * Constructor
-   */
-  public View() {
-    super(new BorderLayout()); 
-    setMinimumSize(new Dimension());
-    setExplorerHelper(new ExplorerHelper(this));
-  }
+    /**
+     * Constructor
+     */
+    public View() {
+        super(new BorderLayout());
+        setMinimumSize(new Dimension());
+        setExplorerHelper(new ExplorerHelper(this));
+    }
 
     protected void setExplorerHelper(ExplorerHelper explorerHelper) {
         this.explorerHelper = explorerHelper;
     }
-  
-  /**
-   * Constructor
-   */
-  public View(LayoutManager lm) {
-    super(lm);
-  }
-  
-  @Override
-  public Component add(Component comp) {
-    // first w/border layout goes into center
-    if (getLayout() instanceof BorderLayout && getComponentCount()==0)
-      super.add(comp, BorderLayout.CENTER);
-    else
-      super.add(comp);
-    
-    return comp;
-  }
-  
-  /**
-   * commit any outstanding changes
-   */
-  public void commit() {
-  }
 
-  /**
-   * prepare to close
-   */
-  public void closing() {
-  }
+    /**
+     * Constructor
+     */
+    public View(LayoutManager lm) {
+        super(lm);
+    }
 
-  /**
-   * Find the view for given component
-   */
-  public static View getView(Component componentInView) {
-    do {
-      if (componentInView instanceof View)
-        return (View)componentInView;
-      
-      if (componentInView instanceof JPopupMenu)
-        componentInView = ((JPopupMenu)componentInView).getInvoker();
-      else if (componentInView instanceof Window)
-        componentInView = ((Window)componentInView).getOwner();
-      else
-        componentInView = componentInView.getParent();
-    } while (componentInView!=null);
-    
-    throw new IllegalArgumentException("Cannot find view for component");
-  }
+    @Override
+    public Component add(Component comp) {
+        // first w/border layout goes into center
+        if (getLayout() instanceof BorderLayout && getComponentCount() == 0) {
+            super.add(comp, BorderLayout.CENTER);
+        } else {
+            super.add(comp);
+        }
 
-  /**
-   * set current context
-   */
-  public void setContext(Context context, boolean isActionPerformed) {
-    // noop
-  }
+        return comp;
+    }
 
-  /**
-   * populate a toolbar
-   */
-  public void populate(ToolBar toolbar) {
-    // noop
-  }
+    /**
+     * commit any outstanding changes
+     */
+    public void commit() {
+    }
+
+    /**
+     * prepare to close
+     */
+    public void closing() {
+    }
+
+    /**
+     * Find the view for given component
+     */
+    public static View getView(Component componentInView) {
+        do {
+            if (componentInView instanceof View) {
+                return (View) componentInView;
+            }
+
+            if (componentInView instanceof JPopupMenu) {
+                componentInView = ((JPopupMenu) componentInView).getInvoker();
+            } else if (componentInView instanceof Window) {
+                componentInView = ((Window) componentInView).getOwner();
+            } else {
+                componentInView = componentInView.getParent();
+            }
+        } while (componentInView != null);
+
+        throw new IllegalArgumentException("Cannot find view for component");
+    }
+
+    /**
+     * set current context
+     */
+    public void setContext(Context context) {
+        // noop
+    }
+
+    /**
+     * populate a toolbar
+     */
+    public void populate(ToolBar toolbar) {
+        // noop
+    }
 
     /** Initializes the component and lookup explorer manager.
      */
     @Override
-    public void addNotify () {
-        super.addNotify ();
+    public void addNotify() {
+        super.addNotify();
         // default to show context menu
-        if (explorerHelper != null)
+        if (explorerHelper != null) {
             explorerHelper.setPopupAllowed(true);
+        }
     }
-    
+
     /**
      * Deinitializes listeners.
      */
     @Override
-    public void removeNotify () {
-        super.removeNotify ();
-        if (explorerHelper != null)
+    public void removeNotify() {
+        super.removeNotify();
+        if (explorerHelper != null) {
             explorerHelper.setPopupAllowed(false);
+        }
     }
-
 }

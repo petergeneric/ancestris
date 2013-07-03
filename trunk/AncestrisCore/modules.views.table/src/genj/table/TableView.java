@@ -10,16 +10,17 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 //XXX: try to not export this api
 package genj.table;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.view.ExplorerHelper;
 import genj.common.AbstractPropertyTableModel;
 import genj.common.PropertyTableModel;
@@ -31,7 +32,6 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.util.Registry;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.view.SettingsAction;
 import genj.view.ToolBar;
 import genj.view.View;
@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JToggleButton;
@@ -56,97 +57,98 @@ public class TableView extends View {
     /** a static set of resources */
     private Resources resources = Resources.get(this);
     /** the table we're using */
-    /*package*/ PropertyTableWidget propertyTable;
+    /* package */ PropertyTableWidget propertyTable;
     /** the modes we're offering */
     private Map<String, Mode> modes = new HashMap<String, Mode>();
 
     {
 //        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{"INDI", "INDI:NAME", "INDI:SEX", "INDI:BIRT:DATE", "INDI:BIRT:PLAC", "INDI:OCCU", "INDI:FAMS", "INDI:FAMC"}));
         modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{
-            "INDI",
-            "INDI:SEX",
-            "INDI:NAME",
-            "INDI:BIRT:DATE",
-            "INDI:BIRT:PLAC",
-            "INDI:DEAT:DATE",
-            "INDI:DEAT:PLAC",
-            "INDI:FAMS",
-            "INDI:FAMC",
-            "INDI:RESI:ADDR",
-            "INDI:RESI:ADDR:CTRY",
-            "INDI:DEAT:AGE",
-            "INDI:ASSO",
-            "INDI:ASSO:RELA",
-            "INDI:CHAN",
-            "INDI:NAME:GIVN",
-            "INDI:NAME:SURN"
-        }));
+                    "INDI",
+                    "INDI:SEX",
+                    "INDI:NAME",
+                    "INDI:BIRT:DATE",
+                    "INDI:BIRT:PLAC",
+                    "INDI:DEAT:DATE",
+                    "INDI:DEAT:PLAC",
+                    "INDI:FAMS",
+                    "INDI:FAMC",
+                    "INDI:RESI:ADDR",
+                    "INDI:RESI:ADDR:CTRY",
+                    "INDI:DEAT:AGE",
+                    "INDI:ASSO",
+                    "INDI:ASSO:RELA",
+                    "INDI:CHAN",
+                    "INDI:NAME:GIVN",
+                    "INDI:NAME:SURN"
+                }));
 //        modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{"FAM", "FAM:MARR:DATE", "FAM:MARR:PLAC", "FAM:HUSB", "FAM:WIFE", "FAM:CHIL"}));
         modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{
-            "FAM",
-            "FAM:MARR:DATE",
-            "FAM:MARR:PLAC",
-            "FAM:HUSB",
-            "FAM:WIFE",
-            "FAM:MARR:HUSB:AGE",
-            "FAM:MARR:WIFE:AGE",
-            "FAM:DIV:DATE",
-            "FAM:NOTE",
-            "FAM:MARC:DATE",
-            "FAM:MARC:AGNC",
-            "FAM:MARC:PLAC",
-            "FAM:CHAN"
-        }));
+                    "FAM",
+                    "FAM:MARR:DATE",
+                    "FAM:MARR:PLAC",
+                    "FAM:HUSB",
+                    "FAM:WIFE",
+                    "FAM:MARR:HUSB:AGE",
+                    "FAM:MARR:WIFE:AGE",
+                    "FAM:DIV:DATE",
+                    "FAM:NOTE",
+                    "FAM:MARC:DATE",
+                    "FAM:MARC:AGNC",
+                    "FAM:MARC:PLAC",
+                    "FAM:CHAN"
+                }));
 
 //        modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{"OBJE", "OBJE:FILE:TITL"}));
         modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{
-            "OBJE",
-            "OBJE:FILE:TITL"
-        }));
+                    "OBJE",
+                    "OBJE:FILE:TITL"
+                }));
 
 //        modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{"NOTE", "NOTE:NOTE"}));
         modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{
-            "NOTE",
-            "NOTE:NOTE",
-            "NOTE:CHAN"
-        }));
+                    "NOTE",
+                    "NOTE:NOTE",
+                    "NOTE:CHAN"
+                }));
 
 //        modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{"SOUR", "SOUR:TITL", "SOUR:TEXT"}));
         modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{
-            "SOUR",
-            "SOUR:TITL",
-            "SOUR:DATA:EVEN:DATE",
-            "SOUR:REPO",
-            "SOUR:REPO:CALN",
-            "SOUR:REPO:CALN:MEDI",
-            "SOUR:CHAN"
-        }));
+                    "SOUR",
+                    "SOUR:TITL",
+                    "SOUR:DATA:EVEN:DATE",
+                    "SOUR:REPO",
+                    "SOUR:REPO:CALN",
+                    "SOUR:REPO:CALN:MEDI",
+                    "SOUR:CHAN"
+                }));
 
 //        modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{"SUBM", "SUBM:NAME"}));
         modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{
-            "SUBM",
-            "SUBM:NAME",
-            "SUBM:ADDR",
-            "SUBM:ADDR:CITY",
-            "SUBM:ADDR:POST",
-            "SUBM:ADDR:CTRY",
-            "SUBM:PHON",
-            "SUBM:CHAN"
-        }));
+                    "SUBM",
+                    "SUBM:NAME",
+                    "SUBM:ADDR",
+                    "SUBM:ADDR:CITY",
+                    "SUBM:ADDR:POST",
+                    "SUBM:ADDR:CTRY",
+                    "SUBM:PHON",
+                    "SUBM:CHAN"
+                }));
 
 //        modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{"REPO", "REPO:NAME", "REPO:NOTE"}));
         modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{
-            "REPO",
-            "REPO:NAME",
-            "REPO:ADDR",
-            "REPO:ADDR:CITY",
-            "REPO:ADDR:POST",
-            "REPO:ADDR:CTRY",
-            "REPO:PHON",
-            "REPO:NOTE",
-            "REPO:CHAN"
-        }));
-    };
+                    "REPO",
+                    "REPO:NAME",
+                    "REPO:ADDR",
+                    "REPO:ADDR:CITY",
+                    "REPO:ADDR:POST",
+                    "REPO:ADDR:CTRY",
+                    "REPO:PHON",
+                    "REPO:NOTE",
+                    "REPO:CHAN"
+                }));
+    }
+    ;
 
     private Map<String, String> defaultLayouts = new HashMap<String, String>();
 
@@ -158,7 +160,8 @@ public class TableView extends View {
         defaultLayouts.put(Gedcom.SOUR, "7,75,578,227,381,287,115,174,0,1");
         defaultLayouts.put(Gedcom.SUBM, "8,75,385,458,202,84,152,149,174,0,1");
         defaultLayouts.put(Gedcom.REPO, "9,60,283,530,174,75,75,120,202,144,1,1");
-    };
+    }
+    ;
 
     /** current type we're showing */
     private Mode currentMode;
@@ -215,7 +218,7 @@ public class TableView extends View {
         }
     }
 
-    /*package*/ PropertyTableWidget getTable() {
+    /* package */ PropertyTableWidget getTable() {
         return propertyTable;
     }
 
@@ -230,14 +233,14 @@ public class TableView extends View {
     /**
      * Returns a mode for given tag
      */
-    /*package*/ Mode getMode() {
+    /* package */ Mode getMode() {
         return currentMode;
     }
 
     /**
      * Returns a mode for given tag
      */
-    /*package*/ Mode getMode(String tag) {
+    /* package */ final Mode getMode(String tag) {
         // known mode?
         Mode mode = modes.get(tag);
         if (mode == null) {
@@ -250,7 +253,7 @@ public class TableView extends View {
     /**
      * Sets the type of entities to look at
      */
-    /*package*/ void setMode(Mode set) {
+    /* package */ void setMode(Mode set) {
 
         REGISTRY.put("mode", set.getTag());
 
@@ -272,7 +275,7 @@ public class TableView extends View {
     }
 
     @Override
-    public void setContext(Context context, boolean isActionPerformed) {
+    public void setContext(Context context) {
 
         if (sticky.isSelected()) {
             return;
@@ -531,7 +534,7 @@ public class TableView extends View {
                 }
             }
             // hmm, strange
-            LOG.warning("got notified that entity " + entity.getId() + " was deleted but it wasn't in rows in the first place");
+            LOG.log(Level.WARNING, "got notified that entity {0} was deleted but it wasn''t in rows in the first place", entity.getId());
         }
 
         /** gedcom callback */
@@ -576,7 +579,7 @@ public class TableView extends View {
     /**
      * A mode is a configuration for a set of entities
      */
-    /*package*/ class Mode extends AbstractAncestrisAction {
+    /* package */ class Mode extends AbstractAncestrisAction {
 
         /** attributes */
         private String tag;
@@ -626,7 +629,7 @@ public class TableView extends View {
         }
 
         /** set paths */
-        /*package*/ void setPaths(TagPath[] set) {
+        /* package */ void setPaths(TagPath[] set) {
             paths = set;
             if (currentMode == this) {
                 setMode(currentMode);
@@ -634,7 +637,7 @@ public class TableView extends View {
         }
 
         /** get paths */
-        /*package*/ TagPath[] getPaths() {
+        /* package */ TagPath[] getPaths() {
             return paths;
         }
 
@@ -651,7 +654,7 @@ public class TableView extends View {
         }
 
         /** tag */
-        /*package*/ String getTag() {
+        /* package */ String getTag() {
             return tag;
         }
     } //Mode

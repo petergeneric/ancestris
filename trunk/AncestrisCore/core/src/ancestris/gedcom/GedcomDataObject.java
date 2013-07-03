@@ -37,15 +37,13 @@ import org.openide.windows.TopComponent;
 
 //XXX: change GedcomListener to pcl?
 //XXX: create a callback that extends gedcomadapter?
-public class GedcomDataObject extends MultiDataObject implements SelectionListener,GedcomMetaListener {
+public class GedcomDataObject extends MultiDataObject implements SelectionListener, GedcomMetaListener {
+
     private Context context;
     private GedcomUndoRedo undoredo;
-    
     private final Lookup lookup;
     private final InstanceContent lookupContents = new InstanceContent();
-
-        private static Lookup.Result<Context> result;
-
+    private static Lookup.Result<Context> result;
 //    private GedcomMgr gedcomMgr;
     /**
      * SaveCookie for this support instance. The cookie is adding/removing data
@@ -75,24 +73,25 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
         // associatelookup is 1 so super.getlookup is getCookieSet().getLookup()
         //lookup = new ProxyLookup(getCookieSet().getLookup(), new AbstractLookup(lookupContents));
         lookup = new ProxyLookup(super.getLookup(), new AbstractLookup(lookupContents));
-        
+
         // register listener
         result = lookup.lookupResult(Context.class);
-            result.addLookupListener(new LookupListener() {
+        result.addLookupListener(new LookupListener() {
 
             public void resultChanged(LookupEvent ev) {
                 // notify
                 //XXX: we must put selected nodes in global selection lookup (in fact use Explorer API)
                 Context context = lookup.lookup(Context.class);
-                if (context != null)
-                for (SelectionListener listener : AncestrisPlugin.lookupAll(SelectionListener.class)) {
-                    listener.setContext(context, false);
+                if (context != null) {
+                    for (SelectionListener listener : AncestrisPlugin.lookupAll(SelectionListener.class)) {
+                        listener.setContext(context);
+                    }
                 }
             }
         });
-        
-        
-        
+
+
+
         registerEditor("text/x-gedcom", true);
         //XXX: fix it
         this.context = GedcomMgr.getDefault().openGedcom(pf);
@@ -103,20 +102,19 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
         AncestrisPlugin.register(this);
     }
 
-  @Override
-  public Lookup getLookup() {
-    return lookup;
-  }
- 
+    @Override
+    public Lookup getLookup() {
+        return lookup;
+    }
+
     @Override
     protected Node createNodeDelegate() {
 //        return super.createNodeDelegate();
         //FIXME: overidden as stated in http://wiki.netbeans.org/DevFaqNodesCustomLookup
         // FIXME: is this the same as super.createNodeDelegate()?
-        return new DataNode (this, Children.LEAF, getLookup());
+        return new DataNode(this, Children.LEAF, getLookup());
     }
 
-    
     @Override
     protected int associateLookup() {
         return 1;
@@ -125,25 +123,26 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     public InstanceContent getLookupContents() {
         return lookupContents;
     }
-    
+
     /**
      * replace all instances of type clazz in lookup by new instances.
      * FIXME: There may be some optimization to do here...
+     *
      * @param <T>
-     * @param clazz
-     * @param instances 
+     *param clazz
+    param instances
      */
     public <T> void assign(Class<? extends T> clazz, T... instances) {
-        for (T ic:lookup.lookupAll(clazz)){
+        for (T ic : lookup.lookupAll(clazz)) {
             lookupContents.remove(ic);
         }
-        for (T ic : instances){
+        for (T ic : instances) {
             lookupContents.add(ic);
         }
     }
 
-            public GedcomUndoRedo getUndoRedo() {
-        return undoredo; 
+    public GedcomUndoRedo getUndoRedo() {
+        return undoredo;
     }
 
     @MultiViewElement.Registration(displayName = "#LBL_Gedcom_EDITOR",
@@ -180,7 +179,7 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     public void gedcomHeaderChanged(Gedcom gedcom) {
         setModified(gedcom);
     }
-    
+
     public void gedcomWriteLockAcquired(Gedcom gedcom) {
     }
 
@@ -194,9 +193,9 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
         try {
             getUndoRedo().gedcomUpdated(gedcom);
             setModified(gedcom);
-        } catch (NullPointerException e) {}
-  }
-
+        } catch (NullPointerException e) {
+        }
+    }
 
     /**
      * Helper method. Adds save cookie to the data object.
@@ -228,13 +227,13 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     }
 
     private void saveDocument() {
-        GedcomMgr.getDefault().saveGedcom(context,getPrimaryFile());
+        GedcomMgr.getDefault().saveGedcom(context, getPrimaryFile());
         clearModified();
     }
 
     // Remember context
     @Override
-    public void setContext(Context context, boolean isActionPerformed) {
+    public void setContext(Context context) {
         if (this.context != null && this.context.sameGedcom(context)) {
             this.context = context;
         }
