@@ -18,8 +18,14 @@ public class GeonamePostalCodeListModel extends AbstractListModel {
     public void update(List<Place> placesList) {
         int row = 0;
 
+        placesListData = new String[placesList.size()];
+        
         for (Place place : placesList) {
-            placesListData[row] = place.toString();
+            String juridictions = "";
+            for (String juridiction : place.getJurisdictions())
+                juridictions += juridiction + ", ";
+            
+            placesListData[row] = juridictions;
             row += 1;
         }
 
@@ -28,7 +34,7 @@ public class GeonamePostalCodeListModel extends AbstractListModel {
 
     @Override
     public int getSize() {
-        return placesListData.length;
+        return placesListData != null ? placesListData.length : 0;
     }
 
     @Override
