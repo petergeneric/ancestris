@@ -59,13 +59,7 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
                     gedcomCurrentPlaceTableModel = (GedcomPlaceTableModel) gedcomPlaceTable.getModel();
                     currentRowIndex = gedcomPlaceTable.convertRowIndexToModel(lsm.getLeadSelectionIndex());
                     updatePlaceEditorPanel();
-                    String city = ((String) gedcomCurrentPlaceTableModel.getValueAt(currentRowIndex, 1));
-                    if (city.length() > 0) {
-                        List<Place> findPlaces = new GeonamesPlacesList().findPlace(city);
-                        if (findPlaces != null) {
-                            geonamePostalCodeListModel.update(findPlaces);
-                        }
-                    }
+                    searchPlace();
                 }
             }
         }
@@ -125,6 +119,17 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
 
         cancelButton.setEnabled(false);
         modifiedButton.setEnabled(false);
+        searchButton.setEnabled(false);
+    }
+
+    private void searchPlace() {
+        String city = jTextField2.getText();
+        if (city.length() > 0) {
+            List<Place> findPlaces = new GeonamesPlacesList().findPlace(city);
+            if (findPlaces != null) {
+                geonamePostalCodeListModel.update(findPlaces);
+            }
+        }
     }
 
     /**
@@ -285,9 +290,9 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
 
         searchPlacePanel = new javax.swing.JPanel();
         searchPlaceLabel = new javax.swing.JLabel();
-        searchPlaceTextField = new javax.swing.JTextField();
-        searchPlaceButton = new javax.swing.JButton();
-        clearFilterButton = new javax.swing.JButton();
+        filterGedcomPlaceTextField = new javax.swing.JTextField();
+        filterGedcomPlaceButton = new javax.swing.JButton();
+        clearFilterGedcomPlaceButton = new javax.swing.JButton();
         gedcomPlacesTabbedPane = new javax.swing.JTabbedPane();
         gedcomCompletePlacesScrollPane = new javax.swing.JScrollPane();
         gedcomCompletePlaceTable = new javax.swing.JTable();
@@ -312,30 +317,31 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
         jTextField8 = new javax.swing.JTextField();
         cancelButton = new javax.swing.JButton();
         modifiedButton = new javax.swing.JButton();
+        searchButton = new javax.swing.JButton();
         geonameSearchResultPanel = new javax.swing.JPanel();
         geonameSearchResultScrollPane = new javax.swing.JScrollPane();
         geonameSearchResultList = new javax.swing.JList();
 
         org.openide.awt.Mnemonics.setLocalizedText(searchPlaceLabel, org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.searchPlaceLabel.text")); // NOI18N
 
-        searchPlaceTextField.setText(org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.searchPlaceTextField.text")); // NOI18N
-        searchPlaceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+        filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.filterGedcomPlaceTextField.text")); // NOI18N
+        filterGedcomPlaceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                searchPlaceTextFieldKeyTyped(evt);
+                filterGedcomPlaceTextFieldKeyTyped(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(searchPlaceButton, org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.searchPlaceButton.text")); // NOI18N
-        searchPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(filterGedcomPlaceButton, org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.filterGedcomPlaceButton.text")); // NOI18N
+        filterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchPlaceButtonActionPerformed(evt);
+                filterGedcomPlaceButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(clearFilterButton, org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.clearFilterButton.text")); // NOI18N
-        clearFilterButton.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(clearFilterGedcomPlaceButton, org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.clearFilterGedcomPlaceButton.text")); // NOI18N
+        clearFilterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearFilterButtonActionPerformed(evt);
+                clearFilterGedcomPlaceButtonActionPerformed(evt);
             }
         });
 
@@ -347,11 +353,11 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(searchPlaceLabel)
                 .addGap(6, 6, 6)
-                .addComponent(searchPlaceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchPlaceButton)
+                .addComponent(filterGedcomPlaceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(clearFilterButton)
+                .addComponent(clearFilterGedcomPlaceButton)
                 .addContainerGap())
         );
         searchPlacePanelLayout.setVerticalGroup(
@@ -360,9 +366,9 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
                 .addGap(2, 2, 2)
                 .addGroup(searchPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchPlaceLabel)
-                    .addComponent(searchPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchPlaceButton)
-                    .addComponent(clearFilterButton))
+                    .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filterGedcomPlaceButton)
+                    .addComponent(clearFilterGedcomPlaceButton))
                 .addGap(2, 2, 2))
         );
 
@@ -472,6 +478,14 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(searchButton, org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.searchButton.text")); // NOI18N
+        searchButton.setEnabled(false);
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PlaceEditorPanelLayout = new javax.swing.GroupLayout(PlaceEditorPanel);
         PlaceEditorPanel.setLayout(PlaceEditorPanelLayout);
         PlaceEditorPanelLayout.setHorizontalGroup(
@@ -480,7 +494,9 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(PlaceEditorPanelLayout.createSequentialGroup()
-                        .addGap(0, 113, Short.MAX_VALUE)
+                        .addGap(0, 61, Short.MAX_VALUE)
+                        .addComponent(searchButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(modifiedButton))
@@ -544,7 +560,8 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
-                    .addComponent(modifiedButton))
+                    .addComponent(modifiedButton)
+                    .addComponent(searchButton))
                 .addContainerGap())
         );
 
@@ -595,6 +612,7 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
     private void onTextFieldKeyType(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_onTextFieldKeyType
         cancelButton.setEnabled(true);
         modifiedButton.setEnabled(true);
+        searchButton.setEnabled(true);
     }//GEN-LAST:event_onTextFieldKeyType
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -662,24 +680,30 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
         updateGedcomPlaceTable();
     }//GEN-LAST:event_modifiedButtonActionPerformed
 
-    private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
-        newFilter(searchPlaceTextField.getText());
-    }//GEN-LAST:event_searchPlaceButtonActionPerformed
+    private void filterGedcomPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterGedcomPlaceButtonActionPerformed
+        newFilter(filterGedcomPlaceTextField.getText());
+    }//GEN-LAST:event_filterGedcomPlaceButtonActionPerformed
 
-    private void clearFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearFilterButtonActionPerformed
-        searchPlaceTextField.setText("");
-        newFilter(searchPlaceTextField.getText());
-    }//GEN-LAST:event_clearFilterButtonActionPerformed
+    private void clearFilterGedcomPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearFilterGedcomPlaceButtonActionPerformed
+        filterGedcomPlaceTextField.setText("");
+        newFilter(filterGedcomPlaceTextField.getText());
+    }//GEN-LAST:event_clearFilterGedcomPlaceButtonActionPerformed
 
-    private void searchPlaceTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchPlaceTextFieldKeyTyped
+    private void filterGedcomPlaceTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterGedcomPlaceTextFieldKeyTyped
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
-            newFilter(searchPlaceTextField.getText());
+            newFilter(filterGedcomPlaceTextField.getText());
         }
-    }//GEN-LAST:event_searchPlaceTextFieldKeyTyped
+    }//GEN-LAST:event_filterGedcomPlaceTextFieldKeyTyped
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        searchPlace();
+    }//GEN-LAST:event_searchButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PlaceEditorPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton clearFilterButton;
+    private javax.swing.JButton clearFilterGedcomPlaceButton;
+    private javax.swing.JButton filterGedcomPlaceButton;
+    private javax.swing.JTextField filterGedcomPlaceTextField;
     private javax.swing.JTable gedcomCompletePlaceTable;
     private javax.swing.JScrollPane gedcomCompletePlacesScrollPane;
     private javax.swing.JTabbedPane gedcomPlacesTabbedPane;
@@ -705,9 +729,8 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JButton modifiedButton;
-    private javax.swing.JButton searchPlaceButton;
+    private javax.swing.JButton searchButton;
     private javax.swing.JLabel searchPlaceLabel;
     private javax.swing.JPanel searchPlacePanel;
-    private javax.swing.JTextField searchPlaceTextField;
     // End of variables declaration//GEN-END:variables
 }
