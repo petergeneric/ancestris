@@ -3,7 +3,6 @@ package ancestris.modules.editors.placeeditor.gedcom;
 import ancestris.api.place.Place;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
 import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeListModel;
-import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeTableModel;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import ancestris.place.geonames.GeonamesPlacesList;
 import genj.gedcom.Gedcom;
@@ -505,10 +504,10 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
                 .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(modifiedButton)
-                    .addComponent(cancelButton)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cancelButton)
+                    .addComponent(modifiedButton)))
         );
 
         add(PlaceEditorPanel, java.awt.BorderLayout.EAST);
@@ -520,14 +519,14 @@ public class GedcomPlacesEditorPanel extends javax.swing.JPanel {
         geonameSearchResultPanel.setLayout(geonameSearchResultPanelLayout);
         geonameSearchResultPanelLayout.setHorizontalGroup(
             geonameSearchResultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(geonameSearchResultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+            .addComponent(geonameSearchResultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
         geonameSearchResultPanelLayout.setVerticalGroup(
             geonameSearchResultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(geonameSearchResultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
         );
 
-        add(geonameSearchResultPanel, java.awt.BorderLayout.CENTER);
+        add(geonameSearchResultPanel, java.awt.BorderLayout.SOUTH);
         geonameSearchResultPanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(GedcomPlacesEditorPanel.class, "GedcomPlacesEditorPanel.geonameSearchResultPanel.AccessibleContext.accessibleName")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
