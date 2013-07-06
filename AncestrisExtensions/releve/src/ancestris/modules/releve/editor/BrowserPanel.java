@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -178,41 +179,63 @@ public class BrowserPanel extends JPanel {
      * A la fin de la selection, le mode MOVE est retabli automatiquement
      */
     public void adjustAreaColor() {
-        adjustImage = null;
-        mouseMode = MouseMode.SELECT;
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        if (image != null) {
+            adjustImage = null;
+            mouseMode = MouseMode.SELECT;
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+        } 
+        
     }
 
     /**
      * deplace l'image contre le bord gauche
      */
     public void moveToLeft() {
-        originX = 0;
-        repaint();
+        if (image != null) {
+            originX = 0;
+            repaint();
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+        } 
     }
 
     /**
      * deplace l'image contre le bord droit
      */
     public void moveToRight() {
-        originX = (int) (getWidth() - getScreenImageWidth());
-        repaint();
+        if (image != null) {
+            originX = getWidth() - getScreenImageWidth();
+            repaint();
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+        } 
     }
 
     /**
      * deplace l'image contre le bord haut
      */
     public void moveToTop() {
-        originY = 0;
-        repaint();
+        if (image != null) {
+            originY = 0;
+            repaint();
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+        } 
+        
     }
 
     /**
      * deplace l'image contre le bord bas
      */
     public void moveToBottom() {
-        originY = (int) (getHeight() - getScreenImageHeight());
-        repaint();
+        if (image != null) {
+            originY = getHeight() - getScreenImageHeight();
+            repaint();
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+        } 
     }
 
     public boolean isleftSideVisible() {
@@ -220,7 +243,11 @@ public class BrowserPanel extends JPanel {
     }
 
     public boolean isRightSideVisible() {
-        return (originX + getScreenImageWidth()) <= getWidth();
+        if (image != null) {
+            return (originX + getScreenImageWidth()) <= getWidth();
+        } else {
+            return true;
+        }
     }
 
     public boolean isTopSideVisible() {
@@ -228,7 +255,11 @@ public class BrowserPanel extends JPanel {
     }
 
     public boolean isBottomSideVisible() {
-        return (originY + getScreenImageHeight()) <= getHeight();
+        if( image!= null) {
+            return (originY + getScreenImageHeight()) <= getHeight();
+        } else {
+            return true;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -304,8 +335,8 @@ public class BrowserPanel extends JPanel {
     }
 
     private void centerImage() {
-        originX = (int) (getWidth() - getScreenImageWidth()) / 2;
-        originY = (int) (getHeight() - getScreenImageHeight()) / 2;
+        originX = (getWidth() - getScreenImageWidth()) / 2;
+        originY = (getHeight() - getScreenImageHeight()) / 2;
     }
 
     private void moveImage(Point newMousePosition) {
@@ -406,16 +437,16 @@ public class BrowserPanel extends JPanel {
         LookupOp lookupOp = new LookupOp(table, null);
         adjustImage = lookupOp.filter(grayImage, null);
 
-        // j'efface la zone d'affichage
+        // je desactive la zone de selection
         areaSrcx = areaSrcy = areaDestx = areaDesty = 0;
-        repaint();
-
         mouseMode = MouseMode.MOVE;
         setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+
+        repaint();
     }
 
     /**
-     *  affiche l'image , la zone selectionnee sielle existe
+     *  affiche l'image et la zone selectionnee si elle existe
      */
     @Override
     protected void paintComponent(Graphics g) {

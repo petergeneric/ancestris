@@ -16,6 +16,7 @@ import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.ReleveEditorListener;
 import ancestris.modules.releve.TableSelectionListener;
+import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.DataManager.ModelType;
 import ancestris.modules.releve.model.FieldEventType;
@@ -879,7 +880,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     case witness2FirstName :
                     case witness3FirstName :
                     case witness4FirstName :
-                        completionList = dataManager.getCompletionProvider().getFirstNames();                       
+                        completionList = dataManager.getCompletionProvider().getFirstNames(IncludeFilter.ALL);
                         break;
                     case indiLastName :
                     case indiMarriedLastName :
@@ -893,7 +894,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     case witness2LastName :
                     case witness3LastName :
                     case witness4LastName :
-                        completionList = dataManager.getCompletionProvider().getLastNames();
+                        completionList = dataManager.getCompletionProvider().getLastNames(IncludeFilter.ALL);
                         break;
                     case indiOccupation:
                     case indiMarriedOccupation:
@@ -907,10 +908,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     case witness2Occupation:
                     case witness3Occupation:
                     case witness4Occupation:
-                        completionList = dataManager.getCompletionProvider().getOccupations();
+                        completionList = dataManager.getCompletionProvider().getOccupations(IncludeFilter.ALL);
                         break;
                     case eventType:
-                        completionList = dataManager.getCompletionProvider().getEventTypes();
+                        completionList = dataManager.getCompletionProvider().getEventTypes(IncludeFilter.ALL);
                         break;
 //                    case indiPlace:
 //                    case wifePlace:

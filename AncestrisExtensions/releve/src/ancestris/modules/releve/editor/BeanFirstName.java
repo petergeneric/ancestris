@@ -2,6 +2,7 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
+import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import java.util.List;
@@ -18,7 +19,7 @@ public class BeanFirstName extends Bean implements CompletionListener {
         this.completionProvider = completionProvider;
         completionProvider.addFirstNamesListener(this);
         setLayout(new java.awt.BorderLayout());
-        cFirst = new Java2sAutoTextField(completionProvider.getFirstNames());
+        cFirst = new Java2sAutoTextField(completionProvider.getFirstNames(IncludeFilter.INCLUDED));
         cFirst.setStrict(false);
         cFirst.setCaseSensitive(false);
         cFirst.setUpperAllFirstChar(true);
