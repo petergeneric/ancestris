@@ -22,12 +22,12 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String getCity() {
-            return postalCode.getAdminName1();
+        return postalCode.getAdminName1();
     }
 
     @Override
     public String getFirstAvailableJurisdiction() {
-            return postalCode.getAdminCode1();
+        return postalCode.getAdminCode1();
     }
 
     @Override
@@ -51,14 +51,15 @@ public class GeonamesPlace implements Place {
         int index = 0;
 
         jurisdictions[index++] = postalCode.getPlaceName();
-        jurisdictions[index++] = postalCode.getCountryCode();
-        jurisdictions[index++] = postalCode.getAdminCode1();
         jurisdictions[index++] = postalCode.getAdminName1();
-        jurisdictions[index++] = postalCode.getAdminCode2();
+        jurisdictions[index++] = postalCode.getAdminCode1();
         jurisdictions[index++] = postalCode.getAdminName2();
-        jurisdictions[index++] = postalCode.getAdminCode3();
+        jurisdictions[index++] = postalCode.getAdminCode2();
         jurisdictions[index++] = postalCode.getAdminName3();
+        jurisdictions[index++] = postalCode.getAdminCode3();
         jurisdictions[index++] = postalCode.getPostalCode();
+        jurisdictions[index++] = postalCode.getCountryCode();
+
         return jurisdictions;
     }
 
