@@ -26,7 +26,7 @@ public class GeonamePostalCodeListModel extends AbstractListModel {
 
             // City
             jurisdictions += splitJurisdictions[0] != null ? splitJurisdictions[0] : "";
-            
+
             //AdminName1
             jurisdictions += splitJurisdictions[1] != null ? ", " + splitJurisdictions[1] : "";
             //AdminCode1
@@ -47,6 +47,11 @@ public class GeonamePostalCodeListModel extends AbstractListModel {
 
             //Country code
             jurisdictions += splitJurisdictions[8] != null ? ", " + splitJurisdictions[8] : "";
+
+            // latitude
+            jurisdictions += "- LAT: " + place.getLatitude();
+            // longitude
+            jurisdictions += " LON: " + place.getLongitude();
 
             placesListData[row] = jurisdictions;
             row += 1;
