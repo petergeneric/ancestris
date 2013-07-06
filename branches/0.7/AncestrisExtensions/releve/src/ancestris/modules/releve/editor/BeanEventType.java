@@ -2,6 +2,7 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
+import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldEventType;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,7 @@ public class BeanEventType extends Bean implements CompletionListener {
         this.completionProvider = completionProvider;
         completionProvider.addEventTypesListener(this);
         setLayout(new java.awt.BorderLayout());
-        cListEventType = new Java2sAutoComboBox(completionProvider.getEventTypes());
+        cListEventType = new Java2sAutoComboBox(completionProvider.getEventTypes(IncludeFilter.INCLUDED));
         cListEventType.setStrict(false);        
         cListEventType.addChangeListener(changeSupport);
         add(cListEventType, java.awt.BorderLayout.CENTER);
