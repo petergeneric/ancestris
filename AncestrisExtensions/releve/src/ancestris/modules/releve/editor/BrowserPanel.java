@@ -1,6 +1,16 @@
 package ancestris.modules.releve.editor;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -427,16 +437,16 @@ public class BrowserPanel extends JPanel {
         LookupOp lookupOp = new LookupOp(table, null);
         adjustImage = lookupOp.filter(grayImage, null);
 
-        // j'efface la zone d'affichage
+        // je desactive la zone de selection
         areaSrcx = areaSrcy = areaDestx = areaDesty = 0;
-        repaint();
-
         mouseMode = MouseMode.MOVE;
         setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+
+        repaint();
     }
 
     /**
-     *  affiche l'image , la zone selectionnee sielle existe
+     *  affiche l'image et la zone selectionnee si elle existe
      */
     @Override
     protected void paintComponent(Graphics g) {

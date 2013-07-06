@@ -9,6 +9,7 @@ package ancestris.modules.releve;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.CompletionType;
+import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -51,6 +52,17 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         completionDialog.setVisible(true);
     }
 
+        /**
+     * affiche la fenetre de completion des prénoms
+     */
+    static public void showOccupationCompletionPanel() {
+        ReleveCompletionDialog completionDialog = new ReleveCompletionDialog();
+        completionDialog.initData(CompletionType.occupation);
+        completionDialog.setVisible(true);
+    }
+
+
+
     public ReleveCompletionDialog() {
         initComponents();
         
@@ -60,7 +72,7 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
     }
 
     public void initData(CompletionType completionType) {
-        List<String> lastNameList;
+        List<String> valueList;
         List<String> excludeList;
         this.completionType=completionType;
 
@@ -78,17 +90,22 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         switch( completionType ) {
             case firstName:
                columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.firstName");
-               lastNameList = dataManager.getCompletionProvider().getFirstNames();
+               valueList = dataManager.getCompletionProvider().getFirstNames(IncludeFilter.ALL);
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             case lastName:
                columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.lastName");
-               lastNameList = dataManager.getCompletionProvider().getLastNames();
+               valueList = dataManager.getCompletionProvider().getLastNames(IncludeFilter.ALL);
+               excludeList = CompletionProvider.loadExcludeCompletion(completionType);
+               break;
+            case occupation:
+               columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.occupation");
+               valueList = dataManager.getCompletionProvider().getOccupations(IncludeFilter.ALL);
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             default:
                columnTitle = "";
-               lastNameList = new ArrayList<String>();
+               valueList = new ArrayList<String>();
                excludeList = new ArrayList<String>();
         }
 
@@ -100,7 +117,7 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         
         // je recupere la liste des valeurs existantes dans le relevé
         HashMap<String,Boolean> lastNameMap= new HashMap<String,Boolean>();
-        for (Iterator<String> it = lastNameList.iterator(); it.hasNext(); ) {
+        for (Iterator<String> it = valueList.iterator(); it.hasNext(); ) {
             lastNameMap.put(it.next(), true);
         }
         // j'ajoute les valeurs deja exlues
@@ -127,6 +144,9 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
     }
 
 
+    /**
+     * enregistre la liste des valeurs exlues
+     */
     private void saveExcluded() {
         ArrayList<String> excludeList = new ArrayList<String>();
         int n = model.getRowCount();
@@ -139,7 +159,7 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         // j'enregistre les valeurs dans les preferences
         CompletionProvider.saveExcludedCompletion(excludeList, completionType);
 
-        // je notifie les instance de la mise a jour 
+        // je notifie les instances de la mise a jour
         for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
             tc.getDataManager().getCompletionProvider().refreshExcludeCompletion(completionType);
         }
