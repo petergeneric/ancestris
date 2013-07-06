@@ -96,6 +96,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jPanelExludeCompletion = new javax.swing.JPanel();
         jButtonFirstNameCompletion = new javax.swing.JButton();
         jButtonLastNameCompletion = new javax.swing.JButton();
+        jButtonOccupationCompletion = new javax.swing.JButton();
         jCheckBoxBrowser = new javax.swing.JCheckBox();
         fillerPanelHorizontal = new javax.swing.JPanel();
         fillerPanelVertical = new javax.swing.JPanel();
@@ -191,6 +192,14 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         });
         jPanelExludeCompletion.add(jButtonLastNameCompletion);
 
+        jButtonOccupationCompletion.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonOccupationCompletion.text")); // NOI18N
+        jButtonOccupationCompletion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOccupationCompletionActionPerformed(evt);
+            }
+        });
+        jPanelExludeCompletion.add(jButtonOccupationCompletion);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -275,7 +284,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     }//GEN-LAST:event_jButtonLastNameCompletionActionPerformed
 
     private void jButtonFirstNameCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFirstNameCompletionActionPerformed
-        // TODO add your handling code here:
         ReleveCompletionDialog.showFirstNameCompletionPanel();
     }//GEN-LAST:event_jButtonFirstNameCompletionActionPerformed
 
@@ -294,6 +302,10 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
     }//GEN-LAST:event_jCheckBoxBrowserActionPerformed
 
+    private void jButtonOccupationCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOccupationCompletionActionPerformed
+        ReleveCompletionDialog.showOccupationCompletionPanel();
+    }//GEN-LAST:event_jButtonOccupationCompletionActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel OptionsPanel;
     private javax.swing.JCheckBox copyFreeComment;
@@ -303,6 +315,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JButton jButtonConfigEditor;
     private javax.swing.JButton jButtonFirstNameCompletion;
     private javax.swing.JButton jButtonLastNameCompletion;
+    private javax.swing.JButton jButtonOccupationCompletion;
     private javax.swing.JCheckBox jCheckBoxBrowser;
     private javax.swing.JCheckBox jCheckBoxDuplicateRecord;
     private javax.swing.JCheckBox jCheckBoxGedcomCompletion;

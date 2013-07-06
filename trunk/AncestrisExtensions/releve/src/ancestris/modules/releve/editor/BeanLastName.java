@@ -2,6 +2,7 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
+import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,7 @@ public class BeanLastName extends Bean implements CompletionListener {
         this.completionProvider = completionProvider;
         completionProvider.addLastNamesListener(this);
         setLayout(new java.awt.BorderLayout());
-        cLast = new Java2sAutoTextField(completionProvider.getLastNames());
+        cLast = new Java2sAutoTextField(completionProvider.getLastNames(IncludeFilter.INCLUDED));
         cLast.setStrict(false);        
         cLast.setCaseSensitive(false);
         cLast.setUpperAllChar(true);

@@ -28,7 +28,7 @@ public class BeanSex extends Bean {
         //  UNKNOWN = 0;
         //  MALE = 1;
         //  FEMALE = 2;
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[]{"Inconnu", "Masculin", "Feminin" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Inconnu", "Masculin", "Feminin" }));
         jComboBox1.addActionListener(changeSupport);
 
         add(jComboBox1, java.awt.BorderLayout.CENTER);

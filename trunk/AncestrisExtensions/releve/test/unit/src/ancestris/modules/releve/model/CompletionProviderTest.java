@@ -39,16 +39,16 @@ public class CompletionProviderTest extends TestCase {
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addRecord(record);
             // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms",     7,  completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms",        6,  completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 6,  completionProvider.getOccupations().size());
-            assertEquals("Nombre de lieux",       3,  completionProvider.getPlaces().size());
+            assertEquals("Nombre de prenoms",     7,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de noms",        6,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de professions", 6,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de lieux",       3,  completionProvider.getPlaces(CompletionProvider.IncludeFilter.ALL).size());
 
             completionProvider.removeRecord(record);
-            assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms",        0,  completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().size());
-            assertEquals("Nombre de lieux",       0,  completionProvider.getPlaces().size());
+            assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de noms",        0,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de lieux",       0,  completionProvider.getPlaces(CompletionProvider.IncludeFilter.ALL).size());
             
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
@@ -86,16 +86,16 @@ public class CompletionProviderTest extends TestCase {
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addRecord(record);
             // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms",     12,  completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms",        12,  completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 12,  completionProvider.getOccupations().size());
-            assertEquals("Nombre de lieux",       10,  completionProvider.getPlaces().size());
+            assertEquals("Nombre de prenoms",     12,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de noms",        12,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de professions", 12,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de lieux",       10,  completionProvider.getPlaces(CompletionProvider.IncludeFilter.ALL).size());
 
             completionProvider.removeRecord(record);
-            assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms",        0,  completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().size());
-            assertEquals("Nombre de lieux",       0,  completionProvider.getPlaces().size());
+            assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de noms",        0,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de lieux",       0,  completionProvider.getPlaces(CompletionProvider.IncludeFilter.ALL).size());
 
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
@@ -112,9 +112,9 @@ public class CompletionProviderTest extends TestCase {
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addGedcomCompletion(gedcom);
             // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms", 7,  completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms", 2,  completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 1,  completionProvider.getOccupations().size());
+            assertEquals("Nombre de prenoms", 7,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de noms", 2,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de professions", 1,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
         } catch (Exception ex) {
             fail("GedcomException "+ ex.toString());
         }
@@ -130,15 +130,15 @@ public class CompletionProviderTest extends TestCase {
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addGedcomCompletion(gedcom);
             // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms", 4, completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms", 2, completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 2, completionProvider.getOccupations().size());
+            assertEquals("Nombre de prenoms", 4, completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de noms", 2, completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de professions", 2, completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
 
             completionProvider.removeGedcomCompletion();
             // je verifie que les données ont bien été supprimées
-            assertEquals("Nombre de prenoms apres suppression", 0, completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms apres suppression", 0, completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions apres suppression", 0, completionProvider.getOccupations().size());
+            assertEquals("Nombre de prenoms apres suppression", 0, completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de noms apres suppression", 0, completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de professions apres suppression", 0, completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
 
 
         } catch (GedcomException ex) {
@@ -178,14 +178,17 @@ public class CompletionProviderTest extends TestCase {
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addRecord(record);
             // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms 7-2", 5,  completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms  6-1",   5,  completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 6,  completionProvider.getOccupations().size());
+            assertEquals("Nombre de prenoms 7-2", 5,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.INCLUDED).size());
+            assertEquals("Nombre de noms  6-1",   5,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.INCLUDED).size());
+            assertEquals("Nombre de professions", 6,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.INCLUDED).size());
 
             completionProvider.removeRecord(record);
-            assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames().size());
-            assertEquals("Nombre de noms",        0,  completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().size());
+            assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de noms",        0,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de prenoms inclues",     0,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.INCLUDED).size());
+            assertEquals("Nombre de noms inclues",        0,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.INCLUDED).size());
+            assertEquals("Nombre de professions inclues", 0,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.INCLUDED).size());
 
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);

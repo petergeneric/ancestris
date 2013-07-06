@@ -20,6 +20,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -217,6 +218,12 @@ public class StandaloneEditor extends javax.swing.JFrame {
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
+                
+                // j'affiche la fenetre dans le mode normal pour récupere la 
+                // position et la taille
+                if (getExtendedState() != JFrame.NORMAL) {
+                    setExtendedState(JFrame.NORMAL);
+                }
                 // j'enregistre la taille dans les preferences
                 String size ;
                 int editorWidth;
@@ -240,6 +247,8 @@ public class StandaloneEditor extends javax.swing.JFrame {
                 NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorSize", size);
 
                 NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorWidth", String.valueOf(editorWidth));
+
+                // je memorise le nom du repertoire courant des images
                 String imageDirectory = "";
                 if (folder != null) {
                     try {
@@ -247,10 +256,10 @@ public class StandaloneEditor extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
                     }
-
                     NbPreferences.forModule(StandaloneEditor.class).put("ImageDirectory", imageDirectory);
                 }
 
+                // je signale a la classe principale du module que l'editeur est fermé.
                 menuCommandProvider.standaloneEditorClosed();
             }
         });
@@ -482,13 +491,13 @@ public class StandaloneEditor extends javax.swing.JFrame {
             jPanelImageInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelImageInfoLayout.createSequentialGroup()
                 .addComponent(lbFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
         jPanelImageInfoLayout.setVerticalGroup(
             jPanelImageInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelImageInfoLayout.createSequentialGroup()
                 .addComponent(lbFileName)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.add(jPanelImageInfo, java.awt.BorderLayout.NORTH);

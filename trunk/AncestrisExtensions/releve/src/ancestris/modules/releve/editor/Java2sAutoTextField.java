@@ -86,7 +86,7 @@ public class Java2sAutoTextField extends JTextField {
                 }
                 s = s3.toString();
             } else if (isUpperFirstChar) {
-                // je convertis le premier caractere du champ.
+                // je convertis le premier caractere du champ en majuscule
                 // Les autres caractères ne sont pas modifiés.
                 StringBuilder s3 = new StringBuilder();
                 for( int j = 0 ; j < s.length(); j++) {
@@ -124,11 +124,12 @@ public class Java2sAutoTextField extends JTextField {
             if (k > 0) {
                 k--;
             }
-           String s = getMatch(getText(0, k));
-           if ( i <= 1 ) {
-              // s'il ne reste qu'un caractere a efface, je cherche pas de completion
-              super.remove(0, getLength());
-            } if (!isStrict && s == null) {
+            String s = getMatch(getText(0, k));
+            if (i <= 1 && k == 0 ) {
+                // s'il ne reste qu'un caractere a effacer, je n'utilise pas la completion
+                super.remove(0, getLength());
+                s = "";
+            } else if (!isStrict && s == null) {
                 super.remove(i, j);
             } else {
                 super.remove(0, getLength());

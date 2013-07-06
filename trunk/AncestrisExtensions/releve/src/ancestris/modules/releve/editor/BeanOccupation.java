@@ -2,6 +2,7 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
+import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldOccupation;
 import java.util.List;
@@ -18,7 +19,7 @@ public class BeanOccupation extends Bean implements CompletionListener {
         this.completionProvider = completionProvider;
         completionProvider.addOccupationsListener(this);
         setLayout(new java.awt.BorderLayout());
-        cOccupation = new Java2sAutoTextField(completionProvider.getOccupations());
+        cOccupation = new Java2sAutoTextField(completionProvider.getOccupations(IncludeFilter.INCLUDED));
         cOccupation.setStrict(false);
         cOccupation.setCaseSensitive(false);
         cOccupation.setUpperFirstChar(true);
