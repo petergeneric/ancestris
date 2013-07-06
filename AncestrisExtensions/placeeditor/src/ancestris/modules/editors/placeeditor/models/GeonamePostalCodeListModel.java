@@ -19,13 +19,36 @@ public class GeonamePostalCodeListModel extends AbstractListModel {
         int row = 0;
 
         placesListData = new String[placesList.size()];
-        
+
         for (Place place : placesList) {
-            String juridictions = "";
-            for (String juridiction : place.getJurisdictions())
-                juridictions += juridiction + ", ";
+            String[] splitJurisdictions = place.getJurisdictions();
+            String jurisdictions = "";
+
+            // City
+            jurisdictions += splitJurisdictions[0] != null ? splitJurisdictions[0] : "";
             
-            placesListData[row] = juridictions;
+            //AdminName1
+            jurisdictions += splitJurisdictions[1] != null ? ", " + splitJurisdictions[1] : "";
+            //AdminCode1
+            jurisdictions += splitJurisdictions[2] != null ? " (" + splitJurisdictions[2] + ")" : "";
+
+            //AdminName2
+            jurisdictions += splitJurisdictions[3] != null ? ", " + splitJurisdictions[3] : "";
+            //AdminCode2
+            jurisdictions += splitJurisdictions[4] != null ? " (" + splitJurisdictions[4] + ")" : "";
+
+            //AdminName3
+            jurisdictions += splitJurisdictions[5] != null ? ", " + splitJurisdictions[5] : "";
+            //AdminCode3
+            jurisdictions += splitJurisdictions[6] != null ? " (" + splitJurisdictions[6] + ")" : "";
+
+            //Postal code
+            jurisdictions += splitJurisdictions[7] != null ? ", " + splitJurisdictions[7] : "";
+
+            //Country code
+            jurisdictions += splitJurisdictions[8] != null ? ", " + splitJurisdictions[8] : "";
+
+            placesListData[row] = jurisdictions;
             row += 1;
         }
 

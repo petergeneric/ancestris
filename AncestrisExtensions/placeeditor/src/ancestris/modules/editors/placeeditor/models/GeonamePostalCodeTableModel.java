@@ -10,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class GeonamePostalCodeTableModel extends AbstractTableModel {
 
-    String[] placesListColumsTitle = {"AdminCode1", "AdminName1", "AdminCode2", "AdminName2", "AdminCode3", "AdminName3", "AdminCode4", "AdminName4", "AdminCode5", "AdminName5"};
+    String[] placesListColumsTitle = {"City","AdminName1", "AdminCode1", "AdminName2", "AdminCode2", "AdminName3", "AdminCode3", "Postal code", "Country code"};
     String[][] placesListData = null;
 
     public GeonamePostalCodeTableModel() {
