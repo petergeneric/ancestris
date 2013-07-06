@@ -319,6 +319,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
     }
 
+   @SuppressWarnings("unchecked")
     private void populateImageList(File folder) {
         File[] files = folder.listFiles(new FilenameFilter() {
             @Override

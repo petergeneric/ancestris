@@ -812,7 +812,7 @@ class MergeModelMiscOther extends MergeModel {
         }
 
         // je retourn la propriete pour faire une association entre les particpants
-        if (participantType == participantType.participant1) {
+        if (participantType == MergeParticipantType.participant1) {
             return eventProperty;
         } else {
             return currentIndi;
