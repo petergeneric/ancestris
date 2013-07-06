@@ -30,6 +30,12 @@ public class CompletionProvider implements GedcomFileListener {
         place
     }
 
+    public static enum IncludeFilter {
+        ALL,
+        EXCLUDED,
+        INCLUDED
+    }
+
     // Register in ancestris lookup for GedcomFileListener
     public CompletionProvider(){
         AncestrisPlugin.register(this);
@@ -352,16 +358,16 @@ public class CompletionProvider implements GedcomFileListener {
 
         // je supprime les prénoms, noms, professions et lieux du Gedcom des
         // listes de completion
-        for ( String firstName : firstNames.getKeys()) {
+        for ( String firstName : firstNames.getKeys(IncludeFilter.ALL)) {
             firstNames.remove(gedcomField, firstName, null, false);
         }
-        for ( String lastName : lastNames.getKeys()) {
+        for ( String lastName : lastNames.getKeys(IncludeFilter.ALL)) {
             lastNames.remove(gedcomField, lastName, false);
         }
-        for ( String occupation : occupations.getKeys()) {
+        for ( String occupation : occupations.getKeys(IncludeFilter.ALL)) {
             occupations.removeGedcom(gedcomField, occupation);
         }
-        for ( String place : places.getKeys()) {
+        for ( String place : places.getKeys(IncludeFilter.ALL)) {
             places.removeGedcom(gedcomField, place);
         }
 
@@ -442,36 +448,36 @@ public class CompletionProvider implements GedcomFileListener {
     /**
      * retourne les prénoms triées par ordre alphabétique
      */
-    public List<String> getFirstNames() {
-       return firstNames.getKeys();
+    public List<String> getFirstNames(IncludeFilter filter) {
+       return firstNames.getKeys(filter);
     }
 
     /**
      * retourne les noms triées par ordre alphabétique
      */
-    public List<String> getLastNames() {
-        return lastNames.getKeys();
+    public List<String> getLastNames(IncludeFilter filter) {
+        return lastNames.getKeys(filter);
     }
 
     /**
      * retourne les professions triées par ordre alphabétique
      */
-    public List<String> getOccupations() {
-       return occupations.getKeys();
+    public List<String> getOccupations(IncludeFilter filter) {
+       return occupations.getKeys(filter);
     }
 
     /**
      * retourne les tags des types d'evenement triées par ordre alphabétique
      */
-    public List<String> getEventTypes() {
-        return eventTypes.getKeys();
+    public List<String> getEventTypes(IncludeFilter filter) {
+        return eventTypes.getKeys(filter);
     }
 
     /**
      * retourne les lieux triées par ordre alphabétique
      */
-    public List<String> getPlaces() {
-        return places.getKeys();
+    public List<String> getPlaces(IncludeFilter filter) {
+        return places.getKeys(filter);
     }
 
     public Locale getLocale() {
@@ -607,7 +613,7 @@ public class CompletionProvider implements GedcomFileListener {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // Liste des valeurs exlues de la completion
+    // Liste des valeurs exclues de la completion
     ///////////////////////////////////////////////////////////////////////////
     static final private String ExcludedFirstNameList = "ExcludedFirstNameList";
     static final private String ExcludedLastNameList = "ExcludedLastNameList";
@@ -686,7 +692,7 @@ public class CompletionProvider implements GedcomFileListener {
     }
 
     /**
-     * refraichit la liste des valeurs exclues en rechargeant la liste à partir
+     * refraichit la liste des valeurs exclure en rechargeant la liste à partir
      * des preferences du module
      */
     public void refreshExcludeCompletion(CompletionType completionType) {
@@ -698,7 +704,7 @@ public class CompletionProvider implements GedcomFileListener {
                lastNames.loadExclude();
                break;
             case occupation:
-               //occupations.loadExclude();
+               occupations.loadExclude();
                break;
             case place:
                places.loadExclude();
@@ -738,8 +744,6 @@ public class CompletionProvider implements GedcomFileListener {
      * Liste contenant les prenoms avec les "Field" ou ils sont utilises
      */
     private class FirstNameCompletionSet extends CompletionSet<Field> {
-        private List<String> exludedList = new ArrayList<String>();
-
         public FirstNameCompletionSet() {
             loadExclude();
         }
@@ -748,7 +752,7 @@ public class CompletionProvider implements GedcomFileListener {
          * charge les valeurs a exclure
          */
         private void loadExclude() {
-            exludedList = loadExcludeCompletion(CompletionType.firstName);
+            setExclude(loadExcludeCompletion(CompletionType.firstName));
             fireListener();
         }
 
@@ -759,12 +763,9 @@ public class CompletionProvider implements GedcomFileListener {
          * @param sexField
          */
         public void add( Field firstNameField, String sex) {
-            if ( firstNameField != null && firstNameField.isEmpty()==false ) {
-                boolean excluded = exludedList.contains(firstNameField.toString());
-                if ( !excluded ) {
-                    super.add(firstNameField.toString(), firstNameField, true);
-                    updateFirstNameSex(null, null, firstNameField.toString(), sex);
-                }
+            if ( firstNameField != null && firstNameField.isEmpty() == false) {
+                super.add(firstNameField.toString(), firstNameField, true);
+                updateFirstNameSex(null, null, firstNameField.toString(), sex);
             }
         }
         
@@ -775,12 +776,9 @@ public class CompletionProvider implements GedcomFileListener {
          * @param sexField
          */
         public void addGedcom( Field gedcomField, String firstName, String sex) {
-            boolean excluded = exludedList.contains(firstName);
-            if ( gedcomField != null && gedcomField.isEmpty()==false && !excluded) {
-                if ( !excluded ) {
-                    super.add(firstName, gedcomField, false);
-                    updateFirstNameSex(null, null, firstName, sex);
-                }
+            if (gedcomField != null && gedcomField.isEmpty() == false) {
+                super.add(firstName, gedcomField, false);
+                updateFirstNameSex(null, null, firstName, sex);
             }
         }
 
@@ -820,7 +818,6 @@ public class CompletionProvider implements GedcomFileListener {
      * Liste contenant les noms avec les "Field" ou ils sont utilises
      */
     private class LastNameCompletionSet extends CompletionSet<Field> {
-        private List<String> excluded = new ArrayList<String>();
 
         public LastNameCompletionSet() {
             loadExclude();
@@ -830,18 +827,18 @@ public class CompletionProvider implements GedcomFileListener {
          * charge les valeurs a exclure
          */
         private void loadExclude() {
-            excluded = loadExcludeCompletion(CompletionType.lastName);
+            setExclude(loadExcludeCompletion(CompletionType.lastName));
             fireListener();
         }
         
         public void add( Field lastNameField) {
-            if ( lastNameField != null && lastNameField.isEmpty()==false && !excluded.contains(lastNameField.toString())) {
+            if ( lastNameField != null && lastNameField.isEmpty()==false ) {
                 super.add(lastNameField.toString(), lastNameField, true);
             }
         }
 
         public void addGedcom( Field gedcomField, String lastName) {
-            if ( gedcomField != null && gedcomField.isEmpty()==false && !excluded.contains(lastName)) {
+            if ( gedcomField != null && gedcomField.isEmpty()==false) {
                 super.add(lastName, gedcomField, false);
             }
         }
@@ -877,7 +874,6 @@ public class CompletionProvider implements GedcomFileListener {
      * Liste contenant les lieux avec les "Field" ou ils sont utilises
      */
     private class OccupationCompletionSet extends CompletionSet<Field> {
-        private List<String> excluded = new ArrayList<String>();
 
         public OccupationCompletionSet() {
             loadExclude();
@@ -887,18 +883,18 @@ public class CompletionProvider implements GedcomFileListener {
          * charge les valeurs a exclure
          */
         private void loadExclude() {
-            excluded = loadExcludeCompletion(CompletionType.occupation);
+            setExclude(loadExcludeCompletion(CompletionType.occupation));
             fireListener();
         }
 
         public void add( Field occupationField) {
-            if ( occupationField != null && occupationField.isEmpty()==false && !excluded.contains(occupationField.toString())) {
+            if ( occupationField != null && occupationField.isEmpty()==false ) {
                 super.add(occupationField.toString(), occupationField, true);
             }
         }
 
         public void addGedcom( Field occupationField, String occupationValue) {
-            if ( occupationField != null && occupationField.isEmpty()==false && !excluded.contains(occupationValue.toString())) {
+            if ( occupationField != null && occupationField.isEmpty()==false ) {
                 super.add(occupationValue, occupationField, false);
             }
         }
@@ -934,8 +930,6 @@ public class CompletionProvider implements GedcomFileListener {
      * Liste contenant les lieux avec les "Field" ou ils sont utilises
      */
     private class PlaceCompletionSet extends CompletionSet<Field> {
-        private List<String> excluded = new ArrayList<String>();
-
         public PlaceCompletionSet() {
             loadExclude();
         }
@@ -944,18 +938,18 @@ public class CompletionProvider implements GedcomFileListener {
          * charge les valeurs a exclure
          */
         private void loadExclude() {
-            excluded = loadExcludeCompletion(CompletionType.place);
+            setExclude(loadExcludeCompletion(CompletionType.place));
             fireListener();
         }
 
         public void add( Field placeField) {
-            if ( placeField != null && placeField.isEmpty()==false && !excluded.contains(placeField.toString())) {
+            if ( placeField != null && placeField.isEmpty()==false) {
                 super.add(placeField.toString(), placeField, true);
             }
         }
 
         public void addGedcom( Field placeField, String placeValue) {
-            if ( placeField != null && placeField.isEmpty()==false && !excluded.contains(placeValue.toString())) {
+            if ( placeField != null && placeField.isEmpty()==false) {
                 super.add(placeValue, placeField, false);
             }
         }
@@ -988,7 +982,7 @@ public class CompletionProvider implements GedcomFileListener {
 
 
     /**
-     * Liste des valeurs avec les "Field" de réfererence
+     * Liste des valeurs avec les "Field" de référence
      */
     private class CompletionSet<REF> {
 
@@ -996,6 +990,8 @@ public class CompletionProvider implements GedcomFileListener {
         private Map<String, Set<REF>> key2references = new TreeMap<String, Set<REF>>();
         // liste des listeners a notifier quand on change une valeur dans key2references
         private List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
+        private TreeSet<String> excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        private TreeSet<String> included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
 
         /**
@@ -1074,7 +1070,26 @@ public class CompletionProvider implements GedcomFileListener {
             if (!references.add(reference)) {
                 return false;
             }
+
+            if ( !excluded.contains(key) && !included.contains(key))  {
+                included.add(key);
+            }
             return true;
+        }
+
+        /**
+         * initialise les valeurs inclues et exclues
+         * @param newExcluded
+         */
+        protected void setExclude(List<String> newExcluded) {
+            excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+            excluded.addAll(newExcluded);
+            included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+            for (String key : key2references.keySet()) {
+                if (!excluded.contains(key)) {
+                    included.add(key);
+                }
+            }
         }
 
         private boolean remove(String key, REF reference) {
@@ -1106,6 +1121,8 @@ public class CompletionProvider implements GedcomFileListener {
                     fireListener();
                 }
             }
+
+            included.remove(key);
             return true;
         }
 
@@ -1114,10 +1131,17 @@ public class CompletionProvider implements GedcomFileListener {
         }
 
         /**
-         * retourne les valeurs
+         * retourne la liste des valeurs dans l'ordre alphabetique
          */
-        public List<String> getKeys() {
-            return new ArrayList<String>(key2references.keySet());
+        public List<String> getKeys(IncludeFilter filter) {
+            switch (filter) {
+                case EXCLUDED :
+                    return new ArrayList<String>(excluded);
+                case INCLUDED:
+                    return new ArrayList<String>(included);
+                default:
+                    return new ArrayList<String>(key2references.keySet());
+            }
         }
 
         /**
