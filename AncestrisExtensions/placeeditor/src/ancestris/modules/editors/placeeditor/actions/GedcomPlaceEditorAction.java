@@ -32,7 +32,7 @@ public final class GedcomPlaceEditorAction implements ActionListener {
             GedcomPlacesEditorPanel gedcomPlacesPanel = new GedcomPlacesEditorPanel(gedcom);
             DialogDescriptor dialogDescriptor = new DialogDescriptor(
                     gedcomPlacesPanel, // instance of your panel
-                    org.openide.util.NbBundle.getMessage(Bundle.class, "CTL_GedcomPlaceEditorAction"), // title of the dialog
+                    org.openide.util.NbBundle.getMessage(Bundle.class, "CTL_GedcomPlaceEditorAction") + " - " + gedcom.getName(), // title of the dialog
                     false,
                     new Object[]{},
                     (Object)null,
