@@ -19,6 +19,9 @@
  */
 package genj.edit;
  
+import ancestris.awt.FilteredMouseAdapter;
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -91,7 +94,7 @@ public class PropertyTreeWidget extends DnDTree {
     setCellRenderer(new Renderer());
     getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     setToggleClickCount(Integer.MAX_VALUE);
-    addMouseListener(new MouseAdapter() {
+    addMouseListener(new FilteredMouseAdapter() {
       public void mousePressed(MouseEvent e) {
         // default JTree doesn't react to right-mouse clicks -  we're trying harder
         if (e.getButton()==1)
@@ -104,6 +107,18 @@ public class PropertyTreeWidget extends DnDTree {
         if (!getSelection().contains(path.getLastPathComponent()))
           setSelection(Collections.singletonList((Property)path.getLastPathComponent()));
       }
+
+            @Override
+            public void mouseClickedFiltered(MouseEvent me) {
+                super.mouseClickedFiltered(me);
+                if (me.getClickCount()>1){
+        TreePath path = getPathForLocation(me.getX(), me.getY());
+        if (path==null)
+          return;
+        SelectionDispatcher.fireSelection(me, new Context((Property)path.getLastPathComponent()));
+                }
+            }
+      
     });
 
     setExpandsSelectedPaths(true);

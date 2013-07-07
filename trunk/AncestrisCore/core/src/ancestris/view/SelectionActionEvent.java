@@ -54,13 +54,24 @@ public class SelectionActionEvent {
 
     /**
      * Returns true is this event is an Action type event (ie if a double clic occured).
-     * The Action type events are:
-     * <li/>{@link ActionEvent} with CTL Key pressed
-     * <li/>{@link MouseEvent} with CTL Key pressed
+     * Delegates to {@link #isAction(java.awt.AWTEvent) 
      *
      * @return true is this event is an Action type event.
      */
     public boolean isAction() {
+        return isAction(event);
+    }
+
+    /**
+     * Returns true is this event is an Action type event (ie if a double clic occured).
+     * The Action type events are:
+     * <li/>{@link ActionEvent} with CTL Key pressed
+     * <li/>{@link MouseEvent} with CTL Key pressed
+     *
+     * @param event this AWTEvent
+     * @return true is this event is an Action type event.
+     */
+    public static boolean isAction(AWTEvent event) {
         boolean isActionPerformed = false;
         if (event != null) {
             if (event instanceof ActionEvent) {
@@ -74,7 +85,6 @@ public class SelectionActionEvent {
         }
         return isActionPerformed;
     }
-
     /**
      * The object on which the Event initially occurred. Delegates to
      * {@link AWTEvent#getSource()}.
