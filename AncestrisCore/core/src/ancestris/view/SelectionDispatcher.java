@@ -15,6 +15,8 @@ import ancestris.gedcom.GedcomDataObject;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import genj.gedcom.Context;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
 import java.awt.AWTEvent;
 
 /**
@@ -62,15 +64,16 @@ public class SelectionDispatcher {
             return;
         }
         try {
+            //An action on an XREF Property selects targeted property
+                if (SelectionActionEvent.isAction(event) && 
+                    context.getProperties().size() == 1) {
+                    Property p = context.getProperty();
+                    if (p instanceof PropertyXRef) {
+                        context = new Context(((PropertyXRef) p).getTarget());
+                    }
+                }
             GedcomDataObject gdao = GedcomDirectory.getDefault().getDataObject(context);
             gdao.assign(Context.class, context);
-            //FIXME: Should we dereference xref pointer?
-//                if (context.getProperties().size() == 1) {
-//                    Property p = context.getProperty();
-//                    if (p instanceof PropertyXRef) {
-//                        context = new Context(((PropertyXRef) p).getTarget());
-//                    }
-//                }
             gdao.assign(SelectionActionEvent.class, new SelectionActionEvent(event, context));
         } catch (ContextNotFoundException ex) {
         }
