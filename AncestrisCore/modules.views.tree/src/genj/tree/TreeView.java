@@ -270,13 +270,21 @@ public class TreeView extends View implements Filter {
         super.removeNotify();
     }
 
-    // TreeViw Preferences
+    // TreeView Preferences
     public static boolean isFollowSelection() {
         return REGISTRY.get("selection.follow", false);
     }
 
     public static void setFollowSelection(boolean followSelection) {
         REGISTRY.put("selection.follow", followSelection);
+    }
+
+    public static boolean isAutoScroll() {
+        return REGISTRY.get("auto.scroll", true);
+    }
+
+    public static void setAutoScroll(boolean autoScroll) {
+        REGISTRY.put("auto.scroll", autoScroll);
     }
 
     /**
@@ -492,7 +500,10 @@ public class TreeView extends View implements Filter {
      * Set current entity
      */
     /* package */ public boolean show(Entity entity) {
+        return show(entity,false);
+    }
 
+    /* package */ private boolean show(Entity entity, boolean forceCenter) {
         // allowed?
         if (!(entity instanceof Indi || entity instanceof Fam)) // FIXME: ne devrait-on pas plutot renvoyer false dans ce cas?
         {
@@ -506,7 +517,7 @@ public class TreeView extends View implements Filter {
         }
 
         // scroll
-        scrollTo(node.pos);
+        scrollTo(node.pos,forceCenter);
 
         // make sure it's reflected
         content.repaint();
@@ -516,36 +527,38 @@ public class TreeView extends View implements Filter {
         return true;
     }
 
-    /**
-     * Show current entity, show root if failed
-     */
-    /* package */ public boolean show(Entity entity, boolean fallbackRoot) {
-        // try to show
-        if (show(context.getEntity())) {
-            return true;
-        }
-        // otherwise try root
-        if (fallbackRoot) {
-            return show(getRoot());
-        }
-        return false;
-    }
-
+//    /**
+//     * Show current entity, show root if failed
+//     */
+//    /* package */ public boolean show(Entity entity, boolean fallbackRoot) {
+//        // try to show
+//        if (show(context.getEntity())) {
+//            return true;
+//        }
+//        // otherwise try root
+//        if (fallbackRoot) {
+//            return show(getRoot());
+//        }
+//        return false;
+//    }
+//
     /**
      * Scroll to given position
      */
-    private void scrollTo(Point p) {
-        // remember
-        center.setLocation(p);
-        // scroll
-        Rectangle2D b = model.getBounds();
-        Dimension d = getSize();
-        content.scrollRectToVisible(new Rectangle(
-                (int) ((p.getX() - b.getMinX()) * (DPMM.getX() * zoom)) - d.width / 2,
-                (int) ((p.getY() - b.getMinY()) * (DPMM.getY() * zoom)) - d.height / 2,
-                d.width,
-                d.height));
-        // done
+    private void scrollTo(Point p, boolean forceCenter) {
+        if (forceCenter || isAutoScroll()) {
+            // remember
+            center.setLocation(p);
+            // scroll
+            Rectangle2D b = model.getBounds();
+            Dimension d = getSize();
+            content.scrollRectToVisible(new Rectangle(
+                    (int) ((p.getX() - b.getMinX()) * (DPMM.getX() * zoom)) - d.width / 2,
+                    (int) ((p.getY() - b.getMinY()) * (DPMM.getY() * zoom)) - d.height / 2,
+                    d.width,
+                    d.height));
+            // done
+        }
     }
 
     /**
@@ -565,7 +578,7 @@ public class TreeView extends View implements Filter {
         }
 
         // scroll
-        scrollTo(node.pos);
+        scrollTo(node.pos, false);
 
         // done    
     }
@@ -1230,7 +1243,7 @@ public class TreeView extends View implements Filter {
         @Override
         public void actionPerformed(ActionEvent event) {
 
-            show(getRoot());
+            show(getRoot(),true);
 
             // done
         }
