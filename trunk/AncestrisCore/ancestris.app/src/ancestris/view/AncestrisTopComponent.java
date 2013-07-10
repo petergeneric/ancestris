@@ -105,6 +105,7 @@ public class AncestrisTopComponent extends TopComponent
      * http://www.antonioshome.net/kitchen/swingnbrcp/swingnbrcp-explorer.php )
      */
     private ExplorerManager manager;
+    private Lookup lookup;
 
     public AncestrisTopComponent() {
         super();
@@ -124,6 +125,15 @@ public class AncestrisTopComponent extends TopComponent
         associateLookup(ExplorerUtils.createLookup(manager, map));
     }
 
+    @Override
+    public Lookup getLookup() {
+        if (lookup!=null){
+            return lookup;
+        }
+        return super.getLookup();
+    }
+
+    
     public ExplorerManager getExplorerManager() {
         return manager;
     }
@@ -225,6 +235,12 @@ public class AncestrisTopComponent extends TopComponent
 
         LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context});
 
+        if (this.lookup == null){
+            try {
+                lookup = GedcomDirectory.getDefault().getDataObject(context).getLookup();
+            } catch (ContextNotFoundException ex) {
+            }
+        }
         // remember
         this.context = context;
         if (context.getGedcom() != null) {
