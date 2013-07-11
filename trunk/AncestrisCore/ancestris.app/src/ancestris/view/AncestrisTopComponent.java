@@ -124,15 +124,15 @@ public class AncestrisTopComponent extends TopComponent
         // following line tells the top component which lookup should be associated with it
         associateLookup(ExplorerUtils.createLookup(manager, map));
     }
-
-    @Override
-    public Lookup getLookup() {
-        if (lookup!=null){
-            return lookup;
-        }
-        return super.getLookup();
-    }
-
+//XXX: try to find lookup from gedcomdirectory. this breaks lookup logic: we have to redesign this !!!
+//    @Override
+//    public Lookup getLookup() {
+//        if (lookup!=null){
+//            return lookup;
+//        }
+//        return super.getLookup();
+//    }
+//
     
     public ExplorerManager getExplorerManager() {
         return manager;
