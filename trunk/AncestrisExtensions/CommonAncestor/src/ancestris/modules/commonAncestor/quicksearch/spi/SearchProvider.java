@@ -43,8 +43,6 @@
 
 package ancestris.modules.commonAncestor.quicksearch.spi;
 
-import ancestris.modules.commonAncestor.quicksearch.module.ProviderModel;
-
 /**
  * Main interface of Quick Search API. Implement this interface
  * to provide new group of results for quick search.

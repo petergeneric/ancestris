@@ -38,7 +38,9 @@ public class QuickSearchProvider implements SearchProvider {
                     for (Indi indi : samePanel.getContext().getGedcom().getIndis()) {
                         if (Utilities.wordsMatch(indi.getName().toLowerCase(),request.getText().toLowerCase())) {
                             String categoryName = response.getCatResult().getCategory().getName();
-                            if (!response.addResult(new createAction(indi, categoryName), indi.getName() )) {
+                            // j'ajoute l'item . Le parametre htmlDisplayName de addResult(Runnable action, String htmlDisplayName) vaut indi.toString()
+                            // au lieu de indi.getName() pour afficher l'ID en plus du nom et du prénom
+                            if (!response.addResult(new createAction(indi, categoryName), indi.toString() )) {
                                 return;
                             }
                         }
