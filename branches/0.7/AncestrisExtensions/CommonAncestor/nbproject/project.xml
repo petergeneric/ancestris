@@ -35,7 +35,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>1.0.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -108,22 +108,6 @@
             <test-dependencies>
                 <test-type>
                     <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>ancestris.lib.fop</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>ancestris.lib.genj</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>genjfr.app</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>genjfr.genjcore</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.api.annotations.common</code-name-base>
                         <compile-dependency/>

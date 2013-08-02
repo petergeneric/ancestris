@@ -120,9 +120,12 @@ public abstract class AbstractQuickSearchComboBar extends javax.swing.JPanel imp
      * Contructor for quicksearch multi instances in same module
      * Categories and serachProvider are given in parameters
      */
-    public AbstractQuickSearchComboBar(String categoryName, String categoryDisplayName, SearchProvider searchProvider, String commandPrefix, KeyStroke ks) {
+    public AbstractQuickSearchComboBar(String categoryName,
+            String categoryDisplayName, SearchProvider searchProvider,
+            String commandPrefix, KeyStroke ks,
+            int maxResult, int allMaxResult ) {
         keyStroke = ks;
-        providerModel = new ProviderModel(categoryName, categoryDisplayName, searchProvider, commandPrefix);
+        providerModel = new ProviderModel(categoryName, categoryDisplayName, searchProvider, commandPrefix, maxResult, allMaxResult);
 
         initComponents();
 

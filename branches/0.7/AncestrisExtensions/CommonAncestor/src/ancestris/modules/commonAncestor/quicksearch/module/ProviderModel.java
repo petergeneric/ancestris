@@ -74,6 +74,10 @@ public final class ProviderModel {
     
     private HashSet<String> knownCommands;
 
+    private int maxResult = CategoryResult.MAX_RESULTS;
+    private int allMaxResult = CategoryResult.ALL_MAX_RESULTS;
+
+
     /*
      * Contructor for quicksearch mono instance .
      * Categories and providers must be declared in configuration file parameter /QuickSearch
@@ -111,11 +115,16 @@ public final class ProviderModel {
      * @param categoryDisplayName
      * @param searchProvider 
      */
-    public ProviderModel (String categoryName, String categoryDisplayName, SearchProvider searchProvider, String commandPrefix) {        
+    public ProviderModel (String categoryName, String categoryDisplayName, 
+            SearchProvider searchProvider, String commandPrefix,
+            int maxResult, int allMaxResult ) {
         Category category = new Category(categoryName, categoryDisplayName, commandPrefix);
         category.addSearchProvider(searchProvider);
         categories = new ArrayList<ProviderModel.Category>();
         categories.add(category);
+        this.maxResult = maxResult;
+        this.allMaxResult = allMaxResult;
+
     }
 
      /*
@@ -151,7 +160,15 @@ public final class ProviderModel {
         }
         return knownCommands.contains(command);
     }
-    
+
+    int getAllMaxResult() {
+        return allMaxResult;
+    }
+
+    int getMaxResult() {
+        return maxResult;
+    }
+
     public static class Category {
 
         private FileObject fo;
@@ -217,7 +234,7 @@ public final class ProviderModel {
             }
             providers.add(searchProvider);
         }
-        
+
     } // end of Category
 
     private List<Category> loadCategories () {
