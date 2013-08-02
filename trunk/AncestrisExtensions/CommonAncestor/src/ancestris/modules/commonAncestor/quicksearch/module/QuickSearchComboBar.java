@@ -101,8 +101,10 @@ public class QuickSearchComboBar extends AbstractQuickSearchComboBar {
      * Contructor for quicksearch multi instances in same module
      * Categories and serachProvider are given in parameters
      */
-    public QuickSearchComboBar(String categoryName, String categoryDisplayName, SearchProvider searchProvider, String commandPrefix, KeyStroke ks) {
-        super(categoryName, categoryDisplayName, searchProvider, commandPrefix, ks );
+    public QuickSearchComboBar(String categoryName, String categoryDisplayName, 
+            SearchProvider searchProvider, String commandPrefix, KeyStroke ks,
+            int maxResult, int allMaxResult ) {
+        super(categoryName, categoryDisplayName, searchProvider, commandPrefix, ks, maxResult, allMaxResult );
 
         initComponents();
     }

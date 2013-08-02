@@ -87,15 +87,19 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         // Provider individu 1
         QuickSearchProvider searchProvider1 = new QuickSearchProvider();
         searchProvider1.setSamePanel(this);
-        String categoryDisplayName1 = org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.individu1.category.displayName");
-        AbstractQuickSearchComboBar quickSearchIndividu1 = new QuickSearchComboBar(QUICKSEARCH_CATEGORY_INDIVIDU_1, categoryDisplayName1, searchProvider1, null, null);
+        //String categoryDisplayName1 = org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.individu1.category.displayName");
+        String categoryDisplayName1 = ""; // je n'affiche pas le nom de la categorie pour gagner de la place a l'ecran
+        int maxResult = 10;
+        int allMaxResult = 10000;
+        AbstractQuickSearchComboBar quickSearchIndividu1 = new QuickSearchComboBar(QUICKSEARCH_CATEGORY_INDIVIDU_1, categoryDisplayName1, searchProvider1, null, null, maxResult, allMaxResult);
         jPanelSearch1.add(quickSearchIndividu1, BorderLayout.CENTER);
 
         // Provider individu 2
         QuickSearchProvider searchProvider2 = new QuickSearchProvider();
         searchProvider2.setSamePanel(this);
-        String categoryDisplayName2 = org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.individu2.category.displayName");
-        AbstractQuickSearchComboBar quickSearchIndividu2 = new QuickSearchComboBar(QUICKSEARCH_CATEGORY_INDIVIDU_2, categoryDisplayName2, searchProvider2, null, null); //KeyStroke.getKeyStroke("F7")
+        //String categoryDisplayName2 = org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.individu2.category.displayName");
+        String categoryDisplayName2 = ""; // je n'affiche pas le nom de la categorie pour gagner de la place a l'ecran
+        AbstractQuickSearchComboBar quickSearchIndividu2 = new QuickSearchComboBar(QUICKSEARCH_CATEGORY_INDIVIDU_2, categoryDisplayName2, searchProvider2, null, null, maxResult, allMaxResult); //KeyStroke.getKeyStroke("F7")
         jPanelSearch2.add(quickSearchIndividu2, BorderLayout.CENTER);
 
         // j'intialise la combobox de l'option "marie/femme au centre"

@@ -5,6 +5,7 @@ import ancestris.modules.commonAncestor.quicksearch.spi.SearchProvider;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchRequest;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchResponse;
 import ancestris.util.Utilities;
+import genj.gedcom.PropertyDate;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -40,7 +41,12 @@ public class QuickSearchProvider implements SearchProvider {
                             String categoryName = response.getCatResult().getCategory().getName();
                             // j'ajoute l'item . Le parametre htmlDisplayName de addResult(Runnable action, String htmlDisplayName) vaut indi.toString()
                             // au lieu de indi.getName() pour afficher l'ID en plus du nom et du prénom
-                            if (!response.addResult(new createAction(indi, categoryName), indi.toString() )) {
+                            String htmlDisplayName = indi.toString();
+                            PropertyDate birthDate = indi.getBirthDate();
+                            if (birthDate != null) {
+                                htmlDisplayName += " o "+ birthDate.getDisplayValue();
+                            }
+                            if (!response.addResult(new createAction(indi, categoryName), htmlDisplayName )) {
                                 return;
                             }
                         }

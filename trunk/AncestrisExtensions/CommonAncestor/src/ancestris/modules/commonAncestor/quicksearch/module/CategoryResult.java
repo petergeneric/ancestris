@@ -59,6 +59,8 @@ public final class CategoryResult implements Runnable {
     
     static final int MAX_RESULTS = 7;
     static final int ALL_MAX_RESULTS = 30;
+    private int maxResult = CategoryResult.MAX_RESULTS;
+    private int allMaxResult = CategoryResult.ALL_MAX_RESULTS;
 
     private final boolean allResults; 
     
@@ -74,10 +76,14 @@ public final class CategoryResult implements Runnable {
 
     private boolean moreResults = false;
 
-    public CategoryResult (ProviderModel.Category category, boolean allResults) {
+
+
+    public CategoryResult (ProviderModel.Category category, boolean allResults, int maxResult, int allMaxResult) {
+        this.maxResult = maxResult;
+        this.allMaxResult = allMaxResult;
         this.category = category;
         this.allResults = allResults;
-        items = new ArrayList<ItemResult>(allResults ? ALL_MAX_RESULTS : MAX_RESULTS);
+        items = new ArrayList<ItemResult>(allResults ? allMaxResult : maxResult);
     }
 
     public boolean addItem (ItemResult item) {
@@ -85,7 +91,7 @@ public final class CategoryResult implements Runnable {
             if (obsolete) {
                 return false;
             }
-            if (items.size() >= (allResults ? ALL_MAX_RESULTS : MAX_RESULTS)) {
+            if (items.size() >= (allResults ? allMaxResult : maxResult)) {
                 if (!allResults) {
                     moreResults = true;
                 }
@@ -157,7 +163,7 @@ public final class CategoryResult implements Runnable {
         synchronized (LOCK) {
             curSize = items.size();
             shouldNotify = !obsolete && 
-                    items.size() <= (allResults ? ALL_MAX_RESULTS : MAX_RESULTS);
+                    items.size() <= (allResults ? allMaxResult : maxResult);
         }
         
         if (!shouldNotify) {
