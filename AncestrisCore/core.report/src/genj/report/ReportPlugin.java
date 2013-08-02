@@ -289,6 +289,11 @@ public static class GedcomReportSubMenu extends SubMenuAction {
                 return;
             }
             //XXX: Very quick fix!!!
+            //XXX: we need to have some report runner independent from reportView class
+            // which displays a list of report.
+            // One report Viw must be opened to run a report as the runner task is defined in this class.
+            // A report can be run from a context menu and in this case the view (ie list of reports) 
+            // is not necessary. We will have to find a way to set options in this case.
             ReportView view = getReportView(new Context(gedcom));
             if (view != null) {
                 view.startReport(report, context);
@@ -311,18 +316,20 @@ public static class GedcomReportSubMenu extends SubMenuAction {
             view = (ReportView) tc.getView();
         }
 
+        if (view == null){
+            //XXX: can't be called from ancestriscore
+            ReportTopComponent tc = ((ReportTopComponent)ReportTopComponent.getFactory().create(contextToOpen));
+            view = (ReportView) (tc.getView());
+            view.setContext(contextToOpen);
+            atc = tc;
+            //            win.init(contextToOpen);
+        }
         if (view != null) {
             atc.open();
             atc.requestActive();
             return view;
         }
-
-        //XXX: can't be called from ancestriscore
-        ReportTopComponent win = ((ReportTopComponent)ReportTopComponent.getFactory().create(contextToOpen));
-        //            win.init(contextToOpen);
-        win.open();
-        win.requestActive();
-        return (ReportView) ( win.getView());
+        return view; // FIXME: view can't be null
     }
 
 //XXX:    @Override
