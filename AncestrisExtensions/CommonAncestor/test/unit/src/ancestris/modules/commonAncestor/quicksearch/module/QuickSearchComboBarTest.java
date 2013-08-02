@@ -29,7 +29,9 @@ public class QuickSearchComboBarTest extends TestCase {
 
     public void testCreateCombobar() {
         // TODO review the generated test code and remove the default call to fail.
-        AbstractQuickSearchComboBar comboBar = new QuickSearchComboBar("QuickSearchIndividu1", "displayname", null, null, KeyStroke.getKeyStroke("F6"));
+        AbstractQuickSearchComboBar comboBar = new QuickSearchComboBar("QuickSearchIndividu1", 
+                "displayname", null, null, KeyStroke.getKeyStroke("F6"),
+                CategoryResult.MAX_RESULTS, CategoryResult.ALL_MAX_RESULTS);
         //comboBar.displayer.explicitlyInvoked();
         comboBar.evaluateCategory(null, false);
     }
