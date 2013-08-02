@@ -60,6 +60,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import ancestris.modules.commonAncestor.quicksearch.module.recent.RecentSearches;
 import ancestris.modules.commonAncestor.quicksearch.module.ResultsModel.ItemResult;
+import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
@@ -84,12 +85,26 @@ public class QuickSearchPopup extends javax.swing.JPanel
 
     /** text to search for */
     private String searchedText;
-    private boolean resultFound = false; 
+    private boolean resultFound = false;
+    private int maxResult = CategoryResult.MAX_RESULTS;
+    private int allMaxResult = CategoryResult.ALL_MAX_RESULTS;
 
-    private int catWidth;
+    private int catWidth = -1;
     private int resultWidth;
     private Task evalTask;
     private static final RequestProcessor RP = new RequestProcessor(QuickSearchPopup.class);
+
+    /**
+     *
+     * @param comboBar  combobar parent
+     * @param maxResult nombre de resultats maximum affiches par defaut
+     * @param allMaxResult nombre de resultats maximum affiches si l'utilisateur demande plus de resultats
+     */
+    public QuickSearchPopup (AbstractQuickSearchComboBar comboBar, int maxResult, int allMaxResult) {
+        this(comboBar);
+        this.maxResult = maxResult;
+        this.allMaxResult = allMaxResult;
+    }
 
     public QuickSearchPopup (AbstractQuickSearchComboBar comboBar) {
         this.comboBar = comboBar;
@@ -211,8 +226,6 @@ public class QuickSearchPopup extends javax.swing.JPanel
         setLayout(new java.awt.BorderLayout());
 
         jScrollPane1.setBorder(null);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jList1.setFocusable(false);
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -358,7 +371,6 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             setVisible(false);
         }
         explicitlyInvoked = false;
-
         // needed on JDK 1.5.x to repaint correctly
         revalidate();
     }
@@ -369,8 +381,20 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
     }
 
     public int getCategoryWidth () {
-        if (catWidth <= 0) {
-            catWidth = computeWidth(jList1, 20, 30);
+        if (catWidth == -1) {
+            // je recherche la category qui a le DisplayName le plus long
+            int catNameMaxLength = 0;
+            catNameMaxLength = 0;
+            for (CategoryResult categoryResult : rModel.getContent()) {
+                if (categoryResult.getCategory().getName().length() > catNameMaxLength) {
+                    catNameMaxLength = categoryResult.getCategory().getDisplayName().length();
+                }
+            }
+            if ( catNameMaxLength > 0) {
+                catWidth = computeWidth(jList1, 20, 30);
+            } else {
+                catWidth = 0;
+            }
         }
         return catWidth;
     }
@@ -403,8 +427,19 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
 
     private void computePopupBounds (Rectangle result, JLayeredPane lPane, int modelSize) {
         Dimension cSize = comboBar.getSize();
-        int width = getCategoryWidth() + getResultWidth() + 3;
-        Point location = new Point(cSize.width - width - 1, comboBar.getBottomLineY() - 1);
+//        int width = getCategoryWidth() + getResultWidth() + 3;
+//        Point location = new Point(cSize.width - width - 1, comboBar.getBottomLineY() - 1);
+//        if (SwingUtilities.getWindowAncestor(comboBar) != null) {
+//            location = SwingUtilities.convertPoint(comboBar, location, lPane);
+//            // pour empecher la combobox d'etre masque par le bord gauche de la fenetre principale
+//            if (location.x < 0 ) {
+//                location.x = 0;
+//            }
+//        }
+//        result.setLocation(location);
+
+        int width = getResultWidth() + 3;
+        Point location = new Point(comboBar.getX(), comboBar.getBottomLineY() - 1);
         if (SwingUtilities.getWindowAncestor(comboBar) != null) {
             location = SwingUtilities.convertPoint(comboBar, location, lPane);
             // pour empécher la combobox d'etre masqué par le bord gauche de la fenetre principale
@@ -427,6 +462,16 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         preferredSize.width = width;
         preferredSize.height += statusPanel.getPreferredSize().height + 3;
 
+
+        //System.out.print(" modelSize="+modelSize +" updatePopup y="+popupBounds.getY()  );
+        int popupMaxHeight = 600;
+        if (this.getParent() != null ) {
+            popupMaxHeight = this.getParent().getHeight() - (int)popupBounds.getY() -10;
+            //System.out.println(" parent h="+this.getParent().getHeight() + " popupMaxHeight"+popupMaxHeight);
+        } 
+        if (preferredSize.height > popupMaxHeight) {
+            preferredSize.height = popupMaxHeight;
+        }
         result.setSize(preferredSize);
     }
 
@@ -472,7 +517,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         shouldBeVisible = shouldBeVisible || areNoResults;
 
         hintLabel.setText(getHintText());
-        boolean isNarrowed = CommandEvaluator.getEvalCat() != null && searchedNotEmpty;
+        boolean isNarrowed = CommandEvaluator.getEvalCat() != null && searchedNotEmpty && (rModel.getContent() != null && rModel.getContent().size()>1);
         hintSep.setVisible(isNarrowed);
         hintLabel.setVisible(isNarrowed);
         shouldBeVisible = shouldBeVisible || isNarrowed;

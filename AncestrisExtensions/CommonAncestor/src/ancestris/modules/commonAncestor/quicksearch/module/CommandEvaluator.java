@@ -97,7 +97,7 @@ public class CommandEvaluator {
         boolean allResults = getProviderCategories(providerModel, commands, provCats);
 
         for (ProviderModel.Category curCat : provCats) {
-            CategoryResult catResult = new CategoryResult(curCat, allResults);
+            CategoryResult catResult = new CategoryResult(curCat, allResults, providerModel.getMaxResult(), providerModel.getAllMaxResult());
             SearchResponse sResponse = Accessor.DEFAULT.createResponse(catResult, sRequest);
             for (SearchProvider provider : curCat.getProviders()) {
                 Task t = runEvaluation(provider, sRequest, sResponse, curCat);
