@@ -103,10 +103,11 @@ public class QuickSearchComboBar extends AbstractQuickSearchComboBar {
      */
     public QuickSearchComboBar(String categoryName, String categoryDisplayName, 
             SearchProvider searchProvider, String commandPrefix, KeyStroke ks,
-            int maxResult, int allMaxResult ) {
+            int maxResult, int allMaxResult , QuickSearchPopup.WidthMode widthMode) {
         super(categoryName, categoryDisplayName, searchProvider, commandPrefix, ks, maxResult, allMaxResult );
 
         initComponents();
+        displayer.setWidthMode(widthMode);
     }
 
     private void initComponents() {

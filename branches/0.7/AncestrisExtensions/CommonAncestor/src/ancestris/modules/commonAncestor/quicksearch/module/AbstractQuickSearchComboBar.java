@@ -63,6 +63,7 @@ import javax.swing.text.JTextComponent;
 import ancestris.modules.commonAncestor.quicksearch.module.ProviderModel.Category;
 import ancestris.modules.commonAncestor.quicksearch.module.ResultsModel.ItemResult;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchProvider;
+import java.awt.event.*;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
@@ -203,6 +204,17 @@ public abstract class AbstractQuickSearchComboBar extends javax.swing.JPanel imp
                 displayer.explicitlyInvoked();
             }
         });
+        
+         // 
+        addComponentListener(new ComponentAdapter (){
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                //Recalculate the variable you mentioned
+                displayer.resizePopup();
+            }
+        });
+        
     }
 
     private void formFocusLost(java.awt.event.FocusEvent evt) {
