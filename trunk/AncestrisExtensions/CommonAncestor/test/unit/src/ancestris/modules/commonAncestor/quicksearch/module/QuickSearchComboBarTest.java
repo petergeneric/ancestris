@@ -1,10 +1,6 @@
 
 package ancestris.modules.commonAncestor.quicksearch.module;
 
-import javax.swing.KeyStroke;
-
-
-
 import junit.framework.TestCase;
 
 /**
@@ -29,7 +25,11 @@ public class QuickSearchComboBarTest extends TestCase {
 
     public void testCreateCombobar() {
         // TODO review the generated test code and remove the default call to fail.
-        AbstractQuickSearchComboBar comboBar = new QuickSearchComboBar("QuickSearchIndividu1", "displayname", null, null, KeyStroke.getKeyStroke("F6"), 7, 30);
+        AbstractQuickSearchComboBar comboBar = new QuickSearchComboBar(
+                "QuickSearchIndividu1", "displayname", 
+                null, null, 
+                javax.swing.KeyStroke.getKeyStroke("F6"), 
+                7, 30, QuickSearchPopup.WidthMode.FIXED);
         //comboBar.displayer.explicitlyInvoked();
         comboBar.evaluateCategory(null, false);
     }

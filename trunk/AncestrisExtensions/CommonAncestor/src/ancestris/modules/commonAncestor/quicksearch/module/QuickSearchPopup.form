@@ -44,6 +44,7 @@
       <SubComponents>
         <Component class="javax.swing.JList" name="jList1">
           <Properties>
+            <Property name="selectionMode" type="int" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <Events>
