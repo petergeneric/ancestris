@@ -149,7 +149,14 @@ class SearchResultRender extends JLabel implements ListCellRenderer {
 
     private boolean isCut (String text, int realWidth) {
         double width = HtmlRenderer.renderHTML(text, resultLabel.getGraphics(), 0, 10, Integer.MAX_VALUE, 20, resultLabel.getFont(), Color.BLACK, HtmlRenderer.STYLE_CLIP, false);
-        return ((int)width) > (realWidth-4);
+        if (popup.getWidthMode() == QuickSearchPopup.WidthMode.FIXED) {            
+            return ((int)width) > (realWidth-4);
+        } else {
+            // je memorise la largeur
+            popup.setItemMaxWidth((int)width);
+            return false;
+        }
+        
     }
 
     private void configRenderer () {
