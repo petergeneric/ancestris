@@ -15,6 +15,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import ancestris.modules.commonAncestor.quicksearch.module.AbstractQuickSearchComboBar;
 import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchComboBar;
+import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchPopup;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -89,9 +90,14 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         searchProvider1.setSamePanel(this);
         //String categoryDisplayName1 = org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.individu1.category.displayName");
         String categoryDisplayName1 = ""; // je n'affiche pas le nom de la categorie pour gagner de la place a l'ecran
+        String commandPrefix1 = "";
         int maxResult = 10;
         int allMaxResult = 10000;
-        AbstractQuickSearchComboBar quickSearchIndividu1 = new QuickSearchComboBar(QUICKSEARCH_CATEGORY_INDIVIDU_1, categoryDisplayName1, searchProvider1, null, null, maxResult, allMaxResult);
+        AbstractQuickSearchComboBar quickSearchIndividu1 = new QuickSearchComboBar(
+                QUICKSEARCH_CATEGORY_INDIVIDU_1, categoryDisplayName1, searchProvider1, 
+                commandPrefix1, null, 
+                maxResult, allMaxResult,
+                QuickSearchPopup.WidthMode.HORIZONTAL_SCOLLBAR);
         jPanelSearch1.add(quickSearchIndividu1, BorderLayout.CENTER);
 
         // Provider individu 2
@@ -99,7 +105,12 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         searchProvider2.setSamePanel(this);
         //String categoryDisplayName2 = org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.individu2.category.displayName");
         String categoryDisplayName2 = ""; // je n'affiche pas le nom de la categorie pour gagner de la place a l'ecran
-        AbstractQuickSearchComboBar quickSearchIndividu2 = new QuickSearchComboBar(QUICKSEARCH_CATEGORY_INDIVIDU_2, categoryDisplayName2, searchProvider2, null, null, maxResult, allMaxResult); //KeyStroke.getKeyStroke("F7")
+        String commandPrefix2 = "";
+        AbstractQuickSearchComboBar quickSearchIndividu2 = new QuickSearchComboBar(
+                QUICKSEARCH_CATEGORY_INDIVIDU_2, categoryDisplayName2, searchProvider2, 
+                commandPrefix2, null, 
+                maxResult, allMaxResult,
+                QuickSearchPopup.WidthMode.HORIZONTAL_SCOLLBAR ); //KeyStroke.getKeyStroke("F7")
         jPanelSearch2.add(quickSearchIndividu2, BorderLayout.CENTER);
 
         // j'intialise la combobox de l'option "marie/femme au centre"

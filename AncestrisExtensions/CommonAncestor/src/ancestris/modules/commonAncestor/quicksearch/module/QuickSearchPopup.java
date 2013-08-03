@@ -86,25 +86,23 @@ public class QuickSearchPopup extends javax.swing.JPanel
     /** text to search for */
     private String searchedText;
     private boolean resultFound = false;
-    private int maxResult = CategoryResult.MAX_RESULTS;
-    private int allMaxResult = CategoryResult.ALL_MAX_RESULTS;
 
     private int catWidth = -1;
     private int resultWidth;
+    private int itemMaxWidth;
+    
+    public enum WidthMode {
+        FIXED,       // comportement d'origine de QuickSearchPopup
+                     // la popup a une largeur de 42 caracteres 
+                     // Des pointilles (ellipsis) sont ajoutés a la fin des items de plus de 42 caracteres
+        HORIZONTAL_SCOLLBAR // la popup a la meme largeur que la combobar
+                            // tous les cararteres des itmes sont affichés
+                            // une scrollbar horizontale est affiche  s'il y a des items plus larges
+    };
+    private WidthMode widthMode = WidthMode.FIXED;
+    
     private Task evalTask;
     private static final RequestProcessor RP = new RequestProcessor(QuickSearchPopup.class);
-
-    /**
-     *
-     * @param comboBar  combobar parent
-     * @param maxResult nombre de resultats maximum affiches par defaut
-     * @param allMaxResult nombre de resultats maximum affiches si l'utilisateur demande plus de resultats
-     */
-    public QuickSearchPopup (AbstractQuickSearchComboBar comboBar, int maxResult, int allMaxResult) {
-        this(comboBar);
-        this.maxResult = maxResult;
-        this.allMaxResult = allMaxResult;
-    }
 
     public QuickSearchPopup (AbstractQuickSearchComboBar comboBar) {
         this.comboBar = comboBar;
@@ -167,6 +165,7 @@ public class QuickSearchPopup extends javax.swing.JPanel
 
     public void maybeEvaluate (String text) {
         this.searchedText = text;
+        itemMaxWidth = 0;
         if (text.length()>0) {
             updateStatusPanel(true);
             updatePopup(true);
@@ -227,6 +226,7 @@ public class QuickSearchPopup extends javax.swing.JPanel
 
         jScrollPane1.setBorder(null);
 
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList1.setFocusable(false);
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -366,6 +366,14 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             }
             if (explicitlyInvoked || !searchedText.isEmpty()) {
                 setVisible(true);
+            }       
+            
+           // ajuste la largeur de jlist1 en fonction de l'item le plus large
+            if (widthMode == WidthMode.HORIZONTAL_SCOLLBAR && jList1.getCellBounds(0, 0) != null) {
+                int width = itemMaxWidth + 10;
+                int height = jList1.getCellBounds(0, 0).height * rModel.getSize()
+                        + jList1.getInsets().top + jList1.getInsets().bottom;
+                jList1.setPreferredSize(new Dimension(width, height));
             }
         } else {
             setVisible(false);
@@ -399,12 +407,47 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         return catWidth;
     }
 
+    /**
+     * calcule une largeur fixe de la colone "result
+     * @return 
+     */
     public int getResultWidth () {
         if (resultWidth <= 0) {
             resultWidth = computeWidth(jList1, 42, 50);
         }
         return resultWidth;
     }
+    
+    public WidthMode getWidthMode () {
+        return widthMode;
+    }
+
+    public void setWidthMode (WidthMode widthMode) {
+        this.widthMode =  widthMode;
+    }
+
+    /**
+     * memorise la largeur de l'item le plus large
+     * Cette methode est appele chaque fois que la comboBar est redimensionnée
+     * @param width 
+     */
+    public void setItemMaxWidth (int width) {
+        if( width > itemMaxWidth) {
+            itemMaxWidth = width;
+        }
+    }
+    
+    /**
+     * fixe la largeur de la popup egale a la largeur de la comboBar
+     */
+    public void resizePopup() {
+        if ( widthMode == WidthMode.HORIZONTAL_SCOLLBAR ) {
+            popupBounds.width = comboBar.getSize().width;
+            setBounds(popupBounds);
+            revalidate();
+        }
+    }
+
 
     /** Implementation of TaskListener, listen to when providers are finished
      * with their searching work
@@ -438,7 +481,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
 //        }
 //        result.setLocation(location);
 
-        int width = getResultWidth() + 3;
+        // je positionne la popup a la meme abscisse que la combobar
         Point location = new Point(comboBar.getX(), comboBar.getBottomLineY() - 1);
         if (SwingUtilities.getWindowAncestor(comboBar) != null) {
             location = SwingUtilities.convertPoint(comboBar, location, lPane);
@@ -458,20 +501,32 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
 
         jList1.setVisibleRowCount(modelSize);
         Dimension preferredSize = jList1.getPreferredSize();
-
-        preferredSize.width = width;
-        preferredSize.height += statusPanel.getPreferredSize().height + 3;
-
-
-        //System.out.print(" modelSize="+modelSize +" updatePopup y="+popupBounds.getY()  );
-        int popupMaxHeight = 600;
-        if (this.getParent() != null ) {
-            popupMaxHeight = this.getParent().getHeight() - (int)popupBounds.getY() -10;
-            //System.out.println(" parent h="+this.getParent().getHeight() + " popupMaxHeight"+popupMaxHeight);
-        } 
-        if (preferredSize.height > popupMaxHeight) {
-            preferredSize.height = popupMaxHeight;
+        
+        // je calcule la largeur de la popup
+        if ( widthMode == WidthMode.FIXED ) {
+            // la popup a une largeur fixe (commportement d'origine de QuickSearchPopup)
+            preferredSize.width = getResultWidth() + 3;
+        } else {
+            // la popup a la meme largeur que la combobar       
+            preferredSize.width = cSize.width;
         }
+        
+        // je calcule la hauteur de la popup
+        preferredSize.height += statusPanel.getPreferredSize().height + 3;       
+        // j'ajoute la hauteur de la scrollbar horizontale 
+        if (jScrollPane1.getHorizontalScrollBar().isVisible()) {
+            preferredSize.height += jScrollPane1.getHorizontalScrollBar().getHeight();
+        }
+        
+        // je limite la hauteur de la popup à la hauteur du composant parent
+        if (this.getParent() != null ) {
+            int popupMaxHeight = getParent().getHeight() - (int)popupBounds.getY() ;
+            if (preferredSize.height > popupMaxHeight) {
+                preferredSize.height = popupMaxHeight;
+            }
+        } 
+
+        // je retroune la taille
         result.setSize(preferredSize);
     }
 
@@ -501,6 +556,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         searchingLabel.setVisible(isInProgress);
         if (comboBar instanceof QuickSearchComboBar) {
             if (isInProgress) {
+                itemMaxWidth = 0;
                 ((QuickSearchComboBar) comboBar).startProgressAnimation();
             } else {
                 ((QuickSearchComboBar) comboBar).stopProgressAnimation();
