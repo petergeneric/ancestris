@@ -22,15 +22,20 @@ public class DataManager implements PlaceManager {
     private ModelAll   releveAllModel = new ModelAll();
     private CompletionProvider completionProvider  = new CompletionProvider();
 
-    //donnés de configuration
-    boolean copyFreeComment = true;
+    //options de copie
+    boolean copyCoteEnabled = true;
+    boolean copyEventDateEnabled = true;
+    boolean copyFreeCommentEnabled = true;
+    boolean copyNotaryEnabled = true;
+    // options de controle
     boolean duplicateControlEnabled = true;
     boolean valueControlEnabled = true;
     
     // données volatiles
     private int lastRecordNo = 0;
-    private String freeComment = "";
     private String defaultCote = "";
+    private String defaultEventDate = "";
+    private String defaultFreeComment = "";
     private String defaultNotary = "";
 
     // previous record
@@ -72,14 +77,22 @@ public class DataManager implements PlaceManager {
     public int createRecord( ModelAbstract model) {
         Record record = model.createRecord();
 
-        if (getCopyFreeCommentEnabled() ) {
-            // je valorise le numero de photo avec la valeur par defaut
-            String defaultValue = this.getDefaultFreeComment();
-            record.setFreeComment(defaultValue);
+        if (getCopyCoteEnabled() ) {
             record.setCote(defaultCote);
+        }
+
+        if (getCopyEventDateEnabled() ) {
+            record.setEventDate(defaultEventDate);
+        }
+
+        if (getCopyFreeCommentEnabled() ) {
+            record.setFreeComment(defaultFreeComment);
+        }
+
+        if (getCopyNotaryEnabled() && record instanceof RecordMisc ) {
             record.setNotary(defaultNotary);
         }
-        
+
         return addRecord(record, true);
     }
 
@@ -215,7 +228,10 @@ public class DataManager implements PlaceManager {
     ///////////////////////////////////////////////////////////////////////////
 
     public final void loadOptions() {
-        copyFreeComment = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("FreeCommentEnabled", "true"));
+        copyCoteEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyCoteEnabled", "true"));
+        copyEventDateEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyEventDateEnabled", "true"));
+        copyFreeCommentEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyFreeCommentEnabled", "true"));
+        copyNotaryEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyNotaryEnabled", "true"));
         duplicateControlEnabled =  Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("DuplicateRecordControlEnabled", "true"));
         valueControlEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("ValueControlEnabled", "true"));
         boolean completion = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("GedcomCompletionEnabled", "true"));
@@ -254,9 +270,22 @@ public class DataManager implements PlaceManager {
         return duplicateControlEnabled;
     }
 
-    public boolean getCopyFreeCommentEnabled() {
-        return copyFreeComment;
+    public boolean getCopyCoteEnabled() {
+        return copyCoteEnabled;
     }
+
+    public boolean getCopyEventDateEnabled() {
+        return copyEventDateEnabled;
+    }
+
+    public boolean getCopyFreeCommentEnabled() {
+        return copyFreeCommentEnabled;
+    }
+
+    public boolean getCopyNotaryEnabled() {
+        return copyNotaryEnabled;
+    }
+
 
     public boolean getNewValueControlEnabled() {
         return valueControlEnabled;
@@ -265,13 +294,29 @@ public class DataManager implements PlaceManager {
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs numero de page
     ///////////////////////////////////////////////////////////////////////////
+    
+//    public String getDefaultCote() {
+//        return defaultCote;
+//    }
+//
+//    public String getDefaultEventDateComment() {
+//        return defaultEventDate;
+//    }
+//
+//    public String getDefaultFreeComment() {
+//        return defaultFreeComment;
+//    }
+//
+//    public String getDefaultNotary() {
+//        return defaultNotary;
+//    }
 
-    public String getDefaultFreeComment() {
-        return freeComment;
+    public void setDefaultEventDate(String text) {
+        defaultEventDate = text;
     }
 
     public void setDefaultFreeComment(String text) {
-        freeComment = text;
+        defaultFreeComment = text;
     }
 
     public void setDefaultCote(String text) {

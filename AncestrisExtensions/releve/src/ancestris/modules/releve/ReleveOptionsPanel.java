@@ -9,7 +9,6 @@ package ancestris.modules.releve;
 import ancestris.app.TreeTopComponent;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.dnd.TreeViewDropTarget;
-import ancestris.modules.releve.editor.StandaloneEditor;
 import genj.tree.TreeView;
 import org.openide.util.NbPreferences;
 
@@ -23,21 +22,34 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     /** Creates new form ConfigPanel */
     public ReleveOptionsPanel() {
         initComponents();
-       
-
-
     }
 
+    /**
+     * charge les valeurs des options
+     * appelé à chaque update de ReleveOptionsPanelController
+     */
     void load() {
-        copyFreeComment.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("FreeCommentEnabled", "true")));
+        jCheckBoxCopyCote.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("CopyCoteEnabled", "true")));
+        jCheckBoxCopyEventDate.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("CopyEventDateEnabled", "true")));
+        jCheckBoxCopyFreeComment.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("CopyFreeCommentEnabled", "true")));
+        jCheckBoxCopyNotary.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("CopyNotaryEnabled", "true")));
+
         jCheckBoxDuplicateRecord.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("DuplicateRecordControlEnabled", "true")));
         jCheckBoxNewValueControl.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("ValueControlEnabled", "true")));
         jCheckBoxGedcomCompletion.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("GedcomCompletionEnabled", "true")));
         jCheckBoxBrowser.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("ImgageBrowserVisible", "false")));
     }
 
+     /**
+     * enregistre les valeurs des options
+     * appelé à chaque applyChanges  de ReleveOptionsPanelController
+     */
     void store() {
-        NbPreferences.forModule(ReleveTopComponent.class).put("FreeCommentEnabled", String.valueOf(copyFreeComment.isSelected()));
+        NbPreferences.forModule(ReleveTopComponent.class).put("CopyCoteEnabled", String.valueOf(jCheckBoxCopyCote.isSelected()));
+        NbPreferences.forModule(ReleveTopComponent.class).put("CopyEventDateEnabled", String.valueOf(jCheckBoxCopyEventDate.isSelected()));
+        NbPreferences.forModule(ReleveTopComponent.class).put("CopyFreeCommentEnabled", String.valueOf(jCheckBoxCopyFreeComment.isSelected()));
+        NbPreferences.forModule(ReleveTopComponent.class).put("CopyNotaryEnabled", String.valueOf(jCheckBoxCopyNotary.isSelected()));
+
         NbPreferences.forModule(ReleveTopComponent.class).put("DuplicateRecordControlEnabled", String.valueOf(jCheckBoxDuplicateRecord.isSelected()));
         NbPreferences.forModule(ReleveTopComponent.class).put("ValueControlEnabled", String.valueOf(jCheckBoxNewValueControl.isSelected()));
         NbPreferences.forModule(ReleveTopComponent.class).put("GedcomCompletionEnabled", String.valueOf(jCheckBoxGedcomCompletion.isSelected()));
@@ -61,19 +73,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         }
     }
 
-//    public boolean getCopyFreeComment() {
-//        return copyFreeComment.isSelected();
-//    }
-//
-//    public boolean getDuplicateControl() {
-//        return jCheckBoxDuplicateRecord.isSelected();
-//    }
-//
-//    public boolean getNewValueControlEnabled() {
-//        return jCheckBoxNewValueControl.isSelected();
-//    }
-
-    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -90,7 +89,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jCheckBoxDuplicateRecord = new javax.swing.JCheckBox();
         jCheckBoxNewValueControl = new javax.swing.JCheckBox();
         jCheckBoxGedcomCompletion = new javax.swing.JCheckBox();
-        copyFreeComment = new javax.swing.JCheckBox();
+        jCheckBoxCopyFreeComment = new javax.swing.JCheckBox();
         jButtonActivateDnd = new javax.swing.JButton();
         jButtonConfigEditor = new javax.swing.JButton();
         jPanelExludeCompletion = new javax.swing.JPanel();
@@ -98,6 +97,9 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jButtonLastNameCompletion = new javax.swing.JButton();
         jButtonOccupationCompletion = new javax.swing.JButton();
         jCheckBoxBrowser = new javax.swing.JCheckBox();
+        jCheckBoxCopyEventDate = new javax.swing.JCheckBox();
+        jCheckBoxCopyNotary = new javax.swing.JCheckBox();
+        jCheckBoxCopyCote = new javax.swing.JCheckBox();
         fillerPanelHorizontal = new javax.swing.JPanel();
         fillerPanelVertical = new javax.swing.JPanel();
 
@@ -142,13 +144,13 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         OptionsPanel.add(jCheckBoxGedcomCompletion, gridBagConstraints);
 
-        copyFreeComment.setSelected(true);
-        copyFreeComment.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.copyFreeComment.text")); // NOI18N
+        jCheckBoxCopyFreeComment.setSelected(true);
+        jCheckBoxCopyFreeComment.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxCopyFreeComment.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        OptionsPanel.add(copyFreeComment, gridBagConstraints);
+        OptionsPanel.add(jCheckBoxCopyFreeComment, gridBagConstraints);
 
         jButtonActivateDnd.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonActivateDnd.text")); // NOI18N
         jButtonActivateDnd.addActionListener(new java.awt.event.ActionListener() {
@@ -158,7 +160,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         OptionsPanel.add(jButtonActivateDnd, gridBagConstraints);
@@ -171,7 +173,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         OptionsPanel.add(jButtonConfigEditor, gridBagConstraints);
@@ -213,9 +215,33 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         OptionsPanel.add(jCheckBoxBrowser, gridBagConstraints);
+
+        jCheckBoxCopyEventDate.setSelected(true);
+        jCheckBoxCopyEventDate.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxCopyEventDate.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        OptionsPanel.add(jCheckBoxCopyEventDate, gridBagConstraints);
+
+        jCheckBoxCopyNotary.setSelected(true);
+        jCheckBoxCopyNotary.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxCopyNotary.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        OptionsPanel.add(jCheckBoxCopyNotary, gridBagConstraints);
+
+        jCheckBoxCopyCote.setSelected(true);
+        jCheckBoxCopyCote.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxCopyCote.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        OptionsPanel.add(jCheckBoxCopyCote, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -308,7 +334,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel OptionsPanel;
-    private javax.swing.JCheckBox copyFreeComment;
     private javax.swing.JPanel fillerPanelHorizontal;
     private javax.swing.JPanel fillerPanelVertical;
     private javax.swing.JButton jButtonActivateDnd;
@@ -317,6 +342,10 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JButton jButtonLastNameCompletion;
     private javax.swing.JButton jButtonOccupationCompletion;
     private javax.swing.JCheckBox jCheckBoxBrowser;
+    private javax.swing.JCheckBox jCheckBoxCopyCote;
+    private javax.swing.JCheckBox jCheckBoxCopyEventDate;
+    private javax.swing.JCheckBox jCheckBoxCopyFreeComment;
+    private javax.swing.JCheckBox jCheckBoxCopyNotary;
     private javax.swing.JCheckBox jCheckBoxDuplicateRecord;
     private javax.swing.JCheckBox jCheckBoxGedcomCompletion;
     private javax.swing.JCheckBox jCheckBoxNewValueControl;

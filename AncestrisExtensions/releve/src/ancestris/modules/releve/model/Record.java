@@ -16,7 +16,7 @@ public abstract class Record implements Cloneable{
     protected FieldPicture freeComment;
     protected FieldDate eventDate;
     protected FieldComment generalComment;
-    protected FieldComment notary;
+    protected FieldNotary notary;
     protected FieldSimpleValue parish;
     private Participant indi;
     private Participant wife;
@@ -426,7 +426,7 @@ public abstract class Record implements Cloneable{
         return generalComment;
     }
 
-    public FieldSimpleValue getNotary() {
+    public FieldNotary getNotary() {
         return notary;
     }
 

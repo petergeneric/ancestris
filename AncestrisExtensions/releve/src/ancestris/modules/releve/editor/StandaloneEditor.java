@@ -3,6 +3,7 @@ package ancestris.modules.releve.editor;
 import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.PlaceManager;
+import ancestris.modules.releve.model.Record;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -59,9 +60,8 @@ public class StandaloneEditor extends javax.swing.JFrame {
         initComponents();
         ImageIcon icon = new ImageIcon(StandaloneEditor.class.getResource("/ancestris/modules/releve/images/Releve.png"));
         setIconImage(icon.getImage());
-        // J'applique un poids=1 pour que seule la largeur du composant de gauche soit mdofiées quand on change la taille de la fenetre
+        // J'applique un poids=1 pour que seule la largeur du composant de gauche soit modifiée quand on change la taille de la fenetre
         jSplitPane1.setResizeWeight(1.0);
-
 
         //setAlwaysOnTop(true);
         // je configure les editeurs
@@ -69,13 +69,12 @@ public class StandaloneEditor extends javax.swing.JFrame {
         marriageEditor.setStandaloneMode();
         deathEditor.setStandaloneMode();
         miscEditor.setStandaloneMode();
-        
+                
+        // je configure la taille de la fenetre
         browserVisible = Boolean.parseBoolean(NbPreferences.forModule(StandaloneEditor.class).get("ImgageBrowserVisible", "false"));
         editorWidth = Integer.parseInt(NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorWidth", "300"));
-
-        // je configure la taille de la fenetre
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         String size = NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorSize", "300,450,0,0");
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         String[] dimensions = size.split(",");
         if ( dimensions.length >= 4 ) {
             int width = Integer.parseInt(dimensions[0]);
@@ -101,16 +100,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
         // j'applique la taille de la fenetre avant de dimensionner jSplitPane1
         setBounds();
-//        validate();
-
-//        // je dimensionne le panneau droit de jSplitPane1
-//        if (browserVisible) {
-//            if (jSplitPane1.getWidth()  > editorWidth ) {
-//                jSplitPane1.setDividerLocation(jSplitPane1.getWidth() - editorWidth - jSplitPane1.getDividerSize() );
-//            }
-//        } else {
-//
-//        }
+        
         // Image browser
         String imageDirectory = NbPreferences.forModule(StandaloneEditor.class).get("ImageDirectory", "");
         File f = new File(imageDirectory);
@@ -180,14 +170,50 @@ public class StandaloneEditor extends javax.swing.JFrame {
      * @param releveDeathModel
      * @param releveMiscModel
      */
-    public void setDataManager(DataManager dataManager, PlaceManager placeManager, final MenuCommandProvider menuCommandProvider) {
+    public void setDataManager(DataManager dataManager, PlaceManager placeManager, final MenuCommandProvider menuCommandProvider,
+            int recordBirthIndex, int recordMarriageIndex, int recordDeathIndex, int recordMiscIndex, int recordAllIndex, int selectedPanel ) {
         birthEditor.setModel(dataManager, DataManager.ModelType.birth, placeManager, menuCommandProvider);
         marriageEditor.setModel(dataManager, DataManager.ModelType.marriage, placeManager, menuCommandProvider);
         deathEditor.setModel(dataManager, DataManager.ModelType.death, placeManager, menuCommandProvider);
         miscEditor.setModel(dataManager, DataManager.ModelType.misc, placeManager, menuCommandProvider);
 
-        // je selection le premier releve
-        selectRecord(0, 0, 0, 0, 0);
+        // je selection le releve courant
+        if( selectedPanel == 4 )  {
+            // comme le panel 4 n'existe pas dans cet editeur, j'affiche le panel correspondant au type de releve selectionnée
+            Record record = dataManager.getReleveAllModel().getRecord(recordAllIndex);
+                if (record != null) {
+                switch (record.getType()) {
+                    case birth:
+                        selectedPanel = 0;
+                        recordBirthIndex = dataManager.getModel(DataManager.ModelType.birth).getIndex(record);
+                        break;
+                    case marriage:
+                        selectedPanel = 1;
+                        recordMarriageIndex = dataManager.getModel(DataManager.ModelType.marriage).getIndex(record);
+                        break;
+                    case death:
+                        selectedPanel = 2;
+                        recordDeathIndex = dataManager.getModel(DataManager.ModelType.death).getIndex(record);
+                        break;
+                    case misc:
+                        selectedPanel = 3;
+                        recordMiscIndex = dataManager.getModel(DataManager.ModelType.misc).getIndex(record);
+                        break;
+                    default:
+                        selectedPanel = 0;
+                        recordBirthIndex = dataManager.getModel(DataManager.ModelType.birth).getIndex(record);
+                        break;
+                }
+            }
+        } 
+
+        // je selectionne le panel
+        jTabbedPane1.setSelectedIndex(selectedPanel);
+        // je selectionne le relevé
+        birthEditor.selectRecord(recordBirthIndex);
+        marriageEditor.selectRecord(recordMarriageIndex);
+        deathEditor.selectRecord(recordDeathIndex);
+        miscEditor.selectRecord(recordMiscIndex);
 
         // je crée les raccourcis pour créer un nouveau relevé
         jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), jTabbedPane1);
@@ -299,24 +325,6 @@ public class StandaloneEditor extends javax.swing.JFrame {
             setBounds(x,y, width, height);
             validate();
         }
-    }
-
-    /**
-     * selectionne les releves a afficher dans l'editeur
-     *
-     * @param recordBirthIndex
-     * @param recordMarriageIndex
-     * @param recordDeathIndex
-     * @param recordMiscIndex
-     */
-    public void selectRecord(int recordBirthIndex, int recordMarriageIndex, int recordDeathIndex, int recordMiscIndex, int selectedPanel) {
-        birthEditor.selectRecord(recordBirthIndex);
-        marriageEditor.selectRecord(recordMarriageIndex);
-        deathEditor.selectRecord(recordDeathIndex);
-        miscEditor.selectRecord(recordMiscIndex);
-        // je selectionne l'onglet
-        jTabbedPane1.setSelectedIndex(selectedPanel);
-
     }
 
    @SuppressWarnings("unchecked")

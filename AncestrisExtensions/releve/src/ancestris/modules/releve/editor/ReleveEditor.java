@@ -20,6 +20,7 @@ import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.DataManager.ModelType;
 import ancestris.modules.releve.model.FieldEventType;
+import ancestris.modules.releve.model.FieldNotary;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.ActionEvent;
@@ -356,9 +357,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      * 
      */
     private void copyPreviousRecordField() {
-        // je recupere le releve precedent
-        Record previousRecord = recordModel.getPreviousRecord(recordModel.getRecord(currentRecordIndex));
-
+        // je recupere le dernier releve créé
+        //Record previousRecord = recordModel.getPreviousRecord(recordModel.getRecord(currentRecordIndex));
+        Record previousRecord = dataManager.getModel(ModelType.all).getPreviousRecord(recordModel.getRecord(currentRecordIndex));
         if (previousRecord == null) {
             // j'emets un beep
             Toolkit.getDefaultToolkit().beep();
@@ -378,10 +379,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             parent = parent.getParent();
         }
         Bean bean = (Bean) parent;
-        // je recupere le champ qui a le focus
+        // je recupere le champ du meme type dans le releve precedent
         Field previousField = previousRecord.getField(bean.getFieldType());
         // je copie la donnée du meme champ du releve precedent dans le bean
-        // Attention : je ne copie pas la donnée dans le champ du releve courant pour
+        // Attention : je ne copie pas la donnée directement dans le champ du releve courant pour
         // que les controles puissent s'effectuer comme si l'utilisateur avait saisi
         // la nouvelle valeur dans le bean
         bean.replaceValue(previousField);
@@ -598,7 +599,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                             break;
 
                         case notary:
-                            bean = new BeanSimpleValue();
+                            bean = new BeanNotary(dataManager.getCompletionProvider());
                             break;
                     }
 
@@ -913,6 +914,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     case eventType:
                         completionList = dataManager.getCompletionProvider().getEventTypes(IncludeFilter.ALL);
                         break;
+                    case notary:
+                        completionList = dataManager.getCompletionProvider().getNotaries(IncludeFilter.ALL);
+                        break;
 //                    case indiPlace:
 //                    case wifePlace:
 //                        completionList = dataManager.getCompletionProvider().getPlaces();
@@ -1026,6 +1030,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     //je mets à jour la completion des types d'évènement
                     dataManager.getCompletionProvider().updateEventType((FieldEventType)bean.getField(), oldValue);
                     break;
+                case notary:
+                    dataManager.getCompletionProvider().updateNotary((FieldNotary)bean.getField(), oldValue);
+                    break;
             }
 
             // Si l'utilisateur vient de changer la date ou le nom de l'individu
@@ -1053,16 +1060,20 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 }
             }
 
-            // je memorise la nouvelle valeur du numero de photo
+            // je memorise les valeurs
+            if (fieldType == Field.FieldType.eventDate && dataManager.getCopyEventDateEnabled() == true  ) {
+                // je copie le numero de photo dans la valeur par defaut
+                dataManager.setDefaultEventDate(bean.getField().toString());
+            }
             if (fieldType == Field.FieldType.freeComment && dataManager.getCopyFreeCommentEnabled() == true  ) {
                 // je copie le numero de photo dans la valeur par defaut
                 dataManager.setDefaultFreeComment(bean.getField().toString());
             }
-            if ( fieldType == Field.FieldType.notary  && dataManager.getCopyFreeCommentEnabled() == true  ) {
+            if ( fieldType == Field.FieldType.notary  && dataManager.getCopyNotaryEnabled() == true  ) {
                 // je copie le notaire dans la valeur par defaut
                 dataManager.setDefaultNotary(bean.getField().toString());
             }
-            if ( fieldType == Field.FieldType.cote  && dataManager.getCopyFreeCommentEnabled() == true  ) {
+            if ( fieldType == Field.FieldType.cote  && dataManager.getCopyCoteEnabled() == true  ) {
                 // je copie la cote dans la valeur par defaut
                 dataManager.setDefaultCote(bean.getField().toString());
             }

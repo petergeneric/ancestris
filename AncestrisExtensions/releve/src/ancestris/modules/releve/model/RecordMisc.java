@@ -12,7 +12,7 @@ public class RecordMisc extends Record {
         super();
 
         eventType           = new FieldEventType();
-        notary              = new FieldComment();
+        notary              = new FieldNotary();
         
         getIndi().firstName       = new FieldSimpleValue();
         getIndi().lastName        = new FieldSimpleValue();

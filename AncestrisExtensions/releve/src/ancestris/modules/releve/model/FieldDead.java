@@ -7,6 +7,7 @@ package ancestris.modules.releve.model;
 public class FieldDead extends Field {
 
     private boolean value;
+    static String deadLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead").toLowerCase();
 
     public boolean getState() {
         return value;
@@ -23,7 +24,8 @@ public class FieldDead extends Field {
 
     @Override
     public void setValue(Object value) {
-        if (value.toString().toLowerCase().startsWith(java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead").toLowerCase())
+        if (value.toString().toLowerCase().startsWith(deadLabel)
+                || "dead".equals(value.toString())
                 || "true".equals(value.toString())) {
              this.value = true;
         } else {

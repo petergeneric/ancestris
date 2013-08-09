@@ -224,11 +224,7 @@ class MergeModelMiscWill extends MergeModel {
      * @param record
      */
     protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom) throws Exception {
-        super(record, gedcom);
-        this.currentIndi = null;
-        addRowIndi();
-        addRowMarried(null);
-        addRowParents(null);
+        this(record, gedcom, (Indi) null, (Fam) null, (Fam) null);
     }
 
     /**
@@ -239,11 +235,7 @@ class MergeModelMiscWill extends MergeModel {
      * @param record
      */
     protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom, Indi indi, Fam parentfam) throws Exception {
-        super(record, gedcom);
-        this.currentIndi = indi;
-        addRowIndi();
-        addRowMarried(null);
-        addRowParents(parentfam);
+        this(record, gedcom, indi, (Fam) null, parentfam);
     }
 
     /**
@@ -289,11 +281,6 @@ class MergeModelMiscWill extends MergeModel {
         // j'affiche les parents de l'individu
         addRowFather(father);
         addRowMother(mother);
-
-        // j'affiche la famille de l'individu
-
-
-
     }
 
     private void addRowIndi() throws Exception {
