@@ -223,34 +223,22 @@ class MergeModelMiscOther extends MergeModel {
             // je recherche la famille avec l'ex conjoint
             List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithParticipantMarried(mergeRecord, MergeParticipantType.participant2, gedcom);
 
-            // je cherche les familles des parents compatibles avec le releve
+            // je cherche les familles des parents de participant2 compatibles avec le releve
             List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeParticipantType.participant2, gedcom);
 
             if (!marriedFamilies.isEmpty()) {
                 for (Fam family : marriedFamilies) {
-                    if (mergeRecord.getIndi().getSex() == PropertySex.MALE) {
-                        Indi husband = family.getHusband();
-                        Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelMiscOther(mergeRecord, MergeParticipantType.participant2, gedcom, husband, family, husbandParentFamily));
+                    Indi husband = family.getHusband();
+                    Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
+                    models.add(new MergeModelMiscOther(mergeRecord, MergeParticipantType.participant2, gedcom, husband, family, husbandParentFamily));
 
-                        if (husbandParentFamily == null) {
-                            // j'ajoute un nouvel individu avec les familles compatibles
-                            for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelMiscOther(mergeRecord, MergeParticipantType.participant2, gedcom, husband, family, parentFamily));
-                            }
-                        }
-                    } else {
-                        Indi wife = family.getWife();
-                        Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelMiscOther(mergeRecord, MergeParticipantType.participant2, gedcom, wife, family, wifeParentFamily));
-
-                        if (wifeParentFamily == null) {
-                            // j'ajoute un nouvel individu avec les familles compatibles
-                            for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelMiscOther(mergeRecord, MergeParticipantType.participant2, gedcom, wife, family, parentFamily));
-                            }
+                    if (husbandParentFamily == null) {
+                        // j'ajoute un nouvel individu avec les familles compatibles
+                        for (Fam parentFamily : parentFamilies) {
+                            models.add(new MergeModelMiscOther(mergeRecord, MergeParticipantType.participant2, gedcom, husband, family, parentFamily));
                         }
                     }
+                    
                 }
 
             } else {
@@ -356,40 +344,26 @@ class MergeModelMiscOther extends MergeModel {
      */
     protected MergeModelMiscOther(MergeRecord record, MergeParticipantType participantType, Gedcom gedcom, Indi indi, Fam marriedFamily, Fam parentFamily) throws Exception {
         super(record, participantType, gedcom);
-        addRowEvent(indi);
-        addRowIndi(indi);
-        addRowMarried(indi, marriedFamily);
-        addRowParents(parentFamily);
-    }
-    
-    /**
-     * le constucteur initialise les données du modele
-     * en comparant les champs du releve et les
-     *
-     * @param indi
-     * @param record
-     */
-//    protected MergeModelMiscOther(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
-//        super(record, gedcom);
-//        this.currentIndi = null;
-//
-//        // j'affiche l'individu
-//        addRowIndi();
-//        // j'affiche l'ex conjoint
-//        addRowMarried(null);
-//
-//        // j'affiche la famille des parents de l'individu
-//        addRowSeparator();
-//        addRow(RowType.IndiParentFamily, record, null);
-//        addRow(RowType.IndiParentMarriageDate, participant.getParentMarriageDate(), null);
-//
-//        // j'affiche les parents de l'individu
-//        addRowFather(father);
-//        addRowMother(mother);
-//
-//        // j'affiche la famille de l'individu
-//    }
+        if( marriedFamily != null && participant.getSex()== PropertySex.FEMALE) {
+            // l'epouse est affichée en premier
+            addRowEvent(indi);
+            addRowIndi(marriedFamily.getWife());
+            addRowMarried(marriedFamily);
+            addRowParents(parentFamily);
+        } else {
+            addRowEvent(indi);
+            addRowIndi(indi);
+            addRowMarried(marriedFamily);
+            addRowParents(parentFamily);
+        }
 
+    }
+
+    /**
+     * ajoute l'evenement s'il s'agit du participant 1
+     * @param currentIndi
+     * @throws Exception
+     */
     private void addRowEvent(Indi currentIndi) throws Exception {
 
        if (currentIndi != null) {
@@ -411,8 +385,7 @@ class MergeModelMiscOther extends MergeModel {
                addRowSeparator();
            } else {
                // participant 2
-               // j'affiche le lien avec le participant 1
-
+               // rien à faire
            }
 
         } else {
@@ -431,10 +404,7 @@ class MergeModelMiscOther extends MergeModel {
                addRowSeparator();
             } else {
                // participant 2
-               // j'affiche le lien avec le participant 1
-               
-
-
+               // rien à faire
            }
         }
     }
@@ -514,7 +484,7 @@ class MergeModelMiscOther extends MergeModel {
      * @param marriedFamily
      * @throws Exception
      */
-    private void addRowMarried(Indi currentIndi, Fam marriedFamily ) throws Exception {
+    private void addRowMarried(Fam marriedFamily ) throws Exception {
         if (! participant.getMarriedLastName().isEmpty() || ! participant.getMarriedFirstName().isEmpty()) {
             // j'affiche un separateur
             addRowSeparator();
@@ -524,7 +494,7 @@ class MergeModelMiscOther extends MergeModel {
                 addRow(RowType.IndiMarriedMarriageDate, participant.getMarriedMarriageDate(), marriedFamily.getMarriageDate());
 
                 Indi married;
-                if ( currentIndi.getSex() == PropertySex.MALE) {
+                if ( participant.getSex() == PropertySex.MALE) {
                     married = marriedFamily.getWife();
                 } else {
                     married = marriedFamily.getHusband();
@@ -811,7 +781,7 @@ class MergeModelMiscOther extends MergeModel {
             }
         }
 
-        // je retourn la propriete pour faire une association entre les particpants
+        // je retourne la propriete pour faire une association entre les particpants
         if (participantType == MergeParticipantType.participant1) {
             return eventProperty;
         } else {

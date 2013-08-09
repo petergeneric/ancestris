@@ -507,10 +507,8 @@ class MergeModelDeath extends MergeModel {
                 propertyDate.setValue(record.getIndi().getDeathDate().getValue());
             }
 
-            // je copie le domicile dans le lieu du deces
-            if (isChecked(RowType.IndiResidence)) {
-                copyPlace(record.getIndi().getResidence(),  deathProperty);
-            }
+            // je copie le lieu de l'acte dans
+            copyPlace(record.getEventPlace(),  deathProperty);
             
             // je copie la source du deces du releve dans l'individu
             if (isChecked(RowType.EventSource)) {
@@ -536,6 +534,11 @@ class MergeModelDeath extends MergeModel {
                     propertyNote.setValue(comment);
                 }
             }
+        }
+
+        // je copie la profession deu defunt
+        if (isChecked(RowType.IndiOccupation)) {
+            copyOccupation(currentIndi, record.getIndi().getOccupation(), record.getIndi().getResidence(), record);
         }
 
 

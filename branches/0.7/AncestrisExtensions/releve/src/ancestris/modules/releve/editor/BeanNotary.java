@@ -4,7 +4,7 @@ import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.FieldSimpleValue;
+import ancestris.modules.releve.model.FieldNotary;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -16,23 +16,20 @@ import javax.swing.KeyStroke;
  *
  * @author Michel
  */
-public class BeanLastName extends Bean implements CompletionListener {
-    private Java2sAutoTextField cLast;
-    CompletionProvider completionProvider;
+public class BeanNotary extends Bean implements CompletionListener {
+    private Java2sAutoComboBox jCombobox;
+    private CompletionProvider completionProvider;
 
-    public BeanLastName(CompletionProvider completionProvider) {
+    public BeanNotary(CompletionProvider completionProvider) {
         this.completionProvider = completionProvider;
-        completionProvider.addLastNamesListener(this);
+        completionProvider.addNotariesListener(this);
         setLayout(new java.awt.BorderLayout());
-        cLast = new Java2sAutoTextField(completionProvider.getLastNames(IncludeFilter.INCLUDED));
-        cLast.setStrict(false);        
-        cLast.setCaseSensitive(false);
-        cLast.setUpperAllChar(true);
-        cLast.setLocale(completionProvider.getLocale()); //Locale.UK
-        cLast.addChangeListener(changeSupport);
-        // Layout the bean
-        add(cLast, java.awt.BorderLayout.CENTER);
-        defaultFocus = cLast;
+        jCombobox = new Java2sAutoComboBox(completionProvider.getNotaries(IncludeFilter.INCLUDED));
+        jCombobox.setStrict(false);
+        jCombobox.setUpperAllFirstChar(true);
+        jCombobox.addChangeListener(changeSupport);
+        add(jCombobox, java.awt.BorderLayout.CENTER);
+        defaultFocus = jCombobox;
     }
 
     /**
@@ -41,11 +38,12 @@ public class BeanLastName extends Bean implements CompletionListener {
     @Override
     public void setFieldImpl() {
 
-        final FieldSimpleValue name = (FieldSimpleValue) getField();
-        if (name == null) {
-            cLast.setText("");
+        final FieldNotary notaryField = (FieldNotary) getField();
+        if (notaryField == null) {
+            // je n'affiche rien
+            jCombobox.getEditor().setItem("");
         } else {
-            cLast.setText(name.toString());
+            jCombobox.getEditor().setItem(notaryField.toString());
         }
         
         // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
@@ -56,18 +54,19 @@ public class BeanLastName extends Bean implements CompletionListener {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 // restaure la valeur
-                cLast.setText(name.toString());
+                jCombobox.getEditor().setItem(notaryField.toString());
             }
         });
     }
 
     @Override
     protected void replaceValueImpl(Field field) {
-       final FieldSimpleValue name = (FieldSimpleValue) field;
-        if (name == null) {
-            cLast.setText("");
+       final FieldNotary notaryField = (FieldNotary) field;
+        if (notaryField == null) {
+            // je n'affiche rien
+            jCombobox.getEditor().setItem("");
         } else {
-            cLast.setText(name.toString());
+            jCombobox.getEditor().setItem(notaryField.toString());
         }
     }
 
@@ -77,16 +76,16 @@ public class BeanLastName extends Bean implements CompletionListener {
     @Override
     protected void commitImpl() {
 
-        FieldSimpleValue fieldName = (FieldSimpleValue) getField();
+        FieldNotary fieldNotary = (FieldNotary) getField();
 
-        // je supprime les espaces aux extremites
-        String lastName = cLast.getText().trim();
+        // je supprime les espaces aux extremetes
+        String value = jCombobox.getEditor().getItem().toString().trim();
 
-        //last = last.toUpperCase();
-        cLast.setText(lastName);
+        // j'enregistre les valeurs dans la variable field
+        fieldNotary.setValue(value.trim());
 
-        // j'enregistre la nouvelle valeur
-        fieldName.setValue( lastName);
+        // j'affiche la valeur mise en forme
+        jCombobox.getEditor().setItem(fieldNotary.toString());
     }
 
     /**
@@ -95,7 +94,7 @@ public class BeanLastName extends Bean implements CompletionListener {
      */
     @Override
     public void removeNotify() {
-        completionProvider.removeLastNamesListener(this);
+        completionProvider.removeNotariesListener(this);
         super.removeNotify();
     }
 
@@ -106,6 +105,7 @@ public class BeanLastName extends Bean implements CompletionListener {
      */
     @Override
     public void includedKeyUpdated(List<String> keyList) {
-        cLast.setDataList(keyList);
+        jCombobox.setDataList(keyList);
     }
+
 }

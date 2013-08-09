@@ -17,6 +17,7 @@ public class CompletionProvider implements GedcomFileListener {
     private FirstNameCompletionSet firstNames = new FirstNameCompletionSet();
     private LastNameCompletionSet lastNames = new LastNameCompletionSet();
     private OccupationCompletionSet occupations = new OccupationCompletionSet();
+    private NotaryCompletionSet notaries = new NotaryCompletionSet();
     private PlaceCompletionSet places = new PlaceCompletionSet();
     private CompletionSet<Field> eventTypes = new CompletionSet<Field>();
 
@@ -102,6 +103,8 @@ public class CompletionProvider implements GedcomFileListener {
         occupations.add(record.getWitness3Occupation());
         occupations.add(record.getWitness4Occupation());
 
+        notaries.add(record.getNotary());
+
         places.add(record.getIndiBirthPlace());
         places.add(record.getIndiResidence());
         places.add(record.getIndiMarriedResidence());
@@ -170,8 +173,6 @@ public class CompletionProvider implements GedcomFileListener {
         
         // Indi Occupation
         occupations.remove(record.getIndiOccupation());
-        // Indi Occupation
-        occupations.remove(record.getIndiOccupation());
         occupations.remove(record.getIndiMarriedOccupation());
         occupations.remove(record.getIndiFatherOccupation());
         occupations.remove(record.getIndiMotherOccupation());
@@ -185,7 +186,9 @@ public class CompletionProvider implements GedcomFileListener {
         occupations.remove(record.getWitness2Occupation());
         occupations.remove(record.getWitness3Occupation());
         occupations.remove(record.getWitness4Occupation());
-        
+
+        notaries.remove(record.getNotary());
+
         // places
         //Indi places
         places.remove(record.getIndiBirthPlace());
@@ -322,10 +325,10 @@ public class CompletionProvider implements GedcomFileListener {
             places.addGedcom(gedcomField, place);
         }
 
-        firstNames.fireListener();
-        lastNames.fireListener();
-        occupations.fireListener();
-        places.fireListener();
+        firstNames.fireIncludedUpdateListener();
+        lastNames.fireIncludedUpdateListener();
+        occupations.fireIncludedUpdateListener();
+        places.fireIncludedUpdateListener();
 
         // je crée une statistique des sexes/ prénom pour les prénoms du gedcom
         for(Indi indi : gedcom.getIndis()) {
@@ -371,10 +374,10 @@ public class CompletionProvider implements GedcomFileListener {
             places.removeGedcom(gedcomField, place);
         }
 
-        firstNames.fireListener();
-        lastNames.fireListener();
-        occupations.fireListener();
-        places.fireListener();
+        firstNames.fireIncludedUpdateListener();
+        lastNames.fireIncludedUpdateListener();
+        occupations.fireIncludedUpdateListener();
+        places.fireIncludedUpdateListener();
         
         // je vide la statistique des sexes/ prénom des prénoms du gedcom
         gedcomFirstNameSex.clear();
@@ -467,6 +470,13 @@ public class CompletionProvider implements GedcomFileListener {
     }
 
     /**
+     * retourne les professions triées par ordre alphabétique
+     */
+    public List<String> getNotaries(IncludeFilter filter) {
+       return notaries.getKeys(filter);
+    }
+
+    /**
      * retourne les tags des types d'evenement triées par ordre alphabétique
      */
     public List<String> getEventTypes(IncludeFilter filter) {
@@ -526,6 +536,19 @@ public class CompletionProvider implements GedcomFileListener {
        occupations.removeListener(listener);
     }
 
+    /**
+     * ajoute un listener
+     */
+    public void addNotariesListener(CompletionListener listener) {
+       notaries.addListener(listener);
+    }
+
+    /**
+     * supprime un listner
+     */
+    public void removeNotariesListener(CompletionListener listener) {
+       notaries.removeListener(listener);
+    }
     /**
      * ajoute un listener
      */
@@ -591,6 +614,15 @@ public class CompletionProvider implements GedcomFileListener {
         }
         if ( field.toString().isEmpty()==false) {
             occupations.add(field);
+        }
+    }
+
+    public void updateNotary(FieldNotary field, String oldValue) {
+        if (oldValue != null && ! oldValue.isEmpty()) {
+            notaries.remove(field, oldValue);
+        }
+        if ( field.toString().isEmpty()==false) {
+            notaries.add(field);
         }
     }
 
@@ -753,7 +785,7 @@ public class CompletionProvider implements GedcomFileListener {
          */
         private void loadExclude() {
             setExclude(loadExcludeCompletion(CompletionType.firstName));
-            fireListener();
+            fireIncludedUpdateListener();
         }
 
         /**
@@ -828,7 +860,7 @@ public class CompletionProvider implements GedcomFileListener {
          */
         private void loadExclude() {
             setExclude(loadExcludeCompletion(CompletionType.lastName));
-            fireListener();
+            fireIncludedUpdateListener();
         }
         
         public void add( Field lastNameField) {
@@ -884,7 +916,7 @@ public class CompletionProvider implements GedcomFileListener {
          */
         private void loadExclude() {
             setExclude(loadExcludeCompletion(CompletionType.occupation));
-            fireListener();
+            fireIncludedUpdateListener();
         }
 
         public void add( Field occupationField) {
@@ -925,6 +957,42 @@ public class CompletionProvider implements GedcomFileListener {
         }
     }
 
+    /**
+     * Liste contenant les notaires avec les "Field" ou ils sont utilises
+     */
+    private class NotaryCompletionSet extends CompletionSet<Field> {
+
+        public NotaryCompletionSet() {
+        }
+
+        public void add( FieldNotary notaryField) {
+            if ( notaryField != null && notaryField.isEmpty()==false ) {
+                super.add(notaryField.toString(), notaryField, true);
+            }
+        }
+
+        public void remove(FieldNotary notaryField) {
+            if (notaryField != null) {
+                remove(notaryField, notaryField.toString(), true);
+            }
+        }
+
+        public void remove(FieldNotary notaryField, String oldNotaryValue ) {
+            remove(notaryField, oldNotaryValue, true );
+        }
+
+        private void remove(FieldNotary notaryField, String oldNotaryValue, boolean fireListeners) {
+            if (oldNotaryValue != null && notaryField != null) {
+                super.remove(oldNotaryValue, notaryField, fireListeners);
+            }
+        }
+
+        @Override
+        public void removeAll() {
+            super.removeAll();
+        }
+    }
+
 
     /**
      * Liste contenant les lieux avec les "Field" ou ils sont utilises
@@ -939,7 +1007,7 @@ public class CompletionProvider implements GedcomFileListener {
          */
         private void loadExclude() {
             setExclude(loadExcludeCompletion(CompletionType.place));
-            fireListener();
+            fireIncludedUpdateListener();
         }
 
         public void add( Field placeField) {
@@ -1048,33 +1116,32 @@ public class CompletionProvider implements GedcomFileListener {
          * @return whether the reference was actually added (could have been known already)
          */
         private boolean add(String key, REF reference, boolean fireListeners) {
-            // null is ignored
             if (key == null || key.equals("")) {
                 return false;
             }
-            // lookup
+            // je verifie si une reference de cette valeur existe déjà dans key2references
             Set<REF> references = key2references.get(key);
             if (references == null) {
+                // j'ajoute une reference dans key2references
                 references = new HashSet<REF>();
                 key2references.put(key, references);
-                if (fireListeners) {
-                    fireListener();
-                }
-            }
-            // safety check for reference==null - might be
-            // and still was necessary to keep key
-            if (reference == null) {
-                return false;
-            }
-            // add
-            if (!references.add(reference)) {
-                return false;
             }
 
-            if ( !excluded.contains(key) && !included.contains(key))  {
-                included.add(key);
+            // j'ajoute la valeur dans la reference
+            boolean addedInReference  = references.add(reference);
+            if (addedInReference) {
+                if ( !excluded.contains(key) && !included.contains(key))  {
+                    // j'ajoute la valeur dans included
+                    boolean added = included.add(key);
+                    if (added) {
+                        if (fireListeners) {
+                            fireIncludedUpdateListener();
+                        }
+                    }
+                }
             }
-            return true;
+
+            return addedInReference;
         }
 
         /**
@@ -1101,29 +1168,33 @@ public class CompletionProvider implements GedcomFileListener {
          * Remove a reference for given key
          */
         private boolean remove(String key, REF reference, boolean fireListeners) {
-            // null is ignored
             if (key == null || key.equals("")) {
                 return false;
             }
-            // lookup
+            // je verifie si la valeur existe dans key2references
             Set<REF> references = key2references.get(key);
             if (references == null) {
                 return false;
             }
             // remove
-            if (!references.remove(reference)) {
-                return false;
-            }
-            // remove value
-            if (references.isEmpty()) {
-                key2references.remove(key);
-                if(fireListeners) {
-                    fireListener();
+            boolean removedFromFreference = references.remove(reference);
+            if (removedFromFreference) {
+                // remove value
+                if (references.isEmpty()) {
+                    // s'il n'y a plus aucune reference pour cette valeur
+                    // je la supprime de key2references et de includeds
+                    key2references.remove(key);
+                    boolean removedFromIncluded = included.remove(key);
+                    if ( removedFromIncluded ) {
+                        if(fireListeners) {
+                            fireIncludedUpdateListener();
+                        }
+                    }
+
                 }
             }
 
-            included.remove(key);
-            return true;
+            return removedFromFreference;
         }
 
         protected void removeAll() {
@@ -1159,20 +1230,221 @@ public class CompletionProvider implements GedcomFileListener {
         }
 
         /**
-         * notify les listeners d'une mise a jour
+         * notify les listeners d'une mise a jour des items iindluded
          */
-        protected void fireListener() {
-            final List<String> keys = new ArrayList<String>(key2references.keySet());
+        protected void fireIncludedUpdateListener() {
+            final List<String> keys = new ArrayList<String>(included);
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
                     for (CompletionListener listener : keysListener) {
-                        listener.keyUpdated(keys);
+                        listener.includedKeyUpdated(keys);
                     }
                 }
             });
 
         }
     }
+
+//    /**
+//     * Liste des valeurs avec les "Field" de référence
+//     */
+//    private class CompletionSet<REF> {
+//
+//        // liste TreeMap triée sur la clé
+//        private Map<String, Integer> key2references = new TreeMap<String, Integer>();
+//        // liste des listeners a notifier quand on change une valeur dans key2references
+//        private List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
+//        private TreeSet<String> excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+//        private TreeSet<String> included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+//
+//
+//        /**
+//         * Constructor - uses a TreeMap that keeps
+//         * keys sorted by their natural order
+//         */
+//        public CompletionSet() {
+//        }
+//
+//        /**
+//         * Returns the references for a given key
+//         */
+//        public int getReferences(String key) {
+//            // null is ignored
+//            if (key == null) {
+//                return 0;
+//            }
+//            // lookup
+//            Integer references = key2references.get(key);
+//            if (references == null) {
+//                return 0;
+//            }
+//            // return references
+//            return references;
+//        }
+//
+//        /**
+//         * Returns the number of reference for given key
+//         */
+//        public int getSize(String key) {
+//            // null is ignored
+//            if (key == null) {
+//                return 0;
+//            }
+//            // lookup
+//            Integer  references = key2references.get(key);
+//            if (references == null) {
+//                return 0;
+//            }
+//            // done
+//            return references;
+//        }
+//
+//        /**
+//         * Add a key and its reference
+//         * @return whether the reference was actually added (could have been known already)
+//         */
+//        private boolean add(String key, REF reference) {
+//            return add(key, reference, true);
+//        }
+//
+//        /**
+//         * Add a key and its reference
+//         * @return whether the reference was actually added (could have been known already)
+//         */
+//        private boolean add(String key, REF reference, boolean fireListeners) {
+//            if (key == null || key.equals("")) {
+//                return false;
+//            }
+//            // je verifie si une reference de cette valeur existe déjà dans key2references
+//            Integer references = key2references.get(key);
+//            boolean addedInReference ;
+//            if (references == null) {
+//                // j'ajoute une reference dans key2references
+//                references = 1;
+//                key2references.put(key, references);
+//
+//                // j'ajoute la valeur dans la reference
+//                if (!excluded.contains(key) && !included.contains(key)) {
+//                    // j'ajoute la valeur dans included
+//                    boolean added = included.add(key);
+//                    if (added) {
+//                        if (fireListeners) {
+//                            fireIncludedUpdateListener();
+//                        }
+//                    }
+//                }
+//                addedInReference = true;
+//
+//            } else {
+//                key2references.put(key, references +1);
+//                addedInReference = false;
+//            }
+//
+//            return addedInReference;
+//        }
+//
+//        /**
+//         * initialise les valeurs inclues et exclues
+//         * @param newExcluded
+//         */
+//        protected void setExclude(List<String> newExcluded) {
+//            excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+//            excluded.addAll(newExcluded);
+//            included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+//            for (String key : key2references.keySet()) {
+//                if (!excluded.contains(key)) {
+//                    included.add(key);
+//                }
+//            }
+//        }
+//
+//        private boolean remove(String key, REF reference) {
+//            return remove(key, reference, true);
+//
+//        }
+//
+//        /**
+//         * Remove a reference for given key
+//         */
+//        private boolean remove(String key, REF reference, boolean fireListeners) {
+//            if (key == null || key.equals("")) {
+//                return false;
+//            }
+//            // je verifie si la valeur existe dans key2references
+//            Integer references = key2references.get(key);
+//            if (references == null) {
+//                return false;
+//            }
+//            // remove
+//            boolean removedFromFreference;
+//            if (references  <= 1 ) {
+//                // s'il n'y a plus aucune reference pour cette valeur
+//                // je la supprime de key2references et de includeds
+//                key2references.remove(key);
+//                boolean removedFromIncluded = included.remove(key);
+//                if (removedFromIncluded) {
+//                    if (fireListeners) {
+//                        fireIncludedUpdateListener();
+//                    }
+//                }
+//                removedFromFreference = true;
+//            } else {
+//                key2references.put(key,references -1);
+//                removedFromFreference = false;
+//            }
+//
+//            return removedFromFreference;
+//        }
+//
+//        protected void removeAll() {
+//            key2references.clear();
+//        }
+//
+//        /**
+//         * retourne la liste des valeurs dans l'ordre alphabetique
+//         */
+//        public List<String> getKeys(IncludeFilter filter) {
+//            switch (filter) {
+//                case EXCLUDED :
+//                    return new ArrayList<String>(excluded);
+//                case INCLUDED:
+//                    return new ArrayList<String>(included);
+//                default:
+//                    return new ArrayList<String>(key2references.keySet());
+//            }
+//        }
+//
+//        /**
+//         * ajoute un listener de la liste de completion
+//         */
+//        protected void addListener(CompletionListener listener) {
+//            keysListener.add(listener);
+//        }
+//
+//        /**
+//         * supprime un listener de la liste de completion
+//         */
+//        protected void removeListener(CompletionListener listener) {
+//            keysListener.remove(listener);
+//        }
+//
+//        /**
+//         * notify les listeners d'une mise a jour des items iindluded
+//         */
+//        protected void fireIncludedUpdateListener() {
+//            final List<String> keys = new ArrayList<String>(included);
+//            SwingUtilities.invokeLater(new Runnable() {
+//
+//                @Override
+//                public void run() {
+//                    for (CompletionListener listener : keysListener) {
+//                        listener.includedKeyUpdated(keys);
+//                    }
+//                }
+//            });
+//
+//        }
+//    }
 }

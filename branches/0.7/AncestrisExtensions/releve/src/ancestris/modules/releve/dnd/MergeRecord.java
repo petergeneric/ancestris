@@ -776,6 +776,32 @@ public class MergeRecord {
             comment += record.getIndiComment().toString();
         }
 
+        String father = appendValue(
+                record.getIndiFatherFirstName().toString() + " " + record.getIndiFatherLastName().toString(),
+                record.getIndiFatherDead().toString(),
+                record.getIndiFatherOccupation().toString(),
+                record.getIndiFatherComment().toString());
+
+        if (!father.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
+                comment += "\n";
+            }
+            comment += "Père" + ": " + father;
+        }
+
+        String mother = appendValue(
+                record.getIndiMotherFirstName().toString() + " " + record.getIndiMotherLastName().toString(),
+                record.getIndiMotherDead().toString(),
+                record.getIndiMotherOccupation().toString(),
+                record.getIndiMotherComment().toString());
+
+        if (!mother.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
+                comment += "\n";
+            }
+            comment += "Mère" + ": " + mother;
+        }
+
         String godFather = appendValue(
                 record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
                 record.getWitness1Occupation().toString(),
@@ -809,24 +835,6 @@ public class MergeRecord {
                 comment += "\n";
             }
             comment += "Témoin(s)" + ": " + witness;
-        }
-
-        String fatherComment = appendValue(
-                record.getIndiFatherComment().toString() );
-        if (!fatherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Commentaire père" + ": " + fatherComment;
-        }
-
-        String motherComment = appendValue(
-                record.getIndiMotherComment().toString() );
-        if (!motherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Commentaire mère" + ": " + motherComment;
         }
 
         String generalComment = appendValue(
@@ -983,6 +991,39 @@ public class MergeRecord {
     private String makeDeathComment() {
         String comment = appendValue(record.getIndiComment().toString());
 
+        if ( record.getIndiAge()!= null && !record.getIndiAge().isEmpty() ) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+                comment += "\n";
+            }
+            comment += "Age"+": " +record.getIndiAge().toString();
+        }
+
+        String father = appendValue(
+                record.getIndiFatherFirstName().toString() + " " + record.getIndiFatherLastName().toString(),
+                record.getIndiFatherDead().toString(),
+                record.getIndiFatherOccupation().toString(),
+                record.getIndiFatherComment().toString());
+
+        if (!father.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
+                comment += "\n";
+            }
+            comment += "Père" + ": " + father;
+        }
+
+        String mother = appendValue(
+                record.getIndiMotherFirstName().toString() + " " + record.getIndiMotherLastName().toString(),
+                record.getIndiMotherDead().toString(),
+                record.getIndiMotherOccupation().toString(),
+                record.getIndiMotherComment().toString());
+
+        if (!mother.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
+                comment += "\n";
+            }
+            comment += "Mère" + ": " + mother;
+        }
+
         String witness = appendValue(
                 record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
                 record.getWitness1Occupation().toString(),
@@ -1003,38 +1044,12 @@ public class MergeRecord {
             comment += "Témoin(s)" + ": " + witness;
         }
 
-        String fatherComment = appendValue(
-                record.getIndiFatherComment().toString() );
-        if (!fatherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Commentaire père" + ": " + fatherComment;
-        }
-
-        String motherComment = appendValue(
-                record.getIndiMotherComment().toString() );
-
-        if (!motherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Commentaire mère" + ": " + motherComment;
-        }
-
         String generalComment = appendValue(record.getGeneralComment().toString());
         if (!generalComment.isEmpty()) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
             comment += "Commentaire général"+": " + generalComment;
-        }
-
-        if ( record.getIndiAge()!= null && !record.getIndiAge().isEmpty() ) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Age"+": " +record.getIndiAge().toString();
         }
 
         String freeComment = appendValue(
@@ -1732,7 +1747,7 @@ public class MergeRecord {
         /**
          * retourne le lieu de naissance .
          * Si c'est un acte de naissance et si IndiBirthPlace est vide
-         *      retourne IndiFatherResidence ou, à dfafaut, EventPlace
+         *      retourne IndiFatherResidence ou, à défaut, EventPlace
          * @return
          */
         String getBirthPlace() {
@@ -1750,7 +1765,7 @@ public class MergeRecord {
                 }
             }
         }
-
+        
         String getOccupation() {
             if (participant.getOccupation() != null) {
                 return participant.getOccupation().toString();

@@ -1051,18 +1051,14 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         String buttonLabel = "Enregistrer";
         boolean askForOverwrite = true;
         Component component = this;
-        String title  = "Enregistrer";
-        final String extension = "txt";
+        String title  = "Enregistrer";       
 
         // show filechooser
         String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
         String dir = NbPreferences.forModule(ReleveTopComponent.class).get(FILE_DIRECTORY, defaultDir);
         final JFileChooser chooser = new JFileChooser(dir);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setDialogTitle(title);
-        if (extension != null) {
-            chooser.setFileFilter(new FileExtensionFilter(extension));
-        }
+        chooser.setDialogTitle(title);        
 
         GridBagConstraints gridBagConstraints;
         javax.swing.JPanel panelExport;
@@ -1072,6 +1068,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         final javax.swing.JRadioButton jRadioButtonAll;
         final javax.swing.JRadioButton jRadioButtonEgmt;
         final javax.swing.JRadioButton jRadioButtonNimegue;
+        final javax.swing.JRadioButton jRadioButtonPdf;
         javax.swing.ButtonGroup buttonGroupModel;
         final javax.swing.JRadioButton jRadioButtonBirth;
         final javax.swing.JRadioButton jRadioButtonDeath;
@@ -1082,9 +1079,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         jPanelFormat = new javax.swing.JPanel();
         jRadioButtonEgmt = new javax.swing.JRadioButton();
         jRadioButtonNimegue = new javax.swing.JRadioButton();
+        jRadioButtonPdf = new javax.swing.JRadioButton();
         buttonGroupFormat = new javax.swing.ButtonGroup();
         buttonGroupFormat.add(jRadioButtonEgmt);
         buttonGroupFormat.add(jRadioButtonNimegue);
+        buttonGroupFormat.add(jRadioButtonPdf);
 
         jRadioButtonAll = new javax.swing.JRadioButton();
         jRadioButtonBirth = new javax.swing.JRadioButton();
@@ -1107,6 +1106,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         jPanelFormat.add(jRadioButtonEgmt);
         jRadioButtonNimegue.setText(org.openide.util.NbBundle.getMessage(ReleveFileExport.class, "ReleveFileExport.jRadioButtonNimegue.text")); // NOI18N
         jPanelFormat.add(jRadioButtonNimegue);
+        jRadioButtonPdf.setText(org.openide.util.NbBundle.getMessage(ReleveFileExport.class, "ReleveFileExport.jRadioButtonPdf.text")); // NOI18N
+        jPanelFormat.add(jRadioButtonPdf);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1132,13 +1133,14 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         ActionListener rbActionListener = new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String extension = "txt";
                 String cityName = dataManager.getCityName();
                 if ( cityName.isEmpty()) {
                     cityName = "";
                 }
                 String recordType;
                 if (jRadioButtonAll.isSelected()) {
-                    recordType = "_B";
+                    recordType = "";
                 } else if (jRadioButtonBirth.isSelected()) {
                     recordType = "_B";
                 } else if (jRadioButtonMarriage.isSelected()) {
@@ -1153,8 +1155,13 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 String format = "";
                 if (jRadioButtonEgmt.isSelected()) {
                     format = "_EGMT";
+                    extension = "csv";
                 } else if (jRadioButtonNimegue.isSelected()) {
                     format = "_NIMEGUE";
+                    extension = "txt";
+                } else if (jRadioButtonPdf.isSelected()) {
+                    format = "";
+                    extension = "pdf";
                 }
                 // je cree le nom de fichier par defaut
                 chooser.setSelectedFile(new File(cityName+recordType+format+"."+extension));
@@ -1187,6 +1194,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // j'ajoute le panneau dans la boite de dialogue
         chooser.setAccessory(panelExport);
 
+        String extension = chooser.getDescription(chooser.getSelectedFile());
+        chooser.setFileFilter(new FileExtensionFilter(extension));
+
         // j'affiche la boit de dialog
         int rc = chooser.showDialog(component, buttonLabel);
 
@@ -1215,6 +1225,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 fileFormat = FileManager.FileFormat.FILE_TYPE_EGMT;
             } else if (jRadioButtonNimegue.isSelected()) {
                 fileFormat = FileManager.FileFormat.FILE_TYPE_NIMEGUE;
+            } else if (jRadioButtonPdf.isSelected()) {
+                fileFormat = FileManager.FileFormat.FILE_TYPE_PDF;
             }
 
             // j'ajoute l'extension par defaut si l'utilisateur n'a pas mis d'extension
@@ -1369,23 +1381,17 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             if (standaloneEditor == null) {
                 standaloneEditor = new StandaloneEditor();
                 standaloneEditor.setVisible(true);
-                standaloneEditor.setDataManager(dataManager, dataManager, this);
-                // je lui donne le meme titre que ReleveTopComponent
-                standaloneEditor.setTitle(this.getName());
-                //
-                int selectedTabbedPane = jTabbedPane1.getSelectedIndex();
-                if ( selectedTabbedPane ==4 ) {
-                    selectedTabbedPane = 0;
-                }
-                // j'affiche les memes releves que ceux de l'editeur principal
-                standaloneEditor.selectRecord(
+                standaloneEditor.setDataManager(dataManager, dataManager, this,
                         panelBirth.getCurrentRecordIndex(),
                         panelMarriage.getCurrentRecordIndex(),
                         panelDeath.getCurrentRecordIndex(),
                         panelMisc.getCurrentRecordIndex(),
-                        selectedTabbedPane
-                     );
-
+                        panelAll.getCurrentRecordIndex(),
+                        jTabbedPane1.getSelectedIndex()
+                        );
+                // je lui donne le meme titre que ReleveTopComponent
+                standaloneEditor.setTitle(this.getName());
+                
             } else {
                 // Si l'editeur existe déjà, je l'affiche au premier plan
                 standaloneEditor.toFront();

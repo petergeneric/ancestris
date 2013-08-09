@@ -43,6 +43,10 @@ public class FieldDate extends Field implements Cloneable {
         return getValueDDMMYYYY();
     }
 
+    /**
+     * retounr le date au format JJ/MM/AAAA
+     * @return
+     */
     public String getValueDDMMYYYY() {
         try {
             String result;

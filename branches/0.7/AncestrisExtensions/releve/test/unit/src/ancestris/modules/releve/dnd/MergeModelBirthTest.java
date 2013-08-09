@@ -33,8 +33,8 @@ public class MergeModelBirthTest extends TestCase {
                 record.setCote("cote");
                 record.setFreeComment("photo");
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthplace", "indioccupation", "indiResidence", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFtaerResidence", "comment", "", "70y");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFtaerResidence", "indiFatherComment", "", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherComment", "true", "72y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -47,8 +47,8 @@ public class MergeModelBirthTest extends TestCase {
                 record.setCote("cote");
                 record.setFreeComment("photo");
                 record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "indioccupation", "indiResidence", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "dead", "70y");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherComment", "dead", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherComment", "dead", "72y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -61,8 +61,8 @@ public class MergeModelBirthTest extends TestCase {
                 record.setCote("cote");
                 record.setFreeComment("photo");
                 record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "BEF 1981", "", "indiBirthplace", "indioccupation", "indiResidence", "indicomment");
-                //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "comment", "dead");
-                //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "comment", "dead");
+                //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherComment", "dead");
+                //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherComment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -104,7 +104,7 @@ public class MergeModelBirthTest extends TestCase {
 
             Indi mother = indi.getBiologicalMother();
             assertEquals("Naissance de la mere","CAL 1928", mother.getBirthDate().getValue());
-            assertEquals("deces de la mere",    "AFT 2000", mother.getDeathDate().getValue());
+            assertEquals("deces de la mere",    "BET 2000 AND 2000", mother.getDeathDate().getValue());
 
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -129,11 +129,11 @@ public class MergeModelBirthTest extends TestCase {
 
             String expected = "";
             expected +="Acte du 01/01/2000, indicomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, fatherOccupation, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, Décédé, motherOccupation, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
-            expected +="Commentaire père: comment\n";
-            expected +="Commentaire mère: comment\n";
             expected +="generalcomment\n";
             expected +="Photo: photo";
             assertEquals("comment1",expected, indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
@@ -144,11 +144,11 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
             expected ="Acte du 01/01/2000, indicomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, fatherOccupation, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, Décédé, motherOccupation, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
-            expected +="Commentaire père: comment\n";
-            expected +="Commentaire mère: comment\n";
             expected +="generalcomment\n";
             expected +="Photo: photo\n";
             expected += "oldcomment";

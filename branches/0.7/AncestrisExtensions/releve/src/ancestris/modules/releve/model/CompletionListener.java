@@ -7,5 +7,5 @@ import java.util.List;
  * @author Michel
  */
 public interface CompletionListener {
-    public void keyUpdated(List<java.lang.String> keyList);
+    public void includedKeyUpdated(List<java.lang.String> keyList);
 }

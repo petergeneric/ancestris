@@ -25,7 +25,8 @@ public class FileManager {
         FILE_TYPE_ANCESTRISV2,
         FILE_TYPE_ANCESTRISV3,
         FILE_TYPE_EGMT,
-        FILE_TYPE_NIMEGUE
+        FILE_TYPE_NIMEGUE,
+        FILE_TYPE_PDF
     } ;
 
     /**
@@ -105,6 +106,12 @@ public class FileManager {
                     sb.append(ReleveFileNimegue.saveFile(placeManager, models[0], saveFile, false));
                     for(int i=1; i< models.length; i++) {
                         sb.append(ReleveFileNimegue.saveFile(placeManager, models[i], saveFile, true));
+                    }
+                    break;
+                case FILE_TYPE_PDF:
+                    sb.append(ReleveFilePdf.saveFile(placeManager, models[0], saveFile, false));
+                    for(int i=1; i< models.length; i++) {
+                        sb.append(ReleveFilePdf.saveFile(placeManager, models[i], saveFile, true));
                     }
                     break;
             }           
