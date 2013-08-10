@@ -89,6 +89,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
@@ -1392,12 +1393,25 @@ public class TreeView extends View implements Filter {
         public ActionBluePrint() {
             super();
             setImage(IMAGE);
-            Context c = TreeView.this.context;
-            if (c != null && c.getEntity() != null) {
-                setImageText(
-                        IMAGE.getOverLayed(c.getEntity().getImage(false)),
-                        NbBundle.getMessage(ChooseBlueprintAction.class, "blueprint.select.for", Gedcom.getName(c.getEntity().getTag())));
-            }
+                /*
+                 * Reset and set image and text to be sure that propertyCHanged event is
+                 * fired. just after init, image and text are changed and if no change is done
+                 * on them, the display can be out of sync. PropertertyChangeListeners can only be
+                 * called after object construction so in our case we must update ui after all 
+                 * initialisations occured
+                 */
+                SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    Icon icon = getImage();
+                    String text = getText();
+                    String tt = getTip();
+                    setImage(IMAGE).setImage(icon);
+                    setText("").setText(text);
+                    setTip("").setTip(tt);
+                }
+            });
         }
 
         @Override
