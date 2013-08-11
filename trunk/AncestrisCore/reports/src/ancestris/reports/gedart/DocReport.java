@@ -495,8 +495,12 @@ public class DocReport {
 
 		public String getPath() { return property.getPath().toString();}
 		public String getDate()  	{return format("{$D}");}
-		public String getValue() 	{return format("{$v}");}
-		public String getName() 	{return format("{$T}");}
+//		public String getValue() 	{return format("{$v}");} // return display value
+                public String getValue() 	{
+                    // Don't use format to get DisplayValue as format may be overriden (see PropertyPlace)
+                    // FIXME: We should specify that format({$v} must always return the DisplayValue
+                    return (property == null)?"":property.getDisplayValue();}
+                public String getName() 	{return format("{$T}");}
 		public String getPlace() 	{return format("{$P}");}
 		public String toString() 	{return getValue();}
 		/**
