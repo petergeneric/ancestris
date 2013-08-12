@@ -168,7 +168,7 @@ public class ReportGedart extends Report {
 	private File process(Entity[] indis, Entity[] fams, GedartTemplate  usetemplate) {
 		String thetemplate;
 		String extension =null;
-		if (usetemplate == null && gedartTemplates.size()>template)
+		if (usetemplate == null && gedartTemplatesOption.length>template)
 			usetemplate = gedartTemplatesOption[template];
                 if (usetemplate == null){
                     return null;
