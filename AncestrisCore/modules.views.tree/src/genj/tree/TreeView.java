@@ -1389,6 +1389,7 @@ public class TreeView extends View implements Filter {
     private class ActionBluePrint extends AbstractAncestrisContextAction {
 
         private final ImageIcon IMAGE = new ImageIcon(ChooseBlueprintAction.class, "Blueprint.png");
+        private Entity entity;
 
         public ActionBluePrint() {
             super();
@@ -1416,18 +1417,25 @@ public class TreeView extends View implements Filter {
 
         @Override
         protected void contextChanged() {
-            if (!contextProperties.isEmpty() && contextProperties.get(0) instanceof Entity) {
-                Entity entity = (Entity) (contextProperties.get(0));
-                setImageText(IMAGE.getOverLayed(entity.getImage(false)),
-                        NbBundle.getMessage(ChooseBlueprintAction.class, "blueprint.select.for", Gedcom.getName(entity.getTag())));
+            if (!contextProperties.isEmpty()){
+                Property prop = contextProperties.get(0);
+                if (prop.getEntity() instanceof Indi || prop.getEntity() instanceof Fam) {
+                    entity = prop.getEntity();
+                } else if (entity == null) {
+                    entity = prop.getGedcom().getFirstEntity(Gedcom.INDI);
+                }
             }
+            if (entity == null)
+                entity = new Indi();
+                
+            setImageText(IMAGE.getOverLayed(entity.getImage(false)),
+                    NbBundle.getMessage(ChooseBlueprintAction.class, "blueprint.select.for", Gedcom.getName(entity.getTag())));
             super.contextChanged();
         }
 
         @Override
         protected void actionPerformedImpl(final ActionEvent event) {
-            if (!contextProperties.isEmpty() && contextProperties.get(0) instanceof Entity) {
-                Entity entity = (Entity) (contextProperties.get(0));
+            if (entity!=null){
 
                 new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
 
