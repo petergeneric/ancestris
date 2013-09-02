@@ -10,23 +10,14 @@ import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import javax.swing.SpinnerNumberModel;
 import org.openide.awt.StatusDisplayer;
-import org.openide.util.NbBundle;
 
-@SuppressWarnings(value={"unchecked", "rawtypes"})
+@SuppressWarnings(value = {"unchecked", "rawtypes"})
 final class OptionFormatPanel extends javax.swing.JPanel {
 
     private final OptionFormatOptionsPanelController controller;
     // Values
-    String[] indis = new String[]{
-        NbBundle.getMessage(OptionFormatPanel.class, "name.format1"),
-        NbBundle.getMessage(OptionFormatPanel.class, "name.format2")};
-
-    GedcomOptions.GedcomDateFormat[] dates = new GedcomOptions.GedcomDateFormat[]{
-        GedcomOptions.GedcomDateFormat.GEDCOM,
-        GedcomOptions.GedcomDateFormat.SHORT,
-        GedcomOptions.GedcomDateFormat.LONG,
-        GedcomOptions.GedcomDateFormat.NUMERIC
-    };
+    GedcomOptions.NameFormat[] indis = GedcomOptions.NameFormat.values();
+    GedcomOptions.GedcomDateFormat[] dates = GedcomOptions.GedcomDateFormat.values();
 
     OptionFormatPanel(OptionFormatOptionsPanelController controller) {
         this.controller = controller;
@@ -306,7 +297,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         setSymbolBuri(textPrefs.getBurialSymbol());
         jSpinner3.setValue(genj.gedcom.GedcomOptions.getInstance().getValueLineBreak());
         setImageSize(gedcomPrefs.get("maxImageFileSizeKB", ""));
-        setDisplayNames(gedcomPrefs.get("nameFormat", ""));
+        jComboBox4.setSelectedItem(GedcomOptions.getInstance().getNameFormat());
         jComboBox3.setSelectedItem(GedcomOptions.getInstance().getDateFormat());
     }
 
@@ -326,8 +317,8 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         reportPrefs.setBurialSymbol(getSymbolBuri());
         genj.gedcom.GedcomOptions.getInstance().setValueLineBreak(Integer.valueOf(jSpinner3.getValue().toString()));
         gedcomPrefs.put("maxImageFileSizeKB", getImageSize());
-        gedcomPrefs.put("nameFormat", getDisplayNames());
-        genj.gedcom.GedcomOptions.getInstance().setDateFormat((GedcomOptions.GedcomDateFormat)jComboBox3.getSelectedItem());
+        GedcomOptions.getInstance().setNameFormat((GedcomOptions.NameFormat) jComboBox4.getSelectedItem());
+        genj.gedcom.GedcomOptions.getInstance().setDateFormat((GedcomOptions.GedcomDateFormat) jComboBox3.getSelectedItem());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFormatPanel.class, "OptionPanel.saved.statustext"));
     }
@@ -496,42 +487,6 @@ final class OptionFormatPanel extends javax.swing.JPanel {
 
     String getImageSize() {
         return jSpinner1.getValue().toString();
-    }
-
-    void setDisplayNames(String str) {
-        if ((str.length() == 0) || str.equals("-1")) {
-            str = "1";
-        }
-        Integer i = getIntFromStr(str);
-        if (i == -1) {
-            i = 1;
-        }
-        if (i > 1) {
-            i = 1;
-        }
-        jComboBox4.setSelectedIndex(i);
-    }
-
-    String getDisplayNames() {
-        return jComboBox4.getSelectedIndex() + "";
-    }
-
-    void setDisplayDates(String str) {
-        if ((str.length() == 0) || str.equals("-1")) {
-            str = "1";
-        }
-        Integer i = getIntFromStr(str);
-        if (i == -1) {
-            i = 1;
-        }
-        if (i > 3) {
-            i = 3;
-        }
-        jComboBox3.setSelectedIndex(i);
-    }
-
-    String getDisplayDates() {
-        return jComboBox3.getSelectedIndex() + "";
     }
 
     private Integer getIntFromStr(String str) {

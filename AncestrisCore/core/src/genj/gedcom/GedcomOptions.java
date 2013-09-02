@@ -124,11 +124,17 @@ public class GedcomOptions {
         gedcomOptions.put("nameFormat",format);
     }
 
-    //TODO: same as dateformat
-  public enum NameFormat{FIRST, LAST};
-    public final static String[] nameFormats = {
-    RESOURCES.getString("option.nameFormat.first"),
-    RESOURCES.getString("option.nameFormat.last")
+  public enum NameFormat{
+      FIRST("option.nameFormat.first"),
+      LAST("option.nameFormat.last");
+        private final String description;
+      private NameFormat(String desc){
+          description = RESOURCES.getString(desc);
+      }
+        @Override
+        public String toString() {
+            return description;
+        }      
 };
 
   /** option - place hierarchy keys for city NOT EDITABLE ATM */
