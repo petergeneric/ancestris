@@ -64,7 +64,7 @@ public class GedartResources extends ReportResources {
 		      result = this.getString(key+'.'+lang, values, false);
 
 		    // fallback if necessary
-		    if (result==null)
+		    if (result==null || result.equals(key+'.'+lang))
 		      result = this.getString(key, values, notnull);
 
 		    // done
