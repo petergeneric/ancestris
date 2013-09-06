@@ -875,10 +875,10 @@ public class TreeView extends View implements Filter {
                     Content.this.mousePressed(e);
                 }
 
-                @Override
-                public void mouseClickedFiltered(MouseEvent me) {
-                    Content.this.mouseClicked(me);
-                }
+//FIXME: remove                @Override
+//                public void mouseClickedFiltered(MouseEvent me) {
+//                    Content.this.mouseClicked(me);
+//                }
             };
             addMouseListener(mouseAdapter);
             addMouseWheelListener(mouseAdapter);
@@ -1020,18 +1020,6 @@ public class TreeView extends View implements Filter {
                 repaint();
                 overview.repaint();
             }
-            // done
-        }
-
-        /**
-         * @see java.awt.event.MouseAdapter#mouseClicked(MouseEvent)
-         */
-        public void mouseClicked(MouseEvent e) {
-            requestFocusInWindow();
-            // check node
-            Point p = view2model(e.getPoint());
-            Object content = model.getContentAt(p.x, p.y);
-            // entity?
             if (content instanceof Entity) {
                 Entity entity = (Entity) content;
                 // change current!
@@ -1056,11 +1044,47 @@ public class TreeView extends View implements Filter {
                 }
                 return;
             }
-            // runnable?
-            if (content instanceof Runnable) {
-                ((Runnable) content).run();
-            }
+            // done
         }
+
+// FIXME: remove       /**
+//         * @see java.awt.event.MouseAdapter#mouseClicked(MouseEvent)
+//         */
+//        public void mouseClicked(MouseEvent e) {
+//            requestFocusInWindow();
+//            // check node
+//            Point p = view2model(e.getPoint());
+//            Object content = model.getContentAt(p.x, p.y);
+//            // entity?
+//            if (content instanceof Entity) {
+//                Entity entity = (Entity) content;
+//                // change current!
+//                if ((e.getModifiers() & MouseEvent.CTRL_DOWN_MASK) != 0) {
+//                    List<Entity> entities = new ArrayList<Entity>(context.getEntities());
+//                    if (entities.contains(entity)) {
+//                        entities.remove(entity);
+//                    } else {
+//                        entities.add(entity);
+//                    }
+//                } else {
+//                    context = new Context(entity);
+//                }
+////        repaint();
+////        overview.repaint();
+//                // propagate to others
+//                try {
+////          ignoreContextChange = true;
+//                    SelectionDispatcher.fireSelection(e, context);
+//                } finally {
+////          ignoreContextChange = false;
+//                }
+//                return;
+//            }
+//            // runnable?
+//            if (content instanceof Runnable) {
+//                ((Runnable) content).run();
+//            }
+//        }
     } //Content
 
     /**
