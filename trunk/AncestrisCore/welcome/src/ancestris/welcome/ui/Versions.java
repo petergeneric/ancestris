@@ -27,7 +27,7 @@
  * Contributor(s):
  *
  * The Original Software is NetBeans. The Initial Developer of the Original
- * Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+ * Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
  * Microsystems, Inc. All Rights Reserved.
  *
  * If you wish your version of this file to be governed by only the CDDL
@@ -44,35 +44,37 @@
 package ancestris.welcome.ui;
 
 import ancestris.welcome.content.BundleSupport;
-import ancestris.welcome.content.ContentSection;
+import ancestris.welcome.content.RSSFeedReaderPanel;
+import ancestris.welcome.content.WebLink;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import javax.swing.BorderFactory;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
  *
  * @author S. Aubrecht
  */
-class WhatsNewTab extends AbstractTab {
+class Versions extends RSSFeedReaderPanel {
 
-    public WhatsNewTab() {
-        setName(BundleSupport.getLabel("WhatsNewTab")); //NOI18N
+    public Versions() {
+        super("Version", false); // NOI18N
+
+        add(buildBottomContent(), BorderLayout.SOUTH);
     }
 
-    @Override
-    protected void buildContent() {
-        JPanel main = new JPanel(new GridLayout(1, 0));
-        main.setOpaque(false);
-        main.setBorder(BorderFactory.createEmptyBorder());
-        add(main, BorderLayout.CENTER);
+    protected JComponent buildBottomContent() {
+        WebLink allVersions = new WebLink("AllVersions", true); // NOI18N
+        BundleSupport.setAccessibilityProperties(allVersions, "AllVersions"); //NOI18N
 
-        main.add(new ContentSection(BundleSupport.getLabel("SectionVersions"), //NOI18N
-                new Versions(), false, true));
-        main.add(new ContentSection(BundleSupport.getLabel("SectionNewsAndTutorials"), //NOI18N
-                new ArticlesAndNews(), true, true));
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setOpaque(false);
+        panel.add(allVersions, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0));
+        panel.add(new JLabel(), new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
-
-        add(new BottomBar(), BorderLayout.SOUTH);
+        return panel;
     }
 }
