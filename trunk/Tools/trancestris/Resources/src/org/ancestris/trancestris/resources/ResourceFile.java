@@ -262,6 +262,10 @@ public class ResourceFile {
         }
     }
 
+    public int getTranslatedLineCount () {
+        return getLineCount() - not_translated;
+    }
+    
     public String getLine(int i) {
         ResourceItem.ResourceLine line = null;
         String value = null;

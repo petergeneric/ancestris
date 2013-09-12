@@ -166,28 +166,37 @@ public class ZipDirectory implements PropertyChangeListener {
         return directoryNamesArray;
     }
 
-    public int getTranslatedPercent() {
-        int translatedPercent = 0;
+    public int getTranslatedLineCount() {
+
+        int translatedLineCount;
+        
         if (resourceFile != null) {
-            translatedPercent = resourceFile.getTranslatedPercent();
+            translatedLineCount = resourceFile.getTranslatedLineCount();
         } else {
-            translatedPercent = -1;
+            translatedLineCount = 0;
         }
 
         for (ZipDirectory zipDirectory : dirs.values()) {
-            int Percentage = zipDirectory.getTranslatedPercent();
-            if (translatedPercent == -1) {
-                if (Percentage >= 0) {
-                    translatedPercent = Percentage;
-                }
-            } else {
-                if (Percentage >= 0) {
-                    translatedPercent = (int) ((float) (translatedPercent + Percentage) / (float) 2);
-                }
-            }
+            translatedLineCount += zipDirectory.getTranslatedLineCount();
         }
 
-        return translatedPercent;
+        return translatedLineCount;
+    }
+
+    public int getLineCount() {
+        int lineCount;
+        
+        if (resourceFile != null) {
+            lineCount = resourceFile.getLineCount();
+        } else {
+            lineCount = 0;
+        }
+
+        for (ZipDirectory zipDirectory : dirs.values()) {
+            lineCount += zipDirectory.getLineCount();
+        }
+
+        return lineCount;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
