@@ -84,7 +84,7 @@ public class ZipArchive implements PropertyChangeListener {
                 ZipOutputStream translationOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
                 int nbTransaltedFiles = root.saveTranslation(translationOutputStream, "");
                 translationOutputStream.close();
-                
+
                 /*
                  * directory structure has change and need to be saved.
                  * modified.xx file has been removed during translation saving
@@ -132,8 +132,12 @@ public class ZipArchive implements PropertyChangeListener {
         change = true;
     }
 
-    public int getTranslatePercent() {
-        return root.getTranslatedPercent();
+    public int getTranslatedLineCount() {
+        return root.getTranslatedLineCount();
+    }
+
+    public int getLineCount() {
+        return root.getLineCount();
     }
 
     /**
