@@ -34,6 +34,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -126,6 +127,20 @@ public class TableViewSettings extends JPanel {
     gh.add(new JButton(dn)                                ,1,4,1,1,GridBagHelper.FILL_HORIZONTAL);
     gh.add(new JButton(del)                               ,2,4,1,1,GridBagHelper.FILL_HORIZONTAL);
 
+    final JCheckBox cbTableFollowEntity = new JCheckBox(
+            resources.getString("cbTableFollowEntity.text"),
+            TableView.getFollowEntity());
+    cbTableFollowEntity.setToolTipText(resources.getString("cbTableFollowEntity.toolTipText"));    
+    //FIXME: check box is automatically saved on change. 
+    // We should put this dialog in a more traditionnal OK/Cancel dialog box
+    cbTableFollowEntity.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                TableView.setFollowEntity(cbTableFollowEntity.isSelected());
+            }
+        });
+    gh.add(cbTableFollowEntity                            ,0,5,4,1,GridBagHelper.FILL_HORIZONTAL);
   }
 
   /**

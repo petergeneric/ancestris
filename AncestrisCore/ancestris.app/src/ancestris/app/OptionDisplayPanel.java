@@ -74,8 +74,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel8 = new javax.swing.JLabel();
-        cbTableFollowEntity = new javax.swing.JCheckBox();
         jLabel9 = new javax.swing.JLabel();
         jcbOutputLanguage = new javax.swing.JComboBox(initLanguages(NbBundle.getMessage(App.class, "options.lang.gui")));
 
@@ -140,12 +138,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox1.text")); // NOI18N
         jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox1.toolTipText")); // NOI18N
 
-        jLabel8.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel8.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbTableFollowEntity, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTableFollowEntity.text")); // NOI18N
-        cbTableFollowEntity.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTableFollowEntity.toolTipText")); // NOI18N
-
         jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel9.text")); // NOI18N
 
@@ -172,11 +164,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(3, 3, 3)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cbTableFollowEntity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
-                            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)))
+                        .addGap(130, 130, 130)
+                        .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(79, 79, 79)
@@ -213,13 +202,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                         .addGap(121, 121, 121)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jCheckBox1))
-                        .addGap(29, 29, 29)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(cbTableFollowEntity)))
+                            .addComponent(jCheckBox1)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBox3)
                     .addComponent(jLabel4))
@@ -231,7 +216,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                 .addComponent(cbSplitJuridictions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox2)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -254,7 +239,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
         cbSplitJuridictions.setSelected(CoreOptions.getInstance().isSplitJurisdictions());
 //XXX:        setOpenEditor(editPrefs.get("isOpenEditor", ""));
-//XXX:        cbTableFollowEntity.setSelected(TableView.getFollowEntity());
     }
 
     void store() {
@@ -279,7 +263,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         CoreOptions.getInstance().setSplitJurisdictions(cbSplitJuridictions.isSelected());
 
 //XXX:        editPrefs.put("isOpenEditor", getOpenEditor());
-//XXX:        TableView.setFollowEntity(cbTableFollowEntity.isSelected());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
         if (needRestart)
@@ -297,7 +280,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbSplitJuridictions;
-    private javax.swing.JCheckBox cbTableFollowEntity;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
@@ -308,7 +290,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSpinner jSpinner1;
