@@ -875,10 +875,10 @@ public class TreeView extends View implements Filter {
                     Content.this.mousePressed(e);
                 }
 
-//FIXME: remove                @Override
-//                public void mouseClickedFiltered(MouseEvent me) {
-//                    Content.this.mouseClicked(me);
-//                }
+                @Override
+                public void mouseClickedFiltered(MouseEvent me) {
+                    Content.this.mouseClicked(me);
+                }
             };
             addMouseListener(mouseAdapter);
             addMouseWheelListener(mouseAdapter);
@@ -1047,14 +1047,15 @@ public class TreeView extends View implements Filter {
             // done
         }
 
-// FIXME: remove       /**
-//         * @see java.awt.event.MouseAdapter#mouseClicked(MouseEvent)
-//         */
-//        public void mouseClicked(MouseEvent e) {
-//            requestFocusInWindow();
-//            // check node
-//            Point p = view2model(e.getPoint());
-//            Object content = model.getContentAt(p.x, p.y);
+       /**
+         * @see java.awt.event.MouseAdapter#mouseClicked(MouseEvent)
+         */
+        public void mouseClicked(MouseEvent e) {
+            requestFocusInWindow();
+            // check node
+            Point p = view2model(e.getPoint());
+            Object content = model.getContentAt(p.x, p.y);
+// FIXME: remove
 //            // entity?
 //            if (content instanceof Entity) {
 //                Entity entity = (Entity) content;
@@ -1080,11 +1081,11 @@ public class TreeView extends View implements Filter {
 //                }
 //                return;
 //            }
-//            // runnable?
-//            if (content instanceof Runnable) {
-//                ((Runnable) content).run();
-//            }
-//        }
+            // runnable?
+            if (content instanceof Runnable) {
+                ((Runnable) content).run();
+            }
+        }
     } //Content
 
     /**
