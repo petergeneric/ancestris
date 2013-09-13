@@ -298,12 +298,15 @@
             <file name="ancestris-app-FamQuickSearch.instance"/>
         </folder>
         <file name="GoToOption_hidden"/>
+        <file name="GoToSymbol_hidden"/>
+        <file name="GoToType_hidden"/>
         <folder name="Indis">
             <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
             <attr name="command" stringvalue=""/>
             <attr name="position" intvalue="0"/>
             <file name="ancestris-app-IndiQuickSearch.instance"/>
         </folder>
+        <file name="MavenRepositories_hidden"/>
     </folder>
     <folder name="Services">
         <folder name="AutoupdateType">
@@ -468,37 +471,41 @@
         <folder name="General">
             <file name="Other_hidden"/>
             <file name="Welcome_hidden"/>
+            <file name="ui">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/ui"/>
+                <attr name="include" stringvalue="config/Windows2Local/Components/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
+            </file>
+            <file name="Toolbars">
+                <attr name="include" stringvalue="config/Toolbars/.*"/>
+                <attr name="exclude" stringvalue="config/Toolbars/Progress/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.core.windows.resources.Bundle#Toolbars.Options.Export.displayName"/>
+            </file>
+            <file name="General">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/general"/>
+                <attr name="include" stringvalue="config/Preferences/org/.*|config/Preferences/ancestris/.*|etc/.*|config/Services/Browsers/.*"/>
+                <attr name="exclude" stringvalue="ancestris/ancestris.log.*|config/Preferences/ancestris/core/report.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.core.ui.options.general.Bundle#General.Options.Export.displayName"/>
+            </file>
         </folder>
+        <file name="Templates_hidden"/>
         <folder name="preferences">
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences"/>
             <attr name="position" intvalue="100"/>
-            <file name="optionsAncestris">
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/optionsAncestris"/>
-                <attr name="include" stringvalue="config/Preferences/ancestris/.*|config/Preferences/ancestris/.*|etc/.*"/>
-            </file>
-            <file name="ui">
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/ui"/>
-                <attr name="include" stringvalue="config/Toolbars/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
-            </file>
             <file name="gedcoms">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/gedcoms"/>
-                <attr name="include" stringvalue="config/Preferences/gedcoms/.*|config/Windows2Local/Components/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
+                <attr name="include" stringvalue="config/Preferences/gedcoms/.*"/>
             </file>
         </folder>
-        <folder name="other">
-            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/other"/>
-            <attr name="position" intvalue="200"/>
-            <file name="internal">
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/other/internal"/>
-                <attr name="include" stringvalue="config/Preferences/org/.*"/>
-            </file>
-        </folder>
-        <folder name="blueprints">
-            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/blueprints"/>
+        <folder name="templates">
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/templates"/>
             <file name="blueprint">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/blueprints"/>
                 <attr name="include" stringvalue="ancestris/blueprints/[^/]*/([^/]*)\.html"/>
             </file>
+        </folder>
+        <folder name="extensions">
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/extensions"/>
+            <attr name="position" intvalue="500"/>
         </folder>
 
         <folder name="Advanced_hidden"/>

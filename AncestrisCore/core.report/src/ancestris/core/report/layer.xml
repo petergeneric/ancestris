@@ -23,10 +23,15 @@
         <folder name="preferences">
             <file name="reports">
                 <attr name="displayName" bundlevalue="ancestris.core.report.Bundle#OptionsExport/preferences/reports"/>
-                <attr name="include" stringvalue="ancestris/[^/]*|ancestris/gedart/.*|ancestris/almanac/.*"/>
-                <attr name="exclude" stringvalue="ancestris/ancestris.log.*"/>
+                <attr name="include" stringvalue="config/Preferences/ancestris/core/report.*"/>
             </file>
         </folder>
+        <folder name="templates">
+            <file name="gedart">
+                <attr name="displayName" bundlevalue="ancestris.core.report.Bundle#OptionsExport/preferences/gedart"/>
+                <attr name="include" stringvalue="ancestris/gedart/([^/]*)/.*"/>
+            </file>
         </folder>
+    </folder>
 </filesystem>
     
