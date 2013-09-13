@@ -17,5 +17,13 @@
                 <attr name="position" intvalue="-700"/>
             </file>
             </folder>
-</folder>            
+    </folder>            
+    <folder name="OptionsExport">
+        <folder name="templates">
+            <file name="almanac">
+                <attr name="displayName" bundlevalue="ancestris.modules.almanac.Bundle#OptionsExport/preferences/almanac"/>
+                <attr name="include" stringvalue="ancestris/almanac/.*"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>

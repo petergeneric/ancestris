@@ -157,13 +157,12 @@ made subject to such option by the copyright holder.
 
     </folder>
 
-    <folder name="OptionsExport">
+<!--    <folder name="OptionsExport">
         <folder name="General">
-            <file name="Welcome">
+            <file name="General">
                 <attr name="include" stringvalue="config/Preferences/ancestris/welcome[.]properties"/>
                 <attr name="exclude" stringvalue="config/Preferences/ancestris/welcome[.]properties!feedback.*"/>
-                <attr name="displayName" bundlevalue="ancestris.welcome.Bundle#Welcome.Options.Export.displayName"/>
             </file>
         </folder>
-    </folder>
+    </folder>-->
 </filesystem>
