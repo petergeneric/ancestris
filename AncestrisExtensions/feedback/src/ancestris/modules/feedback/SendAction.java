@@ -45,6 +45,7 @@ public final class SendAction implements ActionListener {
         modulePreferences.put("mail.address", panel.jtEmail.getText().trim());
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         try {
