@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.4" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
@@ -25,9 +25,9 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jcbIncGenjLog" min="-2" max="-2" attributes="0"/>
+                      <Component id="sendLogCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="saveButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -40,12 +40,12 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane2" pref="500" max="32767" attributes="2"/>
-                          <Component id="jtSubject" alignment="0" pref="500" max="32767" attributes="2"/>
-                          <Component id="jtEmailTo" alignment="0" pref="500" max="32767" attributes="2"/>
-                          <Component id="jtEmail" alignment="0" pref="500" max="32767" attributes="2"/>
-                          <Component id="jtName" alignment="1" pref="500" max="32767" attributes="2"/>
-                          <Component id="jLabel7" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" max="32767" attributes="2"/>
+                          <Component id="jtSubject" alignment="0" max="32767" attributes="2"/>
+                          <Component id="jtEmailTo" alignment="0" max="32767" attributes="2"/>
+                          <Component id="jtEmail" alignment="0" max="32767" attributes="2"/>
+                          <Component id="jtName" alignment="1" max="32767" attributes="2"/>
+                          <Component id="jLabel7" alignment="0" pref="488" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
                   </Group>
@@ -85,14 +85,14 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" pref="139" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="133" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jcbIncGenjLog" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="sendLogCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="saveButton" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -133,24 +133,16 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel6">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/feedback/Bundle.properties" key="FeedbackPanel.jLabel6.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})">
-            <Argument index="0" javacode="fileLength"/>
-          </ResourceString>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="jcbIncGenjLog">
+    <Component class="javax.swing.JCheckBox" name="sendLogCheckBox">
       <Properties>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/feedback/Bundle.properties" key="FeedbackPanel.jcbIncGenjLog.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/feedback/Bundle.properties" key="FeedbackPanel.jLabel6.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-          <Color id="Pointeur par d&#xe9;faut"/>
+          <Color id="Curseur par d&#xe9;faut"/>
         </Property>
+        <Property name="horizontalTextPosition" type="int" value="2"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
@@ -255,6 +247,16 @@
           <Dimension value="[500, 67]"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="saveButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/feedback/Bundle.properties" key="FeedbackPanel.saveButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
