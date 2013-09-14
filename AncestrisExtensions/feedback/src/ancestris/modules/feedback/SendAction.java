@@ -30,7 +30,7 @@ public final class SendAction implements ActionListener {
     private final static String TEXTSEPARATOR = "\n=======================================\n";
     private final static String SEND = NbBundle.getMessage(SendAction.class, "SEND_BUTTON");
     private Preferences modulePreferences = NbPreferences.forModule(FeedBackPlugin.class);
-    private File userDir;
+    private File zipFile;
     private FeedbackPanel fbPanel;
 
     private void setDefaultValues(FeedbackPanel panel) {
@@ -49,7 +49,7 @@ public final class SendAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         try {
-            userDir = sendUserDir();
+            zipFile = sendUserDir();
         } catch (Exception ex) {
             NotifyDescriptor nd = new NotifyDescriptor.Message(RESOURCES.getString("fb.msg.senderror")
                     + "\n(" + ex.getMessage() + ").", NotifyDescriptor.ERROR_MESSAGE);
@@ -61,7 +61,7 @@ public final class SendAction implements ActionListener {
 
             OptionsDisplayer.getDefault().open("Extensions/FeedBack");
         } else {
-            fbPanel = new FeedbackPanel(userDir.length());
+            fbPanel = new FeedbackPanel(zipFile);
 
             setDefaultValues(fbPanel);
 
@@ -80,8 +80,8 @@ public final class SendAction implements ActionListener {
                 String subject = "[" + RESOURCES.getString("fb.tag.subject") + " " + TS + "] ";
                 subject += fbPanel.jtSubject.getText().trim();
                 File attachedFile = null;
-                if (fbPanel.jcbIncGenjLog.isSelected()) {
-                    attachedFile = userDir;
+                if (fbPanel.sendLogCheckBox.isSelected()) {
+                    attachedFile = zipFile;
                 }
                 Thread t = new Thread(new SendMailWorker(name, from, to, subject, messageBody, attachedFile), "SendFeedback");
                 t.start();
