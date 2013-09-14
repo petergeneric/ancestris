@@ -39,9 +39,7 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
         TLSEncryptioncheckBox = new javax.swing.JCheckBox();
         checkBoxAuthenticationRequired = new javax.swing.JCheckBox();
         labelLoginName = new javax.swing.JLabel();
-        labelPassord = new javax.swing.JLabel();
         textFieldLoginName = new javax.swing.JTextField();
-        passwordField = new javax.swing.JPasswordField();
         noEncryptioncheckBox = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
 
@@ -88,14 +86,8 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(labelLoginName, org.openide.util.NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.labelLoginName.text")); // NOI18N
         labelLoginName.setEnabled(false);
 
-        org.openide.awt.Mnemonics.setLocalizedText(labelPassord, org.openide.util.NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.labelPassord.text")); // NOI18N
-        labelPassord.setEnabled(false);
-
         textFieldLoginName.setText(org.openide.util.NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldLoginName.text")); // NOI18N
         textFieldLoginName.setEnabled(false);
-
-        passwordField.setText(org.openide.util.NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.passwordField.text")); // NOI18N
-        passwordField.setEnabled(false);
 
         buttonGroup1.add(noEncryptioncheckBox);
         org.openide.awt.Mnemonics.setLocalizedText(noEncryptioncheckBox, org.openide.util.NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.noEncryptioncheckBox.text")); // NOI18N
@@ -115,13 +107,9 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelLoginName)
-                            .addComponent(labelPassord))
+                        .addComponent(labelLoginName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textFieldLoginName, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
-                            .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)))
+                        .addComponent(textFieldLoginName, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE))
                     .addComponent(checkBoxAuthenticationRequired)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,10 +163,6 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelLoginName)
                     .addComponent(textFieldLoginName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelPassord)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -187,17 +171,10 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
         if (checkBoxAuthenticationRequired.isSelected() == true) {
             labelLoginName.setEnabled(true);
             textFieldLoginName.setEnabled(true);
-
-            labelPassord.setEnabled(true);
-            passwordField.setEnabled(true);
         } else {
             labelLoginName.setEnabled(false);
             textFieldLoginName.setEnabled(false);
             textFieldLoginName.setText("");
-
-            labelPassord.setEnabled(false);
-            passwordField.setEnabled(false);
-            passwordField.setText("");
         }
 }//GEN-LAST:event_checkBoxAuthenticationRequiredActionPerformed
 
@@ -231,17 +208,10 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
             textFieldLoginName.setEnabled(true);
             textFieldLoginName.setText(modulePreferences.get("mail.host.login", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldLoginName.text")));
 
-            labelPassord.setEnabled(true);
-            passwordField.setEnabled(true);
-            passwordField.setText(modulePreferences.get("mail.host.password", ""));
         } else {
             labelLoginName.setEnabled(false);
             textFieldLoginName.setEnabled(false);
             textFieldLoginName.setText("");
-
-            labelPassord.setEnabled(false);
-            passwordField.setEnabled(false);
-            passwordField.setText("");
         }
     }
 
@@ -257,7 +227,6 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
         modulePreferences.putBoolean("mail.host.AuthenticationRequired", checkBoxAuthenticationRequired.isSelected());
         if (checkBoxAuthenticationRequired.isSelected() == true) {
             modulePreferences.put("mail.host.login", textFieldLoginName.getText());
-            modulePreferences.put("mail.host.password", String.copyValueOf(passwordField.getPassword()));
         } else {
             modulePreferences.put("mail.host.login", "");
             modulePreferences.put("mail.host.password", "");
@@ -278,10 +247,8 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel labelEmailAddress;
     private javax.swing.JLabel labelLoginName;
     private javax.swing.JLabel labelName;
-    private javax.swing.JLabel labelPassord;
     private javax.swing.JLabel labelSMTPHost;
     private javax.swing.JCheckBox noEncryptioncheckBox;
-    private javax.swing.JPasswordField passwordField;
     javax.swing.JFormattedTextField textFieldEmailAddress;
     private javax.swing.JTextField textFieldLoginName;
     javax.swing.JFormattedTextField textFieldName;

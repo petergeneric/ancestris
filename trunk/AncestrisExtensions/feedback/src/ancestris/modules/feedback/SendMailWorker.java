@@ -22,6 +22,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
@@ -68,7 +69,12 @@ public class SendMailWorker implements Runnable {
             logger.log(Level.INFO, "Get no encryption session ...");
             session = this.createSession();
         }
-        logger.log(Level.INFO, "... done");
+        if (session != null)
+            logger.log(Level.INFO, "... done");
+        else {
+            logger.log(Level.INFO, "... canceled by user");
+            return;
+        }
 
         /*
          * Construct the message and send it.
@@ -95,6 +101,20 @@ public class SendMailWorker implements Runnable {
         }
     }
 
+    private String getPassword() {
+        PasswordPanel passwordPanel = new PasswordPanel();
+
+        DialogDescriptor dd = new DialogDescriptor(passwordPanel, NbBundle.getMessage(this.getClass(), "FeedBackPasswordPanel.title"));
+        DialogDisplayer.getDefault().createDialog(dd);
+        DialogDisplayer.getDefault().notify(dd);
+        if (dd.getValue().equals(DialogDescriptor.OK_OPTION)) {
+            return passwordPanel.getPassword ();
+        } else {
+            return null;
+        }
+
+    }
+
     private Session createSSLSession() {
         Session session = null;
         Properties props = new Properties();
@@ -106,12 +126,15 @@ public class SendMailWorker implements Runnable {
         if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
             logger.log(Level.INFO, "Authenticated SSL session");
             props.put("mail.smtp.auth", "true");
+            final String password = getPassword ();
+            if (password == null)
+                return null;
             session = Session.getDefaultInstance(props,
                     new javax.mail.Authenticator() {
 
                         @Override
                         protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), modulePreferences.get("mail.host.password", "password"));
+                            return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), password);
                         }
                     });
         } else {
@@ -123,7 +146,7 @@ public class SendMailWorker implements Runnable {
         return session;
     }
 
-    private Session createTLSSession() {
+    private Session createTLSSession( ) {
         Session session = null;
         Properties props = new Properties();
 
@@ -134,12 +157,15 @@ public class SendMailWorker implements Runnable {
 
         if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
             logger.log(Level.INFO, "Authenticated TLS session");
+            final String password = getPassword ();
+            if (password == null)
+                return null;
             session = Session.getInstance(props,
                     new javax.mail.Authenticator() {
 
                         @Override
                         protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), modulePreferences.get("mail.host.password", "password"));
+                            return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), password);
                         }
                     });
         } else {
@@ -184,9 +210,11 @@ public class SendMailWorker implements Runnable {
             InternetAddress fromInternetAddress = new InternetAddress(from);
             logger.log(Level.INFO, "setFrom {0}", fromInternetAddress);
             message.setFrom(fromInternetAddress);
-            InternetAddress toInternetAddress = new InternetAddress(to);
-            logger.log(Level.INFO, "setRecipient {0}", toInternetAddress);
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            for (String recipient : to.split(",")) {
+                InternetAddress recipientInternetAddress = new InternetAddress(recipient);
+                logger.log(Level.INFO, "addRecipient {0}", recipientInternetAddress);
+                message.addRecipient(Message.RecipientType.TO, recipientInternetAddress);
+            }
             logger.log(Level.INFO, "setSubject {0}", subject);
             message.setSubject(subject);
             if (attachedFile != null) {
