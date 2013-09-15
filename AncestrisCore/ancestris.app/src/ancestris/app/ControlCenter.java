@@ -28,9 +28,13 @@ import java.util.Collection;
 
 import org.openide.util.Exceptions;
 import genj.gedcom.Context;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * The central component of the GenJ application
@@ -42,7 +46,7 @@ public class ControlCenter {
 
     private int isLoaded = 1;
     final private Object loadLock = new Object();
-
+    private static final Logger LOG = Logger.getLogger("ancestris");
 
     /**
      * Loads gedcom files
@@ -120,8 +124,16 @@ public class ControlCenter {
                 for (FileObject file: files) {
                         GedcomDirectory.getDefault().openGedcom(file);
                         // FIXME: should we save and restore passwords, and how?
-
                 }
+            }
+            //XXX: activate welcome TC if opened just after opening all files.
+            // This must not be done here but activated in welcome module. In fact this is already done
+            // but as all other TC are "manually" opened at startup (ie do not use NB persistence
+            // topcomponent) we must open welcome here.
+            // We will have to investigate to properly use Persistence API for TC
+            TopComponent welcome = WindowManager.getDefault().findTopComponent("Welcome");
+            if (welcome!= null){
+                welcome.requestActive();
             }
 
             // done
