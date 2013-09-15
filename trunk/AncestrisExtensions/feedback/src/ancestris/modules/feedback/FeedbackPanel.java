@@ -21,8 +21,6 @@ import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -92,7 +90,7 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jLabel5.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jLabel5.text")); // NOI18N
 
         sendLogCheckBox.setSelected(true);
-        sendLogCheckBox.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jLabel6.text")); // NOI18N
+        sendLogCheckBox.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/feedback/Bundle").getString("FeedbackPanel.jLabel6.text"), new Object[] {zipFile.length()})); // NOI18N
         sendLogCheckBox.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         sendLogCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
