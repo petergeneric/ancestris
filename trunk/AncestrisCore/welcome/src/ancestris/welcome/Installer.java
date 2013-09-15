@@ -32,8 +32,11 @@ package ancestris.welcome;
 
 import java.util.Set;
 import org.openide.modules.ModuleInstall;
+import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
+import org.openide.windows.WindowSystemEvent;
+import org.openide.windows.WindowSystemListener;
 
 /**
  * Checks the feedback survey.
@@ -42,19 +45,31 @@ public class Installer extends ModuleInstall implements Runnable {
 
     @Override public void restored() {
         WindowManager.getDefault().invokeWhenUIReady(this);
+        WindowManager.getDefault().addWindowSystemListener( new WindowSystemListener() {
+
+            @Override
+            public void beforeLoad( WindowSystemEvent event ) {
     }
 
     @Override
-    public boolean closing() {
+            public void afterLoad( WindowSystemEvent event ) {
+            }
+
+            @Override
+            public void beforeSave( WindowSystemEvent event ) {
+                WindowManager.getDefault().removeWindowSystemListener( this);
         WelcomeComponent topComp = null;
+                boolean isEditorShowing = false;
         Set<TopComponent> tcs = TopComponent.getRegistry().getOpened();
-        for (TopComponent tc: tcs) {
+                for (Mode mode : WindowManager.getDefault().getModes()) {
+                    TopComponent tc = mode.getSelectedTopComponent();
             if (tc instanceof WelcomeComponent) {                
                 topComp = (WelcomeComponent) tc;               
-                break;
             }
+                    if( null != tc && WindowManager.getDefault().isEditorTopComponent( tc ) )
+                        isEditorShowing = true;
         }
-        if( WelcomeOptions.getDefault().isShowOnStartup() ) {
+                if( WelcomeOptions.getDefault().isShowOnStartup()/*??? && isEditorShowing */) {
             if(topComp == null){            
                 topComp = WelcomeComponent.findComp();
             }
@@ -65,10 +80,17 @@ public class Installer extends ModuleInstall implements Runnable {
         } else if( topComp != null ) {
             topComp.close();
         }
-        return super.closing();
     }
 
+            @Override
+            public void afterSave( WindowSystemEvent event ) {
+            }
+        });
+    }
+
+    @Override
     public void run() {
         FeedbackSurvey.start();
+        WelcomeComponent.findComp().requestActive();
     }
 }

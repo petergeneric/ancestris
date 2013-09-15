@@ -78,7 +78,7 @@ public class WelcomeComponent extends TopComponent {
     }
     
     @Override protected String preferredID(){
-        return "WelcomeComponent";    //NOI18N
+        return "Welcome";    //NOI18N
     }
     
     /**
@@ -110,7 +110,7 @@ public class WelcomeComponent extends TopComponent {
         }
     }
         
-    /* Singleton accessor. As WelcomeComponent is persistent singleton this
+    /** Singleton accessor. As WelcomeComponent is persistent singleton this
      * accessor makes sure that WelcomeComponent is deserialized by window system.
      * Uses known unique TopComponent ID "Welcome" to get WelcomeComponent instance
      * from window system. "Welcome" is name of settings file defined in module layer.
@@ -142,7 +142,7 @@ public class WelcomeComponent extends TopComponent {
         return wc;
     }
     
-    /* Singleton accessor reserved for window system ONLY. Used by window system to create
+    /** Singleton accessor reserved for window system ONLY. Used by window system to create
      * WelcomeComponent instance from settings file when method is given. Use <code>findComp</code>
      * to get correctly deserialized instance of WelcomeComponent. */
     public static WelcomeComponent createComp() {
