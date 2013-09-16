@@ -62,7 +62,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         cbSplitJuridictions = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
         jSpinner1 = new javax.swing.JSpinner(new SpinnerNumberModel(10, 10, 300, 5));
         jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -84,9 +83,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox2.text")); // NOI18N
         jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox2.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox3, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox3.text")); // NOI18N
-        jCheckBox3.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox3.toolTipText")); // NOI18N
 
         jSpinner1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jSpinner1.toolTipText")); // NOI18N
 
@@ -162,21 +158,22 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                             .addComponent(jcbOutputLanguage, 0, 209, Short.MAX_VALUE))
                         .addGap(32, 32, 32)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel3)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
-                        .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(79, 79, 79)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox2)
-                            .addComponent(cbSplitJuridictions)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addGap(72, 72, 72)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6))
-                            .addComponent(jCheckBox3))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBox2)
+                                    .addComponent(cbSplitJuridictions)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel6)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
@@ -205,18 +202,17 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                             .addComponent(jCheckBox1)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbSplitJuridictions)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbSplitJuridictions)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox2)))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -235,7 +231,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
         jCheckBox1.setSelected(ancestris.app.AppOptions.isRestoreViews());
-//XXX: to be removed (see optiondatapanel)        setAutoCommit(editPrefs.get("isAutoCommit", ""));
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
         cbSplitJuridictions.setSelected(CoreOptions.getInstance().isSplitJurisdictions());
 //XXX:        setOpenEditor(editPrefs.get("isOpenEditor", ""));
@@ -257,7 +252,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         stopts.applyChanges();
 
         ancestris.app.AppOptions.setRestoreViews(jCheckBox1.isSelected());
-//XXX:        editPrefs.put("isAutoCommit", getAutoCommit());
         gedcomPrefs.put("numberOfUndos", getUndos());
 
         CoreOptions.getInstance().setSplitJurisdictions(cbSplitJuridictions.isSelected());
@@ -282,7 +276,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbSplitJuridictions;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -371,14 +364,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         if (i<0 || i>=locales.length)
             return null;
         return locales[i];
-    }
-
-    void setAutoCommit(String str) {
-        jCheckBox3.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAutoCommit() {
-        return jCheckBox3.isSelected() ? "true" : "false";
     }
 
     void setUndos(String str) {
