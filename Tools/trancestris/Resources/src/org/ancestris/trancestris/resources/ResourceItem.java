@@ -109,9 +109,9 @@ public abstract class ResourceItem {
             String comment = "";
             for (String line : value.split("\\r?\\n")) {
                 if (line.length() > 0) {
-                    comment += "# " + line + "\n";
+                    comment += "#" + line + "\n";
                 } else {
-                    comment += "\n";
+                    comment += "#\n";
                 }
             }
 
