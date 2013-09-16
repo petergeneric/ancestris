@@ -217,7 +217,7 @@ public enum GedcomDateFormat{
       return gedcomOptions.get("numberOfUndos",10);
   }
   public void setNumberOfUndos(int i) {
-    gedcomOptions.put("numberOfUndos",Math.max(10,i));
+    gedcomOptions.put("numberOfUndos",Math.min(300,Math.max(10,i)));
   }
 
   /** option - default encoding is the last one in gedcom's list available */
