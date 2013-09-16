@@ -9,17 +9,17 @@ import ancestris.core.CoreOptions;
 import ancestris.core.TextOptions;
 import ancestris.startup.settings.StartupOptions;
 import ancestris.util.Lifecycle;
+import genj.gedcom.GedcomOptions;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.ToolTipManager;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle;
 
-@SuppressWarnings(value={"unchecked", "rawtypes"})
+@SuppressWarnings(value = {"unchecked", "rawtypes"})
 final class OptionDisplayPanel extends javax.swing.JPanel {
 
     private final OptionDisplayOptionsPanelController controller;
@@ -41,7 +41,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("fi"),
         new Locale("sv")
     };
-
     private static LookAndFeelProvider[] skins = LookAndFeelProvider.getProviders();
 
     OptionDisplayPanel(OptionDisplayOptionsPanelController controller) {
@@ -217,9 +216,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        LookAndFeelProvider provider = ((LookAndFeelProvider)jComboBox2.getSelectedItem());
+        LookAndFeelProvider provider = ((LookAndFeelProvider) jComboBox2.getSelectedItem());
 
-        jLabel5.setIcon(provider==null?null:provider.getSampleImage());
+        jLabel5.setIcon(provider == null ? null : provider.getSampleImage());
 }//GEN-LAST:event_jComboBox2ActionPerformed
 
     void load() {
@@ -231,7 +230,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
         jCheckBox1.setSelected(ancestris.app.AppOptions.isRestoreViews());
-        setUndos(gedcomPrefs.get("numberOfUndos", ""));
+        jSpinner1.setValue(GedcomOptions.getInstance().getNumberOfUndos());
         cbSplitJuridictions.setSelected(CoreOptions.getInstance().isSplitJurisdictions());
 //XXX:        setOpenEditor(editPrefs.get("isOpenEditor", ""));
     }
@@ -243,29 +242,30 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         StartupOptions stopts = new StartupOptions();
 
-        needRestart = stopts.setJvmLocale(getLanguage());
+        needRestart |= stopts.setJvmLocale(getLanguage());
         TextOptions.getInstance().setOutputLocale(getOutputLanguage());
 
-        needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getName());
-        stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getClassPath());
+        needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getName());
+        stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getClassPath());
 
         stopts.applyChanges();
 
         ancestris.app.AppOptions.setRestoreViews(jCheckBox1.isSelected());
-        gedcomPrefs.put("numberOfUndos", getUndos());
+        GedcomOptions.getInstance().setNumberOfUndos((Integer) (jSpinner1.getValue()));
 
         CoreOptions.getInstance().setSplitJurisdictions(cbSplitJuridictions.isSelected());
 
 //XXX:        editPrefs.put("isOpenEditor", getOpenEditor());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
-        if (needRestart)
-            // the markForRestart is not applicable here as the restart process loop done in nbexec file
-            // doesn't reread app.conf file wich is read once before the loop.
-            // W/O modifying nbexec and windows dll, the startup  settings are not re-read
-            // So, as in a basic usage of ancestris the language preference will not be set by the user,
-            // we tell the user to stop the start again ancestris. This way all the new startup settings are correctly read
-            Lifecycle.askForStopAndStart(null,getLanguage());
+        if (needRestart) // the markForRestart is not applicable here as the restart process loop done in nbexec file
+        // doesn't reread app.conf file wich is read once before the loop.
+        // W/O modifying nbexec and windows dll, the startup  settings are not re-read
+        // So, as in a basic usage of ancestris the language preference will not be set by the user,
+        // we tell the user to stop the start again ancestris. This way all the new startup settings are correctly read
+        {
+            Lifecycle.askForStopAndStart(null, getLanguage());
+        }
     }
 
     boolean valid() {
@@ -293,7 +293,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private String[] initLanguages(String defaultDesc) {
         ArrayList<String> langDescr = new ArrayList<String>(locales.length);
         langDescr.add(defaultDesc);
-        for (Locale locale:locales){
+        for (Locale locale : locales) {
             langDescr.add(locale.getDisplayName(locale));
         }
         return langDescr.toArray(new String[0]);
@@ -301,35 +301,33 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     /**
      * Find the index in languagesfor the language string lang. If not found returns -1
+     *
      * @param lang
+     *
      * @return
      */
-    private int findLanguageIndex(Locale locale){
-        if (locale == null)
+    private int findLanguageIndex(Locale locale) {
+        if (locale == null) {
             return -1;
-        for (int i=0;i<locales.length;i++){
-            if (locale.equals(locales[i]))
+        }
+        for (int i = 0; i < locales.length; i++) {
+            if (locale.equals(locales[i])) {
                 return i;
+            }
         }
         // tries only language
-        locale = new Locale(locale.getLanguage(),locale.getCountry());
-        for (int i=0;i<locales.length;i++){
-            if (locale.getLanguage().equals(locales[i].getLanguage()))
+        locale = new Locale(locale.getLanguage(), locale.getCountry());
+        for (int i = 0; i < locales.length; i++) {
+            if (locale.getLanguage().equals(locales[i].getLanguage())) {
                 return i;
+            }
         }
         return -1;
     }
 
-    private static String[] initSkins1(){
-        List<String> result = new ArrayList<String>();
-        for (LookAndFeelProvider l:skins){
-            result.add(l.getDisplayName());
-        }
-        return result.toArray(new String[]{});
-    }
-
     /**
      * Set the language selector accorgingly to the locale setting passed in parameter
+     *
      * @param str
      */
     void setLanguage(Locale locale) {
@@ -341,14 +339,16 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     // null means default locale from system
     Locale getLanguage() {
-        int i = jcbLanguage.getSelectedIndex()-1;
-        if (i<0 || i>=locales.length)
+        int i = jcbLanguage.getSelectedIndex() - 1;
+        if (i < 0 || i >= locales.length) {
             return null;
+        }
         return locales[i];
     }
 
     /**
      * Set the language selector accorgingly to the locale setting passed in parameter
+     *
      * @param str
      */
     void setOutputLanguage(Locale locale) {
@@ -360,28 +360,11 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     // null means default locale from system
     Locale getOutputLanguage() {
-        int i = jcbOutputLanguage.getSelectedIndex()-1;
-        if (i<0 || i>=locales.length)
+        int i = jcbOutputLanguage.getSelectedIndex() - 1;
+        if (i < 0 || i >= locales.length) {
             return null;
+        }
         return locales[i];
-    }
-
-    void setUndos(String str) {
-        if (str.equals("-1")) {
-            str = "10";
-        }
-        Integer i = getIntFromStr(str);
-        if (i == -1) {
-            i = 10;
-        }
-        if (i > 300) {
-            i = 300;
-        }
-        jSpinner1.setValue(i);
-    }
-
-    String getUndos() {
-        return jSpinner1.getValue().toString();
     }
 
     void setOpenEditor(String str) {
@@ -391,16 +374,4 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     String getOpenEditor() {
         return jCheckBox2.isSelected() ? "true" : "false";
     }
-
-    private Integer getIntFromStr(String str) {
-
-        Integer i = 0;
-        try {
-            i = Integer.valueOf(str);
-        } catch (Exception e) {
-            i = -1;
-        }
-        return i;
-    }
-
 }
