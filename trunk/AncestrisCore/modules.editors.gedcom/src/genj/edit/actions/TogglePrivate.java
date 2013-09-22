@@ -27,6 +27,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 
 import java.awt.event.ActionEvent;
@@ -111,12 +112,11 @@ public class TogglePrivate extends AbstractChange {
         // check gedcom
         if (pwd == null) {
 
-            pwd = DialogHelper.openDialog(
+            pwd = DialogManager.getInstance().show(
                     getText(),
-                    DialogHelper.QUESTION_MESSAGE,
+                    DialogManager.QUESTION_MESSAGE,
                     AbstractChange.resources.getString("password", gedcom.getName()),
-                    "",
-                    event);
+                    "");
 
             // canceled?
             if (pwd == null) {

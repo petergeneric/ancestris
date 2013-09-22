@@ -23,6 +23,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
@@ -134,12 +135,11 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
       // check selection
       Blueprint selection = (Blueprint)blueprints.getSelectedValue();
       // get name
-      String name = DialogHelper.openDialog(
+      String name = DialogManager.getInstance().show(
         null,
-        DialogHelper.QUESTION_MESSAGE,
+        DialogManager.QUESTION_MESSAGE,
         RESOURCES.getString("blueprint.add.confirm"),
-        "",
-        e
+        ""
       );
       if (name==null||name.length()==0) 
         return;
