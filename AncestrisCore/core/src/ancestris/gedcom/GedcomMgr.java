@@ -34,6 +34,7 @@ import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 import genj.view.ViewContext;
 import java.io.File;
@@ -250,7 +251,7 @@ public abstract class GedcomMgr {
                 reader = (GedcomReader) Spin.off(GedcomReaderFactory.createReader(origin, (GedcomReaderContext) Spin.over(new GedcomReaderContext() {
 
                     public String getPassword() {
-                        return DialogHelper.openDialog(FileUtil.getFileDisplayName(input), DialogHelper.QUESTION_MESSAGE, RES.getString("cc.provide_password"), "", null);
+                        return DialogManager.getInstance().show(FileUtil.getFileDisplayName(input), DialogManager.QUESTION_MESSAGE, RES.getString("cc.provide_password"), "");
                     }
 
                     public void handleWarning(int line, String warning, Context context) {

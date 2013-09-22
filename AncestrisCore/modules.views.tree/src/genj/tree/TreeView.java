@@ -28,6 +28,7 @@ import ancestris.core.actions.CommonActions;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionActionEvent;
 import ancestris.view.SelectionDispatcher;
@@ -1356,8 +1357,8 @@ public class TreeView extends View implements Filter {
             }
 
             // Ask for name of bookmark
-            name = DialogHelper.openDialog(
-                    TITLE, DialogHelper.QUESTION_MESSAGE, RESOURCES.getString("bookmark.name"), name, TreeView.this);
+            name = DialogManager.getInstance().show(
+                    TITLE, DialogManager.QUESTION_MESSAGE, RESOURCES.getString("bookmark.name"), name);
 
             if (name == null) {
                 return;
