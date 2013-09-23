@@ -26,6 +26,9 @@ public class DialogManager {
             WARNING_MESSAGE = NotifyDescriptor.WARNING_MESSAGE,
             QUESTION_MESSAGE = NotifyDescriptor.QUESTION_MESSAGE,
             PLAIN_MESSAGE = NotifyDescriptor.PLAIN_MESSAGE;
+    public static final int OK_CANCEL_OPTION = DialogDescriptor.OK_CANCEL_OPTION;
+    /** Return value if OK is chosen. */
+    public static final Object OK_OPTION = DialogDescriptor.OK_OPTION;
     private static DialogManager instance = null;
     public static DialogManager getInstance() {
         if (instance == null) {
@@ -54,10 +57,22 @@ public class DialogManager {
      *
      * @return
      */
-    public Object show(String title, int messageType, JComponent content, Object[] options, String dialogId) {
+    //TODO: redesign API with less functions
+    public Object show(String title, int messageType, JComponent content,int optionType, String dialogId) {
+        return show(title, messageType, content, optionType, null, dialogId);
+    }
+    public Object show(String title, int messageType, JComponent content,Object[] options, String dialogId) {
+        return show(title, messageType, content, 0, options, dialogId);
+    }
+    public Object show(String title, JComponent content,String dialogId) {
+        return show(title, QUESTION_MESSAGE, content, 0,new Object[]{ DialogDescriptor.OK_OPTION}, dialogId);
+    }
+
+    private Object show(String title, int messageType, JComponent content,int optionType, Object[] options, String dialogId) {
         DialogDescriptor d = new DialogDescriptor(content, title);
         d.setMessageType(messageType);
-        d.setOptions(options);
+        if (options!=null)
+            d.setOptions(options);
         final Dialog dialog = DialogDisplayer.getDefault().createDialog(d);
         // restore bounds
         if (dialogId != null) {
@@ -85,5 +100,59 @@ public class DialogManager {
             return d.getInputText();
         }
         return null;
+    }
+    
+    public static ADialog create(String title, JComponent content){
+        return new ADialog(title, content);
+    }
+    
+    public static class ADialog{
+        private DialogDescriptor dd;
+        private String dialogId = null;
+
+        public ADialog(String title, JComponent content) {
+            dd = new DialogDescriptor(content, title);
+            dd.setMessageType(DialogDescriptor.QUESTION_MESSAGE);
+            dd.setOptions(new Object[]{ DialogDescriptor.OK_OPTION});
+        }
+
+        public ADialog setOptions(Object[] newOptions) {
+            dd.setOptions(newOptions);
+            return this;
+        }
+
+        public ADialog setOptionType(int newType) {
+            dd.setOptions(null);
+            dd.setOptionType(newType);
+            return this;
+        }
+
+        public ADialog setMessageType(int newType) {
+            dd.setMessageType(newType);
+            return this;
+        }        
+
+        public ADialog setDialogId(String id) {
+            dialogId = id;
+            return this;
+        }        
+    public Object show() {
+        final Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
+        // restore bounds
+        if (dialogId != null) {
+            final Registry registry = Registry.get(DialogManager.class);
+            Dimension bounds = registry.get(dialogId+".dialog", (Dimension) null);
+            if (bounds != null) {
+                Rectangle prev = dialog.getBounds();
+                prev.grow((bounds.width - prev.width) / 2, (bounds.height - prev.height) / 2);
+                dialog.setBounds(prev);
+            }
+            dialog.setVisible(true);
+            registry.put(dialogId+".dialog", dialog.getSize());
+        } else {
+            dialog.setVisible(true);
+        }
+        return dd.getValue();
+    }
     }
 }

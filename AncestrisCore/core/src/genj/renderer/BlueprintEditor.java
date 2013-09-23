@@ -31,6 +31,7 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 
 import java.awt.BorderLayout;
@@ -60,6 +61,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.openide.DialogDescriptor;
 
 /**
  * An editor component for changing a rendering scheme
@@ -299,9 +301,12 @@ public class BlueprintEditor extends JSplitPane {
       TagPath[] paths = grammar.getAllPaths(blueprint.getTag(), Property.class);
       tree.setPaths(paths, new TagPath[0]);
       // Recheck with the user
-      int option = DialogHelper.openDialog(resources.getString("prop.insert.tip"),DialogHelper.QUESTION_MESSAGE,tree,AbstractAncestrisAction.okCancel(),BlueprintEditor.this);        
+      Object option = DialogManager.create(resources.getString("prop.insert.tip"),tree).
+              setOptionType(DialogDescriptor.OK_CANCEL_OPTION).
+              setDialogId("genj.renderer.blueprinteditor").
+              show();
       // .. OK?
-      if (option!=0) return;
+      if (option!=DialogDescriptor.OK_OPTION) return;
       // add those properties
       paths = tree.getSelection();
       for (int p=0;p<paths.length; p++) {
