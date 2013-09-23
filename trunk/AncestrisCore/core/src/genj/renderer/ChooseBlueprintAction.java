@@ -41,6 +41,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.openide.DialogDescriptor;
 
 /**
  * Action for picking/editing a blueprint
@@ -111,12 +112,9 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
     content.add(bh.create(del));
     content.add(editor);
     
-    DialogHelper.openDialog(
-        RESOURCES.getString("blueprint"), 
-        DialogHelper.QUESTION_MESSAGE, 
-        content, 
-        AbstractAncestrisAction.okOnly(), 
-        e);
+    DialogManager.create(RESOURCES.getString("blueprint"), content).
+            setDialogId("genj.renderer.blueprint").
+            show();
     
     editor.commit();
 

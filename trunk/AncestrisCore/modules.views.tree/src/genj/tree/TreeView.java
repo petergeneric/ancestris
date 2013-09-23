@@ -1246,8 +1246,11 @@ public class TreeView extends View implements Filter {
 
             // let the user choose an individual
             SelectEntityWidget select = new SelectEntityWidget(context.getGedcom(), Gedcom.INDI, null);
-            int rc = DialogHelper.openDialog(getText(), DialogHelper.QUESTION_MESSAGE, select, AbstractAncestrisAction.okCancel(), TreeView.this);
-            if (rc == 0) {
+            Object rc = DialogManager.create(getText(), select)
+                    .setOptionType(DialogManager.OK_CANCEL_OPTION)
+//                    .setDialogId("select.root")
+                    .show();
+            if (rc == DialogManager.OK_OPTION) {
                 setRoot(select.getSelection());
             }
 

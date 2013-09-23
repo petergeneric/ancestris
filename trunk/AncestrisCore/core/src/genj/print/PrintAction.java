@@ -21,6 +21,7 @@ package genj.print;
 
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 
@@ -30,6 +31,7 @@ import java.util.logging.Logger;
 
 import javax.print.PrintException;
 import javax.swing.Action;
+import org.openide.DialogDescriptor;
 
 /**
  * An action for printing
@@ -72,20 +74,15 @@ public abstract class PrintAction extends AbstractAncestrisAction {
     // show dialog
     PrintWidget widget = new PrintWidget(task);
 
-    // prepare actions
-    Action[] actions = { 
-        new AbstractAncestrisAction(RES.getString("print")),
-        AbstractAncestrisAction.cancel() 
-    };
-    
     // show it in dialog
-    int choice = DialogHelper.openDialog(
-        title, 
-        DialogHelper.QUESTION_MESSAGE, 
-        widget, actions, e);
-
+    String printChoice = new String(RES.getString("print"));
+    Object choice = DialogManager.create(title, widget).
+            setOptions(new Object[]{printChoice,DialogDescriptor.CANCEL_OPTION})
+            .setDialogId("printaction")
+            .show();
+            
     // check choice
-    if (choice != 0 || task.getPages().width == 0 || task.getPages().height == 0)
+    if (choice != printChoice || task.getPages().width == 0 || task.getPages().height == 0)
       return;
     
     widget.commit();

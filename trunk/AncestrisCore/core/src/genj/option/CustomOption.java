@@ -22,12 +22,14 @@
 package genj.option;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.JComponent;
+import org.openide.DialogDescriptor;
 
 /**
  * A custom option with custom UI
@@ -50,8 +52,10 @@ public abstract class CustomOption extends Option {
   
   protected void edit() {
     JComponent editor = getEditor();
-    int rc = DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, editor, AbstractAncestrisAction.okCancel(), widget);
-    if (rc==0)
+    Object rc = DialogManager.create(getName(), editor).
+            setOptionType(DialogDescriptor.OK_CANCEL_OPTION).
+            setDialogId("customoption").show();
+    if (rc==DialogDescriptor.OK_OPTION)
       commit(editor);
   }
   
