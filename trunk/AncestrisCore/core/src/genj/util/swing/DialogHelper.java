@@ -174,27 +174,16 @@ param txt
             }
             box.add(content[i]);
             content[i].setAlignmentX(0F);
-        }
-        // delegate
-        return openDialog(title, messageType, box, actions, source);
-    }
 
-    /**
-     *
-     * @param title
-     * @  param messageType
-     aram content
-     * @param actions
-     * @param source
-     *
-     * @return
-     *
-     * @deprecated use DialogManager
-     */
-    @Deprecated
-    public static int openDialog(String title, int messageType, JComponent content, Action[] actions, Object source) {
+        }
         Object options[] = actions2options(actions);
-        return getResult(DialogManager.getInstance().show(title, messageType, content, options, "window"), options);
+
+        // delegate
+        return getResult(DialogManager.create(title, box)
+                .setMessageType(messageType)
+                .setOptions(options)
+                //XXX: .setDialogId("")
+                .show(),options);
     }
 
     public static Window getWindow(EventObject event) {

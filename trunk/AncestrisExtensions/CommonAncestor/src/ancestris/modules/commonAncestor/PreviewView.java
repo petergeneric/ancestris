@@ -38,6 +38,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 
 import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
@@ -230,11 +231,15 @@ public class PreviewView extends JPanel {
             Action[] actions = AbstractAncestrisAction.okCancel();
             FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
             options.connect(actions[0]);
+            //XXX: will have to reenable ok button listener
 
-            int rc = DialogHelper.openDialog(title, DialogHelper.QUESTION_MESSAGE, options, actions, this);
+            Object rc = DialogManager.create(title, options)
+                    .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                    .setDialogId("common.preview")
+                    .show();
             Format formatter = options.getFormat();
             File file = options.getFile();
-            if (rc != 0 || formatter.getFileExtension() == null || file == null) {
+            if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {
                 showResult(null);
                 return;
             }

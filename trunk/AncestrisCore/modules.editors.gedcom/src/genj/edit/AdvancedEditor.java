@@ -26,6 +26,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.resources.Images;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.common.SelectEntityWidget;
 import genj.edit.beans.PropertyBean;
@@ -426,7 +427,11 @@ import org.openide.nodes.Node;
             select.setSelection(gedcom.getEntity(REGISTRY.get("select." + entity.getTag(), (String) null)));
 
             // show it
-            boolean cancel = 0 != DialogHelper.openDialog(getText(), DialogHelper.WARNING_MESSAGE, panel, AbstractAncestrisAction.okCancel(), AdvancedEditor.this);
+            boolean cancel = DialogManager.OK_OPTION != DialogManager.create(getText(), panel)
+              .setOptionType(DialogManager.OK_CANCEL_OPTION)
+              .setMessageType(DialogManager.WARNING_MESSAGE)
+              //.setDialogId("")
+              .show();
             if (cancel) {
                 return;
             }

@@ -38,6 +38,7 @@ import genj.util.DefaultValueMap;
 import genj.util.Origin;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooserWidget;
 import genj.util.swing.NestedBlockLayout;
@@ -357,7 +358,10 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       
       validate();
       
-      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, options, AbstractAncestrisAction.andCancel(ok), MediaBean.this))
+      if (DialogManager.OK_OPTION != DialogManager.create(getTip(), options)
+              .setOptionType(DialogManager.OK_CANCEL_OPTION)
+              .setDialogId("mediabean.add")
+              .show())
         return;
 
       // tell thumbnail widget
@@ -398,7 +402,6 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
   private class Del extends AbstractAncestrisAction implements PropertyChangeListener,ListSelectionListener {
     
     private JList from;
-    private AbstractAncestrisAction ok;
     
     public Del() {
       setImage(ThumbnailWidget.IMG_THUMBNAIL.getGrayedOut().getOverLayed(ancestris.core.resources.Images.imgDel));
@@ -455,11 +458,13 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       options.add(new JLabel(RES.getString("file.del", "...")));
       options.add(new JScrollPane(from));
 
-      ok = AbstractAncestrisAction.ok();
 
       from.addListSelectionListener(this);
         
-      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, options, AbstractAncestrisAction.andCancel(ok), e))
+      if (DialogManager.OK_OPTION != DialogManager.create(getTip(), options)
+              .setOptionType(DialogManager.OK_CANCEL_OPTION)
+              .setDialogId("mediabean.del")
+              .show())
         return;
       
       // remove props from source
@@ -484,7 +489,10 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
     }
     
     public void valueChanged(ListSelectionEvent e) {
-      ok.setEnabled(from.getSelectedIndices().length>0);
+       
+//XXX: to enable ok button      ok.setEnabled(from.getSelectedIndices().length>0);
+        // Try DialogDescriptor.setValid
+        // See also http://wiki.netbeans.org/DevFaqDialogControlOKButton
     }
     
   }

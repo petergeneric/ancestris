@@ -22,12 +22,14 @@ package genj.report;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.modules.document.view.HyperLinkTextDocumentView;
 import ancestris.modules.document.view.WidgetDocumentView;
+import ancestris.util.swing.DialogManager;
 import genj.common.ContextListWidget;
 import genj.fo.Format;
 import genj.fo.FormatOptionsWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.DialogHelper;
@@ -56,7 +58,7 @@ import spin.Spin;
 public class ReportView extends View {
 
     /* package */
-    static Logger LOG = Logger.getLogger("genj.report");
+    static final Logger LOG = Logger.getLogger("genj.report");
     /** statics */
     private final static ImageIcon imgStart = new ImageIcon(ReportView.class, "Start"),
             imgStop = new ImageIcon(ReportView.class, "Stop");
@@ -179,6 +181,79 @@ public class ReportView extends View {
         }
     }
 
+//    
+//    
+//    
+//    /**
+//     * start a report
+//     * XXX: will be moved to Report class
+//     */
+//    public static void runReport(final Report report, Object context) {
+//        Gedcom gedcom=null;
+//        if (context instanceof Gedcom)
+//            gedcom = (Gedcom)context;
+//        if (context instanceof Property){
+//            gedcom = ((Property)context).getGedcom();
+//        }
+//        if (gedcom == null)
+//            return;
+//        // create a new tab for this run
+//        final HyperLinkTextDocumentView 
+//        output = new HyperLinkTextDocumentView(
+//                new Context(gedcom),
+//                report.getShortName(),
+//                gedcom.getName() + ": " + report.getName());
+//
+//        if (report.getStartMethod(context) == null) {
+//            for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
+//                String tag = Gedcom.ENTITIES[i];
+//                Entity sample = gedcom.getFirstEntity(tag);
+//                if (sample != null && report.accepts(sample) != null) {
+//
+//                    // give the report a chance to name our dialog
+//                    String txt = report.accepts(sample.getClass());
+//                    if (txt == null) {
+//                        Gedcom.getName(tag);
+//                    }
+//
+//                    // ask user for context now
+//                    context = report.getEntityFromUser(txt, gedcom, tag);
+//                    if (context == null) {
+//                        return;
+//                    }
+//                    break;
+//                }
+//            }
+//        }
+//
+//        // check if appropriate
+//        if (context == null || report.accepts(context) == null) {
+//            DialogHelper.openDialog(report.getName(), DialogHelper.ERROR_MESSAGE, RESOURCES.getString("report.noaccept"), AbstractAncestrisAction.okOnly(), null);
+//            return;
+//        }
+//
+//        // set report ui context
+//        report.setOwner(null);
+//
+//        // clear the current output and show coming
+//        output.clear();
+//        // kick it off
+//        Runner.Callback cb = new Runner.Callback(){
+//
+//            @Override
+//            public void handleOutput(Report report, String s) {
+//                output.add(s);
+//            }
+//
+//            @Override
+//            public void handleResult(Report report, Object result) {
+//                showResult(result);
+//            }
+//        };
+//        new Thread(new Runner(gedcom, context, report, (Runner.Callback) Spin.over(cb))).start();
+//
+//    }
+//
     /**
      * Start a report after selection
      */
@@ -300,12 +375,16 @@ public class ReportView extends View {
 
             Action[] actions = AbstractAncestrisAction.okCancel();
             FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
+//XXX: remove connect api and create a validatelistener
             options.connect(actions[0]);
 
-            int rc = DialogHelper.openDialog(title, DialogHelper.QUESTION_MESSAGE, options, actions, this);
+            Object rc = DialogManager.create(title, options)
+              .setOptionType(DialogManager.OK_CANCEL_OPTION)
+              .setDialogId("report.optionsfromuser")
+              .show();
             Format formatter = options.getFormat();
             File file = options.getFile();
-            if (rc != 0 || formatter.getFileExtension() == null || file == null) {
+            if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {
                 showResult(null);
                 return;
             }
@@ -320,6 +399,7 @@ public class ReportView extends View {
             } catch (Throwable t) {
                 LOG.log(Level.WARNING, "formatting " + doc + " failed", t);
                 output.add("*** formatting " + doc + " failed");
+                //XXX: show a dialog to user if file creation failed
                 return;
             }
 
@@ -345,7 +425,7 @@ public class ReportView extends View {
         toolbar.add(selector.getActionGroup());
 
         // done
-    }
+}
 
     /**
      * Action: STOP

@@ -24,6 +24,7 @@ package genj.report;
 import ancestris.core.TextOptions;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
+import ancestris.util.swing.DialogManager;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -507,8 +508,12 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 
     // show to user and check for non-ok
     OptionsWidget widget = new OptionsWidget(title, os);
-    int rc = DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, widget, AbstractAncestrisAction.okCancel(), owner);
-    if (rc!=0)
+    Object rc = DialogManager.create(getName(), widget)
+              .setOptionType(DialogManager.OK_CANCEL_OPTION)
+              .setDialogId("report.optionsfromuser")
+              .show();
+
+    if (rc!=DialogManager.OK_OPTION)
       return false;
 
     // save parameters

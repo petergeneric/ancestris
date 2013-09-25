@@ -27,6 +27,7 @@ import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 
 import java.awt.event.ActionEvent;
@@ -63,14 +64,17 @@ public class EditEvent extends AbstractAncestrisAction {
     
     final Action[] actions = AbstractAncestrisAction.okCancel();
     actions[0].setEnabled(false);
-    
+    //XXX: add change listener
     panel.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent e) {
         actions[0].setEnabled(panel.isCommittable());
       }
     });
     
-    if (0==DialogHelper.openDialog(getText(), DialogHelper.QUESTION_MESSAGE, panel, actions, e)) {
+    if (DialogManager.OK_OPTION == DialogManager.create(getText(),panel)
+            .setOptionType(DialogManager.OK_CANCEL_OPTION)
+            .setDialogId("edit.event")
+            .show()){
       property.getGedcom().doMuteUnitOfWork(new UnitOfWork() {
         public void perform(Gedcom gedcom) throws GedcomException {
           panel.commit();

@@ -22,6 +22,7 @@ package genj.view;
 import genj.renderer.RenderSelectionHintKey;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 
@@ -77,7 +78,10 @@ public class ScreenshotAction extends AbstractAncestrisAction {
       choices.add(viewport);
       choices.add(all);
       
-      if (0!=DialogHelper.openDialog(getTip(), DialogHelper.QUESTION_MESSAGE, choices, AbstractAncestrisAction.okCancel(), e))
+      if (DialogManager.OK_OPTION != DialogManager.create(getTip(), choices)
+              .setOptionType(DialogManager.OK_CANCEL_OPTION)
+              .setDialogId("screenshot")
+              .show())
         return;
 
       if (viewport.isSelected())
