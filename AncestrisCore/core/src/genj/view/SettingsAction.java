@@ -21,6 +21,7 @@ package genj.view;
 
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 
 import java.awt.event.ActionEvent;
@@ -44,13 +45,9 @@ public abstract class SettingsAction extends AbstractAncestrisAction {
     
     JComponent editor = getEditor();
     
-    DialogHelper.openDialog(
-        RESOURCES.getString("view.settings.tip"), 
-        DialogHelper.QUESTION_MESSAGE, 
-        editor, 
-        AbstractAncestrisAction.okOnly(), 
-        e);
-
+    DialogManager.create(RESOURCES.getString("view.settings.tip"),editor)
+              .setDialogId(this.getClass().getName()+".settings")
+              .show();
   }
   
   protected abstract JComponent getEditor();

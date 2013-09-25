@@ -22,6 +22,7 @@ package genj.edit.actions;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.resources.Images;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -104,10 +105,15 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
                 new AbstractAncestrisAction(resources.getString("confirm.proceed", getText())),
                 AbstractAncestrisAction.cancel()
             };
+            
+            String confirmButton = resources.getString("confirm.proceed", getText());
 
             // Recheck with the user
-            int rc = DialogHelper.openDialog(getText(), DialogHelper.QUESTION_MESSAGE, getDialogContent(), actions, event);
-            if (rc != 0) {
+            Object rc = DialogManager.create(getText(), getDialogContent())
+              .setOptions(new Object[]{confirmButton,DialogManager.CANCEL_OPTION})
+              //.setDialogId("")
+              .show();
+            if (rc != confirmButton) {
                 return;
             }
         }

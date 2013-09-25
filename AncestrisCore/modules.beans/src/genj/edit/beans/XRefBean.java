@@ -29,6 +29,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.UnitOfWork;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.util.swing.DialogHelper;
 import genj.view.ViewContext;
@@ -78,12 +79,10 @@ public class XRefBean extends PropertyBean implements AncestrisActionProvider{
         return;
       
       SelectEntityWidget select = new SelectEntityWidget(xref.getGedcom(), xref.getTargetType(), null);
-      if (0!=DialogHelper.openDialog(
-          getText(), 
-          DialogHelper.QUESTION_MESSAGE, 
-          select, 
-          AbstractAncestrisAction.okCancel(), 
-          event))
+      if (DialogManager.OK_OPTION != DialogManager.create(getText(), select)
+              .setOptionType(DialogManager.OK_CANCEL_OPTION)
+              .setDialogId("xrefbean.swivel")
+              .show())
         return;
 
       final Entity newTarget = select.getSelection();
