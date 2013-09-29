@@ -100,23 +100,18 @@ public class TogglePrivate extends AbstractChange {
         // check if that's something we can do
         String pwd = gedcom.getPassword();
         if (Gedcom.PASSWORD_UNKNOWN.equals(pwd)) {
-            DialogHelper.openDialog(
-                    getText(),
-                    DialogHelper.WARNING_MESSAGE,
-                    "This Gedcom file contains encrypted information that has to be decrypted before changing private/public status of other information",
-                    AbstractAncestrisAction.okOnly(),
-                    event);
+            DialogManager.create(getText(), "This Gedcom file contains encrypted information that has to be decrypted before changing private/public status of other information")
+                    .setMessageType(DialogManager.WARNING_MESSAGE).show();
             return null;
         }
 
         // check gedcom
         if (pwd == null) {
 
-            pwd = DialogManager.getInstance().show(
+            pwd = DialogManager.create(
                     getText(),
-                    DialogManager.QUESTION_MESSAGE,
                     AbstractChange.resources.getString("password", gedcom.getName()),
-                    "");
+                    "").show();
 
             // canceled?
             if (pwd == null) {

@@ -104,7 +104,7 @@ public class ScreenshotAction extends AbstractAncestrisAction {
       long max = Runtime.getRuntime().maxMemory()/1024/1000;
       String msg = RES.getString("screenshot.oom", r.width*r.height*4/1024/1000, max, String.valueOf(max));
       Logger.getLogger("genj.view").log(Level.WARNING, msg, oom);
-      DialogHelper.openDialog(getTip(), DialogHelper.ERROR_MESSAGE, msg, AbstractAncestrisAction.okOnly(), e);
+      DialogManager.createError(getTip(), msg).show();
     }
     
     

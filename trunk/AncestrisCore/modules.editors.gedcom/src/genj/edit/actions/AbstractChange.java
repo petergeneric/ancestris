@@ -128,7 +128,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
                 }
             });
         } catch (Throwable t) {
-            DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, t.getMessage(), AbstractAncestrisAction.okOnly(), event);
+            DialogManager.createError(null, t.getMessage()).show();
         }
 
         // propagate selection

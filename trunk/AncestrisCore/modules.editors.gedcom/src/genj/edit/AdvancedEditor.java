@@ -453,7 +453,7 @@ import org.openide.nodes.Node;
                     }
                 });
             } catch (GedcomException e) {
-                DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, e.getMessage(), AbstractAncestrisAction.okOnly(), AdvancedEditor.this);
+                DialogManager.createError(null, e.getMessage()).show();
             }
 
             // done
@@ -739,7 +739,7 @@ import org.openide.nodes.Node;
                 tags = choose.getSelectedTags();
                 addDefaults = check.isSelected();
                 if (tags.length == 0) {
-                    DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, resources.getString("add.must_enter"), AbstractAncestrisAction.okOnly(), AdvancedEditor.this);
+                    DialogManager.createError(null, resources.getString("add.must_enter")).show();
                     return;
                 }
             }

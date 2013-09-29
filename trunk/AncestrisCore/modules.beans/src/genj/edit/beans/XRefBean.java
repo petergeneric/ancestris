@@ -105,12 +105,8 @@ public class XRefBean extends PropertyBean implements AncestrisActionProvider{
           }
         });
       } catch (GedcomException ge) {
-        DialogHelper.openDialog(
-            getText(), 
-            DialogHelper.WARNING_MESSAGE, 
-            ge.getMessage(), 
-            AbstractAncestrisAction.okOnly(), 
-            event);
+          DialogManager.create(getText(), ge.getMessage())
+                  .setMessageType(DialogManager.WARNING_MESSAGE).show();
         LOG.log(Level.FINER, ge.getMessage(), ge);
       }
       

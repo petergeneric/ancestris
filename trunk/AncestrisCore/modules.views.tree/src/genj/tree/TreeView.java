@@ -1360,8 +1360,9 @@ public class TreeView extends View implements Filter {
             }
 
             // Ask for name of bookmark
-            name = DialogManager.getInstance().show(
-                    TITLE, DialogManager.QUESTION_MESSAGE, RESOURCES.getString("bookmark.name"), name);
+            name = DialogManager.create(
+                    TITLE, RESOURCES.getString("bookmark.name"), name)
+                    .show();
 
             if (name == null) {
                 return;
