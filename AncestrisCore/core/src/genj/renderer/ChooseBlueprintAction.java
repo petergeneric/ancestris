@@ -79,10 +79,15 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
     final AbstractAncestrisAction del = new Del();
     blueprints.addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent e) {
-        
-        editor.commit();
-        
-        Blueprint selection = (Blueprint)blueprints.getSelectedValue();
+          if (editor.isChanged() && 
+                  //XXX: Put in bundle
+                  DialogManager.YES_OPTION == DialogManager.create("BluePrint Editor", "Do you want to save changes.")
+                      .setMessageType(DialogManager.WARNING_MESSAGE)
+                      .setOptionType(DialogManager.YES_NO_OPTION).show()){
+            editor.commit();
+          }
+
+          Blueprint selection = (Blueprint)blueprints.getSelectedValue();
         
         // no selection?
         if (selection==null) {
@@ -112,15 +117,16 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
     content.add(bh.create(del));
     content.add(editor);
     
-    DialogManager.create(RESOURCES.getString("blueprint"), content).
+    if (DialogManager.OK_OPTION == DialogManager.create(RESOURCES.getString("blueprint"), content).
             setDialogId("genj.renderer.blueprint").
-            show();
-    
-    editor.commit();
+            setOptionType(DialogManager.OK_CANCEL_OPTION).
+            show()){
+        editor.commit();
 
-    current = (Blueprint)blueprints.getSelectedValue();
-    if (current!=null)
-      commit(recipient, current);
+        current = (Blueprint)blueprints.getSelectedValue();
+        if (current!=null)
+        commit(recipient, current);
+    }
   }
 
   private class Add extends AbstractAncestrisAction {
@@ -133,12 +139,11 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
       // check selection
       Blueprint selection = (Blueprint)blueprints.getSelectedValue();
       // get name
-      String name = DialogManager.getInstance().show(
+      String name = DialogManager.create(
         null,
-        DialogManager.QUESTION_MESSAGE,
         RESOURCES.getString("blueprint.add.confirm"),
         ""
-      );
+      ).show();
       if (name==null||name.length()==0) 
         return;
       // get html

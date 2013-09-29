@@ -67,7 +67,7 @@ public abstract class PrintAction extends AbstractAncestrisAction {
       task = new PrintTask(title, getRenderer());
     } catch (PrintException pe) {
       LOG.log(Level.INFO, "can't setup print task", pe);
-      DialogHelper.openDialog(title, DialogHelper.ERROR_MESSAGE, pe.getMessage(), AbstractAncestrisAction.okOnly(), e);
+      DialogManager.createError(title, pe.getMessage()).show();
       return;
     }
     

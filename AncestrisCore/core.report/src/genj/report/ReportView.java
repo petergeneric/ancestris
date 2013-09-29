@@ -133,7 +133,7 @@ public class ReportView extends View {
 
         // check if appropriate
         if (context == null || report.accepts(context) == null) {
-            DialogHelper.openDialog(report.getName(), DialogHelper.ERROR_MESSAGE, RESOURCES.getString("report.noaccept"), AbstractAncestrisAction.okOnly(), ReportView.this);
+            DialogManager.createError(report.getName(), RESOURCES.getString("report.noaccept")).show();
             return;
         }
 

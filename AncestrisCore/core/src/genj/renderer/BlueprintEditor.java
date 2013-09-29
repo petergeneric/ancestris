@@ -192,6 +192,13 @@ public class BlueprintEditor extends JSplitPane {
   }
   
   /**
+   * Returns true if conatent has been changed.
+   * @return 
+   */
+  public boolean isChanged(){
+      return isChanged;
+  }
+  /**
    * Make sure html is visible
    */
   public void setSourceVisible(boolean v) {

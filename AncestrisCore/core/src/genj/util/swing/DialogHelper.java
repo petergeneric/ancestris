@@ -156,7 +156,7 @@ param txt
     public static int openDialog(String title, int messageType, String txt, Action[] actions, Object source) {
 
         Object options[] = actions2options(actions);
-        return getResult(DialogManager.getInstance().show(title, messageType, txt, options), options);
+        return getResult(DialogManager.show(title, messageType, txt, options), options);
     }
 
     /**
@@ -217,7 +217,7 @@ param txt
             this.title = title;
             this.messageType = messageType;
             this.content = content;
-            this.actions = actions != null ? actions : AbstractAncestrisAction.okOnly();
+            this.actions = actions;
 
             // find window for source
             parent = null;

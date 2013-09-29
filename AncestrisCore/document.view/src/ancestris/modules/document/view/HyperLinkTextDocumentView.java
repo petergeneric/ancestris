@@ -14,6 +14,7 @@ package ancestris.modules.document.view;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
 import static ancestris.modules.document.view.Bundle.*;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.util.swing.DialogHelper;
 import java.awt.event.ActionEvent;
@@ -147,7 +148,7 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
             try {
                 out = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF8"));
             } catch (IOException ex) {
-                DialogHelper.openDialog(textOutput.getName(), DialogHelper.ERROR_MESSAGE, "Error while saving to\n" + file.getAbsolutePath(), AbstractAncestrisAction.okOnly(), HyperLinkTextDocumentView.this);
+                DialogManager.createError(textOutput.getName(), "Error while saving to\n" + file.getAbsolutePath()).show();
                 return;
             }
 

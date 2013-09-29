@@ -206,34 +206,6 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
      * @deprecated
      */
     @Deprecated
-    public static AbstractAncestrisAction[] andCancel(AbstractAncestrisAction ok) {
-        return new AbstractAncestrisAction[]{ok, cancel()};
-    }
-
-//  /** convenience factory */
-//  public static AbstractAncestrisAction[] okAnd(AbstractAncestrisAction action) {
-//    return new AbstractAncestrisAction[]{ ok(), action };
-//  }
-//  
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    public static AbstractAncestrisAction[] okOnly() {
-        return new AbstractAncestrisAction[]{ok()};
-    }
-
-//  /** convenience factory */
-//  public static AbstractAncestrisAction[] cancelOnly() {
-//    return new AbstractAncestrisAction[]{ cancel() };
-//  }
-//
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
     private static class Constant extends AbstractAncestrisAction {
 
         private Constant(String txt) {
