@@ -55,19 +55,29 @@ public abstract class DialogManager {
     }
 
     /**
-     * Cretes an error dialog message with only an ok button.
-     *
+     * Creates a simple error dialog message with only an ok button.
      * @param title
-    * @param text
+     * @param text
      *
      * @return
      */
+    //XXX: rename to createOk, default type is ERROR
     public static DialogManager createError(String title, String text) {
         return new Message(title, text).setMessageType(ERROR_MESSAGE);
     }
 
-    public static DialogManager create(String title, String text) {
-        return new Message(title, text).setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
+    /**
+     * Creates a simple question dialog message with only a yes and no button.
+     * Message type defaults to QUESTION_MESSAGE
+     * @param title
+     * @param text
+     *
+     * @return
+     */
+    public static DialogManager createYesNo(String title, String text) {
+        return new Message(title, text)
+                .setOptionType(NotifyDescriptor.YES_NO_OPTION)
+                .setMessageType(QUESTION_MESSAGE);
     }
 
     // see http://wiki.netbeans.org/DevFaqDialogControlOKButton

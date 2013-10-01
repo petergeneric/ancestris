@@ -81,9 +81,8 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
       public void valueChanged(ListSelectionEvent e) {
           if (editor.isChanged() && 
                   //XXX: Put in bundle
-                  DialogManager.YES_OPTION == DialogManager.create("BluePrint Editor", "Do you want to save changes.")
-                      .setMessageType(DialogManager.WARNING_MESSAGE)
-                      .setOptionType(DialogManager.YES_NO_OPTION).show()){
+                  DialogManager.YES_OPTION == DialogManager.createYesNo("BluePrint Editor", "Do you want to save changes.")
+                      .setMessageType(DialogManager.WARNING_MESSAGE).show()){
             editor.commit();
           }
 

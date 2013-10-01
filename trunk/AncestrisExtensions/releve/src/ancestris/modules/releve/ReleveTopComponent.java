@@ -21,6 +21,7 @@ import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.tree.TreeView;
 import genj.util.EnvironmentChecker;
@@ -916,8 +917,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // choose an existing file?
         if (resultFile.exists() && askForOverwrite) {
             Toolkit.getDefaultToolkit().beep();
-            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), AbstractAncestrisAction.yesNo(), component);
-            if (rc != 0) {
+            if (DialogManager.YES_OPTION !=
+                    DialogManager.createYesNo(title, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"))
+                    .setMessageType(DialogManager.WARNING_MESSAGE).show()){
                 return;
             }
         }
@@ -1196,9 +1198,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // choose an existing file?
         if (resultFile.exists() && askForOverwrite) {
             Toolkit.getDefaultToolkit().beep();
-            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), AbstractAncestrisAction.yesNo(), component);
-            if (rc != 0) {
-                return;
+             if (DialogManager.YES_OPTION !=
+                    DialogManager.createYesNo(title, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"))
+                    .setMessageType(DialogManager.WARNING_MESSAGE).show()){
+               return;
             }
         }
 

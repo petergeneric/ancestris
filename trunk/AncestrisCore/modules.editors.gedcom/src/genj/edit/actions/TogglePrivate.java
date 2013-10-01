@@ -100,7 +100,7 @@ public class TogglePrivate extends AbstractChange {
         // check if that's something we can do
         String pwd = gedcom.getPassword();
         if (Gedcom.PASSWORD_UNKNOWN.equals(pwd)) {
-            DialogManager.create(getText(), "This Gedcom file contains encrypted information that has to be decrypted before changing private/public status of other information")
+            DialogManager.createError(getText(), "This Gedcom file contains encrypted information that has to be decrypted before changing private/public status of other information")
                     .setMessageType(DialogManager.WARNING_MESSAGE).show();
             return null;
         }
@@ -120,18 +120,16 @@ public class TogglePrivate extends AbstractChange {
         }
 
         // check if the user wants to do it recursively
-        int recursive = DialogHelper.openDialog(
+        boolean recursive = (DialogManager.YES_OPTION == DialogManager.createYesNo(
                 getText(),
-                DialogHelper.QUESTION_MESSAGE,
-                AbstractChange.resources.getString("recursive"),
-                AbstractAncestrisAction.yesNo(),
-                event);
+                AbstractChange.resources.getString("recursive")
+                ));
 
         // change it
         gedcom.setPassword(pwd);
 
         for (Property p : properties) {
-            p.setPrivate(makePrivate, recursive == 0);
+            p.setPrivate(makePrivate, recursive);
         }
 
         // done

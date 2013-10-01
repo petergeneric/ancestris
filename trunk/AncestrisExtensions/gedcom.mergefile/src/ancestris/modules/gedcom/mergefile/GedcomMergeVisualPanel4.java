@@ -3,6 +3,7 @@ package ancestris.modules.gedcom.mergefile;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.gedcom.GedcomDirectory;
 import static ancestris.modules.gedcom.mergefile.Bundle.*;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 import java.io.File;
 import javax.swing.JPanel;
@@ -99,8 +100,10 @@ public final class GedcomMergeVisualPanel4 extends JPanel {
                 gedcomMergeFile = new File(gedcomMergeFile.getAbsolutePath() + ".ged");
             }
             if (gedcomMergeFile.exists()) {
-                int rc = DialogHelper.openDialog(create_title(), DialogHelper.WARNING_MESSAGE, file_exists(gedcomMergeFile.getName()), AbstractAncestrisAction.yesNo(), null);
-                if (rc == 0) {
+                if (DialogManager.YES_OPTION == 
+                        DialogManager.createYesNo(create_title(), file_exists(gedcomMergeFile.getName()))
+                        .setMessageType(DialogManager.WARNING_MESSAGE)
+                        .show()) {
                     jTextField1.setText(gedcomMergeFile.toString());
                     firePropertyChange(PROP_MERGED_GEDCOM_NAME, 0, 1);
                 }

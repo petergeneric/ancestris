@@ -137,8 +137,10 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
 
             // .. exits ?
             if (file.exists()) {
-                int rc = DialogHelper.openDialog(textOutput.getName(), DialogHelper.WARNING_MESSAGE, "File exists. Overwrite?", AbstractAncestrisAction.yesNo(), HyperLinkTextDocumentView.this);
-                if (rc != 0) {
+                if (DialogManager.YES_OPTION != 
+                        DialogManager.createYesNo(textOutput.getName(), "File exists. Overwrite?")
+                        .setMessageType(DialogManager.WARNING_MESSAGE)
+                        .show()) {
                     return;
                 }
             }

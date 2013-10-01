@@ -16,6 +16,7 @@ import genj.util.swing.DialogHelper;
 import ancestris.modules.commonAncestor.quicksearch.module.AbstractQuickSearchComboBar;
 import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchComboBar;
 import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchPopup;
+import ancestris.util.swing.DialogManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -381,8 +382,10 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
         // choose an existing file?
         if (result.exists() && askForOverwrite) {
-            rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(SamePanel.class, "SamePanel.message.fileExits"), AbstractAncestrisAction.yesNo(), this);
-            if (rc != 0) {
+            if (DialogManager.YES_OPTION != 
+                    DialogManager.createYesNo(title, NbBundle.getMessage(SamePanel.class, "SamePanel.message.fileExits"))
+                    .setMessageType(DialogManager.WARNING_MESSAGE)
+                    .show()){
                 return null;
             }
         }
