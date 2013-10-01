@@ -23,6 +23,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyChoiceValue;
 import genj.util.GridBagHelper;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
 
@@ -87,8 +88,10 @@ public class ChoiceBean extends PropertyBean {
       public void actionPerformed(ActionEvent e) {
         String msg = getGlobalReplaceMsg();
         if (msg!=null&&global.isSelected()) {
-          int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, msg, AbstractAncestrisAction.yesNo(), ChoiceBean.this);
-          global.setSelected(rc==0);
+            boolean yes = (DialogManager.YES_OPTION == 
+                    DialogManager.createYesNo(RESOURCES.getString("choice.global.enable"), msg)
+                    .show());
+          global.setSelected(yes);
         }        
       }
     });

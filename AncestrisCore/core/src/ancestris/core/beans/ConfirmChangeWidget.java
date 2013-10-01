@@ -79,7 +79,8 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
         JCheckBox auto = new JCheckBox(BUNDLE.getString("confirm.autocomit"));
         auto.setFocusable(false);
 
-        int rc = DialogHelper.openDialog(BUNDLE.getString("confirm.keep.changes"),
+        int rc = DialogHelper.openDialog(
+                BUNDLE.getString("confirm.keep.changes"),
                 DialogHelper.QUESTION_MESSAGE, new JComponent[]{
                     new JLabel(BUNDLE.getString("confirm.keep.changes")),
                     auto

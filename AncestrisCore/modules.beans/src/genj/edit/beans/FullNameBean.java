@@ -13,6 +13,7 @@ package genj.edit.beans;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.CoreOptions;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyName;
@@ -122,8 +123,10 @@ public class FullNameBean extends PropertyBean {
             public void actionPerformed(ActionEvent e) {
                 String msg = getReplaceAllMsg();
                 if (msg != null && cAll.isSelected()) {
-                    int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, msg, AbstractAncestrisAction.yesNo(), FullNameBean.this);
-                    cAll.setSelected(rc == 0);
+            boolean yes = (DialogManager.YES_OPTION == 
+                    DialogManager.createYesNo(RESOURCES.getString("choice.global.enable"), msg)
+                    .show());
+                    cAll.setSelected(yes);
                 }
             }
         });

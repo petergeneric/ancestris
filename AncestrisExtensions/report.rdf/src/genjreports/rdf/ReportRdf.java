@@ -3,12 +3,10 @@ package genjreports.rdf;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.report.Report;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.DialogHelper;
 import genjreports.rdf.gedsem.SemanticGedcomUtil;
 import genjreports.rdf.gedsem.UriFormats;
 import genjreports.rdf.semweb.Extension;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,20 +21,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
-import org.openide.util.lookup.ServiceProvider;
-
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryParseException;
-import com.hp.hpl.jena.query.QuerySolutionMap;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
-import com.hp.hpl.jena.query.Syntax;
-import com.hp.hpl.jena.rdf.model.InfModel;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-
-@ServiceProvider(service = Report.class)
 public class ReportRdf extends Report /* implements BatchCompatible */
 {
 
@@ -236,8 +220,9 @@ public class ReportRdf extends Report /* implements BatchCompatible */
         {
             final String format = getResources().getString("overwrite.question");
             final String prompt = MessageFormat.format(format, file.getAbsoluteFile());
-            final int rc = DialogHelper.openDialog(getName(), DialogHelper.WARNING_MESSAGE, prompt, AbstractAncestrisAction.yesNo(), null);
-            return (rc != 0);
+            return (DialogManager.YES_OPTION != DialogManager.createYesNo(getName(), prompt)
+                    .setMessageType(DialogManager.WARNING_MESSAGE)
+                    .show());
         }
         return false;
     }

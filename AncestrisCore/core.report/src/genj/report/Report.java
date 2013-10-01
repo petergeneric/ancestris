@@ -351,8 +351,9 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 
     // choose an existing file?
     if (result.exists()&&askForOverwrite) {
-      rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, ReportView.RESOURCES.getString("report.file.overwrite"), AbstractAncestrisAction.yesNo(), owner);
-      if (rc!=0)
+        if (DialogManager.YES_OPTION != DialogManager.createYesNo(title, ReportView.RESOURCES.getString("report.file.overwrite"))
+                .setMessageType(DialogManager.WARNING_MESSAGE)
+                .show())
         return null;
     }
 
