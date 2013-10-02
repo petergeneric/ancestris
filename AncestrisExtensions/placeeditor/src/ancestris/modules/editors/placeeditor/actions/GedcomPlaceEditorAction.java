@@ -1,6 +1,6 @@
 package ancestris.modules.editors.placeeditor.actions;
 
-import ancestris.modules.editors.placeeditor.gedcom.GedcomPlacesEditorPanel;
+import ancestris.modules.editors.placeeditor.panels.PlacesTablePanel;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
@@ -13,6 +13,7 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
+/*
 @ActionID(
         category = "Tools",
         id = "ancestris.gedcom.place.GedcomPlaceAction")
@@ -20,6 +21,7 @@ import org.openide.util.Utilities;
         iconBase = "ancestris/modules/editors/placeeditor/Place.png",
         displayName = "#CTL_GedcomPlaceEditorAction")
 @ActionReference(path = "Menu/Tools", position = 700)
+*/
 @Messages("CTL_GedcomPlaceEditorAction=Places editor")
 public final class GedcomPlaceEditorAction implements ActionListener {
 
@@ -29,7 +31,7 @@ public final class GedcomPlaceEditorAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom gedcom = context.getGedcom();
-            GedcomPlacesEditorPanel gedcomPlacesPanel = new GedcomPlacesEditorPanel(gedcom);
+            PlacesTablePanel gedcomPlacesPanel = new PlacesTablePanel(gedcom);
             DialogDescriptor dialogDescriptor = new DialogDescriptor(
                     gedcomPlacesPanel, // instance of your panel
                     org.openide.util.NbBundle.getMessage(Bundle.class, "CTL_GedcomPlaceEditorAction") + " - " + gedcom.getName(), // title of the dialog

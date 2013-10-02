@@ -1,6 +1,6 @@
 package ancestris.modules.editors.placeeditor.actions;
 
-import ancestris.modules.editors.placeeditor.gedcom.GedcomPlaceFormatEditorPanel;
+import ancestris.modules.editors.placeeditor.panels.GedcomPlaceFormatEditorPanel;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
