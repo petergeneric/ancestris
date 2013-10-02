@@ -19,8 +19,6 @@
  */
 package genj.util.swing;
 
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
 import genj.util.Registry;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -36,7 +34,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.EventObject;
 import javax.swing.Action;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -65,126 +62,7 @@ public class DialogHelper {
     /** screen we're dealing with */
     private final static Rectangle screen = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
     /** message types */
-    public static final int ERROR_MESSAGE = NotifyDescriptor.ERROR_MESSAGE,
-            INFORMATION_MESSAGE = NotifyDescriptor.INFORMATION_MESSAGE,
-            WARNING_MESSAGE = NotifyDescriptor.WARNING_MESSAGE,
-            QUESTION_MESSAGE = NotifyDescriptor.QUESTION_MESSAGE,
-            PLAIN_MESSAGE = NotifyDescriptor.PLAIN_MESSAGE;
-
-    /**
-     * Convert actions argument to openDialog (old Genj API) to options
-     * argument for NetBeans framework.
-     *
-     * @param actions
-     *
-     * @return
-     */
-    private static Object[] actions2options(Action[] actions) {
-        Object options[] = new Object[actions.length];
-        for (int i = 0; i < actions.length; i++) {
-            if (actions[i] instanceof AbstractAncestrisAction) {
-                AbstractAncestrisAction a = (AbstractAncestrisAction) (actions[i]);
-                if (a.equals(AbstractAncestrisAction.cancel())) {
-                    options[i] = NotifyDescriptor.CANCEL_OPTION;
-                    continue;
-                }
-                if (a.equals(AbstractAncestrisAction.ok())) {
-                    options[i] = NotifyDescriptor.OK_OPTION;
-                    continue;
-                }
-                if (a.equals(AbstractAncestrisAction.yes())) {
-                    options[i] = NotifyDescriptor.YES_OPTION;
-                    continue;
-                }
-                if (a.equals(AbstractAncestrisAction.no())) {
-                    options[i] = NotifyDescriptor.NO_OPTION;
-                    continue;
-                }
-                options[i] = a.getText();
-                continue;
-            }
-            options[i] = actions[i];
-        }
-        return options;
-    }
-
-    /**
-     * convert NetBeans object dialog return value to old (Genj) action index.
-     * In fact return index in previously computed options array of return value. If not found
-     * returns Cancel object index or -1.
-     *
-     * @param returnValue
-param options
-     *
-     * @return
-     */
-    private static int getResult(Object returnValue, Object[] options) {
-        // close w/o any button means cancel
-        if (NotifyDescriptor.CLOSED_OPTION.equals(returnValue)) {
-            returnValue = NotifyDescriptor.CANCEL_OPTION;
-        }
-
-        for (int a = 0; a < options.length; a++) {
-            if (returnValue == options[a]) {
-                return a;
-            }
-        }
-
-        // None found: tries with cancel
-        returnValue = NotifyDescriptor.CANCEL_OPTION;
-        for (int a = 0; a < options.length; a++) {
-            if (returnValue == options[a]) {
-                return a;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     *
-     * @param title
-     *param messageType
-param txt
-     * @param actions
-    param source
-     *
-     * @return
-     *
-     * @deprecated use DialogManager
-     */
-    @Deprecated
-    public static int openDialog(String title, int messageType, String txt, Action[] actions, Object source) {
-
-        Object options[] = actions2options(actions);
-        return getResult(DialogManager.show(title, messageType, txt, options), options);
-    }
-
-    /**
-     * @see genj.window.WindowManager#openDialog(java.lang.String, java.lang.String, javax.swing.Icon, java.awt.Dimension, javax.swing.JComponent[], java.lang.String[], javax.swing.JComponent)
-     */
-    @Deprecated
-    public static int openDialog(String title, int messageType, JComponent[] content, Action[] actions, Object source) {
-        // assemble content into Box (don't use Box here because
-        // Box extends Container in pre JDK 1.4)
-        JPanel box = new JPanel();
-        box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
-        for (int i = 0; i < content.length; i++) {
-            if (content[i] == null) {
-                continue;
-            }
-            box.add(content[i]);
-            content[i].setAlignmentX(0F);
-
-        }
-        Object options[] = actions2options(actions);
-
-        // delegate
-        return getResult(DialogManager.create(title, box)
-                .setMessageType(messageType)
-                .setOptions(options)
-                //XXX: .setDialogId("")
-                .show(),options);
-    }
+    public static final int QUESTION_MESSAGE = NotifyDescriptor.QUESTION_MESSAGE;
 
     public static Window getWindow(EventObject event) {
         if (!(event.getSource() instanceof Component)) {

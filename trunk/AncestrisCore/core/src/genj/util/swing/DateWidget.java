@@ -20,21 +20,19 @@
 package genj.util.swing;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.GedcomException;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import genj.util.ChangeSupport;
 import genj.util.WordBuffer;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -42,7 +40,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
-import org.openide.util.Exceptions;
 
 /**
  * Generic component for editing dates
@@ -177,7 +174,7 @@ public class DateWidget extends JPanel {
       preferedCalendar = prefered;
   }
 
-  private class TabbingDoc extends PlainDocument {
+  private static class TabbingDoc extends PlainDocument {
     private JComponent next;
 
     public TabbingDoc(JComponent next) {
@@ -227,7 +224,7 @@ public class DateWidget extends JPanel {
   /**
    * Set current value
    */
-  public void setValue(PointInTime pit) {
+  public final void setValue(PointInTime pit) {
 
     // keep calendar
     calendar = pit.getCalendar();
@@ -330,7 +327,7 @@ public class DateWidget extends JPanel {
     }
 
       if (helpCalendar == null){
-          altDisplay.setVisible(false);;
+          altDisplay.setVisible(false);
             altDisplay.setText("");
       } else {
         altDisplay.setVisible(true);
@@ -354,6 +351,7 @@ public class DateWidget extends JPanel {
   /**
    * Return the maximum size this component should be sized to
    */
+    @Override
   public Dimension getMaximumSize() {
     return new Dimension(super.getMaximumSize().width, super.getPreferredSize().height);
   }
@@ -361,6 +359,7 @@ public class DateWidget extends JPanel {
   /**
    * @see javax.swing.JComponent#requestFocus()
    */
+    @Override
   public void requestFocus() {
     getComponent(0).requestFocus();
   }
@@ -368,6 +367,7 @@ public class DateWidget extends JPanel {
   /**
    * @see javax.swing.JComponent#requestFocusInWindow()
    */
+    @Override
   public boolean requestFocusInWindow() {
     return getComponent(0).requestFocusInWindow();
   }
@@ -428,16 +428,20 @@ public class DateWidget extends JPanel {
     /**
      * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
+        @Override
     public void actionPerformed(ActionEvent event) {
       PointInTime pit = DateWidget.this.getValue();
       if (pit != null) {
         try {
           pit.set(newCalendar);
         } catch (GedcomException e) {
-          Action[] actions = { AbstractAncestrisAction.ok(), new AbstractAncestrisAction(Calendar.TXT_CALENDAR_RESET) };
-          int rc = DialogHelper.openDialog(Calendar.TXT_CALENDAR_SWITCH, DialogHelper.ERROR_MESSAGE, e.getMessage(), actions, DateWidget.this);
-          if (rc == 0)
+            String reset = Calendar.TXT_CALENDAR_RESET;
+          if (DialogManager.create(Calendar.TXT_CALENDAR_SWITCH, e.getMessage())
+                  .setMessageType(DialogManager.ERROR_MESSAGE)
+                  .setOptions(new Object[]{DialogManager.OK_OPTION,reset})
+                  .show() == DialogManager.OK_OPTION){
             return;
+        }
           pit = new PointInTime(newCalendar);
         }
         // change

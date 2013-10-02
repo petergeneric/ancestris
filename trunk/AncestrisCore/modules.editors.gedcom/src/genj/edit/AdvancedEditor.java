@@ -514,8 +514,11 @@ import org.openide.nodes.Node;
             // warn about cut
             String veto = getVeto(selection);
             if (veto.length() > 0) {
-                int rc = DialogHelper.openDialog(resources.getString("action.cut"), DialogHelper.WARNING_MESSAGE, veto, new Action[]{new AbstractAncestrisAction(resources.getString("action.cut")), AbstractAncestrisAction.cancel()}, AdvancedEditor.this);
-                if (rc != 0) {
+                String cut = resources.getString("action.cut");
+                if (DialogManager.create(resources.getString("action.cut"), veto)
+                        .setMessageType(DialogManager.WARNING_MESSAGE)
+                        .setOptions(new Object[]{cut,DialogManager.CANCEL_OPTION})
+                        .show() != cut) {
                     return;
                 }
             }
@@ -731,8 +734,10 @@ import org.openide.nodes.Node;
                 JLabel label = new JLabel(resources.getString("add.choose"));
                 ChoosePropertyBean choose = new ChoosePropertyBean(parent);
                 JCheckBox check = new JCheckBox(resources.getString("add.default_too"), addDefaults);
-                int option = DialogHelper.openDialog(resources.getString("add.title"), DialogHelper.QUESTION_MESSAGE, new JComponent[]{label, choose, check}, AbstractAncestrisAction.okCancel(), AdvancedEditor.this);
-                if (option != 0) {
+                if (DialogManager.create(resources.getString("add.title"), new JComponent[]{label, choose, check})
+                        .setMessageType(DialogManager.QUESTION_MESSAGE)
+                        .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                        .show() != DialogManager.OK_OPTION){
                     return;
                 }
                 // .. calculate chosen tags

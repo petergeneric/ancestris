@@ -95,6 +95,11 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     new String[]{AbstractAncestrisAction.TXT_OK , AbstractAncestrisAction.TXT_CANCEL },
     new String[]{AbstractAncestrisAction.TXT_OK }
   };
+  private final static int[] OPTION_TYPE = {
+      DialogManager.YES_NO_OPTION,
+      DialogManager.OK_CANCEL_OPTION,
+      DialogManager.OK_ONLY_OPTION
+  };
 
   /** alignment options */
   protected final static int
@@ -400,9 +405,12 @@ public abstract class Report implements Cloneable,ResourcesProvider {
       select.setSelection(entity);
 
     // show it
-    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),select},AbstractAncestrisAction.okCancel(),owner);
-    if (rc!=0)
-      return null;
+    if (DialogManager.create(getName(), new JComponent[]{new JLabel(msg),select})
+            .setMessageType(DialogManager.QUESTION_MESSAGE)
+            .setOptionType(DialogManager.OK_CANCEL_OPTION)
+            .show() != DialogManager.OK_OPTION){
+        return null;
+    }
 
     // remember selection
     Entity result = select.getSelection();
@@ -432,9 +440,15 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     ChoiceWidget choice = new ChoiceWidget(choices, selected);
     choice.setEditable(false);
 
-    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},AbstractAncestrisAction.okCancel(),owner);
+    // show it
+    if (DialogManager.create(getName(), new JComponent[]{new JLabel(msg),choice})
+            .setMessageType(DialogManager.QUESTION_MESSAGE)
+            .setOptionType(DialogManager.OK_CANCEL_OPTION)
+            .show() != DialogManager.OK_OPTION){
+        return null;
+    }
 
-    return rc==0 ? choice.getSelectedItem() : null;
+    return choice.getSelectedItem();
   }
 
   /**
@@ -460,8 +474,14 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 
     // show 'em
     ChoiceWidget choice = new ChoiceWidget(defaultChoices, defaultChoices.length>0 ? defaultChoices[0] : "");
-    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},AbstractAncestrisAction.okCancel(),owner);
-    String result = rc==0 ? choice.getText() : null;
+    // show it
+    if (DialogManager.create(getName(), new JComponent[]{new JLabel(msg),choice})
+            .setMessageType(DialogManager.QUESTION_MESSAGE)
+            .setOptionType(DialogManager.OK_CANCEL_OPTION)
+            .show() != DialogManager.OK_OPTION){
+        return null;
+    }
+    String result = choice.getText();
 
     // Remember?
     if (key!=null&&result!=null&&result.length()>0) {
@@ -533,20 +553,11 @@ public abstract class Report implements Cloneable,ResourcesProvider {
    * @param option one of OPTION_YESNO, OPTION_OKCANCEL, OPTION_OK
    */
   public final boolean getOptionFromUser(String msg, int option) {
-    return 0==getOptionFromUser(msg, OPTION_TEXTS[option]);
-  }
-
-  /**
-   * Helper method that queries the user for yes/no input
-   */
-  private int getOptionFromUser(String msg, String[] actions) {
-
-    Action[] as  = new Action[actions.length];
-    for (int i=0;i<as.length;i++)
-      as[i]  = new AbstractAncestrisAction(actions[i]);
-
-    return DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, msg, as, owner);
-
+      Object result = DialogManager.create(getName(), msg)
+              .setMessageType(DialogManager.QUESTION_MESSAGE)
+              .setOptionType(OPTION_TYPE[option])
+              .show();
+      return result == DialogManager.OK_OPTION || result == DialogManager.YES_OPTION;
   }
 
   /**

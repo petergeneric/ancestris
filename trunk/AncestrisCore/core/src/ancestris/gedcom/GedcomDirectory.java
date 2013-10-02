@@ -384,14 +384,16 @@ public abstract class GedcomDirectory {
         if (context.getGedcom().hasChanged()) {
 
             // close file officially
-            int rc = DialogHelper.openDialog(null, DialogHelper.WARNING_MESSAGE,
-                    RES.getString("cc.savechanges?", context.getGedcom().getName()), AbstractAncestrisAction.yesNoCancel(), null);
+            Object rc = DialogManager.create(null, RES.getString("cc.savechanges?", context.getGedcom().getName()))
+                    .setMessageType(DialogManager.WARNING_MESSAGE)
+                    .setOptionType(DialogManager.YES_NO_CANCEL_OPTION)
+                    .show();
             // cancel - we're done
-            if (rc == 2) {
+            if (rc == DialogManager.CANCEL_OPTION || rc == DialogManager.CLOSED_OPTION) {
                 return false;
             }
             // yes - close'n save it
-            if (rc == 0) {
+            if (rc == DialogManager.YES_OPTION) {
                 if (!saveGedcom(context)) {
                     return false;
                 }
