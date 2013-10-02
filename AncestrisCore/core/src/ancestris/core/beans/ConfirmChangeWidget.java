@@ -14,6 +14,7 @@ package ancestris.core.beans;
 import ancestris.core.AncestrisCorePlugin;
 import genj.util.Registry;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.DialogHelper;
 import java.awt.FlowLayout;
@@ -79,16 +80,15 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
         JCheckBox auto = new JCheckBox(BUNDLE.getString("confirm.autocomit"));
         auto.setFocusable(false);
 
-        int rc = DialogHelper.openDialog(
+        if (DialogManager.create(
                 BUNDLE.getString("confirm.keep.changes"),
-                DialogHelper.QUESTION_MESSAGE, new JComponent[]{
+                new JComponent[]{
                     new JLabel(BUNDLE.getString("confirm.keep.changes")),
                     auto
-                },
-                AbstractAncestrisAction.yesNo(),
-                this);
-
-        if (rc != 0) {
+                })
+                .setMessageType(DialogManager.QUESTION_MESSAGE)
+                .setOptionType(DialogManager.YES_NO_OPTION)
+                .show() != DialogManager.YES_OPTION){
             return false;
         }
 

@@ -9,7 +9,9 @@ import genj.util.Registry;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
@@ -31,11 +33,15 @@ public abstract class DialogManager {
             PLAIN_MESSAGE = NotifyDescriptor.PLAIN_MESSAGE;
     public static final int 
             OK_CANCEL_OPTION = DialogDescriptor.OK_CANCEL_OPTION,
-            YES_NO_OPTION = NotifyDescriptor.YES_NO_OPTION;
+            YES_NO_OPTION = NotifyDescriptor.YES_NO_OPTION,
+            YES_NO_CANCEL_OPTION = NotifyDescriptor.YES_NO_CANCEL_OPTION,
+            OK_ONLY_OPTION = 10;;
+    
     /** Return value if OK is chosen. */
     public static final Object OK_OPTION = DialogDescriptor.OK_OPTION;
     public static final Object CANCEL_OPTION = DialogDescriptor.CANCEL_OPTION;
     public static final Object YES_OPTION = DialogDescriptor.YES_OPTION;
+    public static final Object CLOSED_OPTION = DialogDescriptor.CLOSED_OPTION;
 
     public static Object show(String title, int messageType, String txt, Object[] options) {
         NotifyDescriptor d = new NotifyDescriptor(txt, title, NotifyDescriptor.DEFAULT_OPTION, messageType, options, null);
@@ -50,6 +56,22 @@ public abstract class DialogManager {
         return new ADialog(title, content);
     }
 
+    public static ADialog create(String title, JComponent[] content) {
+            // assemble content into Box (don't use Box here because
+        // Box extends Container in pre JDK 1.4)
+        JPanel box = new JPanel();
+        box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
+        for (int i = 0; i < content.length; i++) {
+            if (content[i] == null) {
+                continue;
+            }
+            box.add(content[i]);
+            content[i].setAlignmentX(0F);
+
+        }
+        return create(title, box);
+    }
+    
     public static InputLine create(String title, String text, String value) {
         return new InputLine(title, text, value);
     }
@@ -64,6 +86,10 @@ public abstract class DialogManager {
     //XXX: rename to createOk, default type is ERROR
     public static DialogManager createError(String title, String text) {
         return new Message(title, text).setMessageType(ERROR_MESSAGE);
+    }
+
+    public static DialogManager create(String title, String text) {
+        return new Message(title, text);
     }
 
     /**
@@ -148,9 +174,13 @@ public abstract class DialogManager {
     }
 
     public DialogManager setOptionType(int newType) {
-        getDescriptor().setOptions(null);
-        getDescriptor().setOptionType(newType);
-        return this;
+        if (newType == OK_ONLY_OPTION){
+            return setOptions(new Object [] {OK_OPTION});
+        } else {
+            getDescriptor().setOptions(null);
+            getDescriptor().setOptionType(newType);
+            return this;
+        }
     }
 
     public DialogManager setMessageType(int newType) {

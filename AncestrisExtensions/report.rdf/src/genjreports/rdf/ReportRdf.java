@@ -1,9 +1,19 @@
 package genjreports.rdf;
 
+import ancestris.util.swing.DialogManager;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryParseException;
+import com.hp.hpl.jena.query.QuerySolutionMap;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.query.Syntax;
+import com.hp.hpl.jena.rdf.model.InfModel;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.report.Report;
-import genj.util.swing.DialogHelper;
 import genjreports.rdf.gedsem.SemanticGedcomUtil;
 import genjreports.rdf.gedsem.UriFormats;
 import genjreports.rdf.semweb.Extension;

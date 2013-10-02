@@ -138,23 +138,6 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
         return m;
     }
 
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    public static AbstractAncestrisAction yes() {
-        return new Constant(AbstractAncestrisAction.TXT_YES);
-    }
-
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    public static AbstractAncestrisAction no() {
-        return new Constant(AbstractAncestrisAction.TXT_NO);
-    }
 
     /** convenience factory
      *
@@ -172,24 +155,6 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
     @Deprecated
     public static AbstractAncestrisAction cancel() {
         return new Constant(AbstractAncestrisAction.TXT_CANCEL);
-    }
-
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    public static AbstractAncestrisAction[] yesNo() {
-        return new AbstractAncestrisAction[]{yes(), no()};
-    }
-
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    public static AbstractAncestrisAction[] yesNoCancel() {
-        return new AbstractAncestrisAction[]{yes(), no(), cancel()};
     }
 
     /** convenience factory
