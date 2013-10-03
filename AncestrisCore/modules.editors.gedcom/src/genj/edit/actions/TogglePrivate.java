@@ -21,15 +21,12 @@
  */
 package genj.edit.actions;
 
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
-
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import org.openide.awt.ActionID;

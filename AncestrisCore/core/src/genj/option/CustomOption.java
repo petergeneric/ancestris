@@ -24,10 +24,7 @@ package genj.option;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
 import genj.util.swing.ButtonHelper;
-import genj.util.swing.DialogHelper;
-
 import java.awt.event.ActionEvent;
-
 import javax.swing.JComponent;
 import org.openide.DialogDescriptor;
 

@@ -19,13 +19,10 @@
  */
 package genj.view;
 
-import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
-
+import genj.util.Resources;
 import java.awt.event.ActionEvent;
-
 import javax.swing.JComponent;
 
 /**

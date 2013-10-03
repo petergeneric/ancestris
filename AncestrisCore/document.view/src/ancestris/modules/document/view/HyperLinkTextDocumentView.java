@@ -16,7 +16,6 @@ import ancestris.core.resources.Images;
 import static ancestris.modules.document.view.Bundle.*;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
-import genj.util.swing.DialogHelper;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;

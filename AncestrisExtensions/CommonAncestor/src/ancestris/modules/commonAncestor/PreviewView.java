@@ -1,5 +1,9 @@
 package ancestris.modules.commonAncestor;
 
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
+import ancestris.util.swing.DialogManager;
+import ancestris.view.SelectionDispatcher;
 import genj.fo.Format;
 import genj.fo.FormatOptionsWidget;
 import genj.gedcom.Context;
@@ -7,20 +11,21 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.report.ReportView;
 import genj.util.Registry;
-import ancestris.core.actions.AbstractAncestrisAction;
-import genj.util.swing.DialogHelper;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.SliderWidget;
 import genj.view.ToolBar;
 import java.awt.CardLayout;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.io.CharArrayWriter;
 import java.io.File;
@@ -32,20 +37,13 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
-
-import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
-import ancestris.util.swing.DialogManager;
-import ancestris.view.SelectionDispatcher;
-import java.awt.Cursor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import org.openide.util.NbBundle;
 
 /**

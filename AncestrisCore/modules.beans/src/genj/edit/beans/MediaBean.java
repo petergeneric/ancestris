@@ -19,8 +19,10 @@
  */
 package genj.edit.beans;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.RunExternal;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -37,9 +39,6 @@ import genj.io.InputSource.FileInput;
 import genj.util.DefaultValueMap;
 import genj.util.Origin;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooserWidget;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextFieldWidget;

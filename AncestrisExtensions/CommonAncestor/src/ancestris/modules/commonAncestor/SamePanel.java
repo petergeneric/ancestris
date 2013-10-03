@@ -5,18 +5,17 @@
  */
 package ancestris.modules.commonAncestor;
 
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.modules.commonAncestor.quicksearch.module.AbstractQuickSearchComboBar;
+import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchComboBar;
+import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchPopup;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
-import ancestris.core.actions.AbstractAncestrisAction;
-import genj.util.swing.DialogHelper;
-import ancestris.modules.commonAncestor.quicksearch.module.AbstractQuickSearchComboBar;
-import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchComboBar;
-import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchPopup;
-import ancestris.util.swing.DialogManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;

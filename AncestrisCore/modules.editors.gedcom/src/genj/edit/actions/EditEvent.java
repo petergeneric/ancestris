@@ -19,19 +19,16 @@
  */
 package genj.edit.actions;
 
-import genj.edit.BeanPanel;
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
+import ancestris.util.swing.DialogManager;
+import genj.edit.BeanPanel;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
-
 import java.awt.event.ActionEvent;
-
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

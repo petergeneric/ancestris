@@ -19,18 +19,14 @@
  */
 package genj.print;
 
-import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
+import genj.util.Resources;
 import genj.util.swing.ImageIcon;
-
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.print.PrintException;
-import javax.swing.Action;
 import org.openide.DialogDescriptor;
 
 /**
