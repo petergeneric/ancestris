@@ -19,17 +19,13 @@
  */
 package genj.edit.beans;
 
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChoiceValue;
 import genj.util.GridBagHelper;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
 import genj.util.swing.ChoiceWidget;
-import genj.util.swing.DialogHelper;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JCheckBox;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;

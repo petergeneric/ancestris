@@ -1,10 +1,8 @@
 package ancestris.modules.gedcom.mergefile;
 
-import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.gedcom.GedcomDirectory;
 import static ancestris.modules.gedcom.mergefile.Bundle.*;
 import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
 import java.io.File;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;

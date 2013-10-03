@@ -19,6 +19,8 @@
  */
 package genj.renderer;
 
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.common.PathTreeWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -30,10 +32,6 @@ import genj.gedcom.PropertySimpleReadOnly;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -49,7 +47,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;

@@ -19,16 +19,13 @@
  */
 package genj.option;
 
+import ancestris.util.swing.DialogManager;
 import genj.util.Registry;
 import genj.util.Resources;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooserWidget;
 import genj.util.swing.FontChooser;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.TextFieldWidget;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
@@ -50,7 +47,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;

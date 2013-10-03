@@ -45,7 +45,6 @@ import genj.io.PropertyTransferable;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
-import genj.util.swing.DialogHelper;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
 import genj.view.ViewContext;

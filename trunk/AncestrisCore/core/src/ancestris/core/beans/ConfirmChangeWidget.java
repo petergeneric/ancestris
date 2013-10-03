@@ -12,11 +12,10 @@
 package ancestris.core.beans;
 
 import ancestris.core.AncestrisCorePlugin;
-import genj.util.Registry;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
+import genj.util.Registry;
 import genj.util.swing.ButtonHelper;
-import genj.util.swing.DialogHelper;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -25,8 +24,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.NbBundle;

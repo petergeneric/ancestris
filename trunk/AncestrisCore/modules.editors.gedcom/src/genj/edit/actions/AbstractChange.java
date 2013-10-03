@@ -29,7 +29,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
-import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;

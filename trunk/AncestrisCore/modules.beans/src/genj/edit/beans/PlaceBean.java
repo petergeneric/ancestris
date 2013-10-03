@@ -20,14 +20,12 @@
 package genj.edit.beans;
 
 import ancestris.core.CoreOptions;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.GridBagHelper;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
 import genj.util.swing.ChoiceWidget;
-import genj.util.swing.DialogHelper;
 import genj.util.swing.Updateable;
 import java.awt.Component;
 import java.awt.event.ActionEvent;

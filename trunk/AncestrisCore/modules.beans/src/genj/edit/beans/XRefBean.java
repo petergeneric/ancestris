@@ -19,7 +19,10 @@
  */
 package genj.edit.beans;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.util.swing.DialogManager;
+import ancestris.view.SelectionDispatcher;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -28,10 +31,6 @@ import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.UnitOfWork;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.DialogManager;
-import ancestris.view.SelectionDispatcher;
-import genj.util.swing.DialogHelper;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

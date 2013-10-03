@@ -53,7 +53,6 @@ import genj.renderer.RenderSelectionHintKey;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.ButtonHelper;
-import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import genj.util.swing.ScrollPaneWidget;
@@ -66,7 +65,6 @@ import genj.view.SettingsAction;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
-import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -1246,9 +1244,9 @@ public class TreeView extends View implements Filter {
 
             // let the user choose an individual
             SelectEntityWidget select = new SelectEntityWidget(context.getGedcom(), Gedcom.INDI, null);
-            Object rc = DialogManager.create(getText(), select)
+            Object rc = DialogManager.create(getText(), new JComponent[] {select})
                     .setOptionType(DialogManager.OK_CANCEL_OPTION)
-//                    .setDialogId("select.root")
+                    .setDialogId("select.root")
                     .show();
             if (rc == DialogManager.OK_OPTION) {
                 setRoot(select.getSelection());

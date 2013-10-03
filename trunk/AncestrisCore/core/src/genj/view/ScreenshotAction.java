@@ -19,13 +19,11 @@
  */
 package genj.view;
 
-import genj.renderer.RenderSelectionHintKey;
-import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
+import genj.renderer.RenderSelectionHintKey;
+import genj.util.Resources;
 import genj.util.swing.ImageIcon;
-
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -38,7 +36,6 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
