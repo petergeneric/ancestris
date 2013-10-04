@@ -32,7 +32,7 @@ import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
-import genj.util.swing.DialogHelper;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 
@@ -116,7 +116,13 @@ public class EditNote extends AbstractAncestrisAction {
     else if (note!=null)
       text.setText(note.getValue());
 
-    if (0!=new GedcomDialog(property.getGedcom(), property.toString() + " - " + getTip(), DialogHelper.QUESTION_MESSAGE, panel, AbstractAncestrisAction.okCancel(), e).show())
+    if (new GedcomDialog(
+            property.getGedcom(), 
+            property.toString() + " - " + getTip(), 
+            panel)
+            .setMessageType(DialogManager.QUESTION_MESSAGE)
+            .setOptionType(DialogManager.OK_CANCEL_OPTION)
+            .show() != DialogManager.OK_OPTION)
       return;
 
     property.getGedcom().doMuteUnitOfWork(new UnitOfWork() {

@@ -1,6 +1,13 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Ancestris - http://www.ancestris.org
+ *
+ * Copyright 2012-2013 Ancestris
+ *
+ * Author: Daniel Andre (daniel@ancestris.org).
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 //XXX: we must redesign this class and DialogManager in a more NB integrated manner
 package ancestris.util.swing;
@@ -22,20 +29,20 @@ import org.openide.NotifyDescriptor;
  *
  * @author daniel
  */
+//FIXME:: write doc and default values for options ans message type
 public abstract class DialogManager {
 
     /** message types */
-    public static final int 
-            ERROR_MESSAGE = NotifyDescriptor.ERROR_MESSAGE,
+    public static final int ERROR_MESSAGE = NotifyDescriptor.ERROR_MESSAGE,
             INFORMATION_MESSAGE = NotifyDescriptor.INFORMATION_MESSAGE,
             WARNING_MESSAGE = NotifyDescriptor.WARNING_MESSAGE,
             QUESTION_MESSAGE = NotifyDescriptor.QUESTION_MESSAGE,
             PLAIN_MESSAGE = NotifyDescriptor.PLAIN_MESSAGE;
-    public static final int 
-            OK_CANCEL_OPTION = DialogDescriptor.OK_CANCEL_OPTION,
+    public static final int OK_CANCEL_OPTION = DialogDescriptor.OK_CANCEL_OPTION,
             YES_NO_OPTION = NotifyDescriptor.YES_NO_OPTION,
             YES_NO_CANCEL_OPTION = NotifyDescriptor.YES_NO_CANCEL_OPTION,
-            OK_ONLY_OPTION = 10;;
+            OK_ONLY_OPTION = 10;
+    ;
     
     /** Return value if OK is chosen. */
     public static final Object OK_OPTION = DialogDescriptor.OK_OPTION;
@@ -57,7 +64,7 @@ public abstract class DialogManager {
     }
 
     public static ADialog create(String title, JComponent[] content) {
-            // assemble content into Box (don't use Box here because
+        // assemble content into Box (don't use Box here because
         // Box extends Container in pre JDK 1.4)
         JPanel box = new JPanel();
         box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
@@ -71,15 +78,16 @@ public abstract class DialogManager {
         }
         return create(title, box);
     }
-    
+
     public static InputLine create(String title, String text, String value) {
         return new InputLine(title, text, value);
     }
 
     /**
      * Creates a simple error dialog message with only an ok button.
+     *
      * @param title
-     * @param text
+param text
      *
      * @return
      */
@@ -95,15 +103,14 @@ public abstract class DialogManager {
     /**
      * Creates a simple question dialog message with only a yes and no button.
      * Message type defaults to QUESTION_MESSAGE
+     *
      * @param title
-     * @param text
+param text
      *
      * @return
      */
     public static DialogManager createYesNo(String title, String text) {
-        return new Message(title, text)
-                .setOptionType(NotifyDescriptor.YES_NO_OPTION)
-                .setMessageType(QUESTION_MESSAGE);
+        return new Message(title, text).setOptionType(NotifyDescriptor.YES_NO_OPTION).setMessageType(QUESTION_MESSAGE);
     }
 
     // see http://wiki.netbeans.org/DevFaqDialogControlOKButton
@@ -174,8 +181,8 @@ public abstract class DialogManager {
     }
 
     public DialogManager setOptionType(int newType) {
-        if (newType == OK_ONLY_OPTION){
-            return setOptions(new Object [] {OK_OPTION});
+        if (newType == OK_ONLY_OPTION) {
+            return setOptions(new Object[]{OK_OPTION});
         } else {
             getDescriptor().setOptions(null);
             getDescriptor().setOptionType(newType);
@@ -255,6 +262,7 @@ public abstract class DialogManager {
     public static class ADialog extends DialogManager {
 
         protected DialogDescriptor descriptor;
+        private Dialog dialog;
 
         public ADialog(String title, JComponent content) {
             super();
@@ -267,7 +275,7 @@ public abstract class DialogManager {
         }
 
         public Object show() {
-            final Dialog dialog = DialogDisplayer.getDefault().createDialog(descriptor);
+            dialog = DialogDisplayer.getDefault().createDialog(descriptor);
             // restore bounds
             if (dialogId != null) {
                 final Registry registry = Registry.get(DialogManager.class);
@@ -284,5 +292,35 @@ public abstract class DialogManager {
             }
             return descriptor.getValue();
         }
+
+        public void cancel() {
+            if (dialog == null) {
+                throw new IllegalStateException("not showing");
+            }
+            dialog.dispose();
+        }
     }
+    //FIXME: from old DialogHelper. See if this is necessary
+    /**
+     * scan for JTabbedPanes and make their contained components opaque
+     */
+//    private static void patchOpaque(Component component, boolean set) {
+//
+//        if (component instanceof JTabbedPane) {
+//            set = false;
+//        }
+//
+//        if (component instanceof JComponent && !(component instanceof JTextField) && !(component instanceof JScrollPane)) {
+//            if (!set) {
+//                ((JComponent) component).setOpaque(set);
+//            }
+//        }
+//
+//        if (component instanceof Container && !(component instanceof JScrollPane)) {
+//            for (Component c : ((Container) component).getComponents()) {
+//                patchOpaque(c, set);
+//            }
+//        }
+//
+//    }
 }
