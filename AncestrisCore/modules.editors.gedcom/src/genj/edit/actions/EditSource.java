@@ -32,6 +32,7 @@ import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
@@ -100,30 +101,40 @@ public class EditSource extends AbstractAncestrisAction {
     if (!sources.isEmpty()) {
       
       final TableWidget<PropertySource> table = new TableWidget<PropertySource>();
-      AbstractAncestrisAction[] actions = new AbstractAncestrisAction[]{ AbstractAncestrisAction.ok(), new AbstractAncestrisAction(RESOURCES.getString("link", Gedcom.getName("SOUR"))) };
-      final GedcomDialog dlg = new GedcomDialog(property.getGedcom(), property.toString() + " - " + getTip(), DialogHelper.QUESTION_MESSAGE, new JScrollPane(table), actions, e);
+      String linkSource = RESOURCES.getString("link", Gedcom.getName("SOUR"));
+      final GedcomDialog dlg = new GedcomDialog(
+              property.getGedcom(), 
+              property.toString() + " - " + getTip(), 
+              new JScrollPane(table));
+      dlg.setMessageType(DialogManager.QUESTION_MESSAGE);
+      dlg.setOptions(new Object[]{DialogManager.OK_OPTION,linkSource});
     
       table.new Column(Gedcom.getName("SOUR")) {
+                @Override
         public Object getValue(PropertySource source) {
           return source.getTargetEntity().getId();
         }
       };
       table.new Column(Gedcom.getName("AUTH")) {
+                @Override
         public Object getValue(PropertySource source) {
           return source.getTargetEntity().getPropertyDisplayValue("AUTH");
         }
       };
       table.new Column(Gedcom.getName("TITL")) {
+                @Override
         public Object getValue(PropertySource source) {
           return source.getTargetEntity().getPropertyDisplayValue("TITL");
         }
       };
       table.new Column(Gedcom.getName("PAGE")) {
+                @Override
         public Object getValue(PropertySource source) {
           return source.getPropertyDisplayValue("PAGE");
         }
       };
       table.new Column("", AbstractAncestrisAction.class) {
+                @Override
         public Object getValue(PropertySource source) {
           return new Edit(source,false) {
             @Override
@@ -147,7 +158,7 @@ public class EditSource extends AbstractAncestrisAction {
 //      };
       table.setRows(sources);
 
-      if (dlg.show()<1)
+      if (dlg.show()!=linkSource)
         return;
       
     }
@@ -199,9 +210,12 @@ public class EditSource extends AbstractAncestrisAction {
       sourcePanel.setRoot(citation.getTargetEntity());
       tabs.add(Gedcom.getName("SOUR"), sourcePanel);
       
-      GedcomDialog dlg = new GedcomDialog(citation.getGedcom(), getText(), DialogHelper.QUESTION_MESSAGE, tabs, AbstractAncestrisAction.okCancel(), e);
-      if (0==dlg.show())
+      GedcomDialog dlg = new GedcomDialog(citation.getGedcom(), getText(), tabs);
+      dlg.setMessageType(DialogManager.QUESTION_MESSAGE);
+      dlg.setOptionType(DialogManager.OK_CANCEL_OPTION);
+      if (dlg.show() == DialogManager.OK_OPTION)
         citation.getGedcom().doMuteUnitOfWork(new UnitOfWork() {
+                @Override
           public void perform(Gedcom gedcom) throws GedcomException {
             sourcePanel.commit();
             citationPanel.commit();
@@ -210,6 +224,7 @@ public class EditSource extends AbstractAncestrisAction {
       else 
         if (deleteOnCancel)
         citation.getGedcom().doMuteUnitOfWork(new UnitOfWork() {
+                @Override
           public void perform(Gedcom gedcom) throws GedcomException {
             Source source = (Source)citation.getTargetEntity();
             citation.getParent().delProperty(citation);
