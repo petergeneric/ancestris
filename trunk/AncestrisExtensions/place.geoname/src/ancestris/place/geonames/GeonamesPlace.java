@@ -22,7 +22,7 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String getCity() {
-        return postalCode.getAdminName1();
+        return postalCode.getPlaceName();
     }
 
     @Override
@@ -81,5 +81,12 @@ public class GeonamesPlace implements Place {
     @Override
     public Double getLatitude() {
         return postalCode.getLatitude();
+    }
+
+    @Override
+    public String toString() {
+        return postalCode.getPlaceName() + "," + postalCode.getAdminName1() + ","
+                + postalCode.getAdminName2() + "," + postalCode.getAdminName3() + ","
+                + postalCode.getPostalCode() + "," + postalCode.getCountryCode();
     }
 }
