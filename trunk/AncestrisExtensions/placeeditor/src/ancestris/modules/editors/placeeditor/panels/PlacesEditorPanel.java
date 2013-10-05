@@ -2,9 +2,12 @@ package ancestris.modules.editors.placeeditor.panels;
 
 import ancestris.api.place.Place;
 import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeListModel;
+import ancestris.modules.editors.placeeditor.models.ReferencesTableModel;
 import ancestris.place.geonames.GeonamesPlacesList;
 import genj.gedcom.PropertyPlace;
 import java.util.List;
+import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -14,28 +17,42 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
 
     GeonamePostalCodeListModel geonamePostalCodeListModel = new GeonamePostalCodeListModel();
     String[] placeFormat;
-    PropertyPlace propertyPlace;
-
-    private void searchPlace(String city) {
-        if (city.length() > 0) {
-            List<Place> findPlaces = new GeonamesPlacesList().findPlace(city);
-            if (findPlaces != null) {
-                geonamePostalCodeListModel.update(findPlaces);
-            }
-        }
-    }
+    private ReferencesTableModel referencesTableModel;
+    private DefaultComboBoxModel<Place> placesComboBoxModel;
 
     /**
      * Creates new form GedcomPlacesEditorPanel
      */
-    public PlacesEditorPanel(String[] placeFormat, PropertyPlace propertyPlace) {
+    public PlacesEditorPanel(String[] placeFormat, Set<PropertyPlace> propertyPlaces) {
+        Object[] propertyPlaceArray = propertyPlaces.toArray();
+        referencesTableModel = new ReferencesTableModel();
+        placesComboBoxModel = new DefaultComboBoxModel();
 
         this.placeFormat = placeFormat;
-        this.propertyPlace = propertyPlace;
+        String[] jurisdictions = ((PropertyPlace) propertyPlaceArray[0]).getJurisdictions();
+        if (jurisdictions.length > 1) {
+            if (jurisdictions[1].isEmpty() == false) {
+                List<Place> findPlaces = new GeonamesPlacesList().findPlace(jurisdictions[1]);
+
+                if (findPlaces != null) {
+                    for (Place place : findPlaces) {
+                        placesComboBoxModel.addElement(place);
+                    }
+                }
+            }
+        }
+
+        for (PropertyPlace propertyPlace : propertyPlaces) {
+            referencesTableModel.addRow(propertyPlace.getEntity());
+        }
 
         initComponents();
 
-        String[] jurisdictions = propertyPlace.getJurisdictions();
+        Place selectedItem = (Place) jComboBox1.getSelectedItem();
+        if (selectedItem != null) {
+            latitudeTextField.setText(selectedItem.getLatitude().toString());
+            longitudeTextField.setText(selectedItem.getLongitude().toString());
+        }
 
         if (placeFormat.length > 0) {
             jLabel1.setText(placeFormat[0]);
@@ -187,13 +204,13 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
+        latitudeLabel = new javax.swing.JLabel();
+        latitudeTextField = new javax.swing.JTextField();
+        longitudeLabel = new javax.swing.JLabel();
+        longitudeTextField = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jTextField12 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<Place>();
 
         jTabbedPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -291,17 +308,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.PlaceEditorPanel.TabConstraints.tabTitle"), new Object[] {}), PlaceEditorPanel); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        jTable1.setModel(referencesTableModel);
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout PlaceReferencesPanelLayout = new javax.swing.GroupLayout(PlaceReferencesPanel);
@@ -327,11 +334,18 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.jLabel9.text"), new Object[] {})); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel10, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.jLabel10.text"), new Object[] {})); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(latitudeLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.latitudeLabel.text"), new Object[] {})); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel11, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.jLabel11.text"), new Object[] {})); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(longitudeLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.longitudeLabel.text"), new Object[] {})); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.jLabel12.text"), new Object[] {})); // NOI18N
+
+        jComboBox1.setModel(placesComboBoxModel);
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -341,22 +355,20 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
                 .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(latitudeLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField9)
-                        .addGap(115, 115, 115))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextField12, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField10, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(latitudeTextField, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(28, 28, 28)
-                        .addComponent(jLabel11)
+                        .addComponent(longitudeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField11)
-                        .addGap(35, 35, 35))))
+                        .addComponent(longitudeTextField))
+                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(35, 35, 35))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,14 +376,14 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel10)
-                        .addComponent(jLabel11)
-                        .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(latitudeLabel)
+                        .addComponent(longitudeLabel)
+                        .addComponent(longitudeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(latitudeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
@@ -400,12 +412,19 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        Place selectedItem = (Place) jComboBox1.getSelectedItem();
+        if (selectedItem != null) {
+            latitudeTextField.setText(selectedItem.getLatitude().toString());
+            longitudeTextField.setText(selectedItem.getLongitude().toString());
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PlaceEditorPanel;
     private javax.swing.JPanel PlaceReferencesPanel;
+    private javax.swing.JComboBox<Place> jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -420,8 +439,6 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
@@ -430,6 +447,9 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JLabel latitudeLabel;
+    private javax.swing.JTextField latitudeTextField;
+    private javax.swing.JLabel longitudeLabel;
+    private javax.swing.JTextField longitudeTextField;
     // End of variables declaration//GEN-END:variables
 }
