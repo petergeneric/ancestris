@@ -11,6 +11,7 @@ import java.awt.Dialog;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -29,7 +30,7 @@ import org.openide.windows.TopComponent;
  */
 @TopComponent.Description(preferredID = "PlacesTableTopComponent",
 iconBase="ancestris/modules/editors/placeeditor/actions/Place.png", 
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "ancestris.modules.editors.placeeditor.topcomponents.PlacesTableTopComponent")
 @ActionReference(path = "Menu/Window" /*
@@ -45,12 +46,13 @@ public final class PlacesListTopComponent extends TopComponent {
     private Map<String, Set<PropertyPlace>> placesMap = new HashMap<String, Set<PropertyPlace>>();
     private GedcomPlaceTableModel placeTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
+    String[] placeFormat = null;
     private Gedcom gedcom = null;
     int currentRowIndex = -1;
 
     public PlacesListTopComponent(final Gedcom gedcom) {
         this.gedcom = gedcom;
-        String[] placeFormat = PropertyPlace.getFormat(gedcom);
+        placeFormat = PropertyPlace.getFormat(gedcom);
 
         placeTableModel = new GedcomPlaceTableModel(placeFormat);
 
@@ -62,8 +64,7 @@ public final class PlacesListTopComponent extends TopComponent {
                 if (e.getClickCount() == 2) {
                     int rowIndex = placeTable.convertRowIndexToModel(placeTable.getSelectedRow());
                     final Set<PropertyPlace> propertyPlaces = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
-                    Object[] propertyPlaceArray = propertyPlaces.toArray();
-                    PlacesEditorPanel placesEditorPanel = new PlacesEditorPanel(PropertyPlace.getFormat(gedcom), (PropertyPlace) propertyPlaceArray[0]);
+                    PlacesEditorPanel placesEditorPanel = new PlacesEditorPanel(PropertyPlace.getFormat(gedcom), propertyPlaces);
                     DialogDescriptor placesEditorPanelDescriptor = new DialogDescriptor(
                             placesEditorPanel,
                             NbBundle.getMessage(PlacesEditorPanel.class, "PlacesEditorPanel.title"),
@@ -127,7 +128,7 @@ public final class PlacesListTopComponent extends TopComponent {
         RowFilter<TableModel, Integer> rf;
         //If current expression doesn't parse, don't update.
         try {
-            rf = RowFilter.regexFilter(filter);
+            rf = RowFilter.regexFilter(filter, searchPlaceComboBox.getSelectedIndex());
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
@@ -149,6 +150,7 @@ public final class PlacesListTopComponent extends TopComponent {
         filterGedcomPlaceTextField = new javax.swing.JTextField();
         filterGedcomPlaceButton = new javax.swing.JButton();
         clearFilterGedcomPlaceButton = new javax.swing.JButton();
+        searchPlaceComboBox = new javax.swing.JComboBox();
 
         placeTable.setAutoCreateRowSorter(true);
         placeTable.setModel(placeTableModel);
@@ -180,19 +182,23 @@ public final class PlacesListTopComponent extends TopComponent {
             }
         });
 
+        searchPlaceComboBox.setModel(new DefaultComboBoxModel(placeFormat));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addComponent(placesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(searchPlaceLabel)
-                .addGap(6, 6, 6)
-                .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterGedcomPlaceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearFilterGedcomPlaceButton))
-            .addComponent(placesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +207,8 @@ public final class PlacesListTopComponent extends TopComponent {
                     .addComponent(searchPlaceLabel)
                     .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(filterGedcomPlaceButton)
-                    .addComponent(clearFilterGedcomPlaceButton))
+                    .addComponent(clearFilterGedcomPlaceButton)
+                    .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(placesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
         );
@@ -227,6 +234,7 @@ public final class PlacesListTopComponent extends TopComponent {
     private javax.swing.JTextField filterGedcomPlaceTextField;
     private javax.swing.JTable placeTable;
     private javax.swing.JScrollPane placesScrollPane;
+    private javax.swing.JComboBox searchPlaceComboBox;
     private javax.swing.JLabel searchPlaceLabel;
     // End of variables declaration//GEN-END:variables
 
