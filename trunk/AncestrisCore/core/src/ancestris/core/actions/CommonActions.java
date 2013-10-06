@@ -12,6 +12,7 @@
 package ancestris.core.actions;
 
 import java.awt.event.ActionEvent;
+import java.text.MessageFormat;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -43,7 +44,7 @@ public class CommonActions {
         }
     }
 
-    public static SeparatorAction createSeparatorAction(String title) {
+    public static Action createSeparatorAction(String title) {
         SeparatorAction result = new SeparatorAction(title);
         return result;
     }
@@ -66,7 +67,15 @@ public class CommonActions {
 
         public JMenuItem getPopupPresenter() {
 //            JMenuItem item = new JMenuItem("<html><b><font size=+1>"+title+"</font></b></html>");
-            JMenuItem item = new TitleMenuItem("<html><b>" + title + "</b></html>");
+            JMenuItem item = new TitleMenuItem(new StringBuilder("<html><b>").append(title).append("</b></html>").toString());
+            String tt = (String) getValue(SHORT_DESCRIPTION);
+            if (tt!=null){
+                //setToolTipText("<html><p width=\"500\">" +value+"</p></html>");
+                item.setToolTipText(new StringBuilder("<html><body width=\"500\">")
+                        .append(tt.replaceAll("\\n", "<br/>"))
+                        .append("</body></html>")
+                        .toString());
+            }
             item.setEnabled(false);
             return item;
         }
@@ -83,6 +92,12 @@ public class CommonActions {
             this.title.setOpaque(true);
         }
 
+        @Override
+        public void setToolTipText(String text) {
+            title.setToolTipText(text);
+        }
+
+        
         public JComponent[] getMenuPresenters() {
             return new JComponent[]{title};
         }
