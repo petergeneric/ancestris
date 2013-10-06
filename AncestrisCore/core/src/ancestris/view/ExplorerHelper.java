@@ -78,7 +78,6 @@ public class ExplorerHelper {
             // off
             removePopupListener(popupListener);
             popupListener = null;
-            return;
         }
     }
 
@@ -128,7 +127,16 @@ public class ExplorerHelper {
             if (actions.size() > 0) {
                 String title = getTitleFromNodes(selNodes);
                 if (title != null) {
-                    actions.add(0, CommonActions.createSeparatorAction(title));
+                    Action menuTitle;
+                    if (title.length()>32){
+                        menuTitle =  CommonActions.createSeparatorAction(title.substring(0, 28)+"...");
+                        menuTitle.putValue(Action.SHORT_DESCRIPTION, title);
+                    } else {
+                        menuTitle =  CommonActions.createSeparatorAction(title);
+                    }
+                    
+                    
+                    actions.add(0, menuTitle);
                     actions.add(1, null);
                 }
                 JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), source);
