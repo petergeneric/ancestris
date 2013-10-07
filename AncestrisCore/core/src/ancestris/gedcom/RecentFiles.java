@@ -44,6 +44,12 @@ public abstract class RecentFiles {
      */
     public abstract void add(FileObject gedcomFile);
 
+    /**
+     * Remove a FileObject from recent file.
+     * @param gedcomFile 
+     */
+    public abstract void remove(FileObject gedcomFile);
+
     public abstract List<FileObject> getAll();
 
     public RecentFiles() {
@@ -110,6 +116,24 @@ public abstract class RecentFiles {
             pch.firePropertyChange(new PropertyChangeEvent(RecentFiles.class,
                     PROP_RECENT_FILE_INFO, null, null));
         }
+
+        @Override
+        public void remove(FileObject gedcomFile) {
+            String url;
+            try {
+                url = gedcomFile.getURL().toString();
+            } catch (FileStateInvalidException ex) {
+                return;
+            }
+            // remove
+            List<String> history = REGISTRY.get("history", new ArrayList<String>());
+            history.remove(url);
+            REGISTRY.put("history", history);
+            pch.firePropertyChange(new PropertyChangeEvent(RecentFiles.class,
+                    PROP_RECENT_FILE_INFO, null, null));
+        }
+        
+        
 
         @Override
         public List<FileObject> getAll() {

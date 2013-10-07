@@ -44,6 +44,8 @@
 package ancestris.welcome.ui;
 
 import ancestris.app.ActionOpen;
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.resources.Images;
 import ancestris.gedcom.RecentFiles;
 import ancestris.welcome.content.ActionButton;
 import ancestris.welcome.content.BundleSupport;
@@ -53,6 +55,7 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -60,7 +63,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
-
+import org.openide.util.NbBundle;
+import static ancestris.welcome.ui.Bundle.*;
+        
 /**
  * Panel showing all recent files as clickable buttons.
  *
@@ -154,5 +159,26 @@ public class RecentFilesPanel extends JPanel implements Constants {
         b.setIcon(Gedcom.getImage());
         panel.add(b, new GridBagConstraints(0, row, 1, 1, 1.0, 0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+        b = new ActionButton(new DelFile(file), "", false, "DelRecentFile"); //NOI18N
+        panel.add(b, new GridBagConstraints(1, row, 1, 1, 1.0, 0.0,
+                GridBagConstraints.LINE_END, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+    }
+    @NbBundle.Messages("del.from.history=<html>Remove <b>{0}</b> from history</html>")
+    private static class DelFile extends AbstractAncestrisAction{
+        private final FileObject file;
+
+        public DelFile(FileObject file) {
+            this.file = file;
+            setText("");
+            setTip(del_from_history(file.getNameExt()));
+            setImage(Images.imgDel);
+        }
+        
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            RecentFiles.getDefault().remove(file);
+        }
+        
     }
 }
