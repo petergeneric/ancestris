@@ -29,6 +29,7 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import ancestris.util.swing.DialogManager;
+import ancestris.view.BpToolTip;
 import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionActionEvent;
 import ancestris.view.SelectionDispatcher;
@@ -72,6 +73,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -93,6 +95,7 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.JToolTip;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -146,6 +149,8 @@ public class TreeView extends View implements Filter {
     private Sticky sticky = new Sticky();
     // Lookup listener for action callback
     private Lookup.Result<SelectionActionEvent> result;
+
+    private BpToolTip tt = new BpToolTip();
 
     /**
      * Constructor
@@ -902,6 +907,7 @@ public class TreeView extends View implements Filter {
             super.addNotify();
             // listen to model events
             model.addListener(this);
+            setToolTipText("");
         }
 
         @Override
@@ -909,8 +915,26 @@ public class TreeView extends View implements Filter {
             model.removeListener(this);
             // cont
             super.removeNotify();
+            setToolTipText(null);
         }
 
+        @Override
+        public JToolTip createToolTip() {
+            tt.setEntity(getEntityAt(TreeView.this.getMousePosition()));
+            tt.setComponent(this);
+            return tt;
+        }
+
+        // Change TT to fire a createTooltip call
+        @Override
+        public String getToolTipText(MouseEvent event) {
+            Point pos = TreeView.this.getMousePosition();
+            if (pos == null) return "";
+            Entity entity = getEntityAt(pos);
+            if (entity == null) return "";
+            return entity.getId();
+        }
+        
         /**
          * @param e
          */
