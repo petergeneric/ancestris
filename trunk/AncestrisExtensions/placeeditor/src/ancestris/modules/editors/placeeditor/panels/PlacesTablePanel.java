@@ -125,7 +125,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
     private void searchPlace() {
         String city = jTextField2.getText();
         if (city.length() > 0) {
-            List<Place> findPlaces = new GeonamesPlacesList().findPlace(city);
+            List<Place> findPlaces = new GeonamesPlacesList().findPlace(new PropertyPlace(city));
             if (findPlaces != null) {
                 geonamePostalCodeListModel.update(findPlaces);
             }

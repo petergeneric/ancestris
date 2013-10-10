@@ -1,20 +1,14 @@
 package ancestris.modules.editors.placeeditor;
 
-import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeTableModel;
 import ancestris.api.place.Place;
+import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeTableModel;
 import ancestris.place.geonames.GeonamesPlacesList;
+import genj.gedcom.PropertyPlace;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
+import javax.swing.*;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 
@@ -112,7 +106,7 @@ public class FindPlacePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
-        List<Place> findPlaces = new GeonamesPlacesList().findPlace(placeTextField.getText());
+        List<Place> findPlaces = new GeonamesPlacesList().findPlace(new PropertyPlace(placeTextField.getText()));
         if (findPlaces != null) {
             placeTableModel.update(findPlaces);
         }
