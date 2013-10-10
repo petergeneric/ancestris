@@ -920,8 +920,6 @@ public class TreeView extends View implements Filter {
 
         @Override
         public JToolTip createToolTip() {
-            tt.setEntity(getEntityAt(TreeView.this.getMousePosition()));
-            tt.setComponent(this);
             return tt;
         }
 
@@ -929,9 +927,11 @@ public class TreeView extends View implements Filter {
         @Override
         public String getToolTipText(MouseEvent event) {
             Point pos = TreeView.this.getMousePosition();
-            if (pos == null) return "";
-            Entity entity = getEntityAt(pos);
-            if (entity == null) return "";
+            Entity entity = null;
+            if (pos != null)
+                entity = getEntityAt(pos);
+            tt.setEntity(entity);
+            if (entity == null) return null;
             return entity.getId();
         }
         

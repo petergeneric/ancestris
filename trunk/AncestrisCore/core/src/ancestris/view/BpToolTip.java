@@ -101,18 +101,6 @@ public class BpToolTip extends JToolTip {
 
     @Override
     public void paintComponent(Graphics g) {
-
-        // set the parent to not be opaque
-        Component parent = this.getParent();
-        if (parent != null) {
-            if (parent instanceof JComponent) {
-                JComponent jparent = (JComponent) parent;
-                if (jparent.isOpaque()) {
-                    jparent.setOpaque(false);
-                }
-            }
-        }
-
         if (entity == null || renderer == null) {
             return;
         }
@@ -128,6 +116,7 @@ public class BpToolTip extends JToolTip {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.WHITE);
+        g2.fill(getBounds());
         g2.fill(round);
 
 // draw the gray border
@@ -139,8 +128,8 @@ public class BpToolTip extends JToolTip {
 
 // draw the blueprint
         g2.setColor(Color.BLACK);
-        g.setFont(RenderOptions.getInstance().getDefaultFont());
-        renderer.render(g, entity, new Rectangle(4, 4, getWidth() - 9, getHeight() - 9));
+        g2.setFont(RenderOptions.getInstance().getDefaultFont());
+        renderer.render(g2, entity, new Rectangle(4, 4, getWidth() - 9, getHeight() - 9));
     }
 
     /**
@@ -148,10 +137,12 @@ public class BpToolTip extends JToolTip {
      */
     private Blueprint getBlueprint(String tag) {
         Blueprint result = type2blueprint.get(tag);
-        if (result == null) {
+        if (result != null && "tooltip".equals(result.getName()))
+            return result;
+        result = BlueprintManager.getInstance().getBlueprint(tag, "tooltip");
+        if (result == null)
             result = BlueprintManager.getInstance().getBlueprint(tag, "complete");
-            type2blueprint.put(tag, result);
-        }
+        type2blueprint.put(tag, result);
         return result;
     }
 
