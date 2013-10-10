@@ -1,7 +1,10 @@
 package ancestris.place.geonames;
 
 import ancestris.api.place.Place;
-import org.geonames.PostalCode;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.geonames.InsufficientStyleException;
+import org.geonames.Toponym;
 
 /**
  *
@@ -9,10 +12,10 @@ import org.geonames.PostalCode;
  */
 public class GeonamesPlace implements Place {
 
-    private PostalCode postalCode = null;
+    private Toponym toponym = null;
 
-    public GeonamesPlace(PostalCode postalCode) {
-        this.postalCode = postalCode;
+    public GeonamesPlace(Toponym toponym) {
+        this.toponym = toponym;
     }
 
     @Override
@@ -22,12 +25,17 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String getCity() {
-        return postalCode.getPlaceName();
+        return toponym.getName();
     }
 
     @Override
     public String getFirstAvailableJurisdiction() {
-        return postalCode.getAdminCode1();
+        try {
+            return toponym.getAdminCode1();
+        } catch (InsufficientStyleException ex) {
+            Logger.getLogger(GeonamesPlace.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        }
     }
 
     @Override
@@ -49,17 +57,20 @@ public class GeonamesPlace implements Place {
     public String[] getJurisdictions() {
         String[] jurisdictions = new String[10];
         int index = 0;
+        try {
+            jurisdictions[index++] = toponym.getName();
+            jurisdictions[index++] = toponym.getAdminName1();
+            jurisdictions[index++] = toponym.getAdminCode1();
+            jurisdictions[index++] = toponym.getAdminName2();
+            jurisdictions[index++] = toponym.getAdminCode2();
+            jurisdictions[index++] = toponym.getAdminName3();
+            jurisdictions[index++] = toponym.getAdminCode3();
+            jurisdictions[index++] = toponym.getPostcode();
+            jurisdictions[index++] = toponym.getCountryCode();
 
-        jurisdictions[index++] = postalCode.getPlaceName();
-        jurisdictions[index++] = postalCode.getAdminName1();
-        jurisdictions[index++] = postalCode.getAdminCode1();
-        jurisdictions[index++] = postalCode.getAdminName2();
-        jurisdictions[index++] = postalCode.getAdminCode2();
-        jurisdictions[index++] = postalCode.getAdminName3();
-        jurisdictions[index++] = postalCode.getAdminCode3();
-        jurisdictions[index++] = postalCode.getPostalCode();
-        jurisdictions[index++] = postalCode.getCountryCode();
-
+        } catch (InsufficientStyleException ex) {
+            Logger.getLogger(GeonamesPlace.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return jurisdictions;
     }
 
@@ -75,18 +86,23 @@ public class GeonamesPlace implements Place {
 
     @Override
     public Double getLongitude() {
-        return postalCode.getLongitude();
+        return toponym.getLongitude();
     }
 
     @Override
     public Double getLatitude() {
-        return postalCode.getLatitude();
+        return toponym.getLatitude();
     }
 
     @Override
     public String toString() {
-        return postalCode.getPlaceName() + "," + postalCode.getAdminName1() + ","
-                + postalCode.getAdminName2() + "," + postalCode.getAdminName3() + ","
-                + postalCode.getPostalCode() + "," + postalCode.getCountryCode();
+        try {
+            return toponym.getName() + "," + toponym.getAdminName1() + ","
+                    + toponym.getAdminName2() + "," + toponym.getAdminName3() + ","
+                    + toponym.getPostcode() + "," + toponym.getCountryCode();
+        } catch (InsufficientStyleException ex) {
+            Logger.getLogger(GeonamesPlace.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        }
     }
 }

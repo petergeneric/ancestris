@@ -2,14 +2,13 @@ package ancestris.place.geonames;
 
 import ancestris.api.place.Place;
 import ancestris.api.place.PlacesList;
+import genj.gedcom.PropertyPlace;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.geonames.PostalCode;
-import org.geonames.PostalCodeSearchCriteria;
-import org.geonames.Style;
-import org.geonames.WebService;
+import org.geonames.*;
 
 /**
  *
@@ -21,18 +20,18 @@ public class GeonamesPlacesList implements PlacesList {
     private final static Logger logger = Logger.getLogger(GeonamesPlacesList.class.getName(), null);
 
     @Override
-    public List<Place> findPlace(String placeName) {
-        PostalCodeSearchCriteria searchCriteria = new PostalCodeSearchCriteria();
-        searchCriteria.setPlaceName(placeName);
+    public List<Place> findPlace(PropertyPlace place) {
+        ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
+        searchCriteria.setLanguage(Locale.getDefault().toString());
         searchCriteria.setStyle(Style.FULL);
-
+        ToponymSearchResult searchResult;
 
         try {
-            WebService.setUserName("lemovice");
-            List<PostalCode> searchResult = WebService.postalCodeSearch(searchCriteria);
+            searchCriteria.setQ(place.getDisplayValue().replaceAll(",", " "));
+            searchResult = WebService.search(searchCriteria);
 
-            for (PostalCode postalCode : searchResult) {
-                placesList.add(new GeonamesPlace(postalCode));
+            for (Toponym toponym : searchResult.getToponyms()) {
+                placesList.add(new GeonamesPlace(toponym));
             }
             return placesList;
         } catch (Exception e) {
