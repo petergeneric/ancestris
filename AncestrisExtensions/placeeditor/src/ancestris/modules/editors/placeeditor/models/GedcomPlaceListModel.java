@@ -4,11 +4,7 @@ import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.swing.AbstractListModel;
 
 /**

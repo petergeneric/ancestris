@@ -32,7 +32,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         String[] jurisdictions = ((PropertyPlace) propertyPlaceArray[0]).getJurisdictions();
         if (jurisdictions.length > 1) {
             if (jurisdictions[1].isEmpty() == false) {
-                List<Place> findPlaces = new GeonamesPlacesList().findPlace(jurisdictions[1]);
+                List<Place> findPlaces = new GeonamesPlacesList().findPlace((PropertyPlace)propertyPlaceArray[0]);
 
                 if (findPlaces != null) {
                     for (Place place : findPlaces) {
@@ -43,7 +43,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         }
 
         for (PropertyPlace propertyPlace : propertyPlaces) {
-            referencesTableModel.addRow(propertyPlace.getEntity());
+            referencesTableModel.addRow(propertyPlace);
         }
 
         initComponents();
@@ -408,8 +408,8 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jTabbedPane1)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
