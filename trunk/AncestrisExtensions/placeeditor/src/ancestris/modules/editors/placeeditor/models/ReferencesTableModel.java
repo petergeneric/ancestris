@@ -14,9 +14,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ReferencesTableModel extends AbstractTableModel {
 
-    String[] referencesTablecolumnNames = {"Id",
-        "type",
-        "event",
+    String[] referencesTablecolumnNames = {"event",
         "description"};
     protected ArrayList<PropertyPlace> referencesTableValues;
 
@@ -41,10 +39,6 @@ public class ReferencesTableModel extends AbstractTableModel {
         Property parent = place.getParent();
 
         if (column == 0) {
-            return entity.getId();
-        } else if (column == 1) {
-            return EntityTag2Name.getTagName(entity.getTag());
-        } else if (column == 2) {
             return PropertyTag2Name.getTagName(parent.getTag());
         } else {
             return entity.toString(false);

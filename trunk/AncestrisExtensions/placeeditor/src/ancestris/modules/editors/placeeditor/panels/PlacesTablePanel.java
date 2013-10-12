@@ -4,7 +4,7 @@ import ancestris.api.place.Place;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
 import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeListModel;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
-import ancestris.place.geonames.GeonamesPlacesList;
+import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyPlace;
