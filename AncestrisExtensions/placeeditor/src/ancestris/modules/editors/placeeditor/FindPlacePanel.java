@@ -2,7 +2,7 @@ package ancestris.modules.editors.placeeditor;
 
 import ancestris.api.place.Place;
 import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeTableModel;
-import ancestris.place.geonames.GeonamesPlacesList;
+import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.PropertyPlace;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

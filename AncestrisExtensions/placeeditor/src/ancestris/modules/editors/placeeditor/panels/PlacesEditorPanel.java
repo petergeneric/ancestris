@@ -3,7 +3,7 @@ package ancestris.modules.editors.placeeditor.panels;
 import ancestris.api.place.Place;
 import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeListModel;
 import ancestris.modules.editors.placeeditor.models.ReferencesTableModel;
-import ancestris.place.geonames.GeonamesPlacesList;
+import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.PropertyPlace;
 import java.util.List;
 import java.util.Set;
