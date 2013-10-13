@@ -34,14 +34,27 @@ public class ReferencesTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-        PropertyPlace place = referencesTableValues.get(row);
-        Entity entity = place.getEntity();
-        Property parent = place.getParent();
+        if (row < getRowCount()) {
+            PropertyPlace place = referencesTableValues.get(row);
+            Entity entity = place.getEntity();
+            Property parent = place.getParent();
 
-        if (column == 0) {
-            return PropertyTag2Name.getTagName(parent.getTag());
+            if (column == 0) {
+                return PropertyTag2Name.getTagName(parent.getTag());
+            } else {
+                return entity.toString(false);
+            }
         } else {
-            return entity.toString(false);
+            return "";
+        }
+    }
+
+    public Entity getValueAt(int row) {
+        if (row < getRowCount()) {
+            PropertyPlace place = referencesTableValues.get(row);
+            return place.getEntity();
+        } else {
+            return null;
         }
     }
 

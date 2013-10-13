@@ -4,7 +4,12 @@ import ancestris.api.place.Place;
 import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeListModel;
 import ancestris.modules.editors.placeeditor.models.ReferencesTableModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.PropertyPlace;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
@@ -32,7 +37,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         String[] jurisdictions = ((PropertyPlace) propertyPlaceArray[0]).getJurisdictions();
         if (jurisdictions.length > 1) {
             if (jurisdictions[1].isEmpty() == false) {
-                List<Place> findPlaces = new GeonamesPlacesList().findPlace((PropertyPlace)propertyPlaceArray[0]);
+                List<Place> findPlaces = new GeonamesPlacesList().findPlace((PropertyPlace) propertyPlaceArray[0]);
 
                 if (findPlaces != null) {
                     for (Place place : findPlaces) {
@@ -47,7 +52,15 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         }
 
         initComponents();
-
+        placeReferencesTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            int rowIndex = placeReferencesTable.convertRowIndexToModel(placeReferencesTable.getSelectedRow());
+                Entity entity = ((ReferencesTableModel)placeReferencesTable.getModel()).getValueAt(rowIndex);
+                SelectionDispatcher.fireSelection(new Context(entity));
+            }
+        });
+        
         Place selectedItem = (Place) jComboBox1.getSelectedItem();
         if (selectedItem != null) {
             latitudeTextField.setText(selectedItem.getLatitude().toString());
@@ -201,7 +214,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         jTextField3 = new javax.swing.JTextField();
         PlaceReferencesPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        placeReferencesTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         latitudeLabel = new javax.swing.JLabel();
@@ -308,8 +321,8 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.PlaceEditorPanel.TabConstraints.tabTitle"), new Object[] {}), PlaceEditorPanel); // NOI18N
 
-        jTable1.setModel(referencesTableModel);
-        jScrollPane1.setViewportView(jTable1);
+        placeReferencesTable.setModel(referencesTableModel);
+        jScrollPane1.setViewportView(placeReferencesTable);
 
         javax.swing.GroupLayout PlaceReferencesPanelLayout = new javax.swing.GroupLayout(PlaceReferencesPanel);
         PlaceReferencesPanel.setLayout(PlaceReferencesPanelLayout);
@@ -437,7 +450,6 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField2;
@@ -451,5 +463,6 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField latitudeTextField;
     private javax.swing.JLabel longitudeLabel;
     private javax.swing.JTextField longitudeTextField;
+    private javax.swing.JTable placeReferencesTable;
     // End of variables declaration//GEN-END:variables
 }
