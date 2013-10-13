@@ -13,13 +13,15 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
+import org.jdesktop.swingx.JXMapKit;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 
 /**
  *
  * @author dominique
  */
 public class PlacesEditorPanel extends javax.swing.JPanel {
-
+    
     GeonamePostalCodeListModel geonamePostalCodeListModel = new GeonamePostalCodeListModel();
     String[] placeFormat;
     private ReferencesTableModel referencesTableModel;
@@ -32,13 +34,13 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         Object[] propertyPlaceArray = propertyPlaces.toArray();
         referencesTableModel = new ReferencesTableModel();
         placesComboBoxModel = new DefaultComboBoxModel();
-
+        
         this.placeFormat = placeFormat;
         String[] jurisdictions = ((PropertyPlace) propertyPlaceArray[0]).getJurisdictions();
         if (jurisdictions.length > 1) {
             if (jurisdictions[1].isEmpty() == false) {
                 List<Place> findPlaces = new GeonamesPlacesList().findPlace((PropertyPlace) propertyPlaceArray[0]);
-
+                
                 if (findPlaces != null) {
                     for (Place place : findPlaces) {
                         placesComboBoxModel.addElement(place);
@@ -46,17 +48,25 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
                 }
             }
         }
-
+        
         for (PropertyPlace propertyPlace : propertyPlaces) {
             referencesTableModel.addRow(propertyPlace);
         }
-
+        
         initComponents();
+        
+        jXMapKit1.setDataProviderCreditShown(true);
+        jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
+        jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        jXMapKit1.setMiniMapVisible(false);
+        jXMapKit1.getZoomSlider().setValue(5);
+        
         placeReferencesTable.addMouseListener(new MouseAdapter() {
+            
             @Override
             public void mouseClicked(MouseEvent e) {
-            int rowIndex = placeReferencesTable.convertRowIndexToModel(placeReferencesTable.getSelectedRow());
-                Entity entity = ((ReferencesTableModel)placeReferencesTable.getModel()).getValueAt(rowIndex);
+                int rowIndex = placeReferencesTable.convertRowIndexToModel(placeReferencesTable.getSelectedRow());
+                Entity entity = ((ReferencesTableModel) placeReferencesTable.getModel()).getValueAt(rowIndex);
                 SelectionDispatcher.fireSelection(new Context(entity));
             }
         });
@@ -65,8 +75,9 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         if (selectedItem != null) {
             latitudeTextField.setText(selectedItem.getLatitude().toString());
             longitudeTextField.setText(selectedItem.getLongitude().toString());
+            jXMapKit1.setAddressLocation(new GeoPosition(selectedItem.getLatitude(), selectedItem.getLongitude()));
         }
-
+        
         if (placeFormat.length > 0) {
             jLabel1.setText(placeFormat[0]);
             jTextField1.setVisible(true);
@@ -75,7 +86,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
             jLabel1.setText("");
             jTextField1.setVisible(false);
         }
-
+        
         if (placeFormat.length > 1) {
             jLabel2.setText(placeFormat[1]);
             jTextField2.setVisible(true);
@@ -84,7 +95,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
             jLabel2.setText("");
             jTextField2.setVisible(false);
         }
-
+        
         if (placeFormat.length > 2) {
             jLabel3.setText(placeFormat[2]);
             jTextField3.setVisible(true);
@@ -93,7 +104,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
             jLabel3.setText("");
             jTextField3.setVisible(false);
         }
-
+        
         if (placeFormat.length > 3) {
             jLabel4.setText(placeFormat[3]);
             jTextField4.setVisible(true);
@@ -102,7 +113,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
             jLabel4.setText("");
             jTextField4.setVisible(false);
         }
-
+        
         if (placeFormat.length > 4) {
             jLabel5.setText(placeFormat[4]);
             jTextField5.setVisible(true);
@@ -111,7 +122,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
             jLabel5.setText("");
             jTextField5.setVisible(false);
         }
-
+        
         if (placeFormat.length > 5) {
             jLabel6.setText(placeFormat[5]);
             jTextField6.setVisible(true);
@@ -120,7 +131,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
             jLabel6.setText("");
             jTextField6.setVisible(false);
         }
-
+        
         if (placeFormat.length > 6) {
             jLabel7.setText(placeFormat[6]);
             jTextField7.setVisible(true);
@@ -129,7 +140,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
             jLabel7.setText("");
             jTextField7.setVisible(false);
         }
-
+        
         if (placeFormat.length > 7) {
             jLabel8.setText(placeFormat[7]);
             jTextField8.setVisible(true);
@@ -139,49 +150,49 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
             jTextField8.setVisible(false);
         }
     }
-
+    
     public String getPlaceString() {
         String placeString = "";
-
+        
         if (placeFormat.length > 0) {
             placeString = jTextField1.getText();
         }
-
+        
         if (placeFormat.length > 1) {
             placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             placeString += jTextField2.getText();
         }
-
+        
         if (placeFormat.length > 2) {
             placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             placeString += jTextField3.getText();
         }
-
+        
         if (placeFormat.length > 3) {
             placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             placeString += jTextField4.getText();
         }
-
+        
         if (placeFormat.length > 4) {
             placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             placeString += jTextField5.getText();
         }
-
+        
         if (placeFormat.length > 5) {
             placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             placeString += jTextField6.getText();
         }
-
+        
         if (placeFormat.length > 6) {
             placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             placeString += jTextField7.getText();
         }
-
+        
         if (placeFormat.length > 7) {
             placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             placeString += jTextField8.getText();
         }
-
+        
         return placeString;
     }
 
@@ -194,6 +205,15 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        latitudeLabel = new javax.swing.JLabel();
+        latitudeTextField = new javax.swing.JTextField();
+        longitudeLabel = new javax.swing.JLabel();
+        longitudeTextField = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        jTextField12 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<Place>();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         PlaceEditorPanel = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
@@ -213,137 +233,15 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         jTextField4 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         PlaceReferencesPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        placeReferenceScrollPane = new javax.swing.JScrollPane();
         placeReferencesTable = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        latitudeLabel = new javax.swing.JLabel();
-        latitudeTextField = new javax.swing.JTextField();
-        longitudeLabel = new javax.swing.JLabel();
-        longitudeTextField = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<Place>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jXMapKit1 = new org.jdesktop.swingx.JXMapKit();
 
-        jTabbedPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        PlaceEditorPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, "Pays"); // NOI18N
-
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, "Région"); // NOI18N
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, "Lieudit"); // NOI18N
-
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, "Commune"); // NOI18N
-
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, "Département"); // NOI18N
-
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, "Paroisse"); // NOI18N
-
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, "Code Postal"); // NOI18N
-
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, "Code INSEE"); // NOI18N
-
-        javax.swing.GroupLayout PlaceEditorPanelLayout = new javax.swing.GroupLayout(PlaceEditorPanel);
-        PlaceEditorPanel.setLayout(PlaceEditorPanelLayout);
-        PlaceEditorPanelLayout.setHorizontalGroup(
-            PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PlaceEditorPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                    .addComponent(jTextField8)
-                    .addComponent(jTextField6)
-                    .addComponent(jTextField4)
-                    .addComponent(jTextField2)
-                    .addComponent(jTextField1))
-                .addGap(27, 27, 27)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
-                .addGap(53, 53, 53))
-        );
-        PlaceEditorPanelLayout.setVerticalGroup(
-            PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PlaceEditorPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel1))
-                    .addComponent(jTextField3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.PlaceEditorPanel.TabConstraints.tabTitle"), new Object[] {}), PlaceEditorPanel); // NOI18N
-
-        placeReferencesTable.setModel(referencesTableModel);
-        jScrollPane1.setViewportView(placeReferencesTable);
-
-        javax.swing.GroupLayout PlaceReferencesPanelLayout = new javax.swing.GroupLayout(PlaceReferencesPanel);
-        PlaceReferencesPanel.setLayout(PlaceReferencesPanelLayout);
-        PlaceReferencesPanelLayout.setHorizontalGroup(
-            PlaceReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PlaceReferencesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        PlaceReferencesPanelLayout.setVerticalGroup(
-            PlaceReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PlaceReferencesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.PlaceReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), PlaceReferencesPanel); // NOI18N
+        setMinimumSize(new java.awt.Dimension(537, 414));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.setPreferredSize(new java.awt.Dimension(513, 121));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.jLabel9.text"), new Object[] {})); // NOI18N
 
@@ -404,6 +302,130 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jTabbedPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTabbedPane1.setMinimumSize(new java.awt.Dimension(513, 263));
+
+        PlaceEditorPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, "Pays"); // NOI18N
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, "Région"); // NOI18N
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, "Lieudit"); // NOI18N
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, "Commune"); // NOI18N
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, "Département"); // NOI18N
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, "Paroisse"); // NOI18N
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, "Code Postal"); // NOI18N
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, "Code INSEE"); // NOI18N
+
+        javax.swing.GroupLayout PlaceEditorPanelLayout = new javax.swing.GroupLayout(PlaceEditorPanel);
+        PlaceEditorPanel.setLayout(PlaceEditorPanelLayout);
+        PlaceEditorPanelLayout.setHorizontalGroup(
+            PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PlaceEditorPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
+                    .addComponent(jTextField8)
+                    .addComponent(jTextField6)
+                    .addComponent(jTextField4)
+                    .addComponent(jTextField2)
+                    .addComponent(jTextField1))
+                .addGap(27, 27, 27)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField3)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE))
+                .addGap(53, 53, 53))
+        );
+        PlaceEditorPanelLayout.setVerticalGroup(
+            PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PlaceEditorPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField1)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel1))
+                    .addComponent(jTextField3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PlaceEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.PlaceEditorPanel.TabConstraints.tabTitle"), new Object[] {}), PlaceEditorPanel); // NOI18N
+
+        placeReferenceScrollPane.setMinimumSize(new java.awt.Dimension(503, 218));
+        placeReferenceScrollPane.setPreferredSize(new java.awt.Dimension(503, 218));
+
+        placeReferencesTable.setModel(referencesTableModel);
+        placeReferenceScrollPane.setViewportView(placeReferencesTable);
+
+        javax.swing.GroupLayout PlaceReferencesPanelLayout = new javax.swing.GroupLayout(PlaceReferencesPanel);
+        PlaceReferencesPanel.setLayout(PlaceReferencesPanelLayout);
+        PlaceReferencesPanelLayout.setHorizontalGroup(
+            PlaceReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PlaceReferencesPanelLayout.createSequentialGroup()
+                .addComponent(placeReferenceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(106, 106, 106))
+        );
+        PlaceReferencesPanelLayout.setVerticalGroup(
+            PlaceReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PlaceReferencesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(placeReferenceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.PlaceReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), PlaceReferencesPanel); // NOI18N
+
+        jScrollPane1.setViewportView(jXMapKit1);
+
+        jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlacesEditorPanel.jScrollPane1.TabConstraints.tabTitle"), new Object[] {}), jScrollPane1); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -412,7 +434,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTabbedPane1))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -421,7 +443,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -431,6 +453,7 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
         if (selectedItem != null) {
             latitudeTextField.setText(selectedItem.getLatitude().toString());
             longitudeTextField.setText(selectedItem.getLongitude().toString());
+            jXMapKit1.setAddressLocation(new GeoPosition(selectedItem.getLatitude(), selectedItem.getLongitude()));
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -459,10 +482,12 @@ public class PlacesEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
+    private org.jdesktop.swingx.JXMapKit jXMapKit1;
     private javax.swing.JLabel latitudeLabel;
     private javax.swing.JTextField latitudeTextField;
     private javax.swing.JLabel longitudeLabel;
     private javax.swing.JTextField longitudeTextField;
+    private javax.swing.JScrollPane placeReferenceScrollPane;
     private javax.swing.JTable placeReferencesTable;
     // End of variables declaration//GEN-END:variables
 }
