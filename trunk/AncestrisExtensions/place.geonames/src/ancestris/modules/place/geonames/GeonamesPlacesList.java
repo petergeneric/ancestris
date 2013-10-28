@@ -19,30 +19,17 @@ public class GeonamesPlacesList implements PlacesList {
     private final static Logger logger = Logger.getLogger(GeonamesPlacesList.class.getName(), null);
 
     @Override
-    public List<Place> findPlace(PropertyPlace place) {
+    public List<Place> findPlace(String place) {
 
         ToponymSearchResult toponymSearchResult;
-        String[] jurisdictions = place.getJurisdictions();
 
         try {
             WebService.setUserName("lemovice");
-            int index = 0;
 
-            do {
-                // parse format
-                StringBuilder result = new StringBuilder();
-                for (int i = index; i < jurisdictions.length; i++) {
-                    result.append(jurisdictions[i].trim());
-                    if (i < jurisdictions.length) {
-                        result.append(" ");
-                    }
-                }
-                index += 1;
-                ToponymSearchCriteria toponymSearchCriteria = new ToponymSearchCriteria();
-                toponymSearchCriteria.setQ(result.toString());
-                toponymSearchResult = WebService.search(toponymSearchCriteria);
+            ToponymSearchCriteria toponymSearchCriteria = new ToponymSearchCriteria();
+            toponymSearchCriteria.setQ(place);
+            toponymSearchResult = WebService.search(toponymSearchCriteria);
 
-            } while (index < jurisdictions.length && toponymSearchResult.getToponyms().isEmpty());
 
             for (Toponym toponym : toponymSearchResult.getToponyms()) {
                 PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
