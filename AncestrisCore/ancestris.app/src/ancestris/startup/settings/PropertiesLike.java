@@ -8,9 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
-
 import org.openide.util.Utilities;
 
 /**
@@ -48,7 +47,7 @@ public class PropertiesLike extends Properties {
             ByteArrayInputStream byteIn = null;
             try {
                 bf = new BufferedReader(new InputStreamReader(inStream));
-                String line = null;
+                String line;
                 byteOut = new ByteArrayOutputStream();
                 while ((line = bf.readLine()) != null) {
                     if (line.indexOf("jdkhome") > -1
@@ -80,20 +79,26 @@ public class PropertiesLike extends Properties {
         }
     }
 
+    @Override
     public void store(OutputStream out, String comments) throws IOException {
         boolean escape = Boolean.getBoolean(PROP_ESCAPE);
         if (escape) {
             super.store(out, comments);
         } else {
-            StringBuffer buff = new StringBuffer("###");
+            StringBuilder buff = new StringBuilder("###");
             buff.append(comments);
             buff.append(LF);
-            Enumeration en = this.keys();
-            while (en.hasMoreElements()) {
-                String key = (String) en.nextElement();
+            for (Iterator<String> it = this.stringPropertyNames().iterator(); it.hasNext();) {
+                String key = it.next();
                 String value = getProperty(key);
                 buff.append(key).append("=").append(value).append(LF);
             }
+//            Enumeration en = this.keys();
+//            while (en.hasMoreElements()) {
+//                String key = (String) en.nextElement();
+//                String value = getProperty(key);
+//                buff.append(key).append("=").append(value).append(LF);
+//            }
             // TODO: load charset encoding from netbeans advanced settings
             // and write it accordingly
             out.write(buff.toString().getBytes());
