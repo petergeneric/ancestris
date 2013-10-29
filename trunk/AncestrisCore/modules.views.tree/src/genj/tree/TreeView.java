@@ -29,10 +29,10 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import ancestris.util.swing.DialogManager;
-import ancestris.view.BpToolTip;
 import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionActionEvent;
 import ancestris.view.SelectionDispatcher;
+import ancestris.view.TemplateToolTip;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -73,12 +73,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -98,6 +96,7 @@ import javax.swing.JToolBar;
 import javax.swing.JToolTip;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.awt.DynamicMenuContent;
@@ -150,7 +149,7 @@ public class TreeView extends View implements Filter {
     // Lookup listener for action callback
     private Lookup.Result<SelectionActionEvent> result;
 
-    private BpToolTip tt = new BpToolTip();
+    private TemplateToolTip tt = new TemplateToolTip();
 
     /**
      * Constructor
@@ -907,7 +906,7 @@ public class TreeView extends View implements Filter {
             super.addNotify();
             // listen to model events
             model.addListener(this);
-            setToolTipText("");
+            ToolTipManager.sharedInstance().registerComponent(this);
         }
 
         @Override
@@ -915,15 +914,20 @@ public class TreeView extends View implements Filter {
             model.removeListener(this);
             // cont
             super.removeNotify();
-            setToolTipText(null);
+            ToolTipManager.sharedInstance().unregisterComponent(this);
         }
 
         @Override
         public JToolTip createToolTip() {
+            tt.setComponent(this);
             return tt;
         }
 
-        // Change TT to fire a createTooltip call
+        /*
+         * fake set tt text to let tooltip manager hide or show tt
+         * the get ttlocation must return null if no entity can be found. if not tt show a blank component
+         */
+        String tttext = null;
         @Override
         public String getToolTipText(MouseEvent event) {
             Point pos = TreeView.this.getMousePosition();
@@ -931,8 +935,19 @@ public class TreeView extends View implements Filter {
             if (pos != null)
                 entity = getEntityAt(pos);
             tt.setEntity(entity);
-            if (entity == null) return null;
-            return entity.getId();
+            if (entity == null) {
+                tttext = null;
+                return null;
+            }
+            tttext = entity.getId();
+            return tttext;
+        }
+
+        @Override
+        public Point getToolTipLocation(MouseEvent event) {
+            if (tttext == null)
+                return null;
+            return new Point(event.getX()-5, event.getY()-5);
         }
         
         /**
