@@ -1,0 +1,233 @@
+<html>
+<head>
+<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.75em;
+line-height: 1.2em;
+text-align: center;
+}
+h1 { 
+font-family: inherit;
+font-size: 1.5em;
+line-height: 3em;
+font-weight: bold;
+background-color: #ffff66;
+text-align: center;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.2em;
+line-height: 1.8em;
+padding-left: 0.5em;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.1em;
+line-height: 1em;
+}
+h4 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1em;
+line-height: 1em;
+}
+.megr {
+text-align: center;
+font-style: normal;
+font-weight: normal;
+}
+.mital {
+text-align: center;
+font-style: normal;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.droite {
+text-align: right;
+}
+.cent {
+text-align: center;
+}
+.conteneur {
+padding: 0px;
+width: 100%;
+margin-left: 0em;
+margin-top: 0;
+margin-bottom: 0;
+}
+.spacer {
+clear: both;
+margin-top: 0;
+margin-bottom: 0;
+height: 0px;
+}
+.column1 {
+float: left;
+text-align: left;
+width: 45%;
+margin-left: 0.5em;
+margin-right: 0;
+margin-top: 0;
+}
+.column2 {
+float: right;
+text-align: left;
+width: 45%;
+margin-left: 0;
+margin-right: 0.5em;
+margin-top: 0;
+}
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+text-align: center;
+}
+.focolo {
+background-color: #ffff99;
+}
+.minicolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ffff99;
+}
+</style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
+</head>
+<body>
+
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($will=$wills)
+#set($fam1=$famc.Husband.fams)
+#set($fam2=$famc.Husband.famc.Husband.fams)
+#set($fam22=$famc.Wife.famc.Husband.fams)
+#set($conjoint = $fams.getOtherSpouse())
+#set($child=$children)
+#set($famA=$fam.children.fams)
+#set($fratrie=$famc.children)
+#set($surnom=$INDI.getProperty("NAME:NICK"))
+#set($naissance=$INDI.getProperty("BIRT"))
+#set($naissance_source=$INDI.getProperty("BIRT:SOUR"))
+#set($bapteme=$INDI.getProperty("BAPM"))
+#set($bapteme_source=$INDI.getProperty("BAPM:SOUR"))
+#set($bapt_CHR=$INDI.getProperty("CHR"))
+#set($bapt_CH_source=$INDI.getProperty("CHR:SOUR"))
+#set($deces=$INDI.getProperty("DEAT"))
+#set($deces_source=$INDI.getProperty("DEAT:SOUR"))
+#set($inhumation=$INDI.getProperty("BURI"))
+#set($inhumation_source=$INDI.getProperty("BURI:SOUR"))
+#set($residence=$INDI.getProperty("RESI"))
+#set($profession=$INDI.getProperty("OCCU"))
+#set($version="2.00")
+<p><a name="top"></a></p>
+<span class="cent"
+<!----------------------------------- Titre de la page --------------------------->
+<h4> <span class="foncolo"> $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") ($INDI.Id)</span>
+</h4>
+
+<!----------------------------- Zone de l'identite ---------------------------------------->
+
+
+#set($naissance=$INDI.getProperty("BIRT"))
+#if ($naissance) 
+<br><span class="mital">Naissance : </span><span class="megr">$!INDI.getProperty("BIRT:DATE")</span> -
+<span class="megr">$!INDI.getProperty("BIRT:PLAC")</span> ;
+#end 
+
+ #set($bapteme=$INDI.getProperty("BAPM"))
+  #if ($bapteme)
+<br><span class="mital">Bapt&ecirc;me : </span><span class="megr">$!INDI.getProperty("BAPM:DATE")</span> - 
+<span class="megr">$!INDI.getProperty("BAPM:PLAC")</span> ; 
+ #end
+ #set($bapt_CHR=$INDI.getProperty("CHR"))
+  #if ($bapt_CHR)
+<br><span class="mital">Bapt&ecirc;me : </span><span class="megr">$!INDI.getProperty("CHR:DATE")</span> - 
+ <span class="megr">$!INDI.getProperty("CHR:PLAC")</span> ; 
+ #end
+<br>
+ #set($deces=$INDI.getProperty("DEAT"))
+  #if ($deces)
+<br><span class="mital">D&eacute;c&egrave;s : </span><span class="megr">$!INDI.getProperty("DEAT:DATE")</span> - 
+ <span class="megr">$!INDI.getProperty("DEAT:PLAC")</span> ; 
+ #end
+
+ #set($inhumation=$INDI.getProperty("BURI"))
+  #if ($inhumation)
+
+<br><span class="mital">Inhumation : </span><span class="megr">$!INDI.getProperty("BURI:DATE")</span> - 
+ <span class="megr">$!INDI.getProperty("BURI:PLAC")</span>
+  #end
+
+<!-------------------------- Zone de l'adresse ----------------------------------->
+
+ #set($residence=$INDI.getProperty("RESI"))
+  #if ($residence)
+<br><br><span class="mital">Adresses : </span>
+
+          #set($adresse_code=$!resi.getProperty("ADDR:POST"))
+#foreach($resi in $INDI.getProperties("RESI"))
+#if ($!resi.getProperty("ADDR"))
+<span class="megr">$!resi.getProperty("ADDR"), $!resi.getProperty("ADDR:CITY"), ($!resi.getProperty("ADDR:POST")) - p&eacute;riode : $!resi.Date</span>
+
+        #else
+<span class="megr">$!resi.Place - p&eacute;riode : $!resi.Date</span>
+
+#end #end
+  #end
+
+<!-------------------------- Zone de la profession ----------------------------------->
+<!-- deuxi&egrave;me colonne -->
+
+ #set($profession=$INDI.getProperty("OCCU"))
+  #if ($profession)
+#if($list.size($INDI.getProperties("OCCU"))>=2)
+<br><br><span class="mital">Professions : </span>
+
+  #else
+<br><br><span class="mital">Profession : 
+      #end
+#foreach($occu in $INDI.getProperties("OCCU"))
+<span class="megr">$!occu.Value &agrave; $!occu.Place - p&eacute;riode : $!occu.Date</span> ; 
+       #end
+#end
+
+
+
+<!---------------------------------- Mariage ----------------------------------------------->
+
+#foreach ($fam in $fams)
+
+#set($conjoint = $fam.getOtherSpouse())
+#set($mariage=$fam.getProperty("MARR"))
+#set($divorce=$fam.getProperty("DIV"))
+#set($cm=$fam.getProperty("MARC"))
+#set($naiss_conjoint=$conjoint.getProperty("BIRT"))
+#set($dec_conjoint=$conjoint.getProperty("DEAT"))
+#set($marr_source=$fam.getProperty("MARR:SOUR"))
+#set($cm_source=$fam.getProperty("MARC:SOUR"))
+#set($divorce_source=$fam.getProperty("DIV:SOUR"))
+#set($naiss_source=$conjoint.getProperty("BIRT:SOUR"))
+#set($dec_source=$conjoint.getProperty("DEAT:SOUR"))
+<br><br>
+#if ($mariage)
+<span class="mital">Mariage : </span><span class="metit">$!conjoint.getProperty("NAME") ($conjoint.Id)</span> - $!mariage.getProperty("DATE") - $!mariage.getProperty("PLAC")<br>
+#end
+
+#if ($divorce)	
+<br><span class="mital">Divorce : </span>$!divorce.Date - $!divorce.Place <br>
+ #end
+
+
+#end
+
+
+</body>
+</html>
