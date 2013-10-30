@@ -19,7 +19,7 @@ import genj.gedcom.Indi;
 import java.io.File;
 import java.io.Writer;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.ListTool;
 import org.openide.modules.Places;
@@ -29,6 +29,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class VelocityRenderer implements Renderer {
 
     private VelocityContext context;
+    private static VelocityEngine engine = new VelocityEngine();
 //    private Writer out;
 //    public Charset CHARSET;
     private static final File TEMPLATE_DIR = Places.getUserDirectory();
@@ -41,19 +42,19 @@ public class VelocityRenderer implements Renderer {
 //        }
 //
         try {
-            Velocity.setProperty("resource.loader", "file,class");
-            Velocity.setProperty("class.resource.loader.class",
+            engine.setProperty("resource.loader", "file,class");
+            engine.setProperty("class.resource.loader.class",
                     "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-            Velocity.setProperty("class.resource.loader.cache", "true");
-            Velocity.setProperty("file.resource.loader.path", TEMPLATE_DIR.getPath());
-            Velocity.setProperty("file.resource.loader.cache", "false");
+            engine.setProperty("class.resource.loader.cache", "true");
+            engine.setProperty("file.resource.loader.path", TEMPLATE_DIR.getPath());
+            engine.setProperty("file.resource.loader.cache", "false");
 
 
-            Velocity.setProperty("directive.set.null.allowed", "true");
+            engine.setProperty("directive.set.null.allowed", "true");
             // TODO: pour ne pas interpoller {$v} ... il faudrait mettre false
             // TODO: Mais pour #parse("$TEMPLATE/...") il faudrait mettre true
-            Velocity.setProperty("runtime.interpolate.string.literals", "true");
-            Velocity.init();
+            engine.setProperty("runtime.interpolate.string.literals", "true");
+            engine.init();
 
         } catch (Exception e) {
             System.out.println("Problem initializing Velocity : " + e);
@@ -133,7 +134,7 @@ public class VelocityRenderer implements Renderer {
     @Override
     public void render(String template, Writer out) {
         try {
-            Velocity.mergeTemplate(template, "ISO-8859-1",
+            engine.mergeTemplate(template, "ISO-8859-1",
                     context, out);
         } catch (Exception ee) {
         }

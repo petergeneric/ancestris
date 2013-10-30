@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.ListTool;
 
@@ -36,6 +36,7 @@ import org.apache.velocity.tools.generic.ListTool;
 @SuppressWarnings("unchecked")
 public class DocReport {
 	private VelocityContext context;
+        private static VelocityEngine engine = new VelocityEngine();
 	private Writer out;
 	public Charset CHARSET;
 	
@@ -45,19 +46,19 @@ public class DocReport {
 		catch (Exception e) {CHARSET = Charset.forName("ISO-8859-1");}
 
 		try {
-			Velocity.setProperty("resource.loader", "file,class");
+			engine.setProperty("resource.loader", "file,class");
 //			Velocity.setProperty("class.resource.loader.class",
 //			"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 //			Velocity.setProperty("class.resource.loader.cache","true");
- 			Velocity.setProperty("file.resource.loader.path","/");
-			Velocity.setProperty("file.resource.loader.cache","true");
+ 			engine.setProperty("file.resource.loader.path","/");
+			engine.setProperty("file.resource.loader.cache","true");
 
 			
-			Velocity.setProperty("directive.set.null.allowed","true");
+			engine.setProperty("directive.set.null.allowed","true");
 			// TODO: pour ne pas interpoller {$v} ... il faudrait mettre false
 			// TODO: Mais pour #parse("$TEMPLATE/...") il faudrait mettre true
-			Velocity.setProperty("runtime.interpolate.string.literals","true");
-			Velocity.init();
+			engine.setProperty("runtime.interpolate.string.literals","true");
+			engine.init();
 
 		} catch (Exception e) {
 			System.out.println("Problem initializing Velocity : " + e);
@@ -130,7 +131,7 @@ public class DocReport {
 	void render(String template) {
 		//StringWriter w = new StringWriter();
 		try {
-			Velocity.mergeTemplate(template, "ISO-8859-1",
+			engine.mergeTemplate(template, "ISO-8859-1",
 					context, out);
 		} catch (Exception ee) {
 		}
