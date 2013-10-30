@@ -63,6 +63,7 @@ public class TreeViewSettings extends JTabbedPane {
   private ColorsWidget colors;
   private JCheckBox checkBending, checkAntialiasing, checkMarrSymbols;
   private JCheckBox cbTreeFollowSelection;
+  private JCheckBox cbShowPopup;
   private JCheckBox cbTreeAutoScroll;
   private AbstractAncestrisAction 
     up = new Move(-1), 
@@ -89,6 +90,7 @@ public class TreeViewSettings extends JTabbedPane {
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
+         "<check gx=\"1\"/>"+
          "<font gx=\"1\"/>"+
          "<row><label/><spinner/></row>"+
          "<row><label/><spinner/></row>"+
@@ -103,10 +105,12 @@ public class TreeViewSettings extends JTabbedPane {
     checkMarrSymbols = createCheck("marrsymbols", view.getModel().isMarrSymbols());
     cbTreeFollowSelection = createCheck("followselection", TreeView.isFollowSelection());
     cbTreeAutoScroll = createCheck("autoscroll", TreeView.isAutoScroll());
+    cbShowPopup = createCheck("showpopup", TreeView.showPopup());
     font = new FontChooser();
     font.setSelectedFont(view.getContentFont());
     font.addChangeListener(commit);
     
+    options.add(cbShowPopup);
     options.add(cbTreeFollowSelection);
     options.add(cbTreeAutoScroll);
     options.add(checkBending);
@@ -271,6 +275,7 @@ public class TreeViewSettings extends JTabbedPane {
       // options
         TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
         TreeView.setAutoScroll(cbTreeAutoScroll.isSelected());
+        TreeView.setShowPopup(cbShowPopup.isSelected());
       view.getModel().setBendArcs(checkBending.isSelected());
       view.setAntialiasing(checkAntialiasing.isSelected());
       view.setContentFont(font.getSelectedFont());

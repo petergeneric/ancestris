@@ -291,6 +291,14 @@ public class TreeView extends View implements Filter {
         REGISTRY.put("auto.scroll", autoScroll);
     }
 
+    public static boolean showPopup() {
+        return REGISTRY.get("show.popup", true);
+    }
+
+    public static void setShowPopup(boolean showPopup) {
+        REGISTRY.put("show.popup", showPopup);
+    }
+
     /**
      * @see java.awt.Container#doLayout()
      */
@@ -919,6 +927,8 @@ public class TreeView extends View implements Filter {
 
         @Override
         public JToolTip createToolTip() {
+            if (!showPopup())
+                return null;
             tt.setComponent(this);
             return tt;
         }
@@ -930,6 +940,10 @@ public class TreeView extends View implements Filter {
         String tttext = null;
         @Override
         public String getToolTipText(MouseEvent event) {
+            if (!showPopup()){
+                tttext = null;
+                return null;
+            }
             Point pos = TreeView.this.getMousePosition();
             Entity entity = null;
             if (pos != null)
@@ -945,6 +959,8 @@ public class TreeView extends View implements Filter {
 
         @Override
         public Point getToolTipLocation(MouseEvent event) {
+            if (!showPopup())
+                return null;
             if (tttext == null)
                 return null;
             return new Point(event.getX()-5, event.getY()-5);
