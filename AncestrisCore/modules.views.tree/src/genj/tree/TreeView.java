@@ -924,11 +924,9 @@ public class TreeView extends View implements Filter {
             super.removeNotify();
             ToolTipManager.sharedInstance().unregisterComponent(this);
         }
-
+        
         @Override
         public JToolTip createToolTip() {
-            if (!showPopup())
-                return null;
             tt.setComponent(this);
             return tt;
         }
