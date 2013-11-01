@@ -4,153 +4,91 @@
 		#set($isShown = 1)
 	#end
 #end 
+
 <html>
+
 <head>
 <style type="text/css">
 html {
 font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
-font-size: 0.75em;
-line-height: 1.2em;
+font-size: 10px;
+line-height: 1.0em;
+text-align: left;
+}
+.title {
+border-style: dotted;
+border-width: 1px;
+border-color: black;
+background-color: #CEECF5;
+font-size: 12px;
 text-align: center;
-}
-h1 {
-font-family: inherit;
-font-size: 1.5em;
-line-height: 3em;
-font-weight: bold;
-background-color: #ffff66;
-text-align: center;
-}
-h2 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1.2em;
-line-height: 1.8em;
-padding-left: 0.5em;
-}
-h3 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1.1em;
-line-height: 1em;
-}
-h4 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1em;
-line-height: 1em;
-}
-h5 {
-font-family: inherit;
-font-weight: normal;
-font-size: 1em;
-line-height: 1em;
-}
-.megr {
-font-style: normal;
-font-weight: normal;
-}
-.metit {
-color: #000099;
 text-decoration: underline;
 }
-.droite {
-text-align: right;
+.underline_shadow {
+text-shadow: 2px 2px 8px orange;
+text-decoration: underline;
 }
-.trait {
-text-align: center;
+.italic {
+font-style: italic;
+font-size: 9px;
 }
-.cent {
-text-align: center;
-}
-.conteneur {
-padding: 0px;
-width: 100%;
-margin-left: 0em;
-margin-top: 0;
-margin-bottom: 0;
-}
-.spacer {
-clear: both;
-margin-top: 0;
-margin-bottom: 0;
-height: 0px;
-}
-.column1 {
-float: left;
+.version {
+font-style: italic;
+font-size: 6px;
 text-align: left;
-width: 45%;
-margin-left: 0.5em;
-margin-right: 0;
-margin-top: 0;
-}
-.column2 {
-float: right;
-text-align: left;
-width: 45%;
-margin-left: 0;
-margin-right: 0.5em;
-margin-top: 0;
-}
-.foncolo {
-border-style: hidden hidden double;
-border-color: black;
-border-top: 0px hidden black;
-background-color: #ccffff;
-}
-.focolo {
-background-color: #ffff99;
-}
-.minicolo {
-border-style: hidden hidden simple;
-border-color: black;
-border-top: 0px hidden black;
-background-color: #ffff99;
 }
 </style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
 </head>
+
 <body>
-#set ($version="2.0")
+#set ($version="DD_FM_2.0")
 #set($fam=$fams)
 #set($child=$children)
+#set($mariage=$FAM.getProperty("MARR"))
+#set($contrat_de_mariage=$FAM.getProperty("MARC"))
+#set($divorce=$FAM.getProperty("DIV"))
 
-<span class="cent"
 <!-- ----------------- Titre de la page------------ -->
-<h4> <span class="foncolo"> $!FAM.Husband.getProperty("NAME:GIVN") $!FAM.Husband.getProperty("NAME:SURN") 
+<center>
+<span class="title"> $!FAM.Husband.getProperty("NAME:GIVN") $!FAM.Husband.getProperty("NAME:SURN") 
    x
-   $!FAM.Wife.getProperty("NAME:GIVN") $!FAM.Wife.getProperty("NAME:SURN") </span></h4>
-
-
+   $!FAM.Wife.getProperty("NAME:GIVN") $!FAM.Wife.getProperty("NAME:SURN") </span>
+</center>
+<br>
 <!-- ----------------- le mariage----------------------------------------- -->
 
- #set($mariage=$FAM.getProperty("MARR"))
-        #if ($mariage)
-Date du Mariage : <span class="megr">$!FAM.getProperty("MARR:DATE")</span> - 
-Lieu du Mariage : <span class="megr">$!FAM.getProperty("MARR:PLAC")</span>
+#if ($mariage)
+ Date du Mariage : <span class="italic">$!FAM.getProperty("MARR:DATE")</span><br>
+ Lieu du Mariage : <span class="italic">$!FAM.getProperty("MARR:PLAC")</span>
 #end
- #set($contrat_de_mariage=$FAM.getProperty("MARC"))
-        #if ($contrat_de_mariage)
-<br>Contrat de Mariage le : <span class="megr">$FAM.getProperty("MARC:DATE") chez $FAM.getProperty("MARC:AGNC")</span>
- #end
-   #set($divorce=$FAM.getProperty("DIV"))
-   #if ($divorce)
-<br>Divorce : $divorce.Date - Lieu : $divorce.Place - 
-   #end
+#if ($contrat_de_mariage)
+ <br>Contrat de Mariage le : <span class="italic">$FAM.getProperty("MARC:DATE") chez $FAM.getProperty("MARC:AGNC")</span>
+#end
+#if ($divorce)
+ <br>Divorce : $divorce.Date - Lieu : $divorce.Place - 
+#end
 
+<br>
+<br>
 <!-- ----------------- les enfants ----------------------------------------- -->
-<br><br><span class="mital">Enfants : </span><br>
+<span class="underline_shadow">ENFANTS</span> :<br>
 
-    #foreach ($child in $FAM.Children)
-<li>$!child.getProperty("NAME") ($!child.Id) -- Naissance : $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC")-- D&eacute;c&egrave;s : $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC")
+#foreach ($child in $FAM.Children)
+ <li>$!child.getProperty("NAME") ($!child.Id)<br>
+ Naissance : <span class="italic">$!child.getProperty("BIRT:DATE")</span> &agrave; <span class="italic">$!child.getProperty("BIRT:PLAC")</span> 
+ // 
+ D&eacute;c&egrave;s : <span class="italic">$!child.getProperty("DEAT:DATE")</span> &agrave; <span class="italic">$!child.getProperty("DEAT:PLAC")</span>
  </li>
-<P> #testaff($child.getProperty("BAPM"))#if ($isShown!=0)
-Bapt&ecirc;me : $!child.getProperty("BAPM:DATE") &agrave; $!child.getProperty("BAPM:PLAC") --
+ #testaff($child.getProperty("BAPM")) 
+  #if ($isShown!=0)
+  Bapt&ecirc;me : <span class="italic">$!child.getProperty("BAPM:DATE")</span> &agrave; <span class="italic">$!child.getProperty("BAPM:PLAC")</span>
+  #end
+#end
 
- #end
- #end
-</P>
 
-
+<p align="right"><span class="version">
+$version
+</span></p>
 
 </body>
 </html>
