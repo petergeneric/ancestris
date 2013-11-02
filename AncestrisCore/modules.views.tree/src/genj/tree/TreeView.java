@@ -935,35 +935,54 @@ public class TreeView extends View implements Filter {
          * fake set tt text to let tooltip manager hide or show tt
          * the get ttlocation must return null if no entity can be found. if not tt show a blank component
          */
-        String tttext = null;
+        private Entity oldTTEntity = null;
         @Override
         public String getToolTipText(MouseEvent event) {
             if (!showPopup()){
-                tttext = null;
+                oldTTEntity = null;
                 return null;
             }
-            Point pos = TreeView.this.getMousePosition();
-            Entity entity = null;
-            if (pos != null)
-                entity = getEntityAt(pos);
-            tt.setEntity(entity);
-            if (entity == null) {
-                tttext = null;
-                return null;
+            Entity entity = getEntityForEvent(event);
+            if (entity != oldTTEntity){
+                ttPosition = null;
+                oldTTEntity = entity;
             }
-            tttext = entity.getId();
-            return tttext;
-        }
-
-        @Override
-        public Point getToolTipLocation(MouseEvent event) {
-            if (!showPopup())
+            tt.setEntity(oldTTEntity);
+            if (oldTTEntity == null)
                 return null;
-            if (tttext == null)
-                return null;
-            return new Point(event.getX()-5, event.getY()-5);
+            else
+                return oldTTEntity.getId();
         }
         
+        /**
+         * Helper to find entity for a MouseEvent position in Content coordinate
+         * @param event
+         * @return Entity
+         */
+        private Entity getEntityForEvent(MouseEvent event){
+            // check node
+            Entity entity = null;
+            Point p = view2model(event.getPoint());
+            Object content = model.getContentAt(p.x, p.y);
+            // nothing?
+            if (content != null && content instanceof Entity) {
+                entity = (Entity) content;
+            }            
+            return entity;
+        }
+
+        private Point ttPosition = null;
+        @Override
+        public Point getToolTipLocation(MouseEvent event) {
+            if (!showPopup() || oldTTEntity == null)
+                return null;
+            
+            if (ttPosition == null){
+                ttPosition = new Point(event.getX()-5, event.getY()+2);
+            }
+            return ttPosition;
+        }
+
         /**
          * @param e
          */
