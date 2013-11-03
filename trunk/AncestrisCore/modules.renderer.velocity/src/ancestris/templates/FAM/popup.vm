@@ -41,7 +41,8 @@ text-align: left;
 </head>
 
 <body>
-#set ($version="DD_FM_2.0")
+
+#set ($version="DD_FM_2013/11/03")
 #set($fam=$fams)
 #set($child=$children)
 #set($mariage=$FAM.getProperty("MARR"))
@@ -91,4 +92,5 @@ $version
 </span></p>
 
 </body>
+
 </html>
