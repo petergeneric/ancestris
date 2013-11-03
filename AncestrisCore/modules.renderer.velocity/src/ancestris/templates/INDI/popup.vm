@@ -94,7 +94,7 @@ text-align: left;
         #set($portrait=$INDI.getProperty("OBJE"))
         #if ($portrait)
          <center>
-         <IMG SRC="file:///$!INDI.getProperty("OBJE:FILE").AbsolutePath">
+         <IMG height="100" width="80" SRC="file:///$!INDI.getProperty("OBJE:FILE").AbsolutePath">
          </center>
         #end
       </TD>
