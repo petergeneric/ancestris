@@ -125,7 +125,16 @@ public class GedcomUtilities {
                 Entity targetEntity = propertyXRef.getTargetEntity();
                 if (targetEntity != null && targetEntity.equals(src)) {
                     propertyXRef.unlink();
-                    propertyXRef.setValue(dest.getId());
+                    Property parent = propertyXRef.getParent();
+                    boolean alreadyLinked = false;
+                    for (PropertyXRef PropertyXRef : parent.getProperties(PropertyXRef.class)) {
+                        if (PropertyXRef.getValue().replaceAll("@","").equals(dest.getId())) {
+                            alreadyLinked = true;
+                        }
+                    }
+                    if (alreadyLinked == false) {
+                        propertyXRef.setValue(dest.getId());
+                    }
 
                     /*
                      * Try to cope with PropertyForeignXRef exception on link as
