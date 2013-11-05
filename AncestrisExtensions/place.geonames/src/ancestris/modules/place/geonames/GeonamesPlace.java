@@ -1,6 +1,9 @@
 package ancestris.modules.place.geonames;
 
 import ancestris.api.place.Place;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.geonames.InsufficientStyleException;
 import org.geonames.PostalCode;
 import org.geonames.Toponym;
 
@@ -10,13 +13,14 @@ import org.geonames.Toponym;
  */
 public class GeonamesPlace implements Place {
 
-    private PostalCode postalCode= null;
-    private Toponym toponym= null;
+    private PostalCode postalCode = null;
+    private Toponym toponym = null;
+    private final static Logger logger = Logger.getLogger(GeonamesPlacesList.class.getName(), null);
 
     public GeonamesPlace(Toponym toponym, PostalCode postalCode) {
         this.postalCode = postalCode;
         this.toponym = toponym;
-    }
+        }
 
     @Override
     public int compareTo(Place that) {
