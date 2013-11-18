@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.TreeMap;
+import org.openide.modules.Places;
 
 class GedartTemplate extends Object implements Cloneable{
 
@@ -60,7 +61,10 @@ class GedartTemplate extends Object implements Cloneable{
 		return context.get(ctx);
 	}
 	public String getPath() {
-		return path;
+                //XXX: this is a quick fix. Gedart will use velocity renderer
+                // Make template path relative to userdir
+                final String base = Places.getUserDirectory().getAbsolutePath();
+                return path.substring(base.length()+1);
 	}
 	public String getFormat() {
 		return format;
