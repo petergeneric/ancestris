@@ -31,6 +31,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.ListTool;
+import org.openide.modules.Places;
 
 // FIXME: refactor this class, remove @suppresswarning
 @SuppressWarnings("unchecked")
@@ -39,8 +40,9 @@ public class DocReport {
         private static VelocityEngine engine = new VelocityEngine();
 	private Writer out;
 	public Charset CHARSET;
-	
-	
+        private static final File TEMPLATE_DIR = Places.getUserDirectory();
+
+
 	DocReport(GedartTemplates template, String encoding) {
 		try { CHARSET = Charset.forName(encoding);}
 		catch (Exception e) {CHARSET = Charset.forName("ISO-8859-1");}
@@ -50,7 +52,7 @@ public class DocReport {
 //			Velocity.setProperty("class.resource.loader.class",
 //			"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 //			Velocity.setProperty("class.resource.loader.cache","true");
- 			engine.setProperty("file.resource.loader.path","/");
+                        engine.setProperty("file.resource.loader.path", TEMPLATE_DIR.getPath());
 			engine.setProperty("file.resource.loader.cache","true");
 
 			
