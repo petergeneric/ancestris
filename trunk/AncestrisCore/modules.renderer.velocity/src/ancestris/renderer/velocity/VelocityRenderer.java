@@ -18,8 +18,9 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.io.File;
 import java.io.Writer;
+import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeInstance;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.ListTool;
 import org.openide.modules.Places;
@@ -29,7 +30,8 @@ import org.openide.util.lookup.ServiceProvider;
 public class VelocityRenderer implements Renderer {
 
     private VelocityContext context;
-    private static VelocityEngine engine = new VelocityEngine();
+//    private static VelocityEngine engine = new VelocityEngine();
+    RuntimeInstance engine = new RuntimeInstance();
 //    private Writer out;
 //    public Charset CHARSET;
     private static final File TEMPLATE_DIR = Places.getUserDirectory();
@@ -134,8 +136,11 @@ public class VelocityRenderer implements Renderer {
     @Override
     public void render(String template, Writer out) {
         try {
-            engine.mergeTemplate(template, "ISO-8859-1",
-                    context, out);
+            Template t = engine.getTemplate(template+".vm","ISO-8859-1");
+            if (t != null)
+                t.merge(context, out);
+//            engine.mergeTemplate(template, "ISO-8859-1",
+//                    context, out);
         } catch (Exception ee) {
         }
         restart();

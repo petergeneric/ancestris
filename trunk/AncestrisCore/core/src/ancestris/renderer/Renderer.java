@@ -11,7 +11,9 @@
  */
 package ancestris.renderer;
 
+import java.io.IOException;
 import java.io.Writer;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -24,7 +26,7 @@ public interface Renderer {
     
     public static class Lookup {
 
-        public static Renderer lookup() {
+        public static Renderer lookup(String template) {
             //FIXME: we should maintain a template cache and find appropriate provider given a template
             // From AncestrisEditor:
             //public static AncestrisEditor findEditor(Property property) {
@@ -57,6 +59,11 @@ public interface Renderer {
         }
 
         public void render(String template, Writer output) {
+            try {
+                output.write("<html><body><center><b>Not template renderer found!</b><br/>"
+                        + "Please install <b>'Apache Velocity Renderer'!</b></center></body></html>");
+            } catch (IOException ex) {
+            }
         }
         
     }

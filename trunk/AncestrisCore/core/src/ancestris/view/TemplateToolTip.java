@@ -74,11 +74,11 @@ public class TemplateToolTip extends JToolTip {
     @Override
     public void setTipText(String tipText) {
         if (tipText != null && !tipText.equals(prevTT)) {
-            Renderer render = Renderer.Lookup.lookup();
+            String TPL = "ancestris/templates/" + entity.getTag() + "/popup";
+            Renderer render = Renderer.Lookup.lookup(TPL);
             render.put("INDI", entity);
             render.put("FAM", entity);
             StringWriter w = new StringWriter();
-            String TPL = "ancestris/templates/" + entity.getTag() + "/popup.vm";
             render.render(TPL, w);
             w.flush();
             String tt = w.toString();
