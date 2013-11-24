@@ -2,7 +2,9 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.EventsTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.*;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.DialogDescriptor;
