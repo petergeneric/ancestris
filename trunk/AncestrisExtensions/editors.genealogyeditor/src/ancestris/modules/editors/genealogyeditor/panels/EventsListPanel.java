@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.EventsTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
+import java.util.ArrayList;
 import java.util.List;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
@@ -14,8 +15,11 @@ import org.openide.util.NbBundle;
  */
 public class EventsListPanel extends javax.swing.JPanel {
 
-    private EventsTableModel eventsTableModel = new EventsTableModel();
     private Property root;
+    private EventsTableModel eventsTableModel = new EventsTableModel();
+    private ArrayList<PropertyEvent> editedEvents = new ArrayList<PropertyEvent>();
+    private ArrayList<PropertyEvent> addedEvents = new ArrayList<PropertyEvent>();
+    private ArrayList<PropertyEvent> deletedEvents = new ArrayList<PropertyEvent>();
 
     /**
      * Creates new form EventsListPanel
@@ -111,19 +115,9 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            final PropertyEvent propertyEvent = eventEditorPanel.getEvent();
-            try {
-                root.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        root.copyProperties(propertyEvent, true);
-                    }
-                }); // end of doUnitOfWork
-                eventsTableModel.add(propertyEvent);
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            PropertyEvent propertyEvent = eventEditorPanel.getEvent();
+            addedEvents.add(propertyEvent);
+            eventsTableModel.add(propertyEvent);
         }
     }//GEN-LAST:event_addEventButtonActionPerformed
 
@@ -140,6 +134,7 @@ public class EventsListPanel extends javax.swing.JPanel {
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                editedEvents.add(eventEditorPanel.getEvent());
             }
         }
     }//GEN-LAST:event_editEventButtonActionPerformed
@@ -148,20 +143,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         int selectedRow = eventsTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
-            final PropertyEvent propertyEvent = eventsTableModel.getValueAt(rowIndex);
-            final Property parent = propertyEvent.getParent();
-            try {
-                root.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        parent.delProperty(propertyEvent);
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-//            update();
+            deletedEvents.add(eventsTableModel.remove(rowIndex));
         }
     }//GEN-LAST:event_deleteEventButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -179,5 +161,21 @@ public class EventsListPanel extends javax.swing.JPanel {
     }
 
     public void commit() {
+        // Edited Events
+
+        // Added Events
+        for (PropertyEvent event : addedEvents) {
+            try {
+                root.copyProperties(event, true);
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+        // Removed Events
+        for (PropertyEvent event : deletedEvents) {
+            Property parent = event.getParent();
+            parent.delProperty(event);
+        }
     }
 }

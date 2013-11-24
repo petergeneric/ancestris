@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.SexComboBoxModel;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +10,8 @@ import org.openide.util.Exceptions;
  * @author dominique
  */
 public final class IndividualEditorPanel extends javax.swing.JPanel {
-
+    
     private Indi individual;
-    private SexComboBoxModel sexComboBoxModel = new SexComboBoxModel();
 
     /**
      * Creates new form IndividualEditorPanel
@@ -32,11 +30,10 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         generalPanel = new javax.swing.JPanel();
-        sexLabel = new javax.swing.JLabel();
-        sexComboBox = new javax.swing.JComboBox<String>();
         individualIDLabel = new javax.swing.JLabel();
         individualIDTextField = new javax.swing.JTextField();
         simpleNameEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.NameSimpleEditorPanel();
+        sexBeanPanel = new ancestris.modules.editors.genealogyeditor.beans.SexBeanPanel();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
         eventsPanel = new javax.swing.JPanel();
         eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel();
@@ -50,11 +47,6 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         associationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel();
         galleryPanel = new javax.swing.JPanel();
         multimediaObjectsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel();
-
-        sexLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.sexLabel.text"), new Object[] {})); // NOI18N
-
-        sexComboBox.setModel(sexComboBoxModel);
-        sexComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.sexComboBox.toolTipText"), new Object[] {})); // NOI18N
 
         individualIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -71,9 +63,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(simpleNameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(generalPanelLayout.createSequentialGroup()
-                        .addComponent(sexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sexComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sexBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(individualIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -84,11 +74,11 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(individualIDLabel)
-                    .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sexComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sexLabel))
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(individualIDLabel)
+                        .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sexBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(simpleNameEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -165,8 +155,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, referencesPanelLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(associationsListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(associationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Association.png")), referencesPanel); // NOI18N
@@ -222,8 +212,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JPanel referencesPanel;
-    private javax.swing.JComboBox<String> sexComboBox;
-    private javax.swing.JLabel sexLabel;
+    private ancestris.modules.editors.genealogyeditor.beans.SexBeanPanel sexBeanPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NameSimpleEditorPanel simpleNameEditorPanel;
     private ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel sourcesListPanel;
     private javax.swing.JPanel sourcesPanel;
@@ -241,60 +230,60 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
      */
     public void setIndividual(Indi individual) {
         this.individual = individual;
-
-        update();
-    }
-
-    private void update() {
-
+        
         individualIDTextField.setText(individual.getId());
         List<PropertyName> namesList = individual.getProperties(PropertyName.class);
-
+        
         PropertyName name = namesList.get(0);
         if (name != null) {
             simpleNameEditorPanel.setName(individual, name);
         }
-
-        sexComboBox.setSelectedIndex(individual.getSex());
-
+        PropertySex sex = (PropertySex) individual.getProperty("SEX", true);
+        if (sex == null) {
+            individual.setSex(PropertySex.UNKNOWN);
+            sex = (PropertySex) individual.getProperty("SEX", true);
+        }
+        sexBeanPanel.setSex(individual, sex);
+        
         namesListPanel.setNamesList(individual, namesList);
-
+        
         List<PropertyEvent> eventsList = individual.getProperties(PropertyEvent.class);
         for (Fam family : individual.getFamiliesWhereSpouse()) {
             eventsList.addAll(family.getProperties(PropertyEvent.class));
         }
         eventsListPanel.setEventsList(individual, eventsList);
-
+        
         List<Source> sourcesList = new ArrayList<Source>();
         for (PropertySource sourceRef : individual.getProperties(PropertySource.class)) {
             sourcesList.add((Source) sourceRef.getTargetEntity());
         }
         sourcesListPanel.setSourcesList(individual, sourcesList);
-
+        
         List<Note> notesList = new ArrayList<Note>();
         for (PropertyNote noteRef : individual.getProperties(PropertyNote.class)) {
             notesList.add((Note) noteRef.getTargetEntity());
         }
         notesListPanel.setNotesList(individual, notesList);
-
+        
         associationsListPanel.setAssociationsList(individual, individual.getProperties(PropertyAssociation.class));
-
+        
         List<Media> mediasList = new ArrayList<Media>();
         for (PropertyMedia mediaRef : individual.getProperties(PropertyMedia.class)) {
             mediasList.add((Media) mediaRef.getTargetEntity());
         }
         multimediaObjectsListPanel.setMultimediaObjectList(individual, mediasList);
     }
-
+    
     public void commit() {
         try {
             individual.getGedcom().doUnitOfWork(new UnitOfWork() {
-
+                
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
+                    sexBeanPanel.commit();
                     simpleNameEditorPanel.commit();
-                    namesListPanel.commit();
                     eventsListPanel.commit();
+                    namesListPanel.commit();
                     sourcesListPanel.commit();
                     notesListPanel.commit();
                     associationsListPanel.commit();
