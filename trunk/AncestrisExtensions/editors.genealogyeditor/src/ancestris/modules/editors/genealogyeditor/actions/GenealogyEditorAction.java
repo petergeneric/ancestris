@@ -38,6 +38,9 @@ public final class GenealogyEditorAction implements ActionListener {
                         NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
                         individualEditorPanel);
                 editorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    individualEditorPanel.commit();
+                }
             } else if (entity instanceof Fam) {
                 FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
                 familyEditorPanel.setFamily((Fam) entity);
@@ -46,6 +49,9 @@ public final class GenealogyEditorAction implements ActionListener {
                         NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.title"),
                         familyEditorPanel);
                 editorDialog.setDialogId(FamilyEditorPanel.class.getName());
+                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    familyEditorPanel.commit();
+                }
             } else if (entity instanceof Note) {
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
                 noteEditorPanel.setNote((Note) entity);
@@ -54,6 +60,9 @@ public final class GenealogyEditorAction implements ActionListener {
                         NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
                         noteEditorPanel);
                 editorDialog.setDialogId(NoteEditorPanel.class.getName());
+                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    noteEditorPanel.commit();
+                }
             } else if (entity instanceof Source) {
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
                 sourceEditorPanel.setSource((Source) entity);
@@ -62,6 +71,9 @@ public final class GenealogyEditorAction implements ActionListener {
                         NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
                         sourceEditorPanel);
                 editorDialog.setDialogId(SourceEditorPanel.class.getName());
+                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    sourceEditorPanel.commit();
+                }
             } else if (entity instanceof Repository) {
                 RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
                 repositoryEditorPanel.setRepository((Repository) entity);
@@ -70,11 +82,10 @@ public final class GenealogyEditorAction implements ActionListener {
                         NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.title"),
                         repositoryEditorPanel);
                 editorDialog.setDialogId(SourceEditorPanel.class.getName());
-                
-            } else {
-                return;
-            }
-            if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+
+                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    repositoryEditorPanel.commit();
+                }
             }
         }
     }

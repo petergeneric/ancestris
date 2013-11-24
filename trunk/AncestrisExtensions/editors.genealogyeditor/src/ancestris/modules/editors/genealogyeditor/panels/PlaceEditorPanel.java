@@ -505,6 +505,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
         String searchedPlace = searchPlaceTextField.getText();
         if (searchedPlace.isEmpty() == false) {
+            geonamePlacesListModel.clear();
             List<Place> findPlaces = new GeonamesPlacesList().findPlace(searchedPlace);
 
             if (findPlaces != null) {

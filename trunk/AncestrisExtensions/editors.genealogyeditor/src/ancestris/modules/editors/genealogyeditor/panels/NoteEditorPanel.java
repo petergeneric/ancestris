@@ -2,13 +2,9 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.ReferencesTableModel;
 import genj.gedcom.*;
-import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.List;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
-import org.openide.util.ImageUtilities;
-import org.openide.util.NbBundle;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -43,9 +39,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         noteTextScrollPane = new javax.swing.JScrollPane();
         noteTextTextArea = new javax.swing.JTextArea();
         noteReferencesPanel = new javax.swing.JPanel();
-        noteReferencesToolBar = new javax.swing.JToolBar();
-        noteReferencesScrollPane = new javax.swing.JScrollPane();
-        noteReferencesTable = new javax.swing.JTable();
+        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
 
         noteIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -64,39 +58,27 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         noteTextPanelLayout.setHorizontalGroup(
             noteTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(noteTextToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
+            .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         noteTextPanelLayout.setVerticalGroup(
             noteTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(noteTextPanelLayout.createSequentialGroup()
                 .addComponent(noteTextToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
+                .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
         );
 
         noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteTextPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteTextPanel); // NOI18N
-
-        noteReferencesToolBar.setFloatable(false);
-        noteReferencesToolBar.setRollover(true);
-
-        noteReferencesTable.setAutoCreateRowSorter(true);
-        noteReferencesTable.setModel(referencesTableModel);
-        noteReferencesScrollPane.setViewportView(noteReferencesTable);
 
         javax.swing.GroupLayout noteReferencesPanelLayout = new javax.swing.GroupLayout(noteReferencesPanel);
         noteReferencesPanel.setLayout(noteReferencesPanelLayout);
         noteReferencesPanelLayout.setHorizontalGroup(
             noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteReferencesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(noteReferencesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         noteReferencesPanelLayout.setVerticalGroup(
             noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(noteReferencesPanelLayout.createSequentialGroup()
-                .addComponent(noteReferencesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(noteReferencesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
         );
 
         noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Association.png")), noteReferencesPanel); // NOI18N
@@ -134,13 +116,11 @@ public class NoteEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField noteIDTextField;
     private javax.swing.JTabbedPane noteInformationTabbedPane;
     private javax.swing.JPanel noteReferencesPanel;
-    private javax.swing.JScrollPane noteReferencesScrollPane;
-    private javax.swing.JTable noteReferencesTable;
-    private javax.swing.JToolBar noteReferencesToolBar;
     private javax.swing.JPanel noteTextPanel;
     private javax.swing.JScrollPane noteTextScrollPane;
     private javax.swing.JTextArea noteTextTextArea;
     private javax.swing.JToolBar noteTextToolBar;
+    private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -165,6 +145,19 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         for (PropertyXRef entityRef : note.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());
         }
-        referencesTableModel.update(entitiesList);
+        referencesListPanel.setReferencesList(note, entitiesList);
+    }
+
+    public void commit() {
+        try {
+            note.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }        
     }
 }
