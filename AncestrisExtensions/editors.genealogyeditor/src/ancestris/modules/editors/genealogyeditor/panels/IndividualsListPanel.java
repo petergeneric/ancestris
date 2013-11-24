@@ -1,9 +1,11 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.IndividualsTableModel;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
-import genj.gedcom.PropertySex;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.*;
+import java.util.List;
+import org.openide.DialogDescriptor;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -12,8 +14,7 @@ import genj.gedcom.PropertySex;
 public class IndividualsListPanel extends javax.swing.JPanel {
 
     private IndividualsTableModel individualsTableModel = new IndividualsTableModel();
-    private Gedcom gedcom = null;
-    private int sex = PropertySex.UNKNOWN;
+    private Property root;
 
     /**
      * Creates new form IndividualsListPanel
@@ -31,64 +32,117 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        eventsToolBar = new javax.swing.JToolBar();
+        addChildButton = new javax.swing.JButton();
+        editChildButton = new javax.swing.JButton();
+        deleteChildButton = new javax.swing.JButton();
         childrensScrollPane = new javax.swing.JScrollPane();
-        childrensTable = new javax.swing.JTable();
+        individualsTable = new javax.swing.JTable();
 
-        childrensTable.setModel(individualsTableModel);
-        childrensScrollPane.setViewportView(childrensTable);
+        eventsToolBar.setFloatable(false);
+        eventsToolBar.setRollover(true);
+
+        addChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addChildButton.setFocusable(false);
+        addChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addChildButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addChildButtonActionPerformed(evt);
+            }
+        });
+        eventsToolBar.add(addChildButton);
+
+        editChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editChildButton.setFocusable(false);
+        editChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editChildButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editChildButtonActionPerformed(evt);
+            }
+        });
+        eventsToolBar.add(editChildButton);
+
+        deleteChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteChildButton.setFocusable(false);
+        deleteChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteChildButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteChildButtonActionPerformed(evt);
+            }
+        });
+        eventsToolBar.add(deleteChildButton);
+
+        individualsTable.setModel(individualsTableModel);
+        childrensScrollPane.setViewportView(individualsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(childrensScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(eventsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
+            .addComponent(childrensScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(childrensScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(eventsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(childrensScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane childrensScrollPane;
-    private javax.swing.JTable childrensTable;
-    // End of variables declaration//GEN-END:variables
 
-    /**
-     * @return the gedcom
-     */
-    public Gedcom getGedcom() {
-        return gedcom;
-    }
+    private void addChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildButtonActionPerformed
+        Indi individual = new Indi();
+//        individual.setName("", family.getHusband().getName());
+        IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+        individualEditorPanel.setIndividual(individual);
 
-    /**
-     * @param gedcom the gedcom to set
-     */
-    public void setGedcom(Gedcom gedcom) {
-        for (Indi individual : gedcom.getIndis()) {
-            if (individual.getSex() == getSex() || individual.getSex() == PropertySex.UNKNOWN) {
-                individualsTableModel.add(individual);
+        DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                individualEditorPanel);
+        individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+
+        if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            individualsTableModel.add(individualEditorPanel.getIndividual());
+        }
+    }//GEN-LAST:event_addChildButtonActionPerformed
+
+    private void editChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editChildButtonActionPerformed
+        int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
+        if (rowIndex != -1) {
+            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+            individualEditorPanel.setIndividual(individualsTableModel.getValueAt(rowIndex));
+
+            DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                    individualEditorPanel);
+            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+
+            if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             }
         }
-        this.gedcom = gedcom;
+    }//GEN-LAST:event_editChildButtonActionPerformed
+
+    private void deleteChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteChildButtonActionPerformed
+
+   }//GEN-LAST:event_deleteChildButtonActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addChildButton;
+    private javax.swing.JScrollPane childrensScrollPane;
+    private javax.swing.JButton deleteChildButton;
+    private javax.swing.JButton editChildButton;
+    private javax.swing.JToolBar eventsToolBar;
+    private javax.swing.JTable individualsTable;
+    // End of variables declaration//GEN-END:variables
+
+    public void setIndividualsList(Property root, List<Indi> individualsList) {
+        this.root = root;
+        individualsTableModel.update(individualsList);
     }
 
-    /**
-     * @return the sex
-     */
-    public int getSex() {
-        return sex;
-    }
-
-    /**
-     * @param sex the sex to set
-     */
-    public void setSex(int sex) {
-        this.sex = sex;
-    }
-}
+    public void commit() {
+    }}

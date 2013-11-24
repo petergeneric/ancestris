@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.*;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
@@ -17,11 +16,6 @@ import org.openide.util.NbBundle;
 public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private Fam family;
-    private EventsTableModel eventsTableModel = new EventsTableModel();
-    private NotesTableModel notesTableModel = new NotesTableModel();
-    private IndividualsTableModel childrensTableModel = new IndividualsTableModel();
-    private MultiMediaObjectsTableModel multiMediaObjectsTableModel = new MultiMediaObjectsTableModel();
-    private SourcesTableModel sourcesTableModel = new SourcesTableModel();
 
     /**
      * Creates new form FamilyEditorPanel
@@ -66,40 +60,15 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         motherDeathDateTextField = new javax.swing.JTextField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         childrensPanel = new javax.swing.JPanel();
-        eventsToolBar = new javax.swing.JToolBar();
-        addChildButton = new javax.swing.JButton();
-        editChildButton = new javax.swing.JButton();
-        deleteChildButton = new javax.swing.JButton();
-        childrensScrollPane = new javax.swing.JScrollPane();
-        childrensTable = new javax.swing.JTable();
+        childrensListPanel = new ancestris.modules.editors.genealogyeditor.panels.IndividualsListPanel();
         eventsPanel = new javax.swing.JPanel();
-        eventsToolBar1 = new javax.swing.JToolBar();
-        addEventButton = new javax.swing.JButton();
-        editEventButton = new javax.swing.JButton();
-        deleteEventButton = new javax.swing.JButton();
-        eventsScrollPane = new javax.swing.JScrollPane();
-        eventsTable = new javax.swing.JTable();
+        eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel();
         sourcesPanel = new javax.swing.JPanel();
-        sourcesToolBar = new javax.swing.JToolBar();
-        addSourceButton = new javax.swing.JButton();
-        editSourceButton = new javax.swing.JButton();
-        deleteSourceButton = new javax.swing.JButton();
-        sourcesScrollPane = new javax.swing.JScrollPane();
-        sourcesTable = new javax.swing.JTable();
+        sourcesListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel();
         notesPanel = new javax.swing.JPanel();
-        notesToolBar = new javax.swing.JToolBar();
-        addNoteButton = new javax.swing.JButton();
-        editNoteButton = new javax.swing.JButton();
-        deleteNoteButton = new javax.swing.JButton();
-        notesScrollPane = new javax.swing.JScrollPane();
-        notesTable = new javax.swing.JTable();
+        notesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NotesListPanel();
         galleryPanel = new javax.swing.JPanel();
-        GalleryToolBar = new javax.swing.JToolBar();
-        addMMObjectButton = new javax.swing.JButton();
-        editMMObjectButton2 = new javax.swing.JButton();
-        deleteMMObjectButton2 = new javax.swing.JButton();
-        galleryScrollPane = new javax.swing.JScrollPane();
-        GalleryTable = new javax.swing.JTable();
+        multimediaObjectsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel();
         jPanel1 = new javax.swing.JPanel();
         familyIDTextField = new javax.swing.JTextField();
         familyIDLabel = new javax.swing.JLabel();
@@ -312,285 +281,67 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     .addComponent(motherDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        eventsToolBar.setFloatable(false);
-        eventsToolBar.setRollover(true);
-
-        addChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addChildButton.setFocusable(false);
-        addChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addChildButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addChildButtonActionPerformed(evt);
-            }
-        });
-        eventsToolBar.add(addChildButton);
-
-        editChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editChildButton.setFocusable(false);
-        editChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editChildButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editChildButtonActionPerformed(evt);
-            }
-        });
-        eventsToolBar.add(editChildButton);
-
-        deleteChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteChildButton.setFocusable(false);
-        deleteChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteChildButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteChildButtonActionPerformed(evt);
-            }
-        });
-        eventsToolBar.add(deleteChildButton);
-
-        childrensTable.setModel(childrensTableModel);
-        childrensScrollPane.setViewportView(childrensTable);
-
         javax.swing.GroupLayout childrensPanelLayout = new javax.swing.GroupLayout(childrensPanel);
         childrensPanel.setLayout(childrensPanelLayout);
         childrensPanelLayout.setHorizontalGroup(
             childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
-            .addComponent(childrensScrollPane)
+            .addComponent(childrensListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
         );
         childrensPanelLayout.setVerticalGroup(
             childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(childrensPanelLayout.createSequentialGroup()
-                .addComponent(eventsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(childrensScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+            .addComponent(childrensListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.childrensPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Child.png")), childrensPanel); // NOI18N
-
-        eventsToolBar1.setFloatable(false);
-        eventsToolBar1.setRollover(true);
-
-        addEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addEventButton.setFocusable(false);
-        addEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addEventButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addEventButtonActionPerformed(evt);
-            }
-        });
-        eventsToolBar1.add(addEventButton);
-
-        editEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editEventButton.setFocusable(false);
-        editEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editEventButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editEventButtonActionPerformed(evt);
-            }
-        });
-        eventsToolBar1.add(editEventButton);
-
-        deleteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteEventButton.setFocusable(false);
-        deleteEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteEventButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteEventButtonActionPerformed(evt);
-            }
-        });
-        eventsToolBar1.add(deleteEventButton);
-
-        eventsTable.setModel(eventsTableModel);
-        eventsScrollPane.setViewportView(eventsTable);
 
         javax.swing.GroupLayout eventsPanelLayout = new javax.swing.GroupLayout(eventsPanel);
         eventsPanel.setLayout(eventsPanelLayout);
         eventsPanelLayout.setHorizontalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
-            .addComponent(eventsScrollPane)
+            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(eventsPanelLayout.createSequentialGroup()
-                .addComponent(eventsToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Event.png")), eventsPanel); // NOI18N
-
-        sourcesToolBar.setFloatable(false);
-        sourcesToolBar.setRollover(true);
-
-        addSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addSourceButton.setFocusable(false);
-        addSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addSourceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSourceButtonActionPerformed(evt);
-            }
-        });
-        sourcesToolBar.add(addSourceButton);
-
-        editSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editSourceButton.setFocusable(false);
-        editSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editSourceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editSourceButtonActionPerformed(evt);
-            }
-        });
-        sourcesToolBar.add(editSourceButton);
-
-        deleteSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteSourceButton.setFocusable(false);
-        deleteSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteSourceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteSourceButtonActionPerformed(evt);
-            }
-        });
-        sourcesToolBar.add(deleteSourceButton);
-
-        sourcesTable.setModel(sourcesTableModel);
-        sourcesTable.setShowHorizontalLines(false);
-        sourcesTable.setShowVerticalLines(false);
-        sourcesScrollPane.setViewportView(sourcesTable);
 
         javax.swing.GroupLayout sourcesPanelLayout = new javax.swing.GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(sourcesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
+            .addComponent(sourcesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sourcesPanelLayout.createSequentialGroup()
-                .addComponent(sourcesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(sourcesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Sources", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourcesPanel); // NOI18N
-
-        notesToolBar.setFloatable(false);
-        notesToolBar.setRollover(true);
-
-        addNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addNoteButton.setFocusable(false);
-        addNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addNoteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addNoteButtonActionPerformed(evt);
-            }
-        });
-        notesToolBar.add(addNoteButton);
-
-        editNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editNoteButton.setFocusable(false);
-        editNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editNoteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editNoteButtonActionPerformed(evt);
-            }
-        });
-        notesToolBar.add(editNoteButton);
-
-        deleteNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteNoteButton.setFocusable(false);
-        deleteNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteNoteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteNoteButtonActionPerformed(evt);
-            }
-        });
-        notesToolBar.add(deleteNoteButton);
-
-        notesTable.setModel(notesTableModel);
-        notesScrollPane.setViewportView(notesTable);
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
-            .addComponent(notesScrollPane)
+            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(notesPanelLayout.createSequentialGroup()
-                .addComponent(notesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
-
-        GalleryToolBar.setFloatable(false);
-        GalleryToolBar.setRollover(true);
-
-        addMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addMMObjectButton.setFocusable(false);
-        addMMObjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addMMObjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addMMObjectButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addMMObjectButtonActionPerformed(evt);
-            }
-        });
-        GalleryToolBar.add(addMMObjectButton);
-
-        editMMObjectButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editMMObjectButton2.setFocusable(false);
-        editMMObjectButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editMMObjectButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editMMObjectButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editMMObjectButton2ActionPerformed(evt);
-            }
-        });
-        GalleryToolBar.add(editMMObjectButton2);
-
-        deleteMMObjectButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteMMObjectButton2.setFocusable(false);
-        deleteMMObjectButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteMMObjectButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteMMObjectButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteMMObjectButton2ActionPerformed(evt);
-            }
-        });
-        GalleryToolBar.add(deleteMMObjectButton2);
-
-        GalleryTable.setModel(multiMediaObjectsTableModel);
-        galleryScrollPane.setViewportView(GalleryTable);
 
         javax.swing.GroupLayout galleryPanelLayout = new javax.swing.GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(GalleryToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
-            .addComponent(galleryScrollPane)
+            .addComponent(multimediaObjectsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(galleryPanelLayout.createSequentialGroup()
-                .addComponent(GalleryToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(galleryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+            .addComponent(multimediaObjectsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
@@ -658,73 +409,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildButtonActionPerformed
-        Indi individual = new Indi();
-        individual.setName("", family.getHusband().getName());
-        IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-        individualEditorPanel.setIndividual(individual);
-
-        DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
-                individualEditorPanel);
-        individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
-
-        if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            childrensTableModel.add(individualEditorPanel.getIndividual());
-        }
-    }//GEN-LAST:event_addChildButtonActionPerformed
-
-    private void editChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editChildButtonActionPerformed
-        int rowIndex = childrensTable.convertRowIndexToModel(childrensTable.getSelectedRow());
-        if (rowIndex != -1) {
-            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-            individualEditorPanel.setIndividual(childrensTableModel.getValueAt(rowIndex));
-
-            DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
-                    individualEditorPanel);
-            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
-
-            if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            }
-        }
-    }//GEN-LAST:event_editChildButtonActionPerformed
-
-    private void deleteChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteChildButtonActionPerformed
-    }//GEN-LAST:event_deleteChildButtonActionPerformed
-
-    private void addEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEventButtonActionPerformed
-        EventEditorPanel eventEditorPanel = new EventEditorPanel();
-        eventEditorPanel.setEvent(new PropertyEvent("TAG"));
-
-        DialogManager.ADialog eventEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
-                eventEditorPanel);
-        eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            eventsTableModel.add(eventEditorPanel.getEvent());
-        }
-    }//GEN-LAST:event_addEventButtonActionPerformed
-
-    private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEventButtonActionPerformed
-        int rowIndex = eventsTable.convertRowIndexToModel(eventsTable.getSelectedRow());
-        final PropertyEvent propertyEvent = eventsTableModel.getValueAt(rowIndex);
-        final Property parent = propertyEvent.getParent();
-        try {
-            getFamily().getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    parent.delProperty(propertyEvent);
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        update();
-    }//GEN-LAST:event_deleteEventButtonActionPerformed
-
     private void addFatherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFatherButtonActionPerformed
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
         individualEditorPanel.setIndividual(new Indi());
@@ -785,103 +469,15 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_addMotherButtonActionPerformed
 
-    private void editNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNoteButtonActionPerformed
-        int rowIndex = notesTable.convertRowIndexToModel(notesTable.getSelectedRow());
-        if (rowIndex != -1) {
-            NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-            noteEditorPanel.setNote(notesTableModel.getValueAt(rowIndex));
-
-            DialogManager.ADialog noteEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
-                    noteEditorPanel);
-            noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
-
-            if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            }
-        }
-    }//GEN-LAST:event_editNoteButtonActionPerformed
-
-    private void editEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEventButtonActionPerformed
-        int rowIndex = eventsTable.convertRowIndexToModel(eventsTable.getSelectedRow());
-        EventEditorPanel eventEditorPanel = new EventEditorPanel();
-        eventEditorPanel.setEvent(eventsTableModel.getValueAt(rowIndex));
-
-        DialogManager.ADialog eventEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
-                eventEditorPanel);
-        eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-        }
-    }//GEN-LAST:event_editEventButtonActionPerformed
-
-    private void addNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteButtonActionPerformed
-        NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-        noteEditorPanel.setNote(new Note(Gedcom.NOTE, ""));
-
-        DialogManager.ADialog noteEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
-                noteEditorPanel);
-        noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
-
-        if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            notesTableModel.add(noteEditorPanel.getNote());
-        }
-    }//GEN-LAST:event_addNoteButtonActionPerformed
-
-    private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
-        SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-        sourceEditorPanel.setSource(new Source(Gedcom.SOUR, "?"));
-
-        DialogManager.ADialog sourceEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
-                sourceEditorPanel);
-        sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
-
-        if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-        }
-    }//GEN-LAST:event_addSourceButtonActionPerformed
-
-    private void editSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceButtonActionPerformed
-        int rowIndex = sourcesTable.convertRowIndexToModel(sourcesTable.getSelectedRow());
-        if (rowIndex != -1) {
-            SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.setSource(sourcesTableModel.getValueAt(rowIndex));
-
-            DialogManager.ADialog sourceEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
-                    sourceEditorPanel);
-            sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
-
-            if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            }
-        }
-    }//GEN-LAST:event_editSourceButtonActionPerformed
-
-    private void deleteSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_deleteSourceButtonActionPerformed
-
-    private void deleteNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNoteButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_deleteNoteButtonActionPerformed
-
-    private void addMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMMObjectButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addMMObjectButtonActionPerformed
-
-    private void editMMObjectButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMMObjectButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_editMMObjectButton2ActionPerformed
-
-    private void deleteMMObjectButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMMObjectButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_deleteMMObjectButton2ActionPerformed
-
     private void ListFathersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListFathersButtonActionPerformed
         IndividualsListPanel individualsListPanel = new IndividualsListPanel();
-        individualsListPanel.setSex(PropertySex.MALE);
-        individualsListPanel.setGedcom(family.getGedcom());
+        List<Indi> individualsList = new ArrayList<Indi>();
+        for (Indi individual : family.getGedcom().getIndis()) {
+            if (individual.getSex() == PropertySex.MALE || individual.getSex() == PropertySex.UNKNOWN) {
+                individualsList.add(individual);
+            }
+        }
+        individualsListPanel.setIndividualsList(family, individualsList);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsListPanel.class, "IndividualEditorPanel.title"),
                 individualsListPanel);
@@ -893,8 +489,14 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private void ListMothersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListMothersButtonActionPerformed
         IndividualsListPanel individualsListPanel = new IndividualsListPanel();
-        individualsListPanel.setSex(PropertySex.FEMALE);
-        individualsListPanel.setGedcom(family.getGedcom());
+        List<Indi> individualsList = new ArrayList<Indi>();
+
+        for (Indi individual : family.getGedcom().getIndis()) {
+            if (individual.getSex() == PropertySex.FEMALE || individual.getSex() == PropertySex.UNKNOWN) {
+                individualsList.add(individual);
+            }
+        }
+        individualsListPanel.setIndividualsList(family, individualsList);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsListPanel.class, "IndividualEditorPanel.title"),
                 individualsListPanel);
@@ -904,39 +506,18 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_ListMothersButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable GalleryTable;
-    private javax.swing.JToolBar GalleryToolBar;
     private javax.swing.JButton ListFathersButton;
     private javax.swing.JButton ListMothersButton;
-    private javax.swing.JButton addChildButton;
-    private javax.swing.JButton addEventButton;
     private javax.swing.JButton addFatherButton;
-    private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton addMotherButton;
-    private javax.swing.JButton addNoteButton;
-    private javax.swing.JButton addSourceButton;
+    private ancestris.modules.editors.genealogyeditor.panels.IndividualsListPanel childrensListPanel;
     private javax.swing.JPanel childrensPanel;
-    private javax.swing.JScrollPane childrensScrollPane;
-    private javax.swing.JTable childrensTable;
-    private javax.swing.JButton deleteChildButton;
-    private javax.swing.JButton deleteEventButton;
     private javax.swing.JButton deleteFatherButton;
-    private javax.swing.JButton deleteMMObjectButton2;
     private javax.swing.JButton deleteMotherButton;
-    private javax.swing.JButton deleteNoteButton;
-    private javax.swing.JButton deleteSourceButton;
-    private javax.swing.JButton editChildButton;
-    private javax.swing.JButton editEventButton;
     private javax.swing.JButton editFatherButton;
-    private javax.swing.JButton editMMObjectButton2;
     private javax.swing.JButton editMotherButton;
-    private javax.swing.JButton editNoteButton;
-    private javax.swing.JButton editSourceButton;
+    private ancestris.modules.editors.genealogyeditor.panels.EventsListPanel eventsListPanel;
     private javax.swing.JPanel eventsPanel;
-    private javax.swing.JScrollPane eventsScrollPane;
-    private javax.swing.JTable eventsTable;
-    private javax.swing.JToolBar eventsToolBar;
-    private javax.swing.JToolBar eventsToolBar1;
     private javax.swing.JLabel familyIDLabel;
     private javax.swing.JTextField familyIDTextField;
     private javax.swing.JLabel fatherBirthDateLabel;
@@ -948,7 +529,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel fatherPanel;
     private javax.swing.JToolBar fatherToolBar;
     private javax.swing.JPanel galleryPanel;
-    private javax.swing.JScrollPane galleryScrollPane;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
@@ -962,14 +542,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField motherNameTextField;
     private javax.swing.JPanel motherPanel;
     private javax.swing.JToolBar motherToolBar;
+    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel multimediaObjectsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
-    private javax.swing.JScrollPane notesScrollPane;
-    private javax.swing.JTable notesTable;
-    private javax.swing.JToolBar notesToolBar;
+    private ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel sourcesListPanel;
     private javax.swing.JPanel sourcesPanel;
-    private javax.swing.JScrollPane sourcesScrollPane;
-    private javax.swing.JTable sourcesTable;
-    private javax.swing.JToolBar sourcesToolBar;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -1012,27 +589,45 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         motherBirthDateTextField.setText(wife.getBirthAsString());
         motherDeathDateTextField.setText(wife.getDeathAsString());
 
-        childrensTableModel.update(Arrays.asList(family.getChildren()));
+        childrensListPanel.setIndividualsList(wife, Arrays.asList(family.getChildren()));
 
-        List<PropertyEvent> propertyEventList = family.getProperties(PropertyEvent.class);
-        eventsTableModel.update(propertyEventList);
+        List<PropertyEvent> eventsList = family.getProperties(PropertyEvent.class);
+        eventsListPanel.setEventsList(family, eventsList);
 
         List<Source> sourcesList = new ArrayList<Source>();
         for (PropertySource sourceRef : family.getProperties(PropertySource.class)) {
             sourcesList.add((Source) sourceRef.getTargetEntity());
         }
-        sourcesTableModel.update(sourcesList);
+        sourcesListPanel.setSourcesList(family, sourcesList);
+
 
         List<Note> notesList = new ArrayList<Note>();
         for (PropertyNote noteRef : family.getProperties(PropertyNote.class)) {
             notesList.add((Note) noteRef.getTargetEntity());
         }
-        notesTableModel.update(notesList);
+        notesListPanel.setNotesList(family, notesList);
 
         List<Media> mediasList = new ArrayList<Media>();
         for (PropertyMedia mediaRef : family.getProperties(PropertyMedia.class)) {
             mediasList.add((Media) mediaRef.getTargetEntity());
         }
-        multiMediaObjectsTableModel.update(mediasList);
+        multimediaObjectsListPanel.setMultimediaObjectList(family, mediasList);
+    }
+
+    public void commit() {
+        try {
+            family.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    eventsListPanel.commit();
+                    sourcesListPanel.commit();
+                    notesListPanel.commit();
+                    multimediaObjectsListPanel.commit();
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

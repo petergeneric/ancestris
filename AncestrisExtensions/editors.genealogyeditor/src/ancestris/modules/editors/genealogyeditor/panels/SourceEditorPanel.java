@@ -1,11 +1,9 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
-import ancestris.modules.editors.genealogyeditor.models.ReferencesTableModel;
-import ancestris.modules.editors.genealogyeditor.models.RepositoriesTableModel;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -14,9 +12,6 @@ import java.util.List;
 public class SourceEditorPanel extends javax.swing.JPanel {
 
     private Source source;
-    private RepositoriesTableModel repositoriesTableModel = new RepositoriesTableModel();
-    private NotesTableModel notesTableModel = new NotesTableModel();
-    private ReferencesTableModel referencesTableModel = new ReferencesTableModel();
 
     /**
      * Creates new form SourceEditorPanel
@@ -44,17 +39,11 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         recordedEventsTextField = new javax.swing.JTextField();
         sourceInformationTabbedPane = new javax.swing.JTabbedPane();
         repositoriesPanel = new javax.swing.JPanel();
-        repositoriesToolBar = new javax.swing.JToolBar();
-        repositoriesScrollPane = new javax.swing.JScrollPane();
-        repositoriesTable = new javax.swing.JTable();
+        repositoriesListPanel = new ancestris.modules.editors.genealogyeditor.panels.RepositoriesListPanel();
         notesPanel = new javax.swing.JPanel();
-        notesToolBar = new javax.swing.JToolBar();
-        notesScrollPane = new javax.swing.JScrollPane();
-        notesTable = new javax.swing.JTable();
+        notesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NotesListPanel();
         referencesPanel = new javax.swing.JPanel();
-        referencesToolBar = new javax.swing.JToolBar();
-        referencesScrollPane = new javax.swing.JScrollPane();
-        referencesTable = new javax.swing.JTable();
+        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
 
         sourceIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -73,71 +62,51 @@ public class SourceEditorPanel extends javax.swing.JPanel {
 
         recordedEventsTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.recordedEventsTextField.text"), new Object[] {})); // NOI18N
 
-        repositoriesToolBar.setFloatable(false);
-        repositoriesToolBar.setRollover(true);
-
-        repositoriesTable.setModel(repositoriesTableModel);
-        repositoriesScrollPane.setViewportView(repositoriesTable);
-
         javax.swing.GroupLayout repositoriesPanelLayout = new javax.swing.GroupLayout(repositoriesPanel);
         repositoriesPanel.setLayout(repositoriesPanelLayout);
         repositoriesPanelLayout.setHorizontalGroup(
             repositoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(repositoriesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(repositoriesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, repositoriesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(repositoriesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         repositoriesPanelLayout.setVerticalGroup(
             repositoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(repositoriesPanelLayout.createSequentialGroup()
-                .addComponent(repositoriesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(repositoriesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, repositoriesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(repositoriesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.repositoriesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Repository.png")), repositoriesPanel); // NOI18N
-
-        notesToolBar.setFloatable(false);
-        notesToolBar.setRollover(true);
-
-        notesTable.setModel(notesTableModel);
-        notesScrollPane.setViewportView(notesTable);
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(notesPanelLayout.createSequentialGroup()
-                .addComponent(notesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
-
-        referencesToolBar.setFloatable(false);
-        referencesToolBar.setRollover(true);
-
-        referencesTable.setModel(referencesTableModel);
-        referencesScrollPane.setViewportView(referencesTable);
 
         javax.swing.GroupLayout referencesPanelLayout = new javax.swing.GroupLayout(referencesPanel);
         referencesPanel.setLayout(referencesPanelLayout);
         referencesPanelLayout.setHorizontalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(referencesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, referencesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(referencesPanelLayout.createSequentialGroup()
-                .addComponent(referencesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(referencesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Association.png")), referencesPanel); // NOI18N
@@ -195,20 +164,14 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLabel;
     private javax.swing.JTextField authorTextField;
+    private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
-    private javax.swing.JScrollPane notesScrollPane;
-    private javax.swing.JTable notesTable;
-    private javax.swing.JToolBar notesToolBar;
     private javax.swing.JLabel recordedEventsLabel;
     private javax.swing.JTextField recordedEventsTextField;
+    private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     private javax.swing.JPanel referencesPanel;
-    private javax.swing.JScrollPane referencesScrollPane;
-    private javax.swing.JTable referencesTable;
-    private javax.swing.JToolBar referencesToolBar;
+    private ancestris.modules.editors.genealogyeditor.panels.RepositoriesListPanel repositoriesListPanel;
     private javax.swing.JPanel repositoriesPanel;
-    private javax.swing.JScrollPane repositoriesScrollPane;
-    private javax.swing.JTable repositoriesTable;
-    private javax.swing.JToolBar repositoriesToolBar;
     private javax.swing.JLabel sourceIDLabel;
     private javax.swing.JTextField sourceIDTextField;
     private javax.swing.JTabbedPane sourceInformationTabbedPane;
@@ -242,18 +205,34 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         for (PropertyNote noteRef : source.getProperties(PropertyNote.class)) {
             notesList.add((Note) noteRef.getTargetEntity());
         }
-        notesTableModel.update(notesList);
+        notesListPanel.setNotesList(source, notesList);
 
         List<Repository> repositporiesList = new ArrayList<Repository>();
         for (PropertyRepository repositoryRef : source.getProperties(PropertyRepository.class)) {
             repositporiesList.add((Repository) repositoryRef.getTargetEntity());
         }
-        repositoriesTableModel.update(repositporiesList);
-        
+        repositoriesListPanel.setRepositoriesList(source, repositporiesList);
+
         List<Entity> entitiesList = new ArrayList<Entity>();
         for (PropertyXRef entityRef : source.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());
         }
-        referencesTableModel.update(entitiesList);
+        referencesListPanel.setReferencesList(source, entitiesList);
+    }
+
+    public void commit() {
+        try {
+            source.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    notesListPanel.commit();
+                    repositoriesListPanel.commit();
+                    referencesListPanel.commit();
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

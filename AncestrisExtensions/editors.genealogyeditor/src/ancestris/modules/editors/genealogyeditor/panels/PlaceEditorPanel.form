@@ -73,11 +73,11 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="gedcomField0TextField" alignment="0" pref="219" max="32767" attributes="0"/>
-                      <Component id="gedcomField1TextField" alignment="0" pref="219" max="32767" attributes="0"/>
-                      <Component id="gedcomField4TextField" alignment="0" pref="219" max="32767" attributes="0"/>
-                      <Component id="gedcomField5TextField" alignment="0" pref="219" max="32767" attributes="0"/>
-                      <Component id="gedcomLatitudeTextField" alignment="0" pref="219" max="32767" attributes="0"/>
+                      <Component id="gedcomField0TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField1TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField4TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField5TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomLatitudeTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -89,11 +89,11 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="gedcomField2TextField" alignment="0" pref="225" max="32767" attributes="0"/>
-                      <Component id="gedcomField3TextField" alignment="0" pref="225" max="32767" attributes="0"/>
-                      <Component id="gedcomField6TextField" alignment="0" pref="225" max="32767" attributes="0"/>
-                      <Component id="gedcomField7TextField" alignment="0" pref="225" max="32767" attributes="0"/>
-                      <Component id="gedcomLongitudeTextField" alignment="0" pref="225" max="32767" attributes="0"/>
+                      <Component id="gedcomField2TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField3TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField6TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField7TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomLongitudeTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>

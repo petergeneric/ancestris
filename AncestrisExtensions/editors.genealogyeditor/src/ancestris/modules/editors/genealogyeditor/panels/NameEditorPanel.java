@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.FamilyNamesTableModel;
 import ancestris.modules.editors.genealogyeditor.models.NameTypeComboBoxModel;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyName;
@@ -12,7 +11,6 @@ import genj.gedcom.PropertyName;
 public class NameEditorPanel extends javax.swing.JPanel {
 
     private NameTypeComboBoxModel nameTypeComboBoxModelModel = new NameTypeComboBoxModel();
-    private FamilyNamesTableModel familyNamesTableModel = new FamilyNamesTableModel();
     private PropertyName nameToEdit = null;
 
     /**
@@ -45,12 +43,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         nicknameTextField = new javax.swing.JTextField();
         familyNamesPanel = new javax.swing.JPanel();
-        familyNamesToolBar = new javax.swing.JToolBar();
-        addFamilyNameButton = new javax.swing.JButton();
-        editFamilyNameButton = new javax.swing.JButton();
-        deleteFamilyNameButton = new javax.swing.JButton();
-        familyNamesScrollPane = new javax.swing.JScrollPane();
-        familyNamesTable = new javax.swing.JTable();
+        namesListPanel1 = new ancestris.modules.editors.genealogyeditor.panels.NamesListPanel();
 
         nameTypeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.nameTypeLabel.text"), new Object[] {})); // NOI18N
 
@@ -90,7 +83,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                         .addGap(84, 84, 84))
                     .addGroup(firstNamePanelLayout.createSequentialGroup()
                         .addGroup(firstNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(nicknameTextField)
+                            .addComponent(nicknameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
                             .addComponent(firstNameTextField))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(firstNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -99,7 +92,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(firstNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE))
                 .addContainerGap())
         );
         firstNamePanelLayout.setVerticalGroup(
@@ -120,50 +113,22 @@ public class NameEditorPanel extends javax.swing.JPanel {
                     .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         familyNamesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNamesPanel.border.title"), new Object[] {}), 0, 0, null, java.awt.Color.white)); // NOI18N
-
-        familyNamesToolBar.setFloatable(false);
-        familyNamesToolBar.setRollover(true);
-
-        addFamilyNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addFamilyNameButton.setFocusable(false);
-        addFamilyNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addFamilyNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        familyNamesToolBar.add(addFamilyNameButton);
-
-        editFamilyNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editFamilyNameButton.setFocusable(false);
-        editFamilyNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editFamilyNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        familyNamesToolBar.add(editFamilyNameButton);
-
-        deleteFamilyNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteFamilyNameButton.setFocusable(false);
-        deleteFamilyNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteFamilyNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        familyNamesToolBar.add(deleteFamilyNameButton);
-
-        familyNamesTable.setModel(familyNamesTableModel);
-        familyNamesTable.setColumnSelectionAllowed(true);
-        familyNamesScrollPane.setViewportView(familyNamesTable);
-        familyNamesTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         javax.swing.GroupLayout familyNamesPanelLayout = new javax.swing.GroupLayout(familyNamesPanel);
         familyNamesPanel.setLayout(familyNamesPanelLayout);
         familyNamesPanelLayout.setHorizontalGroup(
             familyNamesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familyNamesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(familyNamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+            .addComponent(namesListPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         familyNamesPanelLayout.setVerticalGroup(
             familyNamesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(familyNamesPanelLayout.createSequentialGroup()
-                .addComponent(familyNamesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(familyNamesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(namesListPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -175,14 +140,11 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nameTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(220, 220, 220))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(familyNamesPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(firstNamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                        .addGap(220, 220, 220)
+                        .addComponent(nameTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(familyNamesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(firstNamePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,13 +160,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addFamilyNameButton;
-    private javax.swing.JButton deleteFamilyNameButton;
-    private javax.swing.JButton editFamilyNameButton;
     private javax.swing.JPanel familyNamesPanel;
-    private javax.swing.JScrollPane familyNamesScrollPane;
-    private javax.swing.JTable familyNamesTable;
-    private javax.swing.JToolBar familyNamesToolBar;
     private javax.swing.JLabel firstNameLabel;
     private javax.swing.JPanel firstNamePanel;
     private javax.swing.JLabel firstNamePrefixLabel;
@@ -217,6 +173,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> nameTypeComboBox;
     private javax.swing.JLabel nameTypeLabel;
+    private ancestris.modules.editors.genealogyeditor.panels.NamesListPanel namesListPanel1;
     private javax.swing.JTextField nicknameTextField;
     // End of variables declaration//GEN-END:variables
 

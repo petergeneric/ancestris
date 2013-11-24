@@ -1,10 +1,9 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
-import ancestris.modules.editors.genealogyeditor.models.ReferencesTableModel;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -13,8 +12,6 @@ import java.util.List;
 public class RepositoryEditorPanel extends javax.swing.JPanel {
 
     private Repository repository;
-    private ReferencesTableModel referencesTableModel = new ReferencesTableModel();
-    private NotesTableModel notesTableModel = new NotesTableModel();
 
     /**
      * Creates new form RepositoryEditorPanel
@@ -43,13 +40,9 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         removeRepositoryAddressButton = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         referencesPanel = new javax.swing.JPanel();
-        referencesToolBar = new javax.swing.JToolBar();
-        referencesScrollPane = new javax.swing.JScrollPane();
-        referencesTable = new javax.swing.JTable();
+        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
         notesPanel = new javax.swing.JPanel();
-        notesToolBar = new javax.swing.JToolBar();
-        notesScrollPane = new javax.swing.JScrollPane();
-        notesTable = new javax.swing.JTable();
+        notesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NotesListPanel();
 
         repositoryIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -78,48 +71,36 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
         removeRepositoryAddressButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
 
-        referencesToolBar.setFloatable(false);
-        referencesToolBar.setRollover(true);
-
-        referencesTable.setModel(referencesTableModel);
-        referencesScrollPane.setViewportView(referencesTable);
-
         javax.swing.GroupLayout referencesPanelLayout = new javax.swing.GroupLayout(referencesPanel);
         referencesPanel.setLayout(referencesPanelLayout);
         referencesPanelLayout.setHorizontalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(referencesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, referencesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(referencesListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(referencesPanelLayout.createSequentialGroup()
-                .addComponent(referencesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(referencesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, referencesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(referencesListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jTabbedPane1.addTab("References", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Association.png")), referencesPanel); // NOI18N
-
-        notesToolBar.setFloatable(false);
-        notesToolBar.setRollover(true);
-
-        notesTable.setModel(notesTableModel);
-        notesScrollPane.setViewportView(notesTable);
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(notesListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(notesPanelLayout.createSequentialGroup()
-                .addComponent(notesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(notesListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jTabbedPane1.addTab("Notes", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -179,21 +160,15 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editRepositoryAddressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRepositoryAddressButtonActionPerformed
-
     }//GEN-LAST:event_editRepositoryAddressButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRepositoryAddressButton;
     private javax.swing.JButton editRepositoryAddressButton;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
-    private javax.swing.JScrollPane notesScrollPane;
-    private javax.swing.JTable notesTable;
-    private javax.swing.JToolBar notesToolBar;
+    private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     private javax.swing.JPanel referencesPanel;
-    private javax.swing.JScrollPane referencesScrollPane;
-    private javax.swing.JTable referencesTable;
-    private javax.swing.JToolBar referencesToolBar;
     private javax.swing.JButton removeRepositoryAddressButton;
     private javax.swing.JLabel repositoryAddressLabel;
     private javax.swing.JTextField repositoryAddressTextField;
@@ -220,23 +195,38 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
     private void update() {
         repositoryIDTextField.setText(repository.getId());
-        
+
         Property repositoryName = repository.getProperty("NAME");
-        repositoryNameTextField.setText(repositoryName!= null?repositoryName.getValue():"");
-        
+        repositoryNameTextField.setText(repositoryName != null ? repositoryName.getValue() : "");
+
         Property address = repository.getProperty("ADDR");
-        repositoryAddressTextField.setText(address!= null?address.getValue():"");
-                
+        repositoryAddressTextField.setText(address != null ? address.getValue() : "");
+
         List<Entity> entitiesList = new ArrayList<Entity>();
         for (PropertyXRef entityRef : repository.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());
         }
-        referencesTableModel.update(entitiesList);
-        
+        referencesListPanel.setReferencesList(repository, entitiesList);
+
         List<Note> notesList = new ArrayList<Note>();
         for (PropertyNote noteRef : repository.getProperties(PropertyNote.class)) {
             notesList.add((Note) noteRef.getTargetEntity());
         }
-        notesTableModel.update(notesList);
+        notesListPanel.setNotesList(repository, notesList);
+    }
+
+    public void commit() {
+        try {
+            repository.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    notesListPanel.commit();
+                    referencesListPanel.commit();
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

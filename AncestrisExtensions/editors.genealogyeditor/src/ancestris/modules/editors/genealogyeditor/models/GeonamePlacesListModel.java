@@ -27,6 +27,11 @@ public class GeonamePlacesListModel extends AbstractListModel {
         update();
     }
 
+    public void clear() {
+        placesList.clear();
+        update();
+    }
+
     public void update() {
         int row = 0;
         placesListData = new String[placesList.size()];
@@ -76,7 +81,7 @@ public class GeonamePlacesListModel extends AbstractListModel {
         String jurisdictions = "";
 
         for (String jurisdiction : placesList.get(index).getJurisdictions()) {
-            jurisdictions += jurisdiction!=null? jurisdiction + ", ":"";
+            jurisdictions += jurisdiction != null ? jurisdiction + ", " : "";
         }
 
         return jurisdictions;
