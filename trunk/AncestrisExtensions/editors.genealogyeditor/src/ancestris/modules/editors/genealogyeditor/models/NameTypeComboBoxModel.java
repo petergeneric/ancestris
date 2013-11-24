@@ -26,9 +26,4 @@ public class NameTypeComboBoxModel extends DefaultComboBoxModel<String> {
             addElement(nameTypeComboBox.get(key));
         }
     }
-
-    @Override
-    public void setSelectedItem(Object anObject) {
-        super.setSelectedItem(nameTypeComboBox.get(anObject.toString()));
-    }
 }
