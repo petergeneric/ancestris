@@ -308,13 +308,18 @@ public abstract class GedcomDirectory {
 //    textPassword.setEditable(pwd!=Gedcom.PASSWORD_UNKNOWN);
 //    options.add(textPassword);
 
-        Collection<? extends Filter> filters = AncestrisPlugin.lookupAll(Filter.class);
         ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
-        for (Filter f : filters) {
+        for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
             if (f.canApplyTo(context.getGedcom())) {
                 theFilters.add(f);
             }
         }
+        for (Filter f : Lookup.getDefault().lookupAll(Filter.class)) {
+            if (f.canApplyTo(context.getGedcom())) {
+                theFilters.add(f);
+            }
+        }
+
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
         File file = chooseFile(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.save.action"), options, context.getGedcom().toString());
         if (file == null) {

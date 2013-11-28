@@ -12,10 +12,9 @@
 package ancestris.modules.views.tree;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.core.pluginservice.PluginInterface;
-import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
+import ancestris.view.GenjViewTopComponent;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
@@ -34,7 +33,7 @@ import org.openide.windows.RetainLocation;
 autostore = false)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class TreeTopComponent extends GenjViewTopComponent implements Filter{
+public final class TreeTopComponent extends GenjViewTopComponent{
 
     private static TreeTopComponent factory;
     private static ViewFactory viewfactory = new TreeViewFactory();
@@ -96,21 +95,5 @@ public final class TreeTopComponent extends GenjViewTopComponent implements Filt
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
-    }
-
-    public String getFilterName() {
-        return ((TreeView)getView()).getFilterName();
-    }
-
-    public boolean veto(Property property) {
-        return ((TreeView)getView()).veto(property);
-    }
-
-    public boolean veto(Entity entity) {
-        return ((TreeView)getView()).veto(entity);
-    }
-
-    public boolean canApplyTo(Gedcom gedcom) {
-        return ((TreeView)getView()).canApplyTo(gedcom);
     }
 }

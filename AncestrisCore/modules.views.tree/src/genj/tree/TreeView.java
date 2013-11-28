@@ -104,12 +104,13 @@ import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * TreeView
  */
 // FIXME: used to find proper TreeView component for RootAction
-//XXX: not used @ServiceProvider(service=TreeView.class)
+//@ServiceProvider(service=TreeView.class)
 public class TreeView extends View implements Filter {
 
     protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");
@@ -221,14 +222,16 @@ public class TreeView extends View implements Filter {
     }
 
     public Gedcom getGedcom() {
-        return (context == null ? null : context.getGedcom());
+        if (context != null && context.getGedcom()!= null){
+            return context.getGedcom();
+        }
+        return model.getRoot() == null ? null: model.getRoot().getGedcom();
     }
 
     @Override
     public void addNotify() {
         super.addNotify();
-//XXX: removed in favour of GenjViewProxy    AncestrisPlugin.register (this);
-        // FIXME: should be removed? use @serviceprovider?
+        // Used only for Filter interface
         AncestrisPlugin.register(this);
     }
 
@@ -269,7 +272,6 @@ public class TreeView extends View implements Filter {
         REGISTRY.put("hide.descendants", model.getHideDescendantsIDs());
 
         AncestrisPlugin.unregister(this);
-//XXX: removed in favour of GenjViewProxy    AncestrisPlugin.unregister(this);
         // done
         super.removeNotify();
     }
@@ -1630,6 +1632,6 @@ public class TreeView extends View implements Filter {
 
     @Override
     public boolean canApplyTo(Gedcom gedcom) {
-        return (gedcom != null && gedcom.equals(context.getGedcom()));
+        return (gedcom != null && gedcom.equals(getGedcom()));
     }
 } //TreeView
