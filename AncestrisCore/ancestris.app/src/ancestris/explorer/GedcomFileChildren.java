@@ -1,10 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2013 Ancestris
+ * 
+ * Author: Daniel Andre (daniel@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 package ancestris.explorer;
 
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.gedcom.GedcomDirectory.GedcomRegistryListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.util.ArrayList;
@@ -16,26 +24,22 @@ import org.openide.nodes.Node;
  *
  * @author daniel
  */
-class GedcomFileChildren extends Children.Keys<Gedcom> {
-
-//    private GedcomFileListener model;
-//
-//    public GedcomFileChildren() {
-//        model = new GedcomFileListener(this);
-//    }
+class GedcomFileChildren extends Children.Keys<Gedcom> implements GedcomRegistryListener {
 
     protected Node[] createNodes(Gedcom key) {
         return new Node[]{new GedcomFileNode(key)};
     }
 
+    @Override
     protected void addNotify() {
         super.addNotify();
-//XXX:        GedcomMgr.getDefault().addListener(model);
+        GedcomDirectory.getDefault().addListener(this);
         updateGedcoms();
     }
 
+    @Override
     protected void removeNotify() {
-//XXX:        GedcomMgr.getDefault().removeListener(model);
+        GedcomDirectory.getDefault().removeListener(this);
         super.removeNotify();
     }
 
@@ -48,25 +52,11 @@ class GedcomFileChildren extends Children.Keys<Gedcom> {
         setKeys(gedcoms);
     }
 
-    //XXX:
-    /**
-     * our model
-     */
-//    private static class GedcomFileListener implements GedcomDirectory.Listener {
-//
-//        GedcomFileChildren children;
-//
-//        public GedcomFileListener(GedcomFileChildren gfc) {
-//            this.children = gfc;
-//        }
-//
-//        public void gedcomRegistered(Context context) {
-//            children.updateGedcoms();
-//        }
-//
-//        public void gedcomUnregistered(Context context) {
-//            children.updateGedcoms();
-//        }
-//
-//    }
+    public void gedcomRegistered(Context context) {
+        updateGedcoms();
+    }
+
+    public void gedcomUnregistered(Context context) {
+        updateGedcoms();
+    }
 }
