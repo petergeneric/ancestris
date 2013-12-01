@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectsTableModel;
-import genj.gedcom.Entity;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import java.util.List;
@@ -116,7 +115,7 @@ public class MultimediaObjectsListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar galleryToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setMultimediaObjectList(Property root, List<Media> namesList) {
+    public void set(Property root, List<Media> namesList) {
         this.root = root;
         multiMediaObjectsTableModel.update(namesList);
     }

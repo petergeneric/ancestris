@@ -1,7 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.core.actions.CommonActions;
+import static ancestris.modules.editors.genealogyeditor.actions.Bundle.OpenInEditor_title;
 import ancestris.modules.editors.genealogyeditor.panels.FamilyEditorPanel;
 import ancestris.modules.editors.genealogyeditor.panels.IndividualEditorPanel;
 import ancestris.util.swing.DialogManager;
@@ -14,7 +14,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.DialogDescriptor;
-import org.openide.awt.*;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.NbBundle;
 import static ancestris.modules.editors.genealogyeditor.actions.Bundle.*;
@@ -60,7 +63,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
 
             if (entity instanceof Indi) {
                 IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-                individualEditorPanel.setIndividual((Indi) entity);
+                individualEditorPanel.set((Indi) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
@@ -71,7 +74,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 }
             } else if (entity instanceof Fam) {
                 FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
-                familyEditorPanel.setFamily((Fam) entity);
+                familyEditorPanel.set((Fam) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.title"),

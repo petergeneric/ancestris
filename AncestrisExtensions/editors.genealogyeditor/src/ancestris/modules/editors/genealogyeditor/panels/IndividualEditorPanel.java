@@ -3,14 +3,13 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.openide.util.Exceptions;
 
 /**
  *
  * @author dominique
  */
 public final class IndividualEditorPanel extends javax.swing.JPanel {
-    
+
     private Indi individual;
 
     /**
@@ -33,7 +32,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         individualIDLabel = new javax.swing.JLabel();
         individualIDTextField = new javax.swing.JTextField();
         simpleNameEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.NameSimpleEditorPanel();
-        sexBeanPanel = new ancestris.modules.editors.genealogyeditor.beans.SexBeanPanel();
+        sexBeanPanel = new ancestris.modules.editors.genealogyeditor.beans.SexBean();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
         eventsPanel = new javax.swing.JPanel();
         eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel();
@@ -212,7 +211,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JPanel referencesPanel;
-    private ancestris.modules.editors.genealogyeditor.beans.SexBeanPanel sexBeanPanel;
+    private ancestris.modules.editors.genealogyeditor.beans.SexBean sexBeanPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NameSimpleEditorPanel simpleNameEditorPanel;
     private ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel sourcesListPanel;
     private javax.swing.JPanel sourcesPanel;
@@ -228,70 +227,60 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     /**
      * @param individual the individual to set
      */
-    public void setIndividual(Indi individual) {
+    public void set(Indi individual) {
         this.individual = individual;
-        
+
         individualIDTextField.setText(individual.getId());
         List<PropertyName> namesList = individual.getProperties(PropertyName.class);
-        
+
         PropertyName name = namesList.get(0);
         if (name != null) {
-            simpleNameEditorPanel.setName(individual, name);
+            simpleNameEditorPanel.set(individual, name);
         }
         PropertySex sex = (PropertySex) individual.getProperty("SEX", true);
         if (sex == null) {
             individual.setSex(PropertySex.UNKNOWN);
             sex = (PropertySex) individual.getProperty("SEX", true);
         }
-        sexBeanPanel.setSex(individual, sex);
-        
+        sexBeanPanel.set(individual, sex);
+
         namesListPanel.setNamesList(individual, namesList);
-        
+
         List<PropertyEvent> eventsList = individual.getProperties(PropertyEvent.class);
         for (Fam family : individual.getFamiliesWhereSpouse()) {
             eventsList.addAll(family.getProperties(PropertyEvent.class));
         }
         eventsListPanel.setEventsList(individual, eventsList);
-        
+
         List<Source> sourcesList = new ArrayList<Source>();
         for (PropertySource sourceRef : individual.getProperties(PropertySource.class)) {
             sourcesList.add((Source) sourceRef.getTargetEntity());
         }
-        sourcesListPanel.setSourcesList(individual, sourcesList);
-        
+        sourcesListPanel.set(individual, sourcesList);
+
         List<Note> notesList = new ArrayList<Note>();
         for (PropertyNote noteRef : individual.getProperties(PropertyNote.class)) {
             notesList.add((Note) noteRef.getTargetEntity());
         }
         notesListPanel.setNotesList(individual, notesList);
-        
+
         associationsListPanel.setAssociationsList(individual, individual.getProperties(PropertyAssociation.class));
-        
+
         List<Media> mediasList = new ArrayList<Media>();
         for (PropertyMedia mediaRef : individual.getProperties(PropertyMedia.class)) {
             mediasList.add((Media) mediaRef.getTargetEntity());
         }
-        multimediaObjectsListPanel.setMultimediaObjectList(individual, mediasList);
+        multimediaObjectsListPanel.set(individual, mediasList);
     }
-    
+
     public void commit() {
-        try {
-            individual.getGedcom().doUnitOfWork(new UnitOfWork() {
-                
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    sexBeanPanel.commit();
-                    simpleNameEditorPanel.commit();
-                    eventsListPanel.commit();
-                    namesListPanel.commit();
-                    sourcesListPanel.commit();
-                    notesListPanel.commit();
-                    associationsListPanel.commit();
-                    multimediaObjectsListPanel.commit();
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        simpleNameEditorPanel.commit();
+        sexBeanPanel.commit();
+        eventsListPanel.commit();
+        namesListPanel.commit();
+        sourcesListPanel.commit();
+        notesListPanel.commit();
+        associationsListPanel.commit();
+        multimediaObjectsListPanel.commit();
     }
 }

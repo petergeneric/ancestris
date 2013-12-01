@@ -411,7 +411,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private void addFatherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFatherButtonActionPerformed
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-        individualEditorPanel.setIndividual(new Indi());
+        individualEditorPanel.set(new Indi());
 
         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
@@ -424,7 +424,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private void editFatherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFatherButtonActionPerformed
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-        individualEditorPanel.setIndividual(family.getHusband());
+        individualEditorPanel.set(family.getHusband());
 
         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
@@ -445,7 +445,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private void editMotherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMotherButtonActionPerformed
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-        individualEditorPanel.setIndividual(family.getWife());
+        individualEditorPanel.set(family.getWife());
 
         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
@@ -458,7 +458,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private void addMotherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMotherButtonActionPerformed
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-        individualEditorPanel.setIndividual(new Indi());
+        individualEditorPanel.set(new Indi());
 
         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
@@ -549,17 +549,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * @return the family
-     */
-    public Fam getFamily() {
-        return family;
-    }
 
     /**
      * @param family the family to set
      */
-    public void setFamily(Fam family) {
+    public void set(Fam family) {
         this.family = family;
         update();
     }
@@ -598,7 +592,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         for (PropertySource sourceRef : family.getProperties(PropertySource.class)) {
             sourcesList.add((Source) sourceRef.getTargetEntity());
         }
-        sourcesListPanel.setSourcesList(family, sourcesList);
+        sourcesListPanel.set(family, sourcesList);
 
 
         List<Note> notesList = new ArrayList<Note>();
@@ -611,7 +605,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         for (PropertyMedia mediaRef : family.getProperties(PropertyMedia.class)) {
             mediasList.add((Media) mediaRef.getTargetEntity());
         }
-        multimediaObjectsListPanel.setMultimediaObjectList(family, mediasList);
+        multimediaObjectsListPanel.set(family, mediasList);
     }
 
     public void commit() {

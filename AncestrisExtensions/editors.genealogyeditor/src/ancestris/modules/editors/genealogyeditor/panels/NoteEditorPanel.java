@@ -126,26 +126,22 @@ public class NoteEditorPanel extends javax.swing.JPanel {
     /**
      * @return the note
      */
-    public Note getNote() {
+    public Note get() {
         return note;
     }
 
     /**
      * @param note the note to set
      */
-    public void setNote(Note note) {
+    public void set(Note note) {
         this.note = note;
-        update();
-    }
-
-    private void update() {
         noteIDTextField.setText(note.getId());
         noteTextTextArea.setText(note.getValue() != null ? note.getValue() : "");
         List<Entity> entitiesList = new ArrayList<Entity>();
         for (PropertyXRef entityRef : note.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());
         }
-        referencesListPanel.setReferencesList(note, entitiesList);
+        referencesListPanel.set(note, entitiesList);
     }
 
     public void commit() {

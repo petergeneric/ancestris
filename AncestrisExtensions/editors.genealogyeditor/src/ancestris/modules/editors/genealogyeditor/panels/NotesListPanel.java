@@ -104,14 +104,14 @@ public class NotesListPanel extends javax.swing.JPanel {
 
     private void addNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteButtonActionPerformed
         NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-        noteEditorPanel.setNote(new Note(Gedcom.NOTE, ""));
+        noteEditorPanel.set(new Note(Gedcom.NOTE, ""));
         ADialog noteEditorDialog = new ADialog(
                 NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
                 noteEditorPanel);
         noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
         if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            notesTableModel.add(noteEditorPanel.getNote());
+            notesTableModel.add(noteEditorPanel.get());
         }
     }//GEN-LAST:event_addNoteButtonActionPerformed
 
@@ -120,7 +120,7 @@ public class NotesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-            noteEditorPanel.setNote(notesTableModel.getValueAt(rowIndex));
+            noteEditorPanel.set(notesTableModel.getValueAt(rowIndex));
 
             ADialog noteEditorDialog = new ADialog(
                     NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),

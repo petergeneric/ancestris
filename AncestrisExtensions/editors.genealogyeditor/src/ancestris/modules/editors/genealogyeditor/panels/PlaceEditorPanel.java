@@ -593,14 +593,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     /**
      * @return the place
      */
-    public PropertyPlace getPlace() {
+    public PropertyPlace get() {
         return place;
     }
 
     /**
      * @param place the place to set
      */
-    public void setPlace(PropertyPlace place) {
+    public void set(PropertyPlace place) {
         this.place = place;
         placeFormat = PropertyPlace.getFormat(place.getGedcom());
         updatePanels();
@@ -874,5 +874,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
 
         return placeString;
+    }
+
+    public void commit() {
     }
 }

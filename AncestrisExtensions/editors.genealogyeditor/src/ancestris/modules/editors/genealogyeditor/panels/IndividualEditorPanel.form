@@ -99,7 +99,7 @@
         </Component>
         <Component class="ancestris.modules.editors.genealogyeditor.panels.NameSimpleEditorPanel" name="simpleNameEditorPanel">
         </Component>
-        <Component class="ancestris.modules.editors.genealogyeditor.beans.SexBeanPanel" name="sexBeanPanel">
+        <Component class="ancestris.modules.editors.genealogyeditor.beans.SexBean" name="sexBeanPanel">
         </Component>
       </SubComponents>
     </Container>

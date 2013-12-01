@@ -1,23 +1,23 @@
 package ancestris.modules.editors.genealogyeditor.beans;
 
 import ancestris.modules.editors.genealogyeditor.models.SexComboBoxModel;
-import genj.gedcom.Property;
-import genj.gedcom.PropertySex;
+import genj.gedcom.*;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author dominique
  */
-public class SexBeanPanel extends javax.swing.JPanel {
+public class SexBean extends javax.swing.JPanel {
 
     private SexComboBoxModel sexComboBoxModel = new SexComboBoxModel();
     private Property root;
     private PropertySex sex;
 
     /**
-     * Creates new form SexBeanPanel
+     * Creates new form SexBean
      */
-    public SexBeanPanel() {
+    public SexBean() {
         initComponents();
     }
 
@@ -33,10 +33,10 @@ public class SexBeanPanel extends javax.swing.JPanel {
         sexLabel = new javax.swing.JLabel();
         sexComboBox = new javax.swing.JComboBox<String>();
 
-        sexLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/beans/Bundle").getString("SexBeanPanel.sexLabel.text"), new Object[] {})); // NOI18N
+        sexLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/beans/Bundle").getString("SexBean.sexLabel.text"), new Object[] {})); // NOI18N
 
         sexComboBox.setModel(sexComboBoxModel);
-        sexComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/beans/Bundle").getString("SexBeanPanel.sexComboBox.toolTipText"), new Object[] {})); // NOI18N
+        sexComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/beans/Bundle").getString("SexBean.sexComboBox.toolTipText"), new Object[] {})); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -59,13 +59,26 @@ public class SexBeanPanel extends javax.swing.JPanel {
     private javax.swing.JLabel sexLabel;
     // End of variables declaration//GEN-END:variables
 
-    public void setSex(Property root, PropertySex sex) {
-        sexComboBox.setSelectedIndex(sex.getSex());
+    public void set(Property root, PropertySex sex) {
         this.root = root;
         this.sex = sex;
+        sexComboBox.setSelectedIndex(sex.getSex());
     }
 
     public void commit() {
-        sex.setSex(sexComboBox.getSelectedIndex());
+        try {
+            root.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    if (sex == null) {
+                        sex = (PropertySex) root.addProperty("SEX", "");
+                    }
+                    sex.setSex(sexComboBox.getSelectedIndex());
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

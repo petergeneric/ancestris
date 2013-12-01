@@ -206,7 +206,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         for (PropertyXRef entityRef : repository.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());
         }
-        referencesListPanel.setReferencesList(repository, entitiesList);
+        referencesListPanel.set(repository, entitiesList);
 
         List<Note> notesList = new ArrayList<Note>();
         for (PropertyNote noteRef : repository.getProperties(PropertyNote.class)) {
