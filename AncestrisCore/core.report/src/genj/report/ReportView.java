@@ -47,6 +47,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import spin.Spin;
 
 /**
@@ -60,8 +66,6 @@ public class ReportView extends View {
     /** statics */
     private final static ImageIcon imgStart = new ImageIcon(ReportView.class, "Start"),
             imgStop = new ImageIcon(ReportView.class, "Stop");
-    /** gedcom this view is for */
-    private Gedcom gedcom;
     /** components to show report info */
     private HyperLinkTextDocumentView output;
     private ActionStart actionStart = new ActionStart();
@@ -94,6 +98,16 @@ public class ReportView extends View {
     }
 
     /**
+     * Get selected gedcom from global selection lookup. no need to listen for
+     * context change
+     * @return Gedcom for selected property
+     */
+    private Gedcom getSelectedGedcom(){
+        Context selected = Utilities.actionsGlobalContext().lookup(Context.class);
+        return selected==null?null:selected.getGedcom();
+    }
+
+    /**
      * start a report
      */
     public void startReport(final Report report, Object context) {
@@ -101,6 +115,8 @@ public class ReportView extends View {
         if (!actionStart.isEnabled()) {
             return;
         }
+        Gedcom gedcom = getSelectedGedcom();
+        
         // create a new tab for this run
         output = new HyperLinkTextDocumentView(
                 new Context(gedcom),
@@ -171,7 +187,7 @@ public class ReportView extends View {
             LOG.log(Level.FINE, "Result of report {0} = {1}", new Object[]{report.getName(), result});
 
             // let report happend again
-            actionStart.setEnabled(gedcom != null);
+            actionStart.setEnabled(getSelectedGedcom() != null);
             actionStop.setEnabled(false);
 
             // handle result
@@ -257,14 +273,14 @@ public class ReportView extends View {
      */
     public void startReport() {
         // minimum we can work on?
-        if (gedcom == null) {
+        if (getSelectedGedcom() == null) {
             return;
         }
         Report report = selector.getReport();
         if (report == null) {
             return;
         }
-        startReport(report, gedcom);
+        startReport(report, getSelectedGedcom());
     }
 
     /**
@@ -274,12 +290,12 @@ public class ReportView extends View {
         // TODO: there's no way to stop a running java report atm
     }
 
-    @Override
-    public void setContext(Context context) {
-        gedcom = context.getGedcom();
-        // enable if none running and data available
-        actionStart.setEnabled(!actionStop.isEnabled() && gedcom != null);
-    }
+//    @Override
+//    public void setContext(Context context) {
+//        Gedcom gedcom = context.getGedcom();
+//        // enable if none running and data available
+//        actionStart.setEnabled(!actionStop.isEnabled() && gedcom != null);
+//    }
 
     /**
      * show result of a report run
@@ -358,7 +374,7 @@ public class ReportView extends View {
 
         // component?
         if (object instanceof JComponent) {
-            new WidgetDocumentView(new Context(gedcom), tabName, tabToolTip, ((JComponent) object));
+            new WidgetDocumentView(new Context(getSelectedGedcom()), tabName, tabToolTip, ((JComponent) object));
 
             return;
         }
@@ -445,6 +461,7 @@ public class ReportView extends View {
     /**
      * Action: START
      */
+    // FIXME: we must enable this action only if there is a valid gedcom selected in lookup
     private class ActionStart extends AbstractAncestrisAction {
 
         /** constructor */
