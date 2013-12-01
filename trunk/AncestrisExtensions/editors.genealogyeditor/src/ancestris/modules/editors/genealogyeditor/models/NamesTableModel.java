@@ -4,6 +4,7 @@ import genj.gedcom.PropertyName;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -12,7 +13,9 @@ import javax.swing.table.AbstractTableModel;
 public class NamesTableModel extends AbstractTableModel {
 
     List<PropertyName> namesList = new ArrayList<PropertyName>();
-    String[] columnsName = {"First Name", "Last Name"};
+    String[] columnsName = {
+        NbBundle.getMessage(NamesTableModel.class, "NamesTableModel.column.FirstName.title"),
+        NbBundle.getMessage(NamesTableModel.class, "NamesTableModel.column.LastName.title")};
 
     public NamesTableModel() {
     }

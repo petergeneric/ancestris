@@ -103,7 +103,7 @@ public class NamesListPanel extends javax.swing.JPanel {
 
     private void addNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNameButtonActionPerformed
         NameEditorPanel nameEditorPanel = new NameEditorPanel();
-        nameEditorPanel.setNameToEdit(new PropertyName());
+        nameEditorPanel.set(new PropertyName());
         ADialog nameEditorDialog = new ADialog(
                 NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
                 nameEditorPanel);
@@ -119,7 +119,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
             NameEditorPanel nameEditorPanel = new NameEditorPanel();
-            nameEditorPanel.setNameToEdit(namesTableModel.getValueAt(rowIndex));
+            nameEditorPanel.set(namesTableModel.getValueAt(rowIndex));
             ADialog nameEditorDialog = new ADialog(
                     NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
                     nameEditorPanel);

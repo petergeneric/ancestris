@@ -13,7 +13,13 @@ import org.openide.util.NbBundle;
 public class IndividualsTableModel extends AbstractTableModel {
 
     private List<Indi> individualsList = new ArrayList<Indi>();
-    private String[] columnsName = {"ID", "Name", "Sex", "Bith date", "Death date"};
+    private String[] columnsName = {
+        NbBundle.getMessage(IndividualsTableModel.class, "IndividualsTableModel.column.ID.title"),
+        NbBundle.getMessage(IndividualsTableModel.class, "IndividualsTableModel.column.Name.title"),
+        NbBundle.getMessage(IndividualsTableModel.class, "IndividualsTableModel.column.Sex.title"),
+        NbBundle.getMessage(IndividualsTableModel.class, "IndividualsTableModel.column.BirthDate.title"),
+        NbBundle.getMessage(IndividualsTableModel.class, "IndividualsTableModel.column.DeathDate.title")
+    };
     private String[] sex = {
         NbBundle.getMessage(SexComboBoxModel.class, "SexComboBoxModel.SexType.UNKNOWN"),
         NbBundle.getMessage(SexComboBoxModel.class, "SexComboBoxModel.SexType.MALE"),

@@ -145,7 +145,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar sourcesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setSourcesList(Property root, List<Source> namesList) {
+    public void set(Property root, List<Source> namesList) {
         this.root = root;
         sourcesTableModel.update(namesList);
     }

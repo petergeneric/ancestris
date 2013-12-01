@@ -32,7 +32,7 @@ public final class GenealogyEditorAction implements ActionListener {
             Entity entity = context.getEntity();
             if (entity instanceof Indi) {
                 IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-                individualEditorPanel.setIndividual((Indi) entity);
+                individualEditorPanel.set((Indi) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
@@ -43,7 +43,7 @@ public final class GenealogyEditorAction implements ActionListener {
                 }
             } else if (entity instanceof Fam) {
                 FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
-                familyEditorPanel.setFamily((Fam) entity);
+                familyEditorPanel.set((Fam) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.title"),
@@ -54,7 +54,7 @@ public final class GenealogyEditorAction implements ActionListener {
                 }
             } else if (entity instanceof Note) {
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-                noteEditorPanel.setNote((Note) entity);
+                noteEditorPanel.set((Note) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),

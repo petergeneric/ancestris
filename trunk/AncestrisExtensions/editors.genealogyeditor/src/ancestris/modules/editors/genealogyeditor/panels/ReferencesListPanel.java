@@ -1,9 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.AssociationsTableModel;
 import ancestris.modules.editors.genealogyeditor.models.ReferencesTableModel;
 import genj.gedcom.Entity;
-import genj.gedcom.PropertyXRef;
 import java.util.List;
 
 /**
@@ -82,7 +80,7 @@ public class ReferencesListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar referencesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setReferencesList(Entity rootEntity, List<Entity> referencesList) {
+    public void set(Entity rootEntity, List<Entity> referencesList) {
         this.rootEntity = rootEntity;
         referencesTableModel.update(referencesList);
     }

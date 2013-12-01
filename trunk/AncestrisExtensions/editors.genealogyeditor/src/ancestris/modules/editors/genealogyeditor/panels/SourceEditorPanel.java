@@ -211,13 +211,13 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         for (PropertyRepository repositoryRef : source.getProperties(PropertyRepository.class)) {
             repositporiesList.add((Repository) repositoryRef.getTargetEntity());
         }
-        repositoriesListPanel.setRepositoriesList(source, repositporiesList);
+        repositoriesListPanel.set(source, repositporiesList);
 
         List<Entity> entitiesList = new ArrayList<Entity>();
         for (PropertyXRef entityRef : source.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());
         }
-        referencesListPanel.setReferencesList(source, entitiesList);
+        referencesListPanel.set(source, entitiesList);
     }
 
     public void commit() {

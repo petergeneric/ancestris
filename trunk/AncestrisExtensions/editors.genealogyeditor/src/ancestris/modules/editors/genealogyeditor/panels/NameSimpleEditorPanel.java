@@ -1,11 +1,10 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NameTypeComboBoxModel;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyName;
+import genj.gedcom.*;
 import java.util.ArrayList;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -14,7 +13,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 public class NameSimpleEditorPanel extends javax.swing.JPanel {
 
     private NameTypeComboBoxModel nameTypeComboBoxModelModel = new NameTypeComboBoxModel();
-    private Indi rootEntity;
+    private Indi root;
     private PropertyName name;
     private boolean modified;
 
@@ -132,21 +131,21 @@ public class NameSimpleEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel nameTypeLabel;
     // End of variables declaration//GEN-END:variables
 
-    public void setName(Indi rootEntity, PropertyName name) {
-        this.rootEntity = rootEntity;
+    public void set(Indi root, PropertyName name) {
+        this.root = root;
         this.name = name;
 
         ArrayList<String> firstNames = new ArrayList<String>();
         ArrayList<String> lastNames = new ArrayList<String>();
 
-        for (Indi indi : rootEntity.getGedcom().getIndis()) {
+        for (Indi indi : root.getGedcom().getIndis()) {
             firstNames.add(indi.getFirstName());
             lastNames.add(indi.getLastName());
         }
 
         AutoCompleteDecorator.decorate(firstNameTextField, firstNames, false);
         AutoCompleteDecorator.decorate(familyNameTextField, lastNames, false);
-        
+
         Property nameType = name.getProperty("TYPE");
         if (nameType != null) {
             nameTypeComboBox.setSelectedItem(nameType.getValue());
@@ -179,11 +178,25 @@ public class NameSimpleEditorPanel extends javax.swing.JPanel {
     }
 
     public void commit() {
-        // ... store changed value
-        name.setName(
-                firstNamePrefixTextField.getText().trim(),
-                firstNameTextField.getText().trim(),
-                firstNameSuffixTextField.getText().trim(),
-                familyNameTextField.getText().trim(), familyNamePrefixTextField.getText().trim(), false);
+        try {
+            root.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    if (name == null) {
+                        name = (PropertyName) root.addProperty("NAME", "");
+                    }
+                    name.setName(
+                            firstNamePrefixTextField.getText().trim(),
+                            firstNameTextField.getText().trim(),
+                            firstNameSuffixTextField.getText().trim(),
+                            familyNameTextField.getText().trim(),
+                            familyNamePrefixTextField.getText().trim(),
+                            false);
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

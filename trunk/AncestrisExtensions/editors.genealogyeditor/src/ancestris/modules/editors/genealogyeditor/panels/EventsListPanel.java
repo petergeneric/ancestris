@@ -109,17 +109,14 @@ public class EventsListPanel extends javax.swing.JPanel {
 
     private void addEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEventButtonActionPerformed
         EventEditorPanel eventEditorPanel = new EventEditorPanel();
-        eventEditorPanel.setEvent(new PropertyEvent("EVEN"));
+        eventEditorPanel.set(root, null);
 
         ADialog eventEditorDialog = new ADialog(
                 NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
                 eventEditorPanel);
         eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
-
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            PropertyEvent propertyEvent = eventEditorPanel.getEvent();
-            addedEvents.add(propertyEvent);
-            eventsTableModel.add(propertyEvent);
+            eventsTableModel.add(eventEditorPanel.commit());
         }
     }//GEN-LAST:event_addEventButtonActionPerformed
 
@@ -128,7 +125,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
             EventEditorPanel eventEditorPanel = new EventEditorPanel();
-            eventEditorPanel.setEvent(eventsTableModel.getValueAt(rowIndex));
+            eventEditorPanel.set(root, eventsTableModel.getValueAt(rowIndex));
 
             ADialog eventEditorDialog = new ADialog(
                     NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
@@ -136,7 +133,7 @@ public class EventsListPanel extends javax.swing.JPanel {
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                editedEvents.add(eventEditorPanel.getEvent());
+                eventEditorPanel.commit();
             }
         }
     }//GEN-LAST:event_editEventButtonActionPerformed

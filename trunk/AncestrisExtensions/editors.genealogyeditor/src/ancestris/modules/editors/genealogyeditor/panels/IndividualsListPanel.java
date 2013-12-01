@@ -98,7 +98,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         Indi individual = new Indi();
 //        individual.setName("", family.getHusband().getName());
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-        individualEditorPanel.setIndividual(individual);
+        individualEditorPanel.set(individual);
 
         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
@@ -114,7 +114,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
         if (rowIndex != -1) {
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-            individualEditorPanel.setIndividual(individualsTableModel.getValueAt(rowIndex));
+            individualEditorPanel.set(individualsTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
