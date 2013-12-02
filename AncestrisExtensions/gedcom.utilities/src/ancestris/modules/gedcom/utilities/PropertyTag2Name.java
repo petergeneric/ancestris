@@ -9,7 +9,7 @@ import org.openide.util.NbBundle;
  */
 public class PropertyTag2Name {
 
-    private static final HashMap<String, String> property2Icon = new HashMap<String, String>() {
+    private static final HashMap<String, String> propertyTag2Name = new HashMap<String, String>() {
 
         {
             put("ABBR", NbBundle.getMessage(this.getClass(), "PropertyTag.ABBR"));
@@ -74,7 +74,7 @@ public class PropertyTag2Name {
             put("FILE", NbBundle.getMessage(this.getClass(), "PropertyTag.FILE"));
             put("FORM", NbBundle.getMessage(this.getClass(), "PropertyTag.FORM"));
             put("HUSB", NbBundle.getMessage(this.getClass(), "PropertyTag.HUSB"));
-            put("IMM", NbBundle.getMessage(this.getClass(), "PropertyTag.IMM"));
+            put("IMMI", NbBundle.getMessage(this.getClass(), "PropertyTag.IMMI"));
             put("GEDC", NbBundle.getMessage(this.getClass(), "PropertyTag.GEDC"));
             put("GIVN", NbBundle.getMessage(this.getClass(), "PropertyTag.GIVN"));
             put("GRAD", NbBundle.getMessage(this.getClass(), "PropertyTag.GRAD"));
@@ -144,12 +144,155 @@ public class PropertyTag2Name {
             put("XREF", NbBundle.getMessage(this.getClass(), "PropertyTag.XREF"));
         }
     };
+    private static final HashMap<String, String> propertyName2Tag = new HashMap<String, String>() {
+
+        {
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ABBR"), "ABBR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ADDR"), "ADDR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ADOP"), "ADOP");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ADR1"), "ADR1");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ADR2"), "ADR2");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.AFN"), "AFN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.AGE"), "AGE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.AGNC"), "AGNC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ALIA"), "ALIA");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ANCE"), "ANCE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ANCI"), "ANCI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ANUL"), "ANUL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ASSO"), "ASSO");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.AUTH"), "AUTH");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.BAPL"), "BAPL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.BAPM"), "BAPM");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.BARM"), "BARM");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.BASM"), "BASM");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.BIRT"), "BIRT");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.BLES"), "BLES");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.BLOB"), "BLOB");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.BURI"), "BURI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CALN"), "CALN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CAST"), "CAST");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CAUS"), "CAUS");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CENS"), "CENS");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CHAN"), "CHAN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CHAR"), "CHAR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CHIL"), "CHIL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CHR"), "CHR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CHRA"), "CHRA");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CITY"), "CITY");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CONC"), "CONC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CONF"), "CONF");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CONL"), "CONL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CONT"), "CONT");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.COPR"), "COPR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CORP"), "CORP");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CREM"), "CREM");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.CTRY"), "CTRY");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DATA"), "DATA");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DATE"), "DATE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DEAT"), "DEAT");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DESC"), "DESC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DESI"), "DESI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DEST"), "DEST");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DIV"), "DIV");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DIVF"), "DIVF");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.DSCR"), "DSCR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.EDUC"), "EDUC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.EMIG"), "EMIG");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ENDL"), "ENDL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ENGA"), "ENGA");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.EVEN"), "EVEN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.FAM"), "FAM");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.FAMC"), "FAMC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.FAMF"), "FAMF");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.FAMS"), "FAMS");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.FCOM"), "FCOM");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.FILE"), "FILE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.FORM"), "FORM");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.HUSB"), "HUSB");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.IMMI"), "IMMI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.GEDC"), "GEDC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.GIVN"), "GIVN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.GRAD"), "GRAD");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.HEAD"), "HEAD");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.IDNO"), "IDNO");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.INDI"), "INDI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.LANG"), "LANG");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.LEGA"), "LEGA");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.MARB"), "MARB");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.MARC"), "MARC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.MARL"), "MARL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.MARR"), "MARR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.MARS"), "MARS");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.MEDI"), "MEDI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NAME"), "NAME");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NATI"), "NATI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NATU"), "NATU");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NCHI"), "NCHI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NICK"), "NICK");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NMR"), "NMR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NOTE"), "NOTE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NPFX"), "NPFX");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.NSFX"), "NSFX");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.OBJE"), "OBJE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.OCCU"), "OCCU");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ORDI"), "ORDI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ORDN"), "ORDN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.PAGE"), "PAGE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.PEDI"), "PEDI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.PLAC"), "PLAC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.POST"), "POST");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.PROB"), "PROB");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.PROP"), "PROP");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.PUBL"), "PUBL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.QUAY"), "QUAY");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.REFN"), "REFN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.RELA"), "RELA");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.RELI"), "RELI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.REPO"), "REPO");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.RESI"), "RESI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.RESN"), "RESN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.RETI"), "RETI");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.RFN"), "RFN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.RIN"), "RIN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.ROLE"), "ROLE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SEX"), "SEX");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SLGC"), "SLGC");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SLGS"), "SLGS");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SOUR"), "SOUR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SPFX"), "SPFX");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SSN"), "SSN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SUBM"), "SUBM");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SUBN"), "SUBN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.SURN"), "SURN");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.STAE"), "STAE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.STAT"), "STAT");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.TIME"), "TIME");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.TRLR"), "TRLR");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.PHON"), "PHON");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.TEMP"), "TEMP");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.TEXT"), "TEXT");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.TITL"), "TITL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.TYPE"), "TYPE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.VERS"), "VERS");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.WIFE"), "WIFE");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.WILL"), "WILL");
+            put(NbBundle.getMessage(this.getClass(), "PropertyTag.XREF"), "XREF");
+        }
+    };
 
     static public String getTagName(String propertyTag) {
-        if (property2Icon.get(propertyTag) != null) {
-            return property2Icon.get(propertyTag);
+        if (propertyTag2Name.get(propertyTag) != null) {
+            return propertyTag2Name.get(propertyTag);
         } else {
-            return "U"+propertyTag;
+            return "U" + propertyTag;
+        }
+    }
+
+    static public String getPropertyTag(String propertyName) {
+        if (propertyTag2Name.containsValue(propertyName) == true) {
+            return propertyName2Tag.get(propertyName);
+        } else {
+            return "UnkTag";
         }
     }
 }
