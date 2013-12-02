@@ -19,6 +19,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private EventsTypeComboBoxModelModel eventsTypeComboBoxModelModel = new EventsTypeComboBoxModelModel();
     private PropertyEvent mEvent = null;
     private Property mRoot;
+    private boolean mEventTypeCanChange = false;
 
     /**
      * Creates new form EventEditorPanel
@@ -27,8 +28,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
         initComponents();
         eventIdLabel.setVisible(false);
         eventIDTextField.setVisible(false);
-        eventDescriptionLabel.setVisible(false);
-        eventDescriptionScrollPane.setVisible(false);
         aDateBean.setPreferHorizontal(true);
     }
 
@@ -137,16 +136,13 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(dateLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
                 .addGap(6, 6, 6))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(eventPlaceLabel)
-                        .addGap(44, 44, 44))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(eventDescriptionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                    .addComponent(eventDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eventPlaceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(eventDescriptionScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -173,7 +169,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         .addComponent(dateLabel)
                         .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(eventDescriptionLabel)
                         .addGap(127, 127, 127))
@@ -181,12 +177,11 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         .addComponent(eventDescriptionScrollPane)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(eventPlaceLabel)
+                    .addComponent(eventPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addPlaceButton)
                     .addComponent(editPlaceButton)
-                    .addComponent(removePlaceButton)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(eventPlaceLabel)
-                        .addComponent(eventPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(removePlaceButton)))
         );
 
         javax.swing.GroupLayout sourcesPanelLayout = new javax.swing.GroupLayout(sourcesPanel);
@@ -319,24 +314,26 @@ public class EventEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_removePlaceButtonActionPerformed
 
     private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
-        try {
-            if (mEvent != null) {
-                mRoot.getGedcom().undoUnitOfWork();
-            }
-            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    mEvent = (PropertyEvent) mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventTypeComboBox.getSelectedItem().toString()), "");
-                    PropertyDate date = (PropertyDate) mEvent.getProperty("DATE");
-                    if (date == null) {
-                        date = (PropertyDate) mEvent.addProperty("DATE", "");
-                    }
-                    aDateBean.setContext(date);
+        if (mEventTypeCanChange == true) {
+            try {
+                if (mEvent != null) {
+                    mRoot.getGedcom().undoUnitOfWork();
                 }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mEvent = (PropertyEvent) mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventTypeComboBox.getSelectedItem().toString()), "");
+                        PropertyDate date = (PropertyDate) mEvent.getProperty("DATE");
+                        if (date == null) {
+                            date = (PropertyDate) mEvent.addProperty("DATE", "");
+                        }
+                        aDateBean.setContext(date);
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -370,7 +367,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     public void set(Property root, PropertyEvent event) {
         this.mRoot = root;
         this.mEvent = event;
-        if (event != null) {
+        if (mEvent != null) {
             eventTypeComboBox.setSelectedItem(PropertyTag2Name.getTagName(mEvent.getTag()));
             eventTypeComboBox.setEnabled(false);
             eventDescriptionTextArea.setText(mEvent.getDisplayValue());
@@ -425,6 +422,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         aDateBean.setContext(date);
                     }
                 }); // end of doUnitOfWork
+                mEventTypeCanChange = true;
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
