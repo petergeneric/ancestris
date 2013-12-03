@@ -1,5 +1,6 @@
 package ancestris.reports.gedart;
 
+import ancestris.core.TextOptions;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -12,8 +13,6 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
-import ancestris.core.TextOptions;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +25,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.tools.generic.DateTool;
@@ -451,7 +449,7 @@ public class DocReport {
 		}
 	}
 	
-	public class reportProperty extends Object{
+	public class reportProperty extends Object implements Comparable<reportProperty> {
 		Property property;
 		reportProperty(Property prop){
 			property = prop;
@@ -473,7 +471,12 @@ public class DocReport {
 			return new reportProperty(p);
 		}
 		
-		public reportProperty getProperty(String tagPath) {
+                @Override
+                public int compareTo(reportProperty that) {
+                    return property.compareTo(that.property);
+                }
+
+                public reportProperty getProperty(String tagPath) {
 			if (property == null) return null;
 			Property subProp = property.getPropertyByPath(property.getTag()+":"+tagPath);
 			return create(subProp);
