@@ -26,7 +26,7 @@ import genj.gedcom.TagPath;
  *
  * @author daniel
  */
-public class PropertyWrapper extends Object {
+public class PropertyWrapper extends Object implements Comparable<PropertyWrapper> {
     Property property;
     static final TextOptions OPTIONS = TextOptions.getInstance();
 
@@ -36,7 +36,7 @@ public class PropertyWrapper extends Object {
     }
 
     // Factory for PropertyWrapper
-    PropertyWrapper create(Property p) {
+    static PropertyWrapper create(Property p) {
         if (p == null) {
             return null;
         }
@@ -64,6 +64,11 @@ public class PropertyWrapper extends Object {
         return new PropertyWrapper(p);
     }
 
+    @Override
+    public int compareTo(PropertyWrapper o) {
+        return property.compareTo(o.property);
+    }
+    
     public PropertyWrapper getProperty(String tagPath) {
         if (property == null) {
             return null;
@@ -131,5 +136,5 @@ public class PropertyWrapper extends Object {
     public String format(String fmtstr) {
         return (property == null) ? "" : property.format(fmtstr);
     }
-    
+
 }
