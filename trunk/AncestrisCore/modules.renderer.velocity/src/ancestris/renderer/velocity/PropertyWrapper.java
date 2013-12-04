@@ -77,6 +77,11 @@ public class PropertyWrapper extends Object implements Comparable<PropertyWrappe
         return create(subProp);
     }
 
+    public PropertyWrapper getParent(){
+            if (property == null) return null;
+        return create(property.getParent());
+    }
+
     // Shortcut for getProperty so that $indi.name is equivalent to $indi.getProperty("NAME")
     public Object get(String tag) {
         return getProperty(tag.toUpperCase());
