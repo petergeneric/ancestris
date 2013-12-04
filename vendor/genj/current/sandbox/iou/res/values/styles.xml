@@ -1,6 +1,0 @@
-<resources>  
-  <style name="TitleTextAppearance" parent="@android:style/TextAppearance">  
-    <item name="android:textSize">22sp</item>  
-    <item name="android:textStyle">bold</item>  
-  </style>  
-</resources>  

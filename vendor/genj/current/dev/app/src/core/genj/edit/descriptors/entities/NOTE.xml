@@ -1,5 +1,0 @@
- <col>
-  <row><label path="NOTE"/></row>
-  <row><bean path="NOTE:NOTE" wx="1" wy="1"/></row>
-  <row><bean path="NOTE" type="genj.edit.beans.LinkedByBean" wx="1"/></row>
- </col>
