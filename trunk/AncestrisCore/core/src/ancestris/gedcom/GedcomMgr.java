@@ -190,7 +190,7 @@ public abstract class GedcomMgr {
         }
 
         // .. done
-        return null;
+        return gedcom.getOrigin();
     }
 
     public boolean gedcomClose(Context context) {

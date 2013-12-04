@@ -99,6 +99,8 @@ public abstract class RecentFiles {
 
         @Override
         public void add(FileObject gedcomFile) {
+            if (!gedcomFile.isValid())
+                return;
             String url;
             try {
                 url = gedcomFile.getURL().toString();

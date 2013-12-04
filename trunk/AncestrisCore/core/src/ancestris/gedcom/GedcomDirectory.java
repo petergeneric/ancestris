@@ -50,7 +50,7 @@ import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 
 /**
- * A static registry for Gedcom instances. 
+ * A static registry for Gedcom instances.
  * This registry bridges Gedcom and
  * Context object to Gedcom Data Objects. For file operations, {@link GedcomMgr}
  * service is used.
@@ -64,57 +64,66 @@ public abstract class GedcomDirectory {
 
     /**
      * Gets all registered contexts
-     * @return 
+     *
+     * @return
      */
     public abstract List<Context> getContexts();
 
     /**
      * Gets context for a FileObject if it has been registered
      * null otherwise
+     *
      * @param file
-     * @return 
+     *
+     * @return
      */
     public abstract Context getContext(FileObject file);
 
     /**
-     * Gets the {@link GedcomDataObject} registered for context 
+     * Gets the {@link GedcomDataObject} registered for context
+     *
      * @param context
+     *
      * @return
-     * @throws ancestris.gedcom.GedcomDirectory.ContextNotFoundException 
+     *
+     * @throws .gedcom.GedcomDirectory.ContextNotFoundException
      */
     public abstract GedcomDataObject getDataObject(Context context) throws ContextNotFoundException;
 
     /**
      * register a {@link GedcomDataObject}.
      * The context key is taken from {@link GedcomDataObject#getContext()}
+     *
      * @param dao
-     * @return 
+     *
+     * @return
      */
     protected abstract boolean registerGedcomImpl(GedcomDataObject dao);
 
     /**
      * remove registration for this dao.
-     * 
+     *
      * @param context
-     * @return 
+     *
+     * @return
      */
     protected abstract boolean unregisterGedcomImpl(Context context);
 
     /**
      * create a new gedcom file.
-     * 
+     *
      */
     @NbBundle.Messages({
         "create.action=Create",
         "create.title=Create Gedcom",
         "# {0} - file path",
         "file.exists=File {0} already exists. Proceed?"
-     })            
+    })
     public Context newGedcom() {
-    /*
-     * when creating a new gedcom, the new file is always created on disk ATM
-     * TODO: should we change this behaviour?
-     */
+        /*
+         * when creating a new gedcom, the new file is always created on disk ATM
+         * TODO: should we change this behaviour?
+         */
         //FIXME: use dao.createfromtemplate?
         //FIXME: use DataObject template/wizard. the file is created from data
         // in setGedcom
@@ -128,10 +137,8 @@ public abstract class GedcomDirectory {
             file = new File(file.getAbsolutePath() + ".ged");
         }
         if (file.exists()) {
-            if (DialogManager.YES_OPTION != 
-                    DialogManager.createYesNo(create_title(), file_exists(file.getName()))
-                    .setMessageType(DialogManager.WARNING_MESSAGE)
-                    .show()) {
+            if (DialogManager.YES_OPTION
+                    != DialogManager.createYesNo(create_title(), file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
                 return null;
             }
         }
@@ -158,7 +165,7 @@ public abstract class GedcomDirectory {
 
             // save gedcom file
             GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(file));
-            
+
             // and reopens the file
             return openGedcom(FileUtil.toFileObject(file));
         } catch (Exception e) {
@@ -171,24 +178,24 @@ public abstract class GedcomDirectory {
     private void setDefault(Gedcom gedcom) {
         try {
 
-                    AncestrisPreferences submPref = Registry.get(genj.gedcom.GedcomOptions.class);
+            AncestrisPreferences submPref = Registry.get(genj.gedcom.GedcomOptions.class);
 
-                    // Create submitter
-                    Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
-                    submitter.setName(submPref.get("submName", ""));
-                    submitter.setCity(submPref.get("submCity", ""));
-                    submitter.setPhone(submPref.get("submPhone", ""));
-                    submitter.setEmail(submPref.get("submEmail", ""));
-                    submitter.setCountry(submPref.get("submCountry", ""));
-                    submitter.setWeb(submPref.get("submWeb", ""));
+            // Create submitter
+            Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
+            submitter.setName(submPref.get("submName", ""));
+            submitter.setCity(submPref.get("submCity", ""));
+            submitter.setPhone(submPref.get("submPhone", ""));
+            submitter.setEmail(submPref.get("submEmail", ""));
+            submitter.setCountry(submPref.get("submCountry", ""));
+            submitter.setWeb(submPref.get("submWeb", ""));
 
-                    gedcom.createEntity("HEAD", "");
+            gedcom.createEntity("HEAD", "");
 
-                    // Create place format
-                    gedcom.setPlaceFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceFormat());
-                    gedcom.setShowJuridictions(genj.gedcom.GedcomOptions.getInstance().getShowJuridictions());
-                    gedcom.setPlaceSortOrder(genj.gedcom.GedcomOptions.getInstance().getPlaceSortOrder());
-                    gedcom.setPlaceDisplayFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceDisplayFormat());
+            // Create place format
+            gedcom.setPlaceFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceFormat());
+            gedcom.setShowJuridictions(genj.gedcom.GedcomOptions.getInstance().getShowJuridictions());
+            gedcom.setPlaceSortOrder(genj.gedcom.GedcomOptions.getInstance().getPlaceSortOrder());
+            gedcom.setPlaceDisplayFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceDisplayFormat());
         } catch (GedcomException e) {
             Exceptions.printStackTrace(e);
         }
@@ -210,11 +217,12 @@ public abstract class GedcomDirectory {
 
     /**
      * This is equivalent to openGedcom(FileUtil.toFileObject(input))
+     *
      * @param input File to read
      *
-     * @return loaded context. 
+     * @return loaded context.
      *
-     * @deprecated consider using FileObject. 
+     * @deprecated consider using FileObject.
      */
     @Deprecated
     public Context openGedcom(File input) {
@@ -228,7 +236,7 @@ public abstract class GedcomDirectory {
      * Opens a Gedcom FileObject.
      *
      * Use DataObject loaders to find the proper handler and then register it in local
-     * gedcom registry. Il file is already opened, doesn't open twice and return 
+     * gedcom registry. Il file is already opened, doesn't open twice and return
      * the saved context
      *
      * @param input Gedcom FileObject
@@ -237,8 +245,9 @@ public abstract class GedcomDirectory {
      */
     public Context openGedcom(FileObject input) {
         Context context = getContext(input);
-        if (context != null)
+        if (context != null) {
             return context;
+        }
         try {
             DataObject dao = DataObject.find(input);
             GedcomDataObject gdao = dao.getLookup().lookup(GedcomDataObject.class);
@@ -264,7 +273,9 @@ public abstract class GedcomDirectory {
         if (context == null || context.getGedcom() == null) {
             return false;
         }
-        if (context != null && context.getGedcom().getOrigin() == null) {
+        if (context != null
+                && (context.getGedcom().getOrigin() == null
+                || !context.getGedcom().getOrigin().getFile().exists())) {
             return saveAsGedcom(context);
         }
         try {
@@ -333,10 +344,8 @@ public abstract class GedcomDirectory {
 
         // Need confirmation if File exists?
         if (file.exists()) {
-            if (DialogManager.YES_OPTION != 
-                    DialogManager.createYesNo(RES.getString("cc.save.title", context.getGedcom().toString()),RES.getString("cc.open.file_exists"))
-                    .setMessageType(DialogManager.WARNING_MESSAGE)
-                    .show()){
+            if (DialogManager.YES_OPTION
+                    != DialogManager.createYesNo(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.open.file_exists")).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
                 return false;
             }
         } else {
@@ -353,21 +362,14 @@ public abstract class GedcomDirectory {
         Origin o = GedcomMgr.getDefault().saveGedcomAs(context, options, FileUtil.toFileObject(file));
         //XXX: must handle close old file and open new
 
-        if (o != null) {
-            openGedcom(o.getFile());
-            return true;
+        if (o == null) {
+            return false;
         } else {
             if (context != null) {
-                try {
-                    FileObject newGedcom;
-                    newGedcom = getDataObject(context).getPrimaryFile();
-                    closeGedcom(context); // was:unregisterGedcom(context);
-                    openGedcom(newGedcom);
-                } catch (ContextNotFoundException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                closeGedcom(context); // was:unregisterGedcom(context);
+                openGedcom(FileUtil.toFileObject(o.getFile()));
             }
-            return false;
+            return true;
         }
     }
 
@@ -384,13 +386,10 @@ public abstract class GedcomDirectory {
         GedcomMgr.getDefault().commitRequested(context);
 
         // changes?
-        if (context.getGedcom().hasChanged()) {
+        if (context.getGedcom().hasChanged() || !context.getGedcom().getOrigin().getFile().exists()) {
 
             // close file officially
-            Object rc = DialogManager.create(null, RES.getString("cc.savechanges?", context.getGedcom().getName()))
-                    .setMessageType(DialogManager.WARNING_MESSAGE)
-                    .setOptionType(DialogManager.YES_NO_CANCEL_OPTION)
-                    .show();
+            Object rc = DialogManager.create(null, RES.getString("cc.savechanges?", context.getGedcom().getName())).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_CANCEL_OPTION).show();
             // cancel - we're done
             if (rc == DialogManager.CANCEL_OPTION || rc == DialogManager.CLOSED_OPTION) {
                 return false;
@@ -414,41 +413,41 @@ public abstract class GedcomDirectory {
     /**
      * Registry management
      */
-        /**
-         * register gedcom file
-         */
-        public void registerGedcom(GedcomDataObject gedcomObject) {
-            if (gedcomObject == null) {
-                return;
-            }
-            if (!registerGedcomImpl(gedcomObject)){
-                return;
-            }
-
-            // otifies listeners
-            List<GedcomRegistryListener> ls = new ArrayList<GedcomRegistryListener>(listeners);
-            for (GedcomRegistryListener listener : ls) {
-                listener.gedcomRegistered(gedcomObject.getContext());
-            }
+    /**
+     * register gedcom file
+     */
+    public void registerGedcom(GedcomDataObject gedcomObject) {
+        if (gedcomObject == null) {
+            return;
+        }
+        if (!registerGedcomImpl(gedcomObject)) {
+            return;
         }
 
-        /**
-         * unregister gedcom file
-         */
-        public void unregisterGedcom(Context context) {
-            if (context == null) {
-                return;
-            }
-            if (!unregisterGedcomImpl(context)){
-                return;
-            }
-            
-            // Notifies
-            List<GedcomRegistryListener> ls = new ArrayList<GedcomRegistryListener>(listeners);
-            for (GedcomRegistryListener listener : ls) {
-                listener.gedcomUnregistered(context);
-            }
+        // otifies listeners
+        List<GedcomRegistryListener> ls = new ArrayList<GedcomRegistryListener>(listeners);
+        for (GedcomRegistryListener listener : ls) {
+            listener.gedcomRegistered(gedcomObject.getContext());
         }
+    }
+
+    /**
+     * unregister gedcom file
+     */
+    public void unregisterGedcom(Context context) {
+        if (context == null) {
+            return;
+        }
+        if (!unregisterGedcomImpl(context)) {
+            return;
+        }
+
+        // Notifies
+        List<GedcomRegistryListener> ls = new ArrayList<GedcomRegistryListener>(listeners);
+        for (GedcomRegistryListener listener : ls) {
+            listener.gedcomUnregistered(context);
+        }
+    }
 
     /**
      * gets selected context in active topComponent. If none, return first
@@ -458,16 +457,16 @@ public abstract class GedcomDirectory {
      *
      * @return
      *
-     * @deprecated 
-     * we will use 
+     * @deprecated
+     * we will use
      * Utilities.actionsGlobalContext().lookup(Context.class). If it is null, we must not
-     * use the first available context as it is not deterministic. So this call 
+     * use the first available context as it is not deterministic. So this call
      * is now equivalent to
      * Utilities.actionsGlobalContext().lookup(Context.class)
      */
     //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
     //XXX: in fact we must provide Context in explorer Nodes Lookup
-        @Deprecated
+    @Deprecated
     public Context getSelectedContext(boolean firstIfNoneSelected) {
         Context c = Utilities.actionsGlobalContext().lookup(Context.class);
 //        if (!firstIfNoneSelected) {
@@ -487,10 +486,10 @@ public abstract class GedcomDirectory {
     //XXX; must be removed, no longer supported...
     /**
      *
-     * @return 
+     * @return
      * @deprecated
      */
-        @Deprecated
+    @Deprecated
     public Context getLastContext() {
         throw new UnsupportedOperationException("GedcomDirectory does not provide last context anymore. use private cache or lookup");
     }
@@ -520,7 +519,7 @@ public abstract class GedcomDirectory {
 //            gedcomDir = "user.home";
 //        }
 //        File directory = REGISTRY.get("last.dir", gedcomDir);
-        File directory = REGISTRY.get("last.dir", new File (""));
+        File directory = REGISTRY.get("last.dir", new File(""));
         chooser.setCurrentDirectory(directory);
         if (defaultFilename != null) {
             chooser.setSelectedFile(new File(directory, defaultFilename));
@@ -705,26 +704,28 @@ public abstract class GedcomDirectory {
             gedcomsOpened.remove(context.getGedcom());
             return true;
         }
-/**
- * 
- * @param gedName
- * @return 
- */
-        @Override
-    public Context getContext(FileObject file) {
 
-        if (file == null) {
+        /**
+         *
+         * @param gedName
+         *
+         * @return
+         */
+        @Override
+        public Context getContext(FileObject file) {
+
+            if (file == null) {
+                return null;
+            }
+            for (Gedcom g : gedcomsOpened.keySet()) {
+                if (file.equals(gedcomsOpened.get(g).getPrimaryFile())) {
+                    return gedcomsOpened.get(g).getContext();
+                }
+            }
             return null;
         }
-            for (Gedcom g : gedcomsOpened.keySet()) {
-            if (file.equals(gedcomsOpened.get(g).getPrimaryFile())){
-                return gedcomsOpened.get(g).getContext();
-            }
-        }
-        return null;
-    }
 
-    /**
+        /**
          * accessor gedcoms
          */
         public List<Context> getContexts() {
