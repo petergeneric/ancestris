@@ -29,6 +29,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.ListTool;
+import org.apache.velocity.tools.generic.SortTool;
 import org.openide.modules.Places;
 
 // FIXME: refactor this class, remove @suppresswarning
@@ -80,6 +81,7 @@ public class DocReport {
 		context = new VelocityContext();
 		context.put("gedcom", new Gedcom());
 		context.put("list", new ListTool());
+		context.put("sorter", new SortTool());
 //		context.put("date", (new Date()).toString());
 		context.put("date", new DateTool());
 		context.put("docindex", new reportIndex());
@@ -482,7 +484,12 @@ public class DocReport {
 			return create(subProp);
 		}
 
-		// Shortcut for getProperty so that $indi.name is equivalent to $indi.getProperty("NAME")
+                public reportProperty getParent(){
+			if (property == null) return null;
+                    return create(property.getParent());
+                }
+
+                // Shortcut for getProperty so that $indi.name is equivalent to $indi.getProperty("NAME")
 		public Object get(String tag) { return getProperty(tag.toUpperCase());}
 		
 		public reportProperty[] getProperties(String tagPath) {
