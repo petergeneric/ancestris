@@ -44,16 +44,6 @@ public final class ImportWizardAction extends CallableSystemAction {
                     Context context = GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(outFile));
                     Gedcom importedGedcom = context.getGedcom();
                     importedGedcom.setName(inputFile.getName());
-                    importedGedcom.setOrigin(null);
-                try {
-                     Node n = null;
-            n = GedcomDirectory.getDefault().getDataObject(context).getLookup().lookup(Node.class);
-
-                } catch (ContextNotFoundException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                    
-//                            myNode(context).fire(true);
                     outFile.delete();
                 }
         }
