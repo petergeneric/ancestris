@@ -83,6 +83,11 @@ public class NotesListPanel extends javax.swing.JPanel {
         notesTable.setModel(notesTableModel);
         notesTable.setShowHorizontalLines(false);
         notesTable.setShowVerticalLines(false);
+        notesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                notesTableMouseClicked(evt);
+            }
+        });
         notesScrollPane.setViewportView(notesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -135,6 +140,23 @@ public class NotesListPanel extends javax.swing.JPanel {
     private void deleteNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNoteButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
+
+    private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
+        int selectedRow = notesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
+            NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
+            noteEditorPanel.set(notesTableModel.getValueAt(rowIndex));
+
+            ADialog noteEditorDialog = new ADialog(
+                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                    noteEditorPanel);
+            noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
+
+            if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            }
+        }
+    }//GEN-LAST:event_notesTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNoteButton;
     private javax.swing.JButton deleteNoteButton;

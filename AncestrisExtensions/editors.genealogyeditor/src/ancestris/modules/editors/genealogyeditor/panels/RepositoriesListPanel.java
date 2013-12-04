@@ -79,6 +79,11 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         sourcesTable.setModel(repositoriesTableModel);
         sourcesTable.setShowHorizontalLines(false);
         sourcesTable.setShowVerticalLines(false);
+        sourcesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sourcesTableMouseClicked(evt);
+            }
+        });
         sourcesScrollPane.setViewportView(sourcesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -112,6 +117,11 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
     private void deleteSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteSourceButtonActionPerformed
+
+    private void sourcesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourcesTableMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sourcesTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceButton;
     private javax.swing.JButton deleteSourceButton;

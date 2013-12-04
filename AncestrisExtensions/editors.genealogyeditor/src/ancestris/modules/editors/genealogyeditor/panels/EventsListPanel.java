@@ -89,6 +89,11 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsTable.setGridColor(java.awt.Color.lightGray);
         eventsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         eventsTable.setShowVerticalLines(false);
+        eventsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                eventsTableMouseClicked(evt);
+            }
+        });
         eventsScrollPane.setViewportView(eventsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -145,6 +150,25 @@ public class EventsListPanel extends javax.swing.JPanel {
             deletedEvents.add(eventsTableModel.remove(rowIndex));
         }
     }//GEN-LAST:event_deleteEventButtonActionPerformed
+
+    private void eventsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventsTableMouseClicked
+        int selectedRow = eventsTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+            EventEditorPanel eventEditorPanel = new EventEditorPanel();
+            eventEditorPanel.set(root, eventsTableModel.getValueAt(rowIndex));
+
+            ADialog eventEditorDialog = new ADialog(
+                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
+                    eventEditorPanel);
+            eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
+
+            if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                eventEditorPanel.commit();
+            }
+        }
+    }//GEN-LAST:event_eventsTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addEventButton;
     private javax.swing.JButton deleteEventButton;

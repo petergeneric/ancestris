@@ -42,7 +42,7 @@
                   <Component id="fatherPanel" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="425" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -426,7 +426,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="childrensListPanel" alignment="0" pref="394" max="32767" attributes="0"/>
+                  <Component id="childrensListPanel" alignment="0" pref="392" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -457,7 +457,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventsListPanel" alignment="0" pref="394" max="32767" attributes="0"/>
+                  <Component id="eventsListPanel" alignment="0" pref="392" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -486,7 +486,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourcesListPanel" alignment="0" pref="394" max="32767" attributes="0"/>
+                  <Component id="sourcesListPanel" alignment="0" pref="392" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -517,7 +517,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="notesListPanel" alignment="0" pref="394" max="32767" attributes="0"/>
+                  <Component id="notesListPanel" alignment="0" pref="392" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -548,7 +548,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectsListPanel" alignment="0" pref="394" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectsListPanel" alignment="0" pref="392" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -570,10 +570,6 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="familyIDTextField" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
-                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jComboBox1" min="-2" pref="193" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -582,8 +578,6 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="familyIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="familyIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -601,25 +595,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.familyIDLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBox1">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
-              </StringArray>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel7">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.jLabel7.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
           </Properties>
         </Component>
