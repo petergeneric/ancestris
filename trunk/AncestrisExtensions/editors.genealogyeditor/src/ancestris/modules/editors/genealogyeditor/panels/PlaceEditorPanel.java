@@ -106,7 +106,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         longitudeLabel = new javax.swing.JLabel();
         longitudeTextField = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        placesList = new javax.swing.JList();
+        placesList = new javax.swing.JList<String>();
         searchPlaceTextField = new javax.swing.JTextField();
         searchPlaceButton = new javax.swing.JButton();
         copyButton = new javax.swing.JButton();
@@ -187,11 +187,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     .addComponent(gedcomLatitudeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gedcomField0TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                    .addComponent(gedcomField1TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                    .addComponent(gedcomField4TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                    .addComponent(gedcomField5TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                    .addComponent(gedcomLatitudeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE))
+                    .addComponent(gedcomField0TextField)
+                    .addComponent(gedcomField1TextField)
+                    .addComponent(gedcomField4TextField)
+                    .addComponent(gedcomField5TextField)
+                    .addComponent(gedcomLatitudeTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(gedcomField6Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -201,11 +201,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     .addComponent(gedcomField2Label, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gedcomField2TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                    .addComponent(gedcomField3TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                    .addComponent(gedcomField6TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                    .addComponent(gedcomField7TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                    .addComponent(gedcomLongitudeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
+                    .addComponent(gedcomField2TextField)
+                    .addComponent(gedcomField3TextField)
+                    .addComponent(gedcomField6TextField)
+                    .addComponent(gedcomField7TextField)
+                    .addComponent(gedcomLongitudeTextField))
                 .addContainerGap())
         );
         gedcomPlacePanelLayout.setVerticalGroup(
@@ -584,7 +584,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane placeReferenceScrollPane;
     private javax.swing.JPanel placeReferencesPanel;
     private javax.swing.JTable placeReferencesTable;
-    private javax.swing.JList placesList;
+    private javax.swing.JList<String> placesList;
     private javax.swing.JButton searchPlaceButton;
     private javax.swing.JPanel searchPlacePanel;
     private javax.swing.JTextField searchPlaceTextField;

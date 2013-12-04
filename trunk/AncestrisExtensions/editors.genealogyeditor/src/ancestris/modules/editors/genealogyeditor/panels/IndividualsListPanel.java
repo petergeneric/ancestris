@@ -76,6 +76,11 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         eventsToolBar.add(deleteChildButton);
 
         individualsTable.setModel(individualsTableModel);
+        individualsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                individualsTableMouseClicked(evt);
+            }
+        });
         childrensScrollPane.setViewportView(individualsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -129,6 +134,22 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     private void deleteChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteChildButtonActionPerformed
 
    }//GEN-LAST:event_deleteChildButtonActionPerformed
+
+    private void individualsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_individualsTableMouseClicked
+        int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
+        if (rowIndex != -1) {
+            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+            individualEditorPanel.set(individualsTableModel.getValueAt(rowIndex));
+
+            DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                    individualEditorPanel);
+            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+
+            if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            }
+        }
+    }//GEN-LAST:event_individualsTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addChildButton;

@@ -9,7 +9,7 @@ import javax.swing.AbstractListModel;
  *
  * @author dominique
  */
-public class GeonamePlacesListModel extends AbstractListModel {
+public class GeonamePlacesListModel extends AbstractListModel <String>{
 
     ArrayList<Place> placesList = new ArrayList<Place>();
     String[] placesListData = null;
@@ -77,7 +77,7 @@ public class GeonamePlacesListModel extends AbstractListModel {
     }
 
     @Override
-    public Object getElementAt(int index) {
+    public String getElementAt(int index) {
         String jurisdictions = "";
 
         for (String jurisdiction : placesList.get(index).getJurisdictions()) {

@@ -11,7 +11,7 @@ import javax.swing.AbstractListModel;
  *
  * @author dominique
  */
-public class GedcomPlaceListModel extends AbstractListModel {
+public class GedcomPlaceListModel extends AbstractListModel <String>{
 
     Map<String, Set<PropertyPlace>> gedcomPlacesMap = new HashMap<String, Set<PropertyPlace>> ();
 
@@ -34,7 +34,7 @@ public class GedcomPlaceListModel extends AbstractListModel {
     }
 
     @Override
-    public Object getElementAt(int i) {
+    public String getElementAt(int i) {
         return gedcomPlacesMap.keySet().toArray(new String[0])[i];
     }
 }

@@ -40,22 +40,42 @@ public class FamilyNamesListPanel extends javax.swing.JPanel {
         addFamilyNameButton.setFocusable(false);
         addFamilyNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addFamilyNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addFamilyNameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addFamilyNameButtonActionPerformed(evt);
+            }
+        });
         familyNamesToolBar.add(addFamilyNameButton);
 
         editFamilyNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editFamilyNameButton.setFocusable(false);
         editFamilyNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editFamilyNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editFamilyNameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editFamilyNameButtonActionPerformed(evt);
+            }
+        });
         familyNamesToolBar.add(editFamilyNameButton);
 
         deleteFamilyNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
         deleteFamilyNameButton.setFocusable(false);
         deleteFamilyNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteFamilyNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteFamilyNameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteFamilyNameButtonActionPerformed(evt);
+            }
+        });
         familyNamesToolBar.add(deleteFamilyNameButton);
 
         familyNamesTable.setModel(familyNamesTableModel);
         familyNamesTable.setColumnSelectionAllowed(true);
+        familyNamesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                familyNamesTableMouseClicked(evt);
+            }
+        });
         familyNamesScrollPane.setViewportView(familyNamesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -73,6 +93,23 @@ public class FamilyNamesListPanel extends javax.swing.JPanel {
                 .addComponent(familyNamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void familyNamesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familyNamesTableMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_familyNamesTableMouseClicked
+
+    private void addFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFamilyNameButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addFamilyNameButtonActionPerformed
+
+    private void editFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFamilyNameButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editFamilyNameButtonActionPerformed
+
+    private void deleteFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFamilyNameButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteFamilyNameButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFamilyNameButton;
     private javax.swing.JButton deleteFamilyNameButton;
