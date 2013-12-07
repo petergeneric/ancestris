@@ -107,7 +107,7 @@ public class NamesListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNameButtonActionPerformed
-        NameSimpleEditorPanel nameEditorPanel = new NameSimpleEditorPanel();
+        NameEditorPanel nameEditorPanel = new NameEditorPanel();
         nameEditorPanel.set(root, null);
         ADialog nameEditorDialog = new ADialog(
                 NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
@@ -124,7 +124,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         int selectedRow = namesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
-            NameSimpleEditorPanel nameEditorPanel = new NameSimpleEditorPanel();
+            NameEditorPanel nameEditorPanel = new NameEditorPanel();
             nameEditorPanel.set(root, namesTableModel.getValueAt(rowIndex));
             ADialog nameEditorDialog = new ADialog(
                     NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
@@ -145,7 +145,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         int selectedRow = namesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
-            NameSimpleEditorPanel nameEditorPanel = new NameSimpleEditorPanel();
+            NameEditorPanel nameEditorPanel = new NameEditorPanel();
             nameEditorPanel.set(root, namesTableModel.getValueAt(rowIndex));
             ADialog nameEditorDialog = new ADialog(
                     NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
