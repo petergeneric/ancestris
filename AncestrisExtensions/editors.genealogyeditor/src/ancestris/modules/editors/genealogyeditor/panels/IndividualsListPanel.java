@@ -2,7 +2,8 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.IndividualsTableModel;
 import ancestris.util.swing.DialogManager;
-import genj.gedcom.*;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import java.util.List;
 import org.openide.DialogDescriptor;
 import org.openide.util.NbBundle;
@@ -132,7 +133,6 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editChildButtonActionPerformed
 
     private void deleteChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteChildButtonActionPerformed
-
    }//GEN-LAST:event_deleteChildButtonActionPerformed
 
     private void individualsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_individualsTableMouseClicked
@@ -150,7 +150,6 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_individualsTableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addChildButton;
     private javax.swing.JScrollPane childrensScrollPane;
@@ -166,4 +165,5 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     }
 
     public void commit() {
-    }}
+    }
+}

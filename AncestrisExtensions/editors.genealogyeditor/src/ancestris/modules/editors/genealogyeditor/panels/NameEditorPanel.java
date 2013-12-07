@@ -259,7 +259,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void nameTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTypeComboBoxActionPerformed
-        // TODO add your handling code here:
+        nameTypeModified = true;
     }//GEN-LAST:event_nameTypeComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel familyNameLabel;
@@ -307,6 +307,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
             } else {
                 nameTypeComboBox.setSelectedIndex(1);
             }
+            nameTypeModified = false;
 
             /*
              * NPFX Non indexing name piece that appears preceding the given
@@ -316,13 +317,15 @@ public class NameEditorPanel extends javax.swing.JPanel {
              */
             Property firstnamePrefix = name.getProperty("NPFX");
             firstNamePrefixTextField.setText(firstnamePrefix != null ? firstnamePrefix.getValue() : "");
-
+            firstNamePrefixModified = false;
+            
             /*
              * GIVN Given name or earned name. Different given names are
              * separated by a comma.
              */
             Property givenName = name.getProperty("GIVN");
             firstNameTextField.setText(givenName != null ? givenName.getValue() : name.getFirstName());
+            firstNameModified = false;
 
             /*
              * NSFX Non-indexing name piece that appears after the given name
@@ -331,6 +334,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
              */
             Property firstNameSuffix = name.getProperty("NSFX");
             firstNameSuffixTextField.setText(firstNameSuffix != null ? firstNameSuffix.getValue() : "");
+            firstNameSuffixModified = false;
 
             /*
              * SPFX surname prefix or article used in a family name. Different
@@ -339,7 +343,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
              */
             Property familyNamePrefix = name.getProperty("SPFX");
             familyNamePrefixTextField.setText(familyNamePrefix != null ? familyNamePrefix.getValue() : "");
-
+            familyNamePrefixModified = false;
 
             /*
              * SURN Surname or family name. Different surnames are separated by
@@ -351,6 +355,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
             } else {
                 familyNameTextField.setText(name.getLastName());
             }
+            familyNameModified = false;
 
             /*
              * NICK A descriptive or familiar name used in connection with one's
@@ -358,9 +363,10 @@ public class NameEditorPanel extends javax.swing.JPanel {
              */
             Property nickName = name.getProperty("NICK");
             nicknameTextField.setText(nickName != null ? nickName.getValue() : "");
-
+            nicknameModified = false;
         } else {
             nameTypeComboBox.setSelectedIndex(1);
+            nameTypeModified = false;
         }
     }
 
@@ -375,23 +381,20 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 public void perform(Gedcom gedcom) throws GedcomException {
                     if (name == null) {
                         logger.log(Level.INFO, "Add property NAME");
+                        
                         name = (PropertyName) root.addProperty("NAME", "");
-                        if (version.equals("5.5.1")) {
-                            logger.log(Level.INFO, "Add property TYPE");
-
-                            name.addProperty("TYPE", nameTypeComboBox.getSelectedItem().toString());
-                        }
                     }
 
                     if (version.equals("5.5.1") && nameTypeModified == true) {
 
                         Property nameType = name.getProperty("TYPE");
                         if (nameType == null) {
-                            logger.log(Level.INFO, "Create property Name");
-
+                            logger.log(Level.INFO, "Add property TYPE");
+                            
                             name.addProperty("TYPE", nameTypeComboBox.getSelectedItem().toString());
                         } else {
                             logger.log(Level.INFO, "Update property TYPE");
+                            
                             nameType.setValue(nameTypeComboBox.getSelectedItem().toString());
                         }
                     }
