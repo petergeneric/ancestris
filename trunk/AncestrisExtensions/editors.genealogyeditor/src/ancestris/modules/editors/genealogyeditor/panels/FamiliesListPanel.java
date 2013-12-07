@@ -1,19 +1,23 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.FamilyNamesTableModel;
+import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
+import genj.gedcom.Fam;
+import genj.gedcom.Property;
+import java.util.List;
 
 /**
  *
  * @author dominique
  */
-public class FamilyNamesListPanel extends javax.swing.JPanel {
+public class FamiliesListPanel extends javax.swing.JPanel {
 
-    private FamilyNamesTableModel familyNamesTableModel = new FamilyNamesTableModel();
+    private FamiliesTableModel familiesTableModel = new FamiliesTableModel();
+    private Property root;
 
     /**
-     * Creates new form FamilyNamesListPanel
+     * Creates new form FamiliesListPanel
      */
-    public FamilyNamesListPanel() {
+    public FamiliesListPanel() {
         initComponents();
     }
 
@@ -69,8 +73,7 @@ public class FamilyNamesListPanel extends javax.swing.JPanel {
         });
         familyNamesToolBar.add(deleteFamilyNameButton);
 
-        familyNamesTable.setModel(familyNamesTableModel);
-        familyNamesTable.setColumnSelectionAllowed(true);
+        familyNamesTable.setModel(familiesTableModel);
         familyNamesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 familyNamesTableMouseClicked(evt);
@@ -109,7 +112,6 @@ public class FamilyNamesListPanel extends javax.swing.JPanel {
     private void deleteFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFamilyNameButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteFamilyNameButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFamilyNameButton;
     private javax.swing.JButton deleteFamilyNameButton;
@@ -118,4 +120,9 @@ public class FamilyNamesListPanel extends javax.swing.JPanel {
     private javax.swing.JTable familyNamesTable;
     private javax.swing.JToolBar familyNamesToolBar;
     // End of variables declaration//GEN-END:variables
+
+    public void setFamiliesList(Property root, List<Fam> familiesList) {
+        this.root = root;
+        familiesTableModel.update(familiesList);
+    }
 }
