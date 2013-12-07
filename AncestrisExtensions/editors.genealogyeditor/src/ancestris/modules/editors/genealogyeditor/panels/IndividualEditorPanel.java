@@ -40,7 +40,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         generalPanel = new javax.swing.JPanel();
         individualIDLabel = new javax.swing.JLabel();
         individualIDTextField = new javax.swing.JTextField();
-        simpleNameEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.NameSimpleEditorPanel();
+        simpleNameEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel();
         sexBeanPanel = new ancestris.modules.editors.genealogyeditor.beans.SexBean();
         jXImagePanel1 = new org.jdesktop.swingx.JXImagePanel();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
@@ -243,7 +243,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel notesPanel;
     private javax.swing.JPanel referencesPanel;
     private ancestris.modules.editors.genealogyeditor.beans.SexBean sexBeanPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.NameSimpleEditorPanel simpleNameEditorPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel simpleNameEditorPanel;
     private ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel sourcesListPanel;
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
