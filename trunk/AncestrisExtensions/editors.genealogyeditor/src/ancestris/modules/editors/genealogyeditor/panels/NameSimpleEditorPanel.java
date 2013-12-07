@@ -3,8 +3,11 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.NameTypeComboBoxModel;
 import genj.gedcom.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -15,13 +18,24 @@ public class NameSimpleEditorPanel extends javax.swing.JPanel {
     private NameTypeComboBoxModel nameTypeComboBoxModelModel = new NameTypeComboBoxModel();
     private Indi root;
     private PropertyName name;
-    private boolean modified;
+    private boolean nameTypeModified;
+    private boolean familyNamePrefixModified;
+    private boolean familyNameModified;
+    private boolean firstNamePrefixModified;
+    private boolean firstNameSuffixModified;
+    private boolean firstNameModified;
+    private boolean nicknameModified;
+    private final static Logger logger = Logger.getLogger(NameSimpleEditorPanel.class.getName(), null);
 
     /**
      * Creates new form NameSimpleEditorPanel
      */
     public NameSimpleEditorPanel() {
         initComponents();
+
+        // Listen for changes in the familyNamePrefixTextField
+        // Listen for changes in the familyNamePrefixTextField
+
     }
 
     /**
@@ -43,12 +57,17 @@ public class NameSimpleEditorPanel extends javax.swing.JPanel {
         familyNameTextField = new javax.swing.JTextField();
         firstNameSuffixTextField = new javax.swing.JTextField();
         nicknameLabel = new javax.swing.JLabel();
-        nicknamePrefixTextField = new javax.swing.JTextField();
+        nicknameTextField = new javax.swing.JTextField();
 
         nameTypeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.nameTypeLabel.text"), new Object[] {})); // NOI18N
 
         nameTypeComboBox.setEditable(true);
         nameTypeComboBox.setModel(nameTypeComboBoxModelModel);
+        nameTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameTypeComboBoxActionPerformed(evt);
+            }
+        });
 
         firstnameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.firstnameLabel.text"), new Object[] {})); // NOI18N
 
@@ -56,82 +75,196 @@ public class NameSimpleEditorPanel extends javax.swing.JPanel {
         firstNamePrefixTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         firstNamePrefixTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.firstNamePrefixTextField.text"), new Object[] {})); // NOI18N
         firstNamePrefixTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.firstNamePrefixTextField.toolTipText"), new Object[] {})); // NOI18N
+        firstNamePrefixTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                firstNamePrefixModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                firstNamePrefixModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                firstNamePrefixModified = true;
+            }
+        });
 
         firstNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.firstNameTextField.text"), new Object[] {})); // NOI18N
         firstNameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.firstNameTextField.toolTipText"), new Object[] {})); // NOI18N
+        firstNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                firstNameModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                firstNameModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                firstNameModified = true;
+            }
+        });
 
         familyNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.familyNameLabel.text"), new Object[] {})); // NOI18N
 
         familyNamePrefixTextField.setColumns(8);
         familyNamePrefixTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.familyNamePrefixTextField.text"), new Object[] {})); // NOI18N
         familyNamePrefixTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.familyNamePrefixTextField.toolTipText"), new Object[] {})); // NOI18N
+        familyNamePrefixTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                familyNamePrefixModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                familyNamePrefixModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                familyNamePrefixModified = true;
+            }
+        });
 
         familyNameTextField.setColumns(16);
         familyNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.familyNameTextField.text"), new Object[] {})); // NOI18N
+        familyNameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.familyNameTextField.toolTipText"), new Object[] {})); // NOI18N
+        familyNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                familyNameModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                familyNameModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                familyNameModified = true;
+            }
+        });
 
         firstNameSuffixTextField.setColumns(8);
         firstNameSuffixTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.firstNameSuffixTextField.text"), new Object[] {})); // NOI18N
         firstNameSuffixTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.firstNameSuffixTextField.toolTipText"), new Object[] {})); // NOI18N
+        firstNameSuffixTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                firstNameSuffixModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                firstNameSuffixModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                firstNameSuffixModified = true;
+            }
+        });
 
         nicknameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.nicknameLabel.text"), new Object[] {})); // NOI18N
 
-        nicknamePrefixTextField.setColumns(8);
-        nicknamePrefixTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        nicknamePrefixTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.nicknamePrefixTextField.text"), new Object[] {})); // NOI18N
-        nicknamePrefixTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.nicknamePrefixTextField.toolTipText"), new Object[] {})); // NOI18N
+        nicknameTextField.setColumns(8);
+        nicknameTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        nicknameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.nicknameTextField.text"), new Object[] {})); // NOI18N
+        nicknameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameSimpleEditorPanel.nicknameTextField.toolTipText"), new Object[] {})); // NOI18N
+        nicknameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                nicknameModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                nicknameModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                nicknameModified = true;
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(272, 272, 272)
-                .addComponent(nameTypeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nameTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(nicknameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nicknamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(firstnameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(firstNameTextField))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(familyNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(familyNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(272, 272, 272)
+                        .addComponent(nameTypeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameTypeComboBox, 0, 195, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(familyNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(6, 6, 6)
+                                .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(familyNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(nicknameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(firstnameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(firstNameTextField)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameTypeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstnameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nicknamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nicknameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(familyNameLabel)
                     .addComponent(familyNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void nameTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTypeComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nameTypeComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel familyNameLabel;
     private javax.swing.JTextField familyNamePrefixTextField;
@@ -143,7 +276,7 @@ public class NameSimpleEditorPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> nameTypeComboBox;
     private javax.swing.JLabel nameTypeLabel;
     private javax.swing.JLabel nicknameLabel;
-    private javax.swing.JTextField nicknamePrefixTextField;
+    private javax.swing.JTextField nicknameTextField;
     // End of variables declaration//GEN-END:variables
 
     public void set(Indi root, PropertyName name) {
@@ -161,57 +294,208 @@ public class NameSimpleEditorPanel extends javax.swing.JPanel {
         AutoCompleteDecorator.decorate(firstNameTextField, firstNames, false);
         AutoCompleteDecorator.decorate(familyNameTextField, lastNames, false);
 
-        Property nameType = name.getProperty("TYPE");
-        if (nameType != null) {
-            nameTypeComboBox.setSelectedItem(nameType.getValue());
+        String version = root.getGedcom().getGrammar().getVersion();
+        if (version.equals("5.5")) {
+            nameTypeLabel.setVisible(false);
+            nameTypeComboBox.setVisible(false);
+        }
+
+        if (name != null) {
+            /*
+             * Indicates the name type, for example the name issued or assumed
+             * as an immigrant.
+             */
+            Property nameType = name.getProperty("TYPE");
+            if (nameType != null) {
+                nameTypeComboBox.setSelectedItem(nameType.getValue());
+            } else {
+                nameTypeComboBox.setSelectedIndex(1);
+            }
+
+            /*
+             * NPFX Non indexing name piece that appears preceding the given
+             * name and surname parts. Different name prefix parts are separated
+             * by a comma.
+             *
+             */
+            Property firstnamePrefix = name.getProperty("NPFX");
+            firstNamePrefixTextField.setText(firstnamePrefix != null ? firstnamePrefix.getValue() : "");
+
+            /*
+             * GIVN Given name or earned name. Different given names are
+             * separated by a comma.
+             */
+            Property givenName = name.getProperty("GIVN");
+            firstNameTextField.setText(givenName != null ? givenName.getValue() : name.getFirstName());
+
+            /*
+             * NSFX Non-indexing name piece that appears after the given name
+             * and surname parts. Different name suffix parts are separated by a
+             * comma.
+             */
+            Property firstNameSuffix = name.getProperty("NSFX");
+            firstNameSuffixTextField.setText(firstNameSuffix != null ? firstNameSuffix.getValue() : "");
+
+            /*
+             * SPFX surname prefix or article used in a family name. Different
+             * surname articles are separated by a comma, for example in the
+             * name "de la Cruz", this value would be "de, la".
+             */
+            Property familyNamePrefix = name.getProperty("SPFX");
+            familyNamePrefixTextField.setText(familyNamePrefix != null ? familyNamePrefix.getValue() : "");
+
+
+            /*
+             * SURN Surname or family name. Different surnames are separated by
+             * a comma.
+             */
+            Property familyName = name.getProperty("SURN");
+            if (familyName != null) {
+                familyNameTextField.setText(familyName.getValue());
+            } else {
+                familyNameTextField.setText(name.getLastName());
+            }
+
+            /*
+             * NICK A descriptive or familiar name used in connection with one's
+             * proper name.
+             */
+            Property nickName = name.getProperty("NICK");
+            nicknameTextField.setText(nickName != null ? nickName.getValue() : "");
+
         } else {
             nameTypeComboBox.setSelectedIndex(1);
-        }
-
-        Property namePrefix = name.getProperty("NPFX");
-        firstNamePrefixTextField.setText(namePrefix != null ? namePrefix.getValue() : "");
-
-        Property givenName = name.getProperty("GIVN");
-        if (givenName != null) {
-            firstNameTextField.setText(givenName.getValue());
-        } else {
-            firstNameTextField.setText(name.getFirstName());
-        }
-
-        Property firstNameSuffix = name.getProperty("NSFX");
-        firstNameSuffixTextField.setText(firstNameSuffix != null ? firstNameSuffix.getValue() : "");
-
-        Property familyNamePrefix = name.getProperty("SPFX");
-        familyNamePrefixTextField.setText(familyNamePrefix != null ? familyNamePrefix.getValue() : "");
-
-        Property familyName = name.getProperty("SURN");
-        if (familyName != null) {
-            familyNameTextField.setText(familyName.getValue());
-        } else {
-            familyNameTextField.setText(name.getLastName());
         }
     }
 
     public void commit() {
+        final String version = root.getGedcom().getGrammar().getVersion();
+
+        logger.log(Level.INFO, "Commiting ...");
         try {
             root.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     if (name == null) {
+                        logger.log(Level.INFO, "Add property NAME");
                         name = (PropertyName) root.addProperty("NAME", "");
+                        if (version.equals("5.5.1")) {
+                            logger.log(Level.INFO, "Add property TYPE");
+
+                            name.addProperty("TYPE", nameTypeComboBox.getSelectedItem().toString());
+                        }
                     }
-                    name.setName(
-                            firstNamePrefixTextField.getText().trim(),
-                            firstNameTextField.getText().trim(),
-                            firstNameSuffixTextField.getText().trim(),
-                            familyNameTextField.getText().trim(),
-                            familyNamePrefixTextField.getText().trim(),
-                            false);
+
+                    if (version.equals("5.5.1") && nameTypeModified == true) {
+
+                        Property nameType = name.getProperty("TYPE");
+                        if (nameType == null) {
+                            logger.log(Level.INFO, "Create property Name");
+
+                            name.addProperty("TYPE", nameTypeComboBox.getSelectedItem().toString());
+                        } else {
+                            logger.log(Level.INFO, "Update property TYPE");
+                            nameType.setValue(nameTypeComboBox.getSelectedItem().toString());
+                        }
+                    }
+
+                    /*
+                     * NPFX Non indexing name piece that appears preceding the
+                     * given name and surname parts. Different name prefix parts
+                     * are separated by a comma.
+                     */
+                    if (firstNamePrefixModified == true) {
+                        Property firstnamePrefix = name.getProperty("NPFX");
+                        if (firstnamePrefix == null) {
+                            logger.log(Level.INFO, "Add property NPFX");
+
+                            name.addProperty("NPFX", firstNamePrefixTextField.getText().trim());
+                        } else {
+                            logger.log(Level.INFO, "Update property NPFX");
+                            firstnamePrefix.setValue(firstNamePrefixTextField.getText().trim());
+                        }
+                    }
+
+                    /*
+                     * GIVN Given name or earned name. Different given names are
+                     * separated by a comma.
+                     */
+                    if (firstNameModified == true) {
+                        Property givenName = name.getProperty("GIVN");
+                        if (givenName == null) {
+                            logger.log(Level.INFO, "Add property GIVN");
+
+                            name.addProperty("GIVN", firstNameTextField.getText().trim());
+                        } else {
+                            logger.log(Level.INFO, "Update property GIVN");
+                            givenName.setValue(firstNameTextField.getText().trim());
+                        }
+                    }
+
+                    if (firstNameSuffixModified == true) {
+                        Property firstNameSuffix = name.getProperty("NSFX");
+                        if (firstNameSuffix == null) {
+                            logger.log(Level.INFO, "Add property NSFX");
+                            name.addProperty("NSFX", firstNameSuffixTextField.getText().trim());
+                        } else {
+                            logger.log(Level.INFO, "Update property NSFX");
+                            firstNameSuffix.setValue(firstNameSuffixTextField.getText().trim());
+                        }
+                    }
+
+                    /*
+                     * SPFX surname prefix or article used in a family name.
+                     * Different surname articles are separated by a comma, for
+                     * example in the name "de la Cruz", this value would be
+                     * "de, la".
+                     */
+                    if (familyNamePrefixModified == true) {
+                        Property familyNamePrefix = name.getProperty("SPFX");
+                        if (familyNamePrefix == null) {
+                            logger.log(Level.INFO, "Add property SPFX");
+                            name.addProperty("SPFX", familyNamePrefixTextField.getText().trim());
+                        } else {
+                            logger.log(Level.INFO, "Update property SPFX");
+                            familyNamePrefix.setValue(familyNamePrefixTextField.getText().trim());
+                        }
+                    }
+
+                    /*
+                     * SURN Surname or family name. Different surnames are
+                     * separated by a comma.
+                     */
+                    if (familyNameModified == true) {
+                        Property familyName = name.getProperty("SURN");
+                        if (familyName == null) {
+                            logger.log(Level.INFO, "Add property SURN");
+                            name.addProperty("SURN", familyNameTextField.getText().trim());
+                        } else {
+                            logger.log(Level.INFO, "Update property SURN");
+                            familyName.setValue(familyNameTextField.getText().trim());
+                        }
+                    }
+
+                    if (nicknameModified == true) {
+                        Property nickname = name.getProperty("NICK");
+                        if (nickname == null) {
+                            logger.log(Level.INFO, "Update property NICK");
+                            name.addProperty("NICK", nicknameTextField.getText().trim());
+                        } else {
+                            logger.log(Level.INFO, "Update property NICK");
+                            nickname.setValue(nicknameTextField.getText().trim());
+                        }
+                    }
                 }
             }); // end of doUnitOfWork
         } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+            logger.log(Level.SEVERE, ex.getMessage());
         }
+
+        logger.log(Level.INFO, "... finished");
+    }
+
+    PropertyName get() {
+        return name;
     }
 }

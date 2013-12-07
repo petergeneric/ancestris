@@ -2,7 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NamesTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.Entity;
+import genj.gedcom.Indi;
 import genj.gedcom.PropertyName;
 import java.util.List;
 import org.openide.DialogDescriptor;
@@ -15,7 +15,7 @@ import org.openide.util.NbBundle;
 public class NamesListPanel extends javax.swing.JPanel {
 
     private NamesTableModel namesTableModel = new NamesTableModel();
-    private Entity rootEntity;
+    private Indi root;
 
     /**
      * Creates new form NamesListPanel
@@ -43,6 +43,11 @@ public class NamesListPanel extends javax.swing.JPanel {
         namesTable.setModel(namesTableModel);
         namesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         namesTable.setShowVerticalLines(false);
+        namesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                namesTableMouseClicked(evt);
+            }
+        });
         namesScrollPane.setViewportView(namesTable);
 
         namesToolBar.setFloatable(false);
@@ -102,15 +107,16 @@ public class NamesListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNameButtonActionPerformed
-        NameEditorPanel nameEditorPanel = new NameEditorPanel();
-        nameEditorPanel.set(new PropertyName());
+        NameSimpleEditorPanel nameEditorPanel = new NameSimpleEditorPanel();
+        nameEditorPanel.set(root, null);
         ADialog nameEditorDialog = new ADialog(
                 NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
                 nameEditorPanel);
         nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
 
         if (nameEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            namesTableModel.add(nameEditorPanel.getNameToEdit());
+            nameEditorPanel.commit();
+            namesTableModel.add(nameEditorPanel.get());
         }
     }//GEN-LAST:event_addNameButtonActionPerformed
 
@@ -118,14 +124,15 @@ public class NamesListPanel extends javax.swing.JPanel {
         int selectedRow = namesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
-            NameEditorPanel nameEditorPanel = new NameEditorPanel();
-            nameEditorPanel.set(namesTableModel.getValueAt(rowIndex));
+            NameSimpleEditorPanel nameEditorPanel = new NameSimpleEditorPanel();
+            nameEditorPanel.set(root, namesTableModel.getValueAt(rowIndex));
             ADialog nameEditorDialog = new ADialog(
                     NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
                     nameEditorPanel);
             nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
 
             if (nameEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                nameEditorPanel.commit();
             }
         }
     }//GEN-LAST:event_editNameButtonActionPerformed
@@ -133,6 +140,23 @@ public class NamesListPanel extends javax.swing.JPanel {
     private void deleteNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNameButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteNameButtonActionPerformed
+
+    private void namesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_namesTableMouseClicked
+        int selectedRow = namesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
+            NameSimpleEditorPanel nameEditorPanel = new NameSimpleEditorPanel();
+            nameEditorPanel.set(root, namesTableModel.getValueAt(rowIndex));
+            ADialog nameEditorDialog = new ADialog(
+                    NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
+                    nameEditorPanel);
+            nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
+
+            if (nameEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                nameEditorPanel.commit();
+            }
+        }
+    }//GEN-LAST:event_namesTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNameButton;
     private javax.swing.JButton deleteNameButton;
@@ -142,8 +166,8 @@ public class NamesListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar namesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setNamesList(Entity rootEntity, List<PropertyName> namesList) {
-        this.rootEntity = rootEntity;
+    public void setNamesList(Indi root, List<PropertyName> namesList) {
+        this.root = root;
         namesTableModel.update(namesList);
     }
 

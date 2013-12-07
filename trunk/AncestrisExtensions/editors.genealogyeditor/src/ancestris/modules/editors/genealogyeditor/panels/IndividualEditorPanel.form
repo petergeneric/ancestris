@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.6" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <Properties>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[758, 380]"/>
+    </Property>
+    <Property name="name" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEditorPanel.name" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+    </Property>
+  </Properties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -45,17 +53,22 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
+                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                   <Component id="jXImagePanel1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="simpleNameEditorPanel" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                           <Component id="sexBeanPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="individualIDLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="individualIDTextField" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Component id="simpleNameEditorPanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -64,24 +77,17 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                  <Component id="individualIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="individualIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="sexBeanPanel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="simpleNameEditorPanel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="individualIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="individualIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="jXImagePanel1" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="sexBeanPanel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="simpleNameEditorPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
+              <Component id="jXImagePanel1" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -118,12 +124,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="135" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="144" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="159" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -154,13 +160,13 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventsListPanel" alignment="0" pref="815" max="32767" attributes="0"/>
+                  <Component id="eventsListPanel" alignment="0" pref="726" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="eventsListPanel" pref="211" max="32767" attributes="0"/>
+                      <Component id="eventsListPanel" pref="148" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -188,14 +194,14 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourcesListPanel" alignment="0" pref="815" max="32767" attributes="0"/>
+                  <Component id="sourcesListPanel" alignment="0" pref="726" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="sourcesListPanel" pref="211" max="32767" attributes="0"/>
+                      <Component id="sourcesListPanel" pref="148" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -222,14 +228,14 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="namesListPanel" alignment="0" pref="815" max="32767" attributes="0"/>
+                  <Component id="namesListPanel" alignment="0" pref="726" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="namesListPanel" pref="211" max="32767" attributes="0"/>
+                      <Component id="namesListPanel" pref="148" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -256,14 +262,14 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="notesListPanel" alignment="0" pref="815" max="32767" attributes="0"/>
+                  <Component id="notesListPanel" alignment="0" pref="726" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="notesListPanel" pref="211" max="32767" attributes="0"/>
+                      <Component id="notesListPanel" pref="148" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -290,14 +296,14 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="associationsListPanel" alignment="0" pref="815" max="32767" attributes="0"/>
+                  <Component id="associationsListPanel" alignment="0" pref="726" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="associationsListPanel" pref="211" max="32767" attributes="0"/>
+                      <Component id="associationsListPanel" pref="148" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -322,14 +328,14 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectsListPanel" alignment="0" pref="815" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectsListPanel" alignment="0" pref="726" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="multimediaObjectsListPanel" pref="211" max="32767" attributes="0"/>
+                      <Component id="multimediaObjectsListPanel" pref="148" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

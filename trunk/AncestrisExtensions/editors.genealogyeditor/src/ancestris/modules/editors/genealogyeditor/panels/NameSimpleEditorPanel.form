@@ -16,44 +16,54 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="272" max="-2" attributes="0"/>
-              <Component id="nameTypeLabel" min="-2" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="272" max="-2" attributes="0"/>
+                      <Component id="nameTypeLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="nameTypeComboBox" pref="195" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="familyNameLabel" min="-2" pref="75" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                              <Component id="familyNamePrefixTextField" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="familyNameTextField" pref="263" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="firstNameSuffixTextField" min="-2" pref="88" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="nicknameLabel" min="-2" pref="67" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="nicknameTextField" min="-2" pref="236" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="firstnameLabel" min="-2" pref="67" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="firstNamePrefixTextField" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="firstNameTextField" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="nameTypeComboBox" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="nicknameLabel" min="-2" pref="67" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="nicknamePrefixTextField" min="-2" pref="236" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="firstnameLabel" min="-2" pref="67" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="firstNamePrefixTextField" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-              <Component id="firstNameTextField" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="familyNameLabel" min="-2" pref="75" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-              <Component id="familyNamePrefixTextField" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="familyNameTextField" pref="287" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="firstNameSuffixTextField" min="-2" pref="88" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nameTypeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="nameTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="firstNamePrefixTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="firstNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -61,7 +71,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="nicknamePrefixTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nicknameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="nicknameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -71,6 +81,7 @@
                   <Component id="familyNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="firstNameSuffixTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -90,6 +101,9 @@
           <Connection code="nameTypeComboBoxModelModel" type="code"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nameTypeComboBoxActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
@@ -112,6 +126,9 @@
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.firstNamePrefixTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="firstNamePrefixTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                firstNamePrefixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                firstNamePrefixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                firstNamePrefixModified = true;&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="firstNameTextField">
       <Properties>
@@ -122,6 +139,9 @@
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.firstNameTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="firstNameTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                firstNameModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                firstNameModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                firstNameModified = true;&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="familyNameLabel">
       <Properties>
@@ -140,6 +160,9 @@
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.familyNamePrefixTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="familyNamePrefixTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                familyNamePrefixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                familyNamePrefixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                familyNamePrefixModified = true;&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="familyNameTextField">
       <Properties>
@@ -147,7 +170,13 @@
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.familyNameTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.familyNameTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+        </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="familyNameTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                familyNameModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                familyNameModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                familyNameModified = true;&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="firstNameSuffixTextField">
       <Properties>
@@ -159,6 +188,9 @@
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.firstNameSuffixTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="firstNameSuffixTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                firstNameSuffixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                firstNameSuffixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                firstNameSuffixModified = true;&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="nicknameLabel">
       <Properties>
@@ -167,17 +199,20 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="nicknamePrefixTextField">
+    <Component class="javax.swing.JTextField" name="nicknameTextField">
       <Properties>
         <Property name="columns" type="int" value="8"/>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.nicknamePrefixTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.nicknameTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.nicknamePrefixTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameSimpleEditorPanel.nicknameTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="nicknameTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                nicknameModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                nicknameModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                nicknameModified = true;&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
