@@ -10,6 +10,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
@@ -22,7 +23,13 @@ displayName = "#CTL_IndividualEditorAction")
     @ActionReference(path = "Toolbars/GenealogyEditor", position = 100)
 })
 @Messages("CTL_IndividualEditorAction=Edit current individual")
-public final class GenealogyEditorAction implements ActionListener {
+public final class GenealogyEditorEditAction implements ActionListener {
+
+    private final DataObject context;
+
+    public GenealogyEditorEditAction(DataObject context) {
+        this.context = context;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
