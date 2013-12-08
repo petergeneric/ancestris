@@ -2,10 +2,10 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.IndividualsTableModel;
 import ancestris.util.swing.DialogManager;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
+import genj.gedcom.*;
 import java.util.List;
 import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -16,6 +16,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
 
     private IndividualsTableModel mIndividualsTableModel = new IndividualsTableModel();
     private Property mRoot;
+    Indi mIndividual;
 
     /**
      * Creates new form IndividualsListPanel
@@ -101,18 +102,31 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIndividualButtonActionPerformed
-        Indi individual = new Indi();
-//        individual.setName("", family.getHusband().getName());
-        IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-        individualEditorPanel.set(individual);
+        Gedcom gedcom = mRoot.getGedcom();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
 
-        DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
-                individualEditorPanel);
-        individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mIndividual = (Indi) gedcom.createEntity(Gedcom.INDI);
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+            individualEditorPanel.set(mIndividual);
 
-        if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            mIndividualsTableModel.add(individualEditorPanel.getIndividual());
+            DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                    individualEditorPanel);
+            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+
+            if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                mIndividualsTableModel.add(individualEditorPanel.commit());
+            } else {
+                gedcom.undoUnitOfWork(false);
+            }
         }
     }//GEN-LAST:event_addIndividualButtonActionPerformed
 
@@ -128,6 +142,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                individualEditorPanel.commit();
             }
         }
     }//GEN-LAST:event_editIndividualButtonActionPerformed

@@ -31,50 +31,50 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         sourcesToolBar = new javax.swing.JToolBar();
-        addSourceButton = new javax.swing.JButton();
-        editSourceButton = new javax.swing.JButton();
-        deleteSourceButton = new javax.swing.JButton();
+        addRepositoryButton = new javax.swing.JButton();
+        editRepositoryButton = new javax.swing.JButton();
+        deleteRepositoryButton = new javax.swing.JButton();
         sourcesScrollPane = new javax.swing.JScrollPane();
         sourcesTable = new javax.swing.JTable();
 
         sourcesToolBar.setFloatable(false);
         sourcesToolBar.setRollover(true);
 
-        addSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.addSourceButton.toolTipText"), new Object[] {})); // NOI18N
-        addSourceButton.setFocusable(false);
-        addSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addSourceButton.addActionListener(new java.awt.event.ActionListener() {
+        addRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.addRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
+        addRepositoryButton.setFocusable(false);
+        addRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addRepositoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSourceButtonActionPerformed(evt);
+                addRepositoryButtonActionPerformed(evt);
             }
         });
-        sourcesToolBar.add(addSourceButton);
+        sourcesToolBar.add(addRepositoryButton);
 
-        editSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
-        editSourceButton.setFocusable(false);
-        editSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editSourceButton.addActionListener(new java.awt.event.ActionListener() {
+        editRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.editRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
+        editRepositoryButton.setFocusable(false);
+        editRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editRepositoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editSourceButtonActionPerformed(evt);
+                editRepositoryButtonActionPerformed(evt);
             }
         });
-        sourcesToolBar.add(editSourceButton);
+        sourcesToolBar.add(editRepositoryButton);
 
-        deleteSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.deleteSourceButton.toolTipText"), new Object[] {})); // NOI18N
-        deleteSourceButton.setFocusable(false);
-        deleteSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteSourceButton.addActionListener(new java.awt.event.ActionListener() {
+        deleteRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.deleteRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteRepositoryButton.setFocusable(false);
+        deleteRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteRepositoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteSourceButtonActionPerformed(evt);
+                deleteRepositoryButtonActionPerformed(evt);
             }
         });
-        sourcesToolBar.add(deleteSourceButton);
+        sourcesToolBar.add(deleteRepositoryButton);
 
         sourcesTable.setModel(repositoriesTableModel);
         sourcesTable.setShowHorizontalLines(false);
@@ -103,20 +103,20 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
+    private void addRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRepositoryButtonActionPerformed
 
-    }//GEN-LAST:event_addSourceButtonActionPerformed
+    }//GEN-LAST:event_addRepositoryButtonActionPerformed
 
-    private void editSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceButtonActionPerformed
+    private void editRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRepositoryButtonActionPerformed
         int selectedRow = sourcesTable.getSelectedRow();
         if (selectedRow != -1) {
 
         }
-    }//GEN-LAST:event_editSourceButtonActionPerformed
+    }//GEN-LAST:event_editRepositoryButtonActionPerformed
 
-    private void deleteSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceButtonActionPerformed
+    private void deleteRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRepositoryButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_deleteSourceButtonActionPerformed
+    }//GEN-LAST:event_deleteRepositoryButtonActionPerformed
 
     private void sourcesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourcesTableMouseClicked
         if (evt.getClickCount() >= 2) {
@@ -124,9 +124,9 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_sourcesTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addSourceButton;
-    private javax.swing.JButton deleteSourceButton;
-    private javax.swing.JButton editSourceButton;
+    private javax.swing.JButton addRepositoryButton;
+    private javax.swing.JButton deleteRepositoryButton;
+    private javax.swing.JButton editRepositoryButton;
     private javax.swing.JScrollPane sourcesScrollPane;
     private javax.swing.JTable sourcesTable;
     private javax.swing.JToolBar sourcesToolBar;

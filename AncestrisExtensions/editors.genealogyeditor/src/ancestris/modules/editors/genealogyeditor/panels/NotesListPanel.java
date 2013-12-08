@@ -1,12 +1,14 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
+import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Note;
-import genj.gedcom.Property;
+import genj.gedcom.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -15,8 +17,9 @@ import org.openide.util.NbBundle;
  */
 public class NotesListPanel extends javax.swing.JPanel {
 
-    private Property root;
-    private NotesTableModel notesTableModel = new NotesTableModel();
+    private Property mRoot;
+    private NotesTableModel mNotesTableModel = new NotesTableModel();
+    private Note mNote;
 
     /**
      * Creates new form NotesListPanel
@@ -38,6 +41,7 @@ public class NotesListPanel extends javax.swing.JPanel {
         addNoteButton = new javax.swing.JButton();
         editNoteButton = new javax.swing.JButton();
         deleteNoteButton = new javax.swing.JButton();
+        linkToNoteButton = new javax.swing.JButton();
         notesScrollPane = new javax.swing.JScrollPane();
         notesTable = new javax.swing.JTable();
 
@@ -80,7 +84,19 @@ public class NotesListPanel extends javax.swing.JPanel {
         });
         notesToolBar.add(deleteNoteButton);
 
-        notesTable.setModel(notesTableModel);
+        linkToNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NotesListPanel.linkToNoteButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToNoteButton.setFocusable(false);
+        linkToNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToNoteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkToNoteButtonActionPerformed(evt);
+            }
+        });
+        notesToolBar.add(linkToNoteButton);
+
+        notesTable.setModel(mNotesTableModel);
         notesTable.setShowHorizontalLines(false);
         notesTable.setShowVerticalLines(false);
         notesTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -108,15 +124,29 @@ public class NotesListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteButtonActionPerformed
-        NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-        noteEditorPanel.set(new Note(Gedcom.NOTE, ""));
-        ADialog noteEditorDialog = new ADialog(
-                NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
-                noteEditorPanel);
-        noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
+        Gedcom gedcom = mRoot.getGedcom();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
 
-        if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            notesTableModel.add(noteEditorPanel.get());
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mNote = (Note) gedcom.createEntity(Gedcom.NOTE);
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
+            noteEditorPanel.set(mNote);
+            ADialog noteEditorDialog = new ADialog(
+                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                    noteEditorPanel);
+            noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
+            if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                mNotesTableModel.add(noteEditorPanel.commit());
+            } else {
+                gedcom.undoUnitOfWork(false);
+            }
         }
     }//GEN-LAST:event_addNoteButtonActionPerformed
 
@@ -125,7 +155,7 @@ public class NotesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-            noteEditorPanel.set(notesTableModel.getValueAt(rowIndex));
+            noteEditorPanel.set(mNotesTableModel.getValueAt(rowIndex));
 
             ADialog noteEditorDialog = new ADialog(
                     NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
@@ -133,6 +163,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                noteEditorPanel.commit();
             }
         }
     }//GEN-LAST:event_editNoteButtonActionPerformed
@@ -147,7 +178,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             if (selectedRow != -1) {
                 int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-                noteEditorPanel.set(notesTableModel.getValueAt(rowIndex));
+                noteEditorPanel.set(mNotesTableModel.getValueAt(rowIndex));
 
                 ADialog noteEditorDialog = new ADialog(
                         NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
@@ -155,24 +186,51 @@ public class NotesListPanel extends javax.swing.JPanel {
                 noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
                 if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    noteEditorPanel.commit();
                 }
             }
         }
     }//GEN-LAST:event_notesTableMouseClicked
+
+    private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
+        List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
+
+        NotesListPanel notesListPanel = new NotesListPanel();
+        notesListPanel.setNotesList(mRoot, notesList);
+        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(IndividualsListPanel.class, "NoteEditorPanel.title"),
+                notesListPanel);
+        individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
+
+        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
+            mNotesTableModel.add(notesListPanel.getSelectedNote());
+        }
+    }//GEN-LAST:event_linkToNoteButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNoteButton;
     private javax.swing.JButton deleteNoteButton;
     private javax.swing.JButton editNoteButton;
+    private javax.swing.JButton linkToNoteButton;
     private javax.swing.JScrollPane notesScrollPane;
     private javax.swing.JTable notesTable;
     private javax.swing.JToolBar notesToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void setNotesList(Property root, List<Note> notesList) {
-        this.root = root;
-        notesTableModel.update(notesList);
+        this.mRoot = root;
+        mNotesTableModel.update(notesList);
     }
 
     public void commit() {
+    }
+
+    private Note getSelectedNote() {
+        int selectedRow = notesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
+            return mNotesTableModel.getValueAt(rowIndex);
+        } else {
+            return null;
+        }
     }
 }
