@@ -14,8 +14,8 @@ import org.openide.util.NbBundle;
  */
 public class IndividualsListPanel extends javax.swing.JPanel {
 
-    private IndividualsTableModel individualsTableModel = new IndividualsTableModel();
-    private Property root;
+    private IndividualsTableModel mIndividualsTableModel = new IndividualsTableModel();
+    private Property mRoot;
 
     /**
      * Creates new form IndividualsListPanel
@@ -33,50 +33,50 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        eventsToolBar = new javax.swing.JToolBar();
-        addChildButton = new javax.swing.JButton();
-        editChildButton = new javax.swing.JButton();
-        deleteChildButton = new javax.swing.JButton();
+        IndividualsToolBar = new javax.swing.JToolBar();
+        addIndividualButton = new javax.swing.JButton();
+        editIndividualButton = new javax.swing.JButton();
+        deleteIndividualButton = new javax.swing.JButton();
         childrensScrollPane = new javax.swing.JScrollPane();
         individualsTable = new javax.swing.JTable();
 
-        eventsToolBar.setFloatable(false);
-        eventsToolBar.setRollover(true);
+        IndividualsToolBar.setFloatable(false);
+        IndividualsToolBar.setRollover(true);
 
-        addChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addChildButton.setFocusable(false);
-        addChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addChildButton.addActionListener(new java.awt.event.ActionListener() {
+        addIndividualButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addIndividualButton.setFocusable(false);
+        addIndividualButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addIndividualButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addIndividualButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addChildButtonActionPerformed(evt);
+                addIndividualButtonActionPerformed(evt);
             }
         });
-        eventsToolBar.add(addChildButton);
+        IndividualsToolBar.add(addIndividualButton);
 
-        editChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editChildButton.setFocusable(false);
-        editChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editChildButton.addActionListener(new java.awt.event.ActionListener() {
+        editIndividualButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editIndividualButton.setFocusable(false);
+        editIndividualButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editIndividualButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editIndividualButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editChildButtonActionPerformed(evt);
+                editIndividualButtonActionPerformed(evt);
             }
         });
-        eventsToolBar.add(editChildButton);
+        IndividualsToolBar.add(editIndividualButton);
 
-        deleteChildButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteChildButton.setFocusable(false);
-        deleteChildButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteChildButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteChildButton.addActionListener(new java.awt.event.ActionListener() {
+        deleteIndividualButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteIndividualButton.setFocusable(false);
+        deleteIndividualButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteIndividualButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteIndividualButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteChildButtonActionPerformed(evt);
+                deleteIndividualButtonActionPerformed(evt);
             }
         });
-        eventsToolBar.add(deleteChildButton);
+        IndividualsToolBar.add(deleteIndividualButton);
 
-        individualsTable.setModel(individualsTableModel);
+        individualsTable.setModel(mIndividualsTableModel);
         individualsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 individualsTableMouseClicked(evt);
@@ -88,19 +88,19 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
+            .addComponent(IndividualsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
             .addComponent(childrensScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(eventsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(IndividualsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(childrensScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildButtonActionPerformed
+    private void addIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIndividualButtonActionPerformed
         Indi individual = new Indi();
 //        individual.setName("", family.getHusband().getName());
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
@@ -112,15 +112,15 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            individualsTableModel.add(individualEditorPanel.getIndividual());
+            mIndividualsTableModel.add(individualEditorPanel.getIndividual());
         }
-    }//GEN-LAST:event_addChildButtonActionPerformed
+    }//GEN-LAST:event_addIndividualButtonActionPerformed
 
-    private void editChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editChildButtonActionPerformed
+    private void editIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editIndividualButtonActionPerformed
         int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
         if (rowIndex != -1) {
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-            individualEditorPanel.set(individualsTableModel.getValueAt(rowIndex));
+            individualEditorPanel.set(mIndividualsTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
@@ -130,38 +130,50 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             }
         }
-    }//GEN-LAST:event_editChildButtonActionPerformed
+    }//GEN-LAST:event_editIndividualButtonActionPerformed
 
-    private void deleteChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteChildButtonActionPerformed
-   }//GEN-LAST:event_deleteChildButtonActionPerformed
+    private void deleteIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteIndividualButtonActionPerformed
+   }//GEN-LAST:event_deleteIndividualButtonActionPerformed
 
     private void individualsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_individualsTableMouseClicked
-        int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
-        if (rowIndex != -1) {
-            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-            individualEditorPanel.set(individualsTableModel.getValueAt(rowIndex));
+        if (evt.getClickCount() >= 2) {
+            int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
+            if (rowIndex != -1) {
+                IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                individualEditorPanel.set(mIndividualsTableModel.getValueAt(rowIndex));
 
-            DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
-                    individualEditorPanel);
-            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                        individualEditorPanel);
+                individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
-            if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                }
             }
         }
     }//GEN-LAST:event_individualsTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addChildButton;
+    private javax.swing.JToolBar IndividualsToolBar;
+    private javax.swing.JButton addIndividualButton;
     private javax.swing.JScrollPane childrensScrollPane;
-    private javax.swing.JButton deleteChildButton;
-    private javax.swing.JButton editChildButton;
-    private javax.swing.JToolBar eventsToolBar;
+    private javax.swing.JButton deleteIndividualButton;
+    private javax.swing.JButton editIndividualButton;
     private javax.swing.JTable individualsTable;
     // End of variables declaration//GEN-END:variables
 
     public void setIndividualsList(Property root, List<Indi> individualsList) {
-        this.root = root;
-        individualsTableModel.update(individualsList);
+        this.mRoot = root;
+        mIndividualsTableModel.update(individualsList);
+    }
+
+    public Indi getSelectedIndividual() {
+        int selectedRow = individualsTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = individualsTable.convertRowIndexToModel(selectedRow);
+            return mIndividualsTableModel.getValueAt(rowIndex);
+        } else {
+            return null;
+        }
     }
 
     public void commit() {

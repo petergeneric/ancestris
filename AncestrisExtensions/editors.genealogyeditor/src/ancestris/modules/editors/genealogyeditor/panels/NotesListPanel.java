@@ -142,18 +142,20 @@ public class NotesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
 
     private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
-        int selectedRow = notesTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
-            NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-            noteEditorPanel.set(notesTableModel.getValueAt(rowIndex));
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = notesTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
+                NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
+                noteEditorPanel.set(notesTableModel.getValueAt(rowIndex));
 
-            ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
-                    noteEditorPanel);
-            noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
+                ADialog noteEditorDialog = new ADialog(
+                        NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                        noteEditorPanel);
+                noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
-            if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                }
             }
         }
     }//GEN-LAST:event_notesTableMouseClicked

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public final class IndividualEditorPanel extends javax.swing.JPanel {
 
-    private Indi individual;
+    private Indi mIndividual;
 
     /**
      * Creates new form IndividualEditorPanel
@@ -276,14 +276,14 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
      * @return the individual
      */
     public Indi getIndividual() {
-        return individual;
+        return mIndividual;
     }
 
     /**
      * @param individual the individual to set
      */
     public void set(Indi individual) {
-        this.individual = individual;
+        this.mIndividual = individual;
 
         individualIDTextField.setText(individual.getId());
         List<PropertyName> namesList = individual.getProperties(PropertyName.class);
@@ -344,7 +344,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         }
     }
 
-    public void commit() {
+    public Indi commit() {
         nameEditorPanel.commit();
         imageBean.commit();
         sexBeanPanel.commit();
@@ -354,5 +354,6 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         notesListPanel.commit();
         associationsListPanel.commit();
         multimediaObjectsListPanel.commit();
+        return mIndividual;
     }
 }

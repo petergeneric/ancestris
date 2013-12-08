@@ -2,9 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.EventsTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.GedcomException;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyEvent;
+import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.DialogDescriptor;
@@ -17,11 +15,12 @@ import org.openide.util.NbBundle;
  */
 public class EventsListPanel extends javax.swing.JPanel {
 
-    private Property root;
-    private EventsTableModel eventsTableModel = new EventsTableModel();
-    private ArrayList<PropertyEvent> editedEvents = new ArrayList<PropertyEvent>();
-    private ArrayList<PropertyEvent> addedEvents = new ArrayList<PropertyEvent>();
-    private ArrayList<PropertyEvent> deletedEvents = new ArrayList<PropertyEvent>();
+    private Property mRoot;
+    private EventsTableModel mEventsTableModel = new EventsTableModel();
+    private ArrayList<PropertyEvent> mEditedEvents = new ArrayList<PropertyEvent>();
+    private ArrayList<PropertyEvent> mAddedEvents = new ArrayList<PropertyEvent>();
+    private ArrayList<PropertyEvent> mDeletedEvents = new ArrayList<PropertyEvent>();
+    private PropertyEvent mEvent = null;
 
     /**
      * Creates new form EventsListPanel
@@ -85,7 +84,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         });
         eventsToolBar.add(deleteEventButton);
 
-        eventsTable.setModel(eventsTableModel);
+        eventsTable.setModel(mEventsTableModel);
         eventsTable.setGridColor(java.awt.Color.lightGray);
         eventsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         eventsTable.setShowVerticalLines(false);
@@ -113,16 +112,35 @@ public class EventsListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEventButtonActionPerformed
-        EventEditorPanel eventEditorPanel = new EventEditorPanel();
-        eventEditorPanel.set(root, null);
+/*
+        try {
+            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-        ADialog eventEditorDialog = new ADialog(
-                NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
-                eventEditorPanel);
-        eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            eventsTableModel.add(eventEditorPanel.commit());
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mEvent = (PropertyEvent) mRoot.addProperty("", "");
+                    mEvent.addProperty("DATE", "");
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            EventEditorPanel eventEditorPanel = new EventEditorPanel();
+
+            eventEditorPanel.set(mRoot, mEvent);
+
+            ADialog eventEditorDialog = new ADialog(
+                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
+                    eventEditorPanel);
+
+            eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
+            if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                mEventsTableModel.add(eventEditorPanel.commit());
+            } else {
+                mRoot.getGedcom().undoUnitOfWork(false);
+            }
         }
+*/
     }//GEN-LAST:event_addEventButtonActionPerformed
 
     private void editEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEventButtonActionPerformed
@@ -130,7 +148,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
             EventEditorPanel eventEditorPanel = new EventEditorPanel();
-            eventEditorPanel.set(root, eventsTableModel.getValueAt(rowIndex));
+            eventEditorPanel.set(mRoot, mEventsTableModel.getValueAt(rowIndex));
 
             ADialog eventEditorDialog = new ADialog(
                     NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
@@ -147,28 +165,29 @@ public class EventsListPanel extends javax.swing.JPanel {
         int selectedRow = eventsTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
-            deletedEvents.add(eventsTableModel.remove(rowIndex));
+            mDeletedEvents.add(mEventsTableModel.remove(rowIndex));
         }
     }//GEN-LAST:event_deleteEventButtonActionPerformed
 
     private void eventsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventsTableMouseClicked
-        int selectedRow = eventsTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
-            EventEditorPanel eventEditorPanel = new EventEditorPanel();
-            eventEditorPanel.set(root, eventsTableModel.getValueAt(rowIndex));
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = eventsTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+                EventEditorPanel eventEditorPanel = new EventEditorPanel();
+                eventEditorPanel.set(mRoot, mEventsTableModel.getValueAt(rowIndex));
 
-            ADialog eventEditorDialog = new ADialog(
-                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
-                    eventEditorPanel);
-            eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
+                ADialog eventEditorDialog = new ADialog(
+                        NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
+                        eventEditorPanel);
+                eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
-            if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                eventEditorPanel.commit();
+                if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    eventEditorPanel.commit();
+                }
             }
         }
     }//GEN-LAST:event_eventsTableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addEventButton;
     private javax.swing.JButton deleteEventButton;
@@ -179,24 +198,34 @@ public class EventsListPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void setEventsList(Property root, List<PropertyEvent> eventsList) {
-        this.root = root;
-        eventsTableModel.update(eventsList);
+        this.mRoot = root;
+        mEventsTableModel.update(eventsList);
+    }
+
+    public PropertyEvent getSelectedEvent() {
+        int selectedRow = eventsTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+            return mEventsTableModel.getValueAt(rowIndex);
+        } else {
+            return null;
+        }
     }
 
     public void commit() {
         // Edited Events
 
         // Added Events
-        for (PropertyEvent event : addedEvents) {
+        for (PropertyEvent event : mAddedEvents) {
             try {
-                root.copyProperties(event, true);
+                mRoot.copyProperties(event, true);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
 
         // Removed Events
-        for (PropertyEvent event : deletedEvents) {
+        for (PropertyEvent event : mDeletedEvents) {
             Property parent = event.getParent();
             parent.delProperty(event);
         }
