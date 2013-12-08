@@ -192,7 +192,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         List<Indi> individualsList = new ArrayList<Indi>(mRoot.getGedcom().getIndis());
         individualsListPanel.setIndividualsList(mRoot, individualsList);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualsListPanel.class, "IndividualEditorPanel.title"),
+                NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.child"),
                 individualsListPanel);
         individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
 

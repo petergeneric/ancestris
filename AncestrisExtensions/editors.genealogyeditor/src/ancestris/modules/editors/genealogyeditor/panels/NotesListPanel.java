@@ -200,9 +200,9 @@ public class NotesListPanel extends javax.swing.JPanel {
         NotesListPanel notesListPanel = new NotesListPanel();
         notesListPanel.setNotesList(mRoot, notesList);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualsListPanel.class, "NoteEditorPanel.title"),
+                NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
                 notesListPanel);
-        individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
+        individualsListDialog.setDialogId(NoteEditorPanel.class.getName());
 
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
             Note selectedNote = notesListPanel.getSelectedNote();
