@@ -15,8 +15,10 @@ public class FamiliesTableModel extends AbstractTableModel {
     private List<Fam> familiesList = new ArrayList<Fam>();
     private String[] columnsName = {
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.ID.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.Father.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.Mother.title"),};
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.husband.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.wife.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.weddingDate.title")
+    };
 
     public FamiliesTableModel() {
     }
@@ -41,6 +43,8 @@ public class FamiliesTableModel extends AbstractTableModel {
                 return family.getHusband() != null ? family.getHusband().getName() : "";
             } else if (column == 2) {
                 return family.getWife() != null ? family.getWife().getName() : "";
+            }  else if (column == 3) {
+                return family.getMarriageDate() != null ? family.getMarriageDate().toString() : "";
             } else {
                 return "";
             }
