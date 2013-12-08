@@ -7,6 +7,8 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -29,6 +31,8 @@ public class EventsListPanel extends javax.swing.JPanel {
      */
     public EventsListPanel() {
         initComponents();
+        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(eventsTable.getModel());
+        eventsTable.setRowSorter(sorter);
     }
 
     /**
@@ -115,35 +119,26 @@ public class EventsListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEventButtonActionPerformed
-/*
-        try {
-            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    mEvent = (PropertyEvent) mRoot.addProperty("", "");
-                    mEvent.addProperty("DATE", "");
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
-            EventEditorPanel eventEditorPanel = new EventEditorPanel();
-
-            eventEditorPanel.set(mRoot, mEvent);
-
-            ADialog eventEditorDialog = new ADialog(
-                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
-                    eventEditorPanel);
-
-            eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
-            if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mEventsTableModel.add(eventEditorPanel.commit());
-            } else {
-                mRoot.getGedcom().undoUnitOfWork(false);
-            }
-        }
-*/
+        /*
+         * try { mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+         *
+         * @Override public void perform(Gedcom gedcom) throws GedcomException {
+         * mEvent = (PropertyEvent) mRoot.addProperty("", "");
+         * mEvent.addProperty("DATE", ""); } }); // end of doUnitOfWork } catch
+         * (GedcomException ex) { Exceptions.printStackTrace(ex); } finally {
+         * EventEditorPanel eventEditorPanel = new EventEditorPanel();
+         *
+         * eventEditorPanel.set(mRoot, mEvent);
+         *
+         * ADialog eventEditorDialog = new ADialog(
+         * NbBundle.getMessage(EventEditorPanel.class,
+         * "EventEditorPanel.title"), eventEditorPanel);
+         *
+         * eventEditorDialog.setDialogId(EventEditorPanel.class.getName()); if
+         * (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+         * mEventsTableModel.add(eventEditorPanel.commit()); } else {
+         * mRoot.getGedcom().undoUnitOfWork(false); } }
+         */
     }//GEN-LAST:event_addEventButtonActionPerformed
 
     private void editEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEventButtonActionPerformed

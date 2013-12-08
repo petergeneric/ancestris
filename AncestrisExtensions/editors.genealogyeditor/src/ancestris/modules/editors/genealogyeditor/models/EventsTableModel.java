@@ -2,9 +2,11 @@ package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.PropertyEvent;
+import genj.gedcom.PropertyPlace;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -13,7 +15,11 @@ import javax.swing.table.AbstractTableModel;
 public class EventsTableModel extends AbstractTableModel {
 
     List<PropertyEvent> eventsList = new ArrayList<PropertyEvent>();
-    String[] columnsName = {"Event type", "date"};
+    String[] columnsName = {
+        NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.eventType"),
+        NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.date"),
+        NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.place")
+    };
 
     public EventsTableModel() {
     }
@@ -34,8 +40,11 @@ public class EventsTableModel extends AbstractTableModel {
             PropertyEvent propertyEvent = eventsList.get(row);
             if (column == 0) {
                 return PropertyTag2Name.getTagName(propertyEvent.getTag());
-            } else {
+            } else if (column == 1) {
                 return propertyEvent.getDate() != null ? propertyEvent.getDate().getDisplayValue() : "";
+            } else {
+                PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
+                return place.format("all");
             }
         } else {
             return "";
