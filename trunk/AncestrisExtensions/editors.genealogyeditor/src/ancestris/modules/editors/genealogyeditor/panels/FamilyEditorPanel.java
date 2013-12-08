@@ -512,7 +512,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         
         individualsListPanel.setIndividualsList(mFamily, individualsList);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualsListPanel.class, "IndividualEditorPanel.title"),
+                NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.husband"),
                 individualsListPanel);
         individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
 
@@ -536,7 +536,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         }
         individualsListPanel.setIndividualsList(mFamily, individualsList);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualsListPanel.class, "IndividualEditorPanel.title"),
+                NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.wife"),
                 individualsListPanel);
         individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
 

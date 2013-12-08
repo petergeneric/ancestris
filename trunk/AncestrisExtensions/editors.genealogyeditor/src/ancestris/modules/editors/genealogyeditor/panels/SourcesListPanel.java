@@ -16,7 +16,7 @@ import org.openide.util.NbBundle;
  */
 public class SourcesListPanel extends javax.swing.JPanel {
 
-    private Property root;
+    private Property mRoot;
     private SourcesTableModel sourcesTableModel = new SourcesTableModel();
 
     /**
@@ -145,9 +145,9 @@ public class SourcesListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar sourcesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void set(Property root, List<Source> namesList) {
-        this.root = root;
-        sourcesTableModel.update(namesList);
+    public void set(Property root, List<Source> sourcesList) {
+        this.mRoot = root;
+        sourcesTableModel.update(sourcesList);
     }
 
     public void commit() {
