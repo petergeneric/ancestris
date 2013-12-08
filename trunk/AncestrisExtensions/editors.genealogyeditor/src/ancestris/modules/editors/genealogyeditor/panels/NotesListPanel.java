@@ -143,7 +143,9 @@ public class NotesListPanel extends javax.swing.JPanel {
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mNotesTableModel.add(noteEditorPanel.commit());
+                Note commitedNote = noteEditorPanel.commit();
+                mNotesTableModel.add(commitedNote);
+                mRoot.addNote(commitedNote);
             } else {
                 gedcom.undoUnitOfWork(false);
             }
@@ -203,7 +205,9 @@ public class NotesListPanel extends javax.swing.JPanel {
         individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
 
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            mNotesTableModel.add(notesListPanel.getSelectedNote());
+            Note selectedNote = notesListPanel.getSelectedNote();
+            mNotesTableModel.add(selectedNote);
+            mRoot.addNote(selectedNote);
         }
     }//GEN-LAST:event_linkToNoteButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
