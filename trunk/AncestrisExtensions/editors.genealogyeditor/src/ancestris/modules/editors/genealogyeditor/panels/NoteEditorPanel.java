@@ -12,8 +12,8 @@ import org.openide.util.Exceptions;
  */
 public class NoteEditorPanel extends javax.swing.JPanel {
 
-    private Note note;
-    private ReferencesTableModel referencesTableModel = new ReferencesTableModel();
+    private Note mNote;
+    private ReferencesTableModel mReferencesTableModel = new ReferencesTableModel();
 
     /**
      * Creates new form NoteEditorPanel
@@ -110,7 +110,6 @@ public class NoteEditorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel noteIDLabel;
     private javax.swing.JTextField noteIDTextField;
@@ -127,14 +126,14 @@ public class NoteEditorPanel extends javax.swing.JPanel {
      * @return the note
      */
     public Note get() {
-        return note;
+        return mNote;
     }
 
     /**
      * @param note the note to set
      */
     public void set(Note note) {
-        this.note = note;
+        this.mNote = note;
         noteIDTextField.setText(note.getId());
         noteTextTextArea.setText(note.getValue() != null ? note.getValue() : "");
         List<Entity> entitiesList = new ArrayList<Entity>();
@@ -144,16 +143,20 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         referencesListPanel.set(note, entitiesList);
     }
 
-    public void commit() {
+    public Note commit() {
         try {
-            note.getGedcom().doUnitOfWork(new UnitOfWork() {
+            mNote.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
+                    mNote.setValue(noteTextTextArea.getText());
                 }
             }); // end of doUnitOfWork
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
-        }        
+            return null;
+        } finally {
+            return mNote;
+        }
     }
 }
