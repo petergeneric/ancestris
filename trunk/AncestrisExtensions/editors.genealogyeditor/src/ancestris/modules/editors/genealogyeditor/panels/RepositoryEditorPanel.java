@@ -47,6 +47,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         repositoryIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDLabel.text"), new Object[] {})); // NOI18N
 
         repositoryIDTextField.setColumns(8);
+        repositoryIDTextField.setEditable(false);
         repositoryIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDTextField.text"), new Object[] {})); // NOI18N
         repositoryIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
