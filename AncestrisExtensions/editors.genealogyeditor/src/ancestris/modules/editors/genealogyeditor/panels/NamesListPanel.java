@@ -110,7 +110,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         NameEditorPanel nameEditorPanel = new NameEditorPanel();
         nameEditorPanel.set(root, null);
         ADialog nameEditorDialog = new ADialog(
-                NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
+                NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title.create"),
                 nameEditorPanel);
         nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
 
@@ -127,7 +127,7 @@ public class NamesListPanel extends javax.swing.JPanel {
             NameEditorPanel nameEditorPanel = new NameEditorPanel();
             nameEditorPanel.set(root, namesTableModel.getValueAt(rowIndex));
             ADialog nameEditorDialog = new ADialog(
-                    NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
+                    NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title.edit"),
                     nameEditorPanel);
             nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
 
@@ -148,7 +148,7 @@ public class NamesListPanel extends javax.swing.JPanel {
             NameEditorPanel nameEditorPanel = new NameEditorPanel();
             nameEditorPanel.set(root, namesTableModel.getValueAt(rowIndex));
             ADialog nameEditorDialog = new ADialog(
-                    NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title"),
+                    NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title.edit"),
                     nameEditorPanel);
             nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
 

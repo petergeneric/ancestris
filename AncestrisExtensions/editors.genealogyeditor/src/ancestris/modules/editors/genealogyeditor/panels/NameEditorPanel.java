@@ -69,7 +69,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
 
         firstNamePrefixTextField.setColumns(8);
         firstNamePrefixTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        firstNamePrefixTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNamePrefixTextField.text"), new Object[] {})); // NOI18N
         firstNamePrefixTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNamePrefixTextField.toolTipText"), new Object[] {})); // NOI18N
         firstNamePrefixTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -89,7 +88,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        firstNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNameTextField.text"), new Object[] {})); // NOI18N
         firstNameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNameTextField.toolTipText"), new Object[] {})); // NOI18N
         firstNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -112,7 +110,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
         familyNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNameLabel.text"), new Object[] {})); // NOI18N
 
         familyNamePrefixTextField.setColumns(8);
-        familyNamePrefixTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNamePrefixTextField.text"), new Object[] {})); // NOI18N
         familyNamePrefixTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNamePrefixTextField.toolTipText"), new Object[] {})); // NOI18N
         familyNamePrefixTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -133,7 +130,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
         });
 
         familyNameTextField.setColumns(16);
-        familyNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNameTextField.text"), new Object[] {})); // NOI18N
         familyNameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNameTextField.toolTipText"), new Object[] {})); // NOI18N
         familyNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -178,7 +174,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
 
         nicknameTextField.setColumns(8);
         nicknameTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        nicknameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.nicknameTextField.text"), new Object[] {})); // NOI18N
         nicknameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.nicknameTextField.toolTipText"), new Object[] {})); // NOI18N
         nicknameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
