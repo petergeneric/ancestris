@@ -472,7 +472,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.ChildrensListPanel" name="childrensListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel" name="childrensListPanel">
             </Component>
           </SubComponents>
         </Container>

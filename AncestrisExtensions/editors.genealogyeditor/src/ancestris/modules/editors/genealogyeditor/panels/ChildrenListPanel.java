@@ -13,7 +13,7 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class ChildrensListPanel extends javax.swing.JPanel {
+public class ChildrenListPanel extends javax.swing.JPanel {
 
     private IndividualsTableModel mIndividualsTableModel = new IndividualsTableModel();
     private Fam mRoot;
@@ -22,7 +22,7 @@ public class ChildrensListPanel extends javax.swing.JPanel {
     /**
      * Creates new form IndividualsListPanel
      */
-    public ChildrensListPanel() {
+    public ChildrenListPanel() {
         initComponents();
     }
 
@@ -47,7 +47,7 @@ public class ChildrensListPanel extends javax.swing.JPanel {
         IndividualsToolBar.setRollover(true);
 
         addChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrensListPanel.addChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        addChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.addChildrenButton.toolTipText"), new Object[] {})); // NOI18N
         addChildrenButton.setFocusable(false);
         addChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -59,7 +59,7 @@ public class ChildrensListPanel extends javax.swing.JPanel {
         IndividualsToolBar.add(addChildrenButton);
 
         editChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrensListPanel.editChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        editChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.editChildrenButton.toolTipText"), new Object[] {})); // NOI18N
         editChildrenButton.setFocusable(false);
         editChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -71,7 +71,7 @@ public class ChildrensListPanel extends javax.swing.JPanel {
         IndividualsToolBar.add(editChildrenButton);
 
         deleteChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrensListPanel.deleteChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.deleteChildrenButton.toolTipText"), new Object[] {})); // NOI18N
         deleteChildrenButton.setFocusable(false);
         deleteChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -83,8 +83,8 @@ public class ChildrensListPanel extends javax.swing.JPanel {
         IndividualsToolBar.add(deleteChildrenButton);
 
         linkToChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToChildrenButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrensListPanel.linkToChildrenButton.text"), new Object[] {})); // NOI18N
-        linkToChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrensListPanel.linkToChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToChildrenButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.linkToChildrenButton.text"), new Object[] {})); // NOI18N
+        linkToChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.linkToChildrenButton.toolTipText"), new Object[] {})); // NOI18N
         linkToChildrenButton.setFocusable(false);
         linkToChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         linkToChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

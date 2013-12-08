@@ -66,7 +66,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         wifeDeathDateTextField = new javax.swing.JTextField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         childrensPanel = new javax.swing.JPanel();
-        childrensListPanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrensListPanel();
+        childrensListPanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel();
         eventsPanel = new javax.swing.JPanel();
         eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel();
         sourcesPanel = new javax.swing.JPanel();
@@ -552,7 +552,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel HusbandNameLabel;
     private javax.swing.JButton addHusbandButton;
     private javax.swing.JButton addWifeButton;
-    private ancestris.modules.editors.genealogyeditor.panels.ChildrensListPanel childrensListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel childrensListPanel;
     private javax.swing.JPanel childrensPanel;
     private javax.swing.JButton deleteHusbandButton;
     private javax.swing.JButton deleteWifeButton;
