@@ -1,36 +1,35 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
-import ancestris.modules.editors.genealogyeditor.panels.IndividualEditorPanel;
+import ancestris.modules.editors.genealogyeditor.panels.FamilyEditorPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import org.openide.DialogDescriptor;
-import org.openide.loaders.DataObject;
-
-import org.openide.awt.ActionRegistration;
+import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
-import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
+import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
 @ActionID(category = "Edit",
-id = "ancestris.modules.editors.genealogyeditor.actions.GenealogyEditorCreateIndividualAction")
-@ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/indi_add.png",
-displayName = "#CTL_GenealogyEditorCreateIndividualAction")
+id = "ancestris.modules.editors.genealogyeditor.actions.GenealogyEditorAddFamilyAction")
+@ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/family_add.png",
+displayName = "#CTL_GenealogyEditorAddFamilyAction")
 @ActionReferences({
-    @ActionReference(path = "Toolbars/GenealogyEditor", position = 200)
+    @ActionReference(path = "Toolbars/GenealogyEditor", position = 300)
 })
-@Messages("CTL_GenealogyEditorCreateIndividualAction=Create new Individual")
-public final class GenealogyEditorCreateIndividualAction implements ActionListener {
+@Messages("CTL_GenealogyEditorAddFamilyAction=Add Family")
+public final class GenealogyEditorCreateFamilyAction implements ActionListener {
 
     private final DataObject context;
     Entity entity;
 
-    public GenealogyEditorCreateIndividualAction(DataObject context) {
+    public GenealogyEditorCreateFamilyAction(DataObject context) {
         this.context = context;
     }
 
@@ -46,24 +45,22 @@ public final class GenealogyEditorCreateIndividualAction implements ActionListen
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        entity = gedcom.createEntity(Gedcom.INDI);
+                        entity = gedcom.createEntity(Gedcom.FAM);
                     }
                 }); // end of doUnitOfWork
-
-                IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-
-                individualEditorPanel.set((Indi) entity);
+                FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+                familyEditorPanel.set((Fam) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
-                        individualEditorPanel);
-
-                editorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.title"),
+                        familyEditorPanel);
+                editorDialog.setDialogId(FamilyEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    individualEditorPanel.commit();
+                    familyEditorPanel.commit();
                 } else {
                     gedcom.undoUnitOfWork(false);
                 }
+
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
