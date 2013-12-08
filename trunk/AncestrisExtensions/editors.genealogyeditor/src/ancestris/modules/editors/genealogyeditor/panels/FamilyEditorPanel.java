@@ -432,7 +432,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mHusband = individualEditorPanel.commit();
-                
+
             } else {
                 mFamily.getGedcom().undoUnitOfWork(false);
             }
@@ -510,8 +510,9 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 individualsList.add(individual);
             }
         }
-        
+
         individualsListPanel.setIndividualsList(mFamily, individualsList);
+        individualsListPanel.setToolBarVisible(false);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.husband"),
                 individualsListPanel);
@@ -536,6 +537,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             }
         }
         individualsListPanel.setIndividualsList(mFamily, individualsList);
+        individualsListPanel.setToolBarVisible(false);
+
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.wife"),
                 individualsListPanel);
@@ -655,7 +658,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mFamily.setHusband(mHusband);
                     mFamily.setWife(mWife);
-                    
+
                     eventsListPanel.commit();
                     sourcesListPanel.commit();
                     notesListPanel.commit();
