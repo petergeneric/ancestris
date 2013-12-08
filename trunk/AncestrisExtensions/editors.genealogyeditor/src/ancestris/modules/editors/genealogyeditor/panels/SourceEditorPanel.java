@@ -11,7 +11,7 @@ import org.openide.util.Exceptions;
  */
 public class SourceEditorPanel extends javax.swing.JPanel {
 
-    private Source source;
+    private Source mSource;
 
     /**
      * Creates new form SourceEditorPanel
@@ -35,9 +35,8 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         authorTextField = new javax.swing.JTextField();
         sourceTitleLabel = new javax.swing.JLabel();
         sourceTitleTextField = new javax.swing.JTextField();
-        recordedEventsLabel = new javax.swing.JLabel();
-        recordedEventsTextField = new javax.swing.JTextField();
         sourceInformationTabbedPane = new javax.swing.JTabbedPane();
+        registeredEventsPanel = new javax.swing.JPanel();
         repositoriesPanel = new javax.swing.JPanel();
         repositoriesListPanel = new ancestris.modules.editors.genealogyeditor.panels.RepositoriesListPanel();
         notesPanel = new javax.swing.JPanel();
@@ -59,9 +58,22 @@ public class SourceEditorPanel extends javax.swing.JPanel {
 
         sourceTitleTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceTitleTextField.text"), new Object[] {})); // NOI18N
 
-        recordedEventsLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.recordedEventsLabel.text"), new Object[] {})); // NOI18N
+        sourceInformationTabbedPane.setRequestFocusEnabled(false);
 
-        recordedEventsTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.recordedEventsTextField.text"), new Object[] {})); // NOI18N
+        javax.swing.GroupLayout registeredEventsPanelLayout = new javax.swing.GroupLayout(registeredEventsPanel);
+        registeredEventsPanel.setLayout(registeredEventsPanelLayout);
+        registeredEventsPanelLayout.setHorizontalGroup(
+            registeredEventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        registeredEventsPanelLayout.setVerticalGroup(
+            registeredEventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 216, Short.MAX_VALUE)
+        );
+
+        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.registeredEventsPanel.TabConstraints.tabTitle"), new Object[] {}), registeredEventsPanel); // NOI18N
+
+        repositoriesPanel.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout repositoriesPanelLayout = new javax.swing.GroupLayout(repositoriesPanel);
         repositoriesPanel.setLayout(repositoriesPanelLayout);
@@ -73,12 +85,12 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         repositoriesPanelLayout.setVerticalGroup(
             repositoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, repositoriesPanelLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(repositoriesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
+            .addComponent(repositoriesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.repositoriesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Repository.png")), repositoriesPanel); // NOI18N
+
+        notesPanel.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
@@ -90,12 +102,12 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
+            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+
+        referencesPanel.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout referencesPanelLayout = new javax.swing.GroupLayout(referencesPanel);
         referencesPanel.setLayout(referencesPanelLayout);
@@ -107,7 +119,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
@@ -122,15 +134,13 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(sourceTitleLabel)
-                            .addComponent(sourceIDLabel)
-                            .addComponent(recordedEventsLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(sourceIDLabel))
+                        .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(sourceTitleTextField)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(sourceIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(recordedEventsTextField)))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addComponent(sourceInformationTabbedPane)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(authorLabel)
@@ -154,10 +164,6 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                     .addComponent(sourceTitleLabel)
                     .addComponent(sourceTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(recordedEventsLabel)
-                    .addComponent(recordedEventsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sourceInformationTabbedPane)
                 .addContainerGap())
         );
@@ -167,10 +173,9 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField authorTextField;
     private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
-    private javax.swing.JLabel recordedEventsLabel;
-    private javax.swing.JTextField recordedEventsTextField;
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     private javax.swing.JPanel referencesPanel;
+    private javax.swing.JPanel registeredEventsPanel;
     private ancestris.modules.editors.genealogyeditor.panels.RepositoriesListPanel repositoriesListPanel;
     private javax.swing.JPanel repositoriesPanel;
     private javax.swing.JLabel sourceIDLabel;
@@ -184,56 +189,72 @@ public class SourceEditorPanel extends javax.swing.JPanel {
      * @return the source
      */
     public Source getSource() {
-        return source;
+        return mSource;
     }
 
     /**
      * @param source the source to set
      */
     public void setSource(Source source) {
-        this.source = source;
+        this.mSource = source;
         update();
     }
 
     private void update() {
-        sourceIDTextField.setText(source.getId());
-        Property propertyByPath = source.getPropertyByPath("DATA:EVEN");
-        if (propertyByPath != null) {
-            recordedEventsTextField.setText(propertyByPath.getDisplayValue());
-        }
+        sourceIDTextField.setText(mSource.getId());
+
+        Property sourceTitle = mSource.getProperty("TITL");
+        sourceTitleTextField.setText(sourceTitle != null ? sourceTitle.getValue() : "");
+
+        Property sourceAuthor = mSource.getProperty("AUTH");
+        authorTextField.setText(sourceAuthor!=null ?sourceAuthor.getValue():"");
 
         List<Note> notesList = new ArrayList<Note>();
-        for (PropertyNote noteRef : source.getProperties(PropertyNote.class)) {
+        for (PropertyNote noteRef : mSource.getProperties(PropertyNote.class)) {
             notesList.add((Note) noteRef.getTargetEntity());
         }
-        notesListPanel.setNotesList(source, notesList);
+        notesListPanel.setNotesList(mSource, notesList);
 
         List<Repository> repositporiesList = new ArrayList<Repository>();
-        for (PropertyRepository repositoryRef : source.getProperties(PropertyRepository.class)) {
+        for (PropertyRepository repositoryRef : mSource.getProperties(PropertyRepository.class)) {
             repositporiesList.add((Repository) repositoryRef.getTargetEntity());
         }
-        repositoriesListPanel.set(source, repositporiesList);
+        repositoriesListPanel.set(mSource, repositporiesList);
 
         List<Entity> entitiesList = new ArrayList<Entity>();
-        for (PropertyXRef entityRef : source.getProperties(PropertyXRef.class)) {
+        for (PropertyXRef entityRef : mSource.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());
         }
-        referencesListPanel.set(source, entitiesList);
+        referencesListPanel.set(mSource, entitiesList);
     }
 
-    public void commit() {
+    public Source commit() {
         try {
-            source.getGedcom().doUnitOfWork(new UnitOfWork() {
+            mSource.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
+                    Property sourceTitle = mSource.getProperty("TITL");
+                    if (sourceTitle == null) {
+                        mSource.addProperty("TITL", sourceTitleTextField.getText());
+                    } else {
+                        sourceTitle.setValue(sourceTitleTextField.getText());
+                    }
+                    Property sourceAuthor = mSource.getProperty("AUTH");
+                    if (sourceAuthor == null) {
+                        mSource.addProperty("AUTH", authorTextField.getText());
+                    } else {
+                        sourceAuthor.setValue(authorTextField.getText());
+                    }
                     notesListPanel.commit();
                     repositoriesListPanel.commit();
                     referencesListPanel.commit();
                 }
             }); // end of doUnitOfWork
+            return mSource;
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
+            return null;
         }
     }
 }

@@ -2,12 +2,10 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.SourcesTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Property;
-import genj.gedcom.Source;
+import genj.gedcom.*;
 import java.util.List;
 import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -17,6 +15,7 @@ import org.openide.util.NbBundle;
 public class SourcesListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
+    private Source mSource;
     private SourcesTableModel sourcesTableModel = new SourcesTableModel();
 
     /**
@@ -105,16 +104,31 @@ public class SourcesListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
-        SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-        sourceEditorPanel.setSource(new Source(Gedcom.SOUR, ""));
+        Gedcom gedcom = mRoot.getGedcom();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
 
-        ADialog sourceEditorDialog = new ADialog(
-                NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
-                sourceEditorPanel);
-        sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mSource = (Source) gedcom.createEntity(Gedcom.SOUR);
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
+            sourceEditorPanel.setSource(mSource);
 
-        if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            sourcesTableModel.add(sourceEditorPanel.getSource());
+            ADialog sourceEditorDialog = new ADialog(
+                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
+                    sourceEditorPanel);
+            sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+
+            if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                sourcesTableModel.add(sourceEditorPanel.commit());
+            } else {
+                gedcom.undoUnitOfWork(false);
+            }
         }
     }//GEN-LAST:event_addSourceButtonActionPerformed
 
