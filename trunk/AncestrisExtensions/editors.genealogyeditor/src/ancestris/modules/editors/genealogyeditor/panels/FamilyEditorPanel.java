@@ -138,7 +138,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         });
         fatherToolBar.add(deleteHusbandButton);
 
-        linktoHusbandButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/family_link.png"))); // NOI18N
+        linktoHusbandButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
         linktoHusbandButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.linktoHusbandButton.text"), new Object[] {})); // NOI18N
         linktoHusbandButton.setFocusable(false);
         linktoHusbandButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -236,7 +236,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         });
         motherToolBar.add(deleteWifeButton);
 
-        linkToWifeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/family_link.png"))); // NOI18N
+        linkToWifeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
         linkToWifeButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.linkToWifeButton.text"), new Object[] {})); // NOI18N
         linkToWifeButton.setFocusable(false);
         linkToWifeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
