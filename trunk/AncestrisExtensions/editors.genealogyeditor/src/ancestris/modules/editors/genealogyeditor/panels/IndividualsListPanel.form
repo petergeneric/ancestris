@@ -16,14 +16,14 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="IndividualsToolBar" pref="476" max="32767" attributes="0"/>
+          <Component id="individualsToolBar" pref="476" max="32767" attributes="0"/>
           <Component id="childrensScrollPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="IndividualsToolBar" min="-2" pref="25" max="-2" attributes="0"/>
+              <Component id="individualsToolBar" min="-2" pref="25" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="childrensScrollPane" pref="294" max="32767" attributes="0"/>
           </Group>
@@ -31,7 +31,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JToolBar" name="IndividualsToolBar">
+    <Container class="javax.swing.JToolBar" name="individualsToolBar">
       <Properties>
         <Property name="floatable" type="boolean" value="false"/>
         <Property name="rollover" type="boolean" value="true"/>
@@ -96,6 +96,9 @@
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="individualsTableMouseClicked"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="individualsTable.getColumnModel().getColumn(0).setMaxWidth(100);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

@@ -16,22 +16,22 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="IndividualsToolBar" pref="476" max="32767" attributes="0"/>
-          <Component id="childrensScrollPane" alignment="0" max="32767" attributes="0"/>
+          <Component id="childrenToolBar" pref="476" max="32767" attributes="0"/>
+          <Component id="childrenScrollPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="IndividualsToolBar" min="-2" pref="25" max="-2" attributes="0"/>
+              <Component id="childrenToolBar" min="-2" pref="25" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="childrensScrollPane" pref="294" max="32767" attributes="0"/>
+              <Component id="childrenScrollPane" pref="294" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JToolBar" name="IndividualsToolBar">
+    <Container class="javax.swing.JToolBar" name="childrenToolBar">
       <Properties>
         <Property name="floatable" type="boolean" value="false"/>
         <Property name="rollover" type="boolean" value="true"/>
@@ -108,22 +108,25 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JScrollPane" name="childrensScrollPane">
+    <Container class="javax.swing.JScrollPane" name="childrenScrollPane">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="individualsTable">
+        <Component class="javax.swing.JTable" name="childrenTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="mIndividualsTableModel" type="code"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="individualsTableMouseClicked"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="childrenTableMouseClicked"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="childrenTable.getColumnModel().getColumn(0).setMaxWidth(100);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

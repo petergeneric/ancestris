@@ -84,6 +84,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
         sourcesTable.setModel(sourcesTableModel);
         sourcesTable.setShowHorizontalLines(false);
         sourcesTable.setShowVerticalLines(false);
+        sourcesTable.getColumnModel().getColumn(0).setMaxWidth(100);
         sourcesScrollPane.setViewportView(sourcesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

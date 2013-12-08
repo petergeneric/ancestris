@@ -77,6 +77,7 @@ public class MultimediaObjectsListPanel extends javax.swing.JPanel {
         galleryToolBar.add(deleteMMObjectButton2);
 
         GalleryTable.setModel(multiMediaObjectsTableModel);
+        GalleryTable.getColumnModel().getColumn(0).setMaxWidth(100);
         galleryScrollPane.setViewportView(GalleryTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

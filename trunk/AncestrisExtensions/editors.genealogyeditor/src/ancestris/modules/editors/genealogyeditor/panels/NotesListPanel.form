@@ -124,6 +124,9 @@
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="notesTableMouseClicked"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="notesTable.getColumnModel().getColumn(0).setMaxWidth(100);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

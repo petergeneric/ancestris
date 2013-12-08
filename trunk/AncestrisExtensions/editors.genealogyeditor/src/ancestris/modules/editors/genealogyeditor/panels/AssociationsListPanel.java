@@ -53,6 +53,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
         associationsTable.setModel(associationsTableModel);
         associationsTable.setShowHorizontalLines(false);
         associationsTable.setShowVerticalLines(false);
+        associationsTable.getColumnModel().getColumn(0).setMaxWidth(100);
         associationsScrollPane.setViewportView(associationsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
