@@ -44,6 +44,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         noteIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteIDLabel.text"), new Object[] {})); // NOI18N
 
         noteIDTextField.setColumns(8);
+        noteIDTextField.setEditable(false);
         noteIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteIDTextField.text"), new Object[] {})); // NOI18N
 
         noteTextToolBar.setFloatable(false);
