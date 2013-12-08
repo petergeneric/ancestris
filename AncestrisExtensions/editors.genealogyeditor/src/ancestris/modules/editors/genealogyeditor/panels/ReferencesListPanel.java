@@ -52,6 +52,7 @@ public class ReferencesListPanel extends javax.swing.JPanel {
         referencesTable.setModel(referencesTableModel);
         referencesTable.setShowHorizontalLines(false);
         referencesTable.setShowVerticalLines(false);
+        referencesTable.getColumnModel().getColumn(0).setMaxWidth(100);
         referencesScrollPane.setViewportView(referencesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

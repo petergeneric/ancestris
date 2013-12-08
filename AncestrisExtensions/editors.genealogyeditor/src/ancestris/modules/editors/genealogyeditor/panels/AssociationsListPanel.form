@@ -72,6 +72,9 @@
             <Property name="showHorizontalLines" type="boolean" value="false"/>
             <Property name="showVerticalLines" type="boolean" value="false"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="associationsTable.getColumnModel().getColumn(0).setMaxWidth(100);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

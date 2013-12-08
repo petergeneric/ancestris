@@ -74,6 +74,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
         familyNamesToolBar.add(deleteFamilyNameButton);
 
         familyNamesTable.setModel(familiesTableModel);
+        familyNamesTable.getColumnModel().getColumn(0).setMaxWidth(100);
         familyNamesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 familyNamesTableMouseClicked(evt);

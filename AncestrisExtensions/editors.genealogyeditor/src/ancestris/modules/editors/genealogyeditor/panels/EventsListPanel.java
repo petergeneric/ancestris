@@ -90,6 +90,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsTable.setGridColor(java.awt.Color.lightGray);
         eventsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         eventsTable.setShowVerticalLines(false);
+        eventsTable.getColumnModel().getColumn(0).setMaxWidth(100);
         eventsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 eventsTableMouseClicked(evt);

@@ -102,6 +102,9 @@
               <Connection code="multiMediaObjectsTableModel" type="code"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="GalleryTable.getColumnModel().getColumn(0).setMaxWidth(100);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

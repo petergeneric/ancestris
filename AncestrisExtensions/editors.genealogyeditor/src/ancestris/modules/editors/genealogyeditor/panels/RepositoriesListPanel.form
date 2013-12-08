@@ -16,23 +16,23 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="sourcesToolBar" alignment="0" max="32767" attributes="0"/>
-          <Component id="sourcesScrollPane" alignment="0" pref="400" max="32767" attributes="0"/>
+          <Component id="repositoriesToolBar" alignment="0" max="32767" attributes="0"/>
+          <Component id="repositoriesScrollPane" alignment="0" pref="400" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="sourcesToolBar" min="-2" pref="25" max="-2" attributes="0"/>
+              <Component id="repositoriesToolBar" min="-2" pref="25" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="sourcesScrollPane" pref="269" max="32767" attributes="0"/>
+              <Component id="repositoriesScrollPane" pref="269" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JToolBar" name="sourcesToolBar">
+    <Container class="javax.swing.JToolBar" name="repositoriesToolBar">
       <Properties>
         <Property name="floatable" type="boolean" value="false"/>
         <Property name="rollover" type="boolean" value="true"/>
@@ -90,14 +90,14 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JScrollPane" name="sourcesScrollPane">
+    <Container class="javax.swing.JScrollPane" name="repositoriesScrollPane">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="sourcesTable">
+        <Component class="javax.swing.JTable" name="repositoriesTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="repositoriesTableModel" type="code"/>
@@ -106,13 +106,13 @@
               <TableColumnModel selectionModel="0"/>
             </Property>
             <Property name="showHorizontalLines" type="boolean" value="false"/>
-            <Property name="showVerticalLines" type="boolean" value="false"/>
+            <Property name="showVerticalLines" type="boolean" value="false" postCode="repositoriesTable.getColumnModel().getColumn(0).setMaxWidth(100);"/>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="sourcesTableMouseClicked"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="repositoriesTableMouseClicked"/>
           </Events>
         </Component>
       </SubComponents>

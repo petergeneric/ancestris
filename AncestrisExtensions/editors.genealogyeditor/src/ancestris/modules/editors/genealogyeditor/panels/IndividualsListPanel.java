@@ -34,15 +34,15 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        IndividualsToolBar = new javax.swing.JToolBar();
+        individualsToolBar = new javax.swing.JToolBar();
         addIndividualButton = new javax.swing.JButton();
         editIndividualButton = new javax.swing.JButton();
         deleteIndividualButton = new javax.swing.JButton();
         childrensScrollPane = new javax.swing.JScrollPane();
         individualsTable = new javax.swing.JTable();
 
-        IndividualsToolBar.setFloatable(false);
-        IndividualsToolBar.setRollover(true);
+        individualsToolBar.setFloatable(false);
+        individualsToolBar.setRollover(true);
 
         addIndividualButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
         addIndividualButton.setFocusable(false);
@@ -53,7 +53,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
                 addIndividualButtonActionPerformed(evt);
             }
         });
-        IndividualsToolBar.add(addIndividualButton);
+        individualsToolBar.add(addIndividualButton);
 
         editIndividualButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editIndividualButton.setFocusable(false);
@@ -64,7 +64,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
                 editIndividualButtonActionPerformed(evt);
             }
         });
-        IndividualsToolBar.add(editIndividualButton);
+        individualsToolBar.add(editIndividualButton);
 
         deleteIndividualButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
         deleteIndividualButton.setFocusable(false);
@@ -75,9 +75,10 @@ public class IndividualsListPanel extends javax.swing.JPanel {
                 deleteIndividualButtonActionPerformed(evt);
             }
         });
-        IndividualsToolBar.add(deleteIndividualButton);
+        individualsToolBar.add(deleteIndividualButton);
 
         individualsTable.setModel(mIndividualsTableModel);
+        individualsTable.getColumnModel().getColumn(0).setMaxWidth(100);
         individualsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 individualsTableMouseClicked(evt);
@@ -89,13 +90,13 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(IndividualsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
+            .addComponent(individualsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
             .addComponent(childrensScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(IndividualsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(individualsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(childrensScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
         );
@@ -168,12 +169,12 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_individualsTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToolBar IndividualsToolBar;
     private javax.swing.JButton addIndividualButton;
     private javax.swing.JScrollPane childrensScrollPane;
     private javax.swing.JButton deleteIndividualButton;
     private javax.swing.JButton editIndividualButton;
     private javax.swing.JTable individualsTable;
+    private javax.swing.JToolBar individualsToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void setIndividualsList(Property root, List<Indi> individualsList) {
@@ -191,6 +192,11 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         }
     }
 
+
+    public void setToolBarVisible(boolean visible) {
+        individualsToolBar.setVisible(visible);
+    }
+    
     public void commit() {
     }
 }
