@@ -414,24 +414,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 mediasList.add((Media) mediaRef.getTargetEntity());
             }
             multimediaObjectsListPanel.set(mEvent, mediasList);
-        } else {
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mEvent = (PropertyEvent) mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventTypeComboBox.getSelectedItem().toString()), "");
-                        PropertyDate date = (PropertyDate) mEvent.getProperty("DATE");
-                        if (date == null) {
-                            date = (PropertyDate) mEvent.addProperty("DATE", "");
-                        }
-                        aDateBean.setContext(date);
-                    }
-                }); // end of doUnitOfWork
-                mEventTypeCanChange = true;
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
         }
     }
 

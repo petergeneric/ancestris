@@ -119,7 +119,8 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteSourceButtonActionPerformed
 
     private void sourcesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourcesTableMouseClicked
-        // TODO add your handling code here:
+        if (evt.getClickCount() >= 2) {
+        }
     }//GEN-LAST:event_sourcesTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

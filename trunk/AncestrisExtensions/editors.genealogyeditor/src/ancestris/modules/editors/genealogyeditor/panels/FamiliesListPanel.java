@@ -98,7 +98,9 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void familyNamesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familyNamesTableMouseClicked
-        // TODO add your handling code here:
+        if (evt.getClickCount() >= 2) {
+            
+        }
     }//GEN-LAST:event_familyNamesTableMouseClicked
 
     private void addFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFamilyNameButtonActionPerformed
