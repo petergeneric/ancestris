@@ -16,7 +16,6 @@ import org.openide.util.NbBundle;
  */
 public class EventEditorPanel extends javax.swing.JPanel {
 
-    private EventsTypeComboBoxModelModel eventsTypeComboBoxModelModel = new EventsTypeComboBoxModelModel();
     private PropertyEvent mEvent = null;
     private Property mRoot;
     PropertyPlace mPlace;
@@ -113,6 +112,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         eventTypeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventTypeLabel.text"), new Object[] {})); // NOI18N
 
+        eventTypeTextField.setEditable(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -134,11 +135,10 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(eventTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dateLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(6, 6, 6))
+                        .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventDescriptionScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(eventPlaceTextField)
@@ -253,7 +253,16 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 placeEditorPanel);
         placeEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
         if (placeEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            place.setValue(placeEditorPanel.get().getValue());
+            mPlace = placeEditorPanel.commit();
+            addPlaceButton.setVisible(false);
+            editPlaceButton.setVisible(true);
+            removePlaceButton.setVisible(true);
+            eventPlaceTextField.setText(mPlace.format("all"));
+        } else {
+            addPlaceButton.setVisible(true);
+            editPlaceButton.setVisible(false);
+            removePlaceButton.setVisible(false);
+            eventPlaceTextField.setText("");
         }
     }//GEN-LAST:event_editPlaceButtonActionPerformed
 
@@ -311,7 +320,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_removePlaceButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ADateBean aDateBean;
     private javax.swing.JButton addPlaceButton;
