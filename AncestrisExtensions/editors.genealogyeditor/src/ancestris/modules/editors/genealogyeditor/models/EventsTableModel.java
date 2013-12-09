@@ -44,7 +44,11 @@ public class EventsTableModel extends AbstractTableModel {
                 return propertyEvent.getDate() != null ? propertyEvent.getDate().getDisplayValue() : "";
             } else {
                 PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
-                return place.format("all");
+                if (place != null) {
+                    return place.format("all");
+                } else {
+                    return "";
+                }
             }
         } else {
             return "";
