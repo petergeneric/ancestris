@@ -5,13 +5,17 @@ import ancestris.modules.editors.genealogyeditor.models.EventsTableModel;
 import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import ancestris.util.swing.DialogManager;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.UnitOfWork;
 import java.util.List;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -876,6 +880,20 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         return placeString;
     }
 
-    public void commit() {
+    public PropertyPlace commit() {
+        try {
+            place.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                }
+            }); // end of doUnitOfWork
+
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        } finally {
+            return place;
+        }
     }
 }

@@ -1,10 +1,10 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.EventsTableModel;
+import ancestris.modules.editors.genealogyeditor.models.EventsTypeComboBoxModelModel;
+import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.GedcomException;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyEvent;
+import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.TableModel;
@@ -20,6 +20,7 @@ import org.openide.util.NbBundle;
 public class EventsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
+    private EventsTypeComboBoxModelModel eventsTypeComboBoxModelModel = new EventsTypeComboBoxModelModel();
     private EventsTableModel mEventsTableModel = new EventsTableModel();
     private ArrayList<PropertyEvent> mEditedEvents = new ArrayList<PropertyEvent>();
     private ArrayList<PropertyEvent> mAddedEvents = new ArrayList<PropertyEvent>();
@@ -45,7 +46,8 @@ public class EventsListPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         eventsToolBar = new javax.swing.JToolBar();
-        addEventButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        eventTypeComboBox = new javax.swing.JComboBox<String>();
         editEventButton = new javax.swing.JButton();
         deleteEventButton = new javax.swing.JButton();
         eventsScrollPane = new javax.swing.JScrollPane();
@@ -54,17 +56,17 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.setFloatable(false);
         eventsToolBar.setRollover(true);
 
-        addEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.addEventButton.toolTipText"), new Object[] {})); // NOI18N
-        addEventButton.setFocusable(false);
-        addEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addEventButton.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.jLabel1.text"), new Object[] {})); // NOI18N
+        eventsToolBar.add(jLabel1);
+
+        eventTypeComboBox.setModel(eventsTypeComboBoxModelModel);
+        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
+        eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addEventButtonActionPerformed(evt);
+                eventTypeComboBoxActionPerformed(evt);
             }
         });
-        eventsToolBar.add(addEventButton);
+        eventsToolBar.add(eventTypeComboBox);
 
         editEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.editEventButton.toolTipText"), new Object[] {})); // NOI18N
@@ -107,39 +109,16 @@ public class EventsListPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(eventsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-            .addComponent(eventsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(eventsScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(eventsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(eventsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
+                .addComponent(eventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void addEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEventButtonActionPerformed
-        /*
-         * try { mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-         *
-         * @Override public void perform(Gedcom gedcom) throws GedcomException {
-         * mEvent = (PropertyEvent) mRoot.addProperty("", "");
-         * mEvent.addProperty("DATE", ""); } }); // end of doUnitOfWork } catch
-         * (GedcomException ex) { Exceptions.printStackTrace(ex); } finally {
-         * EventEditorPanel eventEditorPanel = new EventEditorPanel();
-         *
-         * eventEditorPanel.set(mRoot, mEvent);
-         *
-         * ADialog eventEditorDialog = new ADialog(
-         * NbBundle.getMessage(EventEditorPanel.class,
-         * "EventEditorPanel.title"), eventEditorPanel);
-         *
-         * eventEditorDialog.setDialogId(EventEditorPanel.class.getName()); if
-         * (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-         * mEventsTableModel.add(eventEditorPanel.commit()); } else {
-         * mRoot.getGedcom().undoUnitOfWork(false); } }
-         */
-    }//GEN-LAST:event_addEventButtonActionPerformed
 
     private void editEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEventButtonActionPerformed
         int selectedRow = eventsTable.getSelectedRow();
@@ -186,13 +165,44 @@ public class EventsListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_eventsTableMouseClicked
+
+    private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
+        try {
+            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mEvent = (PropertyEvent) mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventTypeComboBox.getSelectedItem().toString()), "");
+                    mEvent.addProperty("DATE", "");
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }  finally {
+            EventEditorPanel eventEditorPanel = new EventEditorPanel();
+
+            eventEditorPanel.set(mRoot, mEvent);
+
+            ADialog eventEditorDialog = new ADialog(
+                    NbBundle.getMessage(EventEditorPanel.class,
+                    "EventEditorPanel.title"), eventEditorPanel);
+
+            eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
+            if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                mEventsTableModel.add(eventEditorPanel.commit());
+            } else {
+                mRoot.getGedcom().undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_eventTypeComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addEventButton;
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JButton editEventButton;
+    private javax.swing.JComboBox<String> eventTypeComboBox;
     private javax.swing.JScrollPane eventsScrollPane;
     private javax.swing.JTable eventsTable;
     private javax.swing.JToolBar eventsToolBar;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
     public void setEventsList(Property root, List<PropertyEvent> eventsList) {
