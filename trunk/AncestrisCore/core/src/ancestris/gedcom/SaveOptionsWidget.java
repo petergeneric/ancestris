@@ -76,19 +76,25 @@ import javax.swing.JTextField;
   /*package*/ public  SaveOptionsWidget(Gedcom gedcom, Collection<? extends Filter> filters) {
       this(gedcom,filters.toArray(new Filter[]{}));
     }
+  /*package*/ public SaveOptionsWidget(Filter[] filters) {
+      this (null, filters);
+  }
   /*package*/ public SaveOptionsWidget(Gedcom gedcom, Filter[] filters) {
     
-    // Options
-    Box options = new Box(BoxLayout.Y_AXIS);
-    options.add(new JLabel(resources.getString("save.options.encoding")));
-    comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
-    comboEncodings.setEditable(false);
-    comboEncodings.setSelectedItem(gedcom.getEncoding());
-    options.add(comboEncodings);
-    options.add(new JLabel(resources.getString("save.options.password")));
-    textPassword = new TextFieldWidget(gedcom.hasPassword() ? gedcom.getPassword() : "", 10);
-    textPassword.setEditable(gedcom.getPassword()!=Gedcom.PASSWORD_UNKNOWN);
-    options.add(textPassword);
+      // Hide options tab if gedcom is null (used for other types of file)
+        Box options = new Box(BoxLayout.Y_AXIS);
+      if (gedcom != null) {
+        // Options
+        options.add(new JLabel(resources.getString("save.options.encoding")));
+        comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
+        comboEncodings.setEditable(false);
+        comboEncodings.setSelectedItem(gedcom.getEncoding());
+        options.add(comboEncodings);
+        options.add(new JLabel(resources.getString("save.options.password")));
+        textPassword = new TextFieldWidget(gedcom.hasPassword() ? gedcom.getPassword() : "", 10);
+        textPassword.setEditable(gedcom.getPassword()!=Gedcom.PASSWORD_UNKNOWN);
+        options.add(textPassword);
+      }
     
     // entities filter    
     Box types = new Box(BoxLayout.Y_AXIS);
@@ -128,7 +134,9 @@ import javax.swing.JTextField;
     }
     
     // layout
-    add(resources.getString("save.options"                  ), options);
+      if (gedcom != null) {
+        add(resources.getString("save.options"                  ), options);
+      }
     add(resources.getString("save.options.filter.entities"  ), types);
     add(resources.getString("save.options.filter.properties"), props);
     add(resources.getString("save.options.filter.views"     ), new JScrollPane(others));

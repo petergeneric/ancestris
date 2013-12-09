@@ -18,8 +18,24 @@
 package ancestris.modules.exports.geneanet;
 
 import ancestris.modules.console.Console;
-import genj.gedcom.*;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyAssociation;
+import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyEvent;
+import genj.gedcom.PropertyName;
+import genj.gedcom.PropertyNote;
+import genj.gedcom.PropertyPlace;
+import genj.gedcom.PropertySex;
+import genj.gedcom.PropertySource;
+import genj.gedcom.PropertyXRef;
+import genj.gedcom.Source;
 import genj.gedcom.time.PointInTime;
+import genj.io.Filter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,8 +44,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -147,11 +168,14 @@ public class GeneanetExport {
     private int ExportRestriction = 100;
     private Gedcom myGedcom = null;
     private File exportFile = null;
+    
+    private Filter filter;
 
     GeneanetExport(Gedcom gedcom, File exportFile) {
         Preferences modulePreferences = NbPreferences.forModule(GeneanetExport.class);
 
         this.myGedcom = gedcom;
+        this.filter = new Filter.Union(gedcom, Collections.<Filter>emptyList());
         this.exportFile = exportFile;
         this.exportedRestricted = modulePreferences.getBoolean("ExportRestricited", true);
         this.ExportRestriction = modulePreferences.getInt("RestricitionDuration", 100);
@@ -195,7 +219,47 @@ public class GeneanetExport {
         console.close();
     }
 
+    /**
+     * Sets filters to use for checking whether to write
+     * entities/properties or not
+     */
+    public void setFilters(Collection<Filter> fs) {
+        filter = new Filter.Union(myGedcom, fs);
+    }
+
+    private boolean vetoedProperty(Property property){
+        if (property == null)
+            return true;
+
+        if (property instanceof Entity){
+            return filter.veto((Entity)property);
+        }
+        return filter.veto(property);
+    }
+    
+    private Property[] vetoedProperties(Property[] properties){
+        List<Property> props = new ArrayList<Property>();
+        for (Property prop:properties){
+            if (vetoedProperty(prop))
+                continue;
+            props.add(prop);
+        }
+        return Property.toArray(props);
+    }
+
+    private Indi[] vetoedProperties(Indi[] indis){
+        List<Indi> props = new ArrayList<Indi>();
+        for (Indi indi:indis){
+            if (vetoedProperty(indi))
+                continue;
+            props.add(indi);
+        }
+        return props.toArray(new Indi[props.size()]);
+    }
+
     private boolean canbeExported(Indi indi) {
+        if (vetoedProperty(indi))
+            return false;
         PointInTime CurrentDate = PointInTime.getNow();
         PropertyDate birthDate = indi != null ? indi.getBirthDate() : null;
         PointInTime date = birthDate != null ? birthDate.getStart() : null;
@@ -229,6 +293,8 @@ public class GeneanetExport {
     }
 
     private boolean canbeExported(Fam family) {
+        if (vetoedProperty(family))
+            return false;
         PointInTime CurrentDate = PointInTime.getNow();
         PropertyDate marriageDate = family != null ? family.getMarriageDate() : null;
         PointInTime date = marriageDate != null ? marriageDate.getStart() : null;
@@ -274,12 +340,12 @@ public class GeneanetExport {
                      * fam HusbandLastName FirstName[.Number]
                      */
                     out.write("fam ");
-                    if (husband != null) {
+                    if (!vetoedProperty(husband)) {
                         /*
                          * LastName FirstName.Occurence
                          */
                         out.write(indiMap.get(husband.getId()).getNameOccurenced() + " ");
-                        Fam[] husbandFamc = husband.getFamiliesWhereChild();
+                        Property[] husbandFamc = vetoedProperties(husband.getFamiliesWhereChild());
                         if (husbandFamc.length == 0) {
                             GwIndi gwIndi = indiMap.get(husband.getId());
 
@@ -308,19 +374,19 @@ public class GeneanetExport {
                      */
                     out.write("+");
                     Property marriage = family.getProperty("MARR");
-                    if (marriage != null) {
+                    if (!vetoedProperty(marriage)) {
                         /*
                          * [WeddingDate] [#mp WeddingPlace] [#ms WeddingSource]
                          */
                         PropertyDate marriageDate = (PropertyDate) marriage.getProperty("DATE");
-                        if (marriageDate != null) {
+                        if (!vetoedProperty(marriageDate)) {
                             out.write(analyzeDate(marriageDate) + " ");
                         } else {
                             out.write("0 ");
                         }
 
                         PropertyPlace marriagePlace = (PropertyPlace) marriage.getProperty("PLAC");
-                        if (marriagePlace != null && marriagePlace.getValue().isEmpty() != true) {
+                        if (!vetoedProperty(marriagePlace) && marriagePlace.getValue().isEmpty() != true) {
                             if (marriagePlace.getValue().length() > 0) {
                                 out.write("#mp " + marriagePlace.getValue().replaceAll(" |\n", "_") + " ");
                             }
@@ -328,7 +394,7 @@ public class GeneanetExport {
 
                         if (sourcesExported == true) {
                             Property marriageSource = marriage.getProperty("SOUR");
-                            if (marriageSource != null) {
+                            if (!vetoedProperty(marriageSource)) {
                                 out.write("#ms " + source2String(marriageSource) + " ");
                             }
                         }
@@ -339,9 +405,9 @@ public class GeneanetExport {
                          */
                         if (divorceExported == true) {
                             Property divorce = family.getProperty("DIV");
-                            if (divorce != null) {
+                            if (!vetoedProperty(divorce)) {
                                 PropertyDate divorceDate = (PropertyDate) divorce.getProperty("DATE");
-                                if (divorceDate != null) {
+                                if (!vetoedProperty(divorceDate)) {
                                     out.write("-" + analyzeDate(divorceDate) + " ");
                                 } else {
                                     out.write("-0 ");
@@ -360,12 +426,12 @@ public class GeneanetExport {
                      * WifeLastName FirstName[.Number]
                      *
                      */
-                    if (wife != null) {
+                    if (!vetoedProperty(wife)) {
                         /*
                          * LastName FirstName.Occurence
                          */
                         out.write(indiMap.get(wife.getId()).getNameOccurenced());
-                        Fam[] wifeFamc = wife.getFamiliesWhereChild();
+                        Property[] wifeFamc = vetoedProperties(wife.getFamiliesWhereChild());
                         if (wifeFamc.length == 0) {
                             GwIndi gwIndi = indiMap.get(wife.getId());
 
@@ -396,7 +462,7 @@ public class GeneanetExport {
                      */
                     if (sourcesExported == true) {
                         Property familySource = family.getProperty("SOUR");
-                        if (familySource != null) {
+                        if (!vetoedProperty(familySource)) {
                             out.write("src " + source2String(familySource) + "\n");
                         }
                     }
@@ -405,7 +471,7 @@ public class GeneanetExport {
                      * [comm Family comments in free format]
                      */
                     if (notesExported == true) {
-                        Property[] familyNotes = family.getProperties("NOTE");
+                        Property[] familyNotes = vetoedProperties(family.getProperties("NOTE"));
                         if (familyNotes.length > 0) {
                             // PropertyNote|PropertyMultilineValue
                             out.write("comm ");
@@ -430,7 +496,7 @@ public class GeneanetExport {
                      * section) ]
                      */
                     if (marriage != null && weddingDetailExported == true) {
-                        Property[] propertiesXRef = marriage.getProperties("XREF");
+                        Property[] propertiesXRef = vetoedProperties(marriage.getProperties("XREF"));
                         if (propertiesXRef.length > 0) {
                             for (Property xrefProperty : propertiesXRef) {
                                 if (xrefProperty instanceof PropertyXRef) {
@@ -451,7 +517,7 @@ public class GeneanetExport {
                      * beg - [h | f | ] Person (see detailed description at the
                      * next section) end
                      */
-                    Indi[] childrens = family.getChildren();
+                    Indi[] childrens = vetoedProperties(family.getChildren());
                     if (childrens.length > 0) {
                         out.write("beg\n");
                         for (Indi children : childrens) {

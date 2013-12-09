@@ -23,12 +23,16 @@
  */
 package ancestris.modules.exports.geneanet;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.SaveOptionsWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
+import genj.io.Filter;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -38,6 +42,7 @@ import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -95,6 +100,21 @@ public final class GeneanetExportAction implements ActionListener {
                 exportDirName = modulePreferences.get("Dossier-Export-" + gedcomName, "");
                 exportFileName = modulePreferences.get("Fichier-Export-" + gedcomName, gedcomName + ".gw");
 
+        ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
+        for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
+            if (f.canApplyTo(context.getGedcom())) {
+                theFilters.add(f);
+            }
+        }
+        for (Filter f : Lookup.getDefault().lookupAll(Filter.class)) {
+            if (f.canApplyTo(context.getGedcom())) {
+                theFilters.add(f);
+            }
+        }
+
+        SaveOptionsWidget options = new SaveOptionsWidget(theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
+
+        fc.setAccessory(options);
                 if (exportDirName.length() > 0) {
                     // Set the current directory
                     fc.setCurrentDirectory(new File(exportDirName));
@@ -110,6 +130,7 @@ public final class GeneanetExportAction implements ActionListener {
                     modulePreferences.put("Fichier-Export-" + gedcomName, exportFile.getName());
 
                     GeneanetExport exportGeneanet = new GeneanetExport(myGedcom, exportFile);
+                    exportGeneanet.setFilters(theFilters);
                     showWaitCursor();
                     exportGeneanet.start();
                     hideWaitCursor();
@@ -164,4 +185,4 @@ public final class GeneanetExportAction implements ActionListener {
             }
         });
     }
-}
+        }
