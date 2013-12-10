@@ -134,6 +134,10 @@ public class EventsListPanel extends javax.swing.JPanel {
 
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 eventEditorPanel.commit();
+            } else {
+                while (mRoot.getGedcom().canUndo()) {
+                    mRoot.getGedcom().undoUnitOfWork(false);
+                }                
             }
         }
     }//GEN-LAST:event_editEventButtonActionPerformed
@@ -161,6 +165,10 @@ public class EventsListPanel extends javax.swing.JPanel {
 
                 if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     eventEditorPanel.commit();
+                } else {
+                    while (mRoot.getGedcom().canUndo()) {
+                        mRoot.getGedcom().undoUnitOfWork(false);
+                    }
                 }
             }
         }
@@ -178,7 +186,7 @@ public class EventsListPanel extends javax.swing.JPanel {
             }); // end of doUnitOfWork
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
-        }  finally {
+        } finally {
             EventEditorPanel eventEditorPanel = new EventEditorPanel();
 
             eventEditorPanel.set(mRoot, mEvent);
@@ -191,7 +199,9 @@ public class EventsListPanel extends javax.swing.JPanel {
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mEventsTableModel.add(eventEditorPanel.commit());
             } else {
-                mRoot.getGedcom().undoUnitOfWork(false);
+                while (mRoot.getGedcom().canUndo()) {
+                    mRoot.getGedcom().undoUnitOfWork(false);
+                }
             }
         }
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
