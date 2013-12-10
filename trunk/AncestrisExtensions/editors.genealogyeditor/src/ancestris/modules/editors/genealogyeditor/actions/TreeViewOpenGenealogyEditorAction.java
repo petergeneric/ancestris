@@ -32,8 +32,8 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages("OpenInEditor.title=Edit with genealogyeditor")
 public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements ContextAwareAction {
 
-    Gedcom myGedcom = null;
-    Entity entity = null;
+    private Gedcom gedcom = null;
+    private Entity entity = null;
 
     @Override
     public void actionPerformed(ActionEvent ae) {
@@ -70,6 +70,11 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 editorDialog.setDialogId(IndividualEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     individualEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = entity.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             } else if (entity instanceof Fam) {
                 FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
@@ -81,6 +86,11 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 editorDialog.setDialogId(FamilyEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     familyEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = entity.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             }
 
