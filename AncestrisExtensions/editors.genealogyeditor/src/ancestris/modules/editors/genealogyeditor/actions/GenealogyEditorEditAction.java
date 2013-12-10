@@ -47,6 +47,11 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 editorDialog.setDialogId(IndividualEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     individualEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = entity.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             } else if (entity instanceof Fam) {
                 FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
@@ -58,6 +63,11 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 editorDialog.setDialogId(FamilyEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     familyEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = entity.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             } else if (entity instanceof Note) {
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
@@ -69,6 +79,11 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 editorDialog.setDialogId(NoteEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     noteEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = entity.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             } else if (entity instanceof Source) {
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
@@ -80,6 +95,11 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 editorDialog.setDialogId(SourceEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     sourceEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = entity.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             } else if (entity instanceof Repository) {
                 RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
@@ -92,6 +112,11 @@ public final class GenealogyEditorEditAction implements ActionListener {
 
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     repositoryEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = entity.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             }
         }

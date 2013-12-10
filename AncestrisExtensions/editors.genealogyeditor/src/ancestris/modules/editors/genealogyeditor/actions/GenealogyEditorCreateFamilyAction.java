@@ -58,9 +58,10 @@ public final class GenealogyEditorCreateFamilyAction implements ActionListener {
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     familyEditorPanel.commit();
                 } else {
-                    gedcom.undoUnitOfWork(false);
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
-
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }

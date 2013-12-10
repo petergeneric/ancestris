@@ -3,15 +3,14 @@ package ancestris.modules.editors.genealogyeditor.actions;
 import ancestris.modules.editors.genealogyeditor.panels.IndividualEditorPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import org.openide.DialogDescriptor;
-import org.openide.loaders.DataObject;
-
-import org.openide.awt.ActionRegistration;
+import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
-import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
+import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -62,7 +61,9 @@ public final class GenealogyEditorCreateIndividualAction implements ActionListen
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     individualEditorPanel.commit();
                 } else {
-                    gedcom.undoUnitOfWork(false);
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
