@@ -16,7 +16,7 @@ import org.openide.util.NbBundle;
  * @author dominique
  */
 public class NotesListPanel extends javax.swing.JPanel {
-    
+
     private Property mRoot;
     private NotesTableModel mNotesTableModel = new NotesTableModel();
     private Note mNote;
@@ -128,7 +128,7 @@ public class NotesListPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
-                
+
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mNote = (Note) gedcom.createEntity(Gedcom.NOTE);
@@ -148,33 +148,40 @@ public class NotesListPanel extends javax.swing.JPanel {
                 mNotesTableModel.add(commitedNote);
                 mRoot.addNote(commitedNote);
             } else {
-                gedcom.undoUnitOfWork(false);
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         }
     }//GEN-LAST:event_addNoteButtonActionPerformed
-    
+
     private void editNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNoteButtonActionPerformed
         int selectedRow = notesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
             noteEditorPanel.set(mNotesTableModel.getValueAt(rowIndex));
-            
+
             ADialog noteEditorDialog = new ADialog(
                     NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
-            
+
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 noteEditorPanel.commit();
+            } else {
+                Gedcom gedcom = mRoot.getGedcom();
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         }
     }//GEN-LAST:event_editNoteButtonActionPerformed
-    
+
     private void deleteNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNoteButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
-    
+
     private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int selectedRow = notesTable.getSelectedRow();
@@ -182,22 +189,27 @@ public class NotesListPanel extends javax.swing.JPanel {
                 int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
                 noteEditorPanel.set(mNotesTableModel.getValueAt(rowIndex));
-                
+
                 ADialog noteEditorDialog = new ADialog(
                         NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
                         noteEditorPanel);
                 noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
-                
+
                 if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     noteEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = mRoot.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             }
         }
     }//GEN-LAST:event_notesTableMouseClicked
-    
+
     private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
         List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
-        
+
         NotesListPanel notesListPanel = new NotesListPanel();
         notesListPanel.setNotesList(mRoot, notesList);
         notesListPanel.setToolBarVisible(false);
@@ -205,11 +217,16 @@ public class NotesListPanel extends javax.swing.JPanel {
                 NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
                 notesListPanel);
         individualsListDialog.setDialogId(NoteEditorPanel.class.getName());
-        
+
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
             Note selectedNote = notesListPanel.getSelectedNote();
             mNotesTableModel.add(selectedNote);
             mRoot.addNote(selectedNote);
+        } else {
+            Gedcom gedcom = mRoot.getGedcom();
+            while (gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
         }
     }//GEN-LAST:event_linkToNoteButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -226,14 +243,14 @@ public class NotesListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mNotesTableModel.update(notesList);
     }
-    
+
     public void setToolBarVisible(boolean visible) {
         notesToolBar.setVisible(visible);
     }
-    
+
     public void commit() {
     }
-    
+
     private Note getSelectedNote() {
         int selectedRow = notesTable.getSelectedRow();
         if (selectedRow != -1) {

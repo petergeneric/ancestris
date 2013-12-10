@@ -126,7 +126,9 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mIndividualsTableModel.add(individualEditorPanel.commit());
             } else {
-                gedcom.undoUnitOfWork(false);
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         }
     }//GEN-LAST:event_addIndividualButtonActionPerformed
@@ -144,6 +146,11 @@ public class IndividualsListPanel extends javax.swing.JPanel {
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 individualEditorPanel.commit();
+            } else {
+                Gedcom gedcom = mRoot.getGedcom();
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         }
     }//GEN-LAST:event_editIndividualButtonActionPerformed
@@ -164,6 +171,12 @@ public class IndividualsListPanel extends javax.swing.JPanel {
                 individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
                 if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    individualEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = mRoot.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             }
         }
@@ -192,11 +205,10 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         }
     }
 
-
     public void setToolBarVisible(boolean visible) {
         individualsToolBar.setVisible(visible);
     }
-    
+
     public void commit() {
     }
 }

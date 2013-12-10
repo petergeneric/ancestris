@@ -84,6 +84,11 @@ public class SourcesListPanel extends javax.swing.JPanel {
         sourcesTable.setShowHorizontalLines(false);
         sourcesTable.setShowVerticalLines(false);
         sourcesTable.getColumnModel().getColumn(0).setMaxWidth(100);
+        sourcesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sourcesTableMouseClicked(evt);
+            }
+        });
         sourcesScrollPane.setViewportView(sourcesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -127,7 +132,9 @@ public class SourcesListPanel extends javax.swing.JPanel {
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 sourcesTableModel.add(sourceEditorPanel.commit());
             } else {
-                gedcom.undoUnitOfWork(false);
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         }
     }//GEN-LAST:event_addSourceButtonActionPerformed
@@ -144,6 +151,12 @@ public class SourcesListPanel extends javax.swing.JPanel {
             sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                sourcesTableModel.add(sourceEditorPanel.commit());
+            } else {
+                Gedcom gedcom = mRoot.getGedcom();
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         }
     }//GEN-LAST:event_editSourceButtonActionPerformed
@@ -151,6 +164,30 @@ public class SourcesListPanel extends javax.swing.JPanel {
     private void deleteSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteSourceButtonActionPerformed
+
+    private void sourcesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourcesTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = sourcesTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
+                SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
+                sourceEditorPanel.setSource(sourcesTableModel.getValueAt(rowIndex));
+                ADialog sourceEditorDialog = new ADialog(
+                        NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
+                        sourceEditorPanel);
+                sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+
+                if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    sourcesTableModel.add(sourceEditorPanel.commit());
+                } else {
+                    Gedcom gedcom = mRoot.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_sourcesTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceButton;
     private javax.swing.JButton deleteSourceButton;
