@@ -98,11 +98,13 @@ public class ImageBean extends javax.swing.JPanel {
             Property file = multimediaObject.getProperty("FILE", true);
             if (file instanceof PropertyFile) {
                 imageFile = ((PropertyFile) file).getFile();
-                try {
-                    BufferedImage loadImage = ImageIO.read(imageFile);
-                    resizedImage = resizeImage(loadImage, 150, 200);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                if (imageFile.exists()) {
+                    try {
+                        BufferedImage loadImage = ImageIO.read(imageFile);
+                        resizedImage = resizeImage(loadImage, 150, 200);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
             }
         }
