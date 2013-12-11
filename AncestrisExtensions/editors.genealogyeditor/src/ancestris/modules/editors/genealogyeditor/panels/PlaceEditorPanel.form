@@ -25,7 +25,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="gedcomPlacePanel" pref="737" max="32767" attributes="0"/>
-                  <Component id="jTabbedPane1" max="32767" attributes="0"/>
+                  <Component id="jTabbedPane1" pref="737" max="32767" attributes="0"/>
                   <Component id="placeEditorToolBar" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -337,7 +337,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MapScrollPane" pref="227" max="32767" attributes="0"/>
+                      <Component id="MapScrollPane" pref="225" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -381,18 +381,16 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="geonamesScrollPane" pref="190" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="geonamesPlacePanel" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="searchPlaceTextField" min="-2" pref="559" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="searchPlaceTextField" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="searchPlaceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="geonamesScrollPane" pref="265" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="geonamesPlacePanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -400,16 +398,15 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="searchPlaceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="searchPlaceButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="geonamesScrollPane" max="32767" attributes="0"/>
+                          <Component id="geonamesPlacePanel" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="geonamesPlacePanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="searchPlaceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="searchPlaceButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="geonamesScrollPane" pref="190" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -476,7 +473,7 @@
                                       <Component id="field1TextField" alignment="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="field4TextField" alignment="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="field5TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="latitudeTextField" alignment="0" pref="160" max="32767" attributes="0"/>
+                                      <Component id="latitudeTextField" alignment="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -489,14 +486,14 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="field6TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="field3TextField" alignment="0" pref="159" max="32767" attributes="0"/>
+                                      <Component id="field3TextField" alignment="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="field2TextField" alignment="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="field7TextField" alignment="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="longitudeTextField" alignment="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jLabel1" min="-2" pref="229" max="-2" attributes="0"/>
+                                  <Component id="jLabel1" pref="291" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="copyButton" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -507,6 +504,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="field0TextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="field2Label" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -546,6 +544,7 @@
                               <Component id="copyButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -668,6 +667,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.jLabel1.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                     </Property>
@@ -711,7 +711,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="placeReferenceScrollPane" pref="227" max="32767" attributes="0"/>
+                      <Component id="placeReferenceScrollPane" pref="225" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.EventsTypeComboBoxModelModel;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -54,6 +53,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         aDateBean = new ancestris.modules.beans.ADateBean();
         eventTypeLabel = new javax.swing.JLabel();
         eventTypeTextField = new javax.swing.JTextField();
+        linkToPlaceButton = new javax.swing.JButton();
         eventInformationTabbedPane = new javax.swing.JTabbedPane();
         sourcesPanel = new javax.swing.JPanel();
         sourcesListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel();
@@ -114,6 +114,17 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         eventTypeTextField.setEditable(false);
 
+        linkToPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToPlaceButton.setFocusable(false);
+        linkToPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToPlaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkToPlaceButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -145,6 +156,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addPlaceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(linkToPlaceButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editPlaceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removePlaceButton))))
@@ -173,8 +186,10 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     .addComponent(eventPlaceLabel)
                     .addComponent(eventPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addPlaceButton)
-                    .addComponent(editPlaceButton)
-                    .addComponent(removePlaceButton)))
+                    .addComponent(removePlaceButton)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(editPlaceButton))))
         );
 
         sourcesListPanel.setPreferredSize(null);
@@ -255,11 +270,13 @@ public class EventEditorPanel extends javax.swing.JPanel {
         if (placeEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             mPlace = placeEditorPanel.commit();
             addPlaceButton.setVisible(false);
+            linkToPlaceButton.setVisible(false);
             editPlaceButton.setVisible(true);
             removePlaceButton.setVisible(true);
             eventPlaceTextField.setText(mPlace.format("all"));
         } else {
             addPlaceButton.setVisible(true);
+            linkToPlaceButton.setVisible(true);
             editPlaceButton.setVisible(false);
             removePlaceButton.setVisible(false);
             eventPlaceTextField.setText("");
@@ -289,13 +306,14 @@ public class EventEditorPanel extends javax.swing.JPanel {
             if (placeEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 placeEditorPanel.commit();
                 addPlaceButton.setVisible(false);
+                linkToPlaceButton.setVisible(false);
                 editPlaceButton.setVisible(true);
                 removePlaceButton.setVisible(true);
                 eventPlaceTextField.setText(mPlace.format("all"));
             } else {
                 mRoot.getGedcom().undoUnitOfWork(false);
-
                 addPlaceButton.setVisible(true);
+                linkToPlaceButton.setVisible(true);
                 editPlaceButton.setVisible(false);
                 removePlaceButton.setVisible(false);
                 eventPlaceTextField.setText("");
@@ -313,6 +331,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
             addPlaceButton.setVisible(true);
+            linkToPlaceButton.setVisible(true);
             editPlaceButton.setVisible(false);
             removePlaceButton.setVisible(false);
             eventPlaceTextField.setText("");
@@ -320,6 +339,42 @@ public class EventEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_removePlaceButtonActionPerformed
+
+    private void linkToPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
+        PlacesListPanel placesListPanel = new PlacesListPanel(mRoot.getGedcom());
+        DialogManager.ADialog placesListPanelDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(PlacesListPanel.class, "NoteEditorPanel.title"),
+                placesListPanel);
+        placesListPanelDialog.setDialogId(NoteEditorPanel.class.getName());
+
+        if (placesListPanelDialog.show() == DialogDescriptor.OK_OPTION) {
+            final PropertyPlace selectedPlace = placesListPanel.getSelectedPlace();
+
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mPlace = (PropertyPlace) mEvent.addProperty("PLAC", selectedPlace.format("all"));
+                    }
+                }); // end of doUnitOfWork
+                addPlaceButton.setVisible(false);
+                linkToPlaceButton.setVisible(false);
+                editPlaceButton.setVisible(true);
+                removePlaceButton.setVisible(true);
+                eventPlaceTextField.setText(mPlace.format("all"));
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            mRoot.getGedcom().undoUnitOfWork(false);
+            addPlaceButton.setVisible(true);
+            linkToPlaceButton.setVisible(true);
+            editPlaceButton.setVisible(false);
+            removePlaceButton.setVisible(false);
+            eventPlaceTextField.setText("");
+        }
+    }//GEN-LAST:event_linkToPlaceButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ADateBean aDateBean;
     private javax.swing.JButton addPlaceButton;
@@ -337,6 +392,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField eventTypeTextField;
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton linkToPlaceButton;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel multimediaObjectsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
@@ -358,11 +414,13 @@ public class EventEditorPanel extends javax.swing.JPanel {
             PropertyPlace place = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
             if (place != null) {
                 addPlaceButton.setVisible(false);
+            linkToPlaceButton.setVisible(false);
                 editPlaceButton.setVisible(true);
                 removePlaceButton.setVisible(true);
                 eventPlaceTextField.setText(place.format("all"));
             } else {
                 addPlaceButton.setVisible(true);
+            linkToPlaceButton.setVisible(true);
                 editPlaceButton.setVisible(false);
                 removePlaceButton.setVisible(false);
                 eventPlaceTextField.setText("");
