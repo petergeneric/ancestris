@@ -5,8 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -26,7 +25,8 @@ public class ImageBean extends javax.swing.JPanel {
     private Property root;
     Property multimediaObject;
     private BufferedImage resizedImage;
-    private File imageFile;
+    private InputStream imageInputStream = null;
+    private File imageFile = null;
 
     /**
      * Creates new form ImageBean
@@ -73,17 +73,18 @@ public class ImageBean extends javax.swing.JPanel {
 
         imageFileChooser.setFileFilter(imageFileFilter);
         imageFileChooser.setAcceptAllFileFilterUsed(true);
-        imageFileChooser.setSelectedFile(imageFile);
+        if (imageFile != null) {
+            imageFileChooser.setSelectedFile(imageFile);
+        }
         if (imageFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             imageFile = imageFileChooser.getSelectedFile();
             try {
                 BufferedImage loadImage = ImageIO.read(imageFile);
                 resizedImage = resizeImage(loadImage, 150, 200);
+                imageModified = true;
                 this.repaint();
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
-            } finally {
-                imageModified = true;
             }
         }
     }//GEN-LAST:event_formMouseClicked
@@ -96,18 +97,27 @@ public class ImageBean extends javax.swing.JPanel {
 
         if (multimediaObject != null) {
             Property file = multimediaObject.getProperty("FILE", true);
-            if (file instanceof PropertyFile) {
-                imageFile = ((PropertyFile) file).getFile();
-                if (imageFile.exists()) {
-                    try {
-                        BufferedImage loadImage = ImageIO.read(imageFile);
-                        resizedImage = resizeImage(loadImage, 150, 200);
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+            if (file instanceof PropertyFile && ((PropertyFile) file).getFile().exists()) {
+                try {
+                    imageInputStream = new FileInputStream(((PropertyFile) file).getFile());
+                } catch (FileNotFoundException ex) {
+                    Exceptions.printStackTrace(ex);
+                    imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
                 }
+            } else {
+                imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
             }
+        } else {
+            imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
         }
+
+        try {
+            BufferedImage loadImage = ImageIO.read(imageInputStream);
+            resizedImage = resizeImage(loadImage, 150, 200);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
     }
 
     public BufferedImage resizeImage(BufferedImage img, int newW, int newH) {
