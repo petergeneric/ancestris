@@ -42,6 +42,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         minAgeMotherFormattedTextField = new javax.swing.JFormattedTextField();
         maxAgeMotherFormattedTextField = new javax.swing.JFormattedTextField();
         minAgeRETIFormattedTextField = new javax.swing.JFormattedTextField();
+        isSameSexFamValid = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(isExtramaritalValidCheckBox, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "isExtramaritalValid")); // NOI18N
 
@@ -91,6 +92,8 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         minAgeRETIFormattedTextField.setColumns(3);
         minAgeRETIFormattedTextField.setText("000");
 
+        org.openide.awt.Mnemonics.setLocalizedText(isSameSexFamValid, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.isSameSexFamValid.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,7 +135,8 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(maxAgeBAPMLabel)
-                            .addComponent(minAgeMARRLabel))))
+                            .addComponent(minAgeMARRLabel)))
+                    .addComponent(isSameSexFamValid))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -140,7 +144,9 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(isExtramaritalValidCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(isSameSexFamValid)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxLifeFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxLifeLabel))
@@ -193,6 +199,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         isPrivateValueValidCheckBox.setSelected(modulePreferences.getBoolean("isPrivateValueValid", true));
         isRelaxedPlaceFormatCheckBox.setSelected(modulePreferences.getBoolean("isRelaxedPlaceFormat", false));
         isUnderscoreValidCheckBox.setSelected(modulePreferences.getBoolean("isUnderscoreValid", true));
+        isSameSexFamValid.setSelected(modulePreferences.getBoolean("isSameSexFamValid", false));
         maxAgeBAPMFormattedTextField.setValue(modulePreferences.getInt("maxAgeBAPM", 120));
         maxAgeMotherFormattedTextField.setValue(modulePreferences.getInt("maxAgeMother", 48));
         maxLifeFormattedTextField.setValue(modulePreferences.getInt("maxLife", 120));
@@ -211,6 +218,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         modulePreferences.putBoolean("isPrivateValueValid", isPrivateValueValidCheckBox.isSelected());
         modulePreferences.putBoolean("isRelaxedPlaceFormat", isRelaxedPlaceFormatCheckBox.isSelected());
         modulePreferences.putBoolean("isUnderscoreValid", isUnderscoreValidCheckBox.isSelected());
+        modulePreferences.putBoolean("isSameSexFamValid", isSameSexFamValid.isSelected());
         modulePreferences.putInt("maxAgeBAPM", (Integer)maxAgeBAPMFormattedTextField.getValue());
         modulePreferences.putInt("maxAgeMother", (Integer)maxAgeMotherFormattedTextField.getValue());
         modulePreferences.putInt("maxLife", (Integer)maxLifeFormattedTextField.getValue());
@@ -231,6 +239,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox isOrderDiscretionaryCheckBox;
     private javax.swing.JCheckBox isPrivateValueValidCheckBox;
     private javax.swing.JCheckBox isRelaxedPlaceFormatCheckBox;
+    private javax.swing.JCheckBox isSameSexFamValid;
     private javax.swing.JCheckBox isUnderscoreValidCheckBox;
     private javax.swing.JFormattedTextField maxAgeBAPMFormattedTextField;
     private javax.swing.JLabel maxAgeBAPMLabel;
