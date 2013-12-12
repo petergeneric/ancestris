@@ -42,9 +42,9 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         fatherPanel = new javax.swing.JPanel();
         fatherToolBar = new javax.swing.JToolBar();
         addHusbandButton = new javax.swing.JButton();
+        linktoHusbandButton = new javax.swing.JButton();
         editHubandButton = new javax.swing.JButton();
         deleteHusbandButton = new javax.swing.JButton();
-        linktoHusbandButton = new javax.swing.JButton();
         HusbandNameLabel = new javax.swing.JLabel();
         husbandNameTextField = new javax.swing.JTextField();
         husbandBirthDateLabel = new javax.swing.JLabel();
@@ -54,9 +54,9 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         motherPanel = new javax.swing.JPanel();
         motherToolBar = new javax.swing.JToolBar();
         addWifeButton = new javax.swing.JButton();
+        linkToWifeButton = new javax.swing.JButton();
         editWifeButton = new javax.swing.JButton();
         deleteWifeButton = new javax.swing.JButton();
-        linkToWifeButton = new javax.swing.JButton();
         wifeLabel = new javax.swing.JLabel();
         wifeNameTextField = new javax.swing.JTextField();
         wifeBirthDateLabel = new javax.swing.JLabel();
@@ -117,6 +117,18 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         });
         fatherToolBar.add(addHusbandButton);
 
+        linktoHusbandButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linktoHusbandButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.linktoHusbandButton.text"), new Object[] {})); // NOI18N
+        linktoHusbandButton.setFocusable(false);
+        linktoHusbandButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linktoHusbandButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linktoHusbandButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linktoHusbandButtonActionPerformed(evt);
+            }
+        });
+        fatherToolBar.add(linktoHusbandButton);
+
         editHubandButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editHubandButton.setFocusable(false);
         editHubandButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -138,18 +150,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             }
         });
         fatherToolBar.add(deleteHusbandButton);
-
-        linktoHusbandButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linktoHusbandButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.linktoHusbandButton.text"), new Object[] {})); // NOI18N
-        linktoHusbandButton.setFocusable(false);
-        linktoHusbandButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linktoHusbandButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        linktoHusbandButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linktoHusbandButtonActionPerformed(evt);
-            }
-        });
-        fatherToolBar.add(linktoHusbandButton);
 
         HusbandNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.HusbandNameLabel.text"), new Object[] {})); // NOI18N
 
@@ -215,6 +215,18 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         });
         motherToolBar.add(addWifeButton);
 
+        linkToWifeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToWifeButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.linkToWifeButton.text"), new Object[] {})); // NOI18N
+        linkToWifeButton.setFocusable(false);
+        linkToWifeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToWifeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToWifeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkToWifeButtonActionPerformed(evt);
+            }
+        });
+        motherToolBar.add(linkToWifeButton);
+
         editWifeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editWifeButton.setFocusable(false);
         editWifeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -236,18 +248,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             }
         });
         motherToolBar.add(deleteWifeButton);
-
-        linkToWifeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToWifeButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.linkToWifeButton.text"), new Object[] {})); // NOI18N
-        linkToWifeButton.setFocusable(false);
-        linkToWifeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linkToWifeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        linkToWifeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linkToWifeButtonActionPerformed(evt);
-            }
-        });
-        motherToolBar.add(linkToWifeButton);
 
         wifeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeLabel.text"), new Object[] {})); // NOI18N
 
@@ -314,7 +314,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         );
         childrensPanelLayout.setVerticalGroup(
             childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrensListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+            .addComponent(childrensListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.childrensPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrensPanel); // NOI18N
@@ -329,7 +329,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
@@ -344,7 +344,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+            .addComponent(sourcesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Sources", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourcesPanel); // NOI18N
@@ -359,7 +359,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -375,7 +375,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         );
         galleryPanelLayout.setVerticalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+            .addComponent(multimediaObjectsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
@@ -432,7 +432,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mHusband = individualEditorPanel.commit();
-
+                addHusbandButton.setVisible(false);
+                linktoHusbandButton.setVisible(false);
             } else {
                 mFamily.getGedcom().undoUnitOfWork(false);
             }
@@ -471,6 +472,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            individualEditorPanel.commit();
         }
     }//GEN-LAST:event_editWifeButtonActionPerformed
 
@@ -521,6 +523,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
             mHusband = individualsListPanel.getSelectedIndividual();
             addHusbandButton.setVisible(false);
+            linktoHusbandButton.setVisible(false);
             husbandNameTextField.setText(mHusband.getName());
             husbandBirthDateTextField.setText(mHusband.getBirthAsString());
             husbandDeathDateTextField.setText(mHusband.getDeathAsString());
@@ -547,6 +550,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
             mWife = individualsListPanel.getSelectedIndividual();
             addWifeButton.setVisible(false);
+            linkToWifeButton.setVisible(false);
             wifeNameTextField.setText(mWife.getName());
             wifeBirthDateTextField.setText(mWife.getBirthAsString());
             wifeDeathDateTextField.setText(mWife.getDeathAsString());
@@ -606,6 +610,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         mHusband = mFamily.getHusband();
         if (mHusband != null) {
             addHusbandButton.setVisible(false);
+            linktoHusbandButton.setVisible(false);
             husbandNameTextField.setText(mHusband.getName());
             husbandBirthDateTextField.setText(mHusband.getBirthAsString());
             husbandDeathDateTextField.setText(mHusband.getDeathAsString());
@@ -618,6 +623,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         mWife = mFamily.getWife();
         if (mWife != null) {
             addWifeButton.setVisible(false);
+            linkToWifeButton.setVisible(false);
             wifeNameTextField.setText(mWife.getName());
             wifeBirthDateTextField.setText(mWife.getBirthAsString());
             wifeDeathDateTextField.setText(mWife.getDeathAsString());
