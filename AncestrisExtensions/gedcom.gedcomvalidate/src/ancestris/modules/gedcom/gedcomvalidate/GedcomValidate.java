@@ -47,6 +47,8 @@ public class GedcomValidate {
     public boolean isExtramaritalValid = modulePreferences.getBoolean("isExtramaritalValid", true);
     /** whether a place format is binding and has to be adhered to */
     public boolean isRelaxedPlaceFormat = modulePreferences.getBoolean("isRelaxedPlaceFormat", false);
+    /** whether Same Sex families are allowed */
+    public boolean isSameSexFamValid = modulePreferences.getBoolean("isSameSexFamValid", false);
     /** options of reports are picked up via field-introspection */
     public int maxLife = modulePreferences.getInt("maxLife", 120);
     public int minAgeMARR = modulePreferences.getInt("minAgeMARR", 12);
@@ -202,7 +204,9 @@ public class GedcomValidate {
         result.add(new TestValid(this));
 
         // spouses with wrong gender
-        result.add(new TestSpouseGender());
+        if (!isSameSexFamValid){
+            result.add(new TestSpouseGender());
+        }
 
         // non existing files
         if (!isFileNotFoundValid) {
