@@ -269,17 +269,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         placeEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
         if (placeEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             mPlace = placeEditorPanel.commit();
-            addPlaceButton.setVisible(false);
-            linkToPlaceButton.setVisible(false);
-            editPlaceButton.setVisible(true);
-            removePlaceButton.setVisible(true);
             eventPlaceTextField.setText(mPlace.format("all"));
-        } else {
-            addPlaceButton.setVisible(true);
-            linkToPlaceButton.setVisible(true);
-            editPlaceButton.setVisible(false);
-            removePlaceButton.setVisible(false);
-            eventPlaceTextField.setText("");
         }
     }//GEN-LAST:event_editPlaceButtonActionPerformed
 
@@ -304,19 +294,12 @@ public class EventEditorPanel extends javax.swing.JPanel {
             placeEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
             if (placeEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                placeEditorPanel.commit();
+                mPlace = placeEditorPanel.commit();
                 addPlaceButton.setVisible(false);
                 linkToPlaceButton.setVisible(false);
                 editPlaceButton.setVisible(true);
                 removePlaceButton.setVisible(true);
                 eventPlaceTextField.setText(mPlace.format("all"));
-            } else {
-                mRoot.getGedcom().undoUnitOfWork(false);
-                addPlaceButton.setVisible(true);
-                linkToPlaceButton.setVisible(true);
-                editPlaceButton.setVisible(false);
-                removePlaceButton.setVisible(false);
-                eventPlaceTextField.setText("");
             }
         }
     }//GEN-LAST:event_addPlaceButtonActionPerformed
@@ -330,6 +313,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     mEvent.delProperties(PropertyPlace.TAG);
                 }
             }); // end of doUnitOfWork
+            
             addPlaceButton.setVisible(true);
             linkToPlaceButton.setVisible(true);
             editPlaceButton.setVisible(false);
@@ -358,6 +342,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         mPlace = (PropertyPlace) mEvent.addProperty("PLAC", selectedPlace.format("all"));
                     }
                 }); // end of doUnitOfWork
+                
                 addPlaceButton.setVisible(false);
                 linkToPlaceButton.setVisible(false);
                 editPlaceButton.setVisible(true);
@@ -407,13 +392,13 @@ public class EventEditorPanel extends javax.swing.JPanel {
             PropertyPlace place = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
             if (place != null) {
                 addPlaceButton.setVisible(false);
-            linkToPlaceButton.setVisible(false);
+                linkToPlaceButton.setVisible(false);
                 editPlaceButton.setVisible(true);
                 removePlaceButton.setVisible(true);
                 eventPlaceTextField.setText(place.format("all"));
             } else {
                 addPlaceButton.setVisible(true);
-            linkToPlaceButton.setVisible(true);
+                linkToPlaceButton.setVisible(true);
                 editPlaceButton.setVisible(false);
                 removePlaceButton.setVisible(false);
                 eventPlaceTextField.setText("");
