@@ -366,13 +366,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        } else {
-            mRoot.getGedcom().undoUnitOfWork(false);
-            addPlaceButton.setVisible(true);
-            linkToPlaceButton.setVisible(true);
-            editPlaceButton.setVisible(false);
-            removePlaceButton.setVisible(false);
-            eventPlaceTextField.setText("");
         }
     }//GEN-LAST:event_linkToPlaceButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
