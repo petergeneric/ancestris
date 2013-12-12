@@ -85,7 +85,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         gedcomLatitudeTextField = new javax.swing.JTextField();
         gedcomLongitudeLabel = new javax.swing.JLabel();
         gedcomLongitudeTextField = new javax.swing.JTextField();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        placeEditorTabbedPane = new javax.swing.JTabbedPane();
         mapPanel = new javax.swing.JPanel();
         MapScrollPane = new javax.swing.JScrollPane();
         jXMapKit1 = new org.jdesktop.swingx.JXMapKit();
@@ -263,8 +263,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.setBorder(null);
-        jTabbedPane1.setMinimumSize(new java.awt.Dimension(513, 263));
+        placeEditorTabbedPane.setBorder(null);
+        placeEditorTabbedPane.setMinimumSize(new java.awt.Dimension(513, 263));
 
         MapScrollPane.setViewportView(jXMapKit1);
 
@@ -285,7 +285,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.mapPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/map.png")), mapPanel); // NOI18N
+        placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.mapPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/map.png")), mapPanel); // NOI18N
 
         searchPlacePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -467,7 +467,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.searchPlacePanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png")), searchPlacePanel); // NOI18N
+        placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.searchPlacePanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png")), searchPlacePanel); // NOI18N
 
         placeReferenceScrollPane.setMinimumSize(new java.awt.Dimension(503, 218));
         placeReferenceScrollPane.setPreferredSize(new java.awt.Dimension(503, 218));
@@ -492,7 +492,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.placeReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), placeReferencesPanel); // NOI18N
+        placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.placeReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), placeReferencesPanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -502,7 +502,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(gedcomPlacePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
+                    .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(placeEditorToolBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -514,7 +514,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gedcomPlacePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -591,7 +591,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JList<String> geonamesPlacesList;
     private javax.swing.JScrollPane geonamesScrollPane;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private org.jdesktop.swingx.JXMapKit jXMapKit1;
     private javax.swing.JLabel latitudeLabel;
     private javax.swing.JTextField latitudeTextField;
@@ -599,6 +598,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField longitudeTextField;
     private javax.swing.JPanel mapPanel;
     private javax.swing.JButton parametersButton;
+    private javax.swing.JTabbedPane placeEditorTabbedPane;
     private javax.swing.JToolBar placeEditorToolBar;
     private javax.swing.JScrollPane placeReferenceScrollPane;
     private javax.swing.JPanel placeReferencesPanel;
@@ -666,23 +666,38 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             gedcomFields[index].setText(mPlace.getJurisdiction(index));
         }
 
+        Property latitude = null;
+        Property longitude = null;
         if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
             Property map = mPlace.getProperty("MAP");
             if (map != null) {
-                Property latitude = map.getProperty("LATI");
-                Property longitude = map.getProperty("LONG");
-                gedcomLatitudeTextField.setText(latitude.getValue());
-                gedcomLongitudeTextField.setText(longitude.getValue());
-                jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
+                latitude = map.getProperty("LATI");
+                longitude = map.getProperty("LONG");
             }
         } else {
             Property map = mPlace.getProperty("_MAP");
             if (map != null) {
-                Property latitude = map.getProperty("_LATI");
-                Property longitude = map.getProperty("_LONG");
-                gedcomLatitudeTextField.setText(latitude.getValue());
-                gedcomLongitudeTextField.setText(longitude.getValue());
-                jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
+                latitude = map.getProperty("_LATI");
+                longitude = map.getProperty("_LONG");
+            }
+        }
+        if (latitude != null && longitude != null) {
+            gedcomLatitudeTextField.setText(latitude.getValue());
+            gedcomLongitudeTextField.setText(longitude.getValue());
+            jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
+        } else {
+            placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
+            String searchedPlace = gedcomField1TextField.getText();
+            searchPlaceTextField.setText(searchedPlace);
+            if (searchedPlace.isEmpty() == false) {
+                geonamePlacesListModel.clear();
+                List<Place> findPlaces = new GeonamesPlacesList().findPlace(searchedPlace);
+
+                if (findPlaces != null) {
+                    for (Place findplace : findPlaces) {
+                        geonamePlacesListModel.add(findplace);
+                    }
+                }
             }
         }
     }
@@ -744,50 +759,43 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         };
 
         for (int index = 0; index < placeFormat.length; index++) {
-            if (index >0)
-            placeString += PropertyPlace.JURISDICTION_SEPARATOR;
+            if (index > 0) {
+                placeString += PropertyPlace.JURISDICTION_SEPARATOR;
+            }
             placeString += gedcomFields[index].getText();
         }
-/*        
-        if (placeFormat.length > 0) {
-            placeString = field0TextField.getText();
-        }
-
-        if (placeFormat.length > 1) {
-            placeString += PropertyPlace.JURISDICTION_SEPARATOR;
-            placeString += field1TextField.getText();
-        }
-
-        if (placeFormat.length > 2) {
-            placeString += PropertyPlace.JURISDICTION_SEPARATOR;
-            placeString += field2TextField.getText();
-        }
-
-        if (placeFormat.length > 3) {
-            placeString += PropertyPlace.JURISDICTION_SEPARATOR;
-            placeString += field4TextField.getText();
-        }
-
-        if (placeFormat.length > 4) {
-            placeString += PropertyPlace.JURISDICTION_SEPARATOR;
-            placeString += field3TextField.getText();
-        }
-
-        if (placeFormat.length > 5) {
-            placeString += PropertyPlace.JURISDICTION_SEPARATOR;
-            placeString += field6TextField.getText();
-        }
-
-        if (placeFormat.length > 6) {
-            placeString += PropertyPlace.JURISDICTION_SEPARATOR;
-            placeString += field5TextField.getText();
-        }
-
-        if (placeFormat.length > 7) {
-            placeString += PropertyPlace.JURISDICTION_SEPARATOR;
-            placeString += field7TextField.getText();
-        }
-*/
+        /*
+         * if (placeFormat.length > 0) { placeString =
+         * field0TextField.getText(); }
+         *
+         * if (placeFormat.length > 1) { placeString +=
+         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
+         * field1TextField.getText(); }
+         *
+         * if (placeFormat.length > 2) { placeString +=
+         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
+         * field2TextField.getText(); }
+         *
+         * if (placeFormat.length > 3) { placeString +=
+         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
+         * field4TextField.getText(); }
+         *
+         * if (placeFormat.length > 4) { placeString +=
+         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
+         * field3TextField.getText(); }
+         *
+         * if (placeFormat.length > 5) { placeString +=
+         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
+         * field6TextField.getText(); }
+         *
+         * if (placeFormat.length > 6) { placeString +=
+         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
+         * field5TextField.getText(); }
+         *
+         * if (placeFormat.length > 7) { placeString +=
+         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
+         * field7TextField.getText(); }
+         */
         return placeString;
     }
 
