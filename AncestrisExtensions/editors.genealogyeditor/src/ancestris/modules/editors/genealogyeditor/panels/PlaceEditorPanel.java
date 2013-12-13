@@ -6,7 +6,6 @@ import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
-import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -49,7 +48,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         jXMapKit1.setMiniMapVisible(false);
         jXMapKit1.getZoomSlider().setValue(5);
-
     }
 
     /**
@@ -523,13 +521,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         String searchedPlace = searchPlaceTextField.getText();
         if (searchedPlace.isEmpty() == false) {
             geonamePlacesListModel.clear();
-            List<Place> findPlaces = new GeonamesPlacesList().findPlace(searchedPlace);
-
-            if (findPlaces != null) {
-                for (Place findplace : findPlaces) {
-                    geonamePlacesListModel.add(findplace);
-                }
-            }
+            new GeonamesPlacesList().searchPlace(searchedPlace, geonamePlacesListModel);
         }
     }//GEN-LAST:event_searchPlaceButtonActionPerformed
 
@@ -686,18 +678,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             gedcomLongitudeTextField.setText(longitude.getValue());
             jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
         } else {
-            placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
             String searchedPlace = gedcomField1TextField.getText();
             searchPlaceTextField.setText(searchedPlace);
+            placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
             if (searchedPlace.isEmpty() == false) {
-                geonamePlacesListModel.clear();
-                List<Place> findPlaces = new GeonamesPlacesList().findPlace(searchedPlace);
-
-                if (findPlaces != null) {
-                    for (Place findplace : findPlaces) {
-                        geonamePlacesListModel.add(findplace);
-                    }
-                }
+                new GeonamesPlacesList().searchPlace(searchedPlace, geonamePlacesListModel);
             }
         }
     }
@@ -764,38 +749,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
             placeString += gedcomFields[index].getText();
         }
-        /*
-         * if (placeFormat.length > 0) { placeString =
-         * field0TextField.getText(); }
-         *
-         * if (placeFormat.length > 1) { placeString +=
-         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
-         * field1TextField.getText(); }
-         *
-         * if (placeFormat.length > 2) { placeString +=
-         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
-         * field2TextField.getText(); }
-         *
-         * if (placeFormat.length > 3) { placeString +=
-         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
-         * field4TextField.getText(); }
-         *
-         * if (placeFormat.length > 4) { placeString +=
-         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
-         * field3TextField.getText(); }
-         *
-         * if (placeFormat.length > 5) { placeString +=
-         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
-         * field6TextField.getText(); }
-         *
-         * if (placeFormat.length > 6) { placeString +=
-         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
-         * field5TextField.getText(); }
-         *
-         * if (placeFormat.length > 7) { placeString +=
-         * PropertyPlace.JURISDICTION_SEPARATOR; placeString +=
-         * field7TextField.getText(); }
-         */
+
         return placeString;
     }
 
