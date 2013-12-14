@@ -47,6 +47,7 @@ public class EventsListPanel extends javax.swing.JPanel {
 
         eventsToolBar = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(3, 0), new java.awt.Dimension(3, 0), new java.awt.Dimension(3, 32767));
         eventTypeComboBox = new javax.swing.JComboBox<String>();
         editEventButton = new javax.swing.JButton();
         deleteEventButton = new javax.swing.JButton();
@@ -58,6 +59,7 @@ public class EventsListPanel extends javax.swing.JPanel {
 
         jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.jLabel1.text"), new Object[] {})); // NOI18N
         eventsToolBar.add(jLabel1);
+        eventsToolBar.add(filler1);
 
         eventTypeComboBox.setModel(eventsTypeComboBoxModelModel);
         eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
@@ -212,6 +214,7 @@ public class EventsListPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane eventsScrollPane;
     private javax.swing.JTable eventsTable;
     private javax.swing.JToolBar eventsToolBar;
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
