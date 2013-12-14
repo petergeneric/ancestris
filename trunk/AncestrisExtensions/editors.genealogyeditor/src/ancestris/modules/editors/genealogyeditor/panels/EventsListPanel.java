@@ -5,7 +5,6 @@ import ancestris.modules.editors.genealogyeditor.models.EventsTypeComboBoxModelM
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -22,9 +21,6 @@ public class EventsListPanel extends javax.swing.JPanel {
     private Property mRoot;
     private EventsTypeComboBoxModelModel eventsTypeComboBoxModelModel = new EventsTypeComboBoxModelModel();
     private EventsTableModel mEventsTableModel = new EventsTableModel();
-    private ArrayList<PropertyEvent> mEditedEvents = new ArrayList<PropertyEvent>();
-    private ArrayList<PropertyEvent> mAddedEvents = new ArrayList<PropertyEvent>();
-    private ArrayList<PropertyEvent> mDeletedEvents = new ArrayList<PropertyEvent>();
     private PropertyEvent mEvent = null;
 
     /**
@@ -139,16 +135,28 @@ public class EventsListPanel extends javax.swing.JPanel {
             } else {
                 while (mRoot.getGedcom().canUndo()) {
                     mRoot.getGedcom().undoUnitOfWork(false);
-                }                
+                }
             }
         }
     }//GEN-LAST:event_editEventButtonActionPerformed
 
     private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEventButtonActionPerformed
-        int selectedRow = eventsTable.getSelectedRow();
+        final int selectedRow = eventsTable.getSelectedRow();
+        Gedcom gedcom = mRoot.getGedcom();
+
         if (selectedRow != -1) {
-            int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
-            mDeletedEvents.add(mEventsTableModel.remove(rowIndex));
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+                        mRoot.delProperty(mEventsTableModel.remove(rowIndex));
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
     }//GEN-LAST:event_deleteEventButtonActionPerformed
 
@@ -177,8 +185,9 @@ public class EventsListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_eventsTableMouseClicked
 
     private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
         try {
-            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+            gedcom.doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
@@ -186,9 +195,7 @@ public class EventsListPanel extends javax.swing.JPanel {
                     mEvent.addProperty("DATE", "");
                 }
             }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
+
             EventEditorPanel eventEditorPanel = new EventEditorPanel();
 
             eventEditorPanel.set(mRoot, mEvent);
@@ -201,10 +208,12 @@ public class EventsListPanel extends javax.swing.JPanel {
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mEventsTableModel.add(eventEditorPanel.commit());
             } else {
-                while (mRoot.getGedcom().canUndo()) {
-                    mRoot.getGedcom().undoUnitOfWork(false);
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
                 }
             }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -234,21 +243,5 @@ public class EventsListPanel extends javax.swing.JPanel {
     }
 
     public void commit() {
-        // Edited Events
-
-        // Added Events
-        for (PropertyEvent event : mAddedEvents) {
-            try {
-                mRoot.copyProperties(event, true);
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-        // Removed Events
-        for (PropertyEvent event : mDeletedEvents) {
-            Property parent = event.getParent();
-            parent.delProperty(event);
-        }
     }
 }
