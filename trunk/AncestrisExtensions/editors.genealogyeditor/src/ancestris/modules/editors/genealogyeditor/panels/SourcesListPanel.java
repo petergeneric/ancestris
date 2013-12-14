@@ -118,9 +118,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
                     mSource = (Source) gedcom.createEntity(Gedcom.SOUR);
                 }
             }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
+            
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
             sourceEditorPanel.setSource(mSource);
 
@@ -136,6 +134,8 @@ public class SourcesListPanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_addSourceButtonActionPerformed
 
@@ -162,7 +162,23 @@ public class SourcesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editSourceButtonActionPerformed
 
     private void deleteSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceButtonActionPerformed
-        // TODO add your handling code here:
+        final int selectedRow = sourcesTable.getSelectedRow();
+        Gedcom gedcom = mRoot.getGedcom();
+
+        if (selectedRow != -1) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
+                        mRoot.delProperty(sourcesTableModel.remove(rowIndex));
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }//GEN-LAST:event_deleteSourceButtonActionPerformed
 
     private void sourcesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourcesTableMouseClicked
