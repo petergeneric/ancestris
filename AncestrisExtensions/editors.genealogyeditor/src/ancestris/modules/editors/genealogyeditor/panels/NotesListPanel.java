@@ -134,9 +134,7 @@ public class NotesListPanel extends javax.swing.JPanel {
                     mNote = (Note) gedcom.createEntity(Gedcom.NOTE);
                 }
             }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
+            
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
             noteEditorPanel.set(mNote);
             ADialog noteEditorDialog = new ADialog(
@@ -152,6 +150,8 @@ public class NotesListPanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_addNoteButtonActionPerformed
 
@@ -179,7 +179,11 @@ public class NotesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editNoteButtonActionPerformed
 
     private void deleteNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNoteButtonActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = notesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
+            mRoot.delProperty(mNotesTableModel.remove(rowIndex));
+        }
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
 
     private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
