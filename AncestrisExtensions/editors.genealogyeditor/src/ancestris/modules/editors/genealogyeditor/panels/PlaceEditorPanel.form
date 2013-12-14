@@ -21,14 +21,18 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="gedcomPlacePanel" pref="737" max="32767" attributes="0"/>
-                  <Component id="placeEditorTabbedPane" max="32767" attributes="0"/>
+                  <Component id="placeEditorTabbedPane" pref="0" max="32767" attributes="0"/>
                   <Component id="placeEditorToolBar" alignment="1" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="gedcomPlacePanel" pref="525" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="geonamesPlacePanel" pref="532" max="32767" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -37,11 +41,14 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="placeEditorToolBar" min="-2" pref="25" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="gedcomPlacePanel" min="-2" pref="196" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="gedcomPlacePanel" min="-2" pref="196" max="-2" attributes="0"/>
+                  <Component id="geonamesPlacePanel" min="-2" pref="229" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="placeEditorTabbedPane" max="32767" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -101,79 +108,103 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="gedcomField0Label" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
-                      <Component id="gedcomField1Label" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
-                      <Component id="gedcomField4Label" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField5Label" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomLatitudeLabel" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="gedcomField0TextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="gedcomField1TextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="gedcomField4TextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="gedcomField5TextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="gedcomLatitudeTextField" alignment="0" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="gedcomField0Label" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomField2Label" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomLatitudeLabel" alignment="1" max="32767" attributes="0"/>
                       <Component id="gedcomField6Label" alignment="1" max="32767" attributes="0"/>
-                      <Component id="gedcomField3Label" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomLongitudeLabel" alignment="1" max="32767" attributes="0"/>
-                      <Component id="gedcomField7Label" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField2Label" min="-2" pref="72" max="-2" attributes="0"/>
+                      <Component id="gedcomField4Label" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="gedcomField6TextField" max="32767" attributes="0"/>
+                      <Component id="gedcomField4TextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="gedcomField2TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField0TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomLatitudeTextField" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="gedcomField1Label" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomField3Label" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField5Label" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField7Label" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomLongitudeLabel" alignment="1" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="gedcomField3TextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="gedcomField6TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomField5TextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="gedcomField7TextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="gedcomLongitudeTextField" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="gedcomField1TextField" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomField0TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField0Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField2Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField2TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="gedcomField0TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="gedcomField0Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="gedcomField1Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="gedcomField1TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomField1Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField1TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField3Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField3TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomField4Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField4TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField6Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField6TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomField5Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField5TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField7Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField7TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomLatitudeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomLatitudeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomLongitudeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomLongitudeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="gedcomField2Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="gedcomField2TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="gedcomField4Label" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="gedcomField4TextField" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="gedcomField6Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="gedcomField6TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="gedcomLatitudeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="gedcomLatitudeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="gedcomField3Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="gedcomField3TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="gedcomField5Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="gedcomField5TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="gedcomField7TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="gedcomField7Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="gedcomLongitudeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="gedcomLongitudeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -181,78 +212,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="gedcomField0Label">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Lieu dit" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField0TextField">
-          <Properties>
-            <Property name="columns" type="int" value="16"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField1Label">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Commune" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField1TextField">
-          <Properties>
-            <Property name="columns" type="int" value="16"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField2Label">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Paroisse" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField2TextField">
-          <Properties>
-            <Property name="columns" type="int" value="16"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField3Label">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Code INSEE" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField3TextField">
-          <Properties>
-            <Property name="columns" type="int" value="16"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField4Label">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="D&#xe9;partement" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField4TextField">
-          <Properties>
-            <Property name="columns" type="int" value="16"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField5Label">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="R&#xe9;gion" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField5TextField">
-          <Properties>
-            <Property name="columns" type="int" value="16"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField6Label">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Code Postal" noResource="true"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="gedcomField6TextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
@@ -264,22 +223,42 @@
             <Property name="text" type="java.lang.String" value="Pays" noResource="true"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JTextField" name="gedcomField1TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JTextField" name="gedcomField7TextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomLatitudeLabel">
+        <Component class="javax.swing.JLabel" name="gedcomField3Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.gedcomLatitudeLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Code INSEE" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="gedcomLatitudeTextField">
+        <Component class="javax.swing.JLabel" name="gedcomField5Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Code Postal" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="gedcomField3TextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="gedcomField5TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="gedcomField4Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="D&#xe9;partement" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="gedcomLongitudeLabel">
@@ -290,9 +269,306 @@
             </Property>
           </Properties>
         </Component>
+        <Component class="javax.swing.JTextField" name="gedcomField0TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JTextField" name="gedcomLongitudeTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="gedcomField2Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Commune" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="gedcomLatitudeLabel">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.gedcomLatitudeLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="gedcomField2TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="gedcomLatitudeTextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="gedcomField1Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Paroisse" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="gedcomField4TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="gedcomField0Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Lieu dit" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="gedcomField6Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="R&#xe9;gion" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="geonamesPlacePanel">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Geoname Place">
+              <ResourceString PropertyName="titleX" bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.geonamesPlacePanel.border.title" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[0, 0]"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="field0Label" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
+                      <Component id="field1Label" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="field4Label" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
+                      <Component id="field5Label" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
+                      <Component id="latitudeLabel" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jLabel1" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="copyButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="field5TextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="field4TextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="field1TextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="field0TextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="latitudeTextField" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="field7Label" alignment="0" max="32767" attributes="0"/>
+                              <Component id="field6Label" alignment="0" max="32767" attributes="0"/>
+                              <Component id="field3Label" alignment="0" max="32767" attributes="0"/>
+                              <Component id="field2Label" alignment="0" max="32767" attributes="0"/>
+                              <Component id="longitudeLabel" alignment="0" min="-2" pref="104" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="field6TextField" alignment="0" min="-2" pref="135" max="-2" attributes="0"/>
+                              <Component id="field3TextField" alignment="0" min="-2" pref="135" max="-2" attributes="0"/>
+                              <Component id="field2TextField" alignment="0" min="-2" pref="135" max="-2" attributes="0"/>
+                              <Component id="field7TextField" alignment="0" min="-2" pref="135" max="-2" attributes="0"/>
+                              <Component id="longitudeTextField" alignment="0" min="-2" pref="135" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="field0TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field2Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field2TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field0Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="field1TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field3Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field3TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field1Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="field4TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field6Label" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                      <Component id="field6TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field4Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="field5TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field7Label" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
+                      <Component id="field7TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="field5Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="latitudeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="longitudeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="longitudeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="latitudeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="copyButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JTextField" name="longitudeTextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="field4TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="field4Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Admin code 2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="latitudeLabel">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.latitudeLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="field3TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="field7TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="field3Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Admin name 2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="longitudeLabel">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.longitudeLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="field2TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="latitudeTextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="field2Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Admin Code 1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="field5TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="field1Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Admin name 1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="field6Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Admin name 3" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="field1TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="field6TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="field0Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Commune" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="field7Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Admin Name 4" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="field0TextField">
+          <Properties>
+            <Property name="columns" type="int" value="16"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="copyButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.copyButton.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="copyButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.jLabel1.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="field5Label">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Admincode 3" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -306,6 +582,9 @@
           <Dimension value="[513, 263]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="placeEditorTabbedPaneStateChanged"/>
+      </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
@@ -328,7 +607,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MapScrollPane" pref="709" max="32767" attributes="0"/>
+                      <Component id="MapScrollPane" pref="1035" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -337,7 +616,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MapScrollPane" pref="225" max="32767" attributes="0"/>
+                      <Component id="MapScrollPane" pref="218" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -386,10 +665,8 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="searchPlaceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="geonamesScrollPane" pref="265" max="32767" attributes="0"/>
+                          <Component id="geonamesScrollPane" pref="1033" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="geonamesPlacePanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -398,17 +675,12 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="geonamesPlacePanel" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="searchPlaceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="searchPlaceButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="geonamesScrollPane" pref="190" max="32767" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="searchPlaceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="searchPlaceButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="geonamesScrollPane" pref="183" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -452,235 +724,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchPlaceButtonActionPerformed"/>
               </Events>
             </Component>
-            <Container class="javax.swing.JPanel" name="geonamesPlacePanel">
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="field0Label" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
-                              <Component id="field1Label" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
-                              <Component id="field4Label" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
-                              <Component id="field5Label" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
-                              <Component id="latitudeLabel" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="field0TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="field1TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="field4TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="field5TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="latitudeTextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="field2Label" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
-                                      <Component id="field3Label" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
-                                      <Component id="field6Label" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
-                                      <Component id="field7Label" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
-                                      <Component id="longitudeLabel" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="field6TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="field3TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="field2TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="field7TextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="longitudeTextField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jLabel1" pref="291" max="32767" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="copyButton" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="field0TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field2Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field2TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field0Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="field1TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field3Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field3TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field1Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="field4TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field6Label" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
-                              <Component id="field6TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field4Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="field5TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field7Label" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
-                              <Component id="field7TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="field5Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="latitudeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="longitudeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="longitudeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="latitudeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="copyButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JTextField" name="longitudeTextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="field4TextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="field4Label">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Code Postal" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="latitudeLabel">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.latitudeLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="field3TextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="field7TextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="field3Label">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Code INSEE" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="longitudeLabel">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.longitudeLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="field2TextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="latitudeTextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="field2Label">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Paroisse" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="field5TextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="field1Label">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Commune" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="field6Label">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="D&#xe9;partement" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="field1TextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="field6TextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="field0Label">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Lieudit" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="field7Label">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Pays" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="field0TextField">
-                  <Properties>
-                    <Property name="columns" type="int" value="16"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="copyButton">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.copyButton.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel1">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.jLabel1.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="field5Label">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="R&#xe9;gion" noResource="true"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="placeReferencesPanel">
@@ -702,7 +745,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="placeReferenceScrollPane" pref="709" max="32767" attributes="0"/>
+                      <Component id="placeReferenceScrollPane" pref="1035" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -711,7 +754,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="placeReferenceScrollPane" pref="225" max="32767" attributes="0"/>
+                      <Component id="placeReferenceScrollPane" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
