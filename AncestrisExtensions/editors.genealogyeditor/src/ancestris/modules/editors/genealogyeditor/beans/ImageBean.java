@@ -59,11 +59,11 @@ public class ImageBean extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
+            .addGap(0, 90, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
+            .addGap(0, 120, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -80,7 +80,7 @@ public class ImageBean extends javax.swing.JPanel {
             imageFile = imageFileChooser.getSelectedFile();
             try {
                 BufferedImage loadImage = ImageIO.read(imageFile);
-                resizedImage = resizeImage(loadImage, 150, 200);
+                resizedImage = resizeImage(loadImage, 90, 120);
                 imageModified = true;
                 this.repaint();
             } catch (IOException ex) {
