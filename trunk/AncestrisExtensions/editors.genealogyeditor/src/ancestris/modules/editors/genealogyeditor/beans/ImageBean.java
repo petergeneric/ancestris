@@ -113,7 +113,7 @@ public class ImageBean extends javax.swing.JPanel {
 
         try {
             BufferedImage loadImage = ImageIO.read(imageInputStream);
-            resizedImage = resizeImage(loadImage, 150, 200);
+            resizedImage = resizeImage(loadImage, 90, 120);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
