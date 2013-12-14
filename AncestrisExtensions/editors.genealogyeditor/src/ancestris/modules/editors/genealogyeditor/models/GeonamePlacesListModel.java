@@ -10,7 +10,7 @@ import javax.swing.AbstractListModel;
  */
 public class GeonamePlacesListModel extends AbstractListModel<String> implements List<Place> {
 
-    ArrayList<Place> placesList = new ArrayList<Place>();
+    List<Place> placesList = Collections.synchronizedList(new ArrayList<Place>());
     String[] placesListData = null;
 
     public GeonamePlacesListModel() {
