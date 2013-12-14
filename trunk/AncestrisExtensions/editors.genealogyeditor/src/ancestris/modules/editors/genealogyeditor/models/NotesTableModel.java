@@ -64,4 +64,10 @@ public class NotesTableModel extends AbstractTableModel {
     public Note getValueAt(int row) {
         return notesList.get(row);
     }
+
+    public Note remove(int row) {
+        Note note = notesList.remove(row);
+        fireTableDataChanged();
+        return note;
+    }
 }
