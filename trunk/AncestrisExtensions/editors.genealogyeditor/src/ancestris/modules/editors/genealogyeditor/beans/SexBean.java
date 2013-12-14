@@ -13,6 +13,7 @@ public class SexBean extends javax.swing.JPanel {
     private SexComboBoxModel sexComboBoxModel = new SexComboBoxModel();
     private Property root;
     private PropertySex sex;
+    private boolean sexModified = false;
 
     /**
      * Creates new form SexBean
@@ -37,6 +38,11 @@ public class SexBean extends javax.swing.JPanel {
 
         sexComboBox.setModel(sexComboBoxModel);
         sexComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/beans/Bundle").getString("SexBean.sexComboBox.toolTipText"), new Object[] {})); // NOI18N
+        sexComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sexComboBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -54,6 +60,10 @@ public class SexBean extends javax.swing.JPanel {
                 .addComponent(sexComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void sexComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sexComboBoxActionPerformed
+        sexModified = true;
+    }//GEN-LAST:event_sexComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> sexComboBox;
     private javax.swing.JLabel sexLabel;
@@ -66,19 +76,21 @@ public class SexBean extends javax.swing.JPanel {
     }
 
     public void commit() {
-        try {
-            root.getGedcom().doUnitOfWork(new UnitOfWork() {
+        if (sexModified) {
+            try {
+                root.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    if (sex == null) {
-                        sex = (PropertySex) root.addProperty("SEX", "");
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (sex == null) {
+                            sex = (PropertySex) root.addProperty("SEX", "");
+                        }
+                        sex.setSex(sexComboBox.getSelectedIndex());
                     }
-                    sex.setSex(sexComboBox.getSelectedIndex());
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
     }
 }
