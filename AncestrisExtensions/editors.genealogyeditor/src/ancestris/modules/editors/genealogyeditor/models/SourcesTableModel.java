@@ -72,4 +72,10 @@ public class SourcesTableModel extends AbstractTableModel {
     public Source getValueAt(int row) {
         return sourcesList.get(row);
     }
+
+    public Source remove(int row) {
+        Source source = sourcesList.remove(row);
+        fireTableDataChanged();
+        return source;
+    }
 }
