@@ -27,7 +27,8 @@ final class LanguagePanel extends javax.swing.JPanel {
         new Locale("pt"),
         new Locale("ru"),
         new Locale("fi"),
-        new Locale("sv")
+        new Locale("sv"),
+        new Locale("el")
     };
 
     LanguagePanel(LanguageOptionsPanelController controller) {
