@@ -11,22 +11,15 @@ import javax.swing.AbstractListModel;
 public class GeonamePlacesListModel extends AbstractListModel<String> implements List<Place> {
 
     List<Place> placesList = Collections.synchronizedList(new ArrayList<Place>());
-    String[] placesListData = null;
+    ArrayList<String> placesListData = new ArrayList<String>();
 
     public GeonamePlacesListModel() {
     }
 
-    @Override
-    public void clear() {
-        placesList.clear();
-        update();
-    }
+    public void update(int index0, int index1) {
+        for (int index = index0; index < index1; index++) {
+            Place place = placesList.get(index);
 
-    public void update() {
-        int row = 0;
-        placesListData = new String[placesList.size()];
-
-        for (Place place : placesList) {
             String[] splitJurisdictions = place.getJurisdictions();
             String jurisdictions = "";
 
@@ -54,18 +47,13 @@ public class GeonamePlacesListModel extends AbstractListModel<String> implements
             //Country code
             jurisdictions += splitJurisdictions[8] != null ? ", " + splitJurisdictions[8] : "";
 
-            placesListData[row] = jurisdictions;
-            row += 1;
+            placesListData.add(index, jurisdictions);
         }
-
-        fireContentsChanged(placesListData, 0, row);
     }
 
-    @Override
-    public int size() {
-        return placesListData != null ? placesListData.length : 0;
-    }
-
+    /*
+     * AbstractListModel implementation
+     */
     @Override
     public String getElementAt(int index) {
         String jurisdictions = "";
@@ -75,6 +63,27 @@ public class GeonamePlacesListModel extends AbstractListModel<String> implements
         }
 
         return jurisdictions;
+    }
+
+    @Override
+    public int getSize() {
+        return placesListData.size();
+    }
+
+    /*
+     * List implementation
+     */
+    @Override
+    public void clear() {
+        int oldSize = placesList.size();
+        placesList.clear();
+        update(0, oldSize);
+        fireIntervalRemoved(placesListData, 0, oldSize);
+    }
+
+    @Override
+    public int size() {
+        return placesList.size();
     }
 
     public Place getPlaceAt(int index) {
@@ -118,21 +127,31 @@ public class GeonamePlacesListModel extends AbstractListModel<String> implements
 
     @Override
     public boolean addAll(Collection<? extends Place> clctn) {
+        int oldSize = placesList.size();
         boolean addAll = placesList.addAll(clctn);
-        update();
+        int newSize = placesList.size();
+
+        update(oldSize, newSize);
+        fireIntervalAdded(placesListData, oldSize, newSize);
         return addAll;
     }
 
     @Override
     public boolean addAll(int i, Collection<? extends Place> clctn) {
+        int oldSize = placesList.size();
         boolean addAll = placesList.addAll(i, clctn);
-        update();
+        int newSize = placesList.size();
+        update(oldSize, newSize);
+        fireIntervalAdded(placesListData, oldSize, newSize);
         return addAll;
     }
 
     @Override
     public boolean removeAll(Collection<?> clctn) {
-        return placesList.removeAll(clctn);
+        int oldSize = placesList.size();
+        boolean removeAll = placesList.removeAll(clctn);
+        update(oldSize, 0);
+        return removeAll;
     }
 
     @Override
@@ -152,15 +171,19 @@ public class GeonamePlacesListModel extends AbstractListModel<String> implements
 
     @Override
     public boolean add(Place place) {
+        int oldSize = placesList.size();
         boolean add = placesList.add(place);
-        update();
+        update(oldSize, oldSize + 1);
+        fireIntervalAdded(placesListData, oldSize, oldSize + 1);
         return add;
     }
 
     @Override
     public void add(int i, Place e) {
+        int oldSize = placesList.size();
         placesList.add(i, e);
-        update();
+        update(oldSize, oldSize + 1);
+        fireIntervalAdded(placesListData, oldSize, oldSize + 1);
     }
 
     @Override
@@ -191,10 +214,5 @@ public class GeonamePlacesListModel extends AbstractListModel<String> implements
     @Override
     public List<Place> subList(int i, int i1) {
         return placesList.subList(i1, i1);
-    }
-
-    @Override
-    public int getSize() {
-        return placesListData != null ? placesListData.length : 0;
     }
 }
