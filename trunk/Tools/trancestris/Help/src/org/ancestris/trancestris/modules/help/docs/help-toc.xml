@@ -15,5 +15,6 @@ and open the template in the editor.
         <tocitem expand="true" text="Configuration" target="org.ancestris.trancestris.modules.help.configuration">
             <tocitem text="Mail" target="org.ancestris.trancestris.modules.help.configuration.mail"/>
         </tocitem>
+        <tocitem text="Application Updates" target="org.ancestris.trancestris.modules.help.updates"/>
     </tocitem>
 </toc>
