@@ -4,6 +4,7 @@ import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
@@ -56,7 +57,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         linkToPlaceButton = new javax.swing.JButton();
         eventInformationTabbedPane = new javax.swing.JTabbedPane();
         sourcesPanel = new javax.swing.JPanel();
-        sourcesListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel();
+        sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
         notesPanel = new javax.swing.JPanel();
         notesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NotesListPanel();
         galleryPanel = new javax.swing.JPanel();
@@ -130,11 +131,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(eventIdLabel)
-                .addGap(62, 62, 62)
-                .addComponent(eventIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(eventDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -161,6 +157,11 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         .addComponent(editPlaceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removePlaceButton))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(eventIdLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(eventIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,17 +193,17 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         .addComponent(editPlaceButton))))
         );
 
-        sourcesListPanel.setPreferredSize(null);
+        sourceCitationsListPanel.setPreferredSize(null);
 
         javax.swing.GroupLayout sourcesPanelLayout = new javax.swing.GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourcesPanel); // NOI18N
@@ -313,7 +314,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     mEvent.delProperties(PropertyPlace.TAG);
                 }
             }); // end of doUnitOfWork
-            
+
             addPlaceButton.setVisible(true);
             linkToPlaceButton.setVisible(true);
             editPlaceButton.setVisible(false);
@@ -342,7 +343,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         mPlace = (PropertyPlace) mEvent.addProperty("PLAC", selectedPlace.format("all"));
                     }
                 }); // end of doUnitOfWork
-                
+
                 addPlaceButton.setVisible(false);
                 linkToPlaceButton.setVisible(false);
                 editPlaceButton.setVisible(true);
@@ -375,7 +376,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JButton removePlaceButton;
-    private ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel sourcesListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -410,11 +411,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
             }
             aDateBean.setContext(date);
 
-            List<Source> sourcesList = new ArrayList<Source>();
-            for (PropertySource sourceRef : mEvent.getProperties(PropertySource.class)) {
-                sourcesList.add((Source) sourceRef.getTargetEntity());
-            }
-            sourcesListPanel.set(mEvent, sourcesList);
+            Property[] sourcesList = mEvent.getProperties("SOUR");
+            sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
 
             List<Note> notesList = new ArrayList<Note>();
             for (PropertyNote noteRef : mEvent.getProperties(PropertyNote.class)) {
@@ -442,7 +440,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
-        sourcesListPanel.commit();
+        sourceCitationsListPanel.commit();
         notesListPanel.commit();
         multimediaObjectsListPanel.commit();
         return mEvent;
