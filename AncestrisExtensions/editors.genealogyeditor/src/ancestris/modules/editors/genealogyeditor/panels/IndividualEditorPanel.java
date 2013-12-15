@@ -4,6 +4,7 @@ import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -43,7 +44,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         familiesSpousePanel = new javax.swing.JPanel();
         familiesSpouseListPanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel();
         sourcesPanel = new javax.swing.JPanel();
-        sourcesListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel();
+        sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
         namesPanel = new javax.swing.JPanel();
         namesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NamesListPanel();
         notesPanel = new javax.swing.JPanel();
@@ -157,13 +158,13 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sourcesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(sourcesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourcesPanel); // NOI18N
@@ -245,7 +246,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                .addComponent(individualInformationTabbedPane)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -271,7 +272,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel notesPanel;
     private javax.swing.JPanel referencesPanel;
     private ancestris.modules.editors.genealogyeditor.beans.SexBean sexBeanPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.SourcesListPanel sourcesListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -319,11 +320,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         List<Fam> familiesSpouseList = Arrays.asList(individual.getFamiliesWhereSpouse());
         familiesSpouseListPanel.setFamiliesList(individual, familiesSpouseList);
 
-        List<Source> sourcesList = new ArrayList<Source>();
-        for (PropertySource sourceRef : individual.getProperties(PropertySource.class)) {
-            sourcesList.add((Source) sourceRef.getTargetEntity());
-        }
-        sourcesListPanel.set(individual, sourcesList);
+        Property[] sourcesList = individual.getProperties("SOUR");
+        sourceCitationsListPanel.set(individual, Arrays.asList(sourcesList));
 
         List<Note> notesList = new ArrayList<Note>();
         for (PropertyNote noteRef : individual.getProperties(PropertyNote.class)) {
@@ -353,7 +351,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         sexBeanPanel.commit();
         eventsListPanel.commit();
         namesListPanel.commit();
-        sourcesListPanel.commit();
+        sourceCitationsListPanel.commit();
         notesListPanel.commit();
         associationsListPanel.commit();
         multimediaObjectsListPanel.commit();
