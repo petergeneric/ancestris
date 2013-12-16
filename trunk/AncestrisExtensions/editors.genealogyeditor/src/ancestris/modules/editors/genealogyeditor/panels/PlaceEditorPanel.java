@@ -282,6 +282,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         geonamesScrollPane.setViewportView(geonamesPlacesList);
 
         org.openide.awt.Mnemonics.setLocalizedText(copyGeonamesDataButton, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.copyGeonamesDataButton.text"), new Object[] {})); // NOI18N
+        copyGeonamesDataButton.setEnabled(false);
         copyGeonamesDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 copyGeonamesDataButtonActionPerformed(evt);
@@ -385,6 +386,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         String searchedPlace = searchPlaceTextField.getText();
         if (searchedPlace.isEmpty() == false) {
             geonamePlacesListModel.clear();
+            parametersButton.setEnabled(false);
             new GeonamesPlacesList().searchPlace(searchedPlace, geonamePlacesListModel);
         }
     }//GEN-LAST:event_searchPlaceButtonActionPerformed
@@ -404,6 +406,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private void geonamesPlacesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListValueChanged
         if (!evt.getValueIsAdjusting()) {
+            parametersButton.setEnabled(true);
             Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
             jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
         }
@@ -523,9 +526,15 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         String placeString = "";
         javax.swing.JTextField gedcomFields[] = {
-            gedcomField0TextField, gedcomField1TextField, gedcomField2TextField,
-            gedcomField3TextField, gedcomField4TextField, gedcomField5TextField,
-            gedcomField6TextField, gedcomField7TextField};
+            gedcomField0TextField,
+            gedcomField1TextField,
+            gedcomField2TextField,
+            gedcomField3TextField,
+            gedcomField4TextField,
+            gedcomField5TextField,
+            gedcomField6TextField,
+            gedcomField7TextField
+        };
 
         for (int index = 0; index < mPlaceFormat.length; index++) {
             if (index > 0) {
