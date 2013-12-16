@@ -1,11 +1,11 @@
 package ancestris.modules.place.geonames;
 
 import ancestris.api.place.Place;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.geonames.InsufficientStyleException;
 import org.geonames.PostalCode;
 import org.geonames.Toponym;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -20,7 +20,7 @@ public class GeonamesPlace implements Place {
     public GeonamesPlace(Toponym toponym, PostalCode postalCode) {
         this.postalCode = postalCode;
         this.toponym = toponym;
-        }
+    }
 
     @Override
     public int compareTo(Place that) {
@@ -54,20 +54,29 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String[] getJurisdictions() {
-        String[] jurisdictions = new String[10];
-        int index = 0;
+        String[] jurisdictions = new String[13];
 
-        jurisdictions[index++] = postalCode.getPlaceName();
-        jurisdictions[index++] = postalCode.getAdminName1();
-        jurisdictions[index++] = postalCode.getAdminCode1();
-        jurisdictions[index++] = postalCode.getAdminName2();
-        jurisdictions[index++] = postalCode.getAdminCode2();
-        jurisdictions[index++] = postalCode.getAdminName3();
-        jurisdictions[index++] = postalCode.getAdminCode3();
-        jurisdictions[index++] = postalCode.getPostalCode();
-        jurisdictions[index++] = postalCode.getCountryCode();
+        try {
+            int index = 0;
 
+            jurisdictions[index++] = postalCode.getPlaceName();
+            jurisdictions[index++] = postalCode.getPostalCode();
+            jurisdictions[index++] = toponym.getAdminName1();
+            jurisdictions[index++] = toponym.getAdminCode1();
+            jurisdictions[index++] = toponym.getAdminName2();
+            jurisdictions[index++] = toponym.getAdminCode2();
+            jurisdictions[index++] = toponym.getAdminName3();
+            jurisdictions[index++] = toponym.getAdminCode3();
+            jurisdictions[index++] = toponym.getAdminName4();
+            jurisdictions[index++] = toponym.getAdminCode4();
+            jurisdictions[index++] = toponym.getAdminName5();
+            jurisdictions[index++] = toponym.getAdminCode5();
+            jurisdictions[index++] = postalCode.getCountryCode();
+        } catch (InsufficientStyleException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         return jurisdictions;
+
     }
 
     @Override
