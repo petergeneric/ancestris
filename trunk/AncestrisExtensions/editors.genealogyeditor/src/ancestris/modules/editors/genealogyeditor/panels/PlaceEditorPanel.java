@@ -23,6 +23,16 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     String[] mPlaceFormat;
     private EventsTableModel eventsTableModel = new EventsTableModel();
     private GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
+    int mPlaceOrder[] = {
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+    };
 
     /**
      * Creates new form GedcomPlacesEditorPanel
@@ -264,6 +274,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         geonamesPlacesList.setModel(geonamePlacesListModel);
         geonamesPlacesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        geonamesPlacesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                geonamesPlacesListValueChanged(evt);
+            }
+        });
         geonamesScrollPane.setViewportView(geonamesPlacesList);
 
         org.openide.awt.Mnemonics.setLocalizedText(copyGeonamesDataButton, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.copyGeonamesDataButton.text"), new Object[] {})); // NOI18N
@@ -355,8 +370,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void parametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parametersButtonActionPerformed
-        GedcomPlaceFormatEditorPanel gedcomPlaceFormatEditorPanel = new GedcomPlaceFormatEditorPanel();
-        gedcomPlaceFormatEditorPanel.setGedcom(mPlace.getGedcom());
+        GedcomPlaceFormatEditorPanel gedcomPlaceFormatEditorPanel = new GedcomPlaceFormatEditorPanel(mPlace.getGedcom());
 
         DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(GedcomPlaceFormatEditorPanel.class, "GedcomPlaceFormatEditorPanel.title"),
@@ -379,14 +393,22 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         CopyGeonamesDataPanel copyGeonamesDataPanel = new CopyGeonamesDataPanel();
         Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
         copyGeonamesDataPanel.setGeonamesData(place);
-        DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
+        DialogManager.ADialog copyGeonamesDataPanelDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(GedcomPlaceFormatEditorPanel.class, "CopyGeonamesDataPanel.title"),
                 copyGeonamesDataPanel);
-        gedcomPlaceFormatEditorDialog.setDialogId(GedcomPlaceFormatEditorPanel.class.getName());
+        copyGeonamesDataPanelDialog.setDialogId(GedcomPlaceFormatEditorPanel.class.getName());
 
-        if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+        if (copyGeonamesDataPanelDialog.show() == DialogDescriptor.OK_OPTION) {
         }
     }//GEN-LAST:event_copyGeonamesDataButtonActionPerformed
+
+    private void geonamesPlacesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListValueChanged
+        if (!evt.getValueIsAdjusting()) {
+            Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
+            jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
+        }
+
+    }//GEN-LAST:event_geonamesPlacesListValueChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane MapScrollPane;
     private javax.swing.JButton copyGeonamesDataButton;
@@ -487,19 +509,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
 
         } else {
-            String searchedPlace = gedcomField1TextField.getText();
+            String searchedPlace = ((javax.swing.JTextField) (gedcomFields[mPlaceOrder[1]][1])).getText();
             searchPlaceTextField.setText(searchedPlace);
-            new GeonamesPlacesList().searchPlace(searchedPlace, geonamePlacesListModel);
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
 
             if (searchedPlace.isEmpty() == false) {
                 new GeonamesPlacesList().searchPlace(searchedPlace, geonamePlacesListModel);
             }
         }
-    }
-
-    private void updateMap(Place place) {
-        jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
     }
 
     public String getPlaceString() {
