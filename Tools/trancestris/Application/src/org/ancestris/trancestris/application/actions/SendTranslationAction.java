@@ -81,9 +81,9 @@ public final class SendTranslationAction implements ActionListener {
                         String message = sendTranslationPanel.getMessageTextArea();
                         String to = sendTranslationPanel.getMailToFormattedTextField();
                         if (nbTranslatedFiles > 1) {
-                            message += "\n \n ----- Don't delete the following sentence ----- \n       (.) There are " + nbTranslatedFiles + " files in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
+                            message += "\n \n ----- Do not delete the following sentence ----- \n       (.) There are " + nbTranslatedFiles + " files in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
                         } else {
-                            message += "\n \n ----- Don't delete the following sentence ----- \n       (.) There is one file in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
+                            message += "\n \n ----- Do not delete the following sentence ----- \n       (.) There is one file in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
                         }
                         Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
                         t.start();
