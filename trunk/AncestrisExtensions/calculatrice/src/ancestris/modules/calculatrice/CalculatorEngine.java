@@ -281,11 +281,12 @@ public class CalculatorEngine {
      *  Convert the current value to it's reciprocal value
      */
     public void reciprocal(){
-        if( value > 0 ){
+        if( value != 0 ){
             value = 1 / value;
-        }else{
-            value = 0;
         }
+        /*else{
+            value = 0;        }
+            Sauf 0, tout nombre a un inverse*/
         unaryOperation();
     }       
     
