@@ -111,7 +111,7 @@ public class AbstractDocumentView extends JPanel {
     }
 
     /**
-     * Set this view toolsbar actions.
+     * Set this view toolbars actions.
      *
      * @param actions
      */
