@@ -190,7 +190,7 @@
         <Component class="javax.swing.JLabel" name="gedcomField7Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Pays" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Country" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="gedcomField1TextField">
@@ -206,13 +206,13 @@
         <Component class="javax.swing.JLabel" name="gedcomField3Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Code INSEE" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Zip Code " noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="gedcomField5Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Code Postal" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Geo ID" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="gedcomField3TextField">
@@ -228,7 +228,7 @@
         <Component class="javax.swing.JLabel" name="gedcomField4Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="D&#xe9;partement" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="County" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="gedcomLongitudeLabel">
@@ -252,7 +252,7 @@
         <Component class="javax.swing.JLabel" name="gedcomField2Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Commune" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Town" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="gedcomLatitudeLabel">
@@ -276,7 +276,7 @@
         <Component class="javax.swing.JLabel" name="gedcomField1Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Paroisse" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Parish" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="gedcomField4TextField">
@@ -287,13 +287,13 @@
         <Component class="javax.swing.JLabel" name="gedcomField0Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Lieu dit" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Hamlet" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="gedcomField6Label">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="R&#xe9;gion" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="State" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

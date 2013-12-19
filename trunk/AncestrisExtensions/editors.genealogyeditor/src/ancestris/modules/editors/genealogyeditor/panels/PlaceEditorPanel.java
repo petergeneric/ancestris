@@ -6,12 +6,15 @@ import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -23,16 +26,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     String[] mPlaceFormat;
     private EventsTableModel eventsTableModel = new EventsTableModel();
     private GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
-    int mPlaceOrder[] = {
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
-    };
+    int mPlaceOrder[] = new int[8];
 
     /**
      * Creates new form GedcomPlacesEditorPanel
@@ -119,24 +113,24 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         gedcomField6TextField.setColumns(16);
 
         gedcomField7Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField7Label, "Pays"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomField7Label, "Country"); // NOI18N
 
         gedcomField1TextField.setColumns(16);
 
         gedcomField7TextField.setColumns(16);
 
         gedcomField3Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField3Label, "Code INSEE"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomField3Label, "Zip Code "); // NOI18N
 
         gedcomField5Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField5Label, "Code Postal"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomField5Label, "Geo ID"); // NOI18N
 
         gedcomField3TextField.setColumns(16);
 
         gedcomField5TextField.setColumns(16);
 
         gedcomField4Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField4Label, "Département"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomField4Label, "County"); // NOI18N
 
         gedcomLongitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(gedcomLongitudeLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.gedcomLongitudeLabel.text"), new Object[] {})); // NOI18N
@@ -146,7 +140,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         gedcomLongitudeTextField.setColumns(16);
 
         gedcomField2Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField2Label, "Commune"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomField2Label, "Town"); // NOI18N
 
         gedcomLatitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(gedcomLatitudeLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.gedcomLatitudeLabel.text"), new Object[] {})); // NOI18N
@@ -156,15 +150,15 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         gedcomLatitudeTextField.setColumns(16);
 
         gedcomField1Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField1Label, "Paroisse"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomField1Label, "Parish"); // NOI18N
 
         gedcomField4TextField.setColumns(16);
 
         gedcomField0Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField0Label, "Lieu dit"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomField0Label, "Hamlet"); // NOI18N
 
         gedcomField6Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField6Label, "Région"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomField6Label, "State"); // NOI18N
 
         javax.swing.GroupLayout gedcomPlacePanelLayout = new javax.swing.GroupLayout(gedcomPlacePanel);
         gedcomPlacePanel.setLayout(gedcomPlacePanelLayout);
@@ -234,7 +228,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     .addComponent(gedcomLongitudeLabel)
                     .addComponent(gedcomLatitudeLabel)
                     .addComponent(gedcomLatitudeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         placeEditorTabbedPane.setBorder(null);
@@ -371,34 +365,68 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void parametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parametersButtonActionPerformed
-        GedcomPlaceFormatEditorPanel gedcomPlaceFormatEditorPanel = new GedcomPlaceFormatEditorPanel(mPlace.getGedcom());
+        PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlace.getGedcom());
 
         DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(GedcomPlaceFormatEditorPanel.class, "GedcomPlaceFormatEditorPanel.title"),
+                NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
                 gedcomPlaceFormatEditorPanel);
-        gedcomPlaceFormatEditorDialog.setDialogId(GedcomPlaceFormatEditorPanel.class.getName());
+        gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
 
         if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            Preferences modulePreferences = NbPreferences.forModule(PlaceEditorPanel.class);
+            Preferences node;
+            mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
+            node = modulePreferences.node(mPlace.getGedcom().getName());
+            node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
+            node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
+            node.putInt("placeOrder.index.town", mPlaceOrder[2]);
+            node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
+            node.putInt("placeOrder.index.townCode", mPlaceOrder[4]);
+            node.putInt("placeOrder.index.county", mPlaceOrder[5]);
+            node.putInt("placeOrder.index.state", mPlaceOrder[6]);
+            node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
+            JComponent gedcomFields[][] = {
+                {gedcomField0Label, gedcomField0TextField},
+                {gedcomField1Label, gedcomField1TextField},
+                {gedcomField2Label, gedcomField2TextField},
+                {gedcomField3Label, gedcomField3TextField},
+                {gedcomField4Label, gedcomField4TextField},
+                {gedcomField5Label, gedcomField5TextField},
+                {gedcomField6Label, gedcomField6TextField},
+                {gedcomField7Label, gedcomField7TextField}
+            };
+
+            for (int index = 0; index < mPlaceOrder.length; index++) {
+                if (mPlaceOrder[index] != -1) {
+                    if (mPlaceOrder[index] < mPlaceFormat.length) {
+                        ((javax.swing.JLabel) (gedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
+                        ((javax.swing.JTextField) (gedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
+                    }
+                } else {
+                    ((javax.swing.JLabel) (gedcomFields[index][0])).setText("");
+                    ((javax.swing.JTextField) (gedcomFields[index][1])).setText("");
+                    gedcomFields[index][1].setEnabled(false);
+                }
+            }
         }
     }//GEN-LAST:event_parametersButtonActionPerformed
-
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
         String searchedPlace = searchPlaceTextField.getText();
         if (searchedPlace.isEmpty() == false) {
             geonamePlacesListModel.clear();
-            parametersButton.setEnabled(false);
+            copyGeonamesDataButton.setEnabled(false);
             new GeonamesPlacesList().searchPlace(searchedPlace, geonamePlacesListModel);
         }
     }//GEN-LAST:event_searchPlaceButtonActionPerformed
 
     private void copyGeonamesDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyGeonamesDataButtonActionPerformed
-        CopyGeonamesDataPanel copyGeonamesDataPanel = new CopyGeonamesDataPanel();
+        CopyGeonamesDataPanel copyGeonamesDataPanel = new CopyGeonamesDataPanel(mPlaceOrder, mPlaceFormat);
         Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
         copyGeonamesDataPanel.setGeonamesData(place);
         DialogManager.ADialog copyGeonamesDataPanelDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(GedcomPlaceFormatEditorPanel.class, "CopyGeonamesDataPanel.title"),
+                NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "CopyGeonamesDataPanel.title"),
                 copyGeonamesDataPanel);
-        copyGeonamesDataPanelDialog.setDialogId(GedcomPlaceFormatEditorPanel.class.getName());
+        copyGeonamesDataPanelDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
 
         if (copyGeonamesDataPanelDialog.show() == DialogDescriptor.OK_OPTION) {
         }
@@ -406,11 +434,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private void geonamesPlacesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListValueChanged
         if (!evt.getValueIsAdjusting()) {
-            parametersButton.setEnabled(true);
+            copyGeonamesDataButton.setEnabled(true);
             Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
             jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
         }
-
     }//GEN-LAST:event_geonamesPlacesListValueChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane MapScrollPane;
@@ -463,8 +490,46 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @param place the place to set
      */
     public void set(PropertyPlace place) {
+        Preferences modulePreferences = NbPreferences.forModule(PlaceEditorPanel.class);
+        Preferences node;
+
         this.mPlace = place;
         mPlaceFormat = PropertyPlace.getFormat(place.getGedcom());
+        
+        try {
+            if (!modulePreferences.nodeExists(place.getGedcom().getName())) {
+                PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlace.getGedcom());
+
+                DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
+                        gedcomPlaceFormatEditorPanel);
+                gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
+                node = modulePreferences.node(place.getGedcom().getName());
+                if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
+                    node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
+                    node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
+                    node.putInt("placeOrder.index.town", mPlaceOrder[2]);
+                    node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
+                    node.putInt("placeOrder.index.townCode", mPlaceOrder[4]);
+                    node.putInt("placeOrder.index.county", mPlaceOrder[5]);
+                    node.putInt("placeOrder.index.state", mPlaceOrder[6]);
+                    node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
+                }
+            } else {
+                node = modulePreferences.node(place.getGedcom().getName());
+            }
+            mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", 0);
+            mPlaceOrder[1] = node.getInt("placeOrder.index.parish", 1);
+            mPlaceOrder[2] = node.getInt("placeOrder.index.town", 2);
+            mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", 3);
+            mPlaceOrder[4] = node.getInt("placeOrder.index.townCode", 4);
+            mPlaceOrder[5] = node.getInt("placeOrder.index.county", 5);
+            mPlaceOrder[6] = node.getInt("placeOrder.index.state", 6);
+            mPlaceOrder[7] = node.getInt("placeOrder.index.Country", 7);
+        } catch (BackingStoreException ex) {
+            Exceptions.printStackTrace(ex);
+        }
 
         JComponent gedcomFields[][] = {
             {gedcomField0Label, gedcomField0TextField},
@@ -477,16 +542,16 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             {gedcomField7Label, gedcomField7TextField}
         };
 
-        for (int index = 0; index < mPlaceFormat.length; index++) {
-            gedcomFields[index][0].setVisible(true);
-            ((javax.swing.JLabel) (gedcomFields[index][0])).setText(mPlaceFormat[index]);
-            gedcomFields[index][1].setVisible(true);
-            ((javax.swing.JTextField) (gedcomFields[index][1])).setText(mPlace.getJurisdiction(index));
-        }
-
-        for (int index = mPlaceFormat.length; index < gedcomFields.length; index++) {
-            gedcomFields[index][0].setVisible(false);
-            gedcomFields[index][1].setVisible(false);
+        for (int index = 0; index < mPlaceOrder.length; index++) {
+            if (mPlaceOrder[index] != -1) {
+                if (mPlaceOrder[index] < mPlaceFormat.length) {
+                    ((javax.swing.JLabel) (gedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
+                    ((javax.swing.JTextField) (gedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
+                }
+            } else {
+                ((javax.swing.JLabel) (gedcomFields[index][0])).setText("");
+                gedcomFields[index][1].setEnabled(false);
+            }
         }
 
         Property latitude = null;
@@ -512,7 +577,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
 
         } else {
-            String searchedPlace = ((javax.swing.JTextField) (gedcomFields[mPlaceOrder[1]][1])).getText();
+            String searchedPlace = gedcomField2TextField.getText() + "," + gedcomField7TextField.getText();
             searchPlaceTextField.setText(searchedPlace);
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
 

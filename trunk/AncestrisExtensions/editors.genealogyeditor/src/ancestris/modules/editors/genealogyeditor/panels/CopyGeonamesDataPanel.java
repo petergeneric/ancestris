@@ -9,11 +9,15 @@ import ancestris.api.place.Place;
 public class CopyGeonamesDataPanel extends javax.swing.JPanel {
 
     private Place mPlace;
+    int mPlaceOrder[];
+    private final String[] mPlaceFormat;
 
     /**
      * Creates new form CopyGeonamesDataPanel
      */
-    public CopyGeonamesDataPanel() {
+    public CopyGeonamesDataPanel(int placeOrder[], String[] placeFormat) {
+        this.mPlaceOrder = placeOrder;
+        this.mPlaceFormat = placeFormat;
         initComponents();
     }
 
@@ -76,6 +80,10 @@ public class CopyGeonamesDataPanel extends javax.swing.JPanel {
         jLabel13 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jRadioButton13 = new javax.swing.JRadioButton();
+        postalCodeLabel = new javax.swing.JLabel();
+        jRadioButton14 = new javax.swing.JRadioButton();
+        postalCodeTextField = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
 
         adminCode2TextField.setColumns(16);
 
@@ -189,6 +197,15 @@ public class CopyGeonamesDataPanel extends javax.swing.JPanel {
 
         jRadioButton13.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("CopyGeonamesDataPanel.jRadioButton13.text"), new Object[] {})); // NOI18N
 
+        postalCodeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        postalCodeLabel.setText("Postal code"); // NOI18N
+
+        jRadioButton14.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("CopyGeonamesDataPanel.jRadioButton14.text"), new Object[] {})); // NOI18N
+
+        postalCodeTextField.setColumns(16);
+
+        jLabel14.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("CopyGeonamesDataPanel.jLabel14.text"), new Object[] {})); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -243,50 +260,67 @@ public class CopyGeonamesDataPanel extends javax.swing.JPanel {
                     .addComponent(jRadioButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(adminCode2Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(adminCode3Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(longitudeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(adminCode1Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(adminCode4Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(adminCode5Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(4, 4, 4)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(longitudeTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                    .addComponent(adminCode2TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(adminCode3TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(adminCode4TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(adminCode5TextField)
-                    .addComponent(AdminCode1TextField))
+                            .addComponent(adminCode2Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(adminCode3Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(longitudeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(adminCode1Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(adminCode4Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(adminCode5Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(4, 4, 4)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(postalCodeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(postalCodeTextField)
+                    .addComponent(longitudeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                    .addComponent(adminCode2TextField)
+                    .addComponent(adminCode3TextField)
+                    .addComponent(adminCode4TextField)
+                    .addComponent(adminCode5TextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(AdminCode1TextField, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(8, 8, 8))
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton9)
-                    .addComponent(jRadioButton8)
-                    .addComponent(jRadioButton10)
-                    .addComponent(jRadioButton11)
-                    .addComponent(jRadioButton12)
-                    .addComponent(jRadioButton7))
-                .addGap(12, 12, 12))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(8, 8, 8))
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButton9)
+                            .addComponent(jRadioButton8)
+                            .addComponent(jRadioButton10)
+                            .addComponent(jRadioButton11)
+                            .addComponent(jRadioButton12)
+                            .addComponent(jRadioButton7))
+                        .addGap(12, 12, 12))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(2, 2, 2)
+                        .addComponent(jRadioButton14)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(field0Label)
-                    .addComponent(jRadioButton13)
+                    .addComponent(copyToGedcomFieldLabel)
                     .addComponent(field0TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(copyToGedcomFieldLabel))
+                    .addComponent(field0Label)
+                    .addComponent(jLabel14)
+                    .addComponent(postalCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButton14)
+                    .addComponent(postalCodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButton13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel9)
@@ -378,6 +412,7 @@ public class CopyGeonamesDataPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -387,6 +422,7 @@ public class CopyGeonamesDataPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton jRadioButton11;
     private javax.swing.JRadioButton jRadioButton12;
     private javax.swing.JRadioButton jRadioButton13;
+    private javax.swing.JRadioButton jRadioButton14;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
@@ -399,6 +435,8 @@ public class CopyGeonamesDataPanel extends javax.swing.JPanel {
     private javax.swing.JTextField latitudeTextField;
     private javax.swing.JLabel longitudeLabel;
     private javax.swing.JTextField longitudeTextField;
+    private javax.swing.JLabel postalCodeLabel;
+    private javax.swing.JTextField postalCodeTextField;
     // End of variables declaration//GEN-END:variables
 
     void setGeonamesData(Place place) {
@@ -406,13 +444,17 @@ public class CopyGeonamesDataPanel extends javax.swing.JPanel {
         String[] jurisdictions = place.getJurisdictions();
 
         field0TextField.setText(jurisdictions[0]);
-        adminName1TextField.setText(jurisdictions[1]);
-        AdminCode1TextField.setText(jurisdictions[2]);
-        adminName2TextField.setText(jurisdictions[3]);
-        adminCode2TextField.setText(jurisdictions[4]);
-        adminCode3TextField.setText(jurisdictions[5]);
+        postalCodeTextField.setText(jurisdictions[1]);
+        adminName1TextField.setText(jurisdictions[2]);
+        AdminCode1TextField.setText(jurisdictions[3]);
+        adminName2TextField.setText(jurisdictions[4]);
+        adminCode2TextField.setText(jurisdictions[5]);
         adminName3TextField.setText(jurisdictions[6]);
-        adminName4TextField.setText(jurisdictions[7]);
+        adminCode3TextField.setText(jurisdictions[7]);
+        adminName4TextField.setText(jurisdictions[8]);
+        adminCode4TextField.setText(jurisdictions[9]);
+        adminName5TextField.setText(jurisdictions[10]);
+        adminCode5TextField.setText(jurisdictions[11]);
 
         latitudeTextField.setText(place.getLatitude().toString());
         longitudeTextField.setText(place.getLongitude().toString());
