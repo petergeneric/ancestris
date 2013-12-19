@@ -76,47 +76,66 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="adminCode2Label" max="32767" attributes="0"/>
-                  <Component id="adminCode3Label" max="32767" attributes="0"/>
-                  <Component id="longitudeLabel" max="32767" attributes="0"/>
-                  <Component id="adminCode1Label" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="adminCode4Label" alignment="0" max="32767" attributes="0"/>
-                          <Component id="adminCode5Label" alignment="0" max="32767" attributes="0"/>
+                          <Component id="adminCode2Label" max="32767" attributes="0"/>
+                          <Component id="adminCode3Label" max="32767" attributes="0"/>
+                          <Component id="longitudeLabel" max="32767" attributes="0"/>
+                          <Component id="adminCode1Label" alignment="1" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="adminCode4Label" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="adminCode5Label" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="postalCodeLabel" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="postalCodeTextField" max="32767" attributes="0"/>
                   <Component id="longitudeTextField" alignment="0" pref="166" max="32767" attributes="0"/>
                   <Component id="adminCode2TextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="adminCode3TextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="adminCode4TextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="adminCode5TextField" alignment="1" max="32767" attributes="0"/>
-                  <Component id="AdminCode1TextField" max="32767" attributes="0"/>
+                  <Component id="AdminCode1TextField" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="jLabel9" max="32767" attributes="0"/>
-                      <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel9" max="32767" attributes="0"/>
+                              <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel12" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel13" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jRadioButton9" min="-2" max="-2" attributes="0"/>
+                          <Component id="jRadioButton8" min="-2" max="-2" attributes="0"/>
+                          <Component id="jRadioButton10" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jRadioButton11" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jRadioButton12" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jRadioButton7" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jLabel12" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jLabel13" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="jLabel14" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                      <Component id="jRadioButton14" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jRadioButton9" min="-2" max="-2" attributes="0"/>
-                  <Component id="jRadioButton8" min="-2" max="-2" attributes="0"/>
-                  <Component id="jRadioButton10" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jRadioButton11" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jRadioButton12" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jRadioButton7" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -125,10 +144,14 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="field0Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="jRadioButton13" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="field0TextField" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="copyToGedcomFieldLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="field0TextField" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="field0Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel14" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="postalCodeTextField" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="jRadioButton14" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="postalCodeLabel" alignment="2" min="-2" pref="22" max="-2" attributes="0"/>
+                  <Component id="jRadioButton13" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
@@ -514,6 +537,31 @@
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="CopyGeonamesDataPanel.jRadioButton13.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="postalCodeLabel">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" value="Postal code" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="jRadioButton14">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="CopyGeonamesDataPanel.jRadioButton14.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="postalCodeTextField">
+      <Properties>
+        <Property name="columns" type="int" value="16"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel14">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="CopyGeonamesDataPanel.jLabel14.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
