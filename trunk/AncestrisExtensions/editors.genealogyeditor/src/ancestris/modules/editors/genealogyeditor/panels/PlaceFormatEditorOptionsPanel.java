@@ -50,15 +50,13 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
             SpinnerNumberModel model = (SpinnerNumberModel) ((javax.swing.JSpinner) gedcomFields[index][1]).getModel();
             model.setMinimum(0);
             model.setMaximum(mPlaceFormat.length);
-            
+
             ((javax.swing.JLabel) (gedcomFields[index][0])).setText(index < mPlaceFormat.length ? mPlaceFormat[index] : "");
 
-            if (placeOrder[index] > -1) {
+            if (placeOrder[index] > -1 && placeOrder[index] < mPlaceFormat.length) {
                 ((javax.swing.JSpinner) gedcomFields[index][1]).setValue(placeOrder[index] + 1);
-                ((javax.swing.JLabel) (gedcomFields[index][2])).setText(mPlaceFormat[placeOrder[index]]);
             } else {
                 ((javax.swing.JSpinner) gedcomFields[index][1]).setValue(0);
-                ((javax.swing.JLabel) (gedcomFields[index][2])).setText("");
             }
         }
     }
