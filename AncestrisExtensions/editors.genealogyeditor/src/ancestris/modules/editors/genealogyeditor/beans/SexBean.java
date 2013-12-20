@@ -73,6 +73,7 @@ public class SexBean extends javax.swing.JPanel {
         this.root = root;
         this.sex = sex;
         sexComboBox.setSelectedIndex(sex.getSex());
+        sexModified = false;
     }
 
     public void commit() {
