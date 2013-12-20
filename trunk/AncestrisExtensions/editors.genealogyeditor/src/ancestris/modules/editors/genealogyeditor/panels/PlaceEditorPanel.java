@@ -23,10 +23,19 @@ import org.openide.util.NbPreferences;
 public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private PropertyPlace mPlace;
-    String[] mPlaceFormat;
+    private String mPlaceFormat[];
+    private int mPlaceOrder[] = {
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+    };
     private EventsTableModel eventsTableModel = new EventsTableModel();
     private GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
-    int mPlaceOrder[] = new int[8];
 
     /**
      * Creates new form GedcomPlacesEditorPanel
@@ -54,26 +63,26 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         parametersButton = new javax.swing.JButton();
         gedcomPlacePanel = new javax.swing.JPanel();
-        gedcomField6TextField = new javax.swing.JTextField();
-        gedcomField7Label = new javax.swing.JLabel();
-        gedcomField1TextField = new javax.swing.JTextField();
-        gedcomField7TextField = new javax.swing.JTextField();
-        gedcomField3Label = new javax.swing.JLabel();
-        gedcomField5Label = new javax.swing.JLabel();
-        gedcomField3TextField = new javax.swing.JTextField();
-        gedcomField5TextField = new javax.swing.JTextField();
-        gedcomField4Label = new javax.swing.JLabel();
+        gedcomStateTextField = new javax.swing.JTextField();
+        gedcomCountryLabel = new javax.swing.JLabel();
+        gedcomParishTextField = new javax.swing.JTextField();
+        gedcomCountryTextField = new javax.swing.JTextField();
+        gedcomZipCodeLabel = new javax.swing.JLabel();
+        gedcomGeoIdLabel = new javax.swing.JLabel();
+        gedcomZipCodeTextField = new javax.swing.JTextField();
+        gedcomGeoIDTextField = new javax.swing.JTextField();
+        gedcomCountyLabel = new javax.swing.JLabel();
         gedcomLongitudeLabel = new javax.swing.JLabel();
-        gedcomField0TextField = new javax.swing.JTextField();
+        gedcomHamletTextField = new javax.swing.JTextField();
         gedcomLongitudeTextField = new javax.swing.JTextField();
-        gedcomField2Label = new javax.swing.JLabel();
+        gedcomTownLabel = new javax.swing.JLabel();
         gedcomLatitudeLabel = new javax.swing.JLabel();
-        gedcomField2TextField = new javax.swing.JTextField();
+        gedcomTownTextField = new javax.swing.JTextField();
         gedcomLatitudeTextField = new javax.swing.JTextField();
-        gedcomField1Label = new javax.swing.JLabel();
-        gedcomField4TextField = new javax.swing.JTextField();
-        gedcomField0Label = new javax.swing.JLabel();
-        gedcomField6Label = new javax.swing.JLabel();
+        gedcomParishLabel = new javax.swing.JLabel();
+        gedcomCountyTextField = new javax.swing.JTextField();
+        gedcomHamletLabel = new javax.swing.JLabel();
+        gedcomStateLabel = new javax.swing.JLabel();
         placeEditorTabbedPane = new javax.swing.JTabbedPane();
         mapPanel = new javax.swing.JPanel();
         MapScrollPane = new javax.swing.JScrollPane();
@@ -110,55 +119,55 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         gedcomPlacePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Gedcom place"));
         gedcomPlacePanel.setPreferredSize(new java.awt.Dimension(513, 121));
 
-        gedcomField6TextField.setColumns(16);
+        gedcomStateTextField.setColumns(16);
 
-        gedcomField7Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField7Label, "Country"); // NOI18N
+        gedcomCountryLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomCountryLabel, "Country"); // NOI18N
 
-        gedcomField1TextField.setColumns(16);
+        gedcomParishTextField.setColumns(16);
 
-        gedcomField7TextField.setColumns(16);
+        gedcomCountryTextField.setColumns(16);
 
-        gedcomField3Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField3Label, "Zip Code "); // NOI18N
+        gedcomZipCodeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomZipCodeLabel, "Zip Code "); // NOI18N
 
-        gedcomField5Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField5Label, "Geo ID"); // NOI18N
+        gedcomGeoIdLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomGeoIdLabel, "Geo ID"); // NOI18N
 
-        gedcomField3TextField.setColumns(16);
+        gedcomZipCodeTextField.setColumns(16);
 
-        gedcomField5TextField.setColumns(16);
+        gedcomGeoIDTextField.setColumns(16);
 
-        gedcomField4Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField4Label, "County"); // NOI18N
+        gedcomCountyLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomCountyLabel, "County"); // NOI18N
 
         gedcomLongitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(gedcomLongitudeLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.gedcomLongitudeLabel.text"), new Object[] {})); // NOI18N
 
-        gedcomField0TextField.setColumns(16);
+        gedcomHamletTextField.setColumns(16);
 
         gedcomLongitudeTextField.setColumns(16);
 
-        gedcomField2Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField2Label, "Town"); // NOI18N
+        gedcomTownLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomTownLabel, "Town"); // NOI18N
 
         gedcomLatitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(gedcomLatitudeLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.gedcomLatitudeLabel.text"), new Object[] {})); // NOI18N
 
-        gedcomField2TextField.setColumns(16);
+        gedcomTownTextField.setColumns(16);
 
         gedcomLatitudeTextField.setColumns(16);
 
-        gedcomField1Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField1Label, "Parish"); // NOI18N
+        gedcomParishLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomParishLabel, "Parish"); // NOI18N
 
-        gedcomField4TextField.setColumns(16);
+        gedcomCountyTextField.setColumns(16);
 
-        gedcomField0Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField0Label, "Hamlet"); // NOI18N
+        gedcomHamletLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomHamletLabel, "Hamlet"); // NOI18N
 
-        gedcomField6Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomField6Label, "State"); // NOI18N
+        gedcomStateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(gedcomStateLabel, "State"); // NOI18N
 
         javax.swing.GroupLayout gedcomPlacePanelLayout = new javax.swing.GroupLayout(gedcomPlacePanel);
         gedcomPlacePanel.setLayout(gedcomPlacePanelLayout);
@@ -167,31 +176,31 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             .addGroup(gedcomPlacePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gedcomField0Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(gedcomField2Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(gedcomField4Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(gedcomField6Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomHamletLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomTownLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomCountyLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomStateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(gedcomLatitudeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(gedcomLatitudeTextField)
-                    .addComponent(gedcomField6TextField)
-                    .addComponent(gedcomField2TextField)
-                    .addComponent(gedcomField0TextField)
-                    .addComponent(gedcomField4TextField))
+                    .addComponent(gedcomStateTextField)
+                    .addComponent(gedcomTownTextField)
+                    .addComponent(gedcomHamletTextField)
+                    .addComponent(gedcomCountyTextField))
                 .addGap(16, 16, 16)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gedcomField7Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(gedcomField5Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(gedcomField3Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(gedcomField1Label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomCountryLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomGeoIdLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomZipCodeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomParishLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(gedcomLongitudeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(gedcomField7TextField)
-                    .addComponent(gedcomField5TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gedcomField3TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gedcomField1TextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(gedcomCountryTextField)
+                    .addComponent(gedcomGeoIDTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(gedcomZipCodeTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(gedcomParishTextField, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(gedcomLongitudeTextField))
                 .addContainerGap())
         );
@@ -200,35 +209,35 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             .addGroup(gedcomPlacePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(gedcomField1Label)
-                    .addComponent(gedcomField1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomField0TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomField0Label))
+                    .addComponent(gedcomParishLabel)
+                    .addComponent(gedcomParishTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gedcomHamletTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gedcomHamletLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(gedcomField3Label)
-                    .addComponent(gedcomField3TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomField2Label)
-                    .addComponent(gedcomField2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(gedcomZipCodeLabel)
+                    .addComponent(gedcomZipCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gedcomTownLabel)
+                    .addComponent(gedcomTownTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(gedcomField5Label)
-                    .addComponent(gedcomField5TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomField4TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomField4Label))
+                    .addComponent(gedcomGeoIdLabel)
+                    .addComponent(gedcomGeoIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gedcomCountyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gedcomCountyLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(gedcomField7TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomField7Label)
-                    .addComponent(gedcomField6TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomField6Label))
+                    .addComponent(gedcomCountryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gedcomCountryLabel)
+                    .addComponent(gedcomStateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gedcomStateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gedcomPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(gedcomLongitudeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(gedcomLongitudeLabel)
                     .addComponent(gedcomLatitudeLabel)
                     .addComponent(gedcomLatitudeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         placeEditorTabbedPane.setBorder(null);
@@ -365,7 +374,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void parametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parametersButtonActionPerformed
-        PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlace.getGedcom());
+        PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
 
         DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
@@ -381,19 +390,19 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
             node.putInt("placeOrder.index.town", mPlaceOrder[2]);
             node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
-            node.putInt("placeOrder.index.townCode", mPlaceOrder[4]);
-            node.putInt("placeOrder.index.county", mPlaceOrder[5]);
+            node.putInt("placeOrder.index.county", mPlaceOrder[4]);
+            node.putInt("placeOrder.index.townCode", mPlaceOrder[5]);
             node.putInt("placeOrder.index.state", mPlaceOrder[6]);
             node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
             JComponent gedcomFields[][] = {
-                {gedcomField0Label, gedcomField0TextField},
-                {gedcomField1Label, gedcomField1TextField},
-                {gedcomField2Label, gedcomField2TextField},
-                {gedcomField3Label, gedcomField3TextField},
-                {gedcomField4Label, gedcomField4TextField},
-                {gedcomField5Label, gedcomField5TextField},
-                {gedcomField6Label, gedcomField6TextField},
-                {gedcomField7Label, gedcomField7TextField}
+                {gedcomHamletLabel, gedcomHamletTextField},
+                {gedcomParishLabel, gedcomParishTextField},
+                {gedcomTownLabel, gedcomTownTextField},
+                {gedcomZipCodeLabel, gedcomZipCodeTextField},
+                {gedcomCountyLabel, gedcomCountyTextField},
+                {gedcomGeoIdLabel, gedcomGeoIDTextField},
+                {gedcomStateLabel, gedcomStateTextField},
+                {gedcomCountryLabel, gedcomCountryTextField}
             };
 
             for (int index = 0; index < mPlaceOrder.length; index++) {
@@ -410,6 +419,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_parametersButtonActionPerformed
+
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
         String searchedPlace = searchPlaceTextField.getText();
         if (searchedPlace.isEmpty() == false) {
@@ -443,27 +453,27 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane MapScrollPane;
     private javax.swing.JButton copyGeonamesDataButton;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.JLabel gedcomField0Label;
-    private javax.swing.JTextField gedcomField0TextField;
-    private javax.swing.JLabel gedcomField1Label;
-    private javax.swing.JTextField gedcomField1TextField;
-    private javax.swing.JLabel gedcomField2Label;
-    private javax.swing.JTextField gedcomField2TextField;
-    private javax.swing.JLabel gedcomField3Label;
-    private javax.swing.JTextField gedcomField3TextField;
-    private javax.swing.JLabel gedcomField4Label;
-    private javax.swing.JTextField gedcomField4TextField;
-    private javax.swing.JLabel gedcomField5Label;
-    private javax.swing.JTextField gedcomField5TextField;
-    private javax.swing.JLabel gedcomField6Label;
-    private javax.swing.JTextField gedcomField6TextField;
-    private javax.swing.JLabel gedcomField7Label;
-    private javax.swing.JTextField gedcomField7TextField;
+    private javax.swing.JLabel gedcomCountryLabel;
+    private javax.swing.JTextField gedcomCountryTextField;
+    private javax.swing.JLabel gedcomCountyLabel;
+    private javax.swing.JTextField gedcomCountyTextField;
+    private javax.swing.JTextField gedcomGeoIDTextField;
+    private javax.swing.JLabel gedcomGeoIdLabel;
+    private javax.swing.JLabel gedcomHamletLabel;
+    private javax.swing.JTextField gedcomHamletTextField;
     private javax.swing.JLabel gedcomLatitudeLabel;
     private javax.swing.JTextField gedcomLatitudeTextField;
     private javax.swing.JLabel gedcomLongitudeLabel;
     private javax.swing.JTextField gedcomLongitudeTextField;
+    private javax.swing.JLabel gedcomParishLabel;
+    private javax.swing.JTextField gedcomParishTextField;
     private javax.swing.JPanel gedcomPlacePanel;
+    private javax.swing.JLabel gedcomStateLabel;
+    private javax.swing.JTextField gedcomStateTextField;
+    private javax.swing.JLabel gedcomTownLabel;
+    private javax.swing.JTextField gedcomTownTextField;
+    private javax.swing.JLabel gedcomZipCodeLabel;
+    private javax.swing.JTextField gedcomZipCodeTextField;
     private javax.swing.JList<String> geonamesPlacesList;
     private javax.swing.JScrollPane geonamesScrollPane;
     private org.jdesktop.swingx.JXMapKit jXMapKit1;
@@ -495,10 +505,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         this.mPlace = place;
         mPlaceFormat = PropertyPlace.getFormat(place.getGedcom());
-        
+
         try {
             if (!modulePreferences.nodeExists(place.getGedcom().getName())) {
-                PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlace.getGedcom());
+
+                PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
 
                 DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
@@ -518,28 +529,28 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 }
             } else {
                 node = modulePreferences.node(place.getGedcom().getName());
+                mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", 0);
+                mPlaceOrder[1] = node.getInt("placeOrder.index.parish", 1);
+                mPlaceOrder[2] = node.getInt("placeOrder.index.town", 2);
+                mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", 3);
+                mPlaceOrder[4] = node.getInt("placeOrder.index.townCode", 4);
+                mPlaceOrder[5] = node.getInt("placeOrder.index.county", 5);
+                mPlaceOrder[6] = node.getInt("placeOrder.index.state", 6);
+                mPlaceOrder[7] = node.getInt("placeOrder.index.Country", 7);
             }
-            mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", 0);
-            mPlaceOrder[1] = node.getInt("placeOrder.index.parish", 1);
-            mPlaceOrder[2] = node.getInt("placeOrder.index.town", 2);
-            mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", 3);
-            mPlaceOrder[4] = node.getInt("placeOrder.index.townCode", 4);
-            mPlaceOrder[5] = node.getInt("placeOrder.index.county", 5);
-            mPlaceOrder[6] = node.getInt("placeOrder.index.state", 6);
-            mPlaceOrder[7] = node.getInt("placeOrder.index.Country", 7);
         } catch (BackingStoreException ex) {
             Exceptions.printStackTrace(ex);
         }
 
         JComponent gedcomFields[][] = {
-            {gedcomField0Label, gedcomField0TextField},
-            {gedcomField1Label, gedcomField1TextField},
-            {gedcomField2Label, gedcomField2TextField},
-            {gedcomField3Label, gedcomField3TextField},
-            {gedcomField4Label, gedcomField4TextField},
-            {gedcomField5Label, gedcomField5TextField},
-            {gedcomField6Label, gedcomField6TextField},
-            {gedcomField7Label, gedcomField7TextField}
+            {gedcomHamletLabel, gedcomHamletTextField},
+            {gedcomParishLabel, gedcomParishTextField},
+            {gedcomTownLabel, gedcomTownTextField},
+            {gedcomZipCodeLabel, gedcomZipCodeTextField},
+            {gedcomGeoIdLabel, gedcomGeoIDTextField},
+            {gedcomCountyLabel, gedcomCountyTextField},
+            {gedcomStateLabel, gedcomStateTextField},
+            {gedcomCountryLabel, gedcomCountryTextField}
         };
 
         for (int index = 0; index < mPlaceOrder.length; index++) {
@@ -549,7 +560,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     ((javax.swing.JTextField) (gedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
                 }
             } else {
-                ((javax.swing.JLabel) (gedcomFields[index][0])).setText("");
                 gedcomFields[index][1].setEnabled(false);
             }
         }
@@ -577,7 +587,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
 
         } else {
-            String searchedPlace = gedcomField2TextField.getText() + "," + gedcomField7TextField.getText();
+            String searchedPlace = gedcomTownTextField.getText() + "," + gedcomCountryTextField.getText();
             searchPlaceTextField.setText(searchedPlace);
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
 
@@ -591,21 +601,28 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         String placeString = "";
         javax.swing.JTextField gedcomFields[] = {
-            gedcomField0TextField,
-            gedcomField1TextField,
-            gedcomField2TextField,
-            gedcomField3TextField,
-            gedcomField4TextField,
-            gedcomField5TextField,
-            gedcomField6TextField,
-            gedcomField7TextField
+            gedcomHamletTextField,
+            gedcomParishTextField,
+            gedcomTownTextField,
+            gedcomZipCodeTextField,
+            gedcomCountyTextField,
+            gedcomGeoIDTextField,
+            gedcomStateTextField,
+            gedcomCountryTextField
         };
+
+        javax.swing.JTextField gedcomFieldsOrder[] = new javax.swing.JTextField[8];
+        for (int index = 0; index < mPlaceOrder.length; index++) {
+            if (mPlaceOrder[index] != -1) {
+                gedcomFieldsOrder[index] = gedcomFields[mPlaceOrder[index]];
+            }
+        }
 
         for (int index = 0; index < mPlaceFormat.length; index++) {
             if (index > 0) {
                 placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             }
-            placeString += gedcomFields[index].getText();
+            placeString += gedcomFieldsOrder[index].getText();
         }
 
         return placeString;

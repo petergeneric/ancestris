@@ -104,34 +104,34 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="gedcomField0Label" alignment="1" max="32767" attributes="0"/>
-                      <Component id="gedcomField2Label" alignment="1" max="32767" attributes="0"/>
-                      <Component id="gedcomField4Label" alignment="1" max="32767" attributes="0"/>
-                      <Component id="gedcomField6Label" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomHamletLabel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomTownLabel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomCountyLabel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomStateLabel" alignment="1" max="32767" attributes="0"/>
                       <Component id="gedcomLatitudeLabel" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="gedcomLatitudeTextField" max="32767" attributes="0"/>
-                      <Component id="gedcomField6TextField" max="32767" attributes="0"/>
-                      <Component id="gedcomField2TextField" max="32767" attributes="0"/>
-                      <Component id="gedcomField0TextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="gedcomField4TextField" max="32767" attributes="0"/>
+                      <Component id="gedcomStateTextField" max="32767" attributes="0"/>
+                      <Component id="gedcomTownTextField" max="32767" attributes="0"/>
+                      <Component id="gedcomHamletTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomCountyTextField" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="gedcomField7Label" alignment="1" max="32767" attributes="0"/>
-                      <Component id="gedcomField5Label" alignment="1" max="32767" attributes="0"/>
-                      <Component id="gedcomField3Label" alignment="1" max="32767" attributes="0"/>
-                      <Component id="gedcomField1Label" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomCountryLabel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomGeoIdLabel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomZipCodeLabel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="gedcomParishLabel" alignment="1" max="32767" attributes="0"/>
                       <Component id="gedcomLongitudeLabel" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="gedcomField7TextField" max="32767" attributes="0"/>
-                      <Component id="gedcomField5TextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="gedcomField3TextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="gedcomField1TextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomCountryTextField" max="32767" attributes="0"/>
+                      <Component id="gedcomGeoIDTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomZipCodeTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="gedcomParishTextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="gedcomLongitudeTextField" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -143,31 +143,31 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomField1Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField1TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField0TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField0Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomParishLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomParishTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomHamletTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomHamletLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomField3Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField3TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField2Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField2TextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomZipCodeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomZipCodeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomTownLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomTownTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomField5Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField5TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField4TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField4Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomGeoIdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomGeoIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomCountyTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomCountyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="gedcomField7TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField7Label" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField6TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="gedcomField6Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomCountryTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomCountryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomStateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="gedcomStateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -182,50 +182,50 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JTextField" name="gedcomField6TextField">
+        <Component class="javax.swing.JTextField" name="gedcomStateTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField7Label">
+        <Component class="javax.swing.JLabel" name="gedcomCountryLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Country" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField1TextField">
+        <Component class="javax.swing.JTextField" name="gedcomParishTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField7TextField">
+        <Component class="javax.swing.JTextField" name="gedcomCountryTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField3Label">
+        <Component class="javax.swing.JLabel" name="gedcomZipCodeLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Zip Code " noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField5Label">
+        <Component class="javax.swing.JLabel" name="gedcomGeoIdLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Geo ID" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField3TextField">
+        <Component class="javax.swing.JTextField" name="gedcomZipCodeTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField5TextField">
+        <Component class="javax.swing.JTextField" name="gedcomGeoIDTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField4Label">
+        <Component class="javax.swing.JLabel" name="gedcomCountyLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="County" noResource="true"/>
@@ -239,7 +239,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField0TextField">
+        <Component class="javax.swing.JTextField" name="gedcomHamletTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
@@ -249,7 +249,7 @@
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField2Label">
+        <Component class="javax.swing.JLabel" name="gedcomTownLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Town" noResource="true"/>
@@ -263,7 +263,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField2TextField">
+        <Component class="javax.swing.JTextField" name="gedcomTownTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
@@ -273,24 +273,24 @@
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField1Label">
+        <Component class="javax.swing.JLabel" name="gedcomParishLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Parish" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="gedcomField4TextField">
+        <Component class="javax.swing.JTextField" name="gedcomCountyTextField">
           <Properties>
             <Property name="columns" type="int" value="16"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField0Label">
+        <Component class="javax.swing.JLabel" name="gedcomHamletLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Hamlet" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="gedcomField6Label">
+        <Component class="javax.swing.JLabel" name="gedcomStateLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="State" noResource="true"/>
