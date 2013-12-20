@@ -14,12 +14,15 @@ import org.openide.util.NbPreferences;
 public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
 
     private String[] mPlaceFormat;
+    private int mPlaceOrder[];
 
     /**
      * Creates new form PlaceFormatEditorOptionsPanel
      */
-    public PlaceFormatEditorOptionsPanel(Gedcom gedcom) {
-        mPlaceFormat = PropertyPlace.getFormat(gedcom);
+    public PlaceFormatEditorOptionsPanel(String placeFormat[], int placeOrder[]) {
+        mPlaceFormat = placeFormat;
+        mPlaceOrder = placeOrder;
+        
         initComponents();
 
         JComponent gedcomFields[][] = {
@@ -32,29 +35,16 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
             {jLabel7, stateSpinner, gedcomStateLabel},
             {jLabel8, countrySpinner, gedcomCountryLabel}
         };
-        int placeOrder[] = new int[8];
-        Preferences modulePreferences = NbPreferences.forModule(PlaceEditorPanel.class);
-        Preferences node = modulePreferences.node(gedcom.getName());
 
-
-        placeOrder[0] = node.getInt("placeOrder.index.hamlet", 0);
-        placeOrder[1] = node.getInt("placeOrder.index.parish", 1);
-        placeOrder[2] = node.getInt("placeOrder.index.town", 2);
-        placeOrder[3] = node.getInt("placeOrder.index.zipCode", 3);
-        placeOrder[4] = node.getInt("placeOrder.index.townCode", 4);
-        placeOrder[5] = node.getInt("placeOrder.index.county", 5);
-        placeOrder[6] = node.getInt("placeOrder.index.state", 6);
-        placeOrder[7] = node.getInt("placeOrder.index.Country", 7);
-
-        for (int index = 0; index < placeOrder.length; index++) {
+        for (int index = 0; index < mPlaceOrder.length; index++) {
             SpinnerNumberModel model = (SpinnerNumberModel) ((javax.swing.JSpinner) gedcomFields[index][1]).getModel();
             model.setMinimum(0);
             model.setMaximum(mPlaceFormat.length);
 
             ((javax.swing.JLabel) (gedcomFields[index][0])).setText(index < mPlaceFormat.length ? mPlaceFormat[index] : "");
 
-            if (placeOrder[index] > -1 && placeOrder[index] < mPlaceFormat.length) {
-                ((javax.swing.JSpinner) gedcomFields[index][1]).setValue(placeOrder[index] + 1);
+            if (mPlaceOrder[index] > -1 && mPlaceOrder[index] < mPlaceFormat.length) {
+                ((javax.swing.JSpinner) gedcomFields[index][1]).setValue(mPlaceOrder[index] + 1);
             } else {
                 ((javax.swing.JSpinner) gedcomFields[index][1]).setValue(0);
             }
@@ -434,7 +424,6 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         } else {
             gedcomTownLabel.setText("");
         }
-
     }//GEN-LAST:event_townSpinnerStateChanged
 
     private void townCodeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_townCodeSpinnerStateChanged
@@ -444,7 +433,6 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         } else {
             gedcomTownCodeLabel.setText("");
         }
-
     }//GEN-LAST:event_townCodeSpinnerStateChanged
 
     private void stateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_stateSpinnerStateChanged
@@ -454,7 +442,6 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         } else {
             gedcomStateLabel.setText("");
         }
-
     }//GEN-LAST:event_stateSpinnerStateChanged
 
     private void parishSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_parishSpinnerStateChanged
@@ -464,7 +451,6 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         } else {
             gedcomParishLabel.setText("");
         }
-
     }//GEN-LAST:event_parishSpinnerStateChanged
 
     private void zipCodeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zipCodeSpinnerStateChanged
@@ -474,7 +460,6 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         } else {
             gedcomZipCodeLabel.setText("");
         }
-
     }//GEN-LAST:event_zipCodeSpinnerStateChanged
 
     private void countySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_countySpinnerStateChanged
@@ -484,7 +469,6 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         } else {
             gedcomCountyLabel.setText("");
         }
-
     }//GEN-LAST:event_countySpinnerStateChanged
 
     private void countrySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_countrySpinnerStateChanged
@@ -494,7 +478,6 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         } else {
             gedcomCountryLabel.setText("");
         }
-
     }//GEN-LAST:event_countrySpinnerStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel countryLabel;
