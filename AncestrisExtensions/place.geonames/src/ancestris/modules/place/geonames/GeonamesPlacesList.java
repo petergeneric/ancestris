@@ -18,11 +18,15 @@ import org.openide.util.TaskListener;
 public class GeonamesPlacesList implements SearchPlace {
 
     private final static Logger logger = Logger.getLogger(GeonamesPlacesList.class.getName(), null);
-    private List<Place> mPlacesList = new ArrayList<Place> ();
+    private List<Place> mPlacesList = new ArrayList<Place>();
+    RequestProcessor.Task theTask;
+
+    public RequestProcessor.Task getTask() {
+        return theTask;
+    }
 
     @Override
     public void searchPlace(final String searchedPlace, final List<Place> placesList) {
-        RequestProcessor.Task theTask;
         RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
         Runnable runnable = new Runnable() {
 
