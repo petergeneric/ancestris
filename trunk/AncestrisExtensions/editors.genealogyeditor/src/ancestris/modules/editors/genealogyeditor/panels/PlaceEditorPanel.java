@@ -12,9 +12,7 @@ import javax.swing.JComponent;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.DialogDescriptor;
-import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
+import org.openide.util.*;
 
 /**
  *
@@ -422,10 +420,20 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
         String searchedPlace = searchPlaceTextField.getText();
+        searchPlaceButton.setEnabled(false);
+
         if (searchedPlace.isEmpty() == false) {
             geonamePlacesListModel.clear();
             copyGeonamesDataButton.setEnabled(false);
-            new GeonamesPlacesList().searchPlace(searchedPlace, geonamePlacesListModel);
+            GeonamesPlacesList geonamesPlacesList1 = new GeonamesPlacesList();
+            geonamesPlacesList1.searchPlace(searchedPlace, geonamePlacesListModel);
+            geonamesPlacesList1.getTask().addTaskListener(new TaskListener() {
+
+                @Override
+                public void taskFinished(Task task) {
+                    searchPlaceButton.setEnabled(true);
+                }
+            });
         }
     }//GEN-LAST:event_searchPlaceButtonActionPerformed
 
@@ -592,7 +600,16 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
 
             if (searchedPlace.isEmpty() == false) {
-                new GeonamesPlacesList().searchPlace(searchedPlace, geonamePlacesListModel);
+                searchPlaceButton.setEnabled(false);
+                GeonamesPlacesList geonamesPlacesList1 = new GeonamesPlacesList();
+                geonamesPlacesList1.searchPlace(searchedPlace, geonamePlacesListModel);
+                geonamesPlacesList1.getTask().addTaskListener(new TaskListener() {
+
+                    @Override
+                    public void taskFinished(Task task) {
+                        searchPlaceButton.setEnabled(true);
+                    }
+                });
             }
         }
     }
