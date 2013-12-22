@@ -12,7 +12,7 @@ and open the template in the editor.
             <tocitem text="My first words, sentences" target="org.ancestris.trancestris.modules.help.first-steps-2"/>
             <tocitem text="Search Function" target="org.ancestris.trancestris.modules.help.first-steps-3"/>
         </tocitem>
-        <tocitem expand="true" text="Configuration" target="org.ancestris.trancestris.modules.help.configuration">
+        <tocitem expand="false" text="Configuration" target="org.ancestris.trancestris.modules.help.configuration">
             <tocitem text="Mail" target="org.ancestris.trancestris.modules.help.configuration.mail"/>
         </tocitem>
         <tocitem text="Bundles Updates" target="org.ancestris.trancestris.modules.help.bundles.updates"/>
