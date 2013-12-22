@@ -13,5 +13,6 @@ and open the template in the editor.
     <mapID target="org.ancestris.trancestris.modules.help.first-steps-3" url="trancestris-first_steps3.html"/>
     <mapID target="org.ancestris.trancestris.modules.help.configuration" url="trancestris-configuration.html"/>
     <mapID target="org.ancestris.trancestris.modules.help.configuration.mail" url="trancestris-configuration-mail.html"/>
+    <mapID target="org.ancestris.trancestris.modules.help.bundles.updates" url="trancestris-bundles-updates.html"/>
     <mapID target="org.ancestris.trancestris.modules.help.updates" url="trancestris-updates.html"/>
 </map>
