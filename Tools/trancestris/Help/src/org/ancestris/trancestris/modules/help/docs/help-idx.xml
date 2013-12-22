@@ -15,5 +15,6 @@ and open the template in the editor.
     <indexitem text="Configuration" target="org.ancestris.trancestris.modules.help.configuration">
         <indexitem text="Mail configuration" target="org.ancestris.trancestris.modules.help.configuration.mail"/>
     </indexitem>
+    <indexitem text="Bundles Updates" target="org.ancestris.trancestris.modules.help.bundles.updates"/>
     <indexitem text="Trancestris Updates" target="org.ancestris.trancestris.modules.help.updates"/>
 </index>
