@@ -76,7 +76,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         notesPanel = new javax.swing.JPanel();
         noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
         multiMediaPanel = new javax.swing.JPanel();
-        multimediaObjectsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel();
+        multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
         jLabel5 = new javax.swing.JLabel();
         dataQualityComboBox = new javax.swing.JComboBox<String>();
         recordingDateLabel = new javax.swing.JLabel();
@@ -243,7 +243,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         SourceDataPanel.setLayout(SourceDataPanelLayout);
         SourceDataPanelLayout.setHorizontalGroup(
             SourceDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceDataScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+            .addComponent(sourceDataScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
         );
         SourceDataPanelLayout.setVerticalGroup(
             SourceDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -256,7 +256,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,17 +265,15 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
-        multimediaObjectsListPanel.setPreferredSize(null);
-
         javax.swing.GroupLayout multiMediaPanelLayout = new javax.swing.GroupLayout(multiMediaPanel);
         multiMediaPanel.setLayout(multiMediaPanelLayout);
         multiMediaPanelLayout.setHorizontalGroup(
             multiMediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
         );
         multiMediaPanelLayout.setVerticalGroup(
             multiMediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
         );
 
         sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.multiMediaPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multiMediaPanel); // NOI18N
@@ -301,27 +299,28 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sourceCitationTabbedPane)
                     .addComponent(SourceReferencePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(eventTypeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(eventRoleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(eventTypeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(eventRoleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(eventTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(eventRoleComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(dataQualityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(recordingDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(recordingDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(recordingDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(sourceCitationTabbedPane))
+                        .addComponent(recordingDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(SourceReferencePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -455,7 +454,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JButton linkToSourceButton;
     private javax.swing.JPanel multiMediaPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel multimediaObjectsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JLabel pageLabel;
@@ -494,102 +493,96 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         mRoot = root;
         mSourceCitation = sourceCitation;
-        if (sourceCitation != null) {
-            if (sourceCitation instanceof PropertySource) {
-                SourceReferencePanel.setVisible(true);
-                mReferencedSource = (Source) ((PropertySource) sourceCitation).getTargetEntity();
-                SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
-                mSourceReferencedTitleModified = false;
-                Property page = sourceCitation.getProperty("PAGE");
-                if (page != null) {
-                    pageTextField.setText(page.getValue());
-                }
+        if (sourceCitation instanceof PropertySource) {
+            SourceReferencePanel.setVisible(true);
+            mReferencedSource = (Source) ((PropertySource) sourceCitation).getTargetEntity();
+            SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
+            mSourceReferencedTitleModified = false;
+            Property page = sourceCitation.getProperty("PAGE");
+            if (page != null) {
+                pageTextField.setText(page.getValue());
+            }
 
-                Property eventType = sourceCitation.getProperty("EVEN");
-                if (eventType != null) {
-                    eventTypeComboBox.setSelectedItem(eventType.getValue());
-                } else {
-                    eventTypeComboBox.setSelectedIndex(0);
-                }
-                mEventTypeModified = false;
-
-                Property eventRole = sourceCitation.getProperty("ROLE");
-                if (eventRole != null) {
-                    eventRoleComboBox.setSelectedItem(eventRole.getValue());
-                } else {
-                    eventRoleComboBox.setSelectedIndex(0);
-                }
-                mEventRoleModified = false;
-
-                final Property sourceData = sourceCitation.getProperty("DATA");
-                if (sourceData != null) {
-                    PropertyDate date = (PropertyDate) sourceData.getProperty("DATE");
-                    if (date == null) {
-                        try {
-                            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                                @Override
-                                public void perform(Gedcom gedcom) throws GedcomException {
-                                    addProperty = sourceData.addProperty("DATE", "");
-                                }
-                            }); // end of doUnitOfWork
-                        } catch (GedcomException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                        date = (PropertyDate) addProperty;
-                    }
-                    recordingDate.setContext(date);
-
-                    Property sourceText = sourceData.getProperty("TEXT");
-                    if (sourceText != null) {
-                        sourceDataTextArea.setText(sourceText.getValue());
-                        mSourceTextModified = false;
-                    }
-                }
+            Property eventType = sourceCitation.getProperty("EVEN");
+            if (eventType != null) {
+                eventTypeComboBox.setSelectedItem(PropertyTag2Name.getTagName(eventType.getValue()));
             } else {
-                addSourceButton.setVisible(false);
-                deleteSourceButton.setVisible(false);
-                editSourceButton.setVisible(false);
-                linkToSourceButton.setVisible(false);
+                eventTypeComboBox.setSelectedIndex(0);
+            }
+            mEventTypeModified = false;
 
-                pageLabel.setVisible(false);
-                pageTextField.setVisible(false);
+            Property eventRole = sourceCitation.getProperty("ROLE");
+            if (eventRole != null) {
+                eventRoleComboBox.setSelectedItem(PropertyTag2Name.getTagName(eventRole.getValue()));
+            } else {
+                eventRoleComboBox.setSelectedIndex(0);
+            }
+            mEventRoleModified = false;
 
-                eventTypeLabel.setVisible(false);
-                eventTypeComboBox.setVisible(false);
+            final Property sourceData = sourceCitation.getProperty("DATA");
+            if (sourceData != null) {
+                PropertyDate date = (PropertyDate) sourceData.getProperty("DATE");
+                if (date == null) {
+                    try {
+                        mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                eventRoleLabel.setVisible(false);
-                eventRoleComboBox.setVisible(false);
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                addProperty = sourceData.addProperty("DATE", "");
+                            }
+                        }); // end of doUnitOfWork
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    date = (PropertyDate) addProperty;
+                }
+                recordingDate.setContext(date);
 
-                recordingDateLabel.setVisible(false);
-                recordingDate.setVisible(false);
-
-                SourceReferencedTitleTextField.setText(sourceCitation.getValue());
-                mSourceReferencedTitleModified = false;
-
-                Property sourceText = sourceCitation.getProperty("TEXT");
+                Property sourceText = sourceData.getProperty("TEXT");
                 if (sourceText != null) {
                     sourceDataTextArea.setText(sourceText.getValue());
                     mSourceTextModified = false;
                 }
             }
+        } else {
+            addSourceButton.setVisible(false);
+            deleteSourceButton.setVisible(false);
+            editSourceButton.setVisible(false);
+            linkToSourceButton.setVisible(false);
 
-            Property dataQuality = sourceCitation.getProperty("QUAY");
-            if (dataQuality != null) {
-                dataQualityComboBox.setSelectedItem(dataQuality.getValue());
-            } else {
-                dataQualityComboBox.setSelectedIndex(0);
+            pageLabel.setVisible(false);
+            pageTextField.setVisible(false);
+
+            eventTypeLabel.setVisible(false);
+            eventTypeComboBox.setVisible(false);
+
+            eventRoleLabel.setVisible(false);
+            eventRoleComboBox.setVisible(false);
+
+            recordingDateLabel.setVisible(false);
+            recordingDate.setVisible(false);
+
+            SourceReferencedTitleTextField.setText(sourceCitation.getValue());
+            mSourceReferencedTitleModified = false;
+
+            Property sourceText = sourceCitation.getProperty("TEXT");
+            if (sourceText != null) {
+                sourceDataTextArea.setText(sourceText.getValue());
+                mSourceTextModified = false;
             }
-            mDataQualityModified = false;
-
-            noteCitationsListPanel.setNotesList(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("NOTE")));
-
-            List<Media> mediasList = new ArrayList<Media>();
-            for (PropertyMedia mediaRef : mSourceCitation.getProperties(PropertyMedia.class)) {
-                mediasList.add((Media) mediaRef.getTargetEntity());
-            }
-            multimediaObjectsListPanel.set(mSourceCitation, mediasList);
         }
+
+        Property dataQuality = sourceCitation.getProperty("QUAY");
+        if (dataQuality != null) {
+            dataQualityComboBox.setSelectedItem(dataQuality.getValue());
+        } else {
+            dataQualityComboBox.setSelectedIndex(0);
+        }
+        mDataQualityModified = false;
+
+        noteCitationsListPanel.setNotesList(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("NOTE")));
+
+        multimediaObjectCitationsListPanel.set(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("OBJE")));
     }
 
     public Property commit() {

@@ -17,14 +17,15 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="sourceCitationTabbedPane" max="32767" attributes="0"/>
                   <Component id="SourceReferencePanel" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jLabel5" max="32767" attributes="0"/>
-                          <Component id="eventTypeLabel" alignment="0" max="32767" attributes="0"/>
-                          <Component id="eventRoleLabel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel5" min="-2" pref="132" max="-2" attributes="0"/>
+                          <Component id="eventTypeLabel" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
+                          <Component id="eventRoleLabel" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -32,12 +33,11 @@
                           <Component id="eventRoleComboBox" max="32767" attributes="0"/>
                           <Component id="dataQualityComboBox" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="recordingDateLabel" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="recordingDateLabel" min="-2" pref="118" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="recordingDate" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="sourceCitationTabbedPane" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -46,6 +46,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="SourceReferencePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -264,7 +265,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceDataScrollPane" alignment="0" pref="652" max="32767" attributes="0"/>
+                  <Component id="sourceDataScrollPane" alignment="0" pref="656" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -313,7 +314,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="652" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="656" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -344,22 +345,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectsListPanel" alignment="0" pref="652" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="656" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectsListPanel" alignment="0" pref="166" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="166" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel" name="multimediaObjectsListPanel">
-              <Properties>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="null"/>
-                </Property>
-              </Properties>
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel" name="multimediaObjectCitationsListPanel">
             </Component>
           </SubComponents>
         </Container>
