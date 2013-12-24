@@ -420,9 +420,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
         String searchedPlace = searchPlaceTextField.getText();
-        searchPlaceButton.setEnabled(false);
 
         if (searchedPlace.isEmpty() == false) {
+            searchPlaceButton.setEnabled(false);
             geonamePlacesListModel.clear();
             copyGeonamesDataButton.setEnabled(false);
             GeonamesPlacesList geonamesPlacesList1 = new GeonamesPlacesList();

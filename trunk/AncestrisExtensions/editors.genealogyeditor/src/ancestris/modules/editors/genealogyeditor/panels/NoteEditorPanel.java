@@ -132,11 +132,20 @@ public class NoteEditorPanel extends javax.swing.JPanel {
 
     /**
      * @param note the note to set
+     * 
+     * @<XREF:NOTE>@ NOTE <SUBMITTER_TEXT>
+     * +1 [CONC|CONT] <SUBMITTER_TEXT>
+     * +1 REFN <USER_REFERENCE_NUMBER>
+     * +2 TYPE <USER_REFERENCE_TYPE>
+     * +1 RIN <AUTOMATED_RECORD_ID>
+     * +1 <<SOURCE_CITATION>>
+     * +1 <<CHANGE_DATE>>
      */
     public void set(Note note) {
         this.mNote = note;
         noteIDTextField.setText(note.getId());
         noteTextTextArea.setText(note.getValue() != null ? note.getValue() : "");
+        
         List<Entity> entitiesList = new ArrayList<Entity>();
         for (PropertyXRef entityRef : note.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());

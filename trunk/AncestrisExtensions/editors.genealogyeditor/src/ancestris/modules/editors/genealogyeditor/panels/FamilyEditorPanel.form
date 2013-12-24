@@ -42,7 +42,7 @@
                   <Component id="fatherPanel" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="187" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="183" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -415,12 +415,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="childrensListPanel" alignment="0" pref="636" max="32767" attributes="0"/>
+                  <Component id="childrensListPanel" alignment="0" pref="639" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="childrensListPanel" alignment="1" pref="156" max="32767" attributes="0"/>
+                  <Component id="childrensListPanel" alignment="1" pref="152" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -446,12 +446,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventsListPanel" alignment="0" pref="636" max="32767" attributes="0"/>
+                  <Component id="eventsListPanel" alignment="0" pref="639" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventsListPanel" alignment="0" pref="156" max="32767" attributes="0"/>
+                  <Component id="eventsListPanel" alignment="0" pref="152" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -480,12 +480,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="636" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="639" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="156" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="152" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -516,22 +516,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="notesListPanel" alignment="0" pref="636" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="639" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="notesListPanel" alignment="0" pref="156" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="152" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.NotesListPanel" name="notesListPanel">
-              <Properties>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="null"/>
-                </Property>
-              </Properties>
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel" name="noteCitationsListPanel">
             </Component>
           </SubComponents>
         </Container>
@@ -552,25 +547,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectsListPanel" alignment="0" pref="636" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="639" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectsListPanel" alignment="0" pref="156" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="152" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel" name="multimediaObjectsListPanel">
-              <Properties>
-                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="null"/>
-                </Property>
-                <Property name="name" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.multimediaObjectsListPanel.name" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-                </Property>
-              </Properties>
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel" name="multimediaObjectCitationsListPanel">
             </Component>
           </SubComponents>
         </Container>

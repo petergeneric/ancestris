@@ -5,6 +5,7 @@ import genj.gedcom.Entity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -13,7 +14,11 @@ import javax.swing.table.AbstractTableModel;
 public class ReferencesTableModel extends AbstractTableModel {
 
     List<Entity> entitiesList = new ArrayList<Entity>();
-    String[] columnsName = {"ID", "Type", "Value"};
+    private String[] columnsName = {
+        NbBundle.getMessage(ReferencesTableModel.class, "ReferencesTableModel.column.ID.title"),
+        NbBundle.getMessage(ReferencesTableModel.class, "ReferencesTableModel.column.Type.title"),
+        NbBundle.getMessage(ReferencesTableModel.class, "ReferencesTableModel.column.Value.title")
+    };
 
     public ReferencesTableModel() {
     }

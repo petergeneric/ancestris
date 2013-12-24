@@ -5,6 +5,33 @@ import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.Exceptions;
 
+/*
+* SOURCE_RECORD:=
+* 0 @<XREF:SOUR>@ SOUR {0:M}
+* +1 DATA {0:1}
+* +2 EVEN <EVENTS_RECORDED> {0:M}
+* +3 DATE <DATE_PERIOD> {0:1}
+* +3 PLAC <SOURCE_JURISDICTION_PLACE> {0:1}
+* +2 AGNC <RESPONSIBLE_AGENCY> {0:1}
+* +2 <<NOTE_STRUCTURE>> {0:M}
+* +1 AUTH <SOURCE_ORIGINATOR> {0:1}
+* +2 [CONT|CONC] <SOURCE_ORIGINATOR> {0:M}
+* +1 TITL <SOURCE_DESCRIPTIVE_TITLE> {0:1}
+* +2 [CONT|CONC] <SOURCE_DESCRIPTIVE_TITLE> {0:M}
+* +1 ABBR <SOURCE_FILED_BY_ENTRY> {0:1}
+* +1 PUBL <SOURCE_PUBLICATION_FACTS> {0:1}
+* +2 [CONT|CONC] <SOURCE_PUBLICATION_FACTS> {0:M}
+* +1 TEXT <TEXT_FROM_SOURCE> {0:1}
+* +2 [CONT|CONC] <TEXT_FROM_SOURCE> {0:M}
+* +1 <<SOURCE_REPOSITORY_CITATION>> {0:1}
+* +1 <<MULTIMEDIA_LINK>> {0:M}
+* +1 <<NOTE_STRUCTURE>> {0:M}
+* +1 REFN <USER_REFERENCE_NUMBER> {0:M}
+* +2 TYPE <USER_REFERENCE_TYPE> {0:1}
+* +1 RIN <AUTOMATED_RECORD_ID> {0:1}
+* +1 <<CHANGE_DATE>> {0:1}
+*/
+
 /**
  *
  * @author dominique
@@ -164,7 +191,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                     .addComponent(sourceTitleLabel)
                     .addComponent(sourceTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourceInformationTabbedPane)
+                .addComponent(sourceInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

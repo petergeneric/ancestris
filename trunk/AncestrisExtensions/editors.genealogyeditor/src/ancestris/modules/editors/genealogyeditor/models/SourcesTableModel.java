@@ -3,15 +3,15 @@ package ancestris.modules.editors.genealogyeditor.models;
 import genj.gedcom.Property;
 import genj.gedcom.Source;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author dominique
- */
-
-/*
+ *
  * SOURCE_RECORD:=
  * n @<XREF:SOUR>@ SOUR
  * +1 DATA
@@ -39,15 +39,19 @@ import javax.swing.table.AbstractTableModel;
  */
 public class SourcesTableModel extends AbstractTableModel {
 
-    List<Source> sourcesList = new ArrayList<Source>();
-    String[] columnsName = {"ID", "Description", "Events"};
+    List<Source> mSourcesList = new ArrayList<Source>();
+    private String[] columnsName = {
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.ID.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.description.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.events.title")
+    };
 
     public SourcesTableModel() {
     }
 
     @Override
     public int getRowCount() {
-        return sourcesList.size();
+        return mSourcesList.size();
     }
 
     @Override
@@ -57,7 +61,7 @@ public class SourcesTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-        Source source = sourcesList.get(row);
+        Source source = mSourcesList.get(row);
         if (source != null) {
             if (column == 0) {
                 return source.getId();
@@ -82,26 +86,27 @@ public class SourcesTableModel extends AbstractTableModel {
     }
 
     public void add(Source source) {
-        sourcesList.add(source);
+        mSourcesList.add(source);
         fireTableDataChanged();
     }
 
-    public void addAll(List<Source> sourcesList) {
-        sourcesList.addAll(sourcesList);
+    public void addAll(Collection<Source> sourcesList) {
+        mSourcesList.addAll(sourcesList);
         fireTableDataChanged();
     }
 
-    public void update(List<Source> sourcesList) {
-        this.sourcesList.clear();
+
+    public void update(Collection<Source> sourcesList) {
+        this.mSourcesList.clear();
         addAll(sourcesList);
     }
 
     public Source getValueAt(int row) {
-        return sourcesList.get(row);
+        return mSourcesList.get(row);
     }
 
     public Source remove(int row) {
-        Source source = sourcesList.remove(row);
+        Source source = mSourcesList.remove(row);
         fireTableDataChanged();
         return source;
     }

@@ -4,6 +4,7 @@ import genj.gedcom.Note;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -12,7 +13,10 @@ import javax.swing.table.AbstractTableModel;
 public class NotesTableModel extends AbstractTableModel {
 
     List<Note> notesList = new ArrayList<Note>();
-    String[] columnsName = {"ID", "text"};
+    private String[] columnsName = {
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "NotesTableModel.column.ID.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "NotesTableModel.column.noteText.title")
+    };
 
     public NotesTableModel() {
     }
@@ -34,7 +38,7 @@ public class NotesTableModel extends AbstractTableModel {
             if (column == 0) {
                 return note.getId();
             } else {
-                return note.getDisplayValue();
+                return note.getValue();
             }
         } else {
             return "";

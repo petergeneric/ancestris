@@ -7,9 +7,11 @@ import javax.swing.DefaultComboBoxModel;
  *
  * @author dominique
  */
-public class EventsTypeComboBoxModelModel extends DefaultComboBoxModel<String> {
+public class EventsTypeComboBoxModel extends DefaultComboBoxModel<String> {
 
-    public EventsTypeComboBoxModelModel() {
+    public EventsTypeComboBoxModel() {
+        addElement("");
+        
         // Individual events
         addElement(PropertyTag2Name.getTagName("ADOP"));
         addElement(PropertyTag2Name.getTagName("BIRT"));

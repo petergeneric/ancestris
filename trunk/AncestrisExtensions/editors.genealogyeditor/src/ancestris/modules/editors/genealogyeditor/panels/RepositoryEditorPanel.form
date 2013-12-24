@@ -211,20 +211,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="notesListPanel" pref="456" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="456" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="notesListPanel" alignment="0" pref="176" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="176" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.NotesListPanel" name="notesListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel" name="noteCitationsListPanel">
             </Component>
           </SubComponents>
         </Container>

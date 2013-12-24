@@ -2,6 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import genj.gedcom.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.openide.util.Exceptions;
 
@@ -42,7 +43,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         referencesPanel = new javax.swing.JPanel();
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
         notesPanel = new javax.swing.JPanel();
-        notesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NotesListPanel();
+        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
 
         repositoryIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -93,13 +94,11 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE))
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Notes", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -164,7 +163,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
     private javax.swing.JButton addRepositoryAddressButton;
     private javax.swing.JButton editRepositoryAddressButton;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     private javax.swing.JPanel referencesPanel;
@@ -207,11 +206,8 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         }
         referencesListPanel.set(repository, entitiesList);
 
-        List<Note> notesList = new ArrayList<Note>();
-        for (PropertyNote noteRef : repository.getProperties(PropertyNote.class)) {
-            notesList.add((Note) noteRef.getTargetEntity());
-        }
-        notesListPanel.setNotesList(repository, notesList);
+        noteCitationsListPanel.setNotesList(repository, Arrays.asList(repository.getProperties("NOTE")));
+
     }
 
     public void commit() {
@@ -220,7 +216,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    notesListPanel.commit();
+                    noteCitationsListPanel.commit();
                     referencesListPanel.commit();
                 }
             }); // end of doUnitOfWork

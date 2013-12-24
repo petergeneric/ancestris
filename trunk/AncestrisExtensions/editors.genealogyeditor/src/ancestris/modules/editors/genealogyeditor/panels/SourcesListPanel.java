@@ -2,8 +2,11 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.SourcesTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.*;
-import java.util.List;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Source;
+import genj.gedcom.UnitOfWork;
+import java.util.Collection;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -14,15 +17,17 @@ import org.openide.util.NbBundle;
  */
 public class SourcesListPanel extends javax.swing.JPanel {
 
-    private Property mRoot;
-    private Source mSource;
+    private Gedcom mGedcom;
     private SourcesTableModel sourcesTableModel = new SourcesTableModel();
+    private Source mSource;
 
     /**
      * Creates new form SourcesListPanel
      */
-    public SourcesListPanel() {
+    public SourcesListPanel(Gedcom gedcom) {
+        this.mGedcom = gedcom;
         initComponents();
+        sourcesTableModel.update((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
     }
 
     /**
@@ -109,9 +114,8 @@ public class SourcesListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
-        Gedcom gedcom = mRoot.getGedcom();
         try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
+            mGedcom.doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
@@ -130,8 +134,8 @@ public class SourcesListPanel extends javax.swing.JPanel {
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 sourcesTableModel.add(sourceEditorPanel.commit());
             } else {
-                while (gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
+                while (mGedcom.canUndo()) {
+                    mGedcom.undoUnitOfWork(false);
                 }
             }
         } catch (GedcomException ex) {
@@ -153,9 +157,8 @@ public class SourcesListPanel extends javax.swing.JPanel {
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 sourcesTableModel.add(sourceEditorPanel.commit());
             } else {
-                Gedcom gedcom = mRoot.getGedcom();
-                while (gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
+                while (mGedcom.canUndo()) {
+                    mGedcom.undoUnitOfWork(false);
                 }
             }
         }
@@ -163,16 +166,15 @@ public class SourcesListPanel extends javax.swing.JPanel {
 
     private void deleteSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceButtonActionPerformed
         final int selectedRow = sourcesTable.getSelectedRow();
-        Gedcom gedcom = mRoot.getGedcom();
 
         if (selectedRow != -1) {
             try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+                mGedcom.doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
-                        mRoot.delProperty(sourcesTableModel.remove(rowIndex));
+                        mGedcom.deleteEntity(sourcesTableModel.remove(rowIndex));
                     }
                 }); // end of doUnitOfWork
             } catch (GedcomException ex) {
@@ -196,9 +198,8 @@ public class SourcesListPanel extends javax.swing.JPanel {
                 if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     sourcesTableModel.add(sourceEditorPanel.commit());
                 } else {
-                    Gedcom gedcom = mRoot.getGedcom();
-                    while (gedcom.canUndo()) {
-                        gedcom.undoUnitOfWork(false);
+                    while (mGedcom.canUndo()) {
+                        mGedcom.undoUnitOfWork(false);
                     }
                 }
             }
@@ -213,11 +214,16 @@ public class SourcesListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar sourcesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void set(Property root, List<Source> sourcesList) {
-        this.mRoot = root;
-        sourcesTableModel.update(sourcesList);
+    public Source getSelectedSource() {
+        int selectedRow = sourcesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
+            return  sourcesTableModel.getValueAt(rowIndex);
+        } else {
+            return null;
+        }
     }
-
+    
     public void commit() {
     }
 }
