@@ -1,9 +1,11 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.Media;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -12,7 +14,10 @@ import javax.swing.table.AbstractTableModel;
 public class MultiMediaObjectsTableModel extends AbstractTableModel {
 
     List<Media> multimediaObjectsRefList = new ArrayList<Media>();
-    String[] columnsName = {"ID", "date"};
+    private String[] columnsName = {
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectsTableModel.column.ID.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectsTableModel.column.fileName.title")
+    };
 
     public MultiMediaObjectsTableModel() {
     }
@@ -33,7 +38,12 @@ public class MultiMediaObjectsTableModel extends AbstractTableModel {
         if (column == 0) {
             return media.getId();
         } else {
-            return media.getDisplayValue();
+            File file = media.getFile();
+            if (file != null) {
+                return file.getAbsolutePath();
+            } else {
+                return "";
+            }
         }
     }
 

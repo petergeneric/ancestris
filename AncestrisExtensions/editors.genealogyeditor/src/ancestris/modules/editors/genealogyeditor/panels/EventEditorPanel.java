@@ -3,9 +3,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -58,10 +56,10 @@ public class EventEditorPanel extends javax.swing.JPanel {
         eventInformationTabbedPane = new javax.swing.JTabbedPane();
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
-        notesPanel = new javax.swing.JPanel();
-        notesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NotesListPanel();
         galleryPanel = new javax.swing.JPanel();
-        multimediaObjectsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel();
+        multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
+        notesPanel = new javax.swing.JPanel();
+        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
 
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.dateLabel.text"), new Object[] {})); // NOI18N
 
@@ -203,40 +201,36 @@ public class EventEditorPanel extends javax.swing.JPanel {
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourcesPanel); // NOI18N
-
-        notesListPanel.setPreferredSize(null);
-
-        javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
-        notesPanel.setLayout(notesPanelLayout);
-        notesPanelLayout.setHorizontalGroup(
-            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
-        );
-        notesPanelLayout.setVerticalGroup(
-            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-        );
-
-        eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
-
-        multimediaObjectsListPanel.setPreferredSize(null);
 
         javax.swing.GroupLayout galleryPanelLayout = new javax.swing.GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
+
+        javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
+        notesPanel.setLayout(notesPanelLayout);
+        notesPanelLayout.setHorizontalGroup(
+            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
+        );
+        notesPanelLayout.setVerticalGroup(
+            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+        );
+
+        eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -372,8 +366,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton linkToPlaceButton;
-    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectsListPanel multimediaObjectsListPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JButton removePlaceButton;
     private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
@@ -414,17 +408,10 @@ public class EventEditorPanel extends javax.swing.JPanel {
             Property[] sourcesList = mEvent.getProperties("SOUR");
             sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
 
-            List<Note> notesList = new ArrayList<Note>();
-            for (PropertyNote noteRef : mEvent.getProperties(PropertyNote.class)) {
-                notesList.add((Note) noteRef.getTargetEntity());
-            }
-            notesListPanel.setNotesList(mEvent, notesList);
+            noteCitationsListPanel.setNotesList(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
 
-            List<Media> mediasList = new ArrayList<Media>();
-            for (PropertyMedia mediaRef : mEvent.getProperties(PropertyMedia.class)) {
-                mediasList.add((Media) mediaRef.getTargetEntity());
-            }
-            multimediaObjectsListPanel.set(mEvent, mediasList);
+            multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
+
         }
     }
 
@@ -441,8 +428,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
         sourceCitationsListPanel.commit();
-        notesListPanel.commit();
-        multimediaObjectsListPanel.commit();
+        noteCitationsListPanel.commit();
+        multimediaObjectCitationsListPanel.commit();
         return mEvent;
     }
 }

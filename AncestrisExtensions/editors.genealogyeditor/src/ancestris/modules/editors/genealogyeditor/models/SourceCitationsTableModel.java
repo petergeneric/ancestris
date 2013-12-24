@@ -6,6 +6,7 @@ import genj.gedcom.Source;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 /*
  * SOURCE_CITATION:= 
  [ 
@@ -40,7 +41,12 @@ import javax.swing.table.AbstractTableModel;
 public class SourceCitationsTableModel extends AbstractTableModel {
 
     ArrayList<Property> mSourcesList = new ArrayList<Property>();
-    String[] columnsName = {"ID", "Description", "Events"};
+    private String[] columnsName = {
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.ID.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.description.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.events.title")
+    };
+
 
     public SourceCitationsTableModel() {
     }

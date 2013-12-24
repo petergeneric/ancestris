@@ -1,12 +1,15 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.SourceCitationsTableModel;
+import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
+import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -15,8 +18,8 @@ import org.openide.util.Exceptions;
 public class SourceCitationsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
-    private Property mSource;
-    private SourceCitationsTableModel sourcesTableModel = new SourceCitationsTableModel();
+    private Property mSourceCitation;
+    private SourceCitationsTableModel sourceCitationsTableModel = new SourceCitationsTableModel();
 
     /**
      * Creates new form SourceCitationsListPanel
@@ -35,52 +38,52 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         sourcesToolBar = new javax.swing.JToolBar();
-        addSourceButton = new javax.swing.JButton();
-        editSourceButton = new javax.swing.JButton();
-        deleteSourceButton = new javax.swing.JButton();
+        addSourceCitationButton = new javax.swing.JButton();
+        editSourceCitationButton = new javax.swing.JButton();
+        deleteSourceCitationButton = new javax.swing.JButton();
         sourcesScrollPane = new javax.swing.JScrollPane();
         sourcesTable = new javax.swing.JTable();
 
         sourcesToolBar.setFloatable(false);
         sourcesToolBar.setRollover(true);
 
-        addSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.addSourceButton.toolTipText"), new Object[] {})); // NOI18N
-        addSourceButton.setFocusable(false);
-        addSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addSourceButton.addActionListener(new java.awt.event.ActionListener() {
+        addSourceCitationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.addSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
+        addSourceCitationButton.setFocusable(false);
+        addSourceCitationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addSourceCitationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addSourceCitationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSourceButtonActionPerformed(evt);
+                addSourceCitationButtonActionPerformed(evt);
             }
         });
-        sourcesToolBar.add(addSourceButton);
+        sourcesToolBar.add(addSourceCitationButton);
 
-        editSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
-        editSourceButton.setFocusable(false);
-        editSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editSourceButton.addActionListener(new java.awt.event.ActionListener() {
+        editSourceCitationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.editSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
+        editSourceCitationButton.setFocusable(false);
+        editSourceCitationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editSourceCitationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editSourceCitationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editSourceButtonActionPerformed(evt);
+                editSourceCitationButtonActionPerformed(evt);
             }
         });
-        sourcesToolBar.add(editSourceButton);
+        sourcesToolBar.add(editSourceCitationButton);
 
-        deleteSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.deleteSourceButton.toolTipText"), new Object[] {})); // NOI18N
-        deleteSourceButton.setFocusable(false);
-        deleteSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteSourceButton.addActionListener(new java.awt.event.ActionListener() {
+        deleteSourceCitationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.deleteSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteSourceCitationButton.setFocusable(false);
+        deleteSourceCitationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteSourceCitationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteSourceCitationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteSourceButtonActionPerformed(evt);
+                deleteSourceCitationButtonActionPerformed(evt);
             }
         });
-        sourcesToolBar.add(deleteSourceButton);
+        sourcesToolBar.add(deleteSourceCitationButton);
 
-        sourcesTable.setModel(sourcesTableModel);
+        sourcesTable.setModel(sourceCitationsTableModel);
         sourcesTable.setShowHorizontalLines(false);
         sourcesTable.setShowVerticalLines(false);
         sourcesTable.getColumnModel().getColumn(0).setMaxWidth(100);
@@ -108,56 +111,39 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
-/*        Gedcom gedcom = mRoot.getGedcom();
-        try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
+    private void addSourceCitationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceCitationButtonActionPerformed
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    mSource = (Source) gedcom.createEntity(Gedcom.SOUR);
-                }
-            }); // end of doUnitOfWork
-            
-            SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.setSource(mSource);
+        Gedcom gedcom = mRoot.getGedcom();
+        SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
+        sourceCitationEditorPanel.setSource(mRoot, null);
 
-            ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
-                    sourceEditorPanel);
-            sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+        ADialog sourceEditorDialog = new ADialog(
+                NbBundle.getMessage(SourceCitationEditorPanel.class,
+                "SourceCitationEditorPanel.title"), sourceCitationEditorPanel);
+        sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
-            if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                Source source = sourceEditorPanel.commit();
-                // TODO add link to parent property
-                // Need at least infos from Daniel method addProperty(Property prop)
-                // is reserved to gedcom. No public method found to add a PropertyXref
-                sourcesTableModel.add(source);
-            } else {
-                while (gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
-                }
+        if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            sourceCitationsTableModel.add(sourceCitationEditorPanel.commit());
+        } else {
+            while (gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
             }
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
         }
-*/
-    }//GEN-LAST:event_addSourceButtonActionPerformed
+    }//GEN-LAST:event_addSourceCitationButtonActionPerformed
 
-    private void editSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceButtonActionPerformed
-/*
+    private void editSourceCitationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceCitationButtonActionPerformed
         int selectedRow = sourcesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
-            SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.setSource(sourcesTableModel.getValueAt(rowIndex));
+            SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
+            sourceCitationEditorPanel.setSource(mRoot, sourceCitationsTableModel.getValueAt(rowIndex));
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
-                    sourceEditorPanel);
-            sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+                    NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.title"),
+                    sourceCitationEditorPanel);
+            sourceEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                sourcesTableModel.add(sourceEditorPanel.commit());
+                sourceCitationEditorPanel.commit();
             } else {
                 Gedcom gedcom = mRoot.getGedcom();
                 while (gedcom.canUndo()) {
@@ -165,10 +151,9 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 }
             }
         }
-*/
-    }//GEN-LAST:event_editSourceButtonActionPerformed
+    }//GEN-LAST:event_editSourceCitationButtonActionPerformed
 
-    private void deleteSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceButtonActionPerformed
+    private void deleteSourceCitationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceCitationButtonActionPerformed
         final int selectedRow = sourcesTable.getSelectedRow();
         Gedcom gedcom = mRoot.getGedcom();
 
@@ -179,30 +164,30 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
-                        mRoot.delProperty(sourcesTableModel.remove(rowIndex));
+                        mRoot.delProperty(sourceCitationsTableModel.remove(rowIndex));
                     }
                 }); // end of doUnitOfWork
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-    }//GEN-LAST:event_deleteSourceButtonActionPerformed
+    }//GEN-LAST:event_deleteSourceCitationButtonActionPerformed
 
     private void sourcesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourcesTableMouseClicked
-/*
- * if (evt.getClickCount() >= 2) {
+
+        if (evt.getClickCount() >= 2) {
             int selectedRow = sourcesTable.getSelectedRow();
             if (selectedRow != -1) {
+
                 int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
-                SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-                sourceEditorPanel.setSource(sourcesTableModel.getValueAt(rowIndex));
-                ADialog sourceEditorDialog = new ADialog(
-                        NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
-                        sourceEditorPanel);
-                sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+                SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
+                sourceCitationEditorPanel.setSource(mRoot, sourceCitationsTableModel.getValueAt(rowIndex));
+                ADialog sourceEditorDialog = new ADialog(NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.title"),
+                        sourceCitationEditorPanel);
+                sourceEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
                 if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    sourcesTableModel.add(sourceEditorPanel.commit());
+                    sourceCitationEditorPanel.commit();
                 } else {
                     Gedcom gedcom = mRoot.getGedcom();
                     while (gedcom.canUndo()) {
@@ -211,13 +196,11 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 }
             }
         }
-        * 
-        */
     }//GEN-LAST:event_sourcesTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addSourceButton;
-    private javax.swing.JButton deleteSourceButton;
-    private javax.swing.JButton editSourceButton;
+    private javax.swing.JButton addSourceCitationButton;
+    private javax.swing.JButton deleteSourceCitationButton;
+    private javax.swing.JButton editSourceCitationButton;
     private javax.swing.JScrollPane sourcesScrollPane;
     private javax.swing.JTable sourcesTable;
     private javax.swing.JToolBar sourcesToolBar;
@@ -225,7 +208,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
     public void set(Property root, List<Property> sourcesList) {
         this.mRoot = root;
-        sourcesTableModel.addAll(sourcesList);
+        sourceCitationsTableModel.addAll(sourcesList);
     }
 
     public void commit() {

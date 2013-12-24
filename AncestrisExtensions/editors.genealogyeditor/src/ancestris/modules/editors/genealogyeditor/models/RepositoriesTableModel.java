@@ -2,10 +2,12 @@ package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.gedcom.utilities.EntityTag2Name;
 import genj.gedcom.Entity;
+import genj.gedcom.Property;
 import genj.gedcom.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -14,7 +16,10 @@ import javax.swing.table.AbstractTableModel;
 public class RepositoriesTableModel extends AbstractTableModel {
 
     List<Repository> repositoriesList = new ArrayList<Repository>();
-    String[] columnsName = {"Type", "Value"};
+    private String[] columnsName = {
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.ID.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.name.title")
+    };
 
     public RepositoriesTableModel() {
     }
@@ -32,16 +37,17 @@ public class RepositoriesTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         if (row < repositoriesList.size()) {
-            Entity entity = repositoriesList.get(row);
+            Repository repository = repositoriesList.get(row);
             if (column == 0) {
-                return entity.getId();
+                return repository.getId();
             } else if (column == 1) {
-                return EntityTag2Name.getTagName(entity.getTag());
+                return EntityTag2Name.getTagName(repository.getTag());
             } else {
-                return entity.toString(false);
+                Property name = repository.getProperty("NAME");
+                return name != null ? name.getValue() : "";
             }
         } else {
-            return null;
+            return "";
         }
     }
 
