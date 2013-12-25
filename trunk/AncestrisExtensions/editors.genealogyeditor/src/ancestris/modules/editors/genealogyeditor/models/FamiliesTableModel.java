@@ -43,7 +43,7 @@ public class FamiliesTableModel extends AbstractTableModel {
                 return family.getHusband() != null ? family.getHusband().getName() : "";
             } else if (column == 2) {
                 return family.getWife() != null ? family.getWife().getName() : "";
-            }  else if (column == 3) {
+            } else if (column == 3) {
                 return family.getMarriageDate() != null ? family.getMarriageDate().toString() : "";
             } else {
                 return "";
@@ -66,6 +66,12 @@ public class FamiliesTableModel extends AbstractTableModel {
     public void addAll(List<Fam> familiesList) {
         this.familiesList.addAll(familiesList);
         fireTableDataChanged();
+    }
+
+    public Fam remove(int row) {
+        Fam fam = familiesList.remove(row);
+        fireTableDataChanged();
+        return fam;
     }
 
     public void update(List<Fam> familiesList) {
