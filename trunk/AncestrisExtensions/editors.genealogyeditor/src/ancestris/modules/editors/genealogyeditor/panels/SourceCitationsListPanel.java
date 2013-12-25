@@ -2,7 +2,10 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.SourceCitationsTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.*;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Property;
+import genj.gedcom.UnitOfWork;
 import java.util.List;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
@@ -15,7 +18,6 @@ import org.openide.util.NbBundle;
 public class SourceCitationsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
-    private Property mSourceCitation;
     private SourceCitationsTableModel sourceCitationsTableModel = new SourceCitationsTableModel();
 
     /**
