@@ -22,36 +22,40 @@
                       <EmptySpace min="-2" pref="272" max="-2" attributes="0"/>
                       <Component id="nameTypeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="nameTypeComboBox" pref="195" max="32767" attributes="0"/>
+                      <Component id="nameTypeComboBox" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="familyNameLabel" min="-2" pref="75" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                              <Component id="familyNamePrefixTextField" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="familyNameTextField" pref="263" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="firstNameSuffixTextField" min="-2" pref="88" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="nicknameLabel" min="-2" pref="67" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="nicknameTextField" min="-2" pref="236" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="firstnameLabel" min="-2" pref="67" max="-2" attributes="0"/>
+                          <Component id="firstnameLabel" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                          <Component id="nicknameLabel" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                          <Component id="familyNameLabel" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="firstNamePrefixTextField" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="familyNamePrefixTextField" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="firstNamePrefixTextField" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="firstNameTextField" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="firstNameTextField" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="familyNameTextField" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="firstNameSuffixTextField" min="-2" pref="88" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="nicknameTextField" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="133" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -110,6 +114,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="firstnameLabel">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.firstnameLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
@@ -139,6 +144,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="familyNameLabel">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.familyNameLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
@@ -182,6 +188,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="nicknameLabel">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.nicknameLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
