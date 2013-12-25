@@ -38,9 +38,9 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         eventsPanel = new javax.swing.JPanel();
         eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel();
         familiesChildPanel = new javax.swing.JPanel();
-        familiesChildListPanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel();
+        familiesChildListPanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel(FamiliesListPanel.EDIT_FAMC);
         familiesSpousePanel = new javax.swing.JPanel();
-        familiesSpouseListPanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel();
+        familiesSpouseListPanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel(FamiliesListPanel.EDIT_FAMS);
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
         namesPanel = new javax.swing.JPanel();
