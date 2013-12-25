@@ -2,10 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.SourceCitationsTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
-import genj.gedcom.Property;
-import genj.gedcom.UnitOfWork;
+import genj.gedcom.*;
 import java.util.List;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
@@ -115,7 +112,8 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
         Gedcom gedcom = mRoot.getGedcom();
         SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
-        sourceCitationEditorPanel.setSource(mRoot, null);
+        // create a the source link
+        sourceCitationEditorPanel.setSource(mRoot, mRoot.addProperty("SOUR", "@@"));
 
         ADialog sourceEditorDialog = new ADialog(
                 NbBundle.getMessage(SourceCitationEditorPanel.class,
