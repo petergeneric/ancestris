@@ -1,9 +1,13 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
-import genj.gedcom.Fam;
-import genj.gedcom.Property;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.*;
+import java.util.ArrayList;
 import java.util.List;
+import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -11,14 +15,30 @@ import java.util.List;
  */
 public class FamiliesListPanel extends javax.swing.JPanel {
 
-    private FamiliesTableModel familiesTableModel = new FamiliesTableModel();
-    private Property root;
+    public static int LIST_FAM = 0;
+    public static int EDIT_FAMC = 1;
+    public static int EDIT_FAMS = 2;
+    private FamiliesTableModel mFamiliesTableModel = new FamiliesTableModel();
+    private Property mRoot;
+    private int mFamilyEditingType = LIST_FAM;
+    private Fam mCreateFamily = null;
 
     /**
      * Creates new form FamiliesListPanel
      */
     public FamiliesListPanel() {
         initComponents();
+        if (mFamilyEditingType == LIST_FAM) {
+            familyNamesToolBar.setVisible(false);
+        }
+    }
+
+    public FamiliesListPanel(int familyEditingType) {
+        this.mFamilyEditingType = familyEditingType;
+        initComponents();
+        if (mFamilyEditingType == LIST_FAM) {
+            familyNamesToolBar.setVisible(false);
+        }
     }
 
     /**
@@ -32,6 +52,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
 
         familyNamesToolBar = new javax.swing.JToolBar();
         addFamilyNameButton = new javax.swing.JButton();
+        linkToButton = new javax.swing.JButton();
         editFamilyNameButton = new javax.swing.JButton();
         deleteFamilyNameButton = new javax.swing.JButton();
         familyNamesScrollPane = new javax.swing.JScrollPane();
@@ -50,6 +71,17 @@ public class FamiliesListPanel extends javax.swing.JPanel {
             }
         });
         familyNamesToolBar.add(addFamilyNameButton);
+
+        linkToButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToButton.setFocusable(false);
+        linkToButton.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        linkToButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkToButtonActionPerformed(evt);
+            }
+        });
+        familyNamesToolBar.add(linkToButton);
 
         editFamilyNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editFamilyNameButton.setFocusable(false);
@@ -73,7 +105,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
         });
         familyNamesToolBar.add(deleteFamilyNameButton);
 
-        familyNamesTable.setModel(familiesTableModel);
+        familyNamesTable.setModel(mFamiliesTableModel);
         familyNamesTable.getColumnModel().getColumn(0).setMaxWidth(100);
         familyNamesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -100,21 +132,141 @@ public class FamiliesListPanel extends javax.swing.JPanel {
 
     private void familyNamesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familyNamesTableMouseClicked
         if (evt.getClickCount() >= 2) {
-            
+            int rowIndex = familyNamesTable.convertRowIndexToModel(familyNamesTable.getSelectedRow());
+            if (rowIndex != -1) {
+                FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+                familyEditorPanel.set(mFamiliesTableModel.getValueAt(rowIndex));
+
+                DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                        familyEditorPanel);
+                individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+
+                if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    familyEditorPanel.commit();
+                } else {
+                    Gedcom gedcom = mRoot.getGedcom();
+                    while (gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
+            }
         }
     }//GEN-LAST:event_familyNamesTableMouseClicked
 
     private void addFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFamilyNameButtonActionPerformed
-        // TODO add your handling code here:
+        Gedcom gedcom = mRoot.getGedcom();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mCreateFamily = (Fam) gedcom.createEntity(Gedcom.FAM);
+                    if (mFamilyEditingType == EDIT_FAMC) {
+                        mCreateFamily.addChild((Indi) mRoot);
+                    } else if (mFamilyEditingType == EDIT_FAMS) {
+                        if (((Indi) mRoot).getSex() == PropertySex.MALE) {
+                            mCreateFamily.setHusband((Indi) mRoot);
+                        } else {
+                            mCreateFamily.setWife((Indi) mRoot);
+                        }
+                    }
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+        familyEditorPanel.set(mCreateFamily);
+
+        DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(FamilyEditorPanel.class, "IndividualEditorPanel.title"),
+                familyEditorPanel);
+        familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+
+        if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+             mFamiliesTableModel.add(familyEditorPanel.commit());
+        } else {
+            while (gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
     }//GEN-LAST:event_addFamilyNameButtonActionPerformed
 
     private void editFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFamilyNameButtonActionPerformed
-        // TODO add your handling code here:
+        int rowIndex = familyNamesTable.convertRowIndexToModel(familyNamesTable.getSelectedRow());
+        if (rowIndex != -1) {
+            FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+            familyEditorPanel.set(mFamiliesTableModel.getValueAt(rowIndex));
+
+            DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(FamilyEditorPanel.class, "IndividualEditorPanel.title"),
+                    familyEditorPanel);
+            familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+
+            if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                familyEditorPanel.commit();
+            } else {
+                Gedcom gedcom = mRoot.getGedcom();
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        }
     }//GEN-LAST:event_editFamilyNameButtonActionPerformed
 
     private void deleteFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFamilyNameButtonActionPerformed
-        // TODO add your handling code here:
+        final int selectedRow = familyNamesTable.getSelectedRow();
+        Gedcom gedcom = mRoot.getGedcom();
+
+        if (selectedRow != -1) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mRoot.delProperty(mFamiliesTableModel.remove(familyNamesTable.convertRowIndexToModel(selectedRow)));
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }//GEN-LAST:event_deleteFamilyNameButtonActionPerformed
+
+    private void linkToButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToButtonActionPerformed
+        FamiliesListPanel familiesListPanel = new FamiliesListPanel(LIST_FAM);
+        familiesListPanel.setFamiliesList(mRoot, new ArrayList(mRoot.getGedcom().getFamilies()));
+        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(FamiliesListPanel.class, "NoteEditorPanel.title"),
+                familiesListPanel);
+        individualsListDialog.setDialogId(NoteEditorPanel.class.getName());
+
+        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Fam selectedFamily = familiesListPanel.getSelectedFamily();
+            mFamiliesTableModel.add(selectedFamily);
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (mFamilyEditingType == EDIT_FAMC) {
+                            selectedFamily.addChild((Indi) mRoot);
+                        } else if (mFamilyEditingType == EDIT_FAMS) {
+                            if (((Indi) mRoot).getSex() == PropertySex.MALE) {
+                                selectedFamily.setHusband((Indi) mRoot);
+                            } else {
+                                selectedFamily.setWife((Indi) mRoot);
+                            }
+                        }
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }//GEN-LAST:event_linkToButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFamilyNameButton;
     private javax.swing.JButton deleteFamilyNameButton;
@@ -122,10 +274,21 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane familyNamesScrollPane;
     private javax.swing.JTable familyNamesTable;
     private javax.swing.JToolBar familyNamesToolBar;
+    private javax.swing.JButton linkToButton;
     // End of variables declaration//GEN-END:variables
 
     public void setFamiliesList(Property root, List<Fam> familiesList) {
-        this.root = root;
-        familiesTableModel.update(familiesList);
+        this.mRoot = root;
+        mFamiliesTableModel.update(familiesList);
+    }
+
+    public Fam getSelectedFamily() {
+        int selectedRow = familyNamesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = familyNamesTable.convertRowIndexToModel(selectedRow);
+            return mFamiliesTableModel.getValueAt(rowIndex);
+        } else {
+            return null;
+        }
     }
 }

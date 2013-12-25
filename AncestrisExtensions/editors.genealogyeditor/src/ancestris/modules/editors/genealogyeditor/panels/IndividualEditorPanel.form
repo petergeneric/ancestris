@@ -203,6 +203,9 @@
           </Layout>
           <SubComponents>
             <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel" name="familiesChildListPanel">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel(FamiliesListPanel.EDIT_FAMC)"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
@@ -231,6 +234,9 @@
           </Layout>
           <SubComponents>
             <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel" name="familiesSpouseListPanel">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel(FamiliesListPanel.EDIT_FAMS)"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
