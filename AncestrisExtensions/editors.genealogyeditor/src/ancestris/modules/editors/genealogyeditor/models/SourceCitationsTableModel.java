@@ -28,8 +28,9 @@ import org.openide.util.NbBundle;
  * +1 TEXT <TEXT_FROM_SOURCE>
  * +2 [CONC|CONT] <TEXT_FROM_SOURCE>
  * +1 <<MULTIMEDIA_LINK>>
- * +1 <<NOTE_STRUCTURE>> +1 QUAY
- * <CERTAINTY_ASSESSMENT> ]
+ * +1 <<NOTE_STRUCTURE>>
+ * +1 QUAY <CERTAINTY_ASSESSMENT>
+ * ]
  */
 
 /**
