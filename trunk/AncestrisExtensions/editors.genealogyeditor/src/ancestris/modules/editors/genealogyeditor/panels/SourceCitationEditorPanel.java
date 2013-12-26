@@ -371,7 +371,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             sourceEditorPanel.setSource(mReferencedSource);
 
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
+                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.create.title"),
                     sourceEditorPanel);
             sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
@@ -395,7 +395,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
             sourceEditorPanel.setSource(mReferencedSource);
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
+                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
                     sourceEditorPanel);
             sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
@@ -433,8 +433,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         SourcesListPanel sourcesListPanel = new SourcesListPanel(mRoot.getGedcom());
         ADialog sourcesListDialog = new ADialog(NbBundle.getMessage(PlacesListPanel.class,
-                "SourcesListPanel.Link.title"), sourcesListPanel);
-        sourcesListDialog.setDialogId(NoteEditorPanel.class.getName());
+                "SourcesListPanel.linkTo.title"), sourcesListPanel);
+        sourcesListDialog.setDialogId(SourcesListPanel.class.getName());
 
         if (sourcesListDialog.show() == DialogDescriptor.OK_OPTION) {
             if (mReferencedSource != null) {

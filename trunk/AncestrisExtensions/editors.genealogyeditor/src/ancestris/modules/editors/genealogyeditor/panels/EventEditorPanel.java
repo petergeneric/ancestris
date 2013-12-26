@@ -259,7 +259,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         PropertyPlace place = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
         placeEditorPanel.set(place);
         DialogManager.ADialog placeEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.title"),
+                NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
                 placeEditorPanel);
         placeEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
         if (placeEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -284,7 +284,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
             placeEditorPanel.set(mPlace);
 
             DialogManager.ADialog placeEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.title"),
+                    NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.create.title"),
                     placeEditorPanel);
             placeEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
@@ -324,7 +324,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         DialogManager.ADialog placesListPanelDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(PlacesListPanel.class, "NoteEditorPanel.title"),
                 placesListPanel);
-        placesListPanelDialog.setDialogId(NoteEditorPanel.class.getName());
+        placesListPanelDialog.setDialogId(PlacesListPanel.class.getName());
 
         if (placesListPanelDialog.show() == DialogDescriptor.OK_OPTION) {
             final PropertyPlace selectedPlace = placesListPanel.getSelectedPlace();

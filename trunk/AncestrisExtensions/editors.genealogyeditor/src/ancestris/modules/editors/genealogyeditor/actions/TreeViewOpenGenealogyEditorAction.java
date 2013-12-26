@@ -65,7 +65,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 individualEditorPanel.set((Indi) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
                         individualEditorPanel);
                 editorDialog.setDialogId(IndividualEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -81,7 +81,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 familyEditorPanel.set((Fam) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.title"),
+                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title"),
                         familyEditorPanel);
                 editorDialog.setDialogId(FamilyEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {

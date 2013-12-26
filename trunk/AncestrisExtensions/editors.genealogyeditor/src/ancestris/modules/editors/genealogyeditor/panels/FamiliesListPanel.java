@@ -137,12 +137,12 @@ public class FamiliesListPanel extends javax.swing.JPanel {
                 FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
                 familyEditorPanel.set(mFamiliesTableModel.getValueAt(rowIndex));
 
-                DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title"),
                         familyEditorPanel);
-                individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 
-                if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     familyEditorPanel.commit();
                 } else {
                     Gedcom gedcom = mRoot.getGedcom();
@@ -181,7 +181,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
         familyEditorPanel.set(mCreateFamily);
 
         DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(FamilyEditorPanel.class, "IndividualEditorPanel.title"),
+                NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
                 familyEditorPanel);
         familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 
@@ -201,7 +201,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
             familyEditorPanel.set(mFamiliesTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "IndividualEditorPanel.title"),
+                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title"),
                     familyEditorPanel);
             familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 
@@ -238,12 +238,12 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     private void linkToButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToButtonActionPerformed
         FamiliesListPanel familiesListPanel = new FamiliesListPanel(LIST_FAM);
         familiesListPanel.setFamiliesList(mRoot, new ArrayList(mRoot.getGedcom().getFamilies()));
-        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(FamiliesListPanel.class, "NoteEditorPanel.title"),
+        DialogManager.ADialog familiesListDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(FamiliesListPanel.class, "FamiliesListPanel.linkto.title"),
                 familiesListPanel);
-        individualsListDialog.setDialogId(NoteEditorPanel.class.getName());
+        familiesListDialog.setDialogId(FamiliesListPanel.class.getName());
 
-        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
+        if (familiesListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Fam selectedFamily = familiesListPanel.getSelectedFamily();
             mFamiliesTableModel.add(selectedFamily);
             try {

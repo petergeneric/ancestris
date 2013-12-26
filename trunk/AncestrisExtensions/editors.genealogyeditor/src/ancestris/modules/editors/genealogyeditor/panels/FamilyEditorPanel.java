@@ -365,13 +365,14 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mEntity = gedcom.createEntity(Gedcom.INDI);
+                    ((Indi) mEntity).setSex(PropertySex.MALE);
                 }
             }); // end of doUnitOfWork
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
             individualEditorPanel.set((Indi) mEntity);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.husband.title"),
                     individualEditorPanel);
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
@@ -402,13 +403,14 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mEntity = gedcom.createEntity(Gedcom.INDI);
+                    ((Indi) mEntity).setSex(PropertySex.FEMALE);
                 }
             }); // end of doUnitOfWork
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
             individualEditorPanel.set((Indi) mEntity);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.wife.title"),
                     individualEditorPanel);
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 

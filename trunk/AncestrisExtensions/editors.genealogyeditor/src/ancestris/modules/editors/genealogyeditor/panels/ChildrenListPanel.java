@@ -137,7 +137,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
             individualEditorPanel.set(mIndividual);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.title"),
                     individualEditorPanel);
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
@@ -156,7 +156,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
             individualEditorPanel.set(mIndividualsTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
                     individualEditorPanel);
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
@@ -177,7 +177,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
                 individualEditorPanel.set(mIndividualsTableModel.getValueAt(rowIndex));
 
                 DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
                         individualEditorPanel);
                 individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 

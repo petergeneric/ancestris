@@ -147,7 +147,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
             noteEditorPanel.set(mNote);
             ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.createtitle"),
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -172,7 +172,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             noteEditorPanel.set(mNotesTableModel.getValueAt(rowIndex));
 
             ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
@@ -204,7 +204,7 @@ public class NotesListPanel extends javax.swing.JPanel {
                 noteEditorPanel.set(mNotesTableModel.getValueAt(rowIndex));
 
                 ADialog noteEditorDialog = new ADialog(
-                        NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                        NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),
                         noteEditorPanel);
                 noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
