@@ -46,10 +46,14 @@ public class NoteCitationsTableModel extends AbstractTableModel {
         if (row < notesList.size()) {
             Property note = notesList.get(row);
             if (note instanceof PropertyNote) {
-                if (column == 0) {
-                    return ((Note) ((PropertyNote) note).getTargetEntity()).getId();
+                if (((PropertyNote) note).getTargetEntity() != null) {
+                    if (column == 0) {
+                        return ((Note) ((PropertyNote) note).getTargetEntity()).getId();
+                    } else {
+                        return ((Note) ((PropertyNote) note).getTargetEntity()).getValue();
+                    }
                 } else {
-                    return ((Note) ((PropertyNote) note).getTargetEntity()).getValue();
+                    return "";
                 }
             } else {
                 if (column == 0) {
