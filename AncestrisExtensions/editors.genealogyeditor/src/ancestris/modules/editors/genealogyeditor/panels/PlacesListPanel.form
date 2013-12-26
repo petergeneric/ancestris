@@ -30,7 +30,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="clearFilterGedcomPlaceButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="placesScrollPane" pref="516" max="32767" attributes="0"/>
+                  <Component id="placesScrollPane" pref="515" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -48,7 +48,7 @@
                   <Component id="searchPlaceComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="placesScrollPane" pref="273" max="32767" attributes="0"/>
+              <Component id="placesScrollPane" pref="122" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>

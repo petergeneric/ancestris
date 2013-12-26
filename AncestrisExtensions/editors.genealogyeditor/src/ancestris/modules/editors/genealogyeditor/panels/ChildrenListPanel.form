@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="childrenToolBar" pref="476" max="32767" attributes="0"/>
+          <Component id="childrenToolBar" pref="539" max="32767" attributes="0"/>
           <Component id="childrenScrollPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
@@ -25,7 +25,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="childrenToolBar" min="-2" pref="25" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="childrenScrollPane" pref="294" max="32767" attributes="0"/>
+              <Component id="childrenScrollPane" pref="148" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
