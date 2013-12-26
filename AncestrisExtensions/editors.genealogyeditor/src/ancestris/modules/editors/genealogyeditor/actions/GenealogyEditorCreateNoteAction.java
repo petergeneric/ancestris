@@ -47,13 +47,10 @@ public final class GenealogyEditorCreateNoteAction implements ActionListener {
                         mNote = (Note) gedcom.createEntity(Gedcom.NOTE);
                     }
                 }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            } finally {
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
                 noteEditorPanel.set(mNote);
                 DialogManager.ADialog noteEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                        NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.create.title"),
                         noteEditorPanel);
                 noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
                 if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -63,6 +60,8 @@ public final class GenealogyEditorCreateNoteAction implements ActionListener {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
     }

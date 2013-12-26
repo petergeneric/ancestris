@@ -117,12 +117,12 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         // create a the source link
         sourceCitationEditorPanel.setSource(mRoot, mRoot.addProperty("SOUR", "@@"));
 
-        ADialog sourceEditorDialog = new ADialog(
+        ADialog  sourceCitationEditorDialog = new ADialog(
                 NbBundle.getMessage(SourceCitationEditorPanel.class,
-                "SourceCitationEditorPanel.title"), sourceCitationEditorPanel);
-        sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+                "SourceCitationEditorPanel.create.title"), sourceCitationEditorPanel);
+         sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
-        if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+        if ( sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             sourceCitationsTableModel.add(sourceCitationEditorPanel.commit());
         } else {
             while (gedcom.canUndo()) {
@@ -137,12 +137,12 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
             int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
             SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
             sourceCitationEditorPanel.setSource(mRoot, sourceCitationsTableModel.getValueAt(rowIndex));
-            ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.title"),
+            ADialog  sourceCitationEditorDialog = new ADialog(
+                    NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
                     sourceCitationEditorPanel);
-            sourceEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
+             sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
-            if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            if ( sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 sourceCitationEditorPanel.commit();
             } else {
                 Gedcom gedcom = mRoot.getGedcom();

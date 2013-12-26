@@ -126,7 +126,7 @@ public class EventsListPanel extends javax.swing.JPanel {
             eventEditorPanel.set(mRoot, mEventsTableModel.getValueAt(rowIndex));
 
             ADialog eventEditorDialog = new ADialog(
-                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
+                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title"),
                     eventEditorPanel);
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
@@ -169,7 +169,7 @@ public class EventsListPanel extends javax.swing.JPanel {
                 eventEditorPanel.set(mRoot, mEventsTableModel.getValueAt(rowIndex));
 
                 ADialog eventEditorDialog = new ADialog(
-                        NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.title"),
+                        NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title"),
                         eventEditorPanel);
                 eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
@@ -202,7 +202,7 @@ public class EventsListPanel extends javax.swing.JPanel {
 
             ADialog eventEditorDialog = new ADialog(
                     NbBundle.getMessage(EventEditorPanel.class,
-                    "EventEditorPanel.title"), eventEditorPanel);
+                    "EventEditorPanel.create.title"), eventEditorPanel);
 
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {

@@ -127,7 +127,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
             sourceEditorPanel.setSource(mSource);
 
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
+                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.create.title"),
                     sourceEditorPanel);
             sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
@@ -150,7 +150,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
             sourceEditorPanel.setSource(sourcesTableModel.getValueAt(rowIndex));
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
+                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
                     sourceEditorPanel);
             sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
@@ -191,7 +191,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
                 sourceEditorPanel.setSource(sourcesTableModel.getValueAt(rowIndex));
                 ADialog sourceEditorDialog = new ADialog(
-                        NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.title"),
+                        NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
                         sourceEditorPanel);
                 sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 

@@ -52,7 +52,7 @@ public final class GenealogyEditorCreateFamilyAction implements ActionListener {
                 familyEditorPanel.set((Fam) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.title"),
+                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
                         familyEditorPanel);
                 editorDialog.setDialogId(FamilyEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {

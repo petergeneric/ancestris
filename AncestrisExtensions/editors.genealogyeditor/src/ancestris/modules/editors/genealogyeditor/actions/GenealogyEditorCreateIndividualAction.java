@@ -54,7 +54,7 @@ public final class GenealogyEditorCreateIndividualAction implements ActionListen
                 individualEditorPanel.set((Indi) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.title"),
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.title"),
                         individualEditorPanel);
 
                 editorDialog.setDialogId(IndividualEditorPanel.class.getName());

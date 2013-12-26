@@ -147,7 +147,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
             noteEditorPanel.set(mNote);
             ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.create.title"),
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -199,9 +199,9 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         notesListPanel.setNotesList(mRoot, notesList);
         notesListPanel.setToolBarVisible(false);
         DialogManager.ADialog notesListListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(NoteEditorPanel.class, "SourcesListPanel.Link.title"),
+                NbBundle.getMessage(NotesListPanel.class, "NotesListPanel.linkTo.title"),
                 notesListPanel);
-        notesListListDialog.setDialogId(NoteEditorPanel.class.getName());
+        notesListListDialog.setDialogId(NotesListPanel.class.getName());
 
         if (notesListListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Note selectedNote = notesListPanel.getSelectedNote();
@@ -249,7 +249,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             noteEditorPanel.set((Note) ((PropertyNote) note).getTargetEntity());
 
             ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
@@ -266,9 +266,9 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             noteEditorPanel.set(note);
 
             ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                    NbBundle.getMessage(InlineNoteEditorPanel.class, "InlineNoteEditorPanel.edit.title"),
                     noteEditorPanel);
-            noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
+            noteEditorDialog.setDialogId(InlineNoteEditorPanel.class.getName());
 
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 noteEditorPanel.commit();
