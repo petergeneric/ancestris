@@ -182,7 +182,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
                 SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
                 sourceCitationEditorPanel.setSource(mRoot, sourceCitationsTableModel.getValueAt(rowIndex));
-                ADialog sourceEditorDialog = new ADialog(NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.title"),
+                ADialog sourceEditorDialog = new ADialog(NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
                         sourceCitationEditorPanel);
                 sourceEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
