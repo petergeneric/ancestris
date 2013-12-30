@@ -12,5 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -->
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
+    <mapID target="ancestris.modules.exports.cousinsgenweb.title" url="cousinsgenweb-title.html"/>
     <mapID target="ancestris.modules.exports.cousinsgenweb.about" url="cousinsgenweb-about.html"/>
+    
 </map>

@@ -11,15 +11,51 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -->
 <html>
     <head>
-        <title>About Exports - CousinsGenWeb</title>
-        <link rel="stylesheet" href="nbdocs:/org/netbeans/modules/usersguide/ide.css" type="text/css">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Mode d'emploi</title>
+        <link rel="stylesheet" href="./ancestris.css" type="text/css">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h2>About Exports - CousinsGenWeb</h2>
-        <p>
-            <!-- TODO describe your module, add more pages... -->
-        </p>
+	 <a name="_Top_"></a>
+  <center>
+        <h2 class="ancestris_help_title"><u>Exports - CousinsGenWeb - Mode d'emploi</u></h2></center>
+        <p class="justify">
+            Vous trouverez CousinsGenWeb à <a href="http://www.francegenweb.org">www.francegenweb.org</a><br><br>
+        Le site est organisé par département, il vous demande de transmettre vos données sous la forme&nbsp;:
+        <br> <u>PATRONYME ; commune</u><br><br>
+        C'est exactement ce que va vous préparer Exports - CousinsGenWeb.<br><br>
+        Exports - CousinsGenWeb va parcourir votre <u>fichier.ged</u> à la recherche des <u>INDI</u>vidus, <br>il retient les patronymes associés aux communes et départements.
+        <br><br></p>
+        <h2>Mode d'emploi:</h2>
+		
+        <p>Choisissez votre gedcom en ouvrant par exemple l'arbre dynamique.<br><br>
+            Vous trouverez Exports - CousinsGenWeb dans le menu <u>Fichier/Exporter/ConsinsGenweb</u>.<br><br>
+        Vous arriverez alors sur cet écran :<br><br>
+	<img style="width: 345px; height: 210px;" alt="Menu de l'export"   src="./images/cousinsgenweb1.PNG"> <br><br>
+        <b>Dep Pos </b>: lire Rang du Département.
+        <b>City Pos </b>: lire Rang de la Commune.<br>
+        Dans les premières lignes de mon <u>fichier.ged</u>, on trouve : <br>  
+		1 PLAC<br>
+2 FORM Lieudit,Commune,Code_INSEE,Code_Postal,Département,Région,Pays<br><br>
+J'y vois que le Département occupe le rang 4 (on commence à 0) et la Commune le 1.<br>
+d'où les 2 première lignes du menu.<br><br>
+<b>Dep Length </b>: lire Longueur du Nom du Département.<br>
+Le 0 de la 3ème ligne indique que je veux le nom complet de chaque département, <br>en y mettant 5 j'aurais eu les 5 premières lettres de ce nom.<br>
+Ex avec 0 : Maine-et-Loire.csv et avec 5 : Maine.csv .<br><br>
+<b>File Name </b>: Lire Nom du Dossier (Répertoire)<br>
+Enfin à la 4ème ligne je choisis le dossier(ou répertoire) <br>
+où je veux récupérer la production de Exports - CousinsGenWeb, <br>
+ce choix se fait en passant par le bouton Ouvrir....<br>
+On arrive sur votre traditionnel gestionnaire de fichiers<br>
+La validation du choix du dossier lance la production de Exports - CousinsGenWeb.<br><br> 
+Cette production est constituée de fichiers genre Maine-et-Loire.csv,<br>
+un par département représenté dans le gedcom.<br><br>
+Ce fichier contient la liste sous la forme<br> 
+BARBAULT ; Angers<br>
+de tous les noms classés par commune, sans doublon.<br><br>
+Un exemple est visible sur la <a href="./cousinsgenweb-title.html">Page précédente</a>.<br><br>
+C'est un fichier texte il s'ouvre avec gedit ou bloc-note et est prêt à être utilisé par copier/coller sur <a href="http://www.francegenweb.org">www.francegenweb.org</a>
+ </p>
     </body>
 </html>
 <!--
