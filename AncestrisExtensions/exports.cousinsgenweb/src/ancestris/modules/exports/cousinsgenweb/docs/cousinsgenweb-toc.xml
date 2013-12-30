@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -->
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
-    <tocitem text="Exports - CousinsGenWeb">
-        <tocitem text="About Exports - CousinsGenWeb" target="ancestris.modules.exports.cousinsgenweb.about"/>
+    <tocitem expand="true" text="Export Consinsgenweb" target="ancestris.modules.exports.cousinsgenweb.title">
+        <tocitem text="Mode d'emploi" target="ancestris.modules.exports.cousinsgenweb.about"/>
     </tocitem>
 </toc>
