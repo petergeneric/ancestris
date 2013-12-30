@@ -7,7 +7,7 @@ and open the template in the editor.
 <helpset version="2.0">
     <title>Calculatrice Help</title>
     <maps>
-        <homeID>ancestris.modules.calculatrice.about</homeID>
+        <homeID>ancestris.modules.calculatrice</homeID>
         <mapref location="calc-map.xml"/>
     </maps>
     <view mergetype="javax.help.AppendMerge">
