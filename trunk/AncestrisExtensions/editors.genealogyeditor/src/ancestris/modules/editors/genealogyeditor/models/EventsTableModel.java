@@ -17,8 +17,8 @@ public class EventsTableModel extends AbstractTableModel {
     List<PropertyEvent> eventsList = new ArrayList<PropertyEvent>();
     String[] columnsName = {
         NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.eventType"),
-        NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.date"),
-        NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.place")
+        NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.place"),
+        NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.date")
     };
 
     public EventsTableModel() {
@@ -41,14 +41,16 @@ public class EventsTableModel extends AbstractTableModel {
             if (column == 0) {
                 return PropertyTag2Name.getTagName(propertyEvent.getTag());
             } else if (column == 1) {
-                return propertyEvent.getDate() != null ? propertyEvent.getDate().getDisplayValue() : "";
-            } else {
                 PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
                 if (place != null) {
                     return place.format("all");
                 } else {
                     return "";
                 }
+            } else if (column == 2) {
+                return propertyEvent.getDate() != null ? propertyEvent.getDate().getDisplayValue() : "";
+            } else {
+                return "";
             }
         } else {
             return "";
