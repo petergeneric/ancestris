@@ -14,7 +14,7 @@ import org.openide.util.NbBundle;
  */
 public class NamesListPanel extends javax.swing.JPanel {
 
-    private NamesTableModel namesTableModel = new NamesTableModel();
+    private NamesTableModel mNamesTableModel = new NamesTableModel();
     private Indi root;
 
     /**
@@ -33,22 +33,12 @@ public class NamesListPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        namesScrollPane = new javax.swing.JScrollPane();
-        namesTable = new javax.swing.JTable();
         namesToolBar = new javax.swing.JToolBar();
         addNameButton = new javax.swing.JButton();
         editNameButton = new javax.swing.JButton();
         deleteNameButton = new javax.swing.JButton();
-
-        namesTable.setModel(namesTableModel);
-        namesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        namesTable.setShowVerticalLines(false);
-        namesTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                namesTableMouseClicked(evt);
-            }
-        });
-        namesScrollPane.setViewportView(namesTable);
+        namesTableScrollPane = new javax.swing.JScrollPane();
+        namesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         namesToolBar.setFloatable(false);
         namesToolBar.setRollover(true);
@@ -89,20 +79,27 @@ public class NamesListPanel extends javax.swing.JPanel {
         });
         namesToolBar.add(deleteNameButton);
 
+        namesTable.setModel(mNamesTableModel);
+        namesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                namesTableMouseClicked(evt);
+            }
+        });
+        namesTableScrollPane.setViewportView(namesTable);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(namesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(namesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(namesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(namesTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(namesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(namesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(namesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -116,7 +113,7 @@ public class NamesListPanel extends javax.swing.JPanel {
 
         if (nameEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             nameEditorPanel.commit();
-            namesTableModel.add(nameEditorPanel.get());
+            mNamesTableModel.add(nameEditorPanel.get());
         }
     }//GEN-LAST:event_addNameButtonActionPerformed
 
@@ -125,7 +122,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
             NameEditorPanel nameEditorPanel = new NameEditorPanel();
-            nameEditorPanel.set(root, namesTableModel.getValueAt(rowIndex));
+            nameEditorPanel.set(root, mNamesTableModel.getValueAt(rowIndex));
             ADialog nameEditorDialog = new ADialog(
                     NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title.edit"),
                     nameEditorPanel);
@@ -146,7 +143,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
             NameEditorPanel nameEditorPanel = new NameEditorPanel();
-            nameEditorPanel.set(root, namesTableModel.getValueAt(rowIndex));
+            nameEditorPanel.set(root, mNamesTableModel.getValueAt(rowIndex));
             ADialog nameEditorDialog = new ADialog(
                     NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title.edit"),
                     nameEditorPanel);
@@ -157,18 +154,19 @@ public class NamesListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_namesTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNameButton;
     private javax.swing.JButton deleteNameButton;
     private javax.swing.JButton editNameButton;
-    private javax.swing.JScrollPane namesScrollPane;
-    private javax.swing.JTable namesTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable namesTable;
+    private javax.swing.JScrollPane namesTableScrollPane;
     private javax.swing.JToolBar namesToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void setNamesList(Indi root, List<PropertyName> namesList) {
         this.root = root;
-        namesTableModel.update(namesList);
+        mNamesTableModel.update(namesList);
     }
 
     public void commit() {

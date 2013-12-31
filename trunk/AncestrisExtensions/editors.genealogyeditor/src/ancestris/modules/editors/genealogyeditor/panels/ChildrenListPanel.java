@@ -24,6 +24,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
      */
     public ChildrenListPanel() {
         initComponents();
+        childrenTable.setID(ChildrenListPanel.class.getName());
     }
 
     /**
@@ -40,8 +41,8 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         editChildrenButton = new javax.swing.JButton();
         deleteChildrenButton = new javax.swing.JButton();
         linkToChildrenButton = new javax.swing.JButton();
-        childrenScrollPane = new javax.swing.JScrollPane();
-        childrenTable = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        childrenTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         childrenToolBar.setFloatable(false);
         childrenToolBar.setRollover(true);
@@ -96,27 +97,26 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         childrenToolBar.add(linkToChildrenButton);
 
         childrenTable.setModel(mIndividualsTableModel);
-        childrenTable.getColumnModel().getColumn(0).setMaxWidth(100);
         childrenTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 childrenTableMouseClicked(evt);
             }
         });
-        childrenScrollPane.setViewportView(childrenTable);
+        jScrollPane1.setViewportView(childrenTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(childrenToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-            .addComponent(childrenScrollPane)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(childrenToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(childrenScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -169,6 +169,21 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     private void deleteChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteChildrenButtonActionPerformed
    }//GEN-LAST:event_deleteChildrenButtonActionPerformed
 
+    private void linkToChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToChildrenButtonActionPerformed
+        IndividualsListPanel individualsListPanel = new IndividualsListPanel();
+        List<Indi> individualsList = new ArrayList<Indi>(mRoot.getGedcom().getIndis());
+        individualsListPanel.setToolBarVisible(false);
+        individualsListPanel.setIndividualsList(mRoot, individualsList);
+        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.child"),
+                individualsListPanel);
+        individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
+
+        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
+            mIndividualsTableModel.add(individualsListPanel.getSelectedIndividual());
+        }
+    }//GEN-LAST:event_linkToChildrenButtonActionPerformed
+
     private void childrenTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_childrenTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
@@ -187,28 +202,13 @@ public class ChildrenListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_childrenTableMouseClicked
-
-    private void linkToChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToChildrenButtonActionPerformed
-        IndividualsListPanel individualsListPanel = new IndividualsListPanel();
-        List<Indi> individualsList = new ArrayList<Indi>(mRoot.getGedcom().getIndis());
-        individualsListPanel.setToolBarVisible(false);
-        individualsListPanel.setIndividualsList(mRoot, individualsList);
-        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.child"),
-                individualsListPanel);
-        individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
-
-        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            mIndividualsTableModel.add(individualsListPanel.getSelectedIndividual());
-        }
-    }//GEN-LAST:event_linkToChildrenButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addChildrenButton;
-    private javax.swing.JScrollPane childrenScrollPane;
-    private javax.swing.JTable childrenTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable childrenTable;
     private javax.swing.JToolBar childrenToolBar;
     private javax.swing.JButton deleteChildrenButton;
     private javax.swing.JButton editChildrenButton;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton linkToChildrenButton;
     // End of variables declaration//GEN-END:variables
 
@@ -230,7 +230,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     public void setToolBarVisible(boolean visible) {
         childrenToolBar.setVisible(visible);
     }
-    
+
     public void commit() {
     }
 }

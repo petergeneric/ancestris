@@ -23,6 +23,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
      */
     public IndividualsListPanel() {
         initComponents();
+        individualsTable.setID(IndividualsListPanel.class.getName());
     }
 
     /**
@@ -38,8 +39,8 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         addIndividualButton = new javax.swing.JButton();
         editIndividualButton = new javax.swing.JButton();
         deleteIndividualButton = new javax.swing.JButton();
-        childrensScrollPane = new javax.swing.JScrollPane();
-        individualsTable = new javax.swing.JTable();
+        individualsTableScrollPane = new javax.swing.JScrollPane();
+        individualsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         individualsToolBar.setFloatable(false);
         individualsToolBar.setRollover(true);
@@ -78,27 +79,26 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         individualsToolBar.add(deleteIndividualButton);
 
         individualsTable.setModel(mIndividualsTableModel);
-        individualsTable.getColumnModel().getColumn(0).setMaxWidth(100);
         individualsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 individualsTableMouseClicked(evt);
             }
         });
-        childrensScrollPane.setViewportView(individualsTable);
+        individualsTableScrollPane.setViewportView(individualsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(individualsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-            .addComponent(childrensScrollPane)
+            .addComponent(individualsTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(individualsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(childrensScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                .addComponent(individualsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -112,9 +112,6 @@ public class IndividualsListPanel extends javax.swing.JPanel {
                     mIndividual = (Indi) gedcom.createEntity(Gedcom.INDI);
                 }
             }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
             individualEditorPanel.set(mIndividual);
 
@@ -130,6 +127,8 @@ public class IndividualsListPanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_addIndividualButtonActionPerformed
 
@@ -181,19 +180,20 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_individualsTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addIndividualButton;
-    private javax.swing.JScrollPane childrensScrollPane;
     private javax.swing.JButton deleteIndividualButton;
     private javax.swing.JButton editIndividualButton;
-    private javax.swing.JTable individualsTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable individualsTable;
+    private javax.swing.JScrollPane individualsTableScrollPane;
     private javax.swing.JToolBar individualsToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void setIndividualsList(Property root, List<Indi> individualsList) {
         this.mRoot = root;
         mIndividualsTableModel.update(individualsList);
-    }
+            }
 
     public Indi getSelectedIndividual() {
         int selectedRow = individualsTable.getSelectedRow();

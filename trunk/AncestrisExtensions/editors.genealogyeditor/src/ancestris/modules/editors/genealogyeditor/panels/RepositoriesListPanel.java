@@ -11,14 +11,15 @@ import java.util.List;
  */
 public class RepositoriesListPanel extends javax.swing.JPanel {
 
-    private Property root;
-    private RepositoriesTableModel repositoriesTableModel = new RepositoriesTableModel();
+    private Property mRoot;
+    private RepositoriesTableModel mRepositoriesTableModel = new RepositoriesTableModel();
 
     /**
      * Creates new form SourcesListPanel
      */
     public RepositoriesListPanel() {
         initComponents();
+        repositoriesTable.setID(RepositoriesListPanel.class.getName());
     }
 
     /**
@@ -34,8 +35,8 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         addRepositoryButton = new javax.swing.JButton();
         editRepositoryButton = new javax.swing.JButton();
         deleteRepositoryButton = new javax.swing.JButton();
-        repositoriesScrollPane = new javax.swing.JScrollPane();
-        repositoriesTable = new javax.swing.JTable();
+        repositoriesTableScrollPane = new javax.swing.JScrollPane();
+        repositoriesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         repositoriesToolBar.setFloatable(false);
         repositoriesToolBar.setRollover(true);
@@ -76,42 +77,31 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         });
         repositoriesToolBar.add(deleteRepositoryButton);
 
-        repositoriesTable.setModel(repositoriesTableModel);
-        repositoriesTable.setShowHorizontalLines(false);
-        repositoriesTable.setShowVerticalLines(false);
-        repositoriesTable.getColumnModel().getColumn(0).setMaxWidth(100);
-        repositoriesTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                repositoriesTableMouseClicked(evt);
-            }
-        });
-        repositoriesScrollPane.setViewportView(repositoriesTable);
+        repositoriesTable.setModel(mRepositoriesTableModel);
+        repositoriesTableScrollPane.setViewportView(repositoriesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(repositoriesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(repositoriesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(repositoriesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(repositoriesTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(repositoriesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(repositoriesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(repositoriesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void addRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRepositoryButtonActionPerformed
-
     }//GEN-LAST:event_addRepositoryButtonActionPerformed
 
     private void editRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRepositoryButtonActionPerformed
         int selectedRow = repositoriesTable.getSelectedRow();
         if (selectedRow != -1) {
-
         }
     }//GEN-LAST:event_editRepositoryButtonActionPerformed
 
@@ -119,23 +109,18 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteRepositoryButtonActionPerformed
 
-    private void repositoriesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_repositoriesTableMouseClicked
-        if (evt.getClickCount() >= 2) {
-        }
-    }//GEN-LAST:event_repositoriesTableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRepositoryButton;
     private javax.swing.JButton deleteRepositoryButton;
     private javax.swing.JButton editRepositoryButton;
-    private javax.swing.JScrollPane repositoriesScrollPane;
-    private javax.swing.JTable repositoriesTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable repositoriesTable;
+    private javax.swing.JScrollPane repositoriesTableScrollPane;
     private javax.swing.JToolBar repositoriesToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Repository> repositoriesList) {
-        this.root = root;
-        repositoriesTableModel.update(repositoriesList);
+        this.mRoot = root;
+        mRepositoriesTableModel.update(repositoriesList);
     }
 
     public void commit() {

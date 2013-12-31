@@ -29,6 +29,7 @@ public class EventsListPanel extends javax.swing.JPanel {
     public EventsListPanel() {
         initComponents();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(eventsTable.getModel());
+        eventsTable.setID(EventsListPanel.class.getName());
         eventsTable.setRowSorter(sorter);
     }
 
@@ -48,7 +49,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         editEventButton = new javax.swing.JButton();
         deleteEventButton = new javax.swing.JButton();
         eventsScrollPane = new javax.swing.JScrollPane();
-        eventsTable = new javax.swing.JTable();
+        eventsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         eventsToolBar.setFloatable(false);
         eventsToolBar.setRollover(true);
@@ -91,10 +92,6 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.add(deleteEventButton);
 
         eventsTable.setModel(mEventsTableModel);
-        eventsTable.setGridColor(java.awt.Color.lightGray);
-        eventsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        eventsTable.setShowVerticalLines(false);
-        eventsTable.getColumnModel().getColumn(0).setMaxWidth(100);
         eventsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 eventsTableMouseClicked(evt);
@@ -106,8 +103,8 @@ public class EventsListPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-            .addComponent(eventsScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(eventsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(eventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,30 +157,6 @@ public class EventsListPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteEventButtonActionPerformed
 
-    private void eventsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventsTableMouseClicked
-        if (evt.getClickCount() >= 2) {
-            int selectedRow = eventsTable.getSelectedRow();
-            if (selectedRow != -1) {
-                int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
-                EventEditorPanel eventEditorPanel = new EventEditorPanel();
-                eventEditorPanel.set(mRoot, mEventsTableModel.getValueAt(rowIndex));
-
-                ADialog eventEditorDialog = new ADialog(
-                        NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title"),
-                        eventEditorPanel);
-                eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
-
-                if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    eventEditorPanel.commit();
-                } else {
-                    while (mRoot.getGedcom().canUndo()) {
-                        mRoot.getGedcom().undoUnitOfWork(false);
-                    }
-                }
-            }
-        }
-    }//GEN-LAST:event_eventsTableMouseClicked
-
     private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
         try {
@@ -216,12 +189,36 @@ public class EventsListPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
+
+    private void eventsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventsTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = eventsTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+                EventEditorPanel eventEditorPanel = new EventEditorPanel();
+                eventEditorPanel.set(mRoot, mEventsTableModel.getValueAt(rowIndex));
+
+                ADialog eventEditorDialog = new ADialog(
+                        NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title"),
+                        eventEditorPanel);
+                eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
+
+                if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    eventEditorPanel.commit();
+                } else {
+                    while (mRoot.getGedcom().canUndo()) {
+                        mRoot.getGedcom().undoUnitOfWork(false);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_eventsTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JButton editEventButton;
     private javax.swing.JComboBox<String> eventTypeComboBox;
     private javax.swing.JScrollPane eventsScrollPane;
-    private javax.swing.JTable eventsTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable eventsTable;
     private javax.swing.JToolBar eventsToolBar;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel jLabel1;

@@ -18,7 +18,7 @@ import org.openide.util.NbBundle;
 public class SourcesListPanel extends javax.swing.JPanel {
 
     private Gedcom mGedcom;
-    private SourcesTableModel sourcesTableModel = new SourcesTableModel();
+    private SourcesTableModel mSourcesTableModel = new SourcesTableModel();
     private Source mSource;
 
     /**
@@ -27,7 +27,8 @@ public class SourcesListPanel extends javax.swing.JPanel {
     public SourcesListPanel(Gedcom gedcom) {
         this.mGedcom = gedcom;
         initComponents();
-        sourcesTableModel.update((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
+        sourcesTable.setID(SourcesListPanel.class.getName());
+        mSourcesTableModel.update((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
     }
 
     /**
@@ -43,8 +44,8 @@ public class SourcesListPanel extends javax.swing.JPanel {
         addSourceButton = new javax.swing.JButton();
         editSourceButton = new javax.swing.JButton();
         deleteSourceButton = new javax.swing.JButton();
-        sourcesScrollPane = new javax.swing.JScrollPane();
-        sourcesTable = new javax.swing.JTable();
+        sourcesTableScrollPane = new javax.swing.JScrollPane();
+        sourcesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         sourcesToolBar.setFloatable(false);
         sourcesToolBar.setRollover(true);
@@ -85,31 +86,27 @@ public class SourcesListPanel extends javax.swing.JPanel {
         });
         sourcesToolBar.add(deleteSourceButton);
 
-        sourcesTable.setModel(sourcesTableModel);
-        sourcesTable.setShowHorizontalLines(false);
-        sourcesTable.setShowVerticalLines(false);
-        sourcesTable.getColumnModel().getColumn(0).setMaxWidth(100);
+        sourcesTable.setModel(mSourcesTableModel);
         sourcesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 sourcesTableMouseClicked(evt);
             }
         });
-        sourcesScrollPane.setViewportView(sourcesTable);
+        sourcesTableScrollPane.setViewportView(sourcesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(sourcesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(sourcesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(sourcesTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(sourcesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(sourcesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -122,7 +119,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
                     mSource = (Source) gedcom.createEntity(Gedcom.SOUR);
                 }
             }); // end of doUnitOfWork
-            
+
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
             sourceEditorPanel.setSource(mSource);
 
@@ -132,7 +129,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
             sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                sourcesTableModel.add(sourceEditorPanel.commit());
+                mSourcesTableModel.add(sourceEditorPanel.commit());
             } else {
                 while (mGedcom.canUndo()) {
                     mGedcom.undoUnitOfWork(false);
@@ -148,14 +145,14 @@ public class SourcesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.setSource(sourcesTableModel.getValueAt(rowIndex));
+            sourceEditorPanel.setSource(mSourcesTableModel.getValueAt(rowIndex));
             ADialog sourceEditorDialog = new ADialog(
                     NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
                     sourceEditorPanel);
             sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                sourcesTableModel.add(sourceEditorPanel.commit());
+                mSourcesTableModel.add(sourceEditorPanel.commit());
             } else {
                 while (mGedcom.canUndo()) {
                     mGedcom.undoUnitOfWork(false);
@@ -174,7 +171,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
-                        mGedcom.deleteEntity(sourcesTableModel.remove(rowIndex));
+                        mGedcom.deleteEntity(mSourcesTableModel.remove(rowIndex));
                     }
                 }); // end of doUnitOfWork
             } catch (GedcomException ex) {
@@ -189,14 +186,14 @@ public class SourcesListPanel extends javax.swing.JPanel {
             if (selectedRow != -1) {
                 int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-                sourceEditorPanel.setSource(sourcesTableModel.getValueAt(rowIndex));
+                sourceEditorPanel.setSource(mSourcesTableModel.getValueAt(rowIndex));
                 ADialog sourceEditorDialog = new ADialog(
                         NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
                         sourceEditorPanel);
                 sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
 
                 if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    sourcesTableModel.add(sourceEditorPanel.commit());
+                    mSourcesTableModel.add(sourceEditorPanel.commit());
                 } else {
                     while (mGedcom.canUndo()) {
                         mGedcom.undoUnitOfWork(false);
@@ -205,12 +202,13 @@ public class SourcesListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_sourcesTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceButton;
     private javax.swing.JButton deleteSourceButton;
     private javax.swing.JButton editSourceButton;
-    private javax.swing.JScrollPane sourcesScrollPane;
-    private javax.swing.JTable sourcesTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable sourcesTable;
+    private javax.swing.JScrollPane sourcesTableScrollPane;
     private javax.swing.JToolBar sourcesToolBar;
     // End of variables declaration//GEN-END:variables
 
@@ -218,12 +216,12 @@ public class SourcesListPanel extends javax.swing.JPanel {
         int selectedRow = sourcesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
-            return  sourcesTableModel.getValueAt(rowIndex);
+            return mSourcesTableModel.getValueAt(rowIndex);
         } else {
             return null;
         }
     }
-    
+
     public void commit() {
     }
 }

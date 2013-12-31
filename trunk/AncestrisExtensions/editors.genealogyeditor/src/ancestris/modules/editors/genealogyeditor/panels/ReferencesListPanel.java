@@ -10,14 +10,15 @@ import java.util.List;
  */
 public class ReferencesListPanel extends javax.swing.JPanel {
 
-    private Entity rootEntity;
-    private ReferencesTableModel referencesTableModel = new ReferencesTableModel();
+    private Entity mRoot;
+    private ReferencesTableModel mReferencesTableModel = new ReferencesTableModel();
 
     /**
      * Creates new form ReferencesListPanel
      */
     public ReferencesListPanel() {
         initComponents();
+        referencesTable.setID(ReferencesListPanel.class.getName());
     }
 
     /**
@@ -31,8 +32,8 @@ public class ReferencesListPanel extends javax.swing.JPanel {
 
         referencesToolBar = new javax.swing.JToolBar();
         addReferenceButton = new javax.swing.JButton();
-        referencesScrollPane = new javax.swing.JScrollPane();
-        referencesTable = new javax.swing.JTable();
+        referencesTableScrollPane = new javax.swing.JScrollPane();
+        referencesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         referencesToolBar.setFloatable(false);
         referencesToolBar.setRollover(true);
@@ -49,25 +50,22 @@ public class ReferencesListPanel extends javax.swing.JPanel {
         });
         referencesToolBar.add(addReferenceButton);
 
-        referencesTable.setModel(referencesTableModel);
-        referencesTable.setShowHorizontalLines(false);
-        referencesTable.setShowVerticalLines(false);
-        referencesTable.getColumnModel().getColumn(0).setMaxWidth(100);
-        referencesScrollPane.setViewportView(referencesTable);
+        referencesTable.setModel(mReferencesTableModel);
+        referencesTableScrollPane.setViewportView(referencesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(referencesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(referencesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(referencesTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(referencesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(referencesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                .addComponent(referencesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -76,14 +74,14 @@ public class ReferencesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addReferenceButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addReferenceButton;
-    private javax.swing.JScrollPane referencesScrollPane;
-    private javax.swing.JTable referencesTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable referencesTable;
+    private javax.swing.JScrollPane referencesTableScrollPane;
     private javax.swing.JToolBar referencesToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void set(Entity rootEntity, List<Entity> referencesList) {
-        this.rootEntity = rootEntity;
-        referencesTableModel.update(referencesList);
+        this.mRoot = rootEntity;
+        mReferencesTableModel.update(referencesList);
     }
 
     public void commit() {

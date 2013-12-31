@@ -1,14 +1,12 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
-import ancestris.modules.editors.genealogyeditor.renderer.NotesTableCellRenderer;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.swing.table.TableCellRenderer;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -28,6 +26,7 @@ public class NotesListPanel extends javax.swing.JPanel {
      */
     public NotesListPanel() {
         initComponents();
+        notesTable.setID(NotesListPanel.class.getName());
     }
 
     /**
@@ -44,15 +43,8 @@ public class NotesListPanel extends javax.swing.JPanel {
         editNoteButton = new javax.swing.JButton();
         deleteNoteButton = new javax.swing.JButton();
         linkToNoteButton = new javax.swing.JButton();
-        notesScrollPane = new javax.swing.JScrollPane();
-        notesTable = new javax.swing.JTable(){
-            public TableCellRenderer getCellRenderer(int row, int column) {
-                if (column == 1) {
-                    return new NotesTableCellRenderer ();
-                }
-                return super.getCellRenderer(row, column);
-            }
-        };
+        notesTableScrollPane = new javax.swing.JScrollPane();
+        notesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         notesToolBar.setFloatable(false);
         notesToolBar.setRollover(true);
@@ -106,30 +98,26 @@ public class NotesListPanel extends javax.swing.JPanel {
         notesToolBar.add(linkToNoteButton);
 
         notesTable.setModel(mNotesTableModel);
-        notesTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
-        notesTable.setShowHorizontalLines(false);
-        notesTable.setShowVerticalLines(false);
-        notesTable.getColumnModel().getColumn(0).setMaxWidth(100);
         notesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 notesTableMouseClicked(evt);
             }
         });
-        notesScrollPane.setViewportView(notesTable);
+        notesTableScrollPane.setViewportView(notesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(notesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(notesTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(notesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                .addComponent(notesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -143,7 +131,7 @@ public class NotesListPanel extends javax.swing.JPanel {
                     mNote = (Note) gedcom.createEntity(Gedcom.NOTE);
                 }
             }); // end of doUnitOfWork
-            
+
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
             noteEditorPanel.set(mNote);
             ADialog noteEditorDialog = new ADialog(
@@ -195,6 +183,29 @@ public class NotesListPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
 
+    private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
+        List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
+
+        NotesListPanel notesListPanel = new NotesListPanel();
+        notesListPanel.setNotesList(mRoot, notesList);
+        notesListPanel.setToolBarVisible(false);
+        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                notesListPanel);
+        individualsListDialog.setDialogId(NoteEditorPanel.class.getName());
+
+        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
+            Note selectedNote = notesListPanel.getSelectedNote();
+            mNotesTableModel.add(selectedNote);
+            mRoot.addNote(selectedNote);
+        } else {
+            Gedcom gedcom = mRoot.getGedcom();
+            while (gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_linkToNoteButtonActionPerformed
+
     private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int selectedRow = notesTable.getSelectedRow();
@@ -219,36 +230,13 @@ public class NotesListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_notesTableMouseClicked
-
-    private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
-        List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
-
-        NotesListPanel notesListPanel = new NotesListPanel();
-        notesListPanel.setNotesList(mRoot, notesList);
-        notesListPanel.setToolBarVisible(false);
-        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
-                notesListPanel);
-        individualsListDialog.setDialogId(NoteEditorPanel.class.getName());
-
-        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            Note selectedNote = notesListPanel.getSelectedNote();
-            mNotesTableModel.add(selectedNote);
-            mRoot.addNote(selectedNote);
-        } else {
-            Gedcom gedcom = mRoot.getGedcom();
-            while (gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
-        }
-    }//GEN-LAST:event_linkToNoteButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNoteButton;
     private javax.swing.JButton deleteNoteButton;
     private javax.swing.JButton editNoteButton;
     private javax.swing.JButton linkToNoteButton;
-    private javax.swing.JScrollPane notesScrollPane;
-    private javax.swing.JTable notesTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable notesTable;
+    private javax.swing.JScrollPane notesTableScrollPane;
     private javax.swing.JToolBar notesToolBar;
     // End of variables declaration//GEN-END:variables
 

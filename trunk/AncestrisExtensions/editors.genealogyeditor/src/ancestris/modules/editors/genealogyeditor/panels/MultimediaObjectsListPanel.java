@@ -11,14 +11,15 @@ import java.util.List;
  */
 public class MultimediaObjectsListPanel extends javax.swing.JPanel {
 
-    private Property root;
-    private MultiMediaObjectsTableModel multiMediaObjectsTableModel = new MultiMediaObjectsTableModel();
+    private Property mRoot;
+    private MultiMediaObjectsTableModel mMultiMediaObjectsTableModel = new MultiMediaObjectsTableModel();
 
     /**
      * Creates new form MultimediaObjectsListPanel
      */
     public MultimediaObjectsListPanel() {
         initComponents();
+        multiMediaObjectsTable.setID(MultimediaObjectsListPanel.class.getName());
     }
 
     /**
@@ -30,15 +31,15 @@ public class MultimediaObjectsListPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        galleryToolBar = new javax.swing.JToolBar();
+        multiMediaObjectsToolBar = new javax.swing.JToolBar();
         addMMObjectButton = new javax.swing.JButton();
         editMMObjectButton2 = new javax.swing.JButton();
         deleteMMObjectButton2 = new javax.swing.JButton();
-        galleryScrollPane = new javax.swing.JScrollPane();
-        GalleryTable = new javax.swing.JTable();
+        multiMediaObjectsTableScrollPane = new javax.swing.JScrollPane();
+        multiMediaObjectsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
-        galleryToolBar.setFloatable(false);
-        galleryToolBar.setRollover(true);
+        multiMediaObjectsToolBar.setFloatable(false);
+        multiMediaObjectsToolBar.setRollover(true);
 
         addMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
         addMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectsListPanel.addMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
@@ -50,7 +51,7 @@ public class MultimediaObjectsListPanel extends javax.swing.JPanel {
                 addMMObjectButtonActionPerformed(evt);
             }
         });
-        galleryToolBar.add(addMMObjectButton);
+        multiMediaObjectsToolBar.add(addMMObjectButton);
 
         editMMObjectButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editMMObjectButton2.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectsListPanel.editMMObjectButton2.toolTipText"), new Object[] {})); // NOI18N
@@ -62,7 +63,7 @@ public class MultimediaObjectsListPanel extends javax.swing.JPanel {
                 editMMObjectButton2ActionPerformed(evt);
             }
         });
-        galleryToolBar.add(editMMObjectButton2);
+        multiMediaObjectsToolBar.add(editMMObjectButton2);
 
         deleteMMObjectButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
         deleteMMObjectButton2.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectsListPanel.deleteMMObjectButton2.toolTipText"), new Object[] {})); // NOI18N
@@ -74,25 +75,24 @@ public class MultimediaObjectsListPanel extends javax.swing.JPanel {
                 deleteMMObjectButton2ActionPerformed(evt);
             }
         });
-        galleryToolBar.add(deleteMMObjectButton2);
+        multiMediaObjectsToolBar.add(deleteMMObjectButton2);
 
-        GalleryTable.setModel(multiMediaObjectsTableModel);
-        GalleryTable.getColumnModel().getColumn(0).setMaxWidth(100);
-        galleryScrollPane.setViewportView(GalleryTable);
+        multiMediaObjectsTable.setModel(mMultiMediaObjectsTableModel);
+        multiMediaObjectsTableScrollPane.setViewportView(multiMediaObjectsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(galleryToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-            .addComponent(galleryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(multiMediaObjectsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(multiMediaObjectsTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(galleryToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(multiMediaObjectsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(galleryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                .addComponent(multiMediaObjectsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -108,17 +108,17 @@ public class MultimediaObjectsListPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteMMObjectButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable GalleryTable;
     private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton deleteMMObjectButton2;
     private javax.swing.JButton editMMObjectButton2;
-    private javax.swing.JScrollPane galleryScrollPane;
-    private javax.swing.JToolBar galleryToolBar;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable multiMediaObjectsTable;
+    private javax.swing.JScrollPane multiMediaObjectsTableScrollPane;
+    private javax.swing.JToolBar multiMediaObjectsToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Media> namesList) {
-        this.root = root;
-        multiMediaObjectsTableModel.update(namesList);
+        this.mRoot = root;
+        mMultiMediaObjectsTableModel.update(namesList);
     }
 
     public void commit() {

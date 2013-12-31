@@ -277,7 +277,7 @@
         <Container class="javax.swing.JPanel" name="namesPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Names">
+              <JTabbedPaneConstraints tabName="Other names">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEditorPanel.namesPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>

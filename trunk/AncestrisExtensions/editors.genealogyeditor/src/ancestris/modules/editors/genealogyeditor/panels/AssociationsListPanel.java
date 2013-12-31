@@ -12,13 +12,14 @@ import java.util.List;
 public class AssociationsListPanel extends javax.swing.JPanel {
 
     private Entity rootEntity;
-    private AssociationsTableModel associationsTableModel = new AssociationsTableModel();
+    private AssociationsTableModel mAssociationsTableModel = new AssociationsTableModel();
 
     /**
      * Creates new form ReferencesListPanel
      */
     public AssociationsListPanel() {
         initComponents();
+        associationsTable.setID(AssociationsListPanel.class.getName());
     }
 
     /**
@@ -32,8 +33,8 @@ public class AssociationsListPanel extends javax.swing.JPanel {
 
         associationsToolBar = new javax.swing.JToolBar();
         addReferenceButton = new javax.swing.JButton();
-        associationsScrollPane = new javax.swing.JScrollPane();
-        associationsTable = new javax.swing.JTable();
+        associationsTableScrollPane = new javax.swing.JScrollPane();
+        associationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         associationsToolBar.setFloatable(false);
         associationsToolBar.setRollover(true);
@@ -50,25 +51,22 @@ public class AssociationsListPanel extends javax.swing.JPanel {
         });
         associationsToolBar.add(addReferenceButton);
 
-        associationsTable.setModel(associationsTableModel);
-        associationsTable.setShowHorizontalLines(false);
-        associationsTable.setShowVerticalLines(false);
-        associationsTable.getColumnModel().getColumn(0).setMaxWidth(100);
-        associationsScrollPane.setViewportView(associationsTable);
+        associationsTable.setModel(mAssociationsTableModel);
+        associationsTableScrollPane.setViewportView(associationsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(associationsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(associationsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(associationsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(associationsTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(associationsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(associationsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                .addComponent(associationsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -77,14 +75,14 @@ public class AssociationsListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addReferenceButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addReferenceButton;
-    private javax.swing.JScrollPane associationsScrollPane;
-    private javax.swing.JTable associationsTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable associationsTable;
+    private javax.swing.JScrollPane associationsTableScrollPane;
     private javax.swing.JToolBar associationsToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void setAssociationsList(Entity rootEntity, List<PropertyAssociation> associationsList) {
         this.rootEntity = rootEntity;
-        associationsTableModel.update(associationsList);
+        mAssociationsTableModel.update(associationsList);
     }
 
     public void commit() {

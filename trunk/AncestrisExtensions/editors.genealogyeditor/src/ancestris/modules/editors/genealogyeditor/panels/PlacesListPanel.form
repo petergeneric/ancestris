@@ -22,7 +22,7 @@
                   <Group type="102" attributes="0">
                       <Component id="searchPlaceLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="searchPlaceComboBox" max="32767" attributes="0"/>
+                      <Component id="searchPlaceComboBox" pref="153" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="filterGedcomPlaceTextField" min="-2" pref="215" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -30,7 +30,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="clearFilterGedcomPlaceButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="placesScrollPane" pref="515" max="32767" attributes="0"/>
+                  <Component id="placesListTableScrollPane" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -48,8 +48,8 @@
                   <Component id="searchPlaceComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="placesScrollPane" pref="122" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <Component id="placesListTableScrollPane" min="-2" pref="154" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -99,24 +99,18 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clearFilterGedcomPlaceButtonActionPerformed"/>
       </Events>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="placesScrollPane">
+    <Container class="javax.swing.JScrollPane" name="placesListTableScrollPane">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="placesListTable">
+        <Component class="ancestris.modules.editors.genealogyeditor.table.EditorTable" name="placesListTable">
           <Properties>
-            <Property name="autoCreateRowSorter" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="mPlacesListTableModel" type="code"/>
             </Property>
-            <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
-              <JTableSelectionModel selectionMode="0"/>
-            </Property>
-            <Property name="showHorizontalLines" type="boolean" value="false"/>
-            <Property name="showVerticalLines" type="boolean" value="false"/>
           </Properties>
         </Component>
       </SubComponents>

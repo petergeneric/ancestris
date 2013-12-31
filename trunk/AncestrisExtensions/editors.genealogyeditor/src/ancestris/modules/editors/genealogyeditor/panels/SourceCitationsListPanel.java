@@ -18,13 +18,14 @@ import org.openide.util.NbBundle;
 public class SourceCitationsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
-    private SourceCitationsTableModel sourceCitationsTableModel = new SourceCitationsTableModel();
+    private SourceCitationsTableModel mSourceCitationsTableModel = new SourceCitationsTableModel();
 
     /**
      * Creates new form SourceCitationsListPanel
      */
     public SourceCitationsListPanel() {
         initComponents();
+        sourceCitationsTable.setID(SourceCitationsListPanel.class.getName());
     }
 
     /**
@@ -40,8 +41,8 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         addSourceCitationButton = new javax.swing.JButton();
         editSourceCitationButton = new javax.swing.JButton();
         deleteSourceCitationButton = new javax.swing.JButton();
-        sourcesScrollPane = new javax.swing.JScrollPane();
-        sourcesTable = new javax.swing.JTable();
+        sourceCitationsTableScrollPane = new javax.swing.JScrollPane();
+        sourceCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         sourcesToolBar.setFloatable(false);
         sourcesToolBar.setRollover(true);
@@ -82,31 +83,27 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         });
         sourcesToolBar.add(deleteSourceCitationButton);
 
-        sourcesTable.setModel(sourceCitationsTableModel);
-        sourcesTable.setShowHorizontalLines(false);
-        sourcesTable.setShowVerticalLines(false);
-        sourcesTable.getColumnModel().getColumn(0).setMaxWidth(100);
-        sourcesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        sourceCitationsTable.setModel(mSourceCitationsTableModel);
+        sourceCitationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                sourcesTableMouseClicked(evt);
+                sourceCitationsTableMouseClicked(evt);
             }
         });
-        sourcesScrollPane.setViewportView(sourcesTable);
+        sourceCitationsTableScrollPane.setViewportView(sourceCitationsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(sourcesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(sourcesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(sourcesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(sourceCitationsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -117,13 +114,13 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         // create a the source link
         sourceCitationEditorPanel.setSource(mRoot, mRoot.addProperty("SOUR", "@@"));
 
-        ADialog  sourceCitationEditorDialog = new ADialog(
+        ADialog sourceCitationEditorDialog = new ADialog(
                 NbBundle.getMessage(SourceCitationEditorPanel.class,
                 "SourceCitationEditorPanel.create.title"), sourceCitationEditorPanel);
-         sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
+        sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
-        if ( sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            sourceCitationsTableModel.add(sourceCitationEditorPanel.commit());
+        if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            mSourceCitationsTableModel.add(sourceCitationEditorPanel.commit());
         } else {
             while (gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -132,17 +129,17 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addSourceCitationButtonActionPerformed
 
     private void editSourceCitationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceCitationButtonActionPerformed
-        int selectedRow = sourcesTable.getSelectedRow();
+        int selectedRow = sourceCitationsTable.getSelectedRow();
         if (selectedRow != -1) {
-            int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
+            int rowIndex = sourceCitationsTable.convertRowIndexToModel(selectedRow);
             SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
-            sourceCitationEditorPanel.setSource(mRoot, sourceCitationsTableModel.getValueAt(rowIndex));
-            ADialog  sourceCitationEditorDialog = new ADialog(
+            sourceCitationEditorPanel.setSource(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
+            ADialog sourceCitationEditorDialog = new ADialog(
                     NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
                     sourceCitationEditorPanel);
-             sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
+            sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
-            if ( sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 sourceCitationEditorPanel.commit();
             } else {
                 Gedcom gedcom = mRoot.getGedcom();
@@ -154,7 +151,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editSourceCitationButtonActionPerformed
 
     private void deleteSourceCitationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceCitationButtonActionPerformed
-        final int selectedRow = sourcesTable.getSelectedRow();
+        final int selectedRow = sourceCitationsTable.getSelectedRow();
         Gedcom gedcom = mRoot.getGedcom();
 
         if (selectedRow != -1) {
@@ -163,8 +160,8 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
-                        mRoot.delProperty(sourceCitationsTableModel.remove(rowIndex));
+                        int rowIndex = sourceCitationsTable.convertRowIndexToModel(selectedRow);
+                        mRoot.delProperty(mSourceCitationsTableModel.remove(rowIndex));
                     }
                 }); // end of doUnitOfWork
             } catch (GedcomException ex) {
@@ -173,15 +170,15 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteSourceCitationButtonActionPerformed
 
-    private void sourcesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourcesTableMouseClicked
+    private void sourceCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceCitationsTableMouseClicked
 
         if (evt.getClickCount() >= 2) {
-            int selectedRow = sourcesTable.getSelectedRow();
+            int selectedRow = sourceCitationsTable.getSelectedRow();
             if (selectedRow != -1) {
 
-                int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
+                int rowIndex = sourceCitationsTable.convertRowIndexToModel(selectedRow);
                 SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
-                sourceCitationEditorPanel.setSource(mRoot, sourceCitationsTableModel.getValueAt(rowIndex));
+                sourceCitationEditorPanel.setSource(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
                 ADialog sourceEditorDialog = new ADialog(NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
                         sourceCitationEditorPanel);
                 sourceEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
@@ -196,19 +193,19 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 }
             }
         }
-    }//GEN-LAST:event_sourcesTableMouseClicked
+    }//GEN-LAST:event_sourceCitationsTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceCitationButton;
     private javax.swing.JButton deleteSourceCitationButton;
     private javax.swing.JButton editSourceCitationButton;
-    private javax.swing.JScrollPane sourcesScrollPane;
-    private javax.swing.JTable sourcesTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable sourceCitationsTable;
+    private javax.swing.JScrollPane sourceCitationsTableScrollPane;
     private javax.swing.JToolBar sourcesToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Property> sourcesList) {
         this.mRoot = root;
-        sourceCitationsTableModel.addAll(sourcesList);
+        mSourceCitationsTableModel.addAll(sourcesList);
     }
 
     public void commit() {

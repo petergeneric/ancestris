@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
-    private Property root;
+    private Property mRoot;
     private MultiMediaObjectCitationsTableModel multiMediaObjectCitationsTableModel = new MultiMediaObjectCitationsTableModel();
 
     /**
@@ -18,6 +18,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
      */
     public MultimediaObjectCitationsListPanel() {
         initComponents();
+        multiMediaObjectCitationsTable.setID(MultimediaObjectCitationsListPanel.class.getName());
     }
 
     /**
@@ -33,8 +34,8 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         addMMObjectButton = new javax.swing.JButton();
         editMMObjectButton2 = new javax.swing.JButton();
         deleteMMObjectButton2 = new javax.swing.JButton();
-        galleryScrollPane = new javax.swing.JScrollPane();
-        GalleryTable = new javax.swing.JTable();
+        multiMediaObjectCitationsScrollPane = new javax.swing.JScrollPane();
+        multiMediaObjectCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         galleryToolBar.setFloatable(false);
         galleryToolBar.setRollover(true);
@@ -75,23 +76,22 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         });
         galleryToolBar.add(deleteMMObjectButton2);
 
-        GalleryTable.setModel(multiMediaObjectCitationsTableModel);
-        GalleryTable.getColumnModel().getColumn(0).setMaxWidth(100);
-        galleryScrollPane.setViewportView(GalleryTable);
+        multiMediaObjectCitationsTable.setModel(multiMediaObjectCitationsTableModel);
+        multiMediaObjectCitationsScrollPane.setViewportView(multiMediaObjectCitationsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(galleryToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(galleryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(galleryToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(multiMediaObjectCitationsScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(galleryToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(galleryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                .addComponent(multiMediaObjectCitationsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -107,16 +107,16 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteMMObjectButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable GalleryTable;
     private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton deleteMMObjectButton2;
     private javax.swing.JButton editMMObjectButton2;
-    private javax.swing.JScrollPane galleryScrollPane;
     private javax.swing.JToolBar galleryToolBar;
+    private javax.swing.JScrollPane multiMediaObjectCitationsScrollPane;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable multiMediaObjectCitationsTable;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Property> multiMediasList) {
-        this.root = root;
+        this.mRoot = root;
         multiMediaObjectCitationsTableModel.update(multiMediasList);
     }
 
