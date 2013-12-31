@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -17,7 +18,8 @@ public class FamiliesTableModel extends AbstractTableModel {
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.ID.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.husband.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.wife.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.weddingDate.title")
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.weddingDate.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.children.title")
     };
 
     public FamiliesTableModel() {
@@ -45,6 +47,17 @@ public class FamiliesTableModel extends AbstractTableModel {
                 return family.getWife() != null ? family.getWife().getName() : "";
             } else if (column == 3) {
                 return family.getMarriageDate() != null ? family.getMarriageDate().toString() : "";
+            } else if (column == 4) {
+                String children = "";
+                int index = 0;
+                for (Indi child : family.getChildren(true)) {
+                    if (index > 0) {
+                        children += "\n";
+                    }
+                    children += child.getFirstName();
+                    index++;
+                }
+                return children;
             } else {
                 return "";
             }
