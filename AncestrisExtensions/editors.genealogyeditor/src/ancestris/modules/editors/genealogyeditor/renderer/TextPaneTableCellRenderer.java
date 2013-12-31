@@ -10,10 +10,11 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author dominique
  */
-public class NotesTableCellRenderer extends JViewport implements TableCellRenderer {
-JTextPane textPane;
-        
-    public NotesTableCellRenderer() {
+public class TextPaneTableCellRenderer extends JViewport implements TableCellRenderer {
+
+    JTextPane textPane;
+
+    public TextPaneTableCellRenderer() {
         textPane = new JTextPane();
         add(textPane);
     }
