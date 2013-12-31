@@ -1,12 +1,14 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
+import ancestris.modules.editors.genealogyeditor.renderer.TextPaneTableCellRenderer;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.swing.table.TableCellRenderer;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -44,7 +46,14 @@ public class NotesListPanel extends javax.swing.JPanel {
         deleteNoteButton = new javax.swing.JButton();
         linkToNoteButton = new javax.swing.JButton();
         notesTableScrollPane = new javax.swing.JScrollPane();
-        notesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
+        notesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable() {
+            public TableCellRenderer getCellRenderer(int row, int column) {
+                if (column == 1) {
+                    return new TextPaneTableCellRenderer ();
+                }
+                return super.getCellRenderer(row, column);
+            }
+        };
 
         notesToolBar.setFloatable(false);
         notesToolBar.setRollover(true);
@@ -98,6 +107,7 @@ public class NotesListPanel extends javax.swing.JPanel {
         notesToolBar.add(linkToNoteButton);
 
         notesTable.setModel(mNotesTableModel);
+        notesTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
         notesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 notesTableMouseClicked(evt);
