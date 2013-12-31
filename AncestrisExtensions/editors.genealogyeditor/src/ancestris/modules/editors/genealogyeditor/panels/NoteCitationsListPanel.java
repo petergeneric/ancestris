@@ -1,14 +1,12 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NoteCitationsTableModel;
-import ancestris.modules.editors.genealogyeditor.renderer.NotesTableCellRenderer;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.swing.table.TableCellRenderer;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -28,6 +26,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
      */
     public NoteCitationsListPanel() {
         initComponents();
+        noteCitationsTable.setID(NoteCitationsListPanel.class.getName());
     }
 
     /**
@@ -44,15 +43,8 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         editNoteButton = new javax.swing.JButton();
         deleteNoteButton = new javax.swing.JButton();
         linkToNoteButton = new javax.swing.JButton();
-        notesScrollPane = new javax.swing.JScrollPane();
-        notesTable = new javax.swing.JTable(){
-            public TableCellRenderer getCellRenderer(int row, int column) {
-                if (column == 1) {
-                    return new NotesTableCellRenderer ();
-                }
-                return super.getCellRenderer(row, column);
-            }
-        };
+        jScrollPane1 = new javax.swing.JScrollPane();
+        noteCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         notesToolBar.setFloatable(false);
         notesToolBar.setRollover(true);
@@ -105,31 +97,27 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         });
         notesToolBar.add(linkToNoteButton);
 
-        notesTable.setModel(mNoteCitationsTableModel);
-        notesTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
-        notesTable.setShowHorizontalLines(false);
-        notesTable.setShowVerticalLines(false);
-        notesTable.getColumnModel().getColumn(0).setMaxWidth(100);
-        notesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        noteCitationsTable.setModel(mNoteCitationsTableModel);
+        noteCitationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                notesTableMouseClicked(evt);
+                noteCitationsTableMouseClicked(evt);
             }
         });
-        notesScrollPane.setViewportView(notesTable);
+        jScrollPane1.setViewportView(noteCitationsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(notesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(notesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(notesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -152,8 +140,8 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 Note commitedNote = noteEditorPanel.commit();
-                mNoteCitationsTableModel.add(commitedNote);
                 mRoot.addNote(commitedNote);
+                mNoteCitationsTableModel.add(commitedNote);
             } else {
                 while (gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -165,32 +153,21 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addNoteButtonActionPerformed
 
     private void editNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNoteButtonActionPerformed
-        int selectedRow = notesTable.getSelectedRow();
+        int selectedRow = noteCitationsTable.getSelectedRow();
         if (selectedRow != -1) {
-            int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
+            int rowIndex = noteCitationsTable.convertRowIndexToModel(selectedRow);
             Property note = mNoteCitationsTableModel.getValueAt(rowIndex);
             editNote(note);
         }
     }//GEN-LAST:event_editNoteButtonActionPerformed
 
     private void deleteNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNoteButtonActionPerformed
-        int selectedRow = notesTable.getSelectedRow();
+        int selectedRow = noteCitationsTable.getSelectedRow();
         if (selectedRow != -1) {
-            int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
+            int rowIndex = noteCitationsTable.convertRowIndexToModel(selectedRow);
             mRoot.delProperty(mNoteCitationsTableModel.remove(rowIndex));
         }
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
-
-    private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
-        if (evt.getClickCount() >= 2) {
-            int selectedRow = notesTable.getSelectedRow();
-            if (selectedRow != -1) {
-                int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
-                Property note = mNoteCitationsTableModel.getValueAt(rowIndex);
-                editNote(note);
-            }
-        }
-    }//GEN-LAST:event_notesTableMouseClicked
 
     private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
         List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
@@ -221,13 +198,24 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             mNoteCitationsTableModel.add(selectedNote);
         }
     }//GEN-LAST:event_linkToNoteButtonActionPerformed
+
+    private void noteCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_noteCitationsTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = noteCitationsTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = noteCitationsTable.convertRowIndexToModel(selectedRow);
+                Property note = mNoteCitationsTableModel.getValueAt(rowIndex);
+                editNote(note);
+            }
+        }
+    }//GEN-LAST:event_noteCitationsTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNoteButton;
     private javax.swing.JButton deleteNoteButton;
     private javax.swing.JButton editNoteButton;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton linkToNoteButton;
-    private javax.swing.JScrollPane notesScrollPane;
-    private javax.swing.JTable notesTable;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable noteCitationsTable;
     private javax.swing.JToolBar notesToolBar;
     // End of variables declaration//GEN-END:variables
 

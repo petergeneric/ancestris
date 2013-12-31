@@ -30,6 +30,8 @@ public class PlacesListPanel extends javax.swing.JPanel {
 
         mPlacesListTableModel = new GedcomPlaceTableModel(mPlaceFormat);
         initComponents();
+        placesListTable.setID(PlacesListPanel.class.getName());
+
         this.mGedcom = gedcom;
         List<PropertyPlace> gedcomPlacesList = GedcomUtilities.searchProperties(gedcom, PropertyPlace.class, GedcomUtilities.ENT_ALL);
         Map<String, Set<PropertyPlace>> placesMap = new HashMap<String, Set<PropertyPlace>>();
@@ -63,8 +65,8 @@ public class PlacesListPanel extends javax.swing.JPanel {
         searchPlaceComboBox = new javax.swing.JComboBox();
         filterGedcomPlaceButton = new javax.swing.JButton();
         clearFilterGedcomPlaceButton = new javax.swing.JButton();
-        placesScrollPane = new javax.swing.JScrollPane();
-        placesListTable = new javax.swing.JTable();
+        placesListTableScrollPane = new javax.swing.JScrollPane();
+        placesListTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         searchPlaceLabel.setText(org.openide.util.NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.searchPlaceLabel.text")); // NOI18N
 
@@ -91,12 +93,8 @@ public class PlacesListPanel extends javax.swing.JPanel {
             }
         });
 
-        placesListTable.setAutoCreateRowSorter(true);
         placesListTable.setModel(mPlacesListTableModel);
-        placesListTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        placesListTable.setShowHorizontalLines(false);
-        placesListTable.setShowVerticalLines(false);
-        placesScrollPane.setViewportView(placesListTable);
+        placesListTableScrollPane.setViewportView(placesListTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -108,14 +106,14 @@ public class PlacesListPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(searchPlaceLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchPlaceComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchPlaceComboBox, 0, 153, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(filterGedcomPlaceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(clearFilterGedcomPlaceButton))
-                    .addComponent(placesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE))
+                    .addComponent(placesListTableScrollPane))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -129,8 +127,8 @@ public class PlacesListPanel extends javax.swing.JPanel {
                     .addComponent(clearFilterGedcomPlaceButton)
                     .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(placesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(placesListTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -152,8 +150,8 @@ public class PlacesListPanel extends javax.swing.JPanel {
     private javax.swing.JButton clearFilterGedcomPlaceButton;
     private javax.swing.JButton filterGedcomPlaceButton;
     private javax.swing.JTextField filterGedcomPlaceTextField;
-    private javax.swing.JTable placesListTable;
-    private javax.swing.JScrollPane placesScrollPane;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable placesListTable;
+    private javax.swing.JScrollPane placesListTableScrollPane;
     private javax.swing.JComboBox searchPlaceComboBox;
     private javax.swing.JLabel searchPlaceLabel;
     // End of variables declaration//GEN-END:variables

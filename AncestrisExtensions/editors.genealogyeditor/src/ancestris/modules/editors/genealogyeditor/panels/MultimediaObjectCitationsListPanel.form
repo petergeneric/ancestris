@@ -16,8 +16,8 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="galleryToolBar" alignment="0" max="32767" attributes="0"/>
-          <Component id="galleryScrollPane" alignment="0" pref="539" max="32767" attributes="0"/>
+          <Component id="galleryToolBar" pref="539" max="32767" attributes="0"/>
+          <Component id="multiMediaObjectCitationsScrollPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -25,7 +25,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="galleryToolBar" min="-2" pref="25" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="galleryScrollPane" pref="148" max="32767" attributes="0"/>
+              <Component id="multiMediaObjectCitationsScrollPane" pref="154" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -89,22 +89,19 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JScrollPane" name="galleryScrollPane">
+    <Container class="javax.swing.JScrollPane" name="multiMediaObjectCitationsScrollPane">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="GalleryTable">
+        <Component class="ancestris.modules.editors.genealogyeditor.table.EditorTable" name="multiMediaObjectCitationsTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="multiMediaObjectCitationsTableModel" type="code"/>
             </Property>
           </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="GalleryTable.getColumnModel().getColumn(0).setMaxWidth(100);"/>
-          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
