@@ -80,7 +80,7 @@ public class FamiliesTableModel extends AbstractTableModel {
                     if (index > 0) {
                         children += "\n";
                     }
-                    children += child.getFirstName();
+                    children += child.getName();
                     index++;
                 }
                 return children;
