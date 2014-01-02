@@ -241,25 +241,27 @@ public class FamiliesListPanel extends javax.swing.JPanel {
 
         if (familiesListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Fam selectedFamily = familiesListPanel.getSelectedFamily();
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+            if (selectedFamily != null) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        if (mFamilyEditingType == EDIT_FAMC) {
-                            selectedFamily.addChild((Indi) mRoot);
-                        } else if (mFamilyEditingType == EDIT_FAMS) {
-                            if (((Indi) mRoot).getSex() == PropertySex.MALE) {
-                                selectedFamily.setHusband((Indi) mRoot);
-                            } else {
-                                selectedFamily.setWife((Indi) mRoot);
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            if (mFamilyEditingType == EDIT_FAMC) {
+                                selectedFamily.addChild((Indi) mRoot);
+                            } else if (mFamilyEditingType == EDIT_FAMS) {
+                                if (((Indi) mRoot).getSex() == PropertySex.MALE) {
+                                    selectedFamily.setHusband((Indi) mRoot);
+                                } else {
+                                    selectedFamily.setWife((Indi) mRoot);
+                                }
                             }
                         }
-                    }
-                }); // end of doUnitOfWork
-                mFamiliesTableModel.add(selectedFamily);
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                    }); // end of doUnitOfWork
+                    mFamiliesTableModel.add(selectedFamily);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }//GEN-LAST:event_linkToFamilyButtonActionPerformed
