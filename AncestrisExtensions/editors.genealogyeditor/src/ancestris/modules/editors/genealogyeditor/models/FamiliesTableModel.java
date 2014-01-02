@@ -44,7 +44,7 @@ public class FamiliesTableModel extends AbstractTableModel {
         mFamilyTableType = familyType;
         if (mFamilyTableType == FAMILY_CHILD) {
             columnsName = familyChildColumnsName;
-        } else if (mFamilyTableType == FAMILY_CHILD) {
+        } else if (mFamilyTableType == FAMILY_SPOUSE) {
             columnsName = familySpouseColumnsName;
         } else {
             columnsName = familyListColumnsName;
