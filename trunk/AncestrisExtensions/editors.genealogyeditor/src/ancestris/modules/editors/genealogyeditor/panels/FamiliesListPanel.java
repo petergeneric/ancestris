@@ -20,15 +20,17 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     public static int LIST_FAM = 0;
     public static int EDIT_FAMC = 1;
     public static int EDIT_FAMS = 2;
-    private FamiliesTableModel mFamiliesTableModel = new FamiliesTableModel();
+    private FamiliesTableModel mFamiliesTableModel;
     private Property mRoot;
-    private int mFamilyEditingType = LIST_FAM;
+    private int mFamilyEditingType;
     private Fam mCreateFamily = null;
 
     /**
      * Creates new form FamiliesListPanel
      */
     public FamiliesListPanel() {
+        mFamilyEditingType = LIST_FAM;
+        mFamiliesTableModel = new FamiliesTableModel(FamiliesTableModel.FAMILY_LIST);
         initComponents();
         familyNamesTable.setID(FamiliesListPanel.class.getName());
         if (mFamilyEditingType == LIST_FAM) {
@@ -37,7 +39,14 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     }
 
     public FamiliesListPanel(int familyEditingType) {
-        this.mFamilyEditingType = familyEditingType;
+        mFamilyEditingType = familyEditingType;
+        if (mFamilyEditingType == EDIT_FAMC) {
+            mFamiliesTableModel = new FamiliesTableModel(FamiliesTableModel.FAMILY_CHILD);
+        } else if (mFamilyEditingType == EDIT_FAMS) {
+            mFamiliesTableModel = new FamiliesTableModel(FamiliesTableModel.FAMILY_SPOUSE);
+        } else if (mFamilyEditingType == LIST_FAM) {
+            mFamiliesTableModel = new FamiliesTableModel(FamiliesTableModel.FAMILY_LIST);
+        }
         initComponents();
         familyNamesTable.setID(FamiliesListPanel.class.getName());
         if (mFamilyEditingType == LIST_FAM) {
@@ -56,7 +65,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
 
         familyNamesToolBar = new javax.swing.JToolBar();
         addFamilyNameButton = new javax.swing.JButton();
-        linkToButton = new javax.swing.JButton();
+        linkToFamilyButton = new javax.swing.JButton();
         editFamilyNameButton = new javax.swing.JButton();
         deleteFamilyNameButton = new javax.swing.JButton();
         familyNamesScrollPane = new javax.swing.JScrollPane();
@@ -83,16 +92,16 @@ public class FamiliesListPanel extends javax.swing.JPanel {
         });
         familyNamesToolBar.add(addFamilyNameButton);
 
-        linkToButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToButton.setFocusable(false);
-        linkToButton.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        linkToButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        linkToButton.addActionListener(new java.awt.event.ActionListener() {
+        linkToFamilyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToFamilyButton.setFocusable(false);
+        linkToFamilyButton.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        linkToFamilyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToFamilyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linkToButtonActionPerformed(evt);
+                linkToFamilyButtonActionPerformed(evt);
             }
         });
-        familyNamesToolBar.add(linkToButton);
+        familyNamesToolBar.add(linkToFamilyButton);
 
         editFamilyNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editFamilyNameButton.setFocusable(false);
@@ -173,7 +182,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
         familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 
         if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-             mFamiliesTableModel.add(familyEditorPanel.commit());
+            mFamiliesTableModel.add(familyEditorPanel.commit());
         } else {
             while (gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -222,7 +231,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteFamilyNameButtonActionPerformed
 
-    private void linkToButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToButtonActionPerformed
+    private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
         FamiliesListPanel familiesListPanel = new FamiliesListPanel(LIST_FAM);
         familiesListPanel.setFamiliesList(mRoot, new ArrayList(mRoot.getGedcom().getFamilies()));
         DialogManager.ADialog familiesListDialog = new DialogManager.ADialog(
@@ -232,7 +241,6 @@ public class FamiliesListPanel extends javax.swing.JPanel {
 
         if (familiesListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Fam selectedFamily = familiesListPanel.getSelectedFamily();
-            mFamiliesTableModel.add(selectedFamily);
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -249,11 +257,12 @@ public class FamiliesListPanel extends javax.swing.JPanel {
                         }
                     }
                 }); // end of doUnitOfWork
+                mFamiliesTableModel.add(selectedFamily);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-    }//GEN-LAST:event_linkToButtonActionPerformed
+    }//GEN-LAST:event_linkToFamilyButtonActionPerformed
 
     private void familyNamesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familyNamesTableMouseClicked
         if (evt.getClickCount() >= 2) {
@@ -278,7 +287,6 @@ public class FamiliesListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_familyNamesTableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFamilyNameButton;
     private javax.swing.JButton deleteFamilyNameButton;
@@ -286,13 +294,13 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane familyNamesScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable familyNamesTable;
     private javax.swing.JToolBar familyNamesToolBar;
-    private javax.swing.JButton linkToButton;
+    private javax.swing.JButton linkToFamilyButton;
     // End of variables declaration//GEN-END:variables
 
     public void setFamiliesList(Property root, List<Fam> familiesList) {
         this.mRoot = root;
         mFamiliesTableModel.update(familiesList);
-            }
+    }
 
     public Fam getSelectedFamily() {
         int selectedRow = familyNamesTable.getSelectedRow();
