@@ -13,16 +13,42 @@ import org.openide.util.NbBundle;
  */
 public class FamiliesTableModel extends AbstractTableModel {
 
+    public static int FAMILY_LIST = 0;
+    public static int FAMILY_CHILD = 1;
+    public static int FAMILY_SPOUSE = 2;
+    private int mFamilyTableType = FAMILY_CHILD;
     private List<Fam> familiesList = new ArrayList<Fam>();
-    private String[] columnsName = {
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.ID.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.husband.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.wife.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.weddingDate.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.column.children.title")
+    private static String[] familyListColumnsName = {
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.ID.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.husband.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.wife.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.weddingDate.title"),
     };
+    private static String[] familyChildColumnsName = {
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.ID.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.husband.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.wife.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.weddingDate.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.children.title")
+    };
+    private static String[] familySpouseColumnsName = {
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.ID.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.husband.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.wife.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.weddingDate.title"),
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.children.title")
+    };
+    private String[] columnsName;
 
-    public FamiliesTableModel() {
+    public FamiliesTableModel(int familyType) {
+        mFamilyTableType = familyType;
+        if (mFamilyTableType == FAMILY_CHILD) {
+            columnsName = familyChildColumnsName;
+        } else if (mFamilyTableType == FAMILY_CHILD) {
+            columnsName = familySpouseColumnsName;
+        } else {
+            columnsName = familyListColumnsName;
+        }
     }
 
     @Override
