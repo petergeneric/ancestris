@@ -119,11 +119,12 @@ public class EventsListPanel extends javax.swing.JPanel {
         int selectedRow = eventsTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+            PropertyEvent event = mEventsTableModel.getValueAt(rowIndex);
             EventEditorPanel eventEditorPanel = new EventEditorPanel();
-            eventEditorPanel.set(mRoot, mEventsTableModel.getValueAt(rowIndex));
+            eventEditorPanel.set(mRoot, event);
 
             ADialog eventEditorDialog = new ADialog(
-                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title"),
+                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title", PropertyTag2Name.getTagName(event.getTag())),
                     eventEditorPanel);
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
@@ -159,12 +160,13 @@ public class EventsListPanel extends javax.swing.JPanel {
 
     private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        final String eventType = eventTypeComboBox.getSelectedItem().toString();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    mEvent = (PropertyEvent) mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventTypeComboBox.getSelectedItem().toString()), "");
+                    mEvent = (PropertyEvent) mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
                     mEvent.addProperty("DATE", "");
                 }
             }); // end of doUnitOfWork
@@ -173,9 +175,8 @@ public class EventsListPanel extends javax.swing.JPanel {
 
             eventEditorPanel.set(mRoot, mEvent);
 
-            ADialog eventEditorDialog = new ADialog(
-                    NbBundle.getMessage(EventEditorPanel.class,
-                    "EventEditorPanel.create.title"), eventEditorPanel);
+            ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(EventEditorPanel.class,
+                    "EventEditorPanel.create.title", eventType), eventEditorPanel);
 
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -195,11 +196,12 @@ public class EventsListPanel extends javax.swing.JPanel {
             int selectedRow = eventsTable.getSelectedRow();
             if (selectedRow != -1) {
                 int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+                PropertyEvent event = mEventsTableModel.getValueAt(rowIndex);
                 EventEditorPanel eventEditorPanel = new EventEditorPanel();
-                eventEditorPanel.set(mRoot, mEventsTableModel.getValueAt(rowIndex));
+                eventEditorPanel.set(mRoot, event);
 
                 ADialog eventEditorDialog = new ADialog(
-                        NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title"),
+                        NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title", PropertyTag2Name.getTagName(event.getTag())),
                         eventEditorPanel);
                 eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
