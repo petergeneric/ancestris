@@ -32,6 +32,10 @@ public class NameEditorPanel extends javax.swing.JPanel {
      */
     public NameEditorPanel() {
         initComponents();
+        jCheckBox1.setSelected(false);
+        firstNamePrefixTextField.setVisible(false);
+        familyNamePrefixTextField.setVisible(false);
+        firstNameSuffixTextField.setVisible(false);
     }
 
     /**
@@ -54,6 +58,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
         firstNameSuffixTextField = new javax.swing.JTextField();
         nicknameLabel = new javax.swing.JLabel();
         nicknameTextField = new javax.swing.JTextField();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         nameTypeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.nameTypeLabel.text"), new Object[] {})); // NOI18N
 
@@ -196,39 +201,49 @@ public class NameEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        jCheckBox1.setText(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(272, 272, 272)
-                        .addComponent(nameTypeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(firstnameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nicknameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(familyNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(nicknameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(firstnameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(familyNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(firstNameTextField)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(familyNameTextField)
+                                        .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(familyNameTextField))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(firstNameTextField)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(nicknameTextField)
-                                .addGap(133, 133, 133)))))
+                                .addGap(192, 192, 192))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jCheckBox1)
+                        .addGap(82, 82, 82)
+                        .addComponent(nameTypeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameTypeComboBox, 0, 196, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -237,29 +252,43 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameTypeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nameTypeLabel)
+                    .addComponent(jCheckBox1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstnameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nicknameLabel))
+                    .addComponent(nicknameLabel)
+                    .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(familyNameLabel)
+                    .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(familyNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void nameTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTypeComboBoxActionPerformed
         nameTypeModified = true;
     }//GEN-LAST:event_nameTypeComboBoxActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        if (jCheckBox1.isSelected()) {
+            firstNamePrefixTextField.setVisible(true);
+            familyNamePrefixTextField.setVisible(true);
+            firstNameSuffixTextField.setVisible(true);
+        } else {
+            firstNamePrefixTextField.setVisible(false);
+            familyNamePrefixTextField.setVisible(false);
+            firstNameSuffixTextField.setVisible(false);
+        }
+        revalidate();
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel familyNameLabel;
     private javax.swing.JTextField familyNamePrefixTextField;
@@ -268,6 +297,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField firstNameSuffixTextField;
     private javax.swing.JTextField firstNameTextField;
     private javax.swing.JLabel firstnameLabel;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> nameTypeComboBox;
     private javax.swing.JLabel nameTypeLabel;
     private javax.swing.JLabel nicknameLabel;
@@ -317,7 +347,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
             Property firstnamePrefix = name.getProperty("NPFX");
             firstNamePrefixTextField.setText(firstnamePrefix != null ? firstnamePrefix.getValue() : "");
             firstNamePrefixModified = false;
-            
+
             /*
              * GIVN Given name or earned name. Different given names are
              * separated by a comma.
@@ -363,10 +393,27 @@ public class NameEditorPanel extends javax.swing.JPanel {
             Property nickName = name.getProperty("NICK");
             nicknameTextField.setText(nickName != null ? nickName.getValue() : "");
             nicknameModified = false;
+
+            if (firstnamePrefix != null || firstNameSuffix != null || familyNamePrefix != null) {
+                jCheckBox1.setSelected(true);
+                firstNamePrefixTextField.setVisible(true);
+                familyNamePrefixTextField.setVisible(true);
+                firstNameSuffixTextField.setVisible(true);
+            } else {
+                jCheckBox1.setSelected(false);
+                firstNamePrefixTextField.setVisible(false);
+                familyNamePrefixTextField.setVisible(false);
+                firstNameSuffixTextField.setVisible(false);
+            }
         } else {
             nameTypeComboBox.setSelectedIndex(1);
             nameTypeModified = false;
+            jCheckBox1.setSelected(false);
+            firstNamePrefixTextField.setVisible(false);
+            familyNamePrefixTextField.setVisible(false);
+            firstNameSuffixTextField.setVisible(false);
         }
+        revalidate();
     }
 
     public void commit() {
@@ -380,7 +427,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 public void perform(Gedcom gedcom) throws GedcomException {
                     if (name == null) {
                         logger.log(Level.INFO, "Add property NAME");
-                        
+
                         name = (PropertyName) root.addProperty("NAME", "");
                     }
 
@@ -389,11 +436,11 @@ public class NameEditorPanel extends javax.swing.JPanel {
                         Property nameType = name.getProperty("TYPE");
                         if (nameType == null) {
                             logger.log(Level.INFO, "Add property TYPE");
-                            
+
                             name.addProperty("TYPE", nameTypeComboBox.getSelectedItem().toString());
                         } else {
                             logger.log(Level.INFO, "Update property TYPE");
-                            
+
                             nameType.setValue(nameTypeComboBox.getSelectedItem().toString());
                         }
                     }
