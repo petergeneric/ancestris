@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 -->
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
-    <tocitem text="Exports - Geneanet">
-        <tocitem text="About Exports - Geneanet" target="ancestris.modules.exports.geneanet.about"/>
+    <tocitem text="Exports - Geneanet" target="ancestris.modules.exports.geneanet.title">
+        <tocitem text="Mode d'emploi" target="ancestris.modules.exports.geneanet.about"/>
     </tocitem>
 </toc>

@@ -18,5 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 -->
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
+    <mapID target="ancestris.modules.exports.geneanet.title" url="geneanet-title.html"/>
     <mapID target="ancestris.modules.exports.geneanet.about" url="geneanet-about.html"/>
 </map>
