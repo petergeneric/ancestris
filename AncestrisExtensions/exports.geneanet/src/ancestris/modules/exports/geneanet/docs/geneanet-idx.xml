@@ -18,5 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 -->
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
-    <indexitem text="About Exports - Geneanet" target="ancestris.modules.exports.geneanet.about"/>
+    <indexitem text="Exports - Geneanet" target="ancestris.modules.exports.geneanet.title"/>
+    <indexitem text="Mode d'emploi" target="ancestris.modules.exports.geneanet.about"/>
 </index>

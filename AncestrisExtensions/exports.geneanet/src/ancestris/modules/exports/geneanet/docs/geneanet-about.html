@@ -1,42 +1,152 @@
 <!--
-Copyright (C) 2013 moi
+Ancestris - http://www.ancestris.org
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+Copyright 2013 Ancestris
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Author: Daniel Andre (daniel@ancestris.org).
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -->
 <html>
     <head>
-        <title>About Exports - Geneanet</title>
-        <link rel="stylesheet" href="nbdocs:/org/netbeans/modules/usersguide/ide.css" type="text/css">
+        <title>Mode d'emploi</title>
+        <link rel="stylesheet" href="./ancestris.css" type="text/css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h2>About Exports - Geneanet</h2>
-        <p>
-            <!-- TODO describe your module, add more pages... -->
+	 <a name="_Top_"></a>
+      <center>
+        <h2 class="ancestris_help_title"><u>Exports - Geneanet - Mode d'emploi</u></h2>
+      </center>
+            <h2>Geneanet :</h2>
+        <p >
+            Vous trouverez Geneanet à <a href="http://www.geneanet.org">www.geneanet.org</a>
         </p>
-    </body>
+        <h2>Mode d'emploi:</h2>
+        <h3>Commencer par le réglage de Exports - Geneanet</h3>
+        <h3>C'est Outils /Préférences /Extensions /Export_Geneanet</h3>
+        <table border="0" width="100%">
+            <tr>
+                <td width="30%">
+                    <img  alt="Menu des préférences du plugin"   src="./images/geneanet_2.jpg">
+                </td> 
+                <td width="30%">
+                    <p>                   
+                        Cocher les cases voulues.<br>
+                        Le <b>fichier de log</b> (ou journal) sert à enregistrer toutes les actions effectuées, 
+                        c'est un fichier texte à consulter avec un éditeur de texte, il a pour adresse :<br>
+                        <b>avec windows</b> C:\Users \IdUtilisateur \AppData(caché) \Roaming \.ancestris \n°version \ancestris \ancestris.log<br>
+                        <b>avec linux</b>  home /.ancestris(caché) /n°version /ancestris /ancestris.log<br>
+                        <b> n°version</b>  est trunk pour une version d'essai ou 0.8 ou ...<br><br>
+                        Les boutons <b>[OK] / [Annuler]</b> servent à Valider / Abandonner les choix.<br> 
+                        Les boutons <b>[Export] / [Importer]</b> servent à Sauvegarder / Récupérer 
+                        le fichier de configuration d'Ancestris.<br><br>
+                    </p>                 
+                </td>
+               </tr>   
+        </table>
+        <h3> Quitter ce tableau de réglage des préférences par [OK].<br><br>
+             Choisir le gedcom en ouvrant par exemple l'arbre dynamique.<br><br>
+             Ouvrir Exports - Geneanet dans le menu Fichier/Exporter/Geneanet.</h3>
+        <table border="0">
+            <tr>
+                <td width="30%">
+                    <img  alt="Menu choix des Entités"   src="./images/geneanet_3.jpg">
+                </td> 
+                <td width="30%">
+                    <p>Premier écran :<br><br>
+                        Onglet <b>Filtrer par Entités </b>: cocher les cases des entités à exporter.<br><br>
+                        Sur cet écran deux réglages à faire :<br>
+                        1/ Le fichier de sortie<br>
+                        <b>Enregistrer dans </b>: Pour choisir le dossier d'enregistrement. Sur l'exemple c'est le Bureau.<br>
+                        <b>Nom du fichier </b>: Pour choisir le nom du fichier si celui proposé ne vous convient pas, tout en gardant le suffixe .gw .<br>
+                        2/ Les entités concernées par la sortie 
+                    </p>
+                </td>                     
+            </tr>   
+        </table>          
+        <table border="0" >
+            <tr>
+                <td width="30%">
+                    <img alt="Menu choix des Propriétés"   src="./images/geneanet_4.jpg"> 
+                </td> 
+                <td width="30%">
+                    <p>Deuxième écran :</p>
+                    <p>  Onglet <b>Filtrer par Propriétés </b>: cocher les cases ou remplir les zones décrivant les exclusions.<br><br>
+                    Sur cet écran un réglage :<br>
+                    3/ Les propriétés que vous ne voulez pas exporter. <br>
+                    </p>
+                </td> 
+            </tr>   
+        </table>      
+        <table border="0" >
+            <tr>
+                <td width="30%">
+                    <img alt="Menu choix des Individus et des Informations concernés"   src="./images/geneanet_5.jpg"> 
+                </td> 
+                <td width="30%">
+                    <p>Troisième écran :</p>
+                    <p>Onglet <b>Filtrer par Vues </b>: cocher les cases.<br><br>
+                        Sur cet écran deux réglages :<br>
+                        5/ La population concernée. <br>
+                        1ère ligne choix entre le gedcom entier ou seulement la partie visible dans l'arbre dynamique.<br>
+                        6/ Les données concernées. <br>
+                        2nde ligne choix entre toutes les données ou seulement les publiques, pour les privées voir Outils /Préférences /Affichage /Données_privées.<br>
+                    </p>
+                </td>
+            </tr>   
+        </table>     
+       
+        
+        <h3>Lancement de Exports - Geneanet:</h3>
+        <table border="0" >
+                   <tr>
+                       <td width="30%">
+                           <img alt="Export terminé"   src="./images/geneanet_6.jpg">
+                       </td>
+                       <td>
+                        <p>Utiliser le bouton [Enregistrer] lance la création et l'enregistrement du fichier .gw .</p>
+                        <p>C'est un fichier texte, il se consulte avec un éditeur de texte.<br>
+                        Il est prêt à être envoyé vers <a href="http://www.geneanet.org">www.geneanet.org</a>.</p>
+                        </td> 
+                    </tr>   
+    </table>   
+                        
+        <!-- Debut des boutons Precedent - Suivant -->
+   
+    <table border="0" width="100%">
+      <tbody><tr>
+        <td width="10%">
+          <table border="0" width="100%">
+            <tbody><tr>
+              <td bgcolor="#e8fcd9">
+                <p align="center">
+                  <font size="-1"><a href="./geneanet-title.html">Page précédente</a></font>
+                </p>
+              </td>
+            </tr></tbody>
+          </table>
+        </td>
+        <td width="80%">
+          &nbsp;
+        </td>
+        <td width="10%">
+          <table border="0" width="100%">
+            <tbody><tr>
+              <td bgcolor="#e8fcd9">
+                <p align="center">
+                  <font size="-1"><a href="./geneanet-about.html#Top">Haut de Page</a></font>
+                    
+                </p>
+              </td>
+            </tr></tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody></table>
+    <!-- Fin des boutons Precedent - Suivant -->
+</body>
 </html>
-<!--
-Tip: to create a link which will open in an external web browser, try:
-<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-    <param name="content" value="http://www.netbeans.org/">
-    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
-    <param name="textFontSize" value="medium">
-    <param name="textColor" value="blue">
-</object>
-To create a link to a help set from another module, you need to know the code name base and path, e.g.:
-<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
-(This link will behave sanely if that module is disabled or missing.)
--->
+

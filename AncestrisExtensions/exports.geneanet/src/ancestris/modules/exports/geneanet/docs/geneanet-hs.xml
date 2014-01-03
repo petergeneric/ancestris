@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <helpset version="2.0">
     <title>Exports - Geneanet Help</title>
     <maps>
-        <homeID>ancestris.modules.exports.geneanet.about</homeID>
+        <homeID>ancestris.modules.exports.geneanet</homeID>
         <mapref location="geneanet-map.xml"/>
     </maps>
     <view mergetype="javax.help.AppendMerge">
