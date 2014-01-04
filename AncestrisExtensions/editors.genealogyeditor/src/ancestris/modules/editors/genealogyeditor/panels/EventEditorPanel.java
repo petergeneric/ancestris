@@ -242,7 +242,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
             aDateBean.setContext(date);
 
             Property eventCause = mEvent.getProperty("CAUS");
-            if (eventCause == null) {
+            if (eventCause != null) {
                 eventCauseTextArea.setText(eventCause.getValue());
             }
 
