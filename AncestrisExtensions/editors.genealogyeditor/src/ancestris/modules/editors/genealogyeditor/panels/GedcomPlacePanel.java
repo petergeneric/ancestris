@@ -26,7 +26,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
     private int mPlaceOrder[] = {
         0, // hamlet
         -1, // parish
-        1, // town,
+        1, // city,
         2, // zip Code
         -1, // geo ID,
         3, // county,
@@ -35,6 +35,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
     };
     JComponent mGedcomFields[][];
     boolean mPlaceModified = false;
+    boolean updateOnGoing = false;
 
     /**
      * Creates new form GedcomPlacePanel
@@ -344,7 +345,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     mGedcomFields[index][1].setVisible(false);
                 }
             }
-            updatePlace(place, -1);
+            updatePlace(place, 0);
         } else {
             linkToPlaceButton.setVisible(true);
         }
@@ -353,10 +354,12 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                mPlaceModified = true;
-                PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
-                if (sameChoices.length > 0) {
-                    updatePlace(sameChoices[0], 0);
+                if (!updateOnGoing) {
+                    mPlaceModified = true;
+                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
+                    if (sameChoices.length > 0) {
+                        updatePlace(sameChoices[0], 1);
+                    }
                 }
             }
 
@@ -367,10 +370,12 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                mPlaceModified = true;
-                PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
-                if (sameChoices.length > 0) {
-                    updatePlace(sameChoices[0], 0);
+                if (!updateOnGoing) {
+                    mPlaceModified = true;
+                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
+                    if (sameChoices.length > 0) {
+                        updatePlace(sameChoices[0], 1);
+                    }
                 }
             }
         });
@@ -378,10 +383,12 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                mPlaceModified = true;
-                PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[1], gedcomCityTextField.getText());
-                if (sameChoices.length > 0) {
-                    updatePlace(sameChoices[0], 1);
+                if (!updateOnGoing) {
+                    mPlaceModified = true;
+                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[2], gedcomCityTextField.getText());
+                    if (sameChoices.length > 0) {
+                        updatePlace(sameChoices[0], 3);
+                    }
                 }
             }
 
@@ -392,19 +399,51 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mPlaceModified = true;
+                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[2], gedcomCityTextField.getText());
+                    if (sameChoices.length > 0) {
+                        updatePlace(sameChoices[0], 3);
+                    }
+                }
+            }
+        });
+        gedcomCountyTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mPlaceModified = true;
+                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[5], gedcomCityTextField.getText());
+                    if (sameChoices.length > 0) {
+                        updatePlace(sameChoices[0], 6);
+                    }
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
                 mPlaceModified = true;
-                PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[1], gedcomCityTextField.getText());
-                if (sameChoices.length > 0) {
-                    updatePlace(sameChoices[0], 1);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mPlaceModified = true;
+                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[5], gedcomCityTextField.getText());
+                    if (sameChoices.length > 0) {
+                        updatePlace(sameChoices[0], 6);
+                    }
                 }
             }
         });
     }
 
-    private void updatePlace(PropertyPlace place, int editedIndex) {
+    private void updatePlace(PropertyPlace place, int startIndex) {
 
-        for (int index = 1; index < mPlaceOrder.length; index++) {
-            if (mPlaceOrder[index] != -1 && index != editedIndex) {
+        updateOnGoing = true;
+        for (int index = startIndex; index < mPlaceOrder.length; index++) {
+            if (mPlaceOrder[index] != -1) {
                 if (mPlaceOrder[index] < mPlaceFormat.length) {
                     ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(place.getJurisdiction(mPlaceOrder[index]));
                 }
@@ -438,6 +477,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
             gedcomLatitudeTextField.setText("");
             gedcomLongitudeTextField.setText("");
         }
+        updateOnGoing = false;
     }
 
     public String getPlaceString() {
@@ -445,9 +485,10 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         String placeString = "";
 
         javax.swing.JTextField gedcomFieldsOrder[] = new javax.swing.JTextField[mPlaceFormat.length];
-        for (int index = 0; index < mPlaceOrder.length; index++) {
-            if (mPlaceOrder[index] != -1 && mPlaceOrder[index] < mPlaceFormat.length) {
-                gedcomFieldsOrder[mPlaceOrder[index]] = (javax.swing.JTextField)mGedcomFields[mPlaceOrder[index]][1];
+        int placeFormatindex = 0;
+        for (int placeOrderindex = 0; placeOrderindex < mPlaceOrder.length; placeOrderindex++) {
+            if (mPlaceOrder[placeOrderindex] != -1 && placeFormatindex < mPlaceFormat.length) {
+                gedcomFieldsOrder[placeFormatindex++] = (javax.swing.JTextField) mGedcomFields[mPlaceOrder[placeOrderindex]][1];
             }
         }
 
