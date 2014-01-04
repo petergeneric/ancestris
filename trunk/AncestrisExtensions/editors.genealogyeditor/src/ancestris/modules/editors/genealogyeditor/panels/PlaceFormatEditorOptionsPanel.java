@@ -1,11 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import genj.gedcom.Gedcom;
-import genj.gedcom.PropertyPlace;
-import java.util.prefs.Preferences;
 import javax.swing.JComponent;
-import javax.swing.SpinnerNumberModel;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -20,33 +15,30 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
      * Creates new form PlaceFormatEditorOptionsPanel
      */
     public PlaceFormatEditorOptionsPanel(String placeFormat[], int placeOrder[]) {
-        mPlaceFormat = placeFormat;
         mPlaceOrder = placeOrder;
+        mPlaceFormat = new String [Math.min(8, placeFormat.length) + 1];
         
+        mPlaceFormat[0] = "";
+        System.arraycopy(placeFormat, 0, mPlaceFormat, 1, placeFormat.length);
+
         initComponents();
 
-        JComponent gedcomFields[][] = {
-            {jLabel1, hamletSpinner, gedcomHamletLabel},
-            {jLabel2, parishSpinner, gedcomParishLabel},
-            {jLabel3, townSpinner, gedcomTownLabel},
-            {jLabel4, zipCodeSpinner, gedcomZipCodeLabel},
-            {jLabel5, townCodeSpinner, gedcomTownCodeLabel},
-            {jLabel6, countySpinner, gedcomCountyLabel},
-            {jLabel7, stateSpinner, gedcomStateLabel},
-            {jLabel8, countrySpinner, gedcomCountryLabel}
+        JComponent gedcomFields[] = {
+            hamletComboBox,
+            parishComboBox,
+            townComboBox,
+            zipCodeComboBox,
+            geoIDComboBox,
+            countyComboBox,
+            stateComboBox,
+            countryComboBox
         };
 
         for (int index = 0; index < mPlaceOrder.length; index++) {
-            SpinnerNumberModel model = (SpinnerNumberModel) ((javax.swing.JSpinner) gedcomFields[index][1]).getModel();
-            model.setMinimum(0);
-            model.setMaximum(mPlaceFormat.length);
-
-            ((javax.swing.JLabel) (gedcomFields[index][0])).setText(index < mPlaceFormat.length ? mPlaceFormat[index] : "");
-
-            if (mPlaceOrder[index] > -1 && mPlaceOrder[index] < mPlaceFormat.length) {
-                ((javax.swing.JSpinner) gedcomFields[index][1]).setValue(mPlaceOrder[index] + 1);
+            if (mPlaceOrder[index] > -1 && mPlaceOrder[index] + 1 < mPlaceFormat.length) {
+                ((javax.swing.JComboBox) gedcomFields[index]).setSelectedIndex(mPlaceOrder[index] + 1);
             } else {
-                ((javax.swing.JSpinner) gedcomFields[index][1]).setValue(0);
+                ((javax.swing.JComboBox) gedcomFields[index]).setSelectedIndex(0);
             }
         }
     }
@@ -66,43 +58,18 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         parishLabel = new javax.swing.JLabel();
         townLabel = new javax.swing.JLabel();
         zipCodeLabel = new javax.swing.JLabel();
-        townCodeLabel = new javax.swing.JLabel();
+        geoIDLabel = new javax.swing.JLabel();
         countyLabel = new javax.swing.JLabel();
         stateLabel = new javax.swing.JLabel();
         countryLabel = new javax.swing.JLabel();
-        hamletSpinner = new javax.swing.JSpinner();
-        parishSpinner = new javax.swing.JSpinner();
-        townSpinner = new javax.swing.JSpinner();
-        zipCodeSpinner = new javax.swing.JSpinner();
-        townCodeSpinner = new javax.swing.JSpinner();
-        countySpinner = new javax.swing.JSpinner();
-        stateSpinner = new javax.swing.JSpinner();
-        countrySpinner = new javax.swing.JSpinner();
-        gedcomHamletLabel = new javax.swing.JLabel();
-        gedcomTownLabel = new javax.swing.JLabel();
-        gedcomTownCodeLabel = new javax.swing.JLabel();
-        gedcomStateLabel = new javax.swing.JLabel();
-        gedcomParishLabel = new javax.swing.JLabel();
-        gedcomZipCodeLabel = new javax.swing.JLabel();
-        gedcomCountyLabel = new javax.swing.JLabel();
-        gedcomCountryLabel = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        hamletComboBox = new javax.swing.JComboBox();
+        townComboBox = new javax.swing.JComboBox();
+        geoIDComboBox = new javax.swing.JComboBox();
+        stateComboBox = new javax.swing.JComboBox();
+        parishComboBox = new javax.swing.JComboBox();
+        zipCodeComboBox = new javax.swing.JComboBox();
+        countyComboBox = new javax.swing.JComboBox();
+        countryComboBox = new javax.swing.JComboBox();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -120,8 +87,8 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         zipCodeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(zipCodeLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.zipCodeLabel.text")); // NOI18N
 
-        townCodeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(townCodeLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.townCodeLabel.text")); // NOI18N
+        geoIDLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(geoIDLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.geoIDLabel.text")); // NOI18N
 
         countyLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(countyLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.countyLabel.text")); // NOI18N
@@ -132,188 +99,21 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         countryLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(countryLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.countryLabel.text")); // NOI18N
 
-        hamletSpinner.setModel(new javax.swing.SpinnerNumberModel());
-        hamletSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                hamletSpinnerStateChanged(evt);
-            }
-        });
+        hamletComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
 
-        parishSpinner.setModel(new javax.swing.SpinnerNumberModel());
-        parishSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                parishSpinnerStateChanged(evt);
-            }
-        });
+        townComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
 
-        townSpinner.setModel(new javax.swing.SpinnerNumberModel());
-        townSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                townSpinnerStateChanged(evt);
-            }
-        });
+        geoIDComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
 
-        zipCodeSpinner.setModel(new javax.swing.SpinnerNumberModel());
-        zipCodeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                zipCodeSpinnerStateChanged(evt);
-            }
-        });
+        stateComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
 
-        townCodeSpinner.setModel(new javax.swing.SpinnerNumberModel());
-        townCodeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                townCodeSpinnerStateChanged(evt);
-            }
-        });
+        parishComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
 
-        countySpinner.setModel(new javax.swing.SpinnerNumberModel());
-        countySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                countySpinnerStateChanged(evt);
-            }
-        });
+        zipCodeComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
 
-        stateSpinner.setModel(new javax.swing.SpinnerNumberModel());
-        stateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                stateSpinnerStateChanged(evt);
-            }
-        });
+        countyComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
 
-        countrySpinner.setModel(new javax.swing.SpinnerNumberModel());
-        countrySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                countrySpinnerStateChanged(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomHamletLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.gedcomHamletLabel.text"), new Object[] {})); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomTownLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.gedcomTownLabel.text"), new Object[] {})); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomTownCodeLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.gedcomTownCodeLabel.text"), new Object[] {})); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomStateLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.gedcomStateLabel.text"), new Object[] {})); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomParishLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.gedcomParishLabel.text"), new Object[] {})); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomZipCodeLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.gedcomZipCodeLabel.text"), new Object[] {})); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomCountyLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.gedcomCountyLabel.text"), new Object[] {})); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(gedcomCountryLabel, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.gedcomCountryLabel.text"), new Object[] {})); // NOI18N
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jPanel1.border.title"), new Object[] {}))); // NOI18N
-
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel2.text"), new Object[] {})); // NOI18N
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel1.text"), new Object[] {})); // NOI18N
-
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel6.text"), new Object[] {})); // NOI18N
-
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel5.text"), new Object[] {})); // NOI18N
-
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel4.text"), new Object[] {})); // NOI18N
-
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel3.text"), new Object[] {})); // NOI18N
-
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel11, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel11.text"), new Object[] {})); // NOI18N
-
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel10, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel10.text"), new Object[] {})); // NOI18N
-
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel8.text"), new Object[] {})); // NOI18N
-
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel7.text"), new Object[] {})); // NOI18N
-
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel9.text"), new Object[] {})); // NOI18N
-
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel13, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel13.text"), new Object[] {})); // NOI18N
-
-        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel14, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel14.text"), new Object[] {})); // NOI18N
-
-        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel15, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel15.text"), new Object[] {})); // NOI18N
-
-        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel16, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel16.text"), new Object[] {})); // NOI18N
-
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel12, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceFormatEditorOptionsPanel.jLabel12.text"), new Object[] {})); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel15)
-                    .addComponent(jLabel16))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8)))
-        );
+        countryComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -324,22 +124,17 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(townCodeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(geoIDLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(stateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(townLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(hamletLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(stateSpinner)
-                            .addComponent(townCodeSpinner, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(townSpinner, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(hamletSpinner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(gedcomStateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(gedcomTownCodeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(gedcomHamletLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(gedcomTownLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(townComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(hamletComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(stateComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(geoIDComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(parishLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -347,23 +142,14 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
                             .addComponent(countyLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(countrySpinner)
-                            .addComponent(countySpinner)
-                            .addComponent(zipCodeSpinner, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(parishSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(gedcomCountryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(gedcomCountyLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(gedcomZipCodeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(gedcomParishLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(12, 12, 12))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                            .addComponent(zipCodeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(parishComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(countryComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(countyComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -371,170 +157,63 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(hamletLabel)
                     .addComponent(parishLabel)
-                    .addComponent(hamletSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(parishSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomHamletLabel)
-                    .addComponent(gedcomParishLabel))
+                    .addComponent(hamletComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(parishComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(townLabel)
                     .addComponent(zipCodeLabel)
-                    .addComponent(townSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(zipCodeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomTownLabel)
-                    .addComponent(gedcomZipCodeLabel))
+                    .addComponent(townComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(zipCodeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(townCodeLabel)
+                    .addComponent(geoIDLabel)
                     .addComponent(countyLabel)
-                    .addComponent(townCodeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(countySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomTownCodeLabel)
-                    .addComponent(gedcomCountyLabel))
+                    .addComponent(geoIDComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(countyComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stateLabel)
                     .addComponent(countryLabel)
-                    .addComponent(stateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(countrySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomStateLabel)
-                    .addComponent(gedcomCountryLabel))
+                    .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(countryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void hamletSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hamletSpinnerStateChanged
-        int index = (Integer) hamletSpinner.getValue();
-        if (index > 0) {
-            gedcomHamletLabel.setText(mPlaceFormat[index - 1]);
-        } else {
-            gedcomHamletLabel.setText("");
-        }
-    }//GEN-LAST:event_hamletSpinnerStateChanged
-
-    private void townSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_townSpinnerStateChanged
-        int index = (Integer) townSpinner.getValue();
-        if (index > 0) {
-            gedcomTownLabel.setText(mPlaceFormat[index - 1]);
-        } else {
-            gedcomTownLabel.setText("");
-        }
-    }//GEN-LAST:event_townSpinnerStateChanged
-
-    private void townCodeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_townCodeSpinnerStateChanged
-        int index = (Integer) townCodeSpinner.getValue();
-        if (index > 0) {
-            gedcomTownCodeLabel.setText(mPlaceFormat[index - 1]);
-        } else {
-            gedcomTownCodeLabel.setText("");
-        }
-    }//GEN-LAST:event_townCodeSpinnerStateChanged
-
-    private void stateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_stateSpinnerStateChanged
-        int index = (Integer) stateSpinner.getValue();
-        if (index > 0) {
-            gedcomStateLabel.setText(mPlaceFormat[index - 1]);
-        } else {
-            gedcomStateLabel.setText("");
-        }
-    }//GEN-LAST:event_stateSpinnerStateChanged
-
-    private void parishSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_parishSpinnerStateChanged
-        int index = (Integer) parishSpinner.getValue();
-        if (index > 0) {
-            gedcomParishLabel.setText(mPlaceFormat[index - 1]);
-        } else {
-            gedcomParishLabel.setText("");
-        }
-    }//GEN-LAST:event_parishSpinnerStateChanged
-
-    private void zipCodeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zipCodeSpinnerStateChanged
-        int index = (Integer) zipCodeSpinner.getValue();
-        if (index > 0) {
-            gedcomZipCodeLabel.setText(mPlaceFormat[index - 1]);
-        } else {
-            gedcomZipCodeLabel.setText("");
-        }
-    }//GEN-LAST:event_zipCodeSpinnerStateChanged
-
-    private void countySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_countySpinnerStateChanged
-        int index = (Integer) countySpinner.getValue();
-        if (index > 0) {
-            gedcomCountyLabel.setText(mPlaceFormat[index - 1]);
-        } else {
-            gedcomCountyLabel.setText("");
-        }
-    }//GEN-LAST:event_countySpinnerStateChanged
-
-    private void countrySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_countrySpinnerStateChanged
-        int index = (Integer) countrySpinner.getValue();
-        if (index > 0) {
-            gedcomCountryLabel.setText(mPlaceFormat[index - 1]);
-        } else {
-            gedcomCountryLabel.setText("");
-        }
-    }//GEN-LAST:event_countrySpinnerStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox countryComboBox;
     private javax.swing.JLabel countryLabel;
-    private javax.swing.JSpinner countrySpinner;
+    private javax.swing.JComboBox countyComboBox;
     private javax.swing.JLabel countyLabel;
-    private javax.swing.JSpinner countySpinner;
-    private javax.swing.JLabel gedcomCountryLabel;
-    private javax.swing.JLabel gedcomCountyLabel;
-    private javax.swing.JLabel gedcomHamletLabel;
-    private javax.swing.JLabel gedcomParishLabel;
-    private javax.swing.JLabel gedcomStateLabel;
-    private javax.swing.JLabel gedcomTownCodeLabel;
-    private javax.swing.JLabel gedcomTownLabel;
-    private javax.swing.JLabel gedcomZipCodeLabel;
+    private javax.swing.JComboBox geoIDComboBox;
+    private javax.swing.JLabel geoIDLabel;
+    private javax.swing.JComboBox hamletComboBox;
     private javax.swing.JLabel hamletLabel;
-    private javax.swing.JSpinner hamletSpinner;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JComboBox parishComboBox;
     private javax.swing.JLabel parishLabel;
-    private javax.swing.JSpinner parishSpinner;
+    private javax.swing.JComboBox stateComboBox;
     private javax.swing.JLabel stateLabel;
-    private javax.swing.JSpinner stateSpinner;
-    private javax.swing.JLabel townCodeLabel;
-    private javax.swing.JSpinner townCodeSpinner;
+    private javax.swing.JComboBox townComboBox;
     private javax.swing.JLabel townLabel;
-    private javax.swing.JSpinner townSpinner;
+    private javax.swing.JComboBox zipCodeComboBox;
     private javax.swing.JLabel zipCodeLabel;
-    private javax.swing.JSpinner zipCodeSpinner;
     // End of variables declaration//GEN-END:variables
 
     public int[] getPlaceOrder() {
         int placeOrder[] = {
-            (Integer) hamletSpinner.getValue() - 1,
-            (Integer) parishSpinner.getValue() - 1,
-            (Integer) townSpinner.getValue() - 1,
-            (Integer) zipCodeSpinner.getValue() - 1,
-            (Integer) townCodeSpinner.getValue() - 1,
-            (Integer) countySpinner.getValue() - 1,
-            (Integer) stateSpinner.getValue() - 1,
-            (Integer) countrySpinner.getValue() - 1
+            (Integer) hamletComboBox.getSelectedIndex() - 1,
+            (Integer) parishComboBox.getSelectedIndex() - 1,
+            (Integer) townComboBox.getSelectedIndex() - 1,
+            (Integer) zipCodeComboBox.getSelectedIndex() - 1,
+            (Integer) geoIDComboBox.getSelectedIndex() - 1,
+            (Integer) countyComboBox.getSelectedIndex() - 1,
+            (Integer) stateComboBox.getSelectedIndex() - 1,
+            (Integer) countryComboBox.getSelectedIndex() - 1
         };
         return placeOrder;
     }
