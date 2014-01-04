@@ -82,8 +82,7 @@ public class EventsTableModel extends AbstractTableModel {
         return event;
     }
 
-    public void update(List<PropertyEvent> eventsList) {
-        this.eventsList.clear();
-        addAll(eventsList);
+    public void update() {
+        fireTableDataChanged();
     }
 }
