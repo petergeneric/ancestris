@@ -23,14 +23,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private PropertyPlace mPlace;
     private String mPlaceFormat[];
     private int mPlaceOrder[] = {
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
+        0, // hamlet
+        -1, // parish
+        1, // town,
+        2, // zip Code
+        -1, // geo ID,
+        3, // county,
+        4, // state
+        5 // country
     };
     private EventsTableModel eventsTableModel = new EventsTableModel();
     private GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
@@ -412,7 +412,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 } else {
                     ((javax.swing.JLabel) (gedcomFields[index][0])).setText("");
                     ((javax.swing.JTextField) (gedcomFields[index][1])).setText("");
-                    gedcomFields[index][1].setEnabled(false);
+                    gedcomFields[index][1].setVisible(false);
                 }
             }
         }
@@ -537,14 +537,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 }
             } else {
                 node = modulePreferences.node(place.getGedcom().getName());
-                mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", 0);
-                mPlaceOrder[1] = node.getInt("placeOrder.index.parish", 1);
-                mPlaceOrder[2] = node.getInt("placeOrder.index.town", 2);
-                mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", 3);
-                mPlaceOrder[4] = node.getInt("placeOrder.index.townCode", 4);
-                mPlaceOrder[5] = node.getInt("placeOrder.index.county", 5);
-                mPlaceOrder[6] = node.getInt("placeOrder.index.state", 6);
-                mPlaceOrder[7] = node.getInt("placeOrder.index.Country", 7);
+                mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", mPlaceOrder[0]);
+                mPlaceOrder[1] = node.getInt("placeOrder.index.parish", mPlaceOrder[1]);
+                mPlaceOrder[2] = node.getInt("placeOrder.index.town", mPlaceOrder[2]);
+                mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", mPlaceOrder[3]);
+                mPlaceOrder[4] = node.getInt("placeOrder.index.townCode", mPlaceOrder[4]);
+                mPlaceOrder[5] = node.getInt("placeOrder.index.county", mPlaceOrder[5]);
+                mPlaceOrder[6] = node.getInt("placeOrder.index.state", mPlaceOrder[6]);
+                mPlaceOrder[7] = node.getInt("placeOrder.index.Country", mPlaceOrder[7]);
             }
         } catch (BackingStoreException ex) {
             Exceptions.printStackTrace(ex);
@@ -568,7 +568,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     ((javax.swing.JTextField) (gedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
                 }
             } else {
-                gedcomFields[index][1].setEnabled(false);
+                ((javax.swing.JLabel) (gedcomFields[index][0])).setText("");
+                gedcomFields[index][1].setVisible(false);
             }
         }
 
