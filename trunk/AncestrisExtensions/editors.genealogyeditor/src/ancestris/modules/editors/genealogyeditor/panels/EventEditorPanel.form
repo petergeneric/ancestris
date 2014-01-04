@@ -52,13 +52,21 @@
               </Group>
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="eventTypeLabel" min="-2" pref="61" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="eventTypeTextField" min="-2" pref="183" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="eventTypeLabel" alignment="0" min="-2" pref="61" max="-2" attributes="0"/>
+                      <Component id="eventCauseLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="aDateBean" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="eventTypeTextField" min="-2" pref="183" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="aDateBean" pref="387" max="32767" attributes="0"/>
+                      </Group>
+                      <Component id="eventCauseScrollPane" max="32767" attributes="0"/>
+                  </Group>
               </Group>
           </Group>
         </DimensionLayout>
@@ -70,24 +78,24 @@
                       <Component id="eventIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="dateLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="aDateBean" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="eventTypeTextField" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="eventTypeLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="2" attributes="0">
+                          <Component id="aDateBean" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventTypeLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="eventTypeTextField" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="eventCauseLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="eventCauseScrollPane" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="dateLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="EventEditorPanel.dateLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="eventIdLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -107,8 +115,6 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="ancestris.modules.beans.ADateBean" name="aDateBean">
-        </Component>
         <Component class="javax.swing.JLabel" name="eventTypeLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -121,6 +127,37 @@
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JLabel" name="dateLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="EventEditorPanel.dateLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="ancestris.modules.beans.ADateBean" name="aDateBean">
+        </Component>
+        <Component class="javax.swing.JLabel" name="eventCauseLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="EventEditorPanel.eventCauseLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Container class="javax.swing.JScrollPane" name="eventCauseScrollPane">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTextArea" name="eventCauseTextArea">
+              <Properties>
+                <Property name="columns" type="int" value="20"/>
+                <Property name="rows" type="int" value="2"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JTabbedPane" name="eventInformationTabbedPane">
