@@ -231,6 +231,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
+        gedcomPlacePanel.commit();
         sourceCitationsListPanel.commit();
         noteCitationsListPanel.commit();
         multimediaObjectCitationsListPanel.commit();

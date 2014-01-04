@@ -2,9 +2,13 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import java.util.Arrays;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -29,12 +33,24 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         4, // state
         5 // country
     };
+    JComponent mGedcomFields[][];
+    boolean mPlaceModified = false;
 
     /**
      * Creates new form GedcomPlacePanel
      */
     public GedcomPlacePanel() {
         initComponents();
+        mGedcomFields = new JComponent[][]{
+            {gedcomHamletLabel, gedcomHamletTextField},
+            {gedcomParishLabel, gedcomParishTextField},
+            {gedcomCityLabel, gedcomCityTextField},
+            {gedcomZipCodeLabel, gedcomZipCodeTextField},
+            {gedcomGeoIdLabel, gedcomGeoIDTextField},
+            {gedcomCountyLabel, gedcomCountyTextField},
+            {gedcomStateLabel, gedcomStateTextField},
+            {gedcomCountryLabel, gedcomCountryTextField}
+        };
     }
 
     /**
@@ -51,7 +67,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomParishLabel = new javax.swing.JLabel();
         gedcomLongitudeTextField = new javax.swing.JTextField();
         gedcomCountyTextField = new javax.swing.JTextField();
-        gedcomTownLabel = new javax.swing.JLabel();
+        gedcomCityLabel = new javax.swing.JLabel();
         gedcomHamletLabel = new javax.swing.JLabel();
         gedcomLongitudeLabel = new javax.swing.JLabel();
         gedcomStateLabel = new javax.swing.JLabel();
@@ -61,7 +77,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomGeoIdLabel = new javax.swing.JLabel();
         gedcomZipCodeTextField = new javax.swing.JTextField();
         gedcomLatitudeTextField = new javax.swing.JTextField();
-        gedcomTownTextField = new javax.swing.JTextField();
+        gedcomCityTextField = new javax.swing.JTextField();
         gedcomZipCodeLabel = new javax.swing.JLabel();
         gedcomCountryLabel = new javax.swing.JLabel();
         gedcomStateTextField = new javax.swing.JTextField();
@@ -69,8 +85,6 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomParishTextField = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
         linkToPlaceButton = new javax.swing.JButton();
-        editPlaceButton = new javax.swing.JButton();
-        addPlaceButton = new javax.swing.JButton();
 
         gedcomLatitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         gedcomLatitudeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.gedcomLatitudeLabel.text"), new Object[] {})); // NOI18N
@@ -79,13 +93,11 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomParishLabel.setText("Parish"); // NOI18N
 
         gedcomLongitudeTextField.setColumns(16);
-        gedcomLongitudeTextField.setEditable(false);
 
         gedcomCountyTextField.setColumns(16);
-        gedcomCountyTextField.setEditable(false);
 
-        gedcomTownLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        gedcomTownLabel.setText("Town"); // NOI18N
+        gedcomCityLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        gedcomCityLabel.setText("City"); // NOI18N
 
         gedcomHamletLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         gedcomHamletLabel.setText("Hamlet"); // NOI18N
@@ -97,10 +109,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomStateLabel.setText("State"); // NOI18N
 
         gedcomHamletTextField.setColumns(16);
-        gedcomHamletTextField.setEditable(false);
 
         gedcomGeoIDTextField.setColumns(16);
-        gedcomGeoIDTextField.setEditable(false);
 
         gedcomCountyLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         gedcomCountyLabel.setText("County"); // NOI18N
@@ -109,13 +119,10 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomGeoIdLabel.setText("Geo ID"); // NOI18N
 
         gedcomZipCodeTextField.setColumns(16);
-        gedcomZipCodeTextField.setEditable(false);
 
         gedcomLatitudeTextField.setColumns(16);
-        gedcomLatitudeTextField.setEditable(false);
 
-        gedcomTownTextField.setColumns(16);
-        gedcomTownTextField.setEditable(false);
+        gedcomCityTextField.setColumns(16);
 
         gedcomZipCodeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         gedcomZipCodeLabel.setText("Zip Code "); // NOI18N
@@ -124,13 +131,10 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomCountryLabel.setText("Country"); // NOI18N
 
         gedcomStateTextField.setColumns(16);
-        gedcomStateTextField.setEditable(false);
 
         gedcomCountryTextField.setColumns(16);
-        gedcomCountryTextField.setEditable(false);
 
         gedcomParishTextField.setColumns(16);
-        gedcomParishTextField.setEditable(false);
 
         jToolBar1.setRollover(true);
 
@@ -146,26 +150,6 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         });
         jToolBar1.add(linkToPlaceButton);
 
-        editPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editPlaceButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.editPlaceButton.text"), new Object[] {})); // NOI18N
-        editPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.editPlaceButton.toolTipText"), new Object[] {})); // NOI18N
-        editPlaceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editPlaceButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(editPlaceButton);
-
-        addPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addPlaceButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.addPlaceButton.text"), new Object[] {})); // NOI18N
-        addPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.addPlaceButton.toolTipText"), new Object[] {})); // NOI18N
-        addPlaceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addPlaceButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(addPlaceButton);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -174,7 +158,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(gedcomHamletLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-                    .addComponent(gedcomTownLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                    .addComponent(gedcomCityLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                     .addComponent(gedcomCountyLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                     .addComponent(gedcomStateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                     .addComponent(gedcomLatitudeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE))
@@ -184,7 +168,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(gedcomLatitudeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                             .addComponent(gedcomStateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(gedcomTownTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                            .addComponent(gedcomCityTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                             .addComponent(gedcomCountyTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
                         .addGap(16, 16, 16))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -222,8 +206,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(gedcomZipCodeLabel)
                     .addComponent(gedcomZipCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gedcomTownLabel)
-                    .addComponent(gedcomTownTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(gedcomCityLabel)
+                    .addComponent(gedcomCityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(gedcomGeoIdLabel)
@@ -265,59 +249,16 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
-                addPlaceButton.setVisible(false);
                 linkToPlaceButton.setVisible(false);
-                editPlaceButton.setVisible(true);
                 set(mRoot, mPlace);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
     }//GEN-LAST:event_linkToPlaceButtonActionPerformed
-
-    private void editPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
-        PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        PropertyPlace place = (PropertyPlace) mRoot.getProperty(PropertyPlace.TAG);
-        placeEditorPanel.set(place);
-        DialogManager.ADialog placeEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
-                placeEditorPanel);
-        placeEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-        if (placeEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            mPlace = placeEditorPanel.commit();
-            set(mRoot, mPlace);
-        }
-    }//GEN-LAST:event_editPlaceButtonActionPerformed
-
-    private void addPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPlaceButtonActionPerformed
-        try {
-            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    mPlace = (PropertyPlace) mRoot.addProperty("PLAC", "");
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
-            PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-            placeEditorPanel.set(mPlace);
-
-            DialogManager.ADialog placeEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.create.title"),
-                    placeEditorPanel);
-            placeEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-            if (placeEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mPlace = placeEditorPanel.commit();
-                set(mRoot, mPlace);
-            }
-        }
-    }//GEN-LAST:event_addPlaceButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addPlaceButton;
-    private javax.swing.JButton editPlaceButton;
+    private javax.swing.JLabel gedcomCityLabel;
+    private javax.swing.JTextField gedcomCityTextField;
     private javax.swing.JLabel gedcomCountryLabel;
     private javax.swing.JTextField gedcomCountryTextField;
     private javax.swing.JLabel gedcomCountyLabel;
@@ -334,8 +275,6 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
     private javax.swing.JTextField gedcomParishTextField;
     private javax.swing.JLabel gedcomStateLabel;
     private javax.swing.JTextField gedcomStateTextField;
-    private javax.swing.JLabel gedcomTownLabel;
-    private javax.swing.JTextField gedcomTownTextField;
     private javax.swing.JLabel gedcomZipCodeLabel;
     private javax.swing.JTextField gedcomZipCodeTextField;
     private javax.swing.JToolBar jToolBar1;
@@ -355,9 +294,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         if (place != null) {
             mPlaceFormat = PropertyPlace.getFormat(place.getGedcom());
 
-            addPlaceButton.setVisible(false);
             linkToPlaceButton.setVisible(false);
-            editPlaceButton.setVisible(true);
 
             try {
                 if (!modulePreferences.nodeExists(place.getGedcom().getName())) {
@@ -395,79 +332,122 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
 
-            JComponent gedcomFields[][] = {
-                {gedcomHamletLabel, gedcomHamletTextField},
-                {gedcomParishLabel, gedcomParishTextField},
-                {gedcomTownLabel, gedcomTownTextField},
-                {gedcomZipCodeLabel, gedcomZipCodeTextField},
-                {gedcomGeoIdLabel, gedcomGeoIDTextField},
-                {gedcomCountyLabel, gedcomCountyTextField},
-                {gedcomStateLabel, gedcomStateTextField},
-                {gedcomCountryLabel, gedcomCountryTextField}
-            };
-
             for (int index = 0; index < mPlaceOrder.length; index++) {
                 if (mPlaceOrder[index] != -1) {
                     if (mPlaceOrder[index] < mPlaceFormat.length) {
-                        ((javax.swing.JLabel) (gedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
-                        ((javax.swing.JTextField) (gedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
+                        ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
+                        AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], Arrays.asList(place.getAllJurisdictions(mPlaceOrder[index], true)), false);
                     }
                 } else {
-                    ((javax.swing.JLabel) (gedcomFields[index][0])).setText("");
-                    gedcomFields[index][1].setVisible(false);
+                    ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
+                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
+                    mGedcomFields[index][1].setVisible(false);
+                }
+            }
+            updatePlace(place, -1);
+        } else {
+            linkToPlaceButton.setVisible(true);
+        }
+
+        gedcomHamletTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                mPlaceModified = true;
+                PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
+                if (sameChoices.length > 0) {
+                    updatePlace(sameChoices[0], 0);
                 }
             }
 
-            Property latitude = null;
-            Property longitude = null;
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mPlaceModified = true;
+            }
 
-            if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                Property map = mPlace.getProperty("MAP");
-                if (map != null) {
-                    latitude = map.getProperty("LATI");
-                    longitude = map.getProperty("LONG");
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                mPlaceModified = true;
+                PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
+                if (sameChoices.length > 0) {
+                    updatePlace(sameChoices[0], 0);
                 }
-            } else {
-                Property map = mPlace.getProperty("_MAP");
-                if (map != null) {
-                    latitude = map.getProperty("_LATI");
-                    longitude = map.getProperty("_LONG");
+            }
+        });
+        gedcomCityTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                mPlaceModified = true;
+                PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[1], gedcomCityTextField.getText());
+                if (sameChoices.length > 0) {
+                    updatePlace(sameChoices[0], 1);
                 }
             }
 
-            if (latitude != null && longitude != null) {
-                gedcomLatitudeTextField.setText(latitude.getValue());
-                gedcomLongitudeTextField.setText(longitude.getValue());
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mPlaceModified = true;
+            }
 
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                mPlaceModified = true;
+                PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[1], gedcomCityTextField.getText());
+                if (sameChoices.length > 0) {
+                    updatePlace(sameChoices[0], 1);
+                }
+            }
+        });
+    }
+
+    private void updatePlace(PropertyPlace place, int editedIndex) {
+
+        for (int index = 1; index < mPlaceOrder.length; index++) {
+            if (mPlaceOrder[index] != -1 && index != editedIndex) {
+                if (mPlaceOrder[index] < mPlaceFormat.length) {
+                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(place.getJurisdiction(mPlaceOrder[index]));
+                }
             } else {
-                gedcomLatitudeTextField.setText("");
-                gedcomLongitudeTextField.setText("");
+                ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
+            }
+        }
+
+        Property latitude = null;
+        Property longitude = null;
+
+        if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            Property map = mPlace.getProperty("MAP");
+            if (map != null) {
+                latitude = map.getProperty("LATI");
+                longitude = map.getProperty("LONG");
             }
         } else {
-            addPlaceButton.setVisible(true);
-            linkToPlaceButton.setVisible(true);
-            editPlaceButton.setVisible(false);
+            Property map = mPlace.getProperty("_MAP");
+            if (map != null) {
+                latitude = map.getProperty("_LATI");
+                longitude = map.getProperty("_LONG");
+            }
+        }
+
+        if (latitude != null && longitude != null) {
+            gedcomLatitudeTextField.setText(latitude.getValue());
+            gedcomLongitudeTextField.setText(longitude.getValue());
+
+        } else {
+            gedcomLatitudeTextField.setText("");
+            gedcomLongitudeTextField.setText("");
         }
     }
 
     public String getPlaceString() {
 
         String placeString = "";
-        javax.swing.JTextField gedcomFields[] = {
-            gedcomHamletTextField,
-            gedcomParishTextField,
-            gedcomTownTextField,
-            gedcomZipCodeTextField,
-            gedcomCountyTextField,
-            gedcomGeoIDTextField,
-            gedcomStateTextField,
-            gedcomCountryTextField
-        };
 
-        javax.swing.JTextField gedcomFieldsOrder[] = new javax.swing.JTextField[8];
+        javax.swing.JTextField gedcomFieldsOrder[] = new javax.swing.JTextField[mPlaceFormat.length];
         for (int index = 0; index < mPlaceOrder.length; index++) {
-            if (mPlaceOrder[index] != -1) {
-                gedcomFieldsOrder[index] = gedcomFields[mPlaceOrder[index]];
+            if (mPlaceOrder[index] != -1 && mPlaceOrder[index] < mPlaceFormat.length) {
+                gedcomFieldsOrder[mPlaceOrder[index]] = (javax.swing.JTextField)mGedcomFields[mPlaceOrder[index]][1];
             }
         }
 
@@ -482,64 +462,72 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
     }
 
     public PropertyPlace commit() {
-        try {
-            mPlace.getGedcom().doUnitOfWork(new UnitOfWork() {
+        if (mPlaceModified) {
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    mPlace.setValue(getPlaceString());
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (mPlace == null) {
+                            mPlace = (PropertyPlace) mRoot.addProperty("PLAC", getPlaceString());
+                        } else {
+                            mPlace.setValue(getPlaceString());
+                        }
 
-                    if (!gedcomLatitudeTextField.getText().isEmpty() && !gedcomLongitudeTextField.getText().isEmpty()) {
-                        Property map;
-                        if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
-                            map = mPlace.getProperty("MAP");
-                            if (map == null) {
-                                map = mPlace.addProperty("MAP", "");
-                                map.addProperty("LATI", gedcomLatitudeTextField.getText());
-                                map.addProperty("LONG", gedcomLongitudeTextField.getText());
-                            } else {
-                                Property latitude = map.getProperty("LATI");
-                                if (latitude == null) {
+                        if (!gedcomLatitudeTextField.getText().isEmpty() && !gedcomLongitudeTextField.getText().isEmpty()) {
+                            Property map;
+                            if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
+                                map = mPlace.getProperty("MAP");
+                                if (map == null) {
+                                    map = mPlace.addProperty("MAP", "");
                                     map.addProperty("LATI", gedcomLatitudeTextField.getText());
-                                } else {
-                                    latitude.setValue(gedcomLatitudeTextField.getText());
-                                }
-                                Property longitude = map.getProperty("LONG");
-                                if (longitude == null) {
                                     map.addProperty("LONG", gedcomLongitudeTextField.getText());
                                 } else {
-                                    longitude.setValue(gedcomLongitudeTextField.getText());
+                                    Property latitude = map.getProperty("LATI");
+                                    if (latitude == null) {
+                                        map.addProperty("LATI", gedcomLatitudeTextField.getText());
+                                    } else {
+                                        latitude.setValue(gedcomLatitudeTextField.getText());
+                                    }
+                                    Property longitude = map.getProperty("LONG");
+                                    if (longitude == null) {
+                                        map.addProperty("LONG", gedcomLongitudeTextField.getText());
+                                    } else {
+                                        longitude.setValue(gedcomLongitudeTextField.getText());
+                                    }
                                 }
-                            }
-                        } else {
-                            map = mPlace.getProperty("_MAP");
-                            if (map == null) {
-                                map = mPlace.addProperty("_MAP", "");
-                                map.addProperty("_LATI", gedcomLatitudeTextField.getText());
-                                map.addProperty("_LONG", gedcomLatitudeTextField.getText());
                             } else {
-                                Property latitude = map.getProperty("_LATI");
-                                if (latitude == null) {
+                                map = mPlace.getProperty("_MAP");
+                                if (map == null) {
+                                    map = mPlace.addProperty("_MAP", "");
                                     map.addProperty("_LATI", gedcomLatitudeTextField.getText());
+                                    map.addProperty("_LONG", gedcomLatitudeTextField.getText());
                                 } else {
-                                    latitude.setValue(gedcomLatitudeTextField.getText());
-                                }
-                                Property longitude = map.getProperty("_LONG");
-                                if (longitude == null) {
-                                    map.addProperty("_LONG", gedcomLongitudeTextField.getText());
-                                } else {
-                                    longitude.setValue(gedcomLongitudeTextField.getText());
+                                    Property latitude = map.getProperty("_LATI");
+                                    if (latitude == null) {
+                                        map.addProperty("_LATI", gedcomLatitudeTextField.getText());
+                                    } else {
+                                        latitude.setValue(gedcomLatitudeTextField.getText());
+                                    }
+                                    Property longitude = map.getProperty("_LONG");
+                                    if (longitude == null) {
+                                        map.addProperty("_LONG", gedcomLongitudeTextField.getText());
+                                    } else {
+                                        longitude.setValue(gedcomLongitudeTextField.getText());
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }); // end of doUnitOfWork
-            return mPlace;
+                }); // end of doUnitOfWork
+                return mPlace;
 
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-            return null;
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+                return null;
+            }
+        } else {
+            return mPlace;
         }
     }
 }
