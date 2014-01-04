@@ -207,6 +207,7 @@ public class EventsListPanel extends javax.swing.JPanel {
 
                 if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     eventEditorPanel.commit();
+                    mEventsTableModel.update();
                 } else {
                     while (mRoot.getGedcom().canUndo()) {
                         mRoot.getGedcom().undoUnitOfWork(false);
@@ -228,7 +229,7 @@ public class EventsListPanel extends javax.swing.JPanel {
 
     public void setEventsList(Property root, List<PropertyEvent> eventsList) {
         this.mRoot = root;
-        mEventsTableModel.update(eventsList);
+        mEventsTableModel.addAll(eventsList);
     }
 
     public PropertyEvent getSelectedEvent() {
