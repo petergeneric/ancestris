@@ -43,14 +43,14 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
     public GedcomPlacePanel() {
         initComponents();
         mGedcomFields = new JComponent[][]{
-            {gedcomHamletLabel, gedcomHamletTextField},
-            {gedcomParishLabel, gedcomParishTextField},
-            {gedcomCityLabel, gedcomCityTextField},
-            {gedcomZipCodeLabel, gedcomZipCodeTextField},
-            {gedcomGeoIdLabel, gedcomGeoIDTextField},
-            {gedcomCountyLabel, gedcomCountyTextField},
-            {gedcomStateLabel, gedcomStateTextField},
-            {gedcomCountryLabel, gedcomCountryTextField}
+            {gedcomHamletLabel, gedcomHamletTextField}, // hamlet
+            {gedcomParishLabel, gedcomParishTextField}, // parish
+            {gedcomCityLabel, gedcomCityTextField}, // city,
+            {gedcomZipCodeLabel, gedcomZipCodeTextField},// zip Code
+            {gedcomGeoIdLabel, gedcomGeoIDTextField}, // geo ID,
+            {gedcomCountyLabel, gedcomCountyTextField}, // county,
+            {gedcomStateLabel, gedcomStateTextField}, // state
+            {gedcomCountryLabel, gedcomCountryTextField} // country
         };
     }
 
@@ -86,6 +86,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomParishTextField = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
         linkToPlaceButton = new javax.swing.JButton();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        parametersButton = new javax.swing.JButton();
 
         gedcomLatitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         gedcomLatitudeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.gedcomLatitudeLabel.text"), new Object[] {})); // NOI18N
@@ -150,6 +152,20 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
             }
         });
         jToolBar1.add(linkToPlaceButton);
+        jToolBar1.add(filler1);
+
+        parametersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/parameters.png"))); // NOI18N
+        parametersButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.parametersButton.text"), new Object[] {})); // NOI18N
+        parametersButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.parametersButton.toolTipText"), new Object[] {})); // NOI18N
+        parametersButton.setFocusable(false);
+        parametersButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        parametersButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        parametersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                parametersButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(parametersButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -257,7 +273,44 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_linkToPlaceButtonActionPerformed
+
+    private void parametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parametersButtonActionPerformed
+        PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
+
+        DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
+                gedcomPlaceFormatEditorPanel);
+        gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
+
+        if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            Preferences modulePreferences = NbPreferences.forModule(PlaceEditorPanel.class);
+            Preferences node;
+            mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
+            node = modulePreferences.node(mPlace.getGedcom().getName());
+            node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
+            node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
+            node.putInt("placeOrder.index.city", mPlaceOrder[2]);
+            node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
+            node.putInt("placeOrder.index.geoID", mPlaceOrder[4]);
+            node.putInt("placeOrder.index.county", mPlaceOrder[5]);
+            node.putInt("placeOrder.index.state", mPlaceOrder[6]);
+            node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
+
+            for (int index = 0; index < mPlaceOrder.length; index++) {
+                if (mPlaceOrder[index] != -1) {
+                    ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
+                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
+                    AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], Arrays.asList(mPlace.getAllJurisdictions(mPlaceOrder[index], true)), false);
+                } else {
+                    ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
+                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
+                    mGedcomFields[index][1].setVisible(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_parametersButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel gedcomCityLabel;
     private javax.swing.JTextField gedcomCityTextField;
     private javax.swing.JLabel gedcomCountryLabel;
@@ -280,6 +333,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
     private javax.swing.JTextField gedcomZipCodeTextField;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton linkToPlaceButton;
+    private javax.swing.JButton parametersButton;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -311,9 +365,9 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                         mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
                         node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
                         node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
-                        node.putInt("placeOrder.index.town", mPlaceOrder[2]);
+                        node.putInt("placeOrder.index.city", mPlaceOrder[2]);
                         node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
-                        node.putInt("placeOrder.index.townCode", mPlaceOrder[4]);
+                        node.putInt("placeOrder.index.geoID", mPlaceOrder[4]);
                         node.putInt("placeOrder.index.county", mPlaceOrder[5]);
                         node.putInt("placeOrder.index.state", mPlaceOrder[6]);
                         node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
@@ -322,9 +376,9 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     node = modulePreferences.node(place.getGedcom().getName());
                     mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", mPlaceOrder[0]);
                     mPlaceOrder[1] = node.getInt("placeOrder.index.parish", mPlaceOrder[1]);
-                    mPlaceOrder[2] = node.getInt("placeOrder.index.town", mPlaceOrder[2]);
+                    mPlaceOrder[2] = node.getInt("placeOrder.index.city", mPlaceOrder[2]);
                     mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", mPlaceOrder[3]);
-                    mPlaceOrder[4] = node.getInt("placeOrder.index.townCode", mPlaceOrder[4]);
+                    mPlaceOrder[4] = node.getInt("placeOrder.index.geoID", mPlaceOrder[4]);
                     mPlaceOrder[5] = node.getInt("placeOrder.index.county", mPlaceOrder[5]);
                     mPlaceOrder[6] = node.getInt("placeOrder.index.state", mPlaceOrder[6]);
                     mPlaceOrder[7] = node.getInt("placeOrder.index.Country", mPlaceOrder[7]);
@@ -485,10 +539,9 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         String placeString = "";
 
         javax.swing.JTextField gedcomFieldsOrder[] = new javax.swing.JTextField[mPlaceFormat.length];
-        int placeFormatindex = 0;
         for (int placeOrderindex = 0; placeOrderindex < mPlaceOrder.length; placeOrderindex++) {
-            if (mPlaceOrder[placeOrderindex] != -1 && placeFormatindex < mPlaceFormat.length) {
-                gedcomFieldsOrder[placeFormatindex++] = (javax.swing.JTextField) mGedcomFields[mPlaceOrder[placeOrderindex]][1];
+            if (mPlaceOrder[placeOrderindex] != -1) {
+                gedcomFieldsOrder[mPlaceOrder[placeOrderindex]] = (javax.swing.JTextField) mGedcomFields[placeOrderindex][1];
             }
         }
 
