@@ -127,12 +127,18 @@ public class ChildrenListPanel extends javax.swing.JPanel {
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mIndividual = (Indi) gedcom.createEntity(Gedcom.INDI);
+                    String lastName = null;
+                    if (mRoot.getHusband() != null) {
+                        lastName = mRoot.getHusband().getLastName();
+                    } else if (mRoot.getWife() != null) {
+                        lastName = mRoot.getWife().getLastName();
+                    }
+
+                    mIndividual.setName("", lastName);
+                    mRoot.addChild(mIndividual);
                 }
             }); // end of doUnitOfWork
 
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
             individualEditorPanel.set(mIndividual);
 
@@ -146,6 +152,8 @@ public class ChildrenListPanel extends javax.swing.JPanel {
             } else {
                 mRoot.getGedcom().undoUnitOfWork(false);
             }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_addChildrenButtonActionPerformed
 
