@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
@@ -300,7 +301,10 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                 if (mPlaceOrder[index] != -1) {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
                     ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
-                    AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], Arrays.asList(mPlace.getAllJurisdictions(mPlaceOrder[index], true)), false);
+                    List<String> jurisdictions = Arrays.asList(mPlace.getAllJurisdictions(mPlaceOrder[index], true));
+                    if (jurisdictions != null) {
+                        AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
+                    }
                 } else {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
                     ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
@@ -391,7 +395,10 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                 if (mPlaceOrder[index] != -1) {
                     if (mPlaceOrder[index] < mPlaceFormat.length) {
                         ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
-                        AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], Arrays.asList(place.getAllJurisdictions(mPlaceOrder[index], true)), false);
+                        List<String> jurisdictions = Arrays.asList(place.getAllJurisdictions(mPlaceOrder[index], true));
+                        if (jurisdictions != null) {
+                            AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
+                        }
                     }
                 } else {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
@@ -499,7 +506,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         for (int index = startIndex; index < mPlaceOrder.length; index++) {
             if (mPlaceOrder[index] != -1) {
                 if (mPlaceOrder[index] < mPlaceFormat.length) {
-                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(place.getJurisdiction(mPlaceOrder[index]));
+                    String jurisdiction = place.getJurisdiction(mPlaceOrder[index]);
+                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(jurisdiction != null ? jurisdiction : "");
                 }
             } else {
                 ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
