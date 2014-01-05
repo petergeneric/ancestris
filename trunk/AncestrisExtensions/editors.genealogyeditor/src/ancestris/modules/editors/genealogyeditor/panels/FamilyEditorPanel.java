@@ -13,6 +13,26 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
+
+/*
+ * n @<XREF:FAM>@ FAM
+ * +1 RESN <RESTRICTION_NOTICE>
+ * +1 <<FAMILY_EVENT_STRUCTURE>>
+ * +1 HUSB @<XREF:INDI>@
+ * +1 WIFE @<XREF:INDI>@
+ * +1 CHIL @<XREF:INDI>@
+ * +1 NCHI <COUNT_OF_CHILDREN>
+ * +1 SUBM @<XREF:SUBM>@
+ * +1 <<LDS_SPOUSE_SEALING>>
+ * +1 REFN <USER_REFERENCE_NUMBER>
+ * +2 TYPE <USER_REFERENCE_TYPE>
+ * +1 RIN <AUTOMATED_RECORD_ID>
+ * +1 <<CHANGE_DATE>>
+ * +1 <<NOTE_STRUCTURE>>
+ * +1 <<SOURCE_CITATION>>
+ * +1 <<MULTIMEDIA_LINK>>
+ *
+ */
 public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private Fam mFamily;
@@ -39,6 +59,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         familyIDTextField = new javax.swing.JTextField();
         familyIDLabel = new javax.swing.JLabel();
+        privateRecordToggleButton = new javax.swing.JToggleButton();
         fatherPanel = new javax.swing.JPanel();
         fatherToolBar = new javax.swing.JToolBar();
         addHusbandButton = new javax.swing.JButton();
@@ -78,21 +99,27 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
         familyIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.familyIDLabel.text"), new Object[] {})); // NOI18N
 
+        privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(505, Short.MAX_VALUE)
                 .addComponent(familyIDLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(familyIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(familyIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(privateRecordToggleButton)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(familyIDLabel)
-                .addComponent(familyIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(familyIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(privateRecordToggleButton))
         );
 
         fatherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.fatherPanel.border.title"), new Object[] {}))); // NOI18N
@@ -148,7 +175,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     .addComponent(husbandDeathDateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(husbandNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                    .addComponent(husbandNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                     .addComponent(husbandBirthDateTextField)
                     .addComponent(husbandDeathDateTextField))
                 .addContainerGap())
@@ -224,7 +251,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     .addGroup(motherPanelLayout.createSequentialGroup()
                         .addComponent(wifeBirthDateLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wifeBirthDateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                        .addComponent(wifeBirthDateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(motherPanelLayout.createSequentialGroup()
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,11 +290,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         childrensPanel.setLayout(childrensPanelLayout);
         childrensPanelLayout.setHorizontalGroup(
             childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrensListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+            .addComponent(childrensListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
         );
         childrensPanelLayout.setVerticalGroup(
             childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrensListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+            .addComponent(childrensListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.childrensPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrensPanel); // NOI18N
@@ -278,11 +305,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         eventsPanel.setLayout(eventsPanelLayout);
         eventsPanelLayout.setHorizontalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
@@ -293,11 +320,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Sources", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourcesPanel); // NOI18N
@@ -306,11 +333,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -319,11 +346,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
@@ -353,7 +380,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -532,6 +559,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
+    private javax.swing.JToggleButton privateRecordToggleButton;
     private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
     private javax.swing.JPanel sourcesPanel;
     private javax.swing.JLabel wifeBirthDateLabel;
@@ -548,9 +576,28 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     public void set(Fam family) {
         this.mFamily = family;
 
+        /*
+         * n @<XREF:FAM>@ FAM
+         */
         familyIDTextField.setText(mFamily.getId());
 
-        // Father Panel
+        /*
+         * +1 RESN <RESTRICTION_NOTICE>
+         */
+        Property restrictionNotice = mFamily.getProperty("RESN", true);
+        if (restrictionNotice != null) {
+            privateRecordToggleButton.setSelected(true);
+        }
+
+        /*
+         * +1 <<FAMILY_EVENT_STRUCTURE>>
+         */
+        List<PropertyEvent> eventsList = mFamily.getProperties(PropertyEvent.class);
+        eventsListPanel.setEventsList(mFamily, eventsList);
+
+        /*
+         * +1 HUSB @<XREF:INDI>@
+         */
         mHusband = mFamily.getHusband();
         if (mHusband != null) {
             husbandNameTextField.setText(mHusband.getName());
@@ -558,7 +605,9 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             husbandDeathDateTextField.setText(mHusband.getDeathAsString());
         }
 
-        // Mother Panel
+        /*
+         * +1 WIFE @<XREF:INDI>@
+         */
         mWife = mFamily.getWife();
         if (mWife != null) {
             wifeNameTextField.setText(mWife.getName());
@@ -566,15 +615,47 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             wifeDeathDateTextField.setText(mWife.getDeathAsString());
         }
 
+        /*
+         * +1 CHIL @<XREF:INDI>@
+         */
         childrensListPanel.setChildrensList(mFamily, Arrays.asList(mFamily.getChildren()));
 
-        List<PropertyEvent> eventsList = mFamily.getProperties(PropertyEvent.class);
-        eventsListPanel.setEventsList(mFamily, eventsList);
+        /*
+         * +1 NCHI <COUNT_OF_CHILDREN>
+         * not used
+         *
+         * +1 SUBM @<XREF:SUBM>@
+         * not used
+         *
+         * +1 <<LDS_SPOUSE_SEALING>>
+         * not used
+         *
+         * +1 REFN <USER_REFERENCE_NUMBER>
+         * not used
+         *
+         * +2 TYPE <USER_REFERENCE_TYPE>
+         * not used
+         *
+         * +1 RIN <AUTOMATED_RECORD_ID>
+         * not used
+         *
+         * +1 <<CHANGE_DATE>>
+         * Handle by gedcom doUnitOfWork
+         */
 
+        /*
+         * +1 <<SOURCE_CITATION>>
+         */
         sourceCitationsListPanel.set(mFamily, Arrays.asList(mFamily.getProperties("SOUR")));
 
+        /*
+         * +1 <<NOTE_STRUCTURE>>
+         */
         noteCitationsListPanel.setNotesList(mFamily, Arrays.asList(mFamily.getProperties("NOTE")));
 
+        /*
+         * +1 <<MULTIMEDIA_LINK>>
+         */
         multimediaObjectCitationsListPanel.set(mFamily, Arrays.asList(mFamily.getProperties("OBJE")));
     }
 
@@ -584,12 +665,23 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    eventsListPanel.commit();
-                    sourceCitationsListPanel.commit();
-                    noteCitationsListPanel.commit();
-                    multimediaObjectCitationsListPanel.commit();
+                    Property restrictionNotice = mFamily.getProperty("RESN", true);
+                    if (privateRecordToggleButton.isSelected()) {
+                        if (restrictionNotice == null) {
+                            mFamily.addProperty("RESN", "confidential");
+                        }
+                    } else {
+                        if (restrictionNotice != null) {
+                            mFamily.delProperty(restrictionNotice);
+                        }
+                    }
                 }
             }); // end of doUnitOfWork
+            
+            eventsListPanel.commit();
+            sourceCitationsListPanel.commit();
+            noteCitationsListPanel.commit();
+            multimediaObjectCitationsListPanel.commit();
 
             return mFamily;
         } catch (GedcomException ex) {
