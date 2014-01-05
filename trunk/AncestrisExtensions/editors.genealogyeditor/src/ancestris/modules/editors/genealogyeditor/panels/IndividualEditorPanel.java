@@ -3,10 +3,37 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import genj.gedcom.*;
 import java.util.Arrays;
 import java.util.List;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author dominique
+ */
+
+/*
+ * n @XREF:INDI@ INDI
+ * +1 RESN <RESTRICTION_NOTICE>
+ * +1 <<PERSONAL_NAME_STRUCTURE>>
+ * +1 SEX <SEX_VALUE>
+ * +1 <<INDIVIDUAL_EVENT_STRUCTURE>>
+ * +1 <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>
+ * +1 <<LDS_INDIVIDUAL_ORDINANCE>>
+ * +1 <<CHILD_TO_FAMILY_LINK>>
+ * +1 <<SPOUSE_TO_FAMILY_LINK>>
+ * +1 SUBM @<XREF:SUBM>@
+ * +1 <<ASSOCIATION_STRUCTURE>>
+ * +1 ALIA @<XREF:INDI>@
+ * +1 ANCI @<XREF:SUBM>@
+ * +1 DESI @<XREF:SUBM>@
+ * +1 RFN <PERMANENT_RECORD_FILE_NUMBER>
+ * +1 AFN <ANCESTRAL_FILE_NUMBER>
+ * +1 REFN <USER_REFERENCE_NUMBER>
+ * +2 TYPE <USER_REFERENCE_TYPE>
+ * +1 RIN <AUTOMATED_RECORD_ID>
+ * +1 <<CHANGE_DATE>>
+ * +1 <<NOTE_STRUCTURE>>
+ * +1 <<SOURCE_CITATION>>
+ * +1 <<MULTIMEDIA_LINK>>
  */
 public final class IndividualEditorPanel extends javax.swing.JPanel {
 
@@ -34,6 +61,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         nameEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel();
         sexBeanPanel = new ancestris.modules.editors.genealogyeditor.beans.SexBean();
         imageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
+        privateRecordToggleButton = new javax.swing.JToggleButton();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
         eventsPanel = new javax.swing.JPanel();
         eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel();
@@ -75,6 +103,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             .addGap(0, 120, Short.MAX_VALUE)
         );
 
+        privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
+
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
         generalPanelLayout.setHorizontalGroup(
@@ -84,16 +114,18 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addComponent(imageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(generalPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(generalPanelLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(sexBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(individualIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18))
+                        .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(privateRecordToggleButton))
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -103,7 +135,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                     .addComponent(sexBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(individualIDLabel)))
+                        .addComponent(individualIDLabel)
+                        .addComponent(privateRecordToggleButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nameEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(imageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -264,6 +297,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel namesPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
+    private javax.swing.JToggleButton privateRecordToggleButton;
     private javax.swing.JPanel referencesPanel;
     private ancestris.modules.editors.genealogyeditor.beans.SexBean sexBeanPanel;
     private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
@@ -282,8 +316,23 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
      */
     public void set(Indi individual) {
         this.mIndividual = individual;
-
+        /*
+         * n @XREF:INDI@ INDI
+         */
         individualIDTextField.setText(individual.getId());
+
+        /*
+         * +1 RESN <RESTRICTION_NOTICE>
+         * not used
+         */
+        Property restrictionNotice = individual.getProperty("RESN", true);
+        if (restrictionNotice != null) {
+            privateRecordToggleButton.setSelected(true);
+        }
+
+        /*
+         * +1 <<PERSONAL_NAME_STRUCTURE>>
+         */
         List<PropertyName> namesList = individual.getProperties(PropertyName.class);
         if (namesList.size() > 0) {
             PropertyName name = namesList.remove(0);
@@ -295,6 +344,9 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         }
         namesListPanel.setNamesList(individual, namesList);
 
+        /*
+         * +1 SEX <SEX_VALUE>
+         */
         PropertySex sex = (PropertySex) individual.getProperty("SEX", true);
         if (sex == null) {
             individual.setSex(PropertySex.UNKNOWN);
@@ -302,26 +354,89 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         }
         sexBeanPanel.set(individual, sex);
 
+        /*
+         * +1 <<INDIVIDUAL_EVENT_STRUCTURE>>
+         */
         List<PropertyEvent> eventsList = individual.getProperties(PropertyEvent.class);
         for (Fam family : individual.getFamiliesWhereSpouse()) {
             eventsList.addAll(family.getProperties(PropertyEvent.class));
         }
         eventsListPanel.setEventsList(individual, eventsList);
 
+        /*
+         * +1 <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>
+         * Not used
+         */
+
+        /*
+         * +1 <<LDS_INDIVIDUAL_ORDINANCE>>
+         * Not Used
+         */
+
+        /*
+         * +1 <<CHILD_TO_FAMILY_LINK>>
+         */
         List<Fam> familiesChildList = Arrays.asList(individual.getFamiliesWhereChild());
         familiesChildListPanel.setFamiliesList(individual, familiesChildList);
 
+        /*
+         * +1 <<SPOUSE_TO_FAMILY_LINK>>
+         */
         List<Fam> familiesSpouseList = Arrays.asList(individual.getFamiliesWhereSpouse());
         familiesSpouseListPanel.setFamiliesList(individual, familiesSpouseList);
 
-        Property[] sourcesList = individual.getProperties("SOUR");
-        sourceCitationsListPanel.set(individual, Arrays.asList(sourcesList));
+        /*
+         * +1 SUBM @<XREF:SUBM>@
+         * Not used
+         */
 
-        noteCitationsListPanel.setNotesList(individual, Arrays.asList(individual.getProperties("NOTE")));
-
+        /*
+         * +1 <<ASSOCIATION_STRUCTURE>>
+         */
         associationsListPanel.setAssociationsList(individual, individual.getProperties(PropertyAssociation.class));
 
+        /*
+         * +1 ALIA @<XREF:INDI>@
+         * Not used
+         *
+         * +1 ANCI @<XREF:SUBM>@
+         * Not used
+         *
+         * +1 DESI @<XREF:SUBM>@
+         * Not used
+         *
+         * +1 RFN <PERMANENT_RECORD_FILE_NUMBER>
+         * Not used
+         *
+         * +1 AFN <ANCESTRAL_FILE_NUMBER>
+         * Not used
+         *
+         * +1 REFN <USER_REFERENCE_NUMBER>
+         * Not used
+         *
+         * +2 TYPE <USER_REFERENCE_TYPE>
+         * Not used
+         *
+         * +1 RIN <AUTOMATED_RECORD_ID>
+         * Not used
+         *
+         * +1 <<CHANGE_DATE>>
+         * Handle by gedcom doUnitOfWork
+         */
 
+        /*
+         * +1 <<NOTE_STRUCTURE>>
+         */
+        noteCitationsListPanel.setNotesList(individual, Arrays.asList(individual.getProperties("NOTE")));
+
+        /*
+         * +1 <<SOURCE_CITATION>>
+         */
+        sourceCitationsListPanel.set(individual, Arrays.asList(individual.getProperties("SOUR")));
+
+        /*
+         * +1 <<MULTIMEDIA_LINK>>
+         */
         Property multimediaObject = individual.getProperty("OBJE");
         if (multimediaObject != null) {
             imageBean.setImage(individual, multimediaObject);
@@ -332,15 +447,38 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     }
 
     public Indi commit() {
-        nameEditorPanel.commit();
-        imageBean.commit();
-        sexBeanPanel.commit();
-        eventsListPanel.commit();
-        namesListPanel.commit();
-        sourceCitationsListPanel.commit();
-        noteCitationsListPanel.commit();
-        associationsListPanel.commit();
-        multimediaObjectCitationsListPanel.commit();
-        return mIndividual;
+        try {
+            mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    Property restrictionNotice = mIndividual.getProperty("RESN", true);
+                    if (privateRecordToggleButton.isSelected()) {
+                        if (restrictionNotice == null) {
+                            mIndividual.addProperty("RESN", "confidential");
+                        }
+                    } else {
+                        if (restrictionNotice != null) {
+                            mIndividual.delProperty(restrictionNotice);
+                        }
+                    }
+                }
+            }); // end of doUnitOfWork
+            
+            nameEditorPanel.commit();
+            imageBean.commit();
+            sexBeanPanel.commit();
+            eventsListPanel.commit();
+            namesListPanel.commit();
+            sourceCitationsListPanel.commit();
+            noteCitationsListPanel.commit();
+            associationsListPanel.commit();
+            multimediaObjectCitationsListPanel.commit();
+            
+            return mIndividual;
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
     }
 }
