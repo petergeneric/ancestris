@@ -22,21 +22,27 @@
                   <Component id="sourceCitationTabbedPane" max="32767" attributes="0"/>
                   <Component id="SourceReferencePanel" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jLabel5" min="-2" pref="132" max="-2" attributes="0"/>
-                          <Component id="eventTypeLabel" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
-                          <Component id="eventRoleLabel" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jLabel5" pref="115" max="32767" attributes="0"/>
+                          <Component id="eventTypeLabel" max="32767" attributes="0"/>
+                          <Component id="eventRoleLabel" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="eventTypeComboBox" max="32767" attributes="0"/>
-                          <Component id="eventRoleComboBox" max="32767" attributes="0"/>
                           <Component id="dataQualityComboBox" max="32767" attributes="0"/>
+                          <Component id="eventRoleComboBox" max="32767" attributes="0"/>
+                          <Component id="eventTypeComboBox" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="recordingDateLabel" min="-2" pref="118" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="recordingDateLabel" pref="118" max="32767" attributes="0"/>
+                          <Component id="pageLabel" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="recordingDate" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="recordingDate" max="32767" attributes="0"/>
+                          <Component id="pageTextField" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -49,17 +55,21 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="SourceReferencePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="eventTypeLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="recordingDateLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="eventTypeComboBox" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="eventTypeLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="2" groupAlignment="3" attributes="0">
+                      <Component id="pageTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="pageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="eventTypeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="eventRoleLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="eventRoleComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="recordingDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -67,9 +77,9 @@
                           <Component id="dataQualityComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="recordingDate" min="-2" pref="93" max="-2" attributes="0"/>
+                  <Component id="recordingDate" pref="66" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="sourceCitationTabbedPane" min="-2" pref="197" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -92,10 +102,6 @@
                   <Component id="deleteSourceButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="SourceReferencedTitleTextField" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pageLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pageTextField" min="-2" pref="44" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -107,10 +113,6 @@
                   <Component id="SourceReferencedTitleTextField" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="editSourceButton" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                   <Component id="addSourceButton" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
-                  <Group type="103" alignment="2" groupAlignment="3" attributes="0">
-                      <Component id="pageTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="pageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
               </Group>
           </Group>
         </DimensionLayout>
@@ -147,21 +149,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteSourceButtonActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="pageLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceCitationEditorPanel.pageLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="pageTextField">
-          <Properties>
-            <Property name="columns" type="int" value="4" postCode="pageTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                mPageModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPageModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                mPageModified = true;&#xa;            }&#xa;});"/>
-            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceCitationEditorPanel.pageTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="linkToSourceButton">
           <Properties>
@@ -392,6 +379,22 @@
       </Properties>
     </Component>
     <Component class="ancestris.modules.beans.ADateBean" name="recordingDate">
+    </Component>
+    <Component class="javax.swing.JLabel" name="pageLabel">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceCitationEditorPanel.pageLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="pageTextField">
+      <Properties>
+        <Property name="columns" type="int" value="4" postCode="pageTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                mPageModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPageModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                mPageModified = true;&#xa;            }&#xa;});"/>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceCitationEditorPanel.pageTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
