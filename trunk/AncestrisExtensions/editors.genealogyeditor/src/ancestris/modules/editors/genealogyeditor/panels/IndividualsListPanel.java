@@ -135,11 +135,12 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     private void editIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editIndividualButtonActionPerformed
         int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
         if (rowIndex != -1) {
+            Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-            individualEditorPanel.set(mIndividualsTableModel.getValueAt(rowIndex));
+            individualEditorPanel.set(individual);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", individual),
                     individualEditorPanel);
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
@@ -161,11 +162,12 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
             if (rowIndex != -1) {
+                Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
                 IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-                individualEditorPanel.set(mIndividualsTableModel.getValueAt(rowIndex));
+                individualEditorPanel.set(individual);
 
                 DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", individual),
                         individualEditorPanel);
                 individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
