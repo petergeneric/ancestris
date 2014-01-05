@@ -3,17 +3,104 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.*;
 import java.util.Arrays;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author dominique
  */
+
+/*
+ *
+ * EVENT_DETAIL:=
+ * n TYPE <EVENT_OR_FACT_CLASSIFICATION>
+ * n DATE <DATE_VALUE>
+ * n <<PLACE_STRUCTURE>>
+ * n <<ADDRESS_STRUCTURE>>
+ * n AGNC <RESPONSIBLE_AGENCY>
+ * n RELI <RELIGIOUS_AFFILIATION>
+ * n CAUS <CAUSE_OF_EVENT>
+ * n RESN <RESTRICTION_NOTICE>
+ * n <<NOTE_STRUCTURE>>
+ * n <<SOURCE_CITATION>>
+ * n <<MULTIMEDIA_LINK>>
+ *
+ * INDIVIDUAL_EVENT_DETAIL:=
+ * n <<EVENT_DETAIL>>
+ * n AGE <AGE_AT_EVENT>
+ *
+ * INDIVIDUAL_EVENT_STRUCTURE:=
+ * [
+ * n [ BIRT | CHR ] [Y|<NULL>]
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * +1 FAMC @<XREF:FAM>@
+ * |
+ * n DEAT [Y|<NULL>]
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * |
+ * n [ BURI | CREM ]
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * |
+ * n ADOP
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * +1 FAMC @<XREF:FAM>@
+ * +2 ADOP <ADOPTED_BY_WHICH_PARENT>
+ * |
+ * n [ BAPM | BARM | BASM | BLES ]
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * |
+ * n [ CHRA | CONF | FCOM | ORDN ]
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * |
+ * n [ NATU | EMIG | IMMI ]
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * |
+ * n [ CENS | PROB | WILL]
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * |
+ * n [ GRAD | RETI ]
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * |
+ * n EVEN
+ * +1 <<INDIVIDUAL_EVENT_DETAIL>>
+ * ]
+ *
+ * FAMILY_EVENT_DETAIL:=
+ * n HUSB
+ * +1 AGE <AGE_AT_EVENT>
+ * n WIFE
+ * +1 AGE <AGE_AT_EVENT>
+ * n <<EVENT_DETAIL>>
+ *
+ * FAMILY_EVENT_STRUCTURE:=
+ * [
+ * n [ ANUL | CENS | DIV | DIVF ]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n [ ENGA | MARB | MARC ]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n MARR [Y|<NULL>]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n [ MARL | MARS ]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n RESI
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n EVEN [<EVENT_DESCRIPTOR> | <NULL>]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * ]
+ */
 public class EventEditorPanel extends javax.swing.JPanel {
 
     private PropertyEvent mEvent = null;
     private Property mRoot;
-    PropertyPlace mPlace;
+    private PropertyPlace mPlace;
+    private boolean mCauseModified = false;
 
     /**
      * Creates new form EventEditorPanel
@@ -216,19 +303,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
     /**
      * @param event the event to set
      */
-    /*
-     * n TYPE <EVENT_OR_FACT_CLASSIFICATION>
-     * n DATE <DATE_VALUE>
-     * n <<PLACE_STRUCTURE>>
-     * n <<ADDRESS_STRUCTURE>>
-     * n AGNC <RESPONSIBLE_AGENCY>
-     * n RELI <RELIGIOUS_AFFILIATION>
-     * n CAUS <CAUSE_OF_EVENT>
-     * n RESN <RESTRICTION_NOTICE>
-     * n <<NOTE_STRUCTURE>>
-     * n <<SOURCE_CITATION>>
-     * n <<MULTIMEDIA_LINK>>
-     */
     public void set(Property root, PropertyEvent event) {
         this.mRoot = root;
         this.mEvent = event;
@@ -256,6 +330,23 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
             multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
         }
+        eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                mCauseModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mCauseModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                mCauseModified = true;
+            }
+        });
     }
 
     public PropertyEvent commit() {
@@ -266,12 +357,16 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 public void perform(Gedcom gedcom) throws GedcomException {
                     aDateBean.commit();
                     String causeText = eventCauseTextArea.getText();
-                    if (causeText.length() > 0) {
+                    if (mCauseModified) {
                         Property eventCause = mEvent.getProperty("CAUS");
-                        if (eventCause == null) {
-                            mRoot.addProperty("CAUS", causeText);
-                        } else {
-                            eventCause.setValue(causeText);
+                        if (causeText.length() > 0) {
+                            if (eventCause == null) {
+                                mEvent.addProperty("CAUS", causeText);
+                            } else {
+                                eventCause.setValue(causeText);
+                            }
+                        } else if (eventCause != null) {
+                            mRoot.delProperty(eventCause);
                         }
                     }
                 }
