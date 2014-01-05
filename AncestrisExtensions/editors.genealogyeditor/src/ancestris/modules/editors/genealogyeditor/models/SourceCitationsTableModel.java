@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
+import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Source;
@@ -41,9 +42,11 @@ public class SourceCitationsTableModel extends AbstractTableModel {
 
     ArrayList<Property> mSourcesList = new ArrayList<Property>();
     private String[] columnsName = {
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.ID.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.events.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.description.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.events.title")
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.page.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.note.title")
     };
 
     public SourceCitationsTableModel() {
@@ -63,33 +66,60 @@ public class SourceCitationsTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         Property source = mSourcesList.get(row);
         if (source != null) {
-            if (column == 0) {
-                if (source instanceof PropertySource) {
-                    Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
-                    if (targetEntity != null) {
-                        return targetEntity.getId();
+            switch (column) {
+                case 0: {
+                    if (source instanceof PropertySource) {
+                        Property event = source.getProperty("EVEN");
+                        if (event != null) {
+                            return PropertyTag2Name.getTagName(event.getValue());
+                        } else {
+                            return "";
+                        }
                     } else {
                         return "";
                     }
-                } else {
-                    return "";
                 }
-            } else if (column == 1) {
-                if (source instanceof PropertySource) {
-                    Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
-                    if (targetEntity != null) {
-                        return targetEntity.getTitle();
+                case 1: {
+                    if (source instanceof PropertySource) {
+                        Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
+                        if (targetEntity != null) {
+                            return targetEntity.getTitle();
+                        } else {
+                            return "";
+                        }
+                    } else {
+                        return source.getValue();
+                    }
+                }
+                case 2: {
+                    if (source instanceof PropertySource) {
+                        Property page = source.getProperty("PAGE");
+                        if (page != null) {
+                            return page.getValue();
+                        } else {
+                            return "";
+                        }
                     } else {
                         return "";
                     }
-                } else {
-                    return source.getValue();
                 }
-            } else {
-                Property propertyByPath = source.getPropertyByPath("DATA:EVEN");
-                if (propertyByPath != null) {
-                    return propertyByPath.getDisplayValue();
-                } else {
+                case 3: {
+                    Property[] multimediaObjects = source.getProperties("OBJE");
+                    if (multimediaObjects.length > 0) {
+                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.yes");
+                    } else {
+                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.no");
+                    }
+                }
+                 case 4: {
+                    Property[] notes = source.getProperties("NOTE");
+                    if (notes.length > 0) {
+                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.note.value.yes");
+                    } else {
+                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.note.value.no");
+                    }
+                }
+               default: {
                     return "";
                 }
             }
