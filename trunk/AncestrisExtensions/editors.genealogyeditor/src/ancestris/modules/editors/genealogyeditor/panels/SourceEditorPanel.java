@@ -8,29 +8,29 @@ import org.openide.util.Exceptions;
 
 /*
  * SOURCE_RECORD:=
- * 0 @<XREF:SOUR>@ SOUR {0:M}
- * +1 DATA {0:1}
- * +2 EVEN <EVENTS_RECORDED> {0:M}
- * +3 DATE <DATE_PERIOD> {0:1}
- * +3 PLAC <SOURCE_JURISDICTION_PLACE> {0:1}
- * +2 AGNC <RESPONSIBLE_AGENCY> {0:1}
- * +2 <<NOTE_STRUCTURE>> {0:M}
- * +1 AUTH <SOURCE_ORIGINATOR> {0:1}
- * +2 [CONT|CONC] <SOURCE_ORIGINATOR> {0:M}
- * +1 TITL <SOURCE_DESCRIPTIVE_TITLE> {0:1}
- * +2 [CONT|CONC] <SOURCE_DESCRIPTIVE_TITLE> {0:M}
- * +1 ABBR <SOURCE_FILED_BY_ENTRY> {0:1}
- * +1 PUBL <SOURCE_PUBLICATION_FACTS> {0:1}
- * +2 [CONT|CONC] <SOURCE_PUBLICATION_FACTS> {0:M}
- * +1 TEXT <TEXT_FROM_SOURCE> {0:1}
- * +2 [CONT|CONC] <TEXT_FROM_SOURCE> {0:M}
- * +1 <<SOURCE_REPOSITORY_CITATION>> {0:1}
- * +1 <<MULTIMEDIA_LINK>> {0:M}
- * +1 <<NOTE_STRUCTURE>> {0:M}
- * +1 REFN <USER_REFERENCE_NUMBER> {0:M}
- * +2 TYPE <USER_REFERENCE_TYPE> {0:1}
- * +1 RIN <AUTOMATED_RECORD_ID> {0:1}
- * +1 <<CHANGE_DATE>> {0:1}
+ * n @<XREF:SOUR>@ SOUR
+ * +1 DATA
+ * +2 EVEN <EVENTS_RECORDED>
+ * +3 DATE <DATE_PERIOD>
+ * +3 PLAC <SOURCE_JURISDICTION_PLACE>
+ * +2 AGNC <RESPONSIBLE_AGENCY>
+ * +2 <<NOTE_STRUCTURE>>
+ * +1 AUTH <SOURCE_ORIGINATOR>
+ * +2 [CONC|CONT] <SOURCE_ORIGINATOR>
+ * +1 TITL <SOURCE_DESCRIPTIVE_TITLE>
+ * +2 [CONC|CONT] <SOURCE_DESCRIPTIVE_TITLE>
+ * +1 ABBR <SOURCE_FILED_BY_ENTRY>
+ * +1 PUBL <SOURCE_PUBLICATION_FACTS>
+ * +2 [CONC|CONT] <SOURCE_PUBLICATION_FACTS>
+ * +1 TEXT <TEXT_FROM_SOURCE>
+ * +2 [CONC|CONT] <TEXT_FROM_SOURCE>
+ * +1 <<SOURCE_REPOSITORY_CITATION>>
+ * +1 REFN <USER_REFERENCE_NUMBER>
+ * +2 TYPE <USER_REFERENCE_TYPE>
+ * +1 RIN <AUTOMATED_RECORD_ID>
+ * +1 <<CHANGE_DATE>>
+ * +1 <<NOTE_STRUCTURE>>
+ * +1 <<MULTIMEDIA_LINK>>
  */
 /**
  *
@@ -73,6 +73,8 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         notesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NotesListPanel();
         referencesPanel = new javax.swing.JPanel();
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
+        multimediaObjectPanel = new javax.swing.JPanel();
+        multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
 
         sourceIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -100,7 +102,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         registeredEventsPanelLayout.setVerticalGroup(
             registeredEventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventTypePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+            .addComponent(eventTypePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.registeredEventsPanel.TabConstraints.tabTitle"), new Object[] {}), registeredEventsPanel); // NOI18N
@@ -117,7 +119,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         repositoriesPanelLayout.setVerticalGroup(
             repositoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(repositoriesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+            .addComponent(repositoriesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.repositoriesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Repository.png")), repositoriesPanel); // NOI18N
@@ -134,7 +136,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+            .addComponent(notesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -151,10 +153,23 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
+
+        javax.swing.GroupLayout multimediaObjectPanelLayout = new javax.swing.GroupLayout(multimediaObjectPanel);
+        multimediaObjectPanel.setLayout(multimediaObjectPanelLayout);
+        multimediaObjectPanelLayout.setHorizontalGroup(
+            multimediaObjectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        multimediaObjectPanelLayout.setVerticalGroup(
+            multimediaObjectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+        );
+
+        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.multimediaObjectPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multimediaObjectPanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -210,6 +225,8 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel eventTypePanel1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
+    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
+    private javax.swing.JPanel multimediaObjectPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
     private javax.swing.JPanel notesPanel;
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
@@ -234,50 +251,24 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     /**
      * @param source the source to set
      */
-    public void setSource(Source source) {
-        this.mSource = source;
-        update();
-    }
     /*
      * SOURCE_RECORD:=
-     * 0 @<XREF:SOUR>@ SOUR {0:M}
-     * +1 DATA {0:1}
-     * +2 EVEN <EVENTS_RECORDED> {0:M}
-     * +3 DATE <DATE_PERIOD> {0:1}
-     * +3 PLAC <SOURCE_JURISDICTION_PLACE> {0:1}
-     * +2 AGNC <RESPONSIBLE_AGENCY> {0:1}
-     * +2 <<NOTE_STRUCTURE>> {0:M}
-     * +1 AUTH <SOURCE_ORIGINATOR> {0:1}
-     * +2 [CONT|CONC] <SOURCE_ORIGINATOR> {0:M}
-     * +1 TITL <SOURCE_DESCRIPTIVE_TITLE> {0:1}
-     * +2 [CONT|CONC] <SOURCE_DESCRIPTIVE_TITLE> {0:M}
-     * +1 ABBR <SOURCE_FILED_BY_ENTRY> {0:1}
-     * +1 PUBL <SOURCE_PUBLICATION_FACTS> {0:1}
-     * +2 [CONT|CONC] <SOURCE_PUBLICATION_FACTS> {0:M}
-     * +1 TEXT <TEXT_FROM_SOURCE> {0:1}
-     * +2 [CONT|CONC] <TEXT_FROM_SOURCE> {0:M}
-     * +1 <<SOURCE_REPOSITORY_CITATION>> {0:1}
-     * +1 <<MULTIMEDIA_LINK>> {0:M}
-     * +1 <<NOTE_STRUCTURE>> {0:M}
-     * +1 REFN <USER_REFERENCE_NUMBER> {0:M}
-     * +2 TYPE <USER_REFERENCE_TYPE> {0:1}
-     * +1 RIN <AUTOMATED_RECORD_ID> {0:1}
-     * +1 <<CHANGE_DATE>> {0:1}
      */
+    public void setSource(Source source) {
+        this.mSource = source;
 
-    private void update() {
         /*
-         * 0 @<XREF:SOUR>@ SOUR {0:M}
+         * n @<XREF:SOUR>@ SOUR
          */
         sourceIDTextField.setText(mSource.getId());
 
         /*
-         * +1 DATA {0:1}
-         * +2 EVEN <EVENTS_RECORDED> {0:M}
-         * +3 DATE <DATE_PERIOD> {0:1}
-         * +3 PLAC <SOURCE_JURISDICTION_PLACE> {0:1}
-         * +2 AGNC <RESPONSIBLE_AGENCY> {0:1}
-         * +2 <<NOTE_STRUCTURE>> {0:M}
+         * +1 DATA
+         * +2 EVEN <EVENTS_RECORDED>
+         * +3 DATE <DATE_PERIOD>
+         * +3 PLAC <SOURCE_JURISDICTION_PLACE>
+         * +2 AGNC <RESPONSIBLE_AGENCY>
+         * +2 <<NOTE_STRUCTURE>>
          */
         Property sourceData = mSource.getProperty("DATA");
         if (sourceData != null) {
@@ -286,34 +277,62 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         }
 
         /*
-         * +1 AUTH <SOURCE_ORIGINATOR> {0:1}
-         * +2 [CONT|CONC] <SOURCE_ORIGINATOR> {0:M}
+         * +1 AUTH <SOURCE_ORIGINATOR>
+         * +2 [CONC|CONT] <SOURCE_ORIGINATOR>
          */
         Property sourceAuthor = mSource.getProperty("AUTH");
         authorTextField.setText(sourceAuthor != null ? sourceAuthor.getValue() : "");
 
         /*
-         * +1 TITL <SOURCE_DESCRIPTIVE_TITLE> {0:1}
-         * +2 [CONT|CONC] <SOURCE_DESCRIPTIVE_TITLE> {0:M}
+         * +1 TITL <SOURCE_DESCRIPTIVE_TITLE>
+         * +2 [CONC|CONT] <SOURCE_DESCRIPTIVE_TITLE>
          */
         Property sourceTitle = mSource.getProperty("TITL");
         sourceTitleTextField.setText(sourceTitle != null ? sourceTitle.getValue() : "");
+
         /*
-         * +1 ABBR <SOURCE_FILED_BY_ENTRY> {0:1}
+         * +1 ABBR <SOURCE_FILED_BY_ENTRY>
+         * Not used
          */
 
         /*
-         * +1 PUBL <SOURCE_PUBLICATION_FACTS> {0:1}
-         * +2 [CONT|CONC] <SOURCE_PUBLICATION_FACTS> {0:M}
+         * +1 PUBL <SOURCE_PUBLICATION_FACTS>
+         * +2 [CONC|CONT] <SOURCE_PUBLICATION_FACTS>
+         * Not used
          */
 
         /*
-         * +1 TEXT <TEXT_FROM_SOURCE> {0:1}
-         * +2 [CONT|CONC] <TEXT_FROM_SOURCE> {0:M}
+         * +1 TEXT <TEXT_FROM_SOURCE>
+         * +2 [CONC|CONT] <TEXT_FROM_SOURCE>
+         * Not used
          */
 
         /*
-         * +1 <<NOTE_STRUCTURE>> {0:M}
+         * +1 <<SOURCE_REPOSITORY_CITATION>>
+         */
+        List<Repository> repositporiesList = new ArrayList<Repository>();
+        for (PropertyRepository repositoryRef : mSource.getProperties(PropertyRepository.class)) {
+            repositporiesList.add((Repository) repositoryRef.getTargetEntity());
+        }
+        repositoriesListPanel.set(mSource, repositporiesList);
+
+        /*
+         * +1 REFN <USER_REFERENCE_NUMBER>
+         * Not used
+         *
+         * +2 TYPE <USER_REFERENCE_TYPE>
+         * Not used
+         *
+         * +1 RIN <AUTOMATED_RECORD_ID>
+         * Not used
+         *
+         * +1 <<CHANGE_DATE>>
+         * Handle by gedcom doUnitOfWork
+         * not displayed
+         */
+
+        /*
+         * +1 <<NOTE_STRUCTURE>>
          */
         List<Note> notesList = new ArrayList<Note>();
         for (PropertyNote noteRef : mSource.getProperties(PropertyNote.class)) {
@@ -322,17 +341,9 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         notesListPanel.setNotesList(mSource, notesList);
 
         /*
-         * +1 <<MULTIMEDIA_LINK>> {0:M}
+         * +1 <<MULTIMEDIA_LINK>>
          */
-
-        /*
-         * +1 <<SOURCE_REPOSITORY_CITATION>> {0:1}
-         */
-        List<Repository> repositporiesList = new ArrayList<Repository>();
-        for (PropertyRepository repositoryRef : mSource.getProperties(PropertyRepository.class)) {
-            repositporiesList.add((Repository) repositoryRef.getTargetEntity());
-        }
-        repositoriesListPanel.set(mSource, repositporiesList);
+        multimediaObjectCitationsListPanel.set(mSource, Arrays.asList(mSource.getProperties("OBJE")));
 
         List<Entity> entitiesList = new ArrayList<Entity>();
         for (PropertyXRef entityRef : mSource.getProperties(PropertyXRef.class)) {

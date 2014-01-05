@@ -153,7 +153,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventTypePanel1" alignment="0" pref="160" max="32767" attributes="0"/>
+                  <Component id="eventTypePanel1" alignment="0" pref="210" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -190,7 +190,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="repositoriesListPanel" alignment="0" pref="160" max="32767" attributes="0"/>
+                  <Component id="repositoriesListPanel" alignment="0" pref="210" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -227,7 +227,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="notesListPanel" alignment="0" pref="160" max="32767" attributes="0"/>
+                  <Component id="notesListPanel" alignment="0" pref="210" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -264,12 +264,43 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="referencesListPanel" alignment="0" pref="160" max="32767" attributes="0"/>
+                  <Component id="referencesListPanel" alignment="0" pref="210" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
             <Component class="ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel" name="referencesListPanel">
+            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="multimediaObjectPanel">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Gallery">
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.multimediaObjectPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+                <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Media.png"/>
+                </Property>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="multimediaObjectCitationsListPanel" alignment="1" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="210" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel" name="multimediaObjectCitationsListPanel">
             </Component>
           </SubComponents>
         </Container>
