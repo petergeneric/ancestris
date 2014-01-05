@@ -193,11 +193,12 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     private void editFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFamilyNameButtonActionPerformed
         int rowIndex = familyNamesTable.convertRowIndexToModel(familyNamesTable.getSelectedRow());
         if (rowIndex != -1) {
+            Fam family = mFamiliesTableModel.getValueAt(rowIndex);
             FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
-            familyEditorPanel.set(mFamiliesTableModel.getValueAt(rowIndex));
+            familyEditorPanel.set(family);
 
             DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title"),
+                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", family),
                     familyEditorPanel);
             familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 
@@ -270,11 +271,12 @@ public class FamiliesListPanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int rowIndex = familyNamesTable.convertRowIndexToModel(familyNamesTable.getSelectedRow());
             if (rowIndex != -1) {
+                Fam family = mFamiliesTableModel.getValueAt(rowIndex);
                 FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
-                familyEditorPanel.set(mFamiliesTableModel.getValueAt(rowIndex));
+                familyEditorPanel.set(family);
 
                 DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title"),
+                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", family),
                         familyEditorPanel);
                 familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 
