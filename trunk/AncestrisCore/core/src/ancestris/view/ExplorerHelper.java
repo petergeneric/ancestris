@@ -159,7 +159,9 @@ public class ExplorerHelper {
                 result = ((Entity) prop).toString(false);
             }
             if (result.isEmpty()) {
-                result = prop.getEntity().toString(false) + " (" + prop.getPropertyName() + ")";
+                Entity entity = prop.getEntity();
+                //FIXME: why can entity be null here?
+                result = (entity == null?"":prop.getEntity().toString(false)) + " (" + prop.getPropertyName() + ")";
             }
         }
         return result;
