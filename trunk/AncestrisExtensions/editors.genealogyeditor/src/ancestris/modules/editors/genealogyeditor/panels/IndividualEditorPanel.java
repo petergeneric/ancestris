@@ -66,7 +66,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         eventsPanel = new javax.swing.JPanel();
         eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel();
         familiesChildPanel = new javax.swing.JPanel();
-        familiesChildListPanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel(FamiliesListPanel.EDIT_FAMC);
+        familiesTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel();
         familiesSpousePanel = new javax.swing.JPanel();
         familiesSpouseListPanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel(FamiliesListPanel.EDIT_FAMS);
         sourcesPanel = new javax.swing.JPanel();
@@ -153,7 +153,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventsPanelLayout.createSequentialGroup()
-                .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -163,14 +163,14 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         familiesChildPanel.setLayout(familiesChildPanelLayout);
         familiesChildPanelLayout.setHorizontalGroup(
             familiesChildPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesChildListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
+            .addComponent(familiesTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
         );
         familiesChildPanelLayout.setVerticalGroup(
             familiesChildPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesChildListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+            .addComponent(familiesTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.familiesChildPanel.TabConstraints.tabTitle"), new Object[] {}), familiesChildPanel); // NOI18N
+        individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.familiesChildPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/family.png")), familiesChildPanel); // NOI18N
 
         javax.swing.GroupLayout familiesSpousePanelLayout = new javax.swing.GroupLayout(familiesSpousePanel);
         familiesSpousePanel.setLayout(familiesSpousePanelLayout);
@@ -180,7 +180,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         );
         familiesSpousePanelLayout.setVerticalGroup(
             familiesSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesSpouseListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+            .addComponent(familiesSpouseListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.familiesSpousePanel.TabConstraints.tabTitle"), new Object[] {}), familiesSpousePanel); // NOI18N
@@ -195,7 +195,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sourcesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE))
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourcesPanel); // NOI18N
@@ -210,7 +210,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, namesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(namesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                .addComponent(namesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE))
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.namesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Name.png")), namesPanel); // NOI18N
@@ -223,7 +223,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -238,7 +238,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, referencesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(associationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                .addComponent(associationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE))
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
@@ -251,7 +251,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         );
         galleryPanelLayout.setVerticalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab("Gallery", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
@@ -281,10 +281,10 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel associationsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.EventsListPanel eventsListPanel;
     private javax.swing.JPanel eventsPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel familiesChildListPanel;
     private javax.swing.JPanel familiesChildPanel;
     private ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel familiesSpouseListPanel;
     private javax.swing.JPanel familiesSpousePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel familiesTreeTablePanel;
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JPanel generalPanel;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean imageBean;
@@ -377,8 +377,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
          * +1 <<CHILD_TO_FAMILY_LINK>>
          */
         List<Fam> familiesChildList = Arrays.asList(individual.getFamiliesWhereChild());
-        familiesChildListPanel.setFamiliesList(individual, familiesChildList);
-
+        familiesTreeTablePanel.setFamiliesList(individual, familiesChildList);
+        
         /*
          * +1 <<SPOUSE_TO_FAMILY_LINK>>
          */
@@ -464,7 +464,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                     }
                 }
             }); // end of doUnitOfWork
-            
+
             nameEditorPanel.commit();
             imageBean.commit();
             sexBeanPanel.commit();
@@ -474,7 +474,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             noteCitationsListPanel.commit();
             associationsListPanel.commit();
             multimediaObjectCitationsListPanel.commit();
-            
+
             return mIndividual;
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
