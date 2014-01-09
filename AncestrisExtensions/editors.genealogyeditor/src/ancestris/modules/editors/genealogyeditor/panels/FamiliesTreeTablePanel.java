@@ -3,10 +3,22 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTreeTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import genj.util.Registry;
+import java.awt.Color;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import org.jdesktop.swingx.decorator.ColorHighlighter;
+import org.jdesktop.swingx.decorator.ComponentAdapter;
+import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -17,18 +29,81 @@ import org.openide.util.NbBundle;
  */
 public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
+    private class FamiliesTreeTableTableColumnModelListener implements TableColumnModelListener {
+
+        private final Logger logger = Logger.getLogger(FamiliesTreeTableTableColumnModelListener.class.getName(), null);
+
+        @Override
+        public void columnAdded(TableColumnModelEvent tcme) {
+            logger.log(Level.INFO, "columnAdded: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnRemoved(TableColumnModelEvent tcme) {
+            logger.log(Level.INFO, "columnRemoved: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnMoved(TableColumnModelEvent tcme) {
+            logger.log(Level.INFO, "columnMoved: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnMarginChanged(ChangeEvent ce) {
+            logger.log(Level.INFO, "columnMarginChanged: {0}", ce.toString());
+            for (int index = 0; index < familiesTreeTable.getColumnCount(); index++) {
+                int preferredWidth = familiesTreeTable.getColumn(index).getPreferredWidth();
+                logger.log(Level.INFO, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
+                mRegistry.put(mTableId + ".column" + index + ".size", preferredWidth);
+            }
+        }
+
+        @Override
+        public void columnSelectionChanged(ListSelectionEvent lse) {
+        }
+    }
     public static int LIST_FAM = 0;
     public static int EDIT_FAMC = 1;
     public static int EDIT_FAMS = 2;
+    private final static Logger logger = Logger.getLogger(FamiliesTreeTablePanel.class.getName(), null);
     private int mFamilyEditingType = EDIT_FAMC;
+    private Registry mRegistry = Registry.get(FamiliesTreeTablePanel.class);
     private Property mRoot;
     private Fam mCreateFamily = null;
+    private String mTableId = FamiliesTreeTablePanel.class.getName();
 
     /**
      * Creates new form FamiliesTreeTablePanel
      */
     public FamiliesTreeTablePanel() {
         initComponents();
+        for (int index = 0; index < familiesTreeTable.getColumnModel().getColumnCount(); index++) {
+            int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
+            familiesTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
+            logger.log(Level.INFO, "setID: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
+        }
+        HighlightPredicate MyHighlightPredicate = new HighlightPredicate() {
+
+            @Override
+            public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+                int rowIndex = adapter.row;
+                TreePath path = familiesTreeTable.getPathForRow(rowIndex);
+                Object lastPathComponent = path.getLastPathComponent();
+                if (lastPathComponent instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+                    if (node.getUserObject() instanceof Indi) {
+                        return node.getUserObject().equals(mRoot);
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        };
+        ColorHighlighter hl = new ColorHighlighter(MyHighlightPredicate, familiesTreeTable.getBackground(), Color.blue);
+        familiesTreeTable.addHighlighter(hl);
+        familiesTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
     }
 
     /**
@@ -49,7 +124,6 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         editButton = new javax.swing.JButton();
         deleteFamilyButton = new javax.swing.JButton();
 
-        familiesTreeTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         familiesTreeTable.setEditable(false);
         familiesTreeTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
