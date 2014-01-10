@@ -205,17 +205,20 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesTreeTablePanel" alignment="0" pref="734" max="32767" attributes="0"/>
+                  <Component id="familiesChildTreeTablePanel" alignment="0" pref="734" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesTreeTablePanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="familiesChildTreeTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel" name="familiesTreeTablePanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel" name="familiesChildTreeTablePanel">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel(FamiliesTreeTablePanel.EDIT_FAMC)"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
@@ -233,19 +236,22 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesSpouseListPanel" alignment="0" pref="734" max="32767" attributes="0"/>
+                  <Component id="familiesSpouseTreeTablePanel" alignment="0" pref="734" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesSpouseListPanel" alignment="0" pref="303" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="familiesSpouseTreeTablePanel" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel" name="familiesSpouseListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel" name="familiesSpouseTreeTablePanel">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel(FamiliesListPanel.EDIT_FAMS)"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel(FamiliesTreeTablePanel.EDIT_FAMS)"/>
               </AuxValues>
             </Component>
           </SubComponents>

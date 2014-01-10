@@ -66,9 +66,9 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         eventsPanel = new javax.swing.JPanel();
         eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel();
         familiesChildPanel = new javax.swing.JPanel();
-        familiesTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel();
+        familiesChildTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel(FamiliesTreeTablePanel.EDIT_FAMC);
         familiesSpousePanel = new javax.swing.JPanel();
-        familiesSpouseListPanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel(FamiliesListPanel.EDIT_FAMS);
+        familiesSpouseTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel(FamiliesTreeTablePanel.EDIT_FAMS);
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
         namesPanel = new javax.swing.JPanel();
@@ -163,11 +163,11 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         familiesChildPanel.setLayout(familiesChildPanelLayout);
         familiesChildPanelLayout.setHorizontalGroup(
             familiesChildPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
+            .addComponent(familiesChildTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
         );
         familiesChildPanelLayout.setVerticalGroup(
             familiesChildPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(familiesChildTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.familiesChildPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/family.png")), familiesChildPanel); // NOI18N
@@ -176,11 +176,13 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         familiesSpousePanel.setLayout(familiesSpousePanelLayout);
         familiesSpousePanelLayout.setHorizontalGroup(
             familiesSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesSpouseListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
+            .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
         );
         familiesSpousePanelLayout.setVerticalGroup(
             familiesSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesSpouseListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familiesSpousePanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.familiesSpousePanel.TabConstraints.tabTitle"), new Object[] {}), familiesSpousePanel); // NOI18N
@@ -282,9 +284,9 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.EventsListPanel eventsListPanel;
     private javax.swing.JPanel eventsPanel;
     private javax.swing.JPanel familiesChildPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.FamiliesListPanel familiesSpouseListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel familiesChildTreeTablePanel;
     private javax.swing.JPanel familiesSpousePanel;
-    private ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel familiesTreeTablePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel familiesSpouseTreeTablePanel;
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JPanel generalPanel;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean imageBean;
@@ -377,13 +379,13 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
          * +1 <<CHILD_TO_FAMILY_LINK>>
          */
         List<Fam> familiesChildList = Arrays.asList(individual.getFamiliesWhereChild());
-        familiesTreeTablePanel.setFamiliesList(individual, familiesChildList);
+        familiesChildTreeTablePanel.setFamiliesList(individual, familiesChildList);
         
         /*
          * +1 <<SPOUSE_TO_FAMILY_LINK>>
          */
         List<Fam> familiesSpouseList = Arrays.asList(individual.getFamiliesWhereSpouse());
-        familiesSpouseListPanel.setFamiliesList(individual, familiesSpouseList);
+        familiesSpouseTreeTablePanel.setFamiliesList(individual, familiesSpouseList);
 
         /*
          * +1 SUBM @<XREF:SUBM>@
