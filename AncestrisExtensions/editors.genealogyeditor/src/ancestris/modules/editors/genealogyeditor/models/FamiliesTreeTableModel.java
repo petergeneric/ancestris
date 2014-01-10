@@ -14,25 +14,44 @@ import org.openide.util.NbBundle;
  */
 public class FamiliesTreeTableModel extends AbstractTreeTableModel {
 
-    private static String[] familyListColumnsName = {
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.ID.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.husband.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.wife.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.weddingDate.title"),};
+    public static int FAMILY_CHILD = 1;
+    public static int FAMILY_SPOUSE = 2;
+    private int mFamilyTableType = FAMILY_CHILD;
+    private static String[] familyChildColumnsName = {
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.ID.title"),
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.husband.title"),
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.wife.title"),
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.weddingDate.title"),};
+    private static String[] familySpouseColumnsName = {
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.ID.title"),
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.husband.title"),
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.wife.title"),
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.weddingDate.title"),};
+    private String[] familyColumnsName = familyChildColumnsName;
 
     public FamiliesTreeTableModel() {
+        this(FAMILY_CHILD);
+    }
+
+    public FamiliesTreeTableModel(int familyType) {
         super(new DefaultMutableTreeNode());
+        mFamilyTableType = familyType;
+        if (mFamilyTableType == FAMILY_CHILD) {
+            familyColumnsName = familyChildColumnsName;
+        } else if (mFamilyTableType == FAMILY_SPOUSE) {
+            familyColumnsName = familySpouseColumnsName;
+        }
     }
 
     @Override
     public int getColumnCount() {
-        return familyListColumnsName.length;
+        return familyColumnsName.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        if (column < familyListColumnsName.length) {
-            return (String) familyListColumnsName[column];
+        if (column < familyColumnsName.length) {
+            return (String) familyColumnsName[column];
         } else {
             return "";
         }
@@ -127,8 +146,8 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
                 familyNode.add(new DefaultMutableTreeNode(child));
             }
             ((DefaultMutableTreeNode) getRoot()).add(familyNode);
-            modelSupport.fireNewRoot();
         }
+        modelSupport.fireNewRoot();
     }
 
     public Fam remove(int row) {
