@@ -1,7 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
 import ancestris.core.actions.AbstractAncestrisAction;
-import static ancestris.modules.editors.genealogyeditor.actions.Bundle.OpenInEditor_title;
+import static ancestris.modules.editors.genealogyeditor.actions.Bundle.*;
 import ancestris.modules.editors.genealogyeditor.panels.FamilyEditorPanel;
 import ancestris.modules.editors.genealogyeditor.panels.IndividualEditorPanel;
 import ancestris.util.swing.DialogManager;
@@ -65,7 +65,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 individualEditorPanel.set((Indi) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", entity),
                         individualEditorPanel);
                 editorDialog.setDialogId(IndividualEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -81,7 +81,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 familyEditorPanel.set((Fam) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title"),
+                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", entity),
                         familyEditorPanel);
                 editorDialog.setDialogId(FamilyEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {

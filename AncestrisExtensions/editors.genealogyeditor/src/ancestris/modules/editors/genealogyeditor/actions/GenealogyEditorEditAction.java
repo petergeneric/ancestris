@@ -42,7 +42,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 individualEditorPanel.set((Indi) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", entity),
                         individualEditorPanel);
                 editorDialog.setDialogId(IndividualEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -58,7 +58,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 familyEditorPanel.set((Fam) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title"),
+                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", entity),
                         familyEditorPanel);
                 editorDialog.setDialogId(FamilyEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -74,7 +74,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 noteEditorPanel.set((Note) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),
+                        NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title", entity),
                         noteEditorPanel);
                 editorDialog.setDialogId(NoteEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -90,7 +90,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 sourceEditorPanel.setSource((Source) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
+                        NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title", entity),
                         sourceEditorPanel);
                 editorDialog.setDialogId(SourceEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -106,7 +106,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 repositoryEditorPanel.setRepository((Repository) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title"),
+                        NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", entity),
                         repositoryEditorPanel);
                 editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
 
