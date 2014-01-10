@@ -69,10 +69,10 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
                         return family.getId();
 
                     case 1:
-                        return family.getHusband().getName();
+                        return family.getHusband() != null ? family.getHusband().getName() : "";
 
                     case 2:
-                        return family.getWife().getName();
+                        return family.getWife() != null ? family.getWife().getName() : "";
 
                     case 3:
                         return family.getMarriageDate() != null ? family.getMarriageDate().toString() : "";
