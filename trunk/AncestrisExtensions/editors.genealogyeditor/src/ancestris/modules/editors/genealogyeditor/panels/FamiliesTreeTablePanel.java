@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTreeTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -76,7 +77,14 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
      * Creates new form FamiliesTreeTablePanel
      */
     public FamiliesTreeTablePanel() {
+        this(EDIT_FAMC);
+    }
+
+    public FamiliesTreeTablePanel(int familyEditingType) {
+        mFamilyEditingType = familyEditingType;
+        
         initComponents();
+        
         for (int index = 0; index < familiesTreeTable.getColumnModel().getColumnCount(); index++) {
             int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
             familiesTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
@@ -103,7 +111,6 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         };
         ColorHighlighter hl = new ColorHighlighter(MyHighlightPredicate, familiesTreeTable.getBackground(), Color.blue);
         familiesTreeTable.addHighlighter(hl);
-        familiesTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
     }
 
     /**
@@ -117,7 +124,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        familiesTreeTable = new org.jdesktop.swingx.JXTreeTable(new FamiliesTreeTableModel());
+        familiesTreeTable = new org.jdesktop.swingx.JXTreeTable(new FamiliesTreeTableModel(mFamilyEditingType));
         familyNamesToolBar = new javax.swing.JToolBar();
         addFamilyButton = new javax.swing.JButton();
         linkToFamilyButton = new javax.swing.JButton();
@@ -299,20 +306,22 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                     }
                 } else if (entity instanceof Indi) {
                     Indi child = (Indi) entity;
-                    IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-                    individualEditorPanel.set(child);
+                    if (!child.equals(mRoot)) {
+                        IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                        individualEditorPanel.set(child);
 
-                    DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                            NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", child),
-                            individualEditorPanel);
-                    individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                        DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                                NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", child),
+                                individualEditorPanel);
+                        individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
-                    if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                        individualEditorPanel.commit();
-                    } else {
-                        Gedcom gedcom = mRoot.getGedcom();
-                        while (gedcom.canUndo()) {
-                            gedcom.undoUnitOfWork(false);
+                        if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                            individualEditorPanel.commit();
+                        } else {
+                            Gedcom gedcom = mRoot.getGedcom();
+                            while (gedcom.canUndo()) {
+                                gedcom.undoUnitOfWork(false);
+                            }
                         }
                     }
                 }
@@ -369,20 +378,22 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                         }
                     } else if (entity instanceof Indi) {
                         Indi child = (Indi) entity;
-                        IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-                        individualEditorPanel.set(child);
+                        if (!child.equals(mRoot)) {
+                            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                            individualEditorPanel.set(child);
 
-                        DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", child),
-                                individualEditorPanel);
-                        individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                            DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", child),
+                                    individualEditorPanel);
+                            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
-                        if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                            individualEditorPanel.commit();
-                        } else {
-                            Gedcom gedcom = mRoot.getGedcom();
-                            while (gedcom.canUndo()) {
-                                gedcom.undoUnitOfWork(false);
+                            if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                                individualEditorPanel.commit();
+                            } else {
+                                Gedcom gedcom = mRoot.getGedcom();
+                                while (gedcom.canUndo()) {
+                                    gedcom.undoUnitOfWork(false);
+                                }
                             }
                         }
                     }
@@ -404,5 +415,6 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         this.mRoot = root;
         ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(familiesList);
         familiesTreeTable.expandAll();
+        familiesTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
     }
 }
