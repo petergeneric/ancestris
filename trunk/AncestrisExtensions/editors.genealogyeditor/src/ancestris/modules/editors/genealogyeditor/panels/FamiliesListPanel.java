@@ -169,24 +169,24 @@ public class FamiliesListPanel extends javax.swing.JPanel {
                     }
                 }
             }); // end of doUnitOfWork
+
+            FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+            familyEditorPanel.set(mCreateFamily);
+
+            DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
+                    familyEditorPanel);
+            familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+
+            if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                mFamiliesTableModel.add(familyEditorPanel.commit());
+            } else {
+                while (gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
-        }
-
-        FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
-        familyEditorPanel.set(mCreateFamily);
-
-        DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
-                familyEditorPanel);
-        familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
-
-        if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            mFamiliesTableModel.add(familyEditorPanel.commit());
-        } else {
-            while (gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
         }
     }//GEN-LAST:event_addFamilyNameButtonActionPerformed
 
@@ -276,7 +276,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
                 familyEditorPanel.set(family);
 
                 DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", family),
+                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", family),
                         familyEditorPanel);
                 familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 

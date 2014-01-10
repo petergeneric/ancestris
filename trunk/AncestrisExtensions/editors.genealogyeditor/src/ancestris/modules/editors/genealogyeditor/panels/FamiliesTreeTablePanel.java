@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTreeTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -123,7 +122,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        familiesScrollPane = new javax.swing.JScrollPane();
         familiesTreeTable = new org.jdesktop.swingx.JXTreeTable(new FamiliesTreeTableModel(mFamilyEditingType));
         familyNamesToolBar = new javax.swing.JToolBar();
         addFamilyButton = new javax.swing.JButton();
@@ -137,7 +136,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                 familiesTreeTableMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(familiesTreeTable);
+        familiesScrollPane.setViewportView(familiesTreeTable);
 
         familyNamesToolBar.setFloatable(false);
         familyNamesToolBar.setRollover(true);
@@ -190,15 +189,15 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
-            .addComponent(familyNamesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+            .addComponent(familiesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(familyNamesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(familyNamesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+                .addComponent(familiesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -405,9 +404,9 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
     private javax.swing.JButton addFamilyButton;
     private javax.swing.JButton deleteFamilyButton;
     private javax.swing.JButton editButton;
+    private javax.swing.JScrollPane familiesScrollPane;
     private org.jdesktop.swingx.JXTreeTable familiesTreeTable;
     private javax.swing.JToolBar familyNamesToolBar;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton linkToFamilyButton;
     // End of variables declaration//GEN-END:variables
 
