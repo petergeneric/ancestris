@@ -46,7 +46,7 @@
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="familiesTreeTableMouseClicked"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new org.jdesktop.swingx.JXTreeTable(new FamiliesTreeTableModel())"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new org.jdesktop.swingx.JXTreeTable(new FamiliesTreeTableModel(mFamilyEditingType))"/>
           </AuxValues>
         </Component>
       </SubComponents>
