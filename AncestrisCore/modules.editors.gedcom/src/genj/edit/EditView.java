@@ -25,6 +25,7 @@ import ancestris.api.editor.Editor;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.core.resources.Images;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -429,8 +430,8 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
             // foreign change while we're looking?
             if (editor != null && !isChangeSource) {
                 Context ctx = editor.getContext();
-                editor.setContext(new Context());
-                editor.setContext(ctx);
+                // Propagate new selected context globally
+                SelectionDispatcher.fireSelection(ctx);
                 populate(toolbar);
             }
         }
