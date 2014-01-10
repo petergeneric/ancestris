@@ -83,11 +83,11 @@ public class AncestrisEditorAction extends AncestrisEditor {
         familyEditorPanel.set(fam);
         if (isNew) {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title"),
+                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
                     familyEditorPanel);
         } else {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
+                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", fam),
                     familyEditorPanel);
         }
         editorDialog.setDialogId(FamilyEditorPanel.class.getName());
@@ -113,7 +113,7 @@ public class AncestrisEditorAction extends AncestrisEditor {
                     individualEditorPanel);
         } else {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", indi),
                     individualEditorPanel);
         }
         editorDialog.setDialogId(IndividualEditorPanel.class.getName());
