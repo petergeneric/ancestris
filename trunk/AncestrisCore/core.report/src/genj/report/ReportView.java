@@ -110,12 +110,12 @@ public class ReportView extends View {
     /**
      * start a report
      */
-    public void startReport(final Report report, Object context) {
+    public void startReport(final Report report, Object context, Gedcom gedcom) {
 
         if (!actionStart.isEnabled()) {
             return;
         }
-        Gedcom gedcom = getSelectedGedcom();
+//        Gedcom gedcom = getSelectedGedcom();
         
         // create a new tab for this run
         output = new HyperLinkTextDocumentView(
@@ -273,14 +273,15 @@ public class ReportView extends View {
      */
     public void startReport() {
         // minimum we can work on?
-        if (getSelectedGedcom() == null) {
+        Gedcom gedcom = getSelectedGedcom();
+        if (gedcom == null) {
             return;
         }
         Report report = selector.getReport();
         if (report == null) {
             return;
         }
-        startReport(report, getSelectedGedcom());
+        startReport(report, gedcom,gedcom);
     }
 
     /**
