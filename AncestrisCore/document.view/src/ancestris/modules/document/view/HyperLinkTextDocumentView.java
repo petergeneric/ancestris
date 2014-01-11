@@ -71,7 +71,7 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
      * @return
      */
     public boolean isEmpty() {
-        return textOutput.getDocument().getLength() == 0;
+        return textOutput.getDocument().getLength() == 0 && textOutput.getPage() == null;
     }
 
     /**
@@ -136,10 +136,8 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
 
             // .. exits ?
             if (file.exists()) {
-                if (DialogManager.YES_OPTION != 
-                        DialogManager.createYesNo(textOutput.getName(), "File exists. Overwrite?")
-                        .setMessageType(DialogManager.WARNING_MESSAGE)
-                        .show()) {
+                if (DialogManager.YES_OPTION
+                        != DialogManager.createYesNo(textOutput.getName(), "File exists. Overwrite?").setMessageType(DialogManager.WARNING_MESSAGE).show()) {
                     return;
                 }
             }
