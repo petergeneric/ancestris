@@ -192,7 +192,7 @@ public class ReportGedart extends Report {
 		LOG.log(Level.INFO,"tofile="+saveReportToFile);
 		if (!saveReportToFile)
 			try{
-				file = File.createTempFile("GenJ-", "-gedart");
+				file = File.createTempFile("Ancestris-", null);
 			}catch (IOException ioe) {file = null;}
 		else{
 			file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true,extension);
