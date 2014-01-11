@@ -47,7 +47,7 @@ public final class WebSiteAction implements ActionListener {
 //        ReportView view = AncestrisPlugin.lookup(GenjViewInterface.class).getReportView(context);
         ReportView view = ReportPlugin.getReportView(new Context(context));
         if (view != null) {
-            view.startReport(report, context.getGedcom());
+            view.startReport(report, context.getGedcom(),context.getGedcom());
         }
     }
 }
