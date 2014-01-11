@@ -296,7 +296,7 @@ public static class GedcomReportSubMenu extends SubMenuAction {
             // is not necessary. We will have to find a way to set options in this case.
             ReportView view = getReportView(new Context(gedcom));
             if (view != null) {
-                view.startReport(report, context);
+                view.startReport(report, context, gedcom);
             }
         }
     } //ActionRun
