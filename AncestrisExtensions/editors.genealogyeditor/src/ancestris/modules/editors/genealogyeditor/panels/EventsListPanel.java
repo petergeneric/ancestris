@@ -18,19 +18,77 @@ import org.openide.util.NbBundle;
  */
 public class EventsListPanel extends javax.swing.JPanel {
 
+    public final static int INDIVIDUAL_EVENT_TYPE_LIST = 1;
+    public final static int FAMILY_EVENT_TYPE_LIST = 2;
     private Property mRoot;
     private EventsTypeComboBoxModel eventsTypeComboBoxModelModel = new EventsTypeComboBoxModel();
     private EventsTableModel mEventsTableModel = new EventsTableModel();
     private PropertyEvent mEvent = null;
+    private int mEventTypeList = INDIVIDUAL_EVENT_TYPE_LIST;
+    private String[] mIndividualEvents = {
+        PropertyTag2Name.getTagName("ADOP"),
+        PropertyTag2Name.getTagName("BIRT"),
+        PropertyTag2Name.getTagName("BAPM"),
+        PropertyTag2Name.getTagName("BARM"),
+        PropertyTag2Name.getTagName("BASM"),
+        PropertyTag2Name.getTagName("BLES"),
+        PropertyTag2Name.getTagName("BURI"),
+        PropertyTag2Name.getTagName("CENS"),
+        PropertyTag2Name.getTagName("CHR"),
+        PropertyTag2Name.getTagName("CHRA"),
+        PropertyTag2Name.getTagName("CONF"),
+        PropertyTag2Name.getTagName("CREM"),
+        PropertyTag2Name.getTagName("DEAT"),
+        PropertyTag2Name.getTagName("EMIG"),
+        PropertyTag2Name.getTagName("FCOM"),
+        PropertyTag2Name.getTagName("GRAD"),
+        PropertyTag2Name.getTagName("IMMI"),
+        PropertyTag2Name.getTagName("NATU"),
+        PropertyTag2Name.getTagName("ORDN"),
+        PropertyTag2Name.getTagName("RETI"),
+        PropertyTag2Name.getTagName("PROB"),
+        PropertyTag2Name.getTagName("WILL"),
+        PropertyTag2Name.getTagName("EVEN")
+    };
+    private String[] mFamilyEvents = {
+        PropertyTag2Name.getTagName("ANUL"),
+        PropertyTag2Name.getTagName("CENS"),
+        PropertyTag2Name.getTagName("DIV"),
+        PropertyTag2Name.getTagName("DIVF"),
+        PropertyTag2Name.getTagName("ENGA"),
+        PropertyTag2Name.getTagName("MARR"),
+        PropertyTag2Name.getTagName("MARB"),
+        PropertyTag2Name.getTagName("MARC"),
+        PropertyTag2Name.getTagName("MARL"),
+        PropertyTag2Name.getTagName("MARS"),
+        PropertyTag2Name.getTagName("EVEN")
+    };
+    private String[] mEvents = mIndividualEvents;
 
     /**
      * Creates new form EventsListPanel
      */
     public EventsListPanel() {
+        this(INDIVIDUAL_EVENT_TYPE_LIST);
+    }
+
+    public EventsListPanel(int eventTypeList) {
+        mEventTypeList = eventTypeList;
+        if (eventTypeList == INDIVIDUAL_EVENT_TYPE_LIST) {
+            mEvents = mIndividualEvents;
+        } else if (eventTypeList == FAMILY_EVENT_TYPE_LIST) {
+            mEvents = mFamilyEvents;
+        } else {
+            mEvents = mIndividualEvents;
+        }
         initComponents();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(eventsTable.getModel());
         eventsTable.setID(EventsListPanel.class.getName());
         eventsTable.setRowSorter(sorter);
+    }
+
+    private String[] getEventTypeList() {
+        return null;
     }
 
     /**
@@ -45,7 +103,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(3, 0), new java.awt.Dimension(3, 0), new java.awt.Dimension(3, 32767));
-        eventTypeComboBox = new javax.swing.JComboBox<String>();
+        eventTypeComboBox = new javax.swing.JComboBox<String>(mEvents);
         editEventButton = new javax.swing.JButton();
         deleteEventButton = new javax.swing.JButton();
         eventsScrollPane = new javax.swing.JScrollPane();
@@ -58,7 +116,6 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.add(jLabel1);
         eventsToolBar.add(filler1);
 
-        eventTypeComboBox.setModel(eventsTypeComboBoxModelModel);
         eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
         eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,7 +177,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
             PropertyEvent event = mEventsTableModel.getValueAt(rowIndex);
-            EventEditorPanel eventEditorPanel = new EventEditorPanel();
+            EventEditorPanel eventEditorPanel = new EventEditorPanel(mEventTypeList);
             eventEditorPanel.set(mRoot, event);
 
             ADialog eventEditorDialog = new ADialog(
@@ -171,7 +228,7 @@ public class EventsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            EventEditorPanel eventEditorPanel = new EventEditorPanel();
+            EventEditorPanel eventEditorPanel = new EventEditorPanel(mEventTypeList);
 
             eventEditorPanel.set(mRoot, mEvent);
 
@@ -197,7 +254,7 @@ public class EventsListPanel extends javax.swing.JPanel {
             if (selectedRow != -1) {
                 int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
                 PropertyEvent event = mEventsTableModel.getValueAt(rowIndex);
-                EventEditorPanel eventEditorPanel = new EventEditorPanel();
+                EventEditorPanel eventEditorPanel = new EventEditorPanel(mEventTypeList);
                 eventEditorPanel.set(mRoot, event);
 
                 ADialog eventEditorDialog = new ADialog(
