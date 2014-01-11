@@ -47,11 +47,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
-import org.openide.awt.ActionRegistration;
-import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import spin.Spin;
 
@@ -100,23 +95,27 @@ public class ReportView extends View {
     /**
      * Get selected gedcom from global selection lookup. no need to listen for
      * context change
+     *
      * @return Gedcom for selected property
      */
-    private Gedcom getSelectedGedcom(){
+    private Gedcom getSelectedGedcom() {
         Context selected = Utilities.actionsGlobalContext().lookup(Context.class);
-        return selected==null?null:selected.getGedcom();
+        return selected == null ? null : selected.getGedcom();
     }
 
     /**
      * start a report
      */
+//    public void startReport(final Report report, Object context) {
+//        startReport(report, context, getSelectedGedcom());
+//    }
     public void startReport(final Report report, Object context, Gedcom gedcom) {
 
         if (!actionStart.isEnabled()) {
             return;
         }
 //        Gedcom gedcom = getSelectedGedcom();
-        
+
         // create a new tab for this run
         output = new HyperLinkTextDocumentView(
                 new Context(gedcom),
@@ -281,7 +280,7 @@ public class ReportView extends View {
         if (report == null) {
             return;
         }
-        startReport(report, gedcom,gedcom);
+        startReport(report, gedcom, gedcom);
     }
 
     /**
@@ -297,7 +296,6 @@ public class ReportView extends View {
 //        // enable if none running and data available
 //        actionStart.setEnabled(!actionStop.isEnabled() && gedcom != null);
 //    }
-
     /**
      * show result of a report run
      */
@@ -330,98 +328,101 @@ public class ReportView extends View {
         // remember title for next document view creation
         String tabName = output.getName();
         String tabToolTip = output.getToolTipText();
-        if (output.isEmpty()) {
-            output.close();
-        }
-
-        // File?
-        if (object instanceof File) {
-            File file = (File) object;
-            if (file.getName().endsWith(".htm") || file.getName().endsWith(".html")) {
-                try {
-                    object = file.toURI().toURL();
-                } catch (Throwable t) {
-                    // can't happen
+        try {
+            // File?
+            if (object instanceof File) {
+                File file = (File) object;
+                // FIXME: if filename ends with htm, displays in DocumentView, 
+                // if ends with html use external browser. because internal broxser doesn't display 
+                // css correctly
+                //            if (file.getName().endsWith(".htm") || file.getName().endsWith(".html")) {
+                if (file.getName().endsWith(".htm")) {
+                    try {
+                        object = file.toURI().toURL();
+                    } catch (Throwable t) {
+                        // can't happen
+                    }
+                } else {
+                    try {
+                        Desktop.getDesktop().open(file);
+                    } catch (Throwable t) {
+                        Logger.getLogger("genj.report").log(Level.INFO, "can't open " + file, t);
+                        output.add("*** can't open file " + file);
+                    }
+                    return;
                 }
-            } else {
+            }
+
+            // URL?
+            if (object instanceof URL) {
                 try {
-                    Desktop.getDesktop().open(file);
-                } catch (Throwable t) {
-                    Logger.getLogger("genj.report").log(Level.INFO, "can't open " + file, t);
-                    output.add("*** can't open file " + file);
+                    output.setPage((URL) object);
+                } catch (IOException e) {
+                    output.add("*** can't open URL " + object + ": " + e.getMessage());
                 }
-                return;
-            }
-        }
-
-        // URL?
-        if (object instanceof URL) {
-            try {
-                output.setPage((URL) object);
-            } catch (IOException e) {
-                output.add("*** can't open URL " + object + ": " + e.getMessage());
-            }
-//XXX:      output.show();
-            return;
-        }
-
-        // context list?
-        if (object instanceof List<?>) {
-            try {
-                object = new ContextListWidget((List<Context>) object);
-            } catch (Throwable t) {
-            }
-        }
-
-        // component?
-        if (object instanceof JComponent) {
-            new WidgetDocumentView(new Context(getSelectedGedcom()), tabName, tabToolTip, ((JComponent) object));
-
-            return;
-        }
-
-        // document
-        if (object instanceof genj.fo.Document) {
-
-            genj.fo.Document doc = (genj.fo.Document) object;
-            String title = "Document " + doc.getTitle();
-
-            Registry foRegistry = Registry.get(getClass());
-
-            Action[] actions = AbstractAncestrisAction.okCancel();
-            FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
-//XXX: remove connect api and create a validatelistener
-            options.connect(actions[0]);
-
-            Object rc = DialogManager.create(title, options)
-              .setOptionType(DialogManager.OK_CANCEL_OPTION)
-              .setDialogId("report.optionsfromuser")
-              .show();
-            Format formatter = options.getFormat();
-            File file = options.getFile();
-            if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {
-                showResult(null);
+                //XXX:      output.show();
                 return;
             }
 
-            // store options
-            options.remember(foRegistry);
+            // context list?
+            if (object instanceof List<?>) {
+                try {
+                    object = new ContextListWidget((List<Context>) object);
+                } catch (Throwable t) {
+                }
+            }
 
-            // format and write
-            try {
-                file.getParentFile().mkdirs();
-                formatter.format(doc, file);
-            } catch (Throwable t) {
-                LOG.log(Level.WARNING, "formatting " + doc + " failed", t);
-                output.add("*** formatting " + doc + " failed");
-                //XXX: show a dialog to user if file creation failed
+            // component?
+            if (object instanceof JComponent) {
+                new WidgetDocumentView(new Context(getSelectedGedcom()), tabName, tabToolTip, ((JComponent) object));
+
                 return;
             }
 
-            // go back to document's file
-            showResult(file);
+            // document
+            if (object instanceof genj.fo.Document) {
 
-            return;
+                genj.fo.Document doc = (genj.fo.Document) object;
+                String title = "Document " + doc.getTitle();
+
+                Registry foRegistry = Registry.get(getClass());
+
+                Action[] actions = AbstractAncestrisAction.okCancel();
+                FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
+                //XXX: remove connect api and create a validatelistener
+                options.connect(actions[0]);
+
+                Object rc = DialogManager.create(title, options).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.optionsfromuser").show();
+                Format formatter = options.getFormat();
+                File file = options.getFile();
+                if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {
+                    showResult(null);
+                    return;
+                }
+
+                // store options
+                options.remember(foRegistry);
+
+                // format and write
+                try {
+                    file.getParentFile().mkdirs();
+                    formatter.format(doc, file);
+                } catch (Throwable t) {
+                    LOG.log(Level.WARNING, "formatting " + doc + " failed", t);
+                    output.add("*** formatting " + doc + " failed");
+                    //XXX: show a dialog to user if file creation failed
+                    return;
+                }
+
+                // go back to document's file
+                showResult(file);
+
+                return;
+            }
+        } finally {
+            if (output.isEmpty()) {
+                output.close();
+            }
         }
 
         // unknown
@@ -440,7 +441,7 @@ public class ReportView extends View {
         toolbar.add(selector.getActionGroup());
 
         // done
-}
+    }
 
     /**
      * Action: STOP
