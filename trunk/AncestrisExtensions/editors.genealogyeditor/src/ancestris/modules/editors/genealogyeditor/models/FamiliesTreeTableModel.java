@@ -23,12 +23,12 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
         NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.ID.title"),
         NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.husband.title"),
         NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.wife.title"),
-        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.weddingDate.title"),};
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.date.title"),};
     private static String[] familySpouseColumnsName = {
         NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.ID.title"),
         NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.husband.title"),
         NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.wife.title"),
-        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.weddingDate.title"),};
+        NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.date.title"),};
     private String[] familyColumnsName = familyChildColumnsName;
     private String mFemale = "";
     private String mMale = "";
@@ -83,7 +83,9 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
                         return family.getWife() != null ? family.getWife().getName() : "";
 
                     case 3:
-                        return family.getMarriageDate() != null ? family.getMarriageDate().toString() : "";
+                        return family.getMarriageDate() != null
+                                ? NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.family.wedding") + " " + family.getMarriageDate().getDisplayValue()
+                                : "";
 
                     default:
                         return "";
@@ -108,7 +110,9 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
                         return child.getLastName();
 
                     case 3:
-                        return child.getBirthDate() != null ? child.getBirthDate().toString() : "";
+                        return child.getBirthDate() != null
+                                ? NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
+                                : "";
 
                     default:
                         return "";
