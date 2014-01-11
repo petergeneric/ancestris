@@ -4,6 +4,8 @@ import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.*;
 import java.awt.CardLayout;
 import java.util.Arrays;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.util.Exceptions;
@@ -98,6 +100,21 @@ import org.openide.util.Exceptions;
  */
 public class EventEditorPanel extends javax.swing.JPanel {
 
+    private class DateBeanListener implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (mEventType == INDIVIDUAL_EVENT_TYPE) {
+                PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
+                individualAgeTextField.setText(age.getValue());
+            } else if (mEventType == FAMILY_EVENT_TYPE) {
+                PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
+                husbandAgeTextField.setText(husbandAge.getValue());
+                PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
+                wifeAgeTextField.setText(wifeAge.getValue());
+            }
+        }
+    }
     public final static int INDIVIDUAL_EVENT_TYPE = 1;
     public final static int FAMILY_EVENT_TYPE = 2;
     private int mEventType = INDIVIDUAL_EVENT_TYPE;
@@ -414,61 +431,18 @@ public class EventEditorPanel extends javax.swing.JPanel {
     public void set(Property root, PropertyEvent event) {
         this.mRoot = root;
         this.mEvent = event;
-        if (mEvent != null) {
-            eventTypeTextField.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
+        eventTypeTextField.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
 
-            PropertyDate date = (PropertyDate) mEvent.getProperty("DATE");
-            if (date == null) {
-                date = (PropertyDate) mEvent.addProperty("DATE", "");
-            }
-            aDateBean.setContext(date);
+        PropertyDate date = (PropertyDate) mEvent.getProperty("DATE");
+        if (date == null) {
+            date = (PropertyDate) mEvent.addProperty("DATE", "");
+        }
+        aDateBean.setContext(date);
+        aDateBean.addChangeListener(new DateBeanListener());
 
-            Property eventCause = mEvent.getProperty("CAUS");
-            if (eventCause != null) {
-                eventCauseTextArea.setText(eventCause.getValue());
-            }
-
-            if (mEventType == INDIVIDUAL_EVENT_TYPE) {
-                PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
-                if (age != null) {
-                    individualAgeTextField.setText(age.getValue());
-                } else {
-                    Property addProperty = mEvent.addProperty("AGE", "");
-                    addProperty.setGuessed(true);
-                    individualAgeTextField.setEditable(false);
-                    individualAgeTextField.setText(addProperty.getValue());
-                }
-            } else if (mEventType == FAMILY_EVENT_TYPE) {
-                PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
-                if (husbandAge == null) {
-                    Property husband = mEvent.addProperty("HUSB", "");
-                    husband.setGuessed(true);
-                    husbandAgeTextField.setEditable(false);
-                    husbandAge = (PropertyAge) husband.addProperty("AGE", "");
-                }
-                husbandAgeTextField.setText(husbandAge.getValue());
-
-                PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
-                if (wifeAge == null) {
-                    Property wife = mEvent.addProperty("WIFE", "");
-                    wife.setGuessed(true);
-                    wifeAgeTextField.setEditable(false);
-                    wifeAge = (PropertyAge) wife.addProperty("AGE", "");
-                }
-                wifeAgeTextField.setText(wifeAge.getValue());
-
-            } else {
-                agePanel.setVisible(false);
-            }
-            PropertyPlace place = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
-            gedcomPlacePanel.set(mEvent, place);
-
-            Property[] sourcesList = mEvent.getProperties("SOUR");
-            sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
-
-            noteCitationsListPanel.setNotesList(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
-
-            multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
+        Property eventCause = mEvent.getProperty("CAUS");
+        if (eventCause != null) {
+            eventCauseTextArea.setText(eventCause.getValue());
         }
         eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -487,57 +461,96 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 mEventCauseModified = true;
             }
         });
-        individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mIndividualAgeModified = true;
+        if (mEventType == INDIVIDUAL_EVENT_TYPE) {
+            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
+            if (age == null) {
+                age = (PropertyAge) mEvent.addProperty("AGE", "");
+                age.setGuessed(true);
+                individualAgeTextField.setEditable(false);
             }
+            individualAgeTextField.setText(age.getValue());
+            individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mIndividualAgeModified = true;
-            }
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mIndividualAgeModified = true;
+                }
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mIndividualAgeModified = true;
-            }
-        });
-        husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mIndividualAgeModified = true;
+                }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mHusbandAgeModified = true;
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mIndividualAgeModified = true;
+                }
+            });
+        } else if (mEventType == FAMILY_EVENT_TYPE) {
+            PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
+            if (husbandAge == null) {
+                Property husband = mEvent.addProperty("HUSB", "");
+                husband.setGuessed(true);
+                husbandAgeTextField.setEditable(false);
+                husbandAge = (PropertyAge) husband.addProperty("AGE", "");
             }
+            husbandAgeTextField.setText(husbandAge.getValue());
+            husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mHusbandAgeModified = true;
-            }
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mHusbandAgeModified = true;
+                }
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mHusbandAgeModified = true;
-            }
-        });
-        wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mHusbandAgeModified = true;
+                }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mWifeAgeModified = true;
-            }
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mHusbandAgeModified = true;
+                }
+            });
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mWifeAgeModified = true;
+            PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
+            if (wifeAge == null) {
+                Property wife = mEvent.addProperty("WIFE", "");
+                wife.setGuessed(true);
+                wifeAgeTextField.setEditable(false);
+                wifeAge = (PropertyAge) wife.addProperty("AGE", "");
             }
+            wifeAgeTextField.setText(wifeAge.getValue());
+            wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mWifeAgeModified = true;
-            }
-        });
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mWifeAgeModified = true;
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mWifeAgeModified = true;
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mWifeAgeModified = true;
+                }
+            });
+        } else {
+            agePanel.setVisible(false);
+        }
+        PropertyPlace place = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
+        gedcomPlacePanel.set(mEvent, place);
+
+        Property[] sourcesList = mEvent.getProperties("SOUR");
+        sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
+
+        noteCitationsListPanel.setNotesList(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
+
+        multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
     }
 
     public PropertyEvent commit() {
