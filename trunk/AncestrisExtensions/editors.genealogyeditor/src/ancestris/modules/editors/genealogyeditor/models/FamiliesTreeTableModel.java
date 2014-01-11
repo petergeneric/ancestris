@@ -3,8 +3,10 @@ package ancestris.modules.editors.genealogyeditor.models;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertySex;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import org.jdesktop.swingx.treetable.AbstractTreeTableModel;
 import org.openide.util.NbBundle;
 
@@ -28,6 +30,8 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
         NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.wife.title"),
         NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.weddingDate.title"),};
     private String[] familyColumnsName = familyChildColumnsName;
+    private String mFemale = "";
+    private String mMale = "";
 
     public FamiliesTreeTableModel() {
         this(FAMILY_CHILD);
@@ -38,8 +42,12 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
         mFamilyTableType = familyType;
         if (mFamilyTableType == FAMILY_CHILD) {
             familyColumnsName = familyChildColumnsName;
+            mFemale = NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.female.title");
+            mMale = NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.male.title");
         } else if (mFamilyTableType == FAMILY_SPOUSE) {
             familyColumnsName = familySpouseColumnsName;
+            mFemale = NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.female.title");
+            mMale = NbBundle.getMessage(FamiliesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.male.title");
         }
     }
 
@@ -81,16 +89,26 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
                         return "";
                 }
             } else if (entity instanceof Indi) {
+                TreeNode[] path = dataNode.getPath();
                 Indi child = (Indi) entity;
                 switch (index) {
                     case 0:
-                        return child.getId();
+                        if (child.getSex() == PropertySex.MALE) {
+                            return mMale + " (" + child.getId() + ")";
+                        } else if (child.getSex() == PropertySex.FEMALE) {
+                            return mFemale + " (" + child.getId() + ")";
+                        } else {
+                            return child.getId();
+                        }
 
                     case 1:
                         return child.getFirstName();
 
                     case 2:
                         return child.getLastName();
+
+                    case 3:
+                        return child.getBirthDate() != null ? child.getBirthDate().toString() : "";
 
                     default:
                         return "";
