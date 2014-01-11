@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.EventsTableModel;
-import ancestris.modules.editors.genealogyeditor.models.EventsTypeComboBoxModel;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
@@ -21,7 +20,6 @@ public class EventsListPanel extends javax.swing.JPanel {
     public final static int INDIVIDUAL_EVENT_TYPE_LIST = 1;
     public final static int FAMILY_EVENT_TYPE_LIST = 2;
     private Property mRoot;
-    private EventsTypeComboBoxModel eventsTypeComboBoxModelModel = new EventsTypeComboBoxModel();
     private EventsTableModel mEventsTableModel = new EventsTableModel();
     private PropertyEvent mEvent = null;
     private int mEventTypeList = INDIVIDUAL_EVENT_TYPE_LIST;
