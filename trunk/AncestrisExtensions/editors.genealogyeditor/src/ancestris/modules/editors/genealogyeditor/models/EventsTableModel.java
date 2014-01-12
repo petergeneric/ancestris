@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyPlace;
 import java.util.ArrayList;
@@ -39,7 +40,12 @@ public class EventsTableModel extends AbstractTableModel {
         if (row < eventsList.size()) {
             PropertyEvent propertyEvent = eventsList.get(row);
             if (column == 0) {
-                return PropertyTag2Name.getTagName(propertyEvent.getTag());
+                if (!propertyEvent.getTag().equals("EVEN")) {
+                    return PropertyTag2Name.getTagName(propertyEvent.getTag());
+                } else {
+                    Property eventType = propertyEvent.getProperty("TYPE");
+                    return eventType != null ?eventType.getValue():"";
+                }
             } else if (column == 1) {
                 PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
                 if (place != null) {

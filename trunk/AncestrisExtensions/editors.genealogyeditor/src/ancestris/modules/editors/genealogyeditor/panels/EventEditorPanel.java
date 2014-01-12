@@ -125,6 +125,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private boolean mIndividualAgeModified = false;
     private boolean mHusbandAgeModified = false;
     private boolean mWifeAgeModified = false;
+    private boolean mEventNameModified = false;
     private boolean mEventTypeModified = false;
 
     /**
@@ -163,8 +164,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         eventIdLabel = new javax.swing.JLabel();
         eventIDTextField = new javax.swing.JTextField();
-        eventLabel = new javax.swing.JLabel();
-        eventTextField = new javax.swing.JTextField();
+        eventNameLabel = new javax.swing.JLabel();
+        eventNameTextField = new javax.swing.JTextField();
         dateLabel = new javax.swing.JLabel();
         aDateBean = new ancestris.modules.beans.ADateBean();
         eventCauseLabel = new javax.swing.JLabel();
@@ -198,10 +199,10 @@ public class EventEditorPanel extends javax.swing.JPanel {
         eventIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventIDTextField.text"), new Object[] {})); // NOI18N
         eventIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
-        eventLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        eventLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventLabel.text"), new Object[] {})); // NOI18N
+        eventNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        eventNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
 
-        eventTextField.setEditable(false);
+        eventNameTextField.setEditable(false);
 
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.dateLabel.text"), new Object[] {})); // NOI18N
 
@@ -226,11 +227,11 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(EventTypeLabel)
-                    .addComponent(eventLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(eventNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(eventTypeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-                    .addComponent(eventTextField))
+                    .addComponent(eventNameTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -250,8 +251,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                         .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(eventLabel)
-                        .addComponent(eventTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(eventNameLabel)
+                        .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(dateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -418,8 +419,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField eventIDTextField;
     private javax.swing.JLabel eventIdLabel;
     private javax.swing.JTabbedPane eventInformationTabbedPane;
-    private javax.swing.JLabel eventLabel;
-    private javax.swing.JTextField eventTextField;
+    private javax.swing.JLabel eventNameLabel;
+    private javax.swing.JTextField eventNameTextField;
     private javax.swing.JTextField eventTypeTextField;
     private javax.swing.JPanel familyAgePanel;
     private javax.swing.JPanel galleryPanel;
@@ -446,33 +447,96 @@ public class EventEditorPanel extends javax.swing.JPanel {
         this.mRoot = root;
         this.mEvent = event;
         if (!mEvent.getTag().equals("EVEN")) {
-            eventTextField.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
+            // Event Name
+            eventNameTextField.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
+
+            Property eventType = mEvent.getProperty("TYPE");
+            if (eventType != null) {
+                eventTypeTextField.setText(eventType.getValue());
+            }
+            eventTypeTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mEventTypeModified = true;
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mEventTypeModified = true;
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mEventTypeModified = true;
+                }
+            });
+
+            Property eventCause = mEvent.getProperty("CAUS");
+            if (eventCause != null) {
+                eventCauseTextArea.setText(eventCause.getValue());
+            }
+            eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+            });
         } else {
-            eventTextField.setEditable(true);
-            eventTextField.setText(mEvent.getValue());
+            // Event Name
+            Property eventType = mEvent.getProperty("TYPE");
+            if (eventType != null) {
+                eventNameTextField.setText(eventType.getValue());
+                eventNameTextField.setEditable(true);
+            }
+            eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mEventNameModified = true;
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mEventNameModified = true;
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mEventNameModified = true;
+                }
+            });
+
+            eventCauseTextArea.setText(mEvent.getValue());
+            eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+            });
         }
-
-        Property eventType = mEvent.getProperty("TYPE");
-        if (eventType != null) {
-            eventTypeTextField.setText(eventType.getValue());
-        }
-        eventTypeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mEventTypeModified = true;
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mEventTypeModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mEventTypeModified = true;
-            }
-        });
 
         PropertyDate date = (PropertyDate) mEvent.getProperty("DATE");
         if (date == null) {
@@ -480,28 +544,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
         }
         aDateBean.setContext(date);
         aDateBean.addChangeListener(new DateBeanListener());
-
-        Property eventCause = mEvent.getProperty("CAUS");
-        if (eventCause != null) {
-            eventCauseTextArea.setText(eventCause.getValue());
-        }
-        eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mEventCauseModified = true;
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mEventCauseModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mEventCauseModified = true;
-            }
-        });
 
         if (mEventType == INDIVIDUAL_EVENT_TYPE) {
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
@@ -600,29 +642,42 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    aDateBean.commit();
-                    if (mEventCauseModified) {
-                        String causeText = eventCauseTextArea.getText();
-                        Property eventCause = mEvent.getProperty("CAUS");
-                        if (causeText.length() > 0) {
-                            if (eventCause == null) {
-                                mEvent.addProperty("CAUS", causeText);
+                    if (mEvent.getTag().equals("EVEN")) {
+                        if (mEventNameModified) {
+                            Property eventType = mEvent.getProperty("TYPE");
+                            if (eventType != null) {
+                                eventType.setValue(eventNameTextField.getText());
                             } else {
-                                eventCause.setValue(causeText);
+                                mEvent.addProperty("TYPE", eventNameTextField.getText());
                             }
-                        } else if (eventCause != null) {
-                            mRoot.delProperty(eventCause);
+                        }
+                        if (mEventCauseModified) {
+                            mEvent.setValue(eventCauseTextArea.getText());
+                        }
+                    } else {
+                        if (mEventTypeModified) {
+                            Property eventType = mEvent.getProperty("TYPE");
+                            if (eventType != null) {
+                                eventType.setValue(eventTypeTextField.getText());
+                            } else {
+                                mEvent.addProperty("TYPE", eventTypeTextField.getText());
+                            }
+                        }
+                        if (mEventCauseModified) {
+                            String causeText = eventCauseTextArea.getText();
+                            Property eventCause = mEvent.getProperty("CAUS");
+                            if (causeText.length() > 0) {
+                                if (eventCause == null) {
+                                    mEvent.addProperty("CAUS", causeText);
+                                } else {
+                                    eventCause.setValue(causeText);
+                                }
+                            } else if (eventCause != null) {
+                                mRoot.delProperty(eventCause);
+                            }
                         }
                     }
-
-                    if (mEventTypeModified) {
-                        Property eventType = mEvent.getProperty("TYPE");
-                        if (eventType != null) {
-                            eventType.setValue(eventTypeTextField.getText());
-                        } else {
-                            mEvent.addProperty("TYPE", eventTypeTextField.getText());
-                        }
-                    }
+                    aDateBean.commit();
 
                     if (mEventType == INDIVIDUAL_EVENT_TYPE) {
                         if (mIndividualAgeModified) {
