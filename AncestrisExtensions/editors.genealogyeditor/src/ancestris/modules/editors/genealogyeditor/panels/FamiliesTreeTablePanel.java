@@ -142,6 +142,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         familyNamesToolBar.setRollover(true);
 
         addFamilyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addFamilyButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamiliesTreeTablePanel.class, "FamiliesTreeTablePanel.addFamilyButton.toolTipText")); // NOI18N
         addFamilyButton.setFocusable(false);
         addFamilyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addFamilyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -153,6 +154,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         familyNamesToolBar.add(addFamilyButton);
 
         linkToFamilyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToFamilyButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamiliesTreeTablePanel.class, "FamiliesTreeTablePanel.linkToFamilyButton.toolTipText")); // NOI18N
         linkToFamilyButton.setFocusable(false);
         linkToFamilyButton.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         linkToFamilyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -164,6 +166,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         familyNamesToolBar.add(linkToFamilyButton);
 
         editButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamiliesTreeTablePanel.class, "FamiliesTreeTablePanel.editButton.toolTipText")); // NOI18N
         editButton.setFocusable(false);
         editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -175,6 +178,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         familyNamesToolBar.add(editButton);
 
         deleteFamilyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteFamilyButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamiliesTreeTablePanel.class, "FamiliesTreeTablePanel.deleteFamilyButton.toolTipText")); // NOI18N
         deleteFamilyButton.setFocusable(false);
         deleteFamilyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteFamilyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
