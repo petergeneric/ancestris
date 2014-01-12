@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.IndividualsTableModel;
+import ancestris.modules.editors.genealogyeditor.models.IndividualReferencesTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import org.openide.util.NbBundle;
  */
 public class ChildrenListPanel extends javax.swing.JPanel {
 
-    private IndividualsTableModel mIndividualsTableModel = new IndividualsTableModel();
+    private IndividualReferencesTableModel mIndividualReferencesTableModel = new IndividualReferencesTableModel();
     private Fam mRoot;
     private Indi mIndividual;
 
@@ -96,7 +96,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         });
         childrenToolBar.add(linkToChildrenButton);
 
-        childrenTable.setModel(mIndividualsTableModel);
+        childrenTable.setModel(mIndividualReferencesTableModel);
         childrenTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 childrenTableMouseClicked(evt);
@@ -135,7 +135,6 @@ public class ChildrenListPanel extends javax.swing.JPanel {
                     }
 
                     mIndividual.setName("", lastName);
-                    mRoot.addChild(mIndividual);
                 }
             }); // end of doUnitOfWork
 
@@ -148,7 +147,15 @@ public class ChildrenListPanel extends javax.swing.JPanel {
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mIndividualsTableModel.add(individualEditorPanel.commit());
+                final Indi individual = individualEditorPanel.commit();
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        PropertyXRef addChild = mRoot.addChild(individual);
+                        mIndividualReferencesTableModel.add(addChild);
+                    }
+                }); // end of doUnitOfWork
             } else {
                 mRoot.getGedcom().undoUnitOfWork(false);
             }
@@ -160,12 +167,12 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     private void editChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editChildrenButtonActionPerformed
         int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
         if (rowIndex != -1) {
-            Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
+            PropertyXRef individualRef = mIndividualReferencesTableModel.getValueAt(rowIndex);
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-            individualEditorPanel.set(individual);
+            individualEditorPanel.set((Indi) individualRef.getTargetEntity());
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", individual),
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", individualRef.getTargetEntity()),
                     individualEditorPanel);
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
@@ -176,6 +183,35 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editChildrenButtonActionPerformed
 
     private void deleteChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteChildrenButtonActionPerformed
+        int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
+        Gedcom gedcom = mRoot.getGedcom();
+
+        if (rowIndex != -1) {
+            final PropertyXRef individualRef = mIndividualReferencesTableModel.getValueAt(rowIndex);
+
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.title",
+                    individualRef.getTargetEntity()),
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.text",
+                    individualRef.getTargetEntity(),
+                    mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mRoot.delProperty(individualRef);
+                        }
+                    }); // end of doUnitOfWork
+                    mIndividualReferencesTableModel.remove(rowIndex);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
    }//GEN-LAST:event_deleteChildrenButtonActionPerformed
 
     private void linkToChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToChildrenButtonActionPerformed
@@ -189,7 +225,20 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
 
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            mIndividualsTableModel.add(individualsListPanel.getSelectedIndividual());
+            final Indi selectedIndividual = individualsListPanel.getSelectedIndividual();
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        PropertyXRef addChild = mRoot.addChild(selectedIndividual);
+                        mIndividualReferencesTableModel.add(addChild);
+                    }
+                }); // end of doUnitOfWork
+
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
     }//GEN-LAST:event_linkToChildrenButtonActionPerformed
 
@@ -197,12 +246,12 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
             if (rowIndex != -1) {
-                Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
+                PropertyXRef individualRef = mIndividualReferencesTableModel.getValueAt(rowIndex);
                 IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-                individualEditorPanel.set(individual);
+                individualEditorPanel.set((Indi) individualRef.getTargetEntity());
 
                 DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", individual),
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", (Indi) individualRef.getTargetEntity()),
                         individualEditorPanel);
                 individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
@@ -222,16 +271,16 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     private javax.swing.JButton linkToChildrenButton;
     // End of variables declaration//GEN-END:variables
 
-    public void setChildrensList(Fam root, List<Indi> individualsList) {
+    public void setChildrensList(Fam root, List<? extends PropertyXRef> individualsList) {
         this.mRoot = root;
-        mIndividualsTableModel.update(individualsList);
+        mIndividualReferencesTableModel.addAll(individualsList);
     }
 
     public Indi getSelectedChildren() {
         int selectedRow = childrenTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = childrenTable.convertRowIndexToModel(selectedRow);
-            return mIndividualsTableModel.getValueAt(rowIndex);
+            return (Indi) mIndividualReferencesTableModel.getValueAt(rowIndex).getTargetEntity();
         } else {
             return null;
         }

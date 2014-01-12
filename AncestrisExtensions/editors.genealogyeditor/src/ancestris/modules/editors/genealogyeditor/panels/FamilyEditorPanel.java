@@ -618,7 +618,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         /*
          * +1 CHIL @<XREF:INDI>@
          */
-        childrensListPanel.setChildrensList(mFamily, Arrays.asList(mFamily.getChildren()));
+        childrensListPanel.setChildrensList(mFamily, mFamily.getProperties(PropertyChild.class));
 
         /*
          * +1 NCHI <COUNT_OF_CHILDREN>
