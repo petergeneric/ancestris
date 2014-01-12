@@ -81,9 +81,9 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
     public FamiliesTreeTablePanel(int familyEditingType) {
         mFamilyEditingType = familyEditingType;
-        
+
         initComponents();
-        
+
         for (int index = 0; index < familiesTreeTable.getColumnModel().getColumnCount(); index++) {
             int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
             familiesTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
@@ -333,22 +333,44 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void deleteFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFamilyButtonActionPerformed
-        final int selectedRow = familiesTreeTable.getSelectedRow();
+/*        int rowIndex = familiesTreeTable.convertRowIndexToModel(familiesTreeTable.getSelectedRow());
         Gedcom gedcom = mRoot.getGedcom();
 
-        if (selectedRow != -1) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+        if (rowIndex != -1) {
+            TreePath path = familiesTreeTable.getPathForRow(rowIndex);
+            Object node = path.getLastPathComponent();
+            if (node instanceof DefaultMutableTreeNode) {
+                final DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) node;
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mRoot.delProperty(((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).remove(familiesTreeTable.convertRowIndexToModel(selectedRow)));
+                Entity entity = (Entity) dataNode.getUserObject();
+                if (entity instanceof Fam) {
+                    final Fam family = (Fam) entity;
+
+                    DialogManager createYesNo = DialogManager.createYesNo(
+                            NbBundle.getMessage(
+                            EventEditorPanel.class, "FamiliesTreeTablePanel.deleteFamilyConfirmation.title",
+                            family),
+                            NbBundle.getMessage(
+                            EventEditorPanel.class, "FamiliesTreeTablePanel.deleteFamilyConfirmation.text",
+                            family,
+                            mRoot));
+                    if (createYesNo.show() == DialogManager.YES_OPTION) {
+                        try {
+                            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                                @Override
+                                public void perform(Gedcom gedcom) throws GedcomException {
+                                    mRoot.delProperty(family);
+                                }
+                            }); // end of doUnitOfWork
+                            ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).remove(dataNode);
+                        } catch (GedcomException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
                     }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                }
             }
-        }
+        }*/
     }//GEN-LAST:event_deleteFamilyButtonActionPerformed
 
     private void familiesTreeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familiesTreeTableMouseClicked
