@@ -171,7 +171,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventsListPanel" alignment="0" pref="697" max="32767" attributes="0"/>
+                  <Component id="eventsListPanel" alignment="0" pref="827" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -191,7 +191,7 @@
         <Container class="javax.swing.JPanel" name="familiesChildPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Parents">
+              <JTabbedPaneConstraints tabName="Parents &amp; Sibling">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEditorPanel.familiesChildPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
@@ -205,27 +205,27 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesChildTreeTablePanel" alignment="0" pref="697" max="32767" attributes="0"/>
+                  <Component id="familiesChildTreeTablePanel" alignment="0" pref="827" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesChildTreeTablePanel" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                      <Component id="familiesChildTreeTablePanel" max="32767" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel" name="familiesChildTreeTablePanel">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel(FamiliesTreeTablePanel.EDIT_FAMC)"/>
-              </AuxValues>
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel" name="familiesChildTreeTablePanel">
             </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="familiesSpousePanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Spouses">
+              <JTabbedPaneConstraints tabName="Spouse(s) &amp; Child(ren)">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEditorPanel.familiesSpousePanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>
@@ -236,20 +236,20 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesSpouseTreeTablePanel" alignment="0" pref="697" max="32767" attributes="0"/>
+                  <Component id="familiesSpouseTreeTablePanel" alignment="0" pref="827" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesSpouseTreeTablePanel" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                      <Component id="familiesSpouseTreeTablePanel" max="32767" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel" name="familiesSpouseTreeTablePanel">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesTreeTablePanel(FamiliesTreeTablePanel.EDIT_FAMS)"/>
-              </AuxValues>
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel" name="familiesSpouseTreeTablePanel">
             </Component>
           </SubComponents>
         </Container>
@@ -270,7 +270,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="697" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="827" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -301,7 +301,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="namesListPanel" alignment="0" pref="697" max="32767" attributes="0"/>
+                  <Component id="namesListPanel" alignment="0" pref="827" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -332,7 +332,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="697" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="827" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -363,7 +363,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="associationsListPanel" alignment="0" pref="697" max="32767" attributes="0"/>
+                  <Component id="associationsListPanel" alignment="0" pref="827" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -392,7 +392,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="697" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="827" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
