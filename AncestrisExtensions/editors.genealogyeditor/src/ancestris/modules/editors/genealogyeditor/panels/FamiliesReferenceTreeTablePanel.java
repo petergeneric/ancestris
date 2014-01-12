@@ -339,7 +339,6 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void deleteFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFamilyButtonActionPerformed
-
         int rowIndex = familiesTreeTable.convertRowIndexToModel(familiesTreeTable.getSelectedRow());
         Gedcom gedcom = mRoot.getGedcom();
 
