@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTreeTableModel;
+import ancestris.modules.editors.genealogyeditor.models.FamilyReferencesTreeTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import genj.util.Registry;
@@ -15,6 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
@@ -98,8 +100,9 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                 Object lastPathComponent = path.getLastPathComponent();
                 if (lastPathComponent instanceof DefaultMutableTreeNode) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-                    if (node.getUserObject() instanceof Indi) {
-                        return node.getUserObject().equals(mRoot);
+                    if (node.getUserObject() instanceof PropertyXRef) {
+                        Entity entity = ((PropertyXRef) node.getUserObject()).getTargetEntity();
+                        return entity.equals(mRoot);
                     } else {
                         return false;
                     }
@@ -333,7 +336,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void deleteFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFamilyButtonActionPerformed
-/*        int rowIndex = familiesTreeTable.convertRowIndexToModel(familiesTreeTable.getSelectedRow());
+        int rowIndex = familiesTreeTable.convertRowIndexToModel(familiesTreeTable.getSelectedRow());
         Gedcom gedcom = mRoot.getGedcom();
 
         if (rowIndex != -1) {
@@ -342,9 +345,8 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
             if (node instanceof DefaultMutableTreeNode) {
                 final DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) node;
 
-                Entity entity = (Entity) dataNode.getUserObject();
-                if (entity instanceof Fam) {
-                    final Fam family = (Fam) entity;
+                if (dataNode.getUserObject() instanceof Fam) {
+                    final Fam family = (Fam) dataNode.getUserObject();
 
                     DialogManager createYesNo = DialogManager.createYesNo(
                             NbBundle.getMessage(
@@ -368,9 +370,42 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                             Exceptions.printStackTrace(ex);
                         }
                     }
+                } else if (dataNode.getUserObject() instanceof PropertyXRef) {
+                    if (((PropertyXRef) dataNode.getUserObject()).getTargetEntity() instanceof Indi) {
+                        Indi indi = (Indi) ((PropertyXRef) dataNode.getUserObject()).getTargetEntity();
+                        TreeNode parent = dataNode.getParent();
+                        if (parent instanceof DefaultMutableTreeNode) {
+                            if (((DefaultMutableTreeNode) parent).getUserObject() instanceof Fam) {
+                                final Fam family = (Fam) ((DefaultMutableTreeNode) parent).getUserObject();
+
+                                DialogManager createYesNo = DialogManager.createYesNo(
+                                        NbBundle.getMessage(
+                                        EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.title",
+                                        indi),
+                                        NbBundle.getMessage(
+                                        EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.text",
+                                        indi,
+                                        family));
+                                if (createYesNo.show() == DialogManager.YES_OPTION) {
+                                    try {
+                                        gedcom.doUnitOfWork(new UnitOfWork() {
+
+                                            @Override
+                                            public void perform(Gedcom gedcom) throws GedcomException {
+                                                family.delProperty((PropertyXRef)dataNode.getUserObject());
+                                            }
+                                        }); // end of doUnitOfWork
+                                        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).remove(dataNode);
+                                    } catch (GedcomException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }*/
+        }
     }//GEN-LAST:event_deleteFamilyButtonActionPerformed
 
     private void familiesTreeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familiesTreeTableMouseClicked
