@@ -198,7 +198,10 @@ public class FamiliesListPanel extends javax.swing.JPanel {
             familyEditorPanel.set(family);
 
             DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", family),
+                    NbBundle.getMessage(
+                    FamilyEditorPanel.class,
+                    "FamilyEditorPanel.edit.title",
+                    family),
                     familyEditorPanel);
             familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 
@@ -218,16 +221,29 @@ public class FamiliesListPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
 
         if (selectedRow != -1) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+            int rowIndex = familyNamesTable.convertRowIndexToModel(selectedRow);
+            Fam family = mFamiliesTableModel.getValueAt(rowIndex);
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mRoot.delProperty(mFamiliesTableModel.remove(familyNamesTable.convertRowIndexToModel(selectedRow)));
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "FamiliesListPanel.deleteFamilyConfirmation.title",
+                    family),
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "FamiliesListPanel.deleteFamilyConfirmation.text",
+                    family,
+                    mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mRoot.delProperty(mFamiliesTableModel.remove(familyNamesTable.convertRowIndexToModel(selectedRow)));
+                        }
+                    }); // end of doUnitOfWork
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }//GEN-LAST:event_deleteFamilyNameButtonActionPerformed

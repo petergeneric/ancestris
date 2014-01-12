@@ -2,6 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.EventsTableModel;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
+import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.List;
@@ -179,7 +180,9 @@ public class EventsListPanel extends javax.swing.JPanel {
             eventEditorPanel.set(mRoot, event);
 
             ADialog eventEditorDialog = new ADialog(
-                    NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title", PropertyTag2Name.getTagName(event.getTag())),
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "EventEditorPanel.edit.title",
+                    PropertyTag2Name.getTagName(event.getTag())),
                     eventEditorPanel);
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
@@ -198,17 +201,30 @@ public class EventsListPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
 
         if (selectedRow != -1) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+            int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+            PropertyEvent event = mEventsTableModel.getValueAt(rowIndex);
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
-                        mRoot.delProperty(mEventsTableModel.remove(rowIndex));
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
+                    PropertyTag2Name.getTagName(event.getTag())),
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
+                    PropertyTag2Name.getTagName(event.getTag()),
+                    mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
+                            mRoot.delProperty(mEventsTableModel.remove(rowIndex));
+                        }
+                    }); // end of doUnitOfWork
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }//GEN-LAST:event_deleteEventButtonActionPerformed
@@ -230,8 +246,11 @@ public class EventsListPanel extends javax.swing.JPanel {
 
             eventEditorPanel.set(mRoot, mEvent);
 
-            ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(EventEditorPanel.class,
-                    "EventEditorPanel.create.title", eventType), eventEditorPanel);
+            ADialog eventEditorDialog = new ADialog(
+                    NbBundle.getMessage(EventEditorPanel.class,
+                    "EventEditorPanel.create.title",
+                    eventType),
+                    eventEditorPanel);
 
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -256,7 +275,9 @@ public class EventsListPanel extends javax.swing.JPanel {
                 eventEditorPanel.set(mRoot, event);
 
                 ADialog eventEditorDialog = new ADialog(
-                        NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.edit.title", PropertyTag2Name.getTagName(event.getTag())),
+                        NbBundle.getMessage(EventEditorPanel.class,
+                        "EventEditorPanel.edit.title",
+                        PropertyTag2Name.getTagName(event.getTag())),
                         eventEditorPanel);
                 eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
