@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.FamiliesTreeTableModel;
 import ancestris.modules.editors.genealogyeditor.models.FamilyReferencesTreeTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -65,14 +64,15 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
         }
     }
     public static int LIST_FAM = 0;
-    public static int EDIT_FAMC = 1;
-    public static int EDIT_FAMS = 2;
+    public static int EDIT_FAMC = FamilyReferencesTreeTableModel.FAMILY_CHILD;
+    public static int EDIT_FAMS = FamilyReferencesTreeTableModel.FAMILY_SPOUSE;
     private final static Logger logger = Logger.getLogger(FamiliesReferenceTreeTablePanel.class.getName(), null);
     private int mFamilyEditingType = EDIT_FAMC;
     private Registry mRegistry = Registry.get(FamiliesReferenceTreeTablePanel.class);
     private Property mRoot;
     private Fam mCreateFamily = null;
     private String mTableId = FamiliesReferenceTreeTablePanel.class.getName();
+    PropertyXRef mAddChild = null;
 
     /**
      * Creates new form FamiliesTreeTablePanel
@@ -217,7 +217,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mCreateFamily = (Fam) gedcom.createEntity(Gedcom.FAM);
                     if (mFamilyEditingType == EDIT_FAMC) {
-                        mCreateFamily.addChild((Indi) mRoot);
+                        mAddChild = mCreateFamily.addChild((Indi) mRoot);
                     } else if (mFamilyEditingType == EDIT_FAMS) {
                         if (((Indi) mRoot).getSex() == PropertySex.MALE) {
                             mCreateFamily.setHusband((Indi) mRoot);
@@ -237,7 +237,8 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
             familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
 
             if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(familyEditorPanel.commit());
+                familyEditorPanel.commit();
+                ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(mAddChild);
             } else {
                 while (gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -265,7 +266,8 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             if (mFamilyEditingType == EDIT_FAMC) {
-                                selectedFamily.addChild((Indi) mRoot);
+                                PropertyXRef addChild = selectedFamily.addChild((Indi) mRoot);
+                                ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(addChild);
                             } else if (mFamilyEditingType == EDIT_FAMS) {
                                 if (((Indi) mRoot).getSex() == PropertySex.MALE) {
                                     selectedFamily.setHusband((Indi) mRoot);
@@ -275,7 +277,6 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                             }
                         }
                     }); // end of doUnitOfWork
-                    ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(selectedFamily);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
