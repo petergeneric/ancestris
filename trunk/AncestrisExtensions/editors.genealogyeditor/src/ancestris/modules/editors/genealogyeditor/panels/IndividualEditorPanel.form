@@ -228,6 +228,9 @@
           </Layout>
           <SubComponents>
             <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel" name="familiesChildTreeTablePanel">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel(FamiliesReferenceTreeTablePanel.EDIT_FAMC)"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
@@ -259,6 +262,9 @@
           </Layout>
           <SubComponents>
             <Component class="ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel" name="familiesSpouseTreeTablePanel">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel(FamiliesReferenceTreeTablePanel.EDIT_FAMS)"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
