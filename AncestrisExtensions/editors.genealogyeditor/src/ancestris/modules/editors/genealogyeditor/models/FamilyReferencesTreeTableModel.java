@@ -17,15 +17,15 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
     public static int FAMILY_SPOUSE = 2;
     private int mFamilyTableType = FAMILY_CHILD;
     private static String[] familyChildColumnsName = {
-        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.ID.title"),
-        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.husband.title"),
-        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.wife.title"),
-        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.column.date.title"),};
+        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamilyReferencesTreeTableModel.familyChild.column.ID.title"),
+        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamilyReferencesTreeTableModel.familyChild.column.husband.title"),
+        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamilyReferencesTreeTableModel.familyChild.column.wife.title"),
+        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamilyReferencesTreeTableModel.familyChild.column.date.title"),};
     private static String[] familySpouseColumnsName = {
-        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.ID.title"),
-        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.husband.title"),
-        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.wife.title"),
-        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.column.date.title"),};
+        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamilyReferencesTreeTableModel.familySpouse.column.ID.title"),
+        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamilyReferencesTreeTableModel.familySpouse.column.husband.title"),
+        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamilyReferencesTreeTableModel.familySpouse.column.wife.title"),
+        NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamilyReferencesTreeTableModel.familySpouse.column.date.title"),};
     private String[] familyColumnsName = familyChildColumnsName;
     private String mFemale = "";
     private String mMale = "";
@@ -39,12 +39,16 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
         mFamilyTableType = familyType;
         if (mFamilyTableType == FAMILY_CHILD) {
             familyColumnsName = familyChildColumnsName;
-            mFemale = NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.female.title");
-            mMale = NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familyChild.male.title");
+            mFemale = NbBundle.getMessage(FamilyReferencesTreeTableModel.class,
+                    "FamilyReferencesTreeTableModel.familyChild.female.title");
+            mMale = NbBundle.getMessage(FamilyReferencesTreeTableModel.class,
+                    "FamilyReferencesTreeTableModel.familyChild.male.title");
         } else if (mFamilyTableType == FAMILY_SPOUSE) {
             familyColumnsName = familySpouseColumnsName;
-            mFemale = NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.female.title");
-            mMale = NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.familySpouse.male.title");
+            mFemale = NbBundle.getMessage(FamilyReferencesTreeTableModel.class,
+                    "FamilyReferencesTreeTableModel.familySpouse.female.title");
+            mMale = NbBundle.getMessage(FamilyReferencesTreeTableModel.class,
+                    "FamilyReferencesTreeTableModel.familySpouse.male.title");
         }
     }
 
@@ -83,7 +87,8 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
 
                         case 3:
                             return family.getMarriageDate() != null
-                                    ? NbBundle.getMessage(FamilyReferencesTreeTableModel.class, "FamiliesTreeTableModel.family.wedding") + " " + family.getMarriageDate().getDisplayValue()
+                                    ? NbBundle.getMessage(FamilyReferencesTreeTableModel.class,
+                                    "FamilyReferencesTreeTableModel.family.wedding") + " " + family.getMarriageDate().getDisplayValue()
                                     : "";
 
                         default:
@@ -111,7 +116,7 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
                             return child.getBirthDate() != null
                                     ? NbBundle.getMessage(
                                     FamilyReferencesTreeTableModel.class,
-                                    "FamiliesTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
+                                    "FamilyReferencesTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
                                     : "";
 
                         default:
