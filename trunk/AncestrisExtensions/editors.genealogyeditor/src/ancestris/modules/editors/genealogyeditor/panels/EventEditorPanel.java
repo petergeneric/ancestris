@@ -498,8 +498,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
                 eventNameTextField.setText(eventType.getValue());
-                eventNameTextField.setEditable(true);
             }
+            eventNameTextField.setEditable(true);
             eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
                 @Override
