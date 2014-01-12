@@ -1,9 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Indi;
-import genj.gedcom.PropertySex;
+import genj.gedcom.*;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -69,9 +66,8 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
     public Object getValueAt(Object object, int index) {
         if (object instanceof DefaultMutableTreeNode) {
             DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) object;
-            Entity entity = (Entity) dataNode.getUserObject();
-            if (entity instanceof Fam) {
-                Fam family = (Fam) entity;
+            if (dataNode.getUserObject() instanceof Fam) {
+                Fam family = (Fam) dataNode.getUserObject();
                 switch (index) {
                     case 0:
                         return family.getId();
@@ -90,9 +86,8 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
                     default:
                         return "";
                 }
-            } else if (entity instanceof Indi) {
-                TreeNode[] path = dataNode.getPath();
-                Indi child = (Indi) entity;
+            } else if (dataNode.getUserObject() instanceof PropertyChild) {
+                Indi child = ((PropertyChild)dataNode.getUserObject()).getChild();
                 switch (index) {
                     case 0:
                         if (child.getSex() == PropertySex.MALE) {
@@ -152,8 +147,8 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
     public void add(Fam family) {
         DefaultMutableTreeNode familyNode = new DefaultMutableTreeNode(family);
 
-        for (Indi child : family.getChildren()) {
-            familyNode.add(new DefaultMutableTreeNode(child));
+        for (PropertyChild childRef : family.getProperties(PropertyChild.class)) {
+            familyNode.add(new DefaultMutableTreeNode(childRef));
         }
 
         ((DefaultMutableTreeNode) getRoot()).add(familyNode);
@@ -164,8 +159,8 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
         for (Fam family : familiesList) {
             DefaultMutableTreeNode familyNode = new DefaultMutableTreeNode(family);
 
-            for (Indi child : family.getChildren()) {
-                familyNode.add(new DefaultMutableTreeNode(child));
+            for (PropertyChild childRef : family.getProperties(PropertyChild.class)) {
+                familyNode.add(new DefaultMutableTreeNode(childRef));
             }
             ((DefaultMutableTreeNode) getRoot()).add(familyNode);
         }
