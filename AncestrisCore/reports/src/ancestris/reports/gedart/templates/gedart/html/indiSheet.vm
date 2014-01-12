@@ -1,14 +1,15 @@
+<anchor="$INDI.Id">
+<a NAME="$INDI.Id"></a>
 #set($famc=$INDI.Famc)
 #set($fams=$INDI.Fams)
 <!--    ============================================================   -->
-#set ($version="1.06")
+#set ($version="1.10")
 <!--    ============================================================   -->
-$GEDCOM.Submitter.getProperty("NAME")
-<TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
+<TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
  <COL WIDTH="128*">
  <COL WIDTH="128*">
  <TR>
-  <TD COLSPAN="2" WIDTH="100%" HEIGHT="25"no STYLE="background: #ffff00">
+  <TD COLSPAN="2" WIDTH="100%" HEIGHT="25" STYLE="background: #ffff00">
    <P ALIGN="CENTER">
    <FONT SIZE="5">Fiche Individuelle ($INDI.Id) :</FONT>
    <FONT COLOR="#0000ff"><FONT SIZE="6" STYLE="font-size: 28pt"><U>$!INDI.getProperty("NAME")</U></FONT></FONT>
@@ -35,7 +36,7 @@ $GEDCOM.Submitter.getProperty("NAME")
 <div style="margin-left: 0px; margin-right: 0px; text-align: left; 
 background-color: #fffffc">
 
-<TABLE WIDTH="100%" BORDER="3" BORDERCOLOR="#ffff00" CELLPADDING="10" CELLSPACING="5">
+<TABLE WIDTH="100%" BORDER="0" BORDERCOLOR="#ffff00" CELLPADDING="10" CELLSPACING="5">
  <TBODY>
  <TR>
   <TD WIDTH="75%">
@@ -62,19 +63,25 @@ background-color: #fffffc">
  </TR>
 </TABLE>
 <!-- ----------        Debut des donnees personnelles de la personne ------------- -->
-<TABLE WIDTH="100%" BORDER="1" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
+<TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
  <COL WIDTH="154*">
  <COL WIDTH="38*">
  <COL WIDTH="64*">
  <TR VALIGN="TOP">
-  <TD WIDTH="60%">
+  <TD BGCOLOR="#ddffca" WIDTH="60%">
    <P ALIGN="LEFT">
    <FONT SIZE="5"><U>Nom complet</U></FONT> :
    <FONT SIZE="5" STYLE="font-size: 20pt"><B>$!INDI.getProperty("NAME")</B></FONT>
    </P>
   </TD>
-  <TD WIDTH="15%">
+  <TD WIDTH="1%">
+   &nbsp;
+  </TD>
+  <TD WIDTH="13%">
    <P ALIGN="LEFT"><U><B>Sexe</B></U> : $!INDI.getProperty("SEX")</P>
+  </TD>
+  <TD WIDTH="1%">
+   &nbsp;
   </TD>
   <TD ROWSPAN="2" WIDTH="25%">
    <P ALIGN="LEFT">
@@ -136,7 +143,7 @@ background-color: #fffffc">
  </TR>
 </TABLE>
 <!-- ----------        Debut de la table d'affichage des infos naissance ------------- -->
-<TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
+<TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
 	<COL WIDTH="192*">
 	<COL WIDTH="64*">
 #testaff($INDI.getProperty("BIRT:DATE"))#if ($isShown!=0)
@@ -209,7 +216,7 @@ background-color: #fffffc">
 #end
 </TABLE>
 <!-- -------  Debut de la table d'affichage des infos profession et domicile --------- -->
-<TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+<TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
 	<COL WIDTH="256*">
   #set($residence=$INDI.getProperty("RESI"))
   #if ($residence)
@@ -268,7 +275,7 @@ background-color: #fffffc">
   #end
 </TABLE>
 <!-- ----------        Debut de la table d'affichage des infos deces ------------- -->
-<TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+<TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
 	<COL WIDTH="192*">
 	<COL WIDTH="64*">
   #set($deces=$INDI.getProperty("DEAT"))
@@ -308,8 +315,9 @@ background-color: #fffffc">
   #end
   #end
 </TABLE>
+<br />
 <!-- ----------  Debut de la table d'affichage des Parents de la personne concernee ------------- -->
-<TABLE WIDTH="100%" BORDER="1" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
+<TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
  <TBODY>
  <TR>
   <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP" BGCOLOR="#e6e6ff">
@@ -371,9 +379,10 @@ background-color: #fffffc">
  </TR>
  </TBODY>
 </TABLE>
+<br />
 <!-- ----------------------- Debut des renseignements sur les mariages -------------- -->
 #foreach ($fam in $fams)
-<TABLE WIDTH="100%" BORDER="1" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
+<TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
 	<TBODY>
 		<TR>
 			<TD COLSPAN="2" WIDTH="100%" VALIGN="TOP" BGCOLOR="#e6e6ff">
@@ -406,7 +415,7 @@ background-color: #fffffc">
 	<TBODY>
 	<TR>
 		<TD COLSPAN="2" WIDTH="100%" VALIGN="TOP">
-			<TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+			<TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
 				<COL WIDTH="256*">
 				<TR>
 					<TD ROWSPAN="2" WIDTH="60%" VALIGN="TOP">
@@ -501,9 +510,11 @@ background-color: #fffffc">
 	</TBODY>
 	#end
 </TABLE>
+<br />
 #end
+<br />
 <!-- ------   Debut de la table d'affichage des Renseignements Complementaires ------- -->
-<TABLE WIDTH="100%" BORDER="1" BORDERCOLOR="#98ffab" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+<TABLE WIDTH="100%" BORDER="0" BORDERCOLOR="#98ffab" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
 	<COL WIDTH="256*">
 	<TR BGCOLOR="#ddffca">
 		<TD WIDTH="100%" VALIGN="TOP">
