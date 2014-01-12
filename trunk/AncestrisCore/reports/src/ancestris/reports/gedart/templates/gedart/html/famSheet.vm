@@ -1,9 +1,11 @@
+##Page Break
+
 <!--    ============================================================   -->
-#set ($version="1.02")
+#set ($version="1.10")
 <!--    ============================================================   -->
 
 <a name="toc10"></a>
-<TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
+<TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
  <COL WIDTH="128*">
  <COL WIDTH="128*">
  <TR>
@@ -39,10 +41,10 @@ padding:2px 0px 2px 0px; text-align:left;">
 <!-- ----------------- Ligne de separation entre l'entete et les infos ------------ -->
 
 <!-- ----  Debut de la table d'affichage des infos sur les 2 conjoints ---- -->
-<TABLE WIDTH="100%" BORDER="1" BGCOLOR="#fffff0" CELLPADDING="1" CELLSPACING="1">
+<TABLE WIDTH="100%" BORDER="0" BGCOLOR="#fffff0" CELLPADDING="1" CELLSPACING="1">
  <COL WIDTH="256*">
  <TR>
-  <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP" BGCOLOR="#e6e6ff">
+  <TD WIDTH="100%" VALIGN="TOP" BGCOLOR="#e6e6ff">
    <P><FONT SIZE="4" STYLE="font-size: 16pt"><U><B>Renseignements sur les deux conjoints</B></U></FONT></P>
   </TD>
  </TR>
@@ -50,7 +52,7 @@ padding:2px 0px 2px 0px; text-align:left;">
 <TABLE WIDTH="100%" BORDER="1" BGCOLOR="#fffff0" CELLPADDING="1" CELLSPACING="1">
  <COL WIDTH="256*">
  <TR>
-  <TD WIDTH="100%" VALIGN="TOP">
+  <TD WIDTH="100%" COLSPAN="2" VALIGN="TOP">
    <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
     <COL WIDTH="128*">
     <COL WIDTH="128*">
@@ -68,7 +70,7 @@ padding:2px 0px 2px 0px; text-align:left;">
        </TR>
       </TABLE>
 <!-- --------- Debut des donnees d'Etat Civil de l'Homme ----------- -->
-      <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+      <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
          <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="0" CELLSPACING="1">
@@ -98,15 +100,15 @@ padding:2px 0px 2px 0px; text-align:left;">
          </TABLE>
         </TD>
        </TR>
+       <br />
 <!-- ----------- Debut des infos naissance de l'Homme ------------- -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
-         <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
-	        <COL WIDTH="192*">
-	        <COL WIDTH="64*">
+         <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
+	        <COL WIDTH="256*">
           #testaff($FAM.Husband.getProperty("BIRT:DATE"))#if ($isShown!=0)
 	        <TR VALIGN="TOP">
-		       <TD WIDTH="75%">
+		       <TD>
 			      <P ALIGN="LEFT">
 			      <FONT STYLE="font-size: 10pt"><U><B>Naissance</B></U> :</FONT>
 			      $!FAM.Husband.getProperty("BIRT:DATE")
@@ -115,18 +117,21 @@ padding:2px 0px 2px 0px; text-align:left;">
 			      <FONT STYLE="font-size: 10pt"><U>Lieu de naissance</U> :</FONT>
 			      $!FAM.Husband.getProperty("BIRT:PLAC")
             </P>
-		       </TD>
-		       <TD WIDTH="25%">
+            #set($naissance_homme_note=$FAM.Husband.getProperty("BIRT:NOTE"))
+            #if ($naissance_homme_note)
+            <hr width="66%">
 			      <P ALIGN="LEFT">
 			      <FONT STYLE="font-size: 10pt"><U>Note</U> :
 			      $!FAM.Husband.getProperty("BIRT:NOTE")</FONT>
             </P>
+            <hr width="66%">
+            #end
 		       </TD>
 	        </TR>
           #end
           #testaff($FAM.Husband.getProperty("BAPM"))#if ($isShown!=0)
       	  <TR VALIGN="TOP">
-		       <TD WIDTH="75%">
+		       <TD>
 			      <P ALIGN="LEFT">
 				     <FONT STYLE="font-size: 10pt"><U><B>Bapt&ecirc;me</B></U> :</FONT>
 				     $!FAM.Husband.getProperty("BAPM:DATE")
@@ -135,21 +140,24 @@ padding:2px 0px 2px 0px; text-align:left;">
 				     <FONT STYLE="font-size: 10pt"><U>Lieu du bapt&ecirc;me</U> :</FONT>
 				     $!FAM.Husband.getProperty("BAPM:PLAC")
             </P>
-		       </TD>
-		       <TD WIDTH="25%">
+            #set($bapteme_homme_note=$FAM.Husband.getProperty("BAPM:NOTE"))
+            #if ($bapteme_homme_note)
+            <hr width="66%">
 			      <P ALIGN="LEFT">
 			      <FONT STYLE="font-size: 10pt"><U>Note</U> :
 			      $!FAM.Husband.getProperty("BAPM:NOTE")</FONT>
             </P>
+            <hr width="66%">
+            #end
 		       </TD>
           </TR>
           #testaff($FAM.Husband.getProperty("BAPM:XREF"))#if ($isShown!=0)
           <TR>
            <TD COLSPAN="2">
             #foreach ($event in $FAM.Husband.getProperty("BAPM:XREF"))
-##	      	<p>$event.Value</p>
+##	      	<P>$event.Value</P>
 		        #set($asso=$event.getProperty("*"))
-            <p>$asso.getProperty("RELA"): $event.Target</p>
+            <P>$asso.getProperty("RELA"): $event.Target</P>
             #end
            </TD>
 	        </TR>
@@ -158,53 +166,65 @@ padding:2px 0px 2px 0px; text-align:left;">
          </TABLE>
         </TD>
        </TR>
+       <br />
 <!-- ------------- Debut des infos deces de l'Homme ---------------- -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
-         <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
-	        <COL WIDTH="192*">
-	        <COL WIDTH="64*">
+         <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+	        <COL WIDTH="256*">
           #set($deces=$FAM.Husband.getProperty("DEAT"))
           #if ($deces)
 	        <TR VALIGN="TOP">
-		       <TD WIDTH="75%">
-		        <P><FONT STYLE="font-size: 10pt"><U><B>D&eacute;c&egrave;s</B></U></FONT>
+		       <TD>
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U><B>D&eacute;c&egrave;s</B></U></FONT>
 		        : $!FAM.Husband.getProperty("DEAT:DATE")
             </P>
-		        <P><FONT STYLE="font-size: 10pt"><U>Lieu du D&eacute;c&egrave;s</U></FONT>
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U>Lieu du D&eacute;c&egrave;s</U></FONT>
 		        : $!FAM.Husband.getProperty("DEAT:PLAC")
             </P>
+            #set($deces_homme_note=$FAM.Husband.getProperty("DEAT:NOTE"))
+            #if ($deces_homme_note)
+            <hr width="66%">
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U>Note</U></FONT>
+            : $!FAM.Husband.getProperty("DEAT:NOTE")
+            </P>
+            <hr width="66%">
+            #end
 <!-- -----------     Age de l'homme lors de son deces -------------- -->
             <P ALIGN="LEFT">
             #set($deces_age_mari=$FAM.Husband.getProperty("DEAT:AGE"))
             #if ($deces_age_mari)
             <FONT STYLE="font-size: 10pt"><U>(Remarque</U> : 
             Lors de son d&eacute;c&egrave;s, il &eacute;tait ag&eacute; 
-            de $!FAM.Husband.getProperty("DEAT:AGE"))</FONT>
+            de $!FAM.Husband.getProperty("DEAT:AGE") ans.)</FONT>
             </P>
             #end
 		       </TD>
-		       <TD WIDTH="25%">
-		        <P><FONT STYLE="font-size: 10pt"><U>Note</U></FONT>
-            : $!FAM.Husband.getProperty("DEAT:NOTE")
-            </P>
-		       </TD>
 	        </TR>
-          #set($sepulture=$FAM.Husband.getProperty("BURI"))
-          #if ($sepulture)
+          #set($sepulture_homme=$FAM.Husband.getProperty("BURI"))
+          #if ($sepulture_homme)
 	        <TR VALIGN="TOP">
-		       <TD WIDTH="75%">
-		        <P><FONT STYLE="font-size: 10pt"><U><B>S&eacute;pulture</B></U></FONT>
+		       <TD>
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U><B>S&eacute;pulture</B></U></FONT>
 		        : $!FAM.Husband.getProperty("BURI:DATE")
             </P>
-		        <P><FONT STYLE="font-size: 10pt"><U>Lieu de la S&eacute;pulture</U></FONT>
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U>Lieu de la S&eacute;pulture</U></FONT>
 		        : $!FAM.Husband.getProperty("BURI:PLAC")
             </P>
-		       </TD>
-		       <TD WIDTH="25%">
-		        <P><FONT STYLE="font-size: 10pt"><U>Note</U></FONT>
+            #set($sepulture_homme_note=$FAM.Husband.getProperty("BURI:NOTE"))
+            #if ($sepulture_homme_note)
+            <hr width="66%">
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U>Note</U></FONT>
             : $!FAM.Husband.getProperty("BURI:NOTE")
             </P>
+            <hr width="66%">
+            #end
 		       </TD>
 	        </TR>
           #end
@@ -212,6 +232,7 @@ padding:2px 0px 2px 0px; text-align:left;">
          </TABLE>
         </TD>
        </TR>
+       <br />
 <!-- ------------------     Parents de l'Homme    ----------------- -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
@@ -219,7 +240,7 @@ padding:2px 0px 2px 0px; text-align:left;">
           <TR VALIGN="TOP">
            <TD WIDTH="100%">
             <P ALIGN="LEFT">
-            <FONT STYLE="font-size: 10pt"><U>Parents de $!FAM.Husband.getProperty("NAME")</U> :<br>
+            <FONT STYLE="font-size: 10pt"><U><b>Parents de $!FAM.Husband.getProperty("NAME")</b></U> :<br>
             <div style="margin-left: 10px;">
              <FONT STYLE="font-size: 10pt">
              <li>
@@ -282,14 +303,7 @@ padding:2px 0px 2px 0px; text-align:left;">
            <TD>
             <P ALIGN="LEFT">
             <FONT STYLE="font-size: 10pt"><U>Lors de son mariage il avait</U> 
-            : $!FAM.getProperty("MARR:HUSB:AGE")
-<br>
-$!FAM.getProperty("MARR:HUSB:AGE").Years ans
-$!FAM.getProperty("MARR:HUSB:AGE").Months mois
-$!FAM.getProperty("MARR:HUSB:AGE").Days jours
-</br>
-
-            </FONT>
+            : $!FAM.getProperty("MARR:HUSB:AGE") ans.</FONT>
             </P>
            </TD>
           </TR>
@@ -312,7 +326,7 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
        </TR>
       </TABLE>
 <!-- --------  Debut des donnees d'Etat Civil de la Femme ---------- -->
-      <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+      <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
          <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
@@ -342,15 +356,15 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
          </TABLE>
         </TD>
        </TR>
+       <br />
 <!-- ----------- Debut des infos naissance de la Femme ------------- -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
-         <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
-	        <COL WIDTH="192*">
-	        <COL WIDTH="64*">
+         <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
+	        <COL WIDTH="256*">
           #testaff($FAM.Wife.getProperty("BIRT:DATE"))#if ($isShown!=0)
 	        <TR VALIGN="TOP">
-		       <TD WIDTH="75%">
+		       <TD>
 			      <P ALIGN="LEFT">
 			      <FONT STYLE="font-size: 10pt"><U><B>Naissance</B></U> :</FONT>
 			      $!FAM.Wife.getProperty("BIRT:DATE")
@@ -359,18 +373,21 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
 			      <FONT STYLE="font-size: 10pt"><U>Lieu de naissance</U> :</FONT>
 			      $!FAM.Wife.getProperty("BIRT:PLAC")
             </P>
-		       </TD>
-		       <TD WIDTH="25%">
+            #set($naissance_femme_note=$FAM.Wife.getProperty("BIRT:NOTE"))
+            #if ($naissance_femme_note)
+            <hr width="66%">
 			      <P ALIGN="LEFT">
 			      <FONT STYLE="font-size: 10pt"><U>Note</U> :
 			      $!FAM.Wife.getProperty("BIRT:NOTE")</FONT>
             </P>
+            <hr width="66%">
+            #end
 		       </TD>
 	        </TR>
           #end
           #testaff($FAM.Wife.getProperty("BAPM"))#if ($isShown!=0)
       	  <TR VALIGN="TOP">
-		       <TD WIDTH="75%">
+		       <TD>
 			      <P ALIGN="LEFT">
 				    <FONT STYLE="font-size: 10pt"><U><B>Bapt&ecirc;me</B></U> :</FONT>
 				    $!FAM.Wife.getProperty("BAPM:DATE")
@@ -379,12 +396,15 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
 				    <FONT STYLE="font-size: 10pt"><U>Lieu du bapt&ecirc;me</U> :</FONT>
 				    $!FAM.Wife.getProperty("BAPM:PLAC")
             </P>
-		       </TD>
-		       <TD WIDTH="25%">
+            #set($bapteme_femme_note=$FAM.Wife.getProperty("BAPM:NOTE"))
+            #if ($bapteme_femme_note)
+            <hr width="66%">
 			      <P ALIGN="LEFT">
 			      <FONT STYLE="font-size: 10pt"><U>Note</U> :
 			      $!FAM.Wife.getProperty("BAPM:NOTE")</FONT>
             </P>
+            <hr width="66%">
+            #end
 		       </TD>
           </TR>
           #testaff($FAM.Wife.getProperty("BAPM:XREF"))#if ($isShown!=0)
@@ -402,53 +422,62 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
          </TABLE>
         </TD>
        </TR>
+       <br />
 <!-- ------------- Debut des infos deces de la Femme --------------- -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
-         <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
-	        <COL WIDTH="192*">
-	        <COL WIDTH="64*">
+         <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+	        <COL WIDTH="256*">
           #set($deces=$FAM.Wife.getProperty("DEAT"))
           #if ($deces)
 	        <TR VALIGN="TOP">
-		       <TD WIDTH="75%">
+		       <TD>
 		        <P><FONT STYLE="font-size: 10pt"><U><B>D&eacute;c&egrave;s</B></U></FONT>
 		        : $!FAM.Wife.getProperty("DEAT:DATE")
             </P>
 		        <P><FONT STYLE="font-size: 10pt"><U>Lieu du D&eacute;c&egrave;s</U></FONT>
 		        : $!FAM.Wife.getProperty("DEAT:PLAC")
             </P>
+            #set($deces_femme_note=$FAM.Wife.getProperty("DEAT:NOTE"))
+            #if ($deces_femme_note)
+            <hr width="66%">
+		        <P><FONT STYLE="font-size: 10pt"><U>Note</U></FONT>
+            : $!FAM.Wife.getProperty("DEAT:NOTE")
+            </P>
+            <hr width="66%">
+            #end
 <!-- -----------    Age de la femme lors de son deces -------------- -->
             <P ALIGN="LEFT">
             #set($deces_age_femme=$FAM.Wife.getProperty("DEAT:AGE"))
             #if ($deces_age_femme)
             <FONT STYLE="font-size: 10pt"><U>(Remarque</U> : 
             Lors de son d&eacute;c&egrave;s, elle &eacute;tait ag&eacute;e 
-            de $!FAM.Wife.getProperty("DEAT:AGE"))</FONT>
+            de $!FAM.Wife.getProperty("DEAT:AGE") ans.)</FONT>
             </P>
             #end
 		       </TD>
-		       <TD WIDTH="25%">
-		        <P><FONT STYLE="font-size: 10pt"><U>Note</U></FONT>
-            : $!FAM.Wife.getProperty("DEAT:NOTE")
-            </P>
-		       </TD>
 	        </TR>
-          #set($sepulture=$FAM.Wife.getProperty("BURI"))
-          #if ($sepulture)
+          #set($sepulture_femme=$FAM.Wife.getProperty("BURI"))
+          #if ($sepulture_femme)
 	        <TR VALIGN="TOP">
-		       <TD WIDTH="75%">
-		        <P><FONT STYLE="font-size: 10pt"><U><B>S&eacute;pulture</B></U></FONT>
+		       <TD>
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U><B>S&eacute;pulture</B></U></FONT>
 		        : $!FAM.Wife.getProperty("BURI:DATE")
             </P>
-		        <P><FONT STYLE="font-size: 10pt"><U>Lieu de la S&eacute;pulture</U></FONT>
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U>Lieu de la S&eacute;pulture</U></FONT>
 		        : $!FAM.Wife.getProperty("BURI:PLAC")
             </P>
-		       </TD>
-		       <TD WIDTH="25%">
-		        <P><FONT STYLE="font-size: 10pt"><U>Note</U></FONT>
+            #set($sepulture_femme_note=$FAM.Wife.getProperty("BURI:NOTE"))
+            #if ($sepulture_femme_note)
+            <hr width="66%">
+		        <P ALIGN="LEFT">
+            <FONT STYLE="font-size: 10pt"><U>Note</U></FONT>
             : $!FAM.Wife.getProperty("BURI:NOTE")
             </P>
+            <hr width="66%">
+            #end
 		       </TD>
 	        </TR>
           #end
@@ -456,6 +485,7 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
          </TABLE>
         </TD>
        </TR>
+       <br />
 <!-- ----------------------  Parents de la Femme ------------------- -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
@@ -463,7 +493,7 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
           <TR VALIGN="TOP">
            <TD WIDTH="100%">
             <P ALIGN="LEFT">
-            <FONT STYLE="font-size: 10pt"><U>Parents de $!FAM.Wife.getProperty("NAME")</U> :<br>
+            <FONT STYLE="font-size: 10pt"><U><b>Parents de $!FAM.Wife.getProperty("NAME")</b></U> :<br>
             <div style="margin-left: 10px;">
              <FONT STYLE="font-size: 10pt">
              <li>
@@ -526,7 +556,7 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
            <TD>
             <P ALIGN="LEFT">
             <FONT STYLE="font-size: 10pt"><U>Lors de son mariage elle avait</U> 
-            : $!FAM.getProperty("MARR:WIFE:AGE")</FONT>
+            : $!FAM.getProperty("MARR:WIFE:AGE") ans.</FONT>
             </P>
            </TD>
           </TR>
@@ -542,8 +572,9 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
  </TR>
 </TABLE>
 
+<br />
 <!-- ----------------------- Debut des renseignements sur le mariage -------------- -->
-<TABLE WIDTH="100%" BORDER="1" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
+<TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
  <TBODY>
   <TR>
    <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP" BGCOLOR="#e6e6ff">
@@ -554,7 +585,7 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
  <TBODY>
   <TR>
    <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP">
-    <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+    <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
      <COL WIDTH="256*">
      <TR>
       <TD ROWSPAN="2" WIDTH="60%" VALIGN="TOP">
@@ -634,8 +665,9 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
   </TBODY>
 </TABLE>
 
+<br />
 <!-- -------------------- Debut des renseignements sur les enfants ------------- -->
-<TABLE WIDTH="100%" BORDER="1" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
+<TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
  <TBODY>
   <TR>
    <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP" BGCOLOR="#e6e6ff">
@@ -659,6 +691,7 @@ $!FAM.getProperty("MARR:HUSB:AGE").Days jours
  </TBODY>
 </TABLE>
 
+<br />
 <!-- --------- Date de derni&egrave;re modification de vos informations ------ -->
 <TABLE WIDTH="100%" BORDER="1" BGCOLOR="#eeeeee" CELLPADDING="1" CELLSPACING="1">
  <TBODY>
