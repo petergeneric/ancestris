@@ -172,8 +172,12 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
         modelSupport.fireNewRoot();
     }
 
-    public Fam remove(int row) {
-        return null;
+    public void remove(DefaultMutableTreeNode dataNode) {
+        TreeNode parent = dataNode.getParent();
+        if (parent instanceof DefaultMutableTreeNode) {
+            ((DefaultMutableTreeNode)parent).remove(dataNode);
+        }
+        modelSupport.fireNewRoot();
     }
 
     public void update(List<Fam> familiesList) {
