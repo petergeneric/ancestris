@@ -5,6 +5,7 @@ import genj.gedcom.PropertyAssociation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -13,7 +14,10 @@ import javax.swing.table.AbstractTableModel;
 public class AssociationsTableModel extends AbstractTableModel {
 
     List<PropertyAssociation> propertyAssociationList = new ArrayList<PropertyAssociation>();
-    String[] columnsName = {"Event type", "date"};
+    String[] columnsName = {
+        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.eventType.title"),
+        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.ID.date")
+    };
 
     public AssociationsTableModel() {
     }
