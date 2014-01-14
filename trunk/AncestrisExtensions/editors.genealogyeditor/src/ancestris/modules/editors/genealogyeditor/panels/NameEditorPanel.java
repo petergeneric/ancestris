@@ -530,6 +530,14 @@ public class NameEditorPanel extends javax.swing.JPanel {
                             nickname.setValue(nicknameTextField.getText().trim());
                         }
                     }
+                    // ... store changed value
+                    name.setName(
+                            firstNamePrefixTextField.getText().trim(),
+                            firstNameTextField.getText().trim(),
+                            familyNamePrefixTextField.getText().trim(),
+                            familyNameTextField.getText().trim(),
+                            firstNameSuffixTextField.getText().trim(),
+                            false);
                 }
             }); // end of doUnitOfWork
         } catch (GedcomException ex) {
