@@ -42,7 +42,7 @@
                   <Component id="fatherPanel" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="175" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="173" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -134,7 +134,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="husbandNameTextField" alignment="0" pref="223" max="32767" attributes="0"/>
-                      <Component id="husbandBirthDateTextField" max="32767" attributes="0"/>
+                      <Component id="husbandBirthDateTextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="husbandDeathDateTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -217,6 +217,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="husbandNameTextField">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandNameTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -231,6 +232,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="husbandBirthDateTextField">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandBirthDateTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -245,6 +247,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="husbandDeathDateTextField">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandDeathDateTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -269,28 +272,17 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="wifeBirthDateLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="wifeBirthDateTextField" pref="224" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="wifeLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                                  <Component id="wifeNameTextField" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="wifeDeathDateLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                                  <Component id="wifeDeathDateTextField" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="0" pref="12" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="wifeBirthDateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="wifeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="wifeDeathDateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="wifeNameTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="wifeBirthDateTextField" alignment="0" pref="225" max="32767" attributes="0"/>
+                      <Component id="wifeDeathDateTextField" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Component id="motherToolBar" alignment="1" max="32767" attributes="0"/>
           </Group>
@@ -367,6 +359,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="wifeNameTextField">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeNameTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -381,6 +374,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="wifeBirthDateTextField">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeBirthDateTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -402,6 +396,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="wifeDeathDateTextField">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeDeathDateTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -440,7 +435,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="childrensListPanel" alignment="1" pref="144" max="32767" attributes="0"/>
+                  <Component id="childrensListPanel" alignment="1" pref="142" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -471,7 +466,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventsListPanel" alignment="0" pref="144" max="32767" attributes="0"/>
+                  <Component id="eventsListPanel" alignment="0" pref="142" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -508,7 +503,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="144" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="142" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -544,7 +539,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="144" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="142" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -575,7 +570,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="144" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="142" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
