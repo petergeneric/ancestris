@@ -238,7 +238,14 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
             if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 familyEditorPanel.commit();
-                ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(mAddChild);
+                
+                ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).clear();
+                if (mFamilyEditingType == EDIT_FAMC) {
+                    ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilyChild.class));
+                } else if (mFamilyEditingType == EDIT_FAMS) {
+                    ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilySpouse.class));
+                }
+                familiesTreeTable.expandAll();
             } else {
                 while (gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -277,6 +284,14 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                             }
                         }
                     }); // end of doUnitOfWork
+
+                    ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).clear();
+                    if (mFamilyEditingType == EDIT_FAMC) {
+                        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilyChild.class));
+                    } else if (mFamilyEditingType == EDIT_FAMS) {
+                        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilySpouse.class));
+                    }
+                    familiesTreeTable.expandAll();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -485,7 +500,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
     public void setFamiliesList(Property root, List<? extends PropertyXRef> familiesList) {
         this.mRoot = root;
         ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(familiesList);
-        familiesTreeTable.expandAll();
         familiesTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
+        familiesTreeTable.expandAll();
     }
 }
