@@ -139,22 +139,23 @@ public class NamesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteNameButtonActionPerformed
 
     private void namesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_namesTableMouseClicked
-        int selectedRow = namesTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
-            NameEditorPanel nameEditorPanel = new NameEditorPanel();
-            nameEditorPanel.set(root, mNamesTableModel.getValueAt(rowIndex));
-            ADialog nameEditorDialog = new ADialog(
-                    NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title.edit"),
-                    nameEditorPanel);
-            nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = namesTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
+                NameEditorPanel nameEditorPanel = new NameEditorPanel();
+                nameEditorPanel.set(root, mNamesTableModel.getValueAt(rowIndex));
+                ADialog nameEditorDialog = new ADialog(
+                        NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title.edit"),
+                        nameEditorPanel);
+                nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
 
-            if (nameEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                nameEditorPanel.commit();
+                if (nameEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    nameEditorPanel.commit();
+                }
             }
         }
     }//GEN-LAST:event_namesTableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNameButton;
     private javax.swing.JButton deleteNameButton;
