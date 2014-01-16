@@ -193,7 +193,11 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
         modelSupport.fireNewRoot();
     }
 
-    public void update(List<Fam> familiesList) {
+    public void clear() {
+        if (root instanceof DefaultMutableTreeNode) {
+            ((DefaultMutableTreeNode) root).removeAllChildren();
+        }
+        modelSupport.fireNewRoot();
     }
 
     @Override
