@@ -570,11 +570,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        if (mPlace == null) {
-                            mPlace = (PropertyPlace) mRoot.addProperty("PLAC", getPlaceString());
-                        } else {
-                            mPlace.setValue(getPlaceString());
-                        }
+                        mPlace.setValue(getPlaceString());
 
                         if (!gedcomLatitudeTextField.getText().isEmpty() && !gedcomLongitudeTextField.getText().isEmpty()) {
                             Property map;
