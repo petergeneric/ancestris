@@ -625,8 +625,23 @@ public class EventEditorPanel extends javax.swing.JPanel {
         } else {
             agePanel.setVisible(false);
         }
+        
         PropertyPlace place = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
-        gedcomPlacePanel.set(mEvent, place);
+        if (mPlace == null) {
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mPlace = (PropertyPlace) mEvent.addProperty("PLAC", "");
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        
+        gedcomPlacePanel.set(mEvent, mPlace);
 
         Property[] sourcesList = mEvent.getProperties("SOUR");
         sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
