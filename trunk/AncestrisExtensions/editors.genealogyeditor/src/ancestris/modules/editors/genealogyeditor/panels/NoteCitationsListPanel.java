@@ -6,6 +6,7 @@ import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.table.TableCellRenderer;
@@ -151,7 +152,8 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 Note commitedNote = noteEditorPanel.commit();
                 mRoot.addNote(commitedNote);
-                mNoteCitationsTableModel.add(commitedNote);
+                mNoteCitationsTableModel.clear();
+                mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
             } else {
                 while (gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -205,7 +207,8 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
 
-            mNoteCitationsTableModel.add(selectedNote);
+            mNoteCitationsTableModel.clear();
+            mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
         }
     }//GEN-LAST:event_linkToNoteButtonActionPerformed
 
@@ -231,7 +234,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
 
     public void setNotesList(Property root, List<Property> notesList) {
         this.mRoot = root;
-        mNoteCitationsTableModel.update(notesList);
+        mNoteCitationsTableModel.addAll(notesList);
     }
 
     public void setToolBarVisible(boolean visible) {

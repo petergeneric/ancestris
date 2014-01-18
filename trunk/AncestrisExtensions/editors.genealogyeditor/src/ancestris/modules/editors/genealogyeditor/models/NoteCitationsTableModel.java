@@ -82,9 +82,9 @@ public class NoteCitationsTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void update(List<Property> notesList) {
+    public void clear() {
         this.notesList.clear();
-        this.notesList.addAll(notesList);
+        fireTableDataChanged();
     }
 
     public Property getValueAt(int row) {
