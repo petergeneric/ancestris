@@ -357,11 +357,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
          * +1 <<INDIVIDUAL_EVENT_STRUCTURE>>
          * +1 <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>
          */
-        List<PropertyEvent> eventsList = individual.getProperties(PropertyEvent.class);
-        for (Fam family : individual.getFamiliesWhereSpouse()) {
-            eventsList.addAll(family.getProperties(PropertyEvent.class));
-        }
-        eventsListPanel.setEventsList(individual, eventsList);
+        eventsListPanel.setEventsList(individual, individual.getProperties(PropertyEvent.class));
 
         /*
          * +1 <<LDS_INDIVIDUAL_ORDINANCE>>
