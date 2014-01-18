@@ -18,13 +18,14 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private NameTypeComboBoxModel nameTypeComboBoxModelModel = new NameTypeComboBoxModel();
     private Indi root;
     private PropertyName name;
-    private boolean nameTypeModified;
-    private boolean familyNamePrefixModified;
-    private boolean familyNameModified;
-    private boolean firstNamePrefixModified;
-    private boolean firstNameSuffixModified;
-    private boolean firstNameModified;
-    private boolean nicknameModified;
+    private boolean nameModified = false;
+    private boolean nameTypeModified = false;
+    private boolean familyNamePrefixModified = false;
+    private boolean familyNameModified = false;
+    private boolean firstNamePrefixModified = false;
+    private boolean firstNameSuffixModified = false;
+    private boolean firstNameModified = false;
+    private boolean nicknameModified = false;
     private final static Logger logger = Logger.getLogger(NameEditorPanel.class.getName(), null);
 
     /**
@@ -89,16 +90,19 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 firstNamePrefixModified = true;
+                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 firstNamePrefixModified = true;
+                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 firstNamePrefixModified = true;
+                nameModified = true;
             }
         });
 
@@ -108,16 +112,19 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 firstNameModified = true;
+                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 firstNameModified = true;
+                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 firstNameModified = true;
+                nameModified = true;
             }
         });
 
@@ -131,16 +138,19 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 familyNamePrefixModified = true;
+                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 familyNamePrefixModified = true;
+                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 familyNamePrefixModified = true;
+                nameModified = true;
             }
         });
 
@@ -151,16 +161,19 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 familyNameModified = true;
+                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 familyNameModified = true;
+                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 familyNameModified = true;
+                nameModified = true;
             }
         });
 
@@ -172,16 +185,19 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 firstNameSuffixModified = true;
+                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 firstNameSuffixModified = true;
+                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 firstNameSuffixModified = true;
+                nameModified = true;
             }
         });
 
@@ -196,16 +212,19 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 nicknameModified = true;
+                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 nicknameModified = true;
+                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 nicknameModified = true;
+                nameModified = true;
             }
         });
 
@@ -274,6 +293,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
 
     private void nameTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTypeComboBoxActionPerformed
         nameTypeModified = true;
+        nameModified = true;
     }//GEN-LAST:event_nameTypeComboBoxActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
@@ -413,138 +433,141 @@ public class NameEditorPanel extends javax.swing.JPanel {
             firstNameSuffixTextField.setVisible(false);
         }
         revalidate();
+        nameModified = false;
     }
 
     public void commit() {
         final String version = root.getGedcom().getGrammar().getVersion();
 
-        logger.log(Level.INFO, "Commiting ...");
-        try {
-            root.getGedcom().doUnitOfWork(new UnitOfWork() {
+        if (nameModified) {
+            logger.log(Level.INFO, "Commiting ...");
+            try {
+                root.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    if (name == null) {
-                        logger.log(Level.INFO, "Add property NAME");
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (name == null) {
+                            logger.log(Level.INFO, "Add property NAME");
 
-                        name = (PropertyName) root.addProperty("NAME", "");
-                    }
-
-                    if (version.equals("5.5.1") && nameTypeModified == true) {
-
-                        Property nameType = name.getProperty("TYPE");
-                        if (nameType == null) {
-                            logger.log(Level.INFO, "Add property TYPE");
-
-                            name.addProperty("TYPE", nameTypeComboBox.getSelectedItem().toString());
-                        } else {
-                            logger.log(Level.INFO, "Update property TYPE");
-
-                            nameType.setValue(nameTypeComboBox.getSelectedItem().toString());
+                            name = (PropertyName) root.addProperty("NAME", "");
                         }
-                    }
 
-                    /*
-                     * NPFX Non indexing name piece that appears preceding the
-                     * given name and surname parts. Different name prefix parts
-                     * are separated by a comma.
-                     */
-                    if (firstNamePrefixModified == true) {
-                        Property firstnamePrefix = name.getProperty("NPFX");
-                        if (firstnamePrefix == null) {
-                            logger.log(Level.INFO, "Add property NPFX");
+                        if (version.equals("5.5.1") && nameTypeModified == true) {
 
-                            name.addProperty("NPFX", firstNamePrefixTextField.getText().trim());
-                        } else {
-                            logger.log(Level.INFO, "Update property NPFX");
-                            firstnamePrefix.setValue(firstNamePrefixTextField.getText().trim());
+                            Property nameType = name.getProperty("TYPE");
+                            if (nameType == null) {
+                                logger.log(Level.INFO, "Add property TYPE");
+
+                                name.addProperty("TYPE", nameTypeComboBox.getSelectedItem().toString());
+                            } else {
+                                logger.log(Level.INFO, "Update property TYPE");
+
+                                nameType.setValue(nameTypeComboBox.getSelectedItem().toString());
+                            }
                         }
-                    }
 
-                    /*
-                     * GIVN Given name or earned name. Different given names are
-                     * separated by a comma.
-                     */
-                    if (firstNameModified == true) {
-                        Property givenName = name.getProperty("GIVN");
-                        if (givenName == null) {
-                            logger.log(Level.INFO, "Add property GIVN");
+                        /*
+                         * NPFX Non indexing name piece that appears preceding the
+                         * given name and surname parts. Different name prefix parts
+                         * are separated by a comma.
+                         */
+                        if (firstNamePrefixModified == true) {
+                            Property firstnamePrefix = name.getProperty("NPFX");
+                            if (firstnamePrefix == null) {
+                                logger.log(Level.INFO, "Add property NPFX");
 
-                            name.addProperty("GIVN", firstNameTextField.getText().trim());
-                        } else {
-                            logger.log(Level.INFO, "Update property GIVN");
-                            givenName.setValue(firstNameTextField.getText().trim());
+                                name.addProperty("NPFX", firstNamePrefixTextField.getText().trim());
+                            } else {
+                                logger.log(Level.INFO, "Update property NPFX");
+                                firstnamePrefix.setValue(firstNamePrefixTextField.getText().trim());
+                            }
                         }
-                    }
 
-                    if (firstNameSuffixModified == true) {
-                        Property firstNameSuffix = name.getProperty("NSFX");
-                        if (firstNameSuffix == null) {
-                            logger.log(Level.INFO, "Add property NSFX");
-                            name.addProperty("NSFX", firstNameSuffixTextField.getText().trim());
-                        } else {
-                            logger.log(Level.INFO, "Update property NSFX");
-                            firstNameSuffix.setValue(firstNameSuffixTextField.getText().trim());
+                        /*
+                         * GIVN Given name or earned name. Different given names are
+                         * separated by a comma.
+                         */
+                        if (firstNameModified == true) {
+                            Property givenName = name.getProperty("GIVN");
+                            if (givenName == null) {
+                                // Suppressed as an IndexOutOfBoundsException is thrown on undo
+                                // logger.log(Level.INFO, "Add property GIVN");
+                                // name.addProperty("GIVN", firstNameTextField.getText().trim());
+                            } else {
+                                logger.log(Level.INFO, "Update property GIVN");
+                                givenName.setValue(firstNameTextField.getText().trim());
+                            }
                         }
-                    }
 
-                    /*
-                     * SPFX surname prefix or article used in a family name.
-                     * Different surname articles are separated by a comma, for
-                     * example in the name "de la Cruz", this value would be
-                     * "de, la".
-                     */
-                    if (familyNamePrefixModified == true) {
-                        Property familyNamePrefix = name.getProperty("SPFX");
-                        if (familyNamePrefix == null) {
-                            logger.log(Level.INFO, "Add property SPFX");
-                            name.addProperty("SPFX", familyNamePrefixTextField.getText().trim());
-                        } else {
-                            logger.log(Level.INFO, "Update property SPFX");
-                            familyNamePrefix.setValue(familyNamePrefixTextField.getText().trim());
+                        if (firstNameSuffixModified == true) {
+                            Property firstNameSuffix = name.getProperty("NSFX");
+                            if (firstNameSuffix == null) {
+                                logger.log(Level.INFO, "Add property NSFX");
+                                name.addProperty("NSFX", firstNameSuffixTextField.getText().trim());
+                            } else {
+                                logger.log(Level.INFO, "Update property NSFX");
+                                firstNameSuffix.setValue(firstNameSuffixTextField.getText().trim());
+                            }
                         }
-                    }
 
-                    /*
-                     * SURN Surname or family name. Different surnames are
-                     * separated by a comma.
-                     */
-                    if (familyNameModified == true) {
-                        Property familyName = name.getProperty("SURN");
-                        if (familyName == null) {
-                            logger.log(Level.INFO, "Add property SURN");
-                            name.addProperty("SURN", familyNameTextField.getText().trim());
-                        } else {
-                            logger.log(Level.INFO, "Update property SURN");
-                            familyName.setValue(familyNameTextField.getText().trim());
+                        /*
+                         * SPFX surname prefix or article used in a family name.
+                         * Different surname articles are separated by a comma, for
+                         * example in the name "de la Cruz", this value would be
+                         * "de, la".
+                         */
+                        if (familyNamePrefixModified == true) {
+                            Property familyNamePrefix = name.getProperty("SPFX");
+                            if (familyNamePrefix == null) {
+                                logger.log(Level.INFO, "Add property SPFX");
+                                name.addProperty("SPFX", familyNamePrefixTextField.getText().trim());
+                            } else {
+                                logger.log(Level.INFO, "Update property SPFX");
+                                familyNamePrefix.setValue(familyNamePrefixTextField.getText().trim());
+                            }
                         }
-                    }
 
-                    if (nicknameModified == true) {
-                        Property nickname = name.getProperty("NICK");
-                        if (nickname == null) {
-                            logger.log(Level.INFO, "Update property NICK");
-                            name.addProperty("NICK", nicknameTextField.getText().trim());
-                        } else {
-                            logger.log(Level.INFO, "Update property NICK");
-                            nickname.setValue(nicknameTextField.getText().trim());
+                        /*
+                         * SURN Surname or family name. Different surnames are
+                         * separated by a comma.
+                         */
+                        if (familyNameModified == true) {
+                            Property familyName = name.getProperty("SURN");
+                            if (familyName == null) {
+                                // Suppressed as an IndexOutOfBoundsException is thrown on undo
+                                // logger.log(Level.INFO, "Add property SURN");
+                                // name.addProperty("SURN", familyNameTextField.getText().trim());
+                            } else {
+                                logger.log(Level.INFO, "Update property SURN");
+                                familyName.setValue(familyNameTextField.getText().trim());
+                            }
                         }
+
+                        if (nicknameModified == true) {
+                            Property nickname = name.getProperty("NICK");
+                            if (nickname == null) {
+                                logger.log(Level.INFO, "Update property NICK");
+                                name.addProperty("NICK", nicknameTextField.getText().trim());
+                            } else {
+                                logger.log(Level.INFO, "Update property NICK");
+                                nickname.setValue(nicknameTextField.getText().trim());
+                            }
+                        }
+                        // ... store changed value
+                        name.setName(
+                                firstNamePrefixTextField.getText().trim(),
+                                firstNameTextField.getText().trim(),
+                                familyNamePrefixTextField.getText().trim(),
+                                familyNameTextField.getText().trim(),
+                                firstNameSuffixTextField.getText().trim(),
+                                false);
                     }
-                    // ... store changed value
-                    name.setName(
-                            firstNamePrefixTextField.getText().trim(),
-                            firstNameTextField.getText().trim(),
-                            familyNamePrefixTextField.getText().trim(),
-                            familyNameTextField.getText().trim(),
-                            firstNameSuffixTextField.getText().trim(),
-                            false);
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            logger.log(Level.SEVERE, ex.getMessage());
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                logger.log(Level.SEVERE, ex.getMessage());
+            }
+            logger.log(Level.INFO, "... finished");
         }
-
-        logger.log(Level.INFO, "... finished");
     }
 
     PropertyName get() {
