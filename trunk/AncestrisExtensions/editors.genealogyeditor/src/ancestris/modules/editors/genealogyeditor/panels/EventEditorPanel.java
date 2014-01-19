@@ -538,7 +538,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
             });
         }
 
-        PropertyDate date = (PropertyDate) mEvent.getProperty("DATE");
+        PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
         if (date == null) {
             date = (PropertyDate) mEvent.addProperty("DATE", "");
         }
@@ -546,7 +546,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         aDateBean.addChangeListener(new DateBeanListener());
 
         if (mEventType == INDIVIDUAL_EVENT_TYPE) {
-            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
+            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
             if (age == null) {
                 age = (PropertyAge) mEvent.addProperty("AGE", "");
                 age.setGuessed(true);
@@ -626,7 +626,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
             agePanel.setVisible(false);
         }
         
-        PropertyPlace place = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
+        mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
         if (mPlace == null) {
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
