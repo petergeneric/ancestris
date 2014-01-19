@@ -557,7 +557,9 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
             if (index > 0) {
                 placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             }
-            placeString += gedcomFieldsOrder[index].getText();
+            if (gedcomFieldsOrder[index] != null) {
+                placeString += gedcomFieldsOrder[index].getText();
+            }
         }
 
         return placeString;
