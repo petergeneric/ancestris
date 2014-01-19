@@ -472,7 +472,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 }
             });
 
-            Property eventCause = mEvent.getProperty("CAUS");
+            Property eventCause = mEvent.getProperty("CAUS", false);
             if (eventCause != null) {
                 eventCauseTextArea.setText(eventCause.getValue());
             }
@@ -495,7 +495,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
             });
         } else {
             // Event Name
-            Property eventType = mEvent.getProperty("TYPE");
+            Property eventType = mEvent.getProperty("TYPE", false);
             if (eventType != null) {
                 eventNameTextField.setText(eventType.getValue());
             }
@@ -626,14 +626,14 @@ public class EventEditorPanel extends javax.swing.JPanel {
             agePanel.setVisible(false);
         }
         
-        mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG);
+        mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         if (mPlace == null) {
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        mPlace = (PropertyPlace) mEvent.addProperty("PLAC", "");
+                        mPlace = (PropertyPlace) mEvent.addProperty(PropertyPlace.TAG, "");
                     }
                 }); // end of doUnitOfWork
             } catch (GedcomException ex) {
@@ -659,7 +659,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 public void perform(Gedcom gedcom) throws GedcomException {
                     if (mEvent.getTag().equals("EVEN")) {
                         if (mEventNameModified) {
-                            Property eventType = mEvent.getProperty("TYPE");
+                            Property eventType = mEvent.getProperty("TYPE", false);
                             if (eventType != null) {
                                 eventType.setValue(eventNameTextField.getText());
                             } else {
@@ -671,7 +671,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         }
                     } else {
                         if (mEventTypeModified) {
-                            Property eventType = mEvent.getProperty("TYPE");
+                            Property eventType = mEvent.getProperty("TYPE", false);
                             if (eventType != null) {
                                 eventType.setValue(eventTypeTextField.getText());
                             } else {
@@ -680,7 +680,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         }
                         if (mEventCauseModified) {
                             String causeText = eventCauseTextArea.getText();
-                            Property eventCause = mEvent.getProperty("CAUS");
+                            Property eventCause = mEvent.getProperty("CAUS", false);
                             if (causeText.length() > 0) {
                                 if (eventCause == null) {
                                     mEvent.addProperty("CAUS", causeText);
@@ -696,7 +696,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
                     if (mEventType == INDIVIDUAL_EVENT_TYPE) {
                         if (mIndividualAgeModified) {
-                            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
+                            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
                             if (age != null) {
                                 age.setValue(individualAgeTextField.getText() + " y");
                             } else {
