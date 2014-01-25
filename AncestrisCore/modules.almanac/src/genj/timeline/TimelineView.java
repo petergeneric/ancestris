@@ -104,7 +104,7 @@ public class TimelineView extends View {
     /** min/max's */
     /* package */ final static double MIN_CM_PER_YEAR = 0.1D,
             DEF_CM_PER_YEAR = 1.0D,
-            MAX_CM_PER_YEAR = 10.0D,
+            MAX_CM_PER_YEAR = 20.0D,
             MIN_CM_BEF_EVENT = 0.1D,
             DEF_CM_BEF_EVENT = 0.5D,
             MAX_CM_BEF_EVENT = 2.0D,
