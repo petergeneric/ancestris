@@ -89,7 +89,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
         for (int index = 0; index < familiesTreeTable.getColumnModel().getColumnCount(); index++) {
             int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
             familiesTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
-            logger.log(Level.INFO, "setID: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
+            logger.log(Level.INFO, "FamiliesReferenceTreeTablePanel: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
         }
         HighlightPredicate MyHighlightPredicate = new HighlightPredicate() {
 

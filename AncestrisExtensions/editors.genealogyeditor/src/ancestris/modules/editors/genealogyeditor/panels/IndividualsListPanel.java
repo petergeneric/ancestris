@@ -210,7 +210,4 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     public void setToolBarVisible(boolean visible) {
         individualsToolBar.setVisible(visible);
     }
-
-    public void commit() {
-    }
 }

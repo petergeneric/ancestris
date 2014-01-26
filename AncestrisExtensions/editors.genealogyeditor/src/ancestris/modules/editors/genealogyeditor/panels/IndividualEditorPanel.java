@@ -457,12 +457,6 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             nameEditorPanel.commit();
             imageBean.commit();
             sexBeanPanel.commit();
-            eventsListPanel.commit();
-            namesListPanel.commit();
-            sourceCitationsListPanel.commit();
-            noteCitationsListPanel.commit();
-            associationsListPanel.commit();
-            multimediaObjectCitationsListPanel.commit();
 
             return mIndividual;
         } catch (GedcomException ex) {

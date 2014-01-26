@@ -370,9 +370,6 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                     } else {
                         sourceAuthor.setValue(authorTextField.getText());
                     }
-                    notesListPanel.commit();
-                    repositoriesListPanel.commit();
-                    referencesListPanel.commit();
                 }
             }); // end of doUnitOfWork
             return mSource;

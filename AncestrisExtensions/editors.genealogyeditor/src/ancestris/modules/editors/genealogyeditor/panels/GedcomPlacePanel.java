@@ -267,7 +267,6 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
-                linkToPlaceButton.setVisible(false);
                 set(mRoot, mPlace);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
@@ -353,8 +352,6 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         if (place != null) {
             mPlaceFormat = PropertyPlace.getFormat(place.getGedcom());
 
-            linkToPlaceButton.setVisible(false);
-
             try {
                 if (!modulePreferences.nodeExists(place.getGedcom().getName())) {
 
@@ -407,8 +404,6 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                 }
             }
             updatePlace(place, 0);
-        } else {
-            linkToPlaceButton.setVisible(true);
         }
 
         gedcomHamletTextField.getDocument().addDocumentListener(new DocumentListener() {

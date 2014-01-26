@@ -259,9 +259,6 @@ public class NotesListPanel extends javax.swing.JPanel {
         notesToolBar.setVisible(visible);
     }
 
-    public void commit() {
-    }
-
     public Note getSelectedNote() {
         int selectedRow = notesTable.getSelectedRow();
         if (selectedRow != -1) {

@@ -279,22 +279,20 @@ public class EventEditorPanel extends javax.swing.JPanel {
             familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(familyAgePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(husbandAgeLabel)
-                    .addComponent(wifeAgeLabel))
+                .addComponent(husbandAgeLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(husbandAgeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                    .addComponent(wifeAgeTextField))
-                .addContainerGap(395, Short.MAX_VALUE))
+                .addComponent(husbandAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wifeAgeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wifeAgeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addGap(83, 83, 83))
         );
         familyAgePanelLayout.setVerticalGroup(
             familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(familyAgePanelLayout.createSequentialGroup()
-                .addGroup(familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(husbandAgeLabel)
-                    .addComponent(husbandAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(husbandAgeLabel)
+                .addComponent(husbandAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(wifeAgeLabel)
                     .addComponent(wifeAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -311,20 +309,16 @@ public class EventEditorPanel extends javax.swing.JPanel {
         individualAgePanelLayout.setHorizontalGroup(
             individualAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(individualAgePanelLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
                 .addComponent(IndividualAgeLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(individualAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(470, Short.MAX_VALUE))
+                .addGap(0, 476, Short.MAX_VALUE))
         );
         individualAgePanelLayout.setVerticalGroup(
             individualAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(individualAgePanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(individualAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(IndividualAgeLabel)
-                    .addComponent(individualAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+            .addGroup(individualAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(IndividualAgeLabel)
+                .addComponent(individualAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         agePanel.add(individualAgePanel, "IndividualCard");
@@ -729,9 +723,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
         gedcomPlacePanel.commit();
-        sourceCitationsListPanel.commit();
-        noteCitationsListPanel.commit();
-        multimediaObjectCitationsListPanel.commit();
         return mEvent;
     }
 }

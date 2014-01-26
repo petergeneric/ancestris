@@ -862,11 +862,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            eventsListPanel.commit();
-            sourceCitationsListPanel.commit();
-            noteCitationsListPanel.commit();
-            multimediaObjectCitationsListPanel.commit();
-
             return mFamily;
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);

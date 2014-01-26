@@ -289,7 +289,4 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     public void setToolBarVisible(boolean visible) {
         childrenToolBar.setVisible(visible);
     }
-
-    public void commit() {
-    }
 }

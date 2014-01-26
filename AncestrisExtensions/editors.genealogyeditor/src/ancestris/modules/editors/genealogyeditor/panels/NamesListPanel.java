@@ -169,7 +169,4 @@ public class NamesListPanel extends javax.swing.JPanel {
         this.root = root;
         mNamesTableModel.update(namesList);
     }
-
-    public void commit() {
-    }
 }

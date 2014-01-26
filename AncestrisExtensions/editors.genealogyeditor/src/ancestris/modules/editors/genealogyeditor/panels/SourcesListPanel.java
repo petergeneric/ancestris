@@ -221,7 +221,4 @@ public class SourcesListPanel extends javax.swing.JPanel {
             return null;
         }
     }
-
-    public void commit() {
-    }
 }

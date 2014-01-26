@@ -207,7 +207,4 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mSourceCitationsTableModel.addAll(sourcesList);
     }
-
-    public void commit() {
-    }
 }

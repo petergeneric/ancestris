@@ -85,7 +85,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="noteTextToolBar" max="32767" attributes="0"/>
-                  <Component id="noteTextScrollPane" pref="400" max="32767" attributes="0"/>
+                  <Component id="noteTextScrollPane" pref="547" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -93,7 +93,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="noteTextToolBar" min="-2" pref="25" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="noteTextScrollPane" pref="294" max="32767" attributes="0"/>
+                      <Component id="noteTextScrollPane" pref="142" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -141,12 +141,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="referencesListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="referencesListPanel" alignment="0" pref="547" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="referencesListPanel" alignment="0" pref="325" max="32767" attributes="0"/>
+                  <Component id="referencesListPanel" alignment="0" pref="173" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
