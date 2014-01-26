@@ -25,19 +25,19 @@ public class EventsListPanel extends javax.swing.JPanel {
     private PropertyEvent mEvent = null;
     private int mEventTypeList = INDIVIDUAL_EVENT_TYPE_LIST;
     private String[] mIndividualEvents = {
-        PropertyTag2Name.getTagName("ADOP"),
         PropertyTag2Name.getTagName("BIRT"),
+        PropertyTag2Name.getTagName("DEAT"),
+        PropertyTag2Name.getTagName("ADOP"),
+        PropertyTag2Name.getTagName("CHR"),
         PropertyTag2Name.getTagName("BAPM"),
         PropertyTag2Name.getTagName("BARM"),
         PropertyTag2Name.getTagName("BASM"),
         PropertyTag2Name.getTagName("BLES"),
         PropertyTag2Name.getTagName("BURI"),
+        PropertyTag2Name.getTagName("CREM"),
         PropertyTag2Name.getTagName("CENS"),
-        PropertyTag2Name.getTagName("CHR"),
         PropertyTag2Name.getTagName("CHRA"),
         PropertyTag2Name.getTagName("CONF"),
-        PropertyTag2Name.getTagName("CREM"),
-        PropertyTag2Name.getTagName("DEAT"),
         PropertyTag2Name.getTagName("EMIG"),
         PropertyTag2Name.getTagName("FCOM"),
         PropertyTag2Name.getTagName("GRAD"),
@@ -316,8 +316,5 @@ public class EventsListPanel extends javax.swing.JPanel {
         } else {
             return null;
         }
-    }
-
-    public void commit() {
     }
 }

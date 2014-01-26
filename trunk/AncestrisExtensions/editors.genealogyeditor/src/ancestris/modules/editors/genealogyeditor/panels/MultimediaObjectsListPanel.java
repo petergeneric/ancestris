@@ -120,7 +120,4 @@ public class MultimediaObjectsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mMultiMediaObjectsTableModel.update(namesList);
     }
-
-    public void commit() {
-    }
 }

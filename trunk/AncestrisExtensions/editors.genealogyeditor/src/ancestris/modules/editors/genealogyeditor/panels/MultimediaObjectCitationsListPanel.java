@@ -119,7 +119,4 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         multiMediaObjectCitationsTableModel.update(multiMediasList);
     }
-
-    public void commit() {
-    }
 }

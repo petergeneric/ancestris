@@ -216,8 +216,6 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    noteCitationsListPanel.commit();
-                    referencesListPanel.commit();
                 }
             }); // end of doUnitOfWork
         } catch (GedcomException ex) {

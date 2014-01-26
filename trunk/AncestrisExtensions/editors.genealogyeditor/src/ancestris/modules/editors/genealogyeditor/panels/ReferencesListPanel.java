@@ -83,7 +83,4 @@ public class ReferencesListPanel extends javax.swing.JPanel {
         this.mRoot = rootEntity;
         mReferencesTableModel.update(referencesList);
     }
-
-    public void commit() {
-    }
 }

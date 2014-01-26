@@ -241,9 +241,6 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         notesToolBar.setVisible(visible);
     }
 
-    public void commit() {
-    }
-
     private void editNote(Property note) {
         if (note instanceof PropertyNote) {
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();

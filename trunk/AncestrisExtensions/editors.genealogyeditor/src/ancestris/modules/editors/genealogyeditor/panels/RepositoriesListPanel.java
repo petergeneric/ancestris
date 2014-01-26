@@ -122,7 +122,4 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mRepositoriesTableModel.update(repositoriesList);
     }
-
-    public void commit() {
-    }
 }
