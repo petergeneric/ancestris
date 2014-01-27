@@ -145,7 +145,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
             noteEditorPanel.set(mNote);
             ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.createtitle"),
+                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.create.title"),
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
