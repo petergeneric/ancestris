@@ -106,12 +106,18 @@ public class EventEditorPanel extends javax.swing.JPanel {
         public void stateChanged(ChangeEvent e) {
             if (mEventType == INDIVIDUAL_EVENT_TYPE) {
                 PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
-                individualAgeTextField.setText(age.getValue());
+                if (age != null) {
+                    individualAgeTextField.setText(age.getValue());
+                }
             } else if (mEventType == FAMILY_EVENT_TYPE) {
                 PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
-                husbandAgeTextField.setText(husbandAge.getValue());
+                if (husbandAge != null) {
+                    husbandAgeTextField.setText(husbandAge.getValue());
+                }
                 PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
-                wifeAgeTextField.setText(wifeAge.getValue());
+                if (wifeAge != null) {
+                    wifeAgeTextField.setText(wifeAge.getValue());
+                }
             }
         }
     }
@@ -619,7 +625,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         } else {
             agePanel.setVisible(false);
         }
-        
+
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         if (mPlace == null) {
             try {
@@ -634,7 +640,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
         }
-        
+
         gedcomPlacePanel.set(mEvent, mPlace);
 
         Property[] sourcesList = mEvent.getProperties("SOUR");
