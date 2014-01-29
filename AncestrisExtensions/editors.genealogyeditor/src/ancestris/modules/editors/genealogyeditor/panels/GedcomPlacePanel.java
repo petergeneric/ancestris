@@ -4,6 +4,8 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
@@ -21,6 +23,7 @@ import org.openide.util.NbPreferences;
  */
 public class GedcomPlacePanel extends javax.swing.JPanel {
 
+    private final static Logger logger = Logger.getLogger(GedcomPlacePanel.class.getName(), null);
     private Property mRoot;
     private PropertyPlace mPlace;
     private String mPlaceFormat[];
@@ -415,6 +418,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 1);
+                    } else {
+                        updatePlace(null, 1);
                     }
                 }
             }
@@ -431,6 +436,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 1);
+                    } else {
+                        updatePlace(null, 1);
                     }
                 }
             }
@@ -444,6 +451,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[2], gedcomCityTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 3);
+                    } else {
+                        updatePlace(null, 1);
                     }
                 }
             }
@@ -460,6 +469,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[2], gedcomCityTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 3);
+                    } else {
+                        updatePlace(null, 1);
                     }
                 }
             }
@@ -473,6 +484,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[5], gedcomCityTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 6);
+                    } else {
+                        updatePlace(null, 1);
                     }
                 }
             }
@@ -489,6 +502,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[5], gedcomCityTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 6);
+                    } else {
+                        updatePlace(null, 1);
                     }
                 }
             }
@@ -498,39 +513,52 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
     private void updatePlace(PropertyPlace place, int startIndex) {
 
         updateOnGoing = true;
-        for (int index = startIndex; index < mPlaceOrder.length; index++) {
-            if (mPlaceOrder[index] != -1) {
-                if (mPlaceOrder[index] < mPlaceFormat.length) {
-                    String jurisdiction = place.getJurisdiction(mPlaceOrder[index]);
-                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(jurisdiction != null ? jurisdiction : "");
+
+        if (place != null) {
+            logger.log(Level.INFO, "startIndex {0}", new Object[]{startIndex});
+
+            for (int index = startIndex; index < mPlaceOrder.length; index++) {
+                if (mPlaceOrder[index] != -1) {
+                    if (mPlaceOrder[index] < mPlaceFormat.length) {
+                        String jurisdiction = place.getJurisdiction(mPlaceOrder[index]);
+                        ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(jurisdiction != null ? jurisdiction : "");
+                    }
+                } else {
+                    ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
+                }
+            }
+
+            Property latitude = null;
+            Property longitude = null;
+
+            if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                Property map = mPlace.getProperty("MAP");
+                if (map != null) {
+                    latitude = map.getProperty("LATI");
+                    longitude = map.getProperty("LONG");
                 }
             } else {
-                ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
+                Property map = mPlace.getProperty("_MAP");
+                if (map != null) {
+                    latitude = map.getProperty("_LATI");
+                    longitude = map.getProperty("_LONG");
+                }
             }
-        }
 
-        Property latitude = null;
-        Property longitude = null;
+            if (latitude != null && longitude != null) {
+                gedcomLatitudeTextField.setText(latitude.getValue());
+                gedcomLongitudeTextField.setText(longitude.getValue());
 
-        if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-            Property map = mPlace.getProperty("MAP");
-            if (map != null) {
-                latitude = map.getProperty("LATI");
-                longitude = map.getProperty("LONG");
+            } else {
+                gedcomLatitudeTextField.setText("");
+                gedcomLongitudeTextField.setText("");
             }
         } else {
-            Property map = mPlace.getProperty("_MAP");
-            if (map != null) {
-                latitude = map.getProperty("_LATI");
-                longitude = map.getProperty("_LONG");
+            logger.log(Level.INFO, "No place found startIndex {0}", new Object[]{startIndex});
+
+            for (int index = startIndex; index < mPlaceOrder.length; index++) {
+                ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
             }
-        }
-
-        if (latitude != null && longitude != null) {
-            gedcomLatitudeTextField.setText(latitude.getValue());
-            gedcomLongitudeTextField.setText(longitude.getValue());
-
-        } else {
             gedcomLatitudeTextField.setText("");
             gedcomLongitudeTextField.setText("");
         }
