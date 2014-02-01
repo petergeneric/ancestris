@@ -452,7 +452,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 3);
                     } else {
-                        updatePlace(null, 1);
+                        updatePlace(null, 3);
                     }
                 }
             }
@@ -470,7 +470,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 3);
                     } else {
-                        updatePlace(null, 1);
+                        updatePlace(null, 3);
                     }
                 }
             }
@@ -485,7 +485,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 6);
                     } else {
-                        updatePlace(null, 1);
+                        updatePlace(null, 6);
                     }
                 }
             }
@@ -503,7 +503,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 6);
                     } else {
-                        updatePlace(null, 1);
+                        updatePlace(null, 6);
                     }
                 }
             }
