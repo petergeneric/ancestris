@@ -1073,6 +1073,13 @@ public class Gedcom implements Comparable {
     return !undoHistory.isEmpty();
   }
   
+/*
+ * Get Undo remaining Un-do Action
+ */
+ public int getUndoNb() {
+    return undoHistory.size();
+ }
+    
   /**
    * Performs an undo
    */
