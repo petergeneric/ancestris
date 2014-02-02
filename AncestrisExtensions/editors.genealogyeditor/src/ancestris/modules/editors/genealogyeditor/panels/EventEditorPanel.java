@@ -297,11 +297,11 @@ public class EventEditorPanel extends javax.swing.JPanel {
         familyAgePanelLayout.setVerticalGroup(
             familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(wifeAgeLabel)
+                .addComponent(wifeAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(husbandAgeLabel)
-                .addComponent(husbandAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(wifeAgeLabel)
-                    .addComponent(wifeAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(husbandAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         agePanel.add(familyAgePanel, "familyCard");
@@ -446,7 +446,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     public void set(Property root, PropertyEvent event) {
         this.mRoot = root;
         this.mEvent = event;
-        if (!mEvent.getTag().equals("EVEN")) {
+        if (!mEvent.getTag().equals("EVEN") || !mEvent.getTag().equals("FACT")) {
             // Event Name
             eventNameTextField.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
 
