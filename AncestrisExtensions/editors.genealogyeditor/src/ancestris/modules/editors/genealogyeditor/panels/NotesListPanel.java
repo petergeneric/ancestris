@@ -133,6 +133,7 @@ public class NotesListPanel extends javax.swing.JPanel {
 
     private void addNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -149,11 +150,17 @@ public class NotesListPanel extends javax.swing.JPanel {
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                Note commitedNote = noteEditorPanel.commit();
+                final Note commitedNote = noteEditorPanel.commit();
                 mNotesTableModel.add(commitedNote);
-                mRoot.addNote(commitedNote);
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mRoot.addNote(commitedNote);
+                    }
+                }); // end of doUnitOfWork
             } else {
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }
@@ -164,6 +171,8 @@ public class NotesListPanel extends javax.swing.JPanel {
 
     private void editNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNoteButtonActionPerformed
         int selectedRow = notesTable.getSelectedRow();
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         if (selectedRow != -1) {
             int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
@@ -177,8 +186,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 noteEditorPanel.commit();
             } else {
-                Gedcom gedcom = mRoot.getGedcom();
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }
@@ -205,13 +213,18 @@ public class NotesListPanel extends javax.swing.JPanel {
         individualsListDialog.setDialogId(NoteEditorPanel.class.getName());
 
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            Note selectedNote = notesListPanel.getSelectedNote();
+            final Note selectedNote = notesListPanel.getSelectedNote();
             mNotesTableModel.add(selectedNote);
-            mRoot.addNote(selectedNote);
-        } else {
-            Gedcom gedcom = mRoot.getGedcom();
-            while (gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mRoot.addNote(selectedNote);
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
     }//GEN-LAST:event_linkToNoteButtonActionPerformed
@@ -219,6 +232,8 @@ public class NotesListPanel extends javax.swing.JPanel {
     private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int selectedRow = notesTable.getSelectedRow();
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
             if (selectedRow != -1) {
                 int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
@@ -232,8 +247,7 @@ public class NotesListPanel extends javax.swing.JPanel {
                 if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     noteEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = mRoot.getGedcom();
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }

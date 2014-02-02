@@ -40,6 +40,7 @@ public final class GenealogyEditorCreateIndividualAction implements ActionListen
 
         if ((gedcomContext = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom gedcom = gedcomContext.getGedcom();
+            int undoNb = gedcom.getUndoNb();
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -61,7 +62,7 @@ public final class GenealogyEditorCreateIndividualAction implements ActionListen
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     individualEditorPanel.commit();
                 } else {
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }

@@ -2,7 +2,6 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.ConfidenceLevelComboBoxModel;
 import ancestris.modules.editors.genealogyeditor.models.EventsRoleComboBoxModel;
-import ancestris.modules.editors.genealogyeditor.models.EventsTypeComboBoxModel;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
@@ -77,7 +76,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         PropertyTag2Name.getTagName("PROB"),
         PropertyTag2Name.getTagName("WILL"),
         PropertyTag2Name.getTagName("EVEN"),
-        
         // Family Events
         PropertyTag2Name.getTagName("ANUL"),
         PropertyTag2Name.getTagName("CENS"),
@@ -91,7 +89,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         PropertyTag2Name.getTagName("MARS"),
         PropertyTag2Name.getTagName("EVEN")
     };
-    
+
     /**
      * Creates new form SourceCitationEditorPanel
      */
@@ -397,6 +395,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
     private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
 
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
@@ -421,7 +420,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 ((PropertySource) mSourceCitation).link();
             } else {
                 mReferencedSource = null;
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }
@@ -432,6 +431,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
     private void editSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceButtonActionPerformed
         if (mReferencedSource != null) {
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
             sourceEditorPanel.setSource(mReferencedSource);
             ADialog sourceEditorDialog = new ADialog(
@@ -442,8 +443,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 sourceEditorPanel.commit();
             } else {
-                Gedcom gedcom = mRoot.getGedcom();
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }

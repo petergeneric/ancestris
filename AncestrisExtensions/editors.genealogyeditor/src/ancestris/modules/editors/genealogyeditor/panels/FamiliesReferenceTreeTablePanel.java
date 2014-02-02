@@ -210,6 +210,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
     private void addFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFamilyButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -238,7 +239,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
             if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 familyEditorPanel.commit();
-                
+
                 ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).clear();
                 if (mFamilyEditingType == EDIT_FAMC) {
                     ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilyChild.class));
@@ -247,7 +248,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                 }
                 familiesTreeTable.expandAll();
             } else {
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }
@@ -300,6 +301,8 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_linkToFamilyButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         int rowIndex = familiesTreeTable.convertRowIndexToModel(familiesTreeTable.getSelectedRow());
         if (rowIndex != -1) {
             TreePath path = familiesTreeTable.getPathForRow(rowIndex);
@@ -323,8 +326,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                         if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                             familyEditorPanel.commit();
                         } else {
-                            Gedcom gedcom = mRoot.getGedcom();
-                            while (gedcom.canUndo()) {
+                            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                                 gedcom.undoUnitOfWork(false);
                             }
                         }
@@ -342,8 +344,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                                 individualEditorPanel.commit();
                             } else {
-                                Gedcom gedcom = mRoot.getGedcom();
-                                while (gedcom.canUndo()) {
+                                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                                     gedcom.undoUnitOfWork(false);
                                 }
                             }
@@ -434,6 +435,8 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
     private void familiesTreeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familiesTreeTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int rowIndex = familiesTreeTable.convertRowIndexToModel(familiesTreeTable.getSelectedRow());
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
             if (rowIndex != -1) {
                 TreePath path = familiesTreeTable.getPathForRow(rowIndex);
                 Object node = path.getLastPathComponent();
@@ -456,8 +459,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                             if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                                 familyEditorPanel.commit();
                             } else {
-                                Gedcom gedcom = mRoot.getGedcom();
-                                while (gedcom.canUndo()) {
+                                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                                     gedcom.undoUnitOfWork(false);
                                 }
                             }
@@ -475,8 +477,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                                 if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                                     individualEditorPanel.commit();
                                 } else {
-                                    Gedcom gedcom = mRoot.getGedcom();
-                                    while (gedcom.canUndo()) {
+                                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                                         gedcom.undoUnitOfWork(false);
                                     }
                                 }

@@ -46,7 +46,6 @@ public class AncestrisEditorAction extends AncestrisEditor {
         return false;
     }
 
-
     @Override
     public Action getCreateParentAction(Indi child, int sex) {
         return AActions.alwaysEnabled(
@@ -76,10 +75,12 @@ public class AncestrisEditorAction extends AncestrisEditor {
                 "ancestris/modules/editors/standard/images/add-spouse.png", // NOI18N
                 true);
     }
-    
+
     public static boolean editEntity(Fam fam, boolean isNew) {
         DialogManager.ADialog editorDialog;
         FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+        Gedcom gedcom = fam.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         familyEditorPanel.set(fam);
         if (isNew) {
             editorDialog = new DialogManager.ADialog(
@@ -94,8 +95,7 @@ public class AncestrisEditorAction extends AncestrisEditor {
         if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
             familyEditorPanel.commit();
         } else {
-            Gedcom gedcom = fam.getGedcom();
-            while (gedcom.canUndo()) {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
             }
         }
@@ -104,7 +104,8 @@ public class AncestrisEditorAction extends AncestrisEditor {
 
     public static boolean editEntity(Indi indi, boolean isNew) {
         DialogManager.ADialog editorDialog;
-
+        Gedcom gedcom = indi.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
         individualEditorPanel.set(indi);
         if (isNew) {
@@ -120,8 +121,7 @@ public class AncestrisEditorAction extends AncestrisEditor {
         if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
             individualEditorPanel.commit();
         } else {
-            Gedcom gedcom = indi.getGedcom();
-            while (gedcom.canUndo()) {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
             }
         }

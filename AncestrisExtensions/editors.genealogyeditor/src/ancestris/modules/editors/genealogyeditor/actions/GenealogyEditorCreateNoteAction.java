@@ -39,6 +39,7 @@ public final class GenealogyEditorCreateNoteAction implements ActionListener {
 
         if ((gedcomContext = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom gedcom = gedcomContext.getGedcom();
+            int undoNb = gedcom.getUndoNb();
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -56,7 +57,7 @@ public final class GenealogyEditorCreateNoteAction implements ActionListener {
                 if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     noteEditorPanel.commit();
                 } else {
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }

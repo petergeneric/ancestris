@@ -600,6 +600,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private void editHusbandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHusbandButtonActionPerformed
         Indi individual = mFamily.getHusband();
+        Gedcom gedcom = mFamily.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
         individualEditorPanel.set(individual);
 
@@ -611,8 +613,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             individualEditorPanel.commit();
         } else {
-            Gedcom gedcom = mFamily.getGedcom();
-            while (gedcom.canUndo()) {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
             }
         }
@@ -620,6 +621,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
     private void editWifeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editWifeButtonActionPerformed
         Indi individual = mFamily.getWife();
+        Gedcom gedcom = mFamily.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
         individualEditorPanel.set(individual);
 
@@ -631,8 +634,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             individualEditorPanel.commit();
         } else {
-            Gedcom gedcom = mFamily.getGedcom();
-            while (gedcom.canUndo()) {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
             }
         }
@@ -655,7 +657,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                         mFamily.setHusband(null);
                     }
                 }); // end of doUnitOfWork
-                
+
                 addHusbandButton.setVisible(true);
                 linkToHusbandButton.setVisible(true);
                 removeHusbandButton.setVisible(false);
@@ -683,7 +685,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                         mFamily.setWife(null);
                     }
                 }); // end of doUnitOfWork
-                
+
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
                 removeWifeButton.setVisible(false);
