@@ -104,6 +104,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
 
     private void addIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIndividualButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -123,7 +124,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mIndividualsTableModel.add(individualEditorPanel.commit());
             } else {
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }
@@ -134,6 +135,8 @@ public class IndividualsListPanel extends javax.swing.JPanel {
 
     private void editIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editIndividualButtonActionPerformed
         int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         if (rowIndex != -1) {
             Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
             IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
@@ -147,8 +150,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 individualEditorPanel.commit();
             } else {
-                Gedcom gedcom = mRoot.getGedcom();
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }
@@ -161,28 +163,28 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     private void individualsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_individualsTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
-            if (rowIndex != -1) {
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        if (rowIndex != -1) {
                 Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
                 IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
                 individualEditorPanel.set(individual);
 
                 DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", individual),
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", individual),
                         individualEditorPanel);
                 individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
                 if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     individualEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = mRoot.getGedcom();
-                    while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
             }
         }
     }//GEN-LAST:event_individualsTableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addIndividualButton;
     private javax.swing.JButton deleteIndividualButton;
@@ -195,7 +197,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     public void setIndividualsList(Property root, List<Indi> individualsList) {
         this.mRoot = root;
         mIndividualsTableModel.update(individualsList);
-            }
+    }
 
     public Indi getSelectedIndividual() {
         int selectedRow = individualsTable.getSelectedRow();

@@ -25,41 +25,62 @@ public class EventsListPanel extends javax.swing.JPanel {
     private PropertyEvent mEvent = null;
     private int mEventTypeList = INDIVIDUAL_EVENT_TYPE_LIST;
     private String[] mIndividualEvents = {
+        /*
+         * INDIVIDUAL_EVENT
+         */
         PropertyTag2Name.getTagName("BIRT"),
-        PropertyTag2Name.getTagName("DEAT"),
-        PropertyTag2Name.getTagName("ADOP"),
         PropertyTag2Name.getTagName("CHR"),
+        PropertyTag2Name.getTagName("DEAT"),
+        PropertyTag2Name.getTagName("BURI"),
+        PropertyTag2Name.getTagName("CREM"),
+        PropertyTag2Name.getTagName("ADOP"),
         PropertyTag2Name.getTagName("BAPM"),
         PropertyTag2Name.getTagName("BARM"),
         PropertyTag2Name.getTagName("BASM"),
         PropertyTag2Name.getTagName("BLES"),
-        PropertyTag2Name.getTagName("BURI"),
-        PropertyTag2Name.getTagName("CREM"),
-        PropertyTag2Name.getTagName("CENS"),
         PropertyTag2Name.getTagName("CHRA"),
         PropertyTag2Name.getTagName("CONF"),
-        PropertyTag2Name.getTagName("EMIG"),
         PropertyTag2Name.getTagName("FCOM"),
-        PropertyTag2Name.getTagName("GRAD"),
-        PropertyTag2Name.getTagName("IMMI"),
-        PropertyTag2Name.getTagName("NATU"),
         PropertyTag2Name.getTagName("ORDN"),
-        PropertyTag2Name.getTagName("RETI"),
+        PropertyTag2Name.getTagName("NATU"),
+        PropertyTag2Name.getTagName("EMIG"),
+        PropertyTag2Name.getTagName("IMMI"),
+        PropertyTag2Name.getTagName("CENS"),
         PropertyTag2Name.getTagName("PROB"),
         PropertyTag2Name.getTagName("WILL"),
-        PropertyTag2Name.getTagName("EVEN")
+        PropertyTag2Name.getTagName("GRAD"),
+        PropertyTag2Name.getTagName("RETI"),
+        PropertyTag2Name.getTagName("EVEN"),
+        /*
+         * INDIVIDUAL_ATTRIBUTE
+         */
+        PropertyTag2Name.getTagName("CAST"),
+        PropertyTag2Name.getTagName("DSCR"),
+        PropertyTag2Name.getTagName("EDUC"),
+        PropertyTag2Name.getTagName("IDNO"),
+        PropertyTag2Name.getTagName("NATI"),
+        PropertyTag2Name.getTagName("NCHI"),
+        PropertyTag2Name.getTagName("NMR"),
+        PropertyTag2Name.getTagName("OCCU"),
+        PropertyTag2Name.getTagName("PROP"),
+        PropertyTag2Name.getTagName("RELI"),
+        PropertyTag2Name.getTagName("RESI"),
+        PropertyTag2Name.getTagName("SSN"),
+        PropertyTag2Name.getTagName("TITL"),
+        PropertyTag2Name.getTagName("FACT")
     };
     private String[] mFamilyEvents = {
         PropertyTag2Name.getTagName("ANUL"),
         PropertyTag2Name.getTagName("CENS"),
         PropertyTag2Name.getTagName("DIV"),
         PropertyTag2Name.getTagName("DIVF"),
-        PropertyTag2Name.getTagName("ENGA"),
         PropertyTag2Name.getTagName("MARR"),
+        PropertyTag2Name.getTagName("ENGA"),
         PropertyTag2Name.getTagName("MARB"),
         PropertyTag2Name.getTagName("MARC"),
         PropertyTag2Name.getTagName("MARL"),
         PropertyTag2Name.getTagName("MARS"),
+        PropertyTag2Name.getTagName("RESI"),
         PropertyTag2Name.getTagName("EVEN")
     };
     private String[] mEvents = mIndividualEvents;
@@ -173,6 +194,8 @@ public class EventsListPanel extends javax.swing.JPanel {
 
     private void editEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEventButtonActionPerformed
         int selectedRow = eventsTable.getSelectedRow();
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         if (selectedRow != -1) {
             int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
             PropertyEvent event = mEventsTableModel.getValueAt(rowIndex);
@@ -189,8 +212,8 @@ public class EventsListPanel extends javax.swing.JPanel {
             if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 eventEditorPanel.commit();
             } else {
-                while (mRoot.getGedcom().canUndo()) {
-                    mRoot.getGedcom().undoUnitOfWork(false);
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
                 }
             }
         }
@@ -231,33 +254,42 @@ public class EventsListPanel extends javax.swing.JPanel {
 
     private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        mEvent = null;
         final String eventType = eventTypeComboBox.getSelectedItem().toString();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    mEvent = (PropertyEvent) mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
-                    mEvent.addProperty("DATE", "");
+                    Property addProperty = mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
+                    if (addProperty instanceof PropertyEvent) {
+                        mEvent = (PropertyEvent) addProperty;
+                        mEvent.addProperty("DATE", "");
+                    } else {
+                        System.out.println(addProperty.getClass());
+                    }
                 }
             }); // end of doUnitOfWork
 
-            EventEditorPanel eventEditorPanel = new EventEditorPanel(mEventTypeList);
+            if (mEvent != null) {
+                EventEditorPanel eventEditorPanel = new EventEditorPanel(mEventTypeList);
 
-            eventEditorPanel.set(mRoot, mEvent);
+                eventEditorPanel.set(mRoot, mEvent);
 
-            ADialog eventEditorDialog = new ADialog(
-                    NbBundle.getMessage(EventEditorPanel.class,
-                    "EventEditorPanel.create.title",
-                    eventType),
-                    eventEditorPanel);
+                ADialog eventEditorDialog = new ADialog(
+                        NbBundle.getMessage(EventEditorPanel.class,
+                        "EventEditorPanel.create.title",
+                        eventType),
+                        eventEditorPanel);
 
-            eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
-            if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mEventsTableModel.add(eventEditorPanel.commit());
-            } else {
-                while (gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
+                eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
+                if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    mEventsTableModel.add(eventEditorPanel.commit());
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
                 }
             }
         } catch (GedcomException ex) {
@@ -268,6 +300,8 @@ public class EventsListPanel extends javax.swing.JPanel {
     private void eventsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventsTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int selectedRow = eventsTable.getSelectedRow();
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
             if (selectedRow != -1) {
                 int rowIndex = eventsTable.convertRowIndexToModel(selectedRow);
                 PropertyEvent event = mEventsTableModel.getValueAt(rowIndex);
@@ -285,8 +319,8 @@ public class EventsListPanel extends javax.swing.JPanel {
                     eventEditorPanel.commit();
                     mEventsTableModel.update();
                 } else {
-                    while (mRoot.getGedcom().canUndo()) {
-                        mRoot.getGedcom().undoUnitOfWork(false);
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
                     }
                 }
             }

@@ -62,8 +62,8 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         authorTextField = new javax.swing.JTextField();
         sourceTitleLabel = new javax.swing.JLabel();
         sourceTitleTextField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        agencyLabel = new javax.swing.JLabel();
+        agencyTextField = new javax.swing.JTextField();
         sourceInformationTabbedPane = new javax.swing.JTabbedPane();
         registeredEventsPanel = new javax.swing.JPanel();
         eventTypePanel1 = new ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel();
@@ -90,7 +90,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
 
         sourceTitleTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceTitleTextField.text"), new Object[] {})); // NOI18N
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.jLabel1.text")); // NOI18N
+        agencyLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.agencyLabel.text")); // NOI18N
 
         sourceInformationTabbedPane.setRequestFocusEnabled(false);
 
@@ -182,7 +182,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(sourceTitleLabel)
                             .addComponent(sourceIDLabel)
-                            .addComponent(jLabel1)
+                            .addComponent(agencyLabel)
                             .addComponent(authorLabel))
                         .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,7 +191,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(authorTextField)
                             .addComponent(sourceTitleTextField)
-                            .addComponent(jTextField1)))
+                            .addComponent(agencyTextField)))
                     .addComponent(sourceInformationTabbedPane))
                 .addContainerGap())
         );
@@ -212,19 +212,19 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                     .addComponent(sourceTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(agencyLabel)
+                    .addComponent(agencyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sourceInformationTabbedPane)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel agencyLabel;
+    private javax.swing.JTextField agencyTextField;
     private javax.swing.JLabel authorLabel;
     private javax.swing.JTextField authorTextField;
     private ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel eventTypePanel1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private javax.swing.JPanel multimediaObjectPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;

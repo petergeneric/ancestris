@@ -40,6 +40,7 @@ public final class GenealogyEditorCreateFamilyAction implements ActionListener {
 
         if ((gedcomContext = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom gedcom = gedcomContext.getGedcom();
+            int undoNb = gedcom.getUndoNb();
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -58,7 +59,7 @@ public final class GenealogyEditorCreateFamilyAction implements ActionListener {
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     familyEditorPanel.commit();
                 } else {
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }

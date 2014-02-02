@@ -111,6 +111,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
+        int undoNb = mGedcom.getUndoNb();
         try {
             mGedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -131,7 +132,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mSourcesTableModel.add(sourceEditorPanel.commit());
             } else {
-                while (mGedcom.canUndo()) {
+                while (mGedcom.getUndoNb() > undoNb && mGedcom.canUndo()) {
                     mGedcom.undoUnitOfWork(false);
                 }
             }
@@ -144,6 +145,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
         int selectedRow = sourcesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
+            int undoNb = mGedcom.getUndoNb();
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
             sourceEditorPanel.setSource(mSourcesTableModel.getValueAt(rowIndex));
             ADialog sourceEditorDialog = new ADialog(
@@ -154,7 +156,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mSourcesTableModel.add(sourceEditorPanel.commit());
             } else {
-                while (mGedcom.canUndo()) {
+                while (mGedcom.getUndoNb() > undoNb && mGedcom.canUndo()) {
                     mGedcom.undoUnitOfWork(false);
                 }
             }
@@ -183,6 +185,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
     private void sourcesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourcesTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int selectedRow = sourcesTable.getSelectedRow();
+            int undoNb = mGedcom.getUndoNb();
             if (selectedRow != -1) {
                 int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
@@ -195,14 +198,13 @@ public class SourcesListPanel extends javax.swing.JPanel {
                 if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     mSourcesTableModel.add(sourceEditorPanel.commit());
                 } else {
-                    while (mGedcom.canUndo()) {
+                    while (mGedcom.getUndoNb() > undoNb && mGedcom.canUndo()) {
                         mGedcom.undoUnitOfWork(false);
                     }
                 }
             }
         }
     }//GEN-LAST:event_sourcesTableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceButton;
     private javax.swing.JButton deleteSourceButton;

@@ -134,6 +134,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
 
     private void addNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -155,7 +156,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                 mNoteCitationsTableModel.clear();
                 mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
             } else {
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }
@@ -242,6 +243,8 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
     }
 
     private void editNote(Property note) {
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         if (note instanceof PropertyNote) {
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
             noteEditorPanel.set((Note) ((PropertyNote) note).getTargetEntity());
@@ -254,8 +257,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 noteEditorPanel.commit();
             } else {
-                Gedcom gedcom = mRoot.getGedcom();
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }
@@ -271,8 +273,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 noteEditorPanel.commit();
             } else {
-                Gedcom gedcom = mRoot.getGedcom();
-                while (gedcom.canUndo()) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
                 }
             }

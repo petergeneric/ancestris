@@ -38,6 +38,8 @@ public final class GenealogyEditorEditAction implements ActionListener {
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Entity entity = context.getEntity();
             if (entity instanceof Indi) {
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
                 IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
                 individualEditorPanel.set((Indi) entity);
 
@@ -48,12 +50,13 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     individualEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = entity.getGedcom();
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
             } else if (entity instanceof Fam) {
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
                 FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
                 familyEditorPanel.set((Fam) entity);
 
@@ -64,12 +67,13 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     familyEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = entity.getGedcom();
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
             } else if (entity instanceof Note) {
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
                 noteEditorPanel.set((Note) entity);
 
@@ -80,12 +84,13 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     noteEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = entity.getGedcom();
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
             } else if (entity instanceof Source) {
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
                 sourceEditorPanel.setSource((Source) entity);
 
@@ -96,12 +101,13 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     sourceEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = entity.getGedcom();
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
             } else if (entity instanceof Repository) {
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
                 RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
                 repositoryEditorPanel.setRepository((Repository) entity);
 
@@ -113,8 +119,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     repositoryEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = entity.getGedcom();
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }

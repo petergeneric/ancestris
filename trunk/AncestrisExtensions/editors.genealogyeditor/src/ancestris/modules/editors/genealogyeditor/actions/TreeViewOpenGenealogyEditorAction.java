@@ -59,6 +59,8 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
         public void actionPerformed(ActionEvent e) {
             SelectionDispatcher.muteSelection(true);
             DialogManager.ADialog editorDialog;
+            Gedcom gedcom = entity.getGedcom();
+            int undoNb = gedcom.getUndoNb();
 
             if (entity instanceof Indi) {
                 IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
@@ -71,8 +73,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     individualEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = entity.getGedcom();
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
@@ -87,8 +88,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     familyEditorPanel.commit();
                 } else {
-                    Gedcom gedcom = entity.getGedcom();
-                    while (gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
