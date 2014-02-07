@@ -1,8 +1,15 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.SourceEventTypesTableModel;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.gedcom.UnitOfWork;
 import java.util.List;
+import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -19,6 +26,7 @@ import java.util.List;
 public class SourceEventTypeListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
+    private Property mRegisteredEvent;
     SourceEventTypesTableModel mSourceEventTypesTableModel = new SourceEventTypesTableModel();
 
     /**
@@ -26,8 +34,7 @@ public class SourceEventTypeListPanel extends javax.swing.JPanel {
      */
     public SourceEventTypeListPanel() {
         initComponents();
-        editorTable1.setID(SourceEventTypeListPanel.class.getName());
-
+        sourceEventsTable.setID(SourceEventTypeListPanel.class.getName());
     }
 
     /**
@@ -40,70 +47,151 @@ public class SourceEventTypeListPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel3 = new javax.swing.JPanel();
-        jToolBar2 = new javax.swing.JToolBar();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        editorTable1 = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
-        jPanel2 = new javax.swing.JPanel();
-        noteCitationsListPanel1 = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        sourceEventsToolBar = new javax.swing.JToolBar();
+        addSourceEventButton = new javax.swing.JButton();
+        editSourceEventButton = new javax.swing.JButton();
+        sourceEventsScrollPane = new javax.swing.JScrollPane();
+        sourceEventsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
-        jToolBar2.setRollover(true);
+        sourceEventsToolBar.setFloatable(false);
+        sourceEventsToolBar.setRollover(true);
 
-        editorTable1.setModel(mSourceEventTypesTableModel);
-        jScrollPane2.setViewportView(editorTable1);
+        addSourceEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addSourceEventButton.setFocusable(false);
+        addSourceEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addSourceEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addSourceEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSourceEventButtonActionPerformed(evt);
+            }
+        });
+        sourceEventsToolBar.add(addSourceEventButton);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE))
-        );
+        editSourceEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editSourceEventButton.setFocusable(false);
+        editSourceEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editSourceEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editSourceEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editSourceEventButtonActionPerformed(evt);
+            }
+        });
+        sourceEventsToolBar.add(editSourceEventButton);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SourceEventTypeListPanel.class, "SourceEventTypeListPanel.jPanel3.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Event.png")), jPanel3); // NOI18N
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(noteCitationsListPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SourceEventTypeListPanel.class, "SourceEventTypeListPanel.jPanel2.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), jPanel2); // NOI18N
+        sourceEventsTable.setModel(mSourceEventTypesTableModel);
+        sourceEventsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sourceEventsTableMouseClicked(evt);
+            }
+        });
+        sourceEventsScrollPane.setViewportView(sourceEventsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(sourceEventsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(sourceEventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(sourceEventsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sourceEventsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addSourceEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceEventButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mRegisteredEvent = mRoot.addProperty("EVEN", "");
+                }
+            }); // end of doUnitOfWork
+
+            RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
+            recordedEventPanel.set(mRegisteredEvent);
+
+            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(FamilyEditorPanel.class, "RecordedEventEditorPanel.create.title"),
+                    recordedEventPanel);
+            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
+
+            if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
+                mSourceEventTypesTableModel.add(recordedEventPanel.commit());
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_addSourceEventButtonActionPerformed
+
+    private void editSourceEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceEventButtonActionPerformed
+        int selectedRow = sourceEventsTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = sourceEventsTable.convertRowIndexToModel(selectedRow);
+
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
+
+            RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
+            recordedEventPanel.set(mSourceEventTypesTableModel.getValueAt(rowIndex));
+
+            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(FamilyEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
+                    recordedEventPanel);
+            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
+
+            if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
+                recordedEventPanel.commit();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_editSourceEventButtonActionPerformed
+
+    private void sourceEventsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceEventsTableMouseClicked
+        int selectedRow = sourceEventsTable.getSelectedRow();
+        if (evt.getClickCount() >= 2 && selectedRow != -1) {
+            int rowIndex = sourceEventsTable.convertRowIndexToModel(selectedRow);
+
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
+
+            RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
+            recordedEventPanel.set(mSourceEventTypesTableModel.getValueAt(rowIndex));
+
+            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(FamilyEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
+                    recordedEventPanel);
+            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
+
+            if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
+                recordedEventPanel.commit();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_sourceEventsTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ancestris.modules.editors.genealogyeditor.table.EditorTable editorTable1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JToolBar jToolBar2;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel1;
+    private javax.swing.JButton addSourceEventButton;
+    private javax.swing.JButton editSourceEventButton;
+    private javax.swing.JScrollPane sourceEventsScrollPane;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable sourceEventsTable;
+    private javax.swing.JToolBar sourceEventsToolBar;
     // End of variables declaration//GEN-END:variables
 
     public void setEventTypesList(Property root, List<Property> eventsTypeList) {
