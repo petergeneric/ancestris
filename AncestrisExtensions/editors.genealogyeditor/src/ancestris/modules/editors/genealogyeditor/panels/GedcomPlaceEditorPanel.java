@@ -21,9 +21,9 @@ import org.openide.util.NbPreferences;
  *
  * @author dominique
  */
-public class GedcomPlacePanel extends javax.swing.JPanel {
+public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
-    private final static Logger logger = Logger.getLogger(GedcomPlacePanel.class.getName(), null);
+    private final static Logger logger = Logger.getLogger(GedcomPlaceEditorPanel.class.getName(), null);
     private Property mRoot;
     private PropertyPlace mPlace;
     private String mPlaceFormat[];
@@ -42,9 +42,9 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
     boolean updateOnGoing = false;
 
     /**
-     * Creates new form GedcomPlacePanel
+     * Creates new form GedcomPlaceEditorPanel
      */
-    public GedcomPlacePanel() {
+    public GedcomPlaceEditorPanel() {
         initComponents();
         mGedcomFields = new JComponent[][]{
             {gedcomHamletLabel, gedcomHamletTextField}, // hamlet
@@ -94,7 +94,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         parametersButton = new javax.swing.JButton();
 
         gedcomLatitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        gedcomLatitudeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.gedcomLatitudeLabel.text"), new Object[] {})); // NOI18N
+        gedcomLatitudeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlaceEditorPanel.gedcomLatitudeLabel.text"), new Object[] {})); // NOI18N
 
         gedcomParishLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         gedcomParishLabel.setText("Parish"); // NOI18N
@@ -110,7 +110,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         gedcomHamletLabel.setText("Hamlet"); // NOI18N
 
         gedcomLongitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        gedcomLongitudeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.gedcomLongitudeLabel.text"), new Object[] {})); // NOI18N
+        gedcomLongitudeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlaceEditorPanel.gedcomLongitudeLabel.text"), new Object[] {})); // NOI18N
 
         gedcomStateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         gedcomStateLabel.setText("State"); // NOI18N
@@ -146,7 +146,7 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         jToolBar1.setRollover(true);
 
         linkToPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlaceEditorPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
         linkToPlaceButton.setFocusable(false);
         linkToPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         linkToPlaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -159,8 +159,8 @@ public class GedcomPlacePanel extends javax.swing.JPanel {
         jToolBar1.add(filler1);
 
         parametersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/parameters.png"))); // NOI18N
-        parametersButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.parametersButton.text"), new Object[] {})); // NOI18N
-        parametersButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlacePanel.parametersButton.toolTipText"), new Object[] {})); // NOI18N
+        parametersButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlaceEditorPanel.parametersButton.text"), new Object[] {})); // NOI18N
+        parametersButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlaceEditorPanel.parametersButton.toolTipText"), new Object[] {})); // NOI18N
         parametersButton.setFocusable(false);
         parametersButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         parametersButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

@@ -190,7 +190,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         individualAgeTextField = new javax.swing.JTextField();
         eventInformationTabbedPane = new javax.swing.JTabbedPane();
         placePanel = new javax.swing.JPanel();
-        gedcomPlacePanel = new ancestris.modules.editors.genealogyeditor.panels.GedcomPlacePanel();
+        gedcomPlacePanel = new ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel();
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
         galleryPanel = new javax.swing.JPanel();
@@ -424,7 +424,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField eventTypeTextField;
     private javax.swing.JPanel familyAgePanel;
     private javax.swing.JPanel galleryPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.GedcomPlacePanel gedcomPlacePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel gedcomPlacePanel;
     private javax.swing.JLabel husbandAgeLabel;
     private javax.swing.JTextField husbandAgeTextField;
     private javax.swing.JPanel individualAgePanel;
