@@ -323,7 +323,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.GedcomPlacePanel" name="gedcomPlacePanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel" name="gedcomPlacePanel">
             </Component>
           </SubComponents>
         </Container>

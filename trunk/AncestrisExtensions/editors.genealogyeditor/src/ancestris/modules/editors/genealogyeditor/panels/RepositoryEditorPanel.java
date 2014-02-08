@@ -12,7 +12,7 @@ import org.openide.util.Exceptions;
  */
 public class RepositoryEditorPanel extends javax.swing.JPanel {
 
-    private Repository repository;
+    private Repository mRepository;
 
     /**
      * Creates new form RepositoryEditorPanel
@@ -40,10 +40,10 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         editRepositoryAddressButton = new javax.swing.JButton();
         removeRepositoryAddressButton = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        referencesPanel = new javax.swing.JPanel();
-        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
         notesPanel = new javax.swing.JPanel();
         noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        referencesPanel = new javax.swing.JPanel();
+        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
 
         repositoryIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -73,6 +73,19 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
         removeRepositoryAddressButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
 
+        javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
+        notesPanel.setLayout(notesPanelLayout);
+        notesPanelLayout.setHorizontalGroup(
+            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+        );
+        notesPanelLayout.setVerticalGroup(
+            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Notes", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+
         javax.swing.GroupLayout referencesPanelLayout = new javax.swing.GroupLayout(referencesPanel);
         referencesPanel.setLayout(referencesPanelLayout);
         referencesPanelLayout.setHorizontalGroup(
@@ -89,19 +102,6 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         );
 
         jTabbedPane1.addTab("References", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
-
-        javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
-        notesPanel.setLayout(notesPanelLayout);
-        notesPanelLayout.setHorizontalGroup(
-            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
-        );
-        notesPanelLayout.setVerticalGroup(
-            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Notes", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -180,46 +180,48 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
      * @return the repository
      */
     public Repository getRepository() {
-        return repository;
+        return mRepository;
     }
 
     /**
      * @param repository the repository to set
      */
     public void setRepository(Repository repository) {
-        this.repository = repository;
+        this.mRepository = repository;
         update();
     }
 
     private void update() {
-        repositoryIDTextField.setText(repository.getId());
+        repositoryIDTextField.setText(mRepository.getId());
 
-        Property repositoryName = repository.getProperty("NAME");
+        Property repositoryName = mRepository.getProperty("NAME");
         repositoryNameTextField.setText(repositoryName != null ? repositoryName.getValue() : "");
 
-        Property address = repository.getProperty("ADDR");
+        Property address = mRepository.getProperty("ADDR");
         repositoryAddressTextField.setText(address != null ? address.getValue() : "");
 
         List<Entity> entitiesList = new ArrayList<Entity>();
-        for (PropertyXRef entityRef : repository.getProperties(PropertyXRef.class)) {
+        for (PropertyXRef entityRef : mRepository.getProperties(PropertyXRef.class)) {
             entitiesList.add(entityRef.getTargetEntity());
         }
-        referencesListPanel.set(repository, entitiesList);
+        referencesListPanel.set(mRepository, entitiesList);
 
-        noteCitationsListPanel.setNotesList(repository, Arrays.asList(repository.getProperties("NOTE")));
+        noteCitationsListPanel.setNotesList(mRepository, Arrays.asList(mRepository.getProperties("NOTE")));
 
     }
 
-    public void commit() {
+    public Repository commit() {
         try {
-            repository.getGedcom().doUnitOfWork(new UnitOfWork() {
+            mRepository.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                 }
             }); // end of doUnitOfWork
+            return mRepository;
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
+            return null;
         }
     }
 }
