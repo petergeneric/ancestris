@@ -93,12 +93,12 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void update(List<Property> multimediaObjectsList) {
-        multimediaObjectsRefList.clear();
-        addAll(multimediaObjectsList);
-    }
-
     public Property getValueAt(int row) {
         return multimediaObjectsRefList.get(row);
+    }
+
+    public void remove(int rowIndex) {
+        multimediaObjectsRefList.remove(rowIndex);
+        fireTableDataChanged();
     }
 }

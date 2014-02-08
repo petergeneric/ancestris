@@ -1,8 +1,14 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectCitationsTableModel;
-import genj.gedcom.Property;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.*;
+import java.io.File;
 import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -11,6 +17,7 @@ import java.util.List;
 public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
+    private String mGedcomVersion = "";
     private MultiMediaObjectCitationsTableModel multiMediaObjectCitationsTableModel = new MultiMediaObjectCitationsTableModel();
 
     /**
@@ -32,7 +39,6 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
         galleryToolBar = new javax.swing.JToolBar();
         addMMObjectButton = new javax.swing.JButton();
-        editMMObjectButton2 = new javax.swing.JButton();
         deleteMMObjectButton2 = new javax.swing.JButton();
         multiMediaObjectCitationsScrollPane = new javax.swing.JScrollPane();
         multiMediaObjectCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
@@ -51,18 +57,6 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
         });
         galleryToolBar.add(addMMObjectButton);
-
-        editMMObjectButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editMMObjectButton2.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.editMMObjectButton2.toolTipText"), new Object[] {})); // NOI18N
-        editMMObjectButton2.setFocusable(false);
-        editMMObjectButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editMMObjectButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editMMObjectButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editMMObjectButton2ActionPerformed(evt);
-            }
-        });
-        galleryToolBar.add(editMMObjectButton2);
 
         deleteMMObjectButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
         deleteMMObjectButton2.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.deleteMMObjectButton2.toolTipText"), new Object[] {})); // NOI18N
@@ -96,27 +90,84 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMMObjectButtonActionPerformed
-        // TODO add your handling code here:
+        FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(MultimediaObjectCitationsListPanel.class, "MultimediaObjectCitationsListPanel.fileType"), "jpeg");
+        JFileChooser imageFileChooser = new JFileChooser();
+
+        imageFileChooser.setFileFilter(imageFileFilter);
+        imageFileChooser.setAcceptAllFileFilterUsed(true);
+
+        if (imageFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            final File imageFile = imageFileChooser.getSelectedFile();
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (mGedcomVersion.equals("5.5.1")) {
+                            Media media = (Media) mRoot.getGedcom().createEntity("OBJE");
+                            media.addFile(imageFile, imageFile.getName());
+                            mRoot.addMedia(media);
+                            multiMediaObjectCitationsTableModel.add(media);
+                        } else {
+                            Property propertyMedia = mRoot.addProperty("OBJE", "");
+                            propertyMedia.addFile(imageFile, imageFile.getName());
+                        }
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+            }
+        }
     }//GEN-LAST:event_addMMObjectButtonActionPerformed
 
-    private void editMMObjectButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMMObjectButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_editMMObjectButton2ActionPerformed
-
     private void deleteMMObjectButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMMObjectButton2ActionPerformed
-        // TODO add your handling code here:
+        final int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(multiMediaObjectCitationsTable.getSelectedRow());
+        Gedcom gedcom = mRoot.getGedcom();
+
+        if (rowIndex != -1) {
+            final Property multiMediaObjectRef = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
+            Property file = multiMediaObjectRef.getProperty("FILE", true);
+            String objectName;
+            if (file != null && file instanceof PropertyFile) {
+                objectName = ((PropertyFile) file).getFile().getAbsolutePath();
+            } else {
+                objectName =  "";
+            }
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "MultimediaObjectCitationsListPanel.deleteObjectConfirmation.title",
+                    objectName),
+                    NbBundle.getMessage(
+                    EventEditorPanel.class, "MultimediaObjectCitationsListPanel.deleteObjectConfirmation.text",
+                    objectName,
+                    mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mRoot.delProperty(multiMediaObjectRef);
+                        }
+                    }); // end of doUnitOfWork
+
+                    multiMediaObjectCitationsTableModel.remove(rowIndex);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
     }//GEN-LAST:event_deleteMMObjectButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton deleteMMObjectButton2;
-    private javax.swing.JButton editMMObjectButton2;
     private javax.swing.JToolBar galleryToolBar;
     private javax.swing.JScrollPane multiMediaObjectCitationsScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable multiMediaObjectCitationsTable;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Property> multiMediasList) {
+        mGedcomVersion = root.getGedcom().getGrammar().getVersion();
         this.mRoot = root;
-        multiMediaObjectCitationsTableModel.update(multiMediasList);
+        multiMediaObjectCitationsTableModel.addAll(multiMediasList);
     }
 }
