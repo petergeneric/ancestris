@@ -9,7 +9,7 @@ import org.openide.util.Exceptions;
  * @author dominique
  */
 public class RecordedEventEditorPanel extends javax.swing.JPanel {
-    
+
     private Property mEvent = null;
     private PropertyPlace mPlace = null;
     private String[] mEvents = {
@@ -91,7 +91,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        gedcomPlacePanel = new ancestris.modules.editors.genealogyeditor.panels.GedcomPlacePanel();
+        gedcomPlacePanel = new ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel();
         eventTypeComboBox = new javax.swing.JComboBox(mEvents);
         recordedEventLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
@@ -121,7 +121,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
                                 .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                                .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
                                 .addContainerGap())))))
         );
         layout.setVerticalGroup(
@@ -144,27 +144,36 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.beans.ADateBean aDateBean;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JComboBox eventTypeComboBox;
-    private ancestris.modules.editors.genealogyeditor.panels.GedcomPlacePanel gedcomPlacePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel gedcomPlacePanel;
     private javax.swing.JLabel recordedEventLabel;
     // End of variables declaration//GEN-END:variables
 
     Property commit() {
-        final String eventType = eventTypeComboBox.getSelectedItem().toString();
-        mEvent.setValue(PropertyTag2Name.getPropertyTag(eventType));
         try {
-            aDateBean.commit();
+            mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    String eventType = eventTypeComboBox.getSelectedItem().toString();
+                    mEvent.setValue(PropertyTag2Name.getPropertyTag(eventType));
+                    try {
+                        aDateBean.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }); // end of doUnitOfWork
+            gedcomPlacePanel.commit();
+            return mEvent;
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
+            return null;
         }
-        
-        gedcomPlacePanel.commit();
-        
-        return mEvent;
     }
-    
+
     void set(Property event) {
         this.mEvent = event;
-        
+
         PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
         if (date == null) {
             date = (PropertyDate) mEvent.addProperty("DATE", "");
@@ -174,7 +183,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         if (mPlace == null) {
             try {
                 mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
-                    
+
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         mPlace = (PropertyPlace) mEvent.addProperty(PropertyPlace.TAG, "");
@@ -184,7 +193,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
         }
-        
+
         gedcomPlacePanel.set(mEvent, mPlace);
     }
 }
