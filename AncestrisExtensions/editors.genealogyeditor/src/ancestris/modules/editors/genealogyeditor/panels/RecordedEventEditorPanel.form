@@ -35,7 +35,7 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Component id="aDateBean" pref="368" max="32767" attributes="0"/>
+                              <Component id="aDateBean" pref="534" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -65,7 +65,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="ancestris.modules.editors.genealogyeditor.panels.GedcomPlacePanel" name="gedcomPlacePanel">
+    <Component class="ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel" name="gedcomPlacePanel">
     </Component>
     <Component class="javax.swing.JComboBox" name="eventTypeComboBox">
       <AuxValues>
