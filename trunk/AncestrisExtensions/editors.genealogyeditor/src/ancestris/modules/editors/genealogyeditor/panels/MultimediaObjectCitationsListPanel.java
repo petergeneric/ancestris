@@ -39,7 +39,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
         galleryToolBar = new javax.swing.JToolBar();
         addMMObjectButton = new javax.swing.JButton();
-        deleteMMObjectButton2 = new javax.swing.JButton();
+        deleteMMObjectButton = new javax.swing.JButton();
         multiMediaObjectCitationsScrollPane = new javax.swing.JScrollPane();
         multiMediaObjectCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
@@ -58,17 +58,17 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         });
         galleryToolBar.add(addMMObjectButton);
 
-        deleteMMObjectButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteMMObjectButton2.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.deleteMMObjectButton2.toolTipText"), new Object[] {})); // NOI18N
-        deleteMMObjectButton2.setFocusable(false);
-        deleteMMObjectButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteMMObjectButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteMMObjectButton2.addActionListener(new java.awt.event.ActionListener() {
+        deleteMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.deleteMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteMMObjectButton.setFocusable(false);
+        deleteMMObjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteMMObjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteMMObjectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteMMObjectButton2ActionPerformed(evt);
+                deleteMMObjectButtonActionPerformed(evt);
             }
         });
-        galleryToolBar.add(deleteMMObjectButton2);
+        galleryToolBar.add(deleteMMObjectButton);
 
         multiMediaObjectCitationsTable.setModel(multiMediaObjectCitationsTableModel);
         multiMediaObjectCitationsScrollPane.setViewportView(multiMediaObjectCitationsTable);
@@ -119,7 +119,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_addMMObjectButtonActionPerformed
 
-    private void deleteMMObjectButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMMObjectButton2ActionPerformed
+    private void deleteMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMMObjectButtonActionPerformed
         final int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(multiMediaObjectCitationsTable.getSelectedRow());
         Gedcom gedcom = mRoot.getGedcom();
 
@@ -156,10 +156,10 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 }
             }
         }
-    }//GEN-LAST:event_deleteMMObjectButton2ActionPerformed
+    }//GEN-LAST:event_deleteMMObjectButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMMObjectButton;
-    private javax.swing.JButton deleteMMObjectButton2;
+    private javax.swing.JButton deleteMMObjectButton;
     private javax.swing.JToolBar galleryToolBar;
     private javax.swing.JScrollPane multiMediaObjectCitationsScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable multiMediaObjectCitationsTable;
