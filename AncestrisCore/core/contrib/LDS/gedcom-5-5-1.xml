@@ -94,25 +94,25 @@
   </ADOP>
   <DEAT img="Death" super="INDI:BIRT"/>
   +++++++++++++ Attributes are not events but have event_details +++++++++++++
-  <RESI cardinality="0:M" img="Residency" super="INDI:BIRT">
+  <RESI cardinality="0:M" type="PropertySimpleReadOnly" img="Residency" super="INDI:BIRT">
    <PLAC default="0"/>
    <ADDR default="1"/>
   </RESI>
-  <OCCU img="Occupation" super="INDI:BIRT" cardinality="0:M"/>
-  <RELI img="Religion" super="INDI:BIRT" cardinality="0:M">
+  <OCCU type="PropertyChoiceValue" img="Occupation" super="INDI:BIRT" cardinality="0:M"/>
+  <RELI type="PropertyChoiceValue" img="Religion" super="INDI:BIRT" cardinality="0:M">
    <DATE default="0"/>
    <PLAC default="0"/>
   </RELI>
-  <CAST hide="1" img="Caste" super="INDI:RELI" />
-  <DSCR hide="1" img="Description" super="INDI:RELI" />
-  <EDUC img="Education" super="INDI:RELI" cardinality="0:M"/>
-  <IDNO img="IDNumber" super="INDI:RELI"/>
-  <NATI img="Nationality" super="INDI:RELI" />
-  <NCHI img="NumChildren" super="INDI:RELI" />
-  <PROP img="Property" super="INDI:RELI" />
-  <SSN  img="SSN" super="INDI:RELI" />
-  <TITL img="Title" super="INDI:RELI"/>
-  <NMR  hide="1" img="Marriage" super="INDI:RELI" />
+  <CAST hide="1" type="PropertySimpleValue" img="Caste" super="INDI:RELI" />
+  <DSCR hide="1" type="PropertyChoiceValue" img="Description" super="INDI:RELI" />
+  <EDUC type="PropertyChoiceValue" img="Education" super="INDI:RELI" cardinality="0:M"/>
+  <IDNO type="PropertySimpleValue" img="IDNumber" super="INDI:RELI"/>
+  <NATI type="PropertyChoiceValue" img="Nationality" super="INDI:RELI" />
+  <NCHI type="PropertySimpleValue" img="NumChildren" super="INDI:RELI" />
+  <PROP type="PropertyChoiceValue" img="Property" super="INDI:RELI" />
+  <SSN  type="PropertySimpleValue" img="SSN" super="INDI:RELI" />
+  <TITL type="PropertyChoiceValue" img="Title" super="INDI:RELI"/>
+  <NMR  hide="1" type="PropertySimpleValue" img="Marriage" super="INDI:RELI" />
   +++++++++++++ More Events +++++++++++++
   <GRAD cardinality="0:M" img="Graduation" super="INDI:BIRT"/>
   <CHR  img="Baptism" super="INDI:GRAD">
@@ -276,7 +276,7 @@
  <SOUR type="Source" img="Source">
   <DATA type="PropertySimpleReadOnly" img="Attribute">
    <EVEN default="1" type="PropertyChoiceValue" img="Event">
-     <DATE type="PropertyDate" img="Date"/>
+    <DATE type="PropertySimpleValue" img="Date"/>
     <PLAC super="INDI:BIRT:PLAC"/>
    </EVEN>
    <AGNC type="PropertySimpleValue" img="Attribute"/>
