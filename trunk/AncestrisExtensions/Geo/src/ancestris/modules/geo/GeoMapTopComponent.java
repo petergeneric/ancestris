@@ -5,6 +5,7 @@
 package ancestris.modules.geo;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
+import org.geonames.FeatureClass;
 import org.geonames.Style;
 import org.geonames.Toponym;
 import org.geonames.WebService;
@@ -1253,10 +1255,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                     }
                     List<Toponym> topoList = new ArrayList<Toponym>();
                     try {
+                        WebService.setUserName(GeonamesOptions.getInstance().getUserName());
                         topoList = WebService.findNearbyPlaceName(localGeoPoint.getLatitude(), localGeoPoint.getLongitude(),
-                                8, 15, // radius, maxrows
-                                Style.FULL, // style
-                                Locale.getDefault().toString()); // language
+                                8, 15); // radius, maxrows
+//                                FeatureClass.Style.FULL, // style
+//                                Locale.getDefault().toString()); // language
                     } catch (Exception ex) {
                         return null;
                     }
