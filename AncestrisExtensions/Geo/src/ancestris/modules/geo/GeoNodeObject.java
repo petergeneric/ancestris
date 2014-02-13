@@ -4,6 +4,7 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.libs.geonames.GeonamesOptions;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -372,6 +373,7 @@ class GeoNodeObject {
     public Toponym getToponymFromPlace(PropertyPlace place, boolean localOnly) {
 
         Toponym topo = defaultToponym();
+        WebService.setUserName(GeonamesOptions.getInstance().getUserName());
 
         // go back if place is null
         if (place == null || place.toString().trim().isEmpty()) {
@@ -439,6 +441,7 @@ class GeoNodeObject {
         //
         try {
             searchCriteria.setQ(place);
+            WebService.setUserName(GeonamesOptions.getInstance().getUserName());
             searchResult = WebService.search(searchCriteria);
             for (Toponym iTopo : searchResult.getToponyms()) {
                 topo.add(iTopo);
@@ -547,7 +550,8 @@ class GeoNodeObject {
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Dept") + spa + dispName(topo.getAdminName2()) + " (" + dispName(topo.getAdminCode2()) + ")" + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Distri") + spa + dispName(topo.getAdminName3()) + " (" + dispName(topo.getAdminCode3()) + ")" + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_CdInsee") + spa + dispName(topo.getAdminCode4()) + sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Post") + spa + dispName(topo.getPostcode()) + sep);
+//XXX: no postcode in new lib            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Post") + spa + dispName(topo.getPostcode()) + sep);
+            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Post") + spa + dispName(topo.getAdminName4()) + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Pop") + spa + getPopulation(topo));
         } catch (InsufficientStyleException ex) {
             Exceptions.printStackTrace(ex);
@@ -580,7 +584,8 @@ class GeoNodeObject {
             str.append(dispName(topo.getAdminName3()) + sep);
             str.append(dispName(topo.getAdminCode3()) + sep);
             str.append(dispName(topo.getAdminCode4()) + sep);
-            str.append(dispName(topo.getPostcode()) + sep);
+//XXX: no postcode in new lib            str.append(dispName(topo.getPostcode()) + sep);
+            str.append(dispName(topo.getAdminName4()) + sep);
             str.append(topo.getPopulation());
         } catch (InsufficientStyleException ex) {
             Exceptions.printStackTrace(ex);
@@ -642,7 +647,8 @@ class GeoNodeObject {
                 topo.setAdminCode4(tokens.nextToken());
             }
             if (tokens.hasMoreTokens()) {
-                topo.setPostcode(tokens.nextToken());
+//XXX: no postcode in new lib                topo.setPostcode(tokens.nextToken());
+                topo.setAdminName4(tokens.nextToken());
             }
             if (tokens.hasMoreTokens()) {
                 topo.setPopulation(Long.parseLong(tokens.nextToken()));
