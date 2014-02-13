@@ -7,6 +7,14 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>ancestris.core</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>0.8.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>ancestris.libs.jdom</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -14,15 +22,49 @@
                         <specification-version>1.1.3</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.options.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.24.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.awt</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.39.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.19.2</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.lookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.11.1</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <public-packages>
+                <package>ancestris.libs.geonames</package>
                 <package>org.geonames</package>
                 <package>org.geonames.utils</package>
                 <package>org.geonames.wikipedia</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/geonames-1.1.9.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/geonames-1.1.9.jar</binary-origin>
+                <runtime-relative-path>ext/geonames-1.1.11.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/geonames-1.1.11.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
