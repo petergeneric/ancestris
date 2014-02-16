@@ -6,6 +6,7 @@ import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.DialogDescriptor;
@@ -50,25 +51,25 @@ public class EventsListPanel extends javax.swing.JPanel {
         PropertyTag2Name.getTagName("WILL"),
         PropertyTag2Name.getTagName("GRAD"),
         PropertyTag2Name.getTagName("RETI"),
-        PropertyTag2Name.getTagName("EVEN"),
-        /*
-         * INDIVIDUAL_ATTRIBUTE
-         */
-        PropertyTag2Name.getTagName("CAST"),
-        PropertyTag2Name.getTagName("DSCR"),
-        PropertyTag2Name.getTagName("EDUC"),
-        PropertyTag2Name.getTagName("IDNO"),
-        PropertyTag2Name.getTagName("NATI"),
-        PropertyTag2Name.getTagName("NCHI"),
-        PropertyTag2Name.getTagName("NMR"),
-        PropertyTag2Name.getTagName("OCCU"),
-        PropertyTag2Name.getTagName("PROP"),
-        PropertyTag2Name.getTagName("RELI"),
-        PropertyTag2Name.getTagName("RESI"),
-        PropertyTag2Name.getTagName("SSN"),
-        PropertyTag2Name.getTagName("TITL"),
-        PropertyTag2Name.getTagName("FACT")
-    };
+        PropertyTag2Name.getTagName("EVEN"), /*
+     * INDIVIDUAL_ATTRIBUTE
+     */ /*
+     * Unable to create / edit this events
+     * PropertyTag2Name.getTagName("CAST"),
+     * PropertyTag2Name.getTagName("DSCR"),
+     * PropertyTag2Name.getTagName("EDUC"),
+     * PropertyTag2Name.getTagName("IDNO"),
+     * PropertyTag2Name.getTagName("NATI"),
+     * PropertyTag2Name.getTagName("NCHI"),
+     * PropertyTag2Name.getTagName("NMR"),
+     * PropertyTag2Name.getTagName("OCCU"),
+     * PropertyTag2Name.getTagName("PROP"),
+     * PropertyTag2Name.getTagName("RELI"),
+     * PropertyTag2Name.getTagName("RESI"),
+     * PropertyTag2Name.getTagName("SSN"),
+     * PropertyTag2Name.getTagName("TITL"),
+     * PropertyTag2Name.getTagName("FACT")
+     */};
     private String[] mFamilyEvents = {
         PropertyTag2Name.getTagName("ANUL"),
         PropertyTag2Name.getTagName("CENS"),
@@ -83,7 +84,8 @@ public class EventsListPanel extends javax.swing.JPanel {
         PropertyTag2Name.getTagName("RESI"),
         PropertyTag2Name.getTagName("EVEN")
     };
-    private String[] mEvents = mIndividualEvents;
+    DefaultComboBoxModel mEventsModel = new DefaultComboBoxModel(new String[]{"empty"});
+    private boolean updateOnGoing = false;
 
     /**
      * Creates new form EventsListPanel
@@ -94,13 +96,6 @@ public class EventsListPanel extends javax.swing.JPanel {
 
     public EventsListPanel(int eventTypeList) {
         mEventTypeList = eventTypeList;
-        if (eventTypeList == INDIVIDUAL_EVENT_TYPE_LIST) {
-            mEvents = mIndividualEvents;
-        } else if (eventTypeList == FAMILY_EVENT_TYPE_LIST) {
-            mEvents = mFamilyEvents;
-        } else {
-            mEvents = mIndividualEvents;
-        }
         initComponents();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(eventsTable.getModel());
         eventsTable.setID(EventsListPanel.class.getName());
@@ -123,7 +118,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(3, 0), new java.awt.Dimension(3, 0), new java.awt.Dimension(3, 32767));
-        eventTypeComboBox = new javax.swing.JComboBox<String>(mEvents);
+        eventTypeComboBox = new javax.swing.JComboBox<String>();
         editEventButton = new javax.swing.JButton();
         deleteEventButton = new javax.swing.JButton();
         eventsScrollPane = new javax.swing.JScrollPane();
@@ -136,6 +131,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.add(jLabel1);
         eventsToolBar.add(filler1);
 
+        eventTypeComboBox.setModel(mEventsModel);
         eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
         eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,47 +249,49 @@ public class EventsListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteEventButtonActionPerformed
 
     private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
-        Gedcom gedcom = mRoot.getGedcom();
-        int undoNb = gedcom.getUndoNb();
-        mEvent = null;
-        final String eventType = eventTypeComboBox.getSelectedItem().toString();
-        try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
+        if (!updateOnGoing) {
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
+            mEvent = null;
+            final String eventType = eventTypeComboBox.getSelectedItem().toString();
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    Property addProperty = mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
-                    if (addProperty instanceof PropertyEvent) {
-                        mEvent = (PropertyEvent) addProperty;
-                        mEvent.addProperty("DATE", "");
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        Property addProperty = mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
+                        if (addProperty instanceof PropertyEvent) {
+                            mEvent = (PropertyEvent) addProperty;
+                            mEvent.addProperty("DATE", "");
+                        } else {
+                            System.out.println(addProperty.getClass());
+                        }
+                    }
+                }); // end of doUnitOfWork
+
+                if (mEvent != null) {
+                    EventEditorPanel eventEditorPanel = new EventEditorPanel(mEventTypeList);
+
+                    eventEditorPanel.set(mRoot, mEvent);
+
+                    ADialog eventEditorDialog = new ADialog(
+                            NbBundle.getMessage(EventEditorPanel.class,
+                            "EventEditorPanel.create.title",
+                            eventType),
+                            eventEditorPanel);
+
+                    eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
+                    if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                        mEventsTableModel.add(eventEditorPanel.commit());
                     } else {
-                        System.out.println(addProperty.getClass());
+                        while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                            gedcom.undoUnitOfWork(false);
+                        }
                     }
                 }
-            }); // end of doUnitOfWork
-
-            if (mEvent != null) {
-                EventEditorPanel eventEditorPanel = new EventEditorPanel(mEventTypeList);
-
-                eventEditorPanel.set(mRoot, mEvent);
-
-                ADialog eventEditorDialog = new ADialog(
-                        NbBundle.getMessage(EventEditorPanel.class,
-                        "EventEditorPanel.create.title",
-                        eventType),
-                        eventEditorPanel);
-
-                eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
-                if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    mEventsTableModel.add(eventEditorPanel.commit());
-                } else {
-                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                        gedcom.undoUnitOfWork(false);
-                    }
-                }
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
             }
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
 
@@ -339,6 +337,7 @@ public class EventsListPanel extends javax.swing.JPanel {
 
     public void setEventsList(Property root, List<PropertyEvent> eventsList) {
         this.mRoot = root;
+        seteventTypeComboBox(eventsList);
         mEventsTableModel.addAll(eventsList);
     }
 
@@ -350,5 +349,40 @@ public class EventsListPanel extends javax.swing.JPanel {
         } else {
             return null;
         }
+    }
+
+    private void seteventTypeComboBox(List<PropertyEvent> eventsList) {
+        updateOnGoing = true;
+        if (mEventTypeList == INDIVIDUAL_EVENT_TYPE_LIST) {
+            mEventsModel.removeAllElements();
+
+            for (String element : mIndividualEvents) {
+                /*
+                 * Filter by events already present
+                 */
+                mEventsModel.addElement(element);
+            }
+            for (PropertyEvent event : eventsList) {
+                if (!event.getTag().equals("EVEN") && !event.getTag().equals("GRAD")) {
+                    mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
+                }
+            }
+        } else if (mEventTypeList == FAMILY_EVENT_TYPE_LIST) {
+            mEventsModel.removeAllElements();
+            for (String element : mFamilyEvents) {
+                mEventsModel.addElement(element);
+            }
+            for (PropertyEvent event : eventsList) {
+                if (!event.getTag().equals("EVEN")) {
+                    mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
+                }
+            }
+        } else {
+            mEventsModel.removeAllElements();
+            for (String element : mIndividualEvents) {
+                mEventsModel.addElement(element);
+            }
+        }
+        updateOnGoing = false;
     }
 }
