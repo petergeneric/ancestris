@@ -179,6 +179,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         eventCauseTextArea = new javax.swing.JTextArea();
         EventTypeLabel = new javax.swing.JLabel();
         eventTypeTextField = new javax.swing.JTextField();
+        privateRecordToggleButton = new javax.swing.JToggleButton();
         agePanel = new javax.swing.JPanel();
         familyAgePanel = new javax.swing.JPanel();
         husbandAgeLabel = new javax.swing.JLabel();
@@ -220,6 +221,11 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         EventTypeLabel.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.EventTypeLabel.text")); // NOI18N
 
+        privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
+        privateRecordToggleButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
+        privateRecordToggleButton.setRolloverSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
+        privateRecordToggleButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -244,7 +250,10 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     .addComponent(eventCauseLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(privateRecordToggleButton))
                     .addComponent(eventCauseScrollPane)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -258,7 +267,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                         .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(eventNameLabel)
-                        .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(privateRecordToggleButton))
                     .addComponent(dateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -434,6 +444,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JPanel placePanel;
+    private javax.swing.JToggleButton privateRecordToggleButton;
     private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
     private javax.swing.JPanel sourcesPanel;
     private javax.swing.JLabel wifeAgeLabel;
@@ -536,6 +547,13 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     mEventCauseModified = true;
                 }
             });
+        }
+        /*
+         * +1 RESN <RESTRICTION_NOTICE>
+         */
+        Property restrictionNotice = mEvent.getProperty("RESN", true);
+        if (restrictionNotice != null) {
+            privateRecordToggleButton.setSelected(true);
         }
 
         PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
@@ -693,6 +711,17 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         }
                     }
                     aDateBean.commit();
+                    
+                    Property restrictionNotice = mEvent.getProperty("RESN", true);
+                    if (privateRecordToggleButton.isSelected()) {
+                        if (restrictionNotice == null) {
+                            mEvent.addProperty("RESN", "confidential");
+                        }
+                    } else {
+                        if (restrictionNotice != null) {
+                            mEvent.delProperty(restrictionNotice);
+                        }
+                    }
 
                     if (mEventType == INDIVIDUAL_EVENT_TYPE) {
                         if (mIndividualAgeModified) {
