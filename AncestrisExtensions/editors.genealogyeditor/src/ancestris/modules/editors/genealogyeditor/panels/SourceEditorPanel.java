@@ -274,6 +274,10 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         if (sourceData != null) {
             Property[] sourceDataEvents = sourceData.getProperties("EVEN");
             eventTypePanel1.setEventTypesList(sourceData, Arrays.asList(sourceDataEvents));
+        } else {
+            sourceData = mSource.addProperty("DATA", "");
+            eventTypePanel1.setEventTypesList(sourceData, null);
+
         }
 
         /*
