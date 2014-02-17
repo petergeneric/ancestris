@@ -12,6 +12,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
 
     private Property mEvent = null;
     private PropertyPlace mPlace = null;
+    private PropertyDate mDate = null;
     private String[] mEvents = {
         /*
          * INDIVIDUAL_EVENT
@@ -174,11 +175,22 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     void set(Property event) {
         this.mEvent = event;
 
-        PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
-        if (date == null) {
-            date = (PropertyDate) mEvent.addProperty("DATE", "");
+        mDate = (PropertyDate) mEvent.getProperty("DATE", false);
+        if (mDate == null) {
+            try {
+                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
-        aDateBean.setContext(date);
+        
+        aDateBean.setContext(mDate);
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         if (mPlace == null) {
             try {
