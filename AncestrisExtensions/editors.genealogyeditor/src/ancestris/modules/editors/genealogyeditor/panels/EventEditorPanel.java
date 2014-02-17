@@ -457,7 +457,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     public void set(Property root, PropertyEvent event) {
         this.mRoot = root;
         this.mEvent = event;
-        if (!mEvent.getTag().equals("EVEN") || !mEvent.getTag().equals("FACT")) {
+        if (!mEvent.getTag().equals("EVEN") && !mEvent.getTag().equals("FACT")) {
             // Event Name
             eventNameTextField.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
 
