@@ -22,7 +22,7 @@ public class ImageBean extends javax.swing.JPanel {
 
     private final static Logger logger = Logger.getLogger(ImageBean.class.getName(), null);
     private boolean imageModified = false;
-    private Property root;
+    private Property mRoot;
     Property multimediaObject;
     private BufferedImage resizedImage;
     private InputStream imageInputStream = null;
@@ -92,12 +92,17 @@ public class ImageBean extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     public void setImage(Property root, Property multimediaObject) {
-        this.root = root;
+        this.mRoot = root;
         this.multimediaObject = multimediaObject;
-
+        Property file = null;
+        
         if (multimediaObject != null) {
-            Property file = multimediaObject.getProperty("FILE", true);
-            if (file instanceof PropertyFile && ((PropertyFile) file).getFile().exists()) {
+            if (multimediaObject instanceof PropertyMedia) {
+                file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
+            } else {
+                file = multimediaObject.getProperty("FILE", true);
+            }
+            if (file != null && file instanceof PropertyFile && ((PropertyFile) file).getFile().exists()) {
                 try {
                     imageInputStream = new FileInputStream(((PropertyFile) file).getFile());
                 } catch (FileNotFoundException ex) {
@@ -134,16 +139,36 @@ public class ImageBean extends javax.swing.JPanel {
     public void commit() {
         logger.log(Level.INFO, "Commiting ...");
         try {
-            root.getGedcom().doUnitOfWork(new UnitOfWork() {
+            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    if (multimediaObject != null && imageModified == true) {
-                        Property file = multimediaObject.getProperty("FILE", true);
-                        if (file instanceof PropertyFile) {
-                            logger.log(Level.INFO, "Update property FILE");
+                    if (imageModified == true) {
+                        if (multimediaObject != null) {
+                            Property file = multimediaObject.getProperty("FILE", true);
+                            if (file != null && file instanceof PropertyFile) {
+                                logger.log(Level.INFO, "Update property FILE");
 
-                            ((PropertyFile) file).addFile(imageFile);
+                                ((PropertyFile) file).addFile(imageFile);
+                            } else {
+                                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                                    Media media = (Media) mRoot.getGedcom().createEntity("OBJE");
+                                    media.addFile(imageFile, imageFile.getName());
+                                    mRoot.addMedia(media);
+                                } else {
+                                    Property propertyMedia = mRoot.addProperty("OBJE", "");
+                                    propertyMedia.addFile(imageFile, imageFile.getName());
+                                }
+                            }
+                        } else {
+                            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                                Media media = (Media) mRoot.getGedcom().createEntity("OBJE");
+                                media.addFile(imageFile, imageFile.getName());
+                                mRoot.addMedia(media);
+                            } else {
+                                Property propertyMedia = mRoot.addProperty("OBJE", "");
+                                propertyMedia.addFile(imageFile, imageFile.getName());
+                            }
                         }
                     }
                 }
