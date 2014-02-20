@@ -90,7 +90,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMMObjectButtonActionPerformed
-        FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(MultimediaObjectCitationsListPanel.class, "MultimediaObjectCitationsListPanel.fileType"), "jpeg");
+        FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(MultimediaObjectCitationsListPanel.class, "MultimediaObjectCitationsListPanel.fileType"),  "jpg", "jpeg", "png", "gif");
         JFileChooser imageFileChooser = new JFileChooser();
 
         imageFileChooser.setFileFilter(imageFileFilter);
