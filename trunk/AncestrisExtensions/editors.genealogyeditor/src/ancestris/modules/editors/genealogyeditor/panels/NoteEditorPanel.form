@@ -21,7 +21,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="noteInformationTabbedPane" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="inlineNoteCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="noteIDLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="noteIDTextField" min="-2" max="-2" attributes="0"/>
@@ -38,6 +39,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="noteIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="noteIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="inlineNoteCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="noteInformationTabbedPane" max="32767" attributes="0"/>
@@ -157,5 +159,15 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JCheckBox" name="inlineNoteCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteEditorPanel.inlineNoteCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inlineNoteCheckBoxActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

@@ -144,7 +144,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             }); // end of doUnitOfWork
 
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-            noteEditorPanel.set(mNote);
+            noteEditorPanel.set(mRoot.getGedcom(), mRoot, mNote);
             ADialog noteEditorDialog = new ADialog(
                     NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.create.title"),
                     noteEditorPanel);
@@ -176,7 +176,7 @@ public class NotesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
             NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-            noteEditorPanel.set(mNotesTableModel.getValueAt(rowIndex));
+            noteEditorPanel.set(mRoot.getGedcom(), mRoot, mNotesTableModel.getValueAt(rowIndex));
 
             ADialog noteEditorDialog = new ADialog(
                     NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),
@@ -237,7 +237,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             if (selectedRow != -1) {
                 int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-                noteEditorPanel.set(mNotesTableModel.getValueAt(rowIndex));
+                noteEditorPanel.set(mRoot.getGedcom(), mRoot, mNotesTableModel.getValueAt(rowIndex));
 
                 ADialog noteEditorDialog = new ADialog(
                         NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),

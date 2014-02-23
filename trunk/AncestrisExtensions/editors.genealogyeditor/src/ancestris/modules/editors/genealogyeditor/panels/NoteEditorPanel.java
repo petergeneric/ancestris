@@ -13,6 +13,8 @@ import org.openide.util.NbBundle;
 public class NoteEditorPanel extends javax.swing.JPanel {
 
     private Property mNote;
+    private Gedcom mGedcom;
+    private Property mParent;
 
     /**
      * Creates new form NoteEditorPanel
@@ -39,6 +41,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         noteTextTextArea = new javax.swing.JTextArea();
         noteReferencesPanel = new javax.swing.JPanel();
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
+        inlineNoteCheckBox = new javax.swing.JCheckBox();
 
         noteIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -83,6 +86,13 @@ public class NoteEditorPanel extends javax.swing.JPanel {
 
         noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel); // NOI18N
 
+        inlineNoteCheckBox.setText(org.openide.util.NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.inlineNoteCheckBox.text")); // NOI18N
+        inlineNoteCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inlineNoteCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -92,7 +102,8 @@ public class NoteEditorPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(noteInformationTabbedPane)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(inlineNoteCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(noteIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -104,13 +115,27 @@ public class NoteEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(noteIDLabel)
-                    .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inlineNoteCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(noteInformationTabbedPane)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void inlineNoteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inlineNoteCheckBoxActionPerformed
+        if (inlineNoteCheckBox.isSelected()) {
+            noteIDLabel.setVisible(false);
+            noteIDTextField.setVisible(false);
+            noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesScrollPane.TabConstraints.tabTitle")));
+        } else {
+            noteIDLabel.setVisible(true);
+            noteIDTextField.setVisible(true);
+            noteInformationTabbedPane.addTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesScrollPane.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel);
+        }
+    }//GEN-LAST:event_inlineNoteCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox inlineNoteCheckBox;
     private javax.swing.JLabel noteIDLabel;
     private javax.swing.JTextField noteIDTextField;
     private javax.swing.JTabbedPane noteInformationTabbedPane;
@@ -133,35 +158,50 @@ public class NoteEditorPanel extends javax.swing.JPanel {
      * +1 <<SOURCE_CITATION>>
      * +1 <<CHANGE_DATE>>
      */
-    public void set(Property note) {
-        if (note instanceof PropertyNote) {
-            this.mNote = ((PropertyNote) note).getTargetEntity();
-        } else {
-            this.mNote = note;
-        }
-        if (note instanceof Note) {
-            noteIDTextField.setText(((Note) note).getId());
-            List<Entity> entitiesList = new ArrayList<Entity>();
-            for (PropertyXRef entityRef : note.getProperties(PropertyXRef.class)) {
-                entitiesList.add(entityRef.getTargetEntity());
-            }
-            referencesListPanel.set(((Note) note), entitiesList);
-        } else {
-            noteIDTextField.setVisible(false);
-            noteIDLabel.setVisible(false);
-            noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesScrollPane.TabConstraints.tabTitle")));
-        }
+    public void set(Gedcom gedcom, Property parent, Property note) {
+        mGedcom = gedcom;
+        mParent = parent;
 
-        noteTextTextArea.setText(note.getValue() != null ? note.getValue() : "");
+        if (note != null) {
+            inlineNoteCheckBox.setVisible(false);
+
+            if (note instanceof PropertyNote) {
+                this.mNote = ((PropertyNote) note).getTargetEntity();
+            } else {
+                this.mNote = note;
+            }
+            if (mNote instanceof Note) {
+                noteIDTextField.setText(((Note) mNote).getId());
+                List<Entity> entitiesList = new ArrayList<Entity>();
+                for (PropertyXRef entityRef : mNote.getProperties(PropertyXRef.class)) {
+                    entitiesList.add(entityRef.getTargetEntity());
+                }
+                referencesListPanel.set(((Note) mNote), entitiesList);
+            } else {
+                noteIDTextField.setVisible(false);
+                noteIDLabel.setVisible(false);
+                noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesScrollPane.TabConstraints.tabTitle")));
+            }
+
+            noteTextTextArea.setText(mNote.getValue() != null ? mNote.getValue() : "");
+        }
     }
 
     public Property commit() {
+
         try {
-            mNote.getGedcom().doUnitOfWork(new UnitOfWork() {
+            mGedcom.doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    mNote.setValue(noteTextTextArea.getText());
+                    if (mNote == null) {
+                        if (inlineNoteCheckBox.isSelected()) {
+                            mNote = mParent.addProperty("NOTE", noteTextTextArea.getText());
+                        } else {
+                            mNote = gedcom.createEntity(Gedcom.NOTE);
+                            mNote.setValue(noteTextTextArea.getText());
+                        }
+                    }
                 }
             }); // end of doUnitOfWork
         } catch (GedcomException ex) {

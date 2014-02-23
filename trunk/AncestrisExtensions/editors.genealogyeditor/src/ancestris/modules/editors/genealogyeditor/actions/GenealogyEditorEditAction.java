@@ -75,7 +75,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 Gedcom gedcom = entity.getGedcom();
                 int undoNb = gedcom.getUndoNb();
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-                noteEditorPanel.set((Note) entity);
+                noteEditorPanel.set(gedcom, null, (Note) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title", entity),

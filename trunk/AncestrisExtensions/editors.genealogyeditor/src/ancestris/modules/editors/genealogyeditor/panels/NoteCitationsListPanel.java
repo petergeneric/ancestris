@@ -22,7 +22,6 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private NoteCitationsTableModel mNoteCitationsTableModel = new NoteCitationsTableModel();
-    private Note mNote;
 
     /**
      * Creates new form NoteCitationsListPanel
@@ -135,39 +134,33 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
     private void addNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    mNote = (Note) gedcom.createEntity(Gedcom.NOTE);
-                }
-            }); // end of doUnitOfWork
-
-            NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-            noteEditorPanel.set(mNote);
-            ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.create.title"),
-                    noteEditorPanel);
-            noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
-            if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                final Note commitedNote = (Note) noteEditorPanel.commit();
+        NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
+        noteEditorPanel.set(gedcom, mRoot, null);
+        ADialog noteEditorDialog = new ADialog(
+                NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.create.title"),
+                noteEditorPanel);
+        noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
+        if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Property commitedNote = noteEditorPanel.commit();
+            try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        mRoot.addNote(commitedNote);
+                        if (commitedNote instanceof Note) {
+                            mRoot.addNote((Note) commitedNote);
+                        }
                     }
                 }); // end of doUnitOfWork
-                mNoteCitationsTableModel.clear();
-                mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
-            } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
-                }
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
             }
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+            mNoteCitationsTableModel.clear();
+            mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
         }
     }//GEN-LAST:event_addNoteButtonActionPerformed
 
@@ -252,7 +245,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
         int undoNb = gedcom.getUndoNb();
         NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-        noteEditorPanel.set(note);
+        noteEditorPanel.set(gedcom, mRoot, note);
 
         ADialog noteEditorDialog = new ADialog(
                 NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),
