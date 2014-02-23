@@ -128,7 +128,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             multiMediaObjectEditorPanel.set(mMultiMediaObject);
 
             DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.title"),
+                    NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.add.title"),
                     multiMediaObjectEditorPanel);
             multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
 
@@ -196,8 +196,16 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
             multiMediaObjectEditorPanel.set(multiMediaObject);
 
+            String multiMediaObjectTitle;
+            if (multiMediaObject instanceof PropertyMedia) {
+                multiMediaObjectTitle = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getTitle();
+            } else {
+                Property propertyTitle = multiMediaObject.getProperty("TITL");
+                multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
+            }
+
             DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                    NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
                     multiMediaObjectEditorPanel);
             multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
 
@@ -224,8 +232,16 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
                 multiMediaObjectEditorPanel.set(multiMediaObject);
 
+                String multiMediaObjectTitle;
+                if (multiMediaObject instanceof PropertyMedia) {
+                    multiMediaObjectTitle = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getTitle();
+                } else {
+                    Property propertyTitle = multiMediaObject.getProperty("TITL");
+                    multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
+                }
+
                 DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                        NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
                         multiMediaObjectEditorPanel);
                 multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
 
@@ -242,6 +258,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_multiMediaObjectCitationsTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton deleteMMObjectButton;
