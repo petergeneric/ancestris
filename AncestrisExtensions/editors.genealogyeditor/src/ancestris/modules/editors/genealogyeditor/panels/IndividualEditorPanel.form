@@ -124,6 +124,9 @@
               <Dimension value="[90, 120]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imageBeanMouseClicked"/>
+          </Events>
 
           <Layout>
             <DimensionLayout dim="0">

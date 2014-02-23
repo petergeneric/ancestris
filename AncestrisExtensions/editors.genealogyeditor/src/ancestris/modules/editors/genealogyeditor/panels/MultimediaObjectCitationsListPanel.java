@@ -3,10 +3,9 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectCitationsTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
-import java.io.File;
+import java.util.Arrays;
 import java.util.List;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -17,6 +16,7 @@ import org.openide.util.NbBundle;
 public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
+    private Property mMultiMediaObject;
     private String mGedcomVersion = "";
     private MultiMediaObjectCitationsTableModel multiMediaObjectCitationsTableModel = new MultiMediaObjectCitationsTableModel();
 
@@ -39,6 +39,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
         galleryToolBar = new javax.swing.JToolBar();
         addMMObjectButton = new javax.swing.JButton();
+        editMMObjecButton = new javax.swing.JButton();
         deleteMMObjectButton = new javax.swing.JButton();
         multiMediaObjectCitationsScrollPane = new javax.swing.JScrollPane();
         multiMediaObjectCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
@@ -58,6 +59,18 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         });
         galleryToolBar.add(addMMObjectButton);
 
+        editMMObjecButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editMMObjecButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.editMMObjecButton.toolTipText"), new Object[] {})); // NOI18N
+        editMMObjecButton.setFocusable(false);
+        editMMObjecButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editMMObjecButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editMMObjecButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editMMObjecButtonActionPerformed(evt);
+            }
+        });
+        galleryToolBar.add(editMMObjecButton);
+
         deleteMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
         deleteMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.deleteMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
         deleteMMObjectButton.setFocusable(false);
@@ -71,6 +84,11 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         galleryToolBar.add(deleteMMObjectButton);
 
         multiMediaObjectCitationsTable.setModel(multiMediaObjectCitationsTableModel);
+        multiMediaObjectCitationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                multiMediaObjectCitationsTableMouseClicked(evt);
+            }
+        });
         multiMediaObjectCitationsScrollPane.setViewportView(multiMediaObjectCitationsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -90,32 +108,41 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMMObjectButtonActionPerformed
-        FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(MultimediaObjectCitationsListPanel.class, "MultimediaObjectCitationsListPanel.fileType"),  "jpg", "jpeg", "png", "gif");
-        JFileChooser imageFileChooser = new JFileChooser();
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
 
-        imageFileChooser.setFileFilter(imageFileFilter);
-        imageFileChooser.setAcceptAllFileFilterUsed(true);
-
-        if (imageFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            final File imageFile = imageFileChooser.getSelectedFile();
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        if (mGedcomVersion.equals("5.5.1")) {
-                            Media media = (Media) mRoot.getGedcom().createEntity("OBJE");
-                            media.addFile(imageFile, imageFile.getName());
-                            mRoot.addMedia(media);
-                            multiMediaObjectCitationsTableModel.add(media);
-                        } else {
-                            Property propertyMedia = mRoot.addProperty("OBJE", "");
-                            propertyMedia.addFile(imageFile, imageFile.getName());
-                        }
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    if (mGedcomVersion.equals("5.5.1")) {
+                        mMultiMediaObject = mRoot.getGedcom().createEntity("OBJE");
+                        mRoot.addMedia((Media) mMultiMediaObject);
+                    } else {
+                        mMultiMediaObject = mRoot.addProperty("OBJE", "");
                     }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
+                }
+            }); // end of doUnitOfWork
+
+            MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+            multiMediaObjectEditorPanel.set(mMultiMediaObject);
+
+            DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.title"),
+                    multiMediaObjectEditorPanel);
+            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+
+            if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                multiMediaObjectEditorPanel.commit();
+                multiMediaObjectCitationsTableModel.clear();
+                multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_addMMObjectButtonActionPerformed
 
@@ -130,7 +157,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             if (file != null && file instanceof PropertyFile) {
                 objectName = ((PropertyFile) file).getFile().getAbsolutePath();
             } else {
-                objectName =  "";
+                objectName = "";
             }
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
@@ -157,9 +184,68 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_deleteMMObjectButtonActionPerformed
+
+    private void editMMObjecButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMMObjecButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+
+        int selectedRow = multiMediaObjectCitationsTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
+            Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
+            MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+            multiMediaObjectEditorPanel.set(multiMediaObject);
+
+            DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                    multiMediaObjectEditorPanel);
+            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+
+            if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                multiMediaObjectEditorPanel.commit();
+                multiMediaObjectCitationsTableModel.clear();
+                multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_editMMObjecButtonActionPerformed
+
+    private void multiMediaObjectCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_multiMediaObjectCitationsTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
+            int selectedRow = multiMediaObjectCitationsTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
+                Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
+                MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                multiMediaObjectEditorPanel.set(multiMediaObject);
+
+                DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                        multiMediaObjectEditorPanel);
+                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+
+                if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    multiMediaObjectEditorPanel.commit();
+                    multiMediaObjectCitationsTableModel.clear();
+                    multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
+
+            }
+        }
+    }//GEN-LAST:event_multiMediaObjectCitationsTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton deleteMMObjectButton;
+    private javax.swing.JButton editMMObjecButton;
     private javax.swing.JToolBar galleryToolBar;
     private javax.swing.JScrollPane multiMediaObjectCitationsScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable multiMediaObjectCitationsTable;

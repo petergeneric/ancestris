@@ -1,18 +1,18 @@
 package ancestris.modules.editors.genealogyeditor.beans;
 
-import genj.gedcom.*;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyMedia;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -20,13 +20,8 @@ import org.openide.util.NbBundle;
  */
 public class ImageBean extends javax.swing.JPanel {
 
-    private final static Logger logger = Logger.getLogger(ImageBean.class.getName(), null);
-    private boolean imageModified = false;
-    private Property mRoot;
-    Property multimediaObject;
     private BufferedImage resizedImage;
     private InputStream imageInputStream = null;
-    private File imageFile = null;
 
     /**
      * Creates new form ImageBean
@@ -49,53 +44,24 @@ public class ImageBean extends javax.swing.JPanel {
         setMinimumSize(new java.awt.Dimension(30, 40));
         setPreferredSize(new java.awt.Dimension(150, 200));
         setRequestFocusEnabled(false);
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                formMouseClicked(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 90, Short.MAX_VALUE)
+            .addGap(0, 150, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 120, Short.MAX_VALUE)
+            .addGap(0, 200, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-        FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(ImageBean.class, "ImageBean.fileType"), "jpg", "jpeg", "png", "gif");
-        JFileChooser imageFileChooser = new JFileChooser();
-
-        imageFileChooser.setFileFilter(imageFileFilter);
-        imageFileChooser.setAcceptAllFileFilterUsed(true);
-        if (imageFile != null) {
-            imageFileChooser.setSelectedFile(imageFile);
-        }
-        if (imageFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            imageFile = imageFileChooser.getSelectedFile();
-            try {
-                BufferedImage loadImage = ImageIO.read(imageFile);
-                resizedImage = resizeImage(loadImage, 90, 120);
-                imageModified = true;
-                this.repaint();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-    }//GEN-LAST:event_formMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public void setImage(Property root, Property multimediaObject) {
-        this.mRoot = root;
-        this.multimediaObject = multimediaObject;
-        Property file = null;
-        
+    public void setImage(Property multimediaObject) {
+        Property file;
+
         if (multimediaObject != null) {
             if (multimediaObject instanceof PropertyMedia) {
                 file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
@@ -122,7 +88,6 @@ public class ImageBean extends javax.swing.JPanel {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-
     }
 
     public BufferedImage resizeImage(BufferedImage img, int newW, int newH) {
@@ -134,50 +99,6 @@ public class ImageBean extends javax.swing.JPanel {
         g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
         g.dispose();
         return dimg;
-    }
-
-    public void commit() {
-        logger.log(Level.INFO, "Commiting ...");
-        try {
-            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    if (imageModified == true) {
-                        if (multimediaObject != null) {
-                            Property file = multimediaObject.getProperty("FILE", true);
-                            if (file != null && file instanceof PropertyFile) {
-                                logger.log(Level.INFO, "Update property FILE");
-
-                                ((PropertyFile) file).addFile(imageFile);
-                            } else {
-                                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                                    Media media = (Media) mRoot.getGedcom().createEntity("OBJE");
-                                    media.addFile(imageFile, imageFile.getName());
-                                    mRoot.addMedia(media);
-                                } else {
-                                    Property propertyMedia = mRoot.addProperty("OBJE", "");
-                                    propertyMedia.addFile(imageFile, imageFile.getName());
-                                }
-                            }
-                        } else {
-                            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                                Media media = (Media) mRoot.getGedcom().createEntity("OBJE");
-                                media.addFile(imageFile, imageFile.getName());
-                                mRoot.addMedia(media);
-                            } else {
-                                Property propertyMedia = mRoot.addProperty("OBJE", "");
-                                propertyMedia.addFile(imageFile, imageFile.getName());
-                            }
-                        }
-                    }
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            logger.log(Level.SEVERE, ex.getMessage());
-        }
-
-        logger.log(Level.INFO, "... finished");
     }
 
     @Override

@@ -150,7 +150,7 @@ public class NotesListPanel extends javax.swing.JPanel {
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                final Note commitedNote = noteEditorPanel.commit();
+                final Note commitedNote = (Note)noteEditorPanel.commit();
                 mNotesTableModel.add(commitedNote);
                 gedcom.doUnitOfWork(new UnitOfWork() {
 

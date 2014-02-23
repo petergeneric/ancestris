@@ -744,6 +744,10 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     public void set(Fam family) {
         this.mFamily = family;
 
+        if (!mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            privateRecordToggleButton.setVisible(false);
+        }
+
         /*
          * n @<XREF:FAM>@ FAM
          */

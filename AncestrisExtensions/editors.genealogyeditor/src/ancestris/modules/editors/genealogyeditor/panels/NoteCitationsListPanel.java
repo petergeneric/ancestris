@@ -151,8 +151,14 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                Note commitedNote = noteEditorPanel.commit();
-                mRoot.addNote(commitedNote);
+                final Note commitedNote = (Note) noteEditorPanel.commit();
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mRoot.addNote(commitedNote);
+                    }
+                }); // end of doUnitOfWork
                 mNoteCitationsTableModel.clear();
                 mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
             } else {
@@ -245,37 +251,19 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
     private void editNote(Property note) {
         Gedcom gedcom = mRoot.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        if (note instanceof PropertyNote) {
-            NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-            noteEditorPanel.set((Note) ((PropertyNote) note).getTargetEntity());
+        NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
+        noteEditorPanel.set(note);
 
-            ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),
-                    noteEditorPanel);
-            noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
+        ADialog noteEditorDialog = new ADialog(
+                NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.edit.title"),
+                noteEditorPanel);
+        noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
-            if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                noteEditorPanel.commit();
-            } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
-                }
-            }
+        if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            noteEditorPanel.commit();
         } else {
-            InlineNoteEditorPanel noteEditorPanel = new InlineNoteEditorPanel();
-            noteEditorPanel.set(note);
-
-            ADialog noteEditorDialog = new ADialog(
-                    NbBundle.getMessage(InlineNoteEditorPanel.class, "InlineNoteEditorPanel.edit.title"),
-                    noteEditorPanel);
-            noteEditorDialog.setDialogId(InlineNoteEditorPanel.class.getName());
-
-            if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                noteEditorPanel.commit();
-            } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
-                }
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
             }
         }
     }
