@@ -241,6 +241,8 @@ public class EventsListPanel extends javax.swing.JPanel {
                             mRoot.delProperty(mEventsTableModel.remove(rowIndex));
                         }
                     }); // end of doUnitOfWork
+                    seteventTypeComboBox(mRoot.getProperties(PropertyEvent.class));
+
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -283,6 +285,7 @@ public class EventsListPanel extends javax.swing.JPanel {
                     eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
                     if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                         mEventsTableModel.add(eventEditorPanel.commit());
+                        seteventTypeComboBox(mRoot.getProperties(PropertyEvent.class));
                     } else {
                         while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                             gedcom.undoUnitOfWork(false);
@@ -357,12 +360,12 @@ public class EventsListPanel extends javax.swing.JPanel {
             mEventsModel.removeAllElements();
 
             for (String element : mIndividualEvents) {
-                /*
-                 * Filter by events already present
-                 */
                 mEventsModel.addElement(element);
             }
             for (PropertyEvent event : eventsList) {
+                /*
+                 * Filter by events already present
+                 */
                 if (!event.getTag().equals("EVEN") && !event.getTag().equals("GRAD")) {
                     mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
                 }
@@ -373,6 +376,9 @@ public class EventsListPanel extends javax.swing.JPanel {
                 mEventsModel.addElement(element);
             }
             for (PropertyEvent event : eventsList) {
+                /*
+                 * Filter by events already present
+                 */
                 if (!event.getTag().equals("EVEN")) {
                     mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
                 }
