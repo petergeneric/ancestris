@@ -457,6 +457,11 @@ public class EventEditorPanel extends javax.swing.JPanel {
     public void set(Property root, PropertyEvent event) {
         this.mRoot = root;
         this.mEvent = event;
+
+        if (!mEvent.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            privateRecordToggleButton.setVisible(false);
+        }
+
         if (!mEvent.getTag().equals("EVEN") && !mEvent.getTag().equals("FACT")) {
             // Event Name
             eventNameTextField.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
@@ -711,7 +716,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         }
                     }
                     aDateBean.commit();
-                    
+
                     Property restrictionNotice = mEvent.getProperty("RESN", true);
                     if (privateRecordToggleButton.isSelected()) {
                         if (restrictionNotice == null) {
