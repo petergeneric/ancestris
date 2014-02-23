@@ -31,7 +31,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
     private String[] columnsName = {
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.ID.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"),
-//        "Image"
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"), //        "Image"
     };
 
     public MultiMediaObjectCitationsTableModel() {
@@ -57,6 +57,9 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                         return ((Media) ((PropertyMedia) multimediaObject).getTargetEntity()).getId();
 
                     case 1: {
+                        return ((Media) ((PropertyMedia) multimediaObject).getTargetEntity()).getTitle();
+                    }
+                    case 2: {
                         Property file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             return ((PropertyFile) file).getFile().getAbsolutePath();
@@ -64,7 +67,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             return "";
                         }
                     }
-                    case 2: {
+                    case 3: {
                         Property file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             ImageIcon imageIcon = createImageIcon(((PropertyFile) file).getFile().getAbsolutePath(), "");
@@ -80,8 +83,15 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                 switch (column) {
                     case 0:
                         return "";
-
                     case 1: {
+                        Property title = multimediaObject.getProperty("TITL", true);
+                        if (title != null) {
+                            return title.getValue();
+                        } else {
+                            return "";
+                        }
+                    }
+                    case 2: {
                         Property file = multimediaObject.getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             return ((PropertyFile) file).getFile().getAbsolutePath();
@@ -89,7 +99,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             return "";
                         }
                     }
-                    case 2: {
+                    case 3: {
                         Property file = multimediaObject.getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             ImageIcon imageIcon = createImageIcon(((PropertyFile) file).getFile().getAbsolutePath(), "");
@@ -135,11 +145,14 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    public void clear() {
+        multimediaObjectsRefList.clear();
+    }
+
     /**
      * Returns an ImageIcon, or null if the path was invalid.
      */
     protected ImageIcon createImageIcon(String path, String description) {
         return new ImageIcon(path, description);
-
     }
 }

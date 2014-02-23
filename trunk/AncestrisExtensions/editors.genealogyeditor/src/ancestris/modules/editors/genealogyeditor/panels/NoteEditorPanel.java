@@ -4,6 +4,7 @@ import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -11,7 +12,7 @@ import org.openide.util.Exceptions;
  */
 public class NoteEditorPanel extends javax.swing.JPanel {
 
-    private Note mNote;
+    private Property mNote;
 
     /**
      * Creates new form NoteEditorPanel
@@ -122,15 +123,8 @@ public class NoteEditorPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * @return the note
-     */
-    public Note get() {
-        return mNote;
-    }
-
-    /**
      * @param note the note to set
-     * 
+     *
      * @<XREF:NOTE>@ NOTE <SUBMITTER_TEXT>
      * +1 [CONC|CONT] <SUBMITTER_TEXT>
      * +1 REFN <USER_REFERENCE_NUMBER>
@@ -139,19 +133,29 @@ public class NoteEditorPanel extends javax.swing.JPanel {
      * +1 <<SOURCE_CITATION>>
      * +1 <<CHANGE_DATE>>
      */
-    public void set(Note note) {
-        this.mNote = note;
-        noteIDTextField.setText(note.getId());
-        noteTextTextArea.setText(note.getValue() != null ? note.getValue() : "");
-        
-        List<Entity> entitiesList = new ArrayList<Entity>();
-        for (PropertyXRef entityRef : note.getProperties(PropertyXRef.class)) {
-            entitiesList.add(entityRef.getTargetEntity());
+    public void set(Property note) {
+        if (note instanceof PropertyNote) {
+            this.mNote = ((PropertyNote) note).getTargetEntity();
+        } else {
+            this.mNote = note;
         }
-        referencesListPanel.set(note, entitiesList);
+        if (note instanceof Note) {
+            noteIDTextField.setText(((Note) note).getId());
+            List<Entity> entitiesList = new ArrayList<Entity>();
+            for (PropertyXRef entityRef : note.getProperties(PropertyXRef.class)) {
+                entitiesList.add(entityRef.getTargetEntity());
+            }
+            referencesListPanel.set(((Note) note), entitiesList);
+        } else {
+            noteIDTextField.setVisible(false);
+            noteIDLabel.setVisible(false);
+            noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesScrollPane.TabConstraints.tabTitle")));
+        }
+
+        noteTextTextArea.setText(note.getValue() != null ? note.getValue() : "");
     }
 
-    public Note commit() {
+    public Property commit() {
         try {
             mNote.getGedcom().doUnitOfWork(new UnitOfWork() {
 
