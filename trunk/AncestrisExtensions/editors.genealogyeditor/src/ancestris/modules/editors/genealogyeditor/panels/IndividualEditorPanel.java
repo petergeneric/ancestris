@@ -1,9 +1,12 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.Arrays;
 import java.util.List;
+import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -38,6 +41,7 @@ import org.openide.util.Exceptions;
 public final class IndividualEditorPanel extends javax.swing.JPanel {
 
     private Indi mIndividual;
+    private Property mMultiMediaObject;
 
     /**
      * Creates new form IndividualEditorPanel
@@ -91,6 +95,11 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         individualIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
         imageBean.setPreferredSize(new java.awt.Dimension(90, 120));
+        imageBean.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageBeanMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout imageBeanLayout = new javax.swing.GroupLayout(imageBean);
         imageBean.setLayout(imageBeanLayout);
@@ -276,6 +285,50 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void imageBeanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageBeanMouseClicked
+        Gedcom gedcom = mIndividual.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+
+        if ((mMultiMediaObject = mIndividual.getProperty("OBJE")) == null) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
+                            mMultiMediaObject = mIndividual.getGedcom().createEntity("OBJE");
+                        } else {
+                            mMultiMediaObject = mIndividual.addProperty("OBJE", "");
+                        }
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+        MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+        multiMediaObjectEditorPanel.set(mIndividual.getProperty("OBJE"));
+
+        DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                multiMediaObjectEditorPanel);
+        multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+
+        if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            multiMediaObjectEditorPanel.commit();
+            if (mMultiMediaObject instanceof Media) {
+                mIndividual.addMedia((Media) mMultiMediaObject);
+            }
+            imageBean.setImage(mMultiMediaObject);
+            repaint();
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_imageBeanMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel associationsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.EventsListPanel eventsListPanel;
@@ -315,6 +368,11 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
      */
     public void set(Indi individual) {
         this.mIndividual = individual;
+
+        if (!mIndividual.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            privateRecordToggleButton.setVisible(false);
+        }
+
         /*
          * n @XREF:INDI@ INDI
          */
@@ -368,7 +426,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
          * +1 <<CHILD_TO_FAMILY_LINK>>
          */
         familiesChildTreeTablePanel.setFamiliesList(individual, individual.getProperties(PropertyFamilyChild.class));
-        
+
         /*
          * +1 <<SPOUSE_TO_FAMILY_LINK>>
          */
@@ -426,12 +484,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         /*
          * +1 <<MULTIMEDIA_LINK>>
          */
-        Property multimediaObject = individual.getProperty("OBJE");
-        if (multimediaObject != null) {
-            imageBean.setImage(individual, multimediaObject);
-        } else {
-            imageBean.setImage(individual, null);
-        }
+        imageBean.setImage(individual.getProperty("OBJE"));
         multimediaObjectCitationsListPanel.set(individual, Arrays.asList(individual.getProperties("OBJE")));
     }
 
@@ -455,7 +508,6 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             }); // end of doUnitOfWork
 
             nameEditorPanel.commit();
-            imageBean.commit();
             sexBeanPanel.commit();
 
             return mIndividual;
