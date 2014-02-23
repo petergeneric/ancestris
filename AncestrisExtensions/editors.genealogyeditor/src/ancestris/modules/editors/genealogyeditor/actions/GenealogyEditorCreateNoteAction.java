@@ -49,7 +49,7 @@ public final class GenealogyEditorCreateNoteAction implements ActionListener {
                     }
                 }); // end of doUnitOfWork
                 NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-                noteEditorPanel.set(mNote);
+                noteEditorPanel.set(gedcom, null, mNote);
                 DialogManager.ADialog noteEditorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.create.title"),
                         noteEditorPanel);
