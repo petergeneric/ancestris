@@ -23,7 +23,7 @@ displayName = "#CTL_GenealogyEditorCreateNoteAction")
 @ActionReferences({
     @ActionReference(path = "Toolbars/GenealogyEditor", position = 400)
 })
-@Messages("CTL_GenealogyEditorCreateNoteAction=Create new note")
+@Messages("CTL_GenealogyEditorCreateNoteAction=Create a new Note")
 public final class GenealogyEditorCreateNoteAction implements ActionListener {
 
     private final DataObject context;

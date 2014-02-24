@@ -23,7 +23,7 @@ displayName = "#CTL_GenealogyEditorAddFamilyAction")
 @ActionReferences({
     @ActionReference(path = "Toolbars/GenealogyEditor", position = 300)
 })
-@Messages("CTL_GenealogyEditorAddFamilyAction=Add Family")
+@Messages("CTL_GenealogyEditorAddFamilyAction=Create a Family")
 public final class GenealogyEditorCreateFamilyAction implements ActionListener {
 
     private final DataObject context;
