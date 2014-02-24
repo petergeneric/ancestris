@@ -29,7 +29,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#OpenInEditor.title")
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
-@NbBundle.Messages("OpenInEditor.title=Edit with genealogyeditor")
+@NbBundle.Messages("OpenInEditor.title=Edit using the Genealogy Editor")
 public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements ContextAwareAction {
 
     private Gedcom gedcom = null;
