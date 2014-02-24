@@ -303,29 +303,56 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                         }
                     }
                 }); // end of doUnitOfWork
+
+                MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                multiMediaObjectEditorPanel.set(mMultiMediaObject);
+
+                DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                        multiMediaObjectEditorPanel);
+                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+
+                if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    multiMediaObjectEditorPanel.commit();
+                    if (mMultiMediaObject instanceof Media) {
+                        mIndividual.addMedia((Media) mMultiMediaObject);
+                    }
+                    imageBean.setImage(mMultiMediaObject);
+                    repaint();
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        }
-
-        MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
-        multiMediaObjectEditorPanel.set(mIndividual.getProperty("OBJE"));
-
-        DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
-                multiMediaObjectEditorPanel);
-        multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
-
-        if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            multiMediaObjectEditorPanel.commit();
-            if (mMultiMediaObject instanceof Media) {
-                mIndividual.addMedia((Media) mMultiMediaObject);
-            }
-            imageBean.setImage(mMultiMediaObject);
-            repaint();
         } else {
-            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
+            MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+            multiMediaObjectEditorPanel.set(mMultiMediaObject);
+            String multiMediaObjectTitle;
+            if (mMultiMediaObject instanceof PropertyMedia) {
+                multiMediaObjectTitle = ((Media) ((PropertyMedia) mMultiMediaObject).getTargetEntity()).getTitle();
+            } else {
+                Property propertyTitle = mMultiMediaObject.getProperty("TITL");
+                multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
+            }
+            DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", multiMediaObjectTitle),
+                    multiMediaObjectEditorPanel);
+            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+
+            if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                multiMediaObjectEditorPanel.commit();
+                if (mMultiMediaObject instanceof Media) {
+                    mIndividual.addMedia((Media) mMultiMediaObject);
+                }
+                imageBean.setImage(mMultiMediaObject);
+                repaint();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         }
     }//GEN-LAST:event_imageBeanMouseClicked
