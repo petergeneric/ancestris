@@ -87,6 +87,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel); // NOI18N
 
         inlineNoteCheckBox.setText(org.openide.util.NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.inlineNoteCheckBox.text")); // NOI18N
+        inlineNoteCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.inlineNoteCheckBox.toolTipText")); // NOI18N
         inlineNoteCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inlineNoteCheckBoxActionPerformed(evt);
