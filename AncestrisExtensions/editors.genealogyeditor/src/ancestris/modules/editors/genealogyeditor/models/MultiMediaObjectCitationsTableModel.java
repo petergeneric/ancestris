@@ -30,7 +30,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
     List<Property> multimediaObjectsRefList = new ArrayList<Property>();
     private String[] columnsName = {
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.ID.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.title.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"), //        "Image"
     };
 
