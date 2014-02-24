@@ -211,14 +211,17 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         eventNameTextField.setEditable(false);
 
+        dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.dateLabel.text"), new Object[] {})); // NOI18N
 
+        eventCauseLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         eventCauseLabel.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.eventCauseLabel.text")); // NOI18N
 
         eventCauseTextArea.setColumns(20);
         eventCauseTextArea.setRows(2);
         eventCauseScrollPane.setViewportView(eventCauseTextArea);
 
+        EventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         EventTypeLabel.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.EventTypeLabel.text")); // NOI18N
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
@@ -238,16 +241,20 @@ public class EventEditorPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(EventTypeLabel)
-                    .addComponent(eventNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(EventTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(eventNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(eventTypeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                     .addComponent(eventNameTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(eventCauseLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(eventCauseLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
