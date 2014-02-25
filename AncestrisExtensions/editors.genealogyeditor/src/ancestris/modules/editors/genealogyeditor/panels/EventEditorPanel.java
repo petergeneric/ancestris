@@ -291,10 +291,12 @@ public class EventEditorPanel extends javax.swing.JPanel {
         husbandAgeLabel.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.husbandAgeLabel.text")); // NOI18N
 
         husbandAgeTextField.setColumns(4);
+        husbandAgeTextField.setEditable(false);
 
         wifeAgeLabel.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.wifeAgeLabel.text")); // NOI18N
 
         wifeAgeTextField.setColumns(4);
+        wifeAgeTextField.setEditable(false);
 
         javax.swing.GroupLayout familyAgePanelLayout = new javax.swing.GroupLayout(familyAgePanel);
         familyAgePanel.setLayout(familyAgePanelLayout);
@@ -326,6 +328,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         IndividualAgeLabel.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.IndividualAgeLabel.text")); // NOI18N
 
         individualAgeTextField.setColumns(4);
+        individualAgeTextField.setEditable(false);
 
         javax.swing.GroupLayout individualAgePanelLayout = new javax.swing.GroupLayout(individualAgePanel);
         individualAgePanel.setLayout(individualAgePanelLayout);
@@ -583,6 +586,10 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 individualAgeTextField.setEditable(false);
             }
             individualAgeTextField.setText(age.getValue());
+            /*
+             * Remove modification of age property
+             * Need to be better handle
+             * 
             individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
                 @Override
@@ -600,6 +607,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     mIndividualAgeModified = true;
                 }
             });
+            *
+            */
         } else if (mEventType == FAMILY_EVENT_TYPE) {
             PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
             if (husbandAge == null) {
@@ -609,7 +618,11 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 husbandAge = (PropertyAge) husband.addProperty("AGE", "");
             }
             husbandAgeTextField.setText(husbandAge.getValue());
-            husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+            /*
+             * Remove modification of age property
+             * Need to be better handle
+             * 
+             * husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
                 @Override
                 public void changedUpdate(DocumentEvent e) {
@@ -626,8 +639,14 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     mHusbandAgeModified = true;
                 }
             });
+            * 
+            */
 
-            PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
+            /*
+             * Remove modification of age property
+             * Need to be better handle
+             * 
+             * PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
             if (wifeAge == null) {
                 Property wife = mEvent.addProperty("WIFE", "");
                 wife.setGuessed(true);
@@ -652,6 +671,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     mWifeAgeModified = true;
                 }
             });
+            * 
+            */
         } else {
             agePanel.setVisible(false);
         }
