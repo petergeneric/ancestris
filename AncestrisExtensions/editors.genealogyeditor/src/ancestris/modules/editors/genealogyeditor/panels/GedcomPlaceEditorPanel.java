@@ -254,25 +254,26 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     private void linkToPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
         PlacesListPanel placesListPanel = new PlacesListPanel(mRoot.getGedcom());
         DialogManager.ADialog placesListPanelDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlacesListPanel.class, "NoteEditorPanel.title"),
+                NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.title.link"),
                 placesListPanel);
         placesListPanelDialog.setDialogId(PlacesListPanel.class.getName());
 
         if (placesListPanelDialog.show() == DialogDescriptor.OK_OPTION) {
             final PropertyPlace selectedPlace = placesListPanel.getSelectedPlace();
+            if (selectedPlace != null) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mPlace = (PropertyPlace) mRoot.addProperty("PLAC", selectedPlace.format("all"));
+                        }
+                    }); // end of doUnitOfWork
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mPlace = (PropertyPlace) mRoot.addProperty("PLAC", selectedPlace.format("all"));
-                    }
-                }); // end of doUnitOfWork
-
-                set(mRoot, mPlace);
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                    set(mRoot, mPlace);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }//GEN-LAST:event_linkToPlaceButtonActionPerformed
