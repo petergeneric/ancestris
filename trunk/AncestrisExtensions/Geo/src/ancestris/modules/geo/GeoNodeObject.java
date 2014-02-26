@@ -551,7 +551,6 @@ class GeoNodeObject {
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Distri") + spa + dispName(topo.getAdminName3()) + " (" + dispName(topo.getAdminCode3()) + ")" + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_CdInsee") + spa + dispName(topo.getAdminCode4()) + sep);
 //XXX: no postcode in new lib            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Post") + spa + dispName(topo.getPostcode()) + sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Post") + spa + dispName(topo.getAdminName4()) + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Pop") + spa + getPopulation(topo));
         } catch (InsufficientStyleException ex) {
             Exceptions.printStackTrace(ex);
@@ -585,7 +584,7 @@ class GeoNodeObject {
             str.append(dispName(topo.getAdminCode3()) + sep);
             str.append(dispName(topo.getAdminCode4()) + sep);
 //XXX: no postcode in new lib            str.append(dispName(topo.getPostcode()) + sep);
-            str.append(dispName(topo.getAdminName4()) + sep);
+            str.append("-" + sep); //no postcode
             str.append(topo.getPopulation());
         } catch (InsufficientStyleException ex) {
             Exceptions.printStackTrace(ex);
@@ -648,7 +647,7 @@ class GeoNodeObject {
             }
             if (tokens.hasMoreTokens()) {
 //XXX: no postcode in new lib                topo.setPostcode(tokens.nextToken());
-                topo.setAdminName4(tokens.nextToken());
+                tokens.nextToken(); //skip postcode
             }
             if (tokens.hasMoreTokens()) {
                 topo.setPopulation(Long.parseLong(tokens.nextToken()));

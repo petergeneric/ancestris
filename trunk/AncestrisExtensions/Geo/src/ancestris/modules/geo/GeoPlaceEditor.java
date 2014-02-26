@@ -483,7 +483,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             jLabel14.setText(topo.getName());
             jLabel15.setText(topo.getAdminCode4());
 //XXX: no postcode in new lib            jLabel16.setText(topo.getPostcode());
-            jLabel15.setText(topo.getAdminName4());
             jLabel18.setText(topo.getAdminName2());
             jLabel19.setText(topo.getAdminName1());
             jLabel20.setText(topo.getCountryName());
@@ -541,7 +540,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                 jTextField7.setText(topo.getName());
                 jTextField8.setText(topo.getAdminCode4());
 //XXX: no postcode in new lib                jTextField9.setText(topo.getPostcode());
-                jTextField8.setText(topo.getAdminName4());
                 jTextField2.setText(topo.getAdminName2());
                 jTextField3.setText(topo.getAdminName1());
                 jTextField4.setText(topo.getCountryName());
@@ -743,7 +741,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             topo.setAdminName3(jTextField3.getText());
             topo.setAdminCode4(jTextField8.getText());
 //XXX: no postcode in new lib            topo.setPostcode(jTextField9.getText());
-            topo.setAdminName4(jTextField8.getText());
         } catch (Throwable t) {
         }
         return;
