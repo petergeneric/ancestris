@@ -2,10 +2,12 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldDead;
-import java.awt.Color;
+import java.awt.AWTEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
@@ -15,24 +17,28 @@ import javax.swing.KeyStroke;
  */
 public class BeanDead extends Bean {
 
-    private javax.swing.JCheckBox jCheckBoxDead;
+    private MyCombobox jComboBox1;
 
     public BeanDead() {
         setLayout(new java.awt.BorderLayout());
-        jCheckBoxDead = new javax.swing.JCheckBox();
-        jCheckBoxDead.addActionListener(changeSupport);
-        jCheckBoxDead.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jCheckBoxDead.setBackground(new Color(255, 255, 255));
-        add(jCheckBoxDead, java.awt.BorderLayout.CENTER);
-        //jCheckBoxDead.setBackground(new Color(200, 255, 255));
-        defaultFocus = jCheckBoxDead;
+        jComboBox1 = new MyCombobox();
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(
+                new String[]{
+                    FieldDead.unknownLabel,
+                    FieldDead.deadLabel,
+                    FieldDead.aliveLabel}
+        ));
+        jComboBox1.addActionListener(changeSupport);
+
+        add(jComboBox1, java.awt.BorderLayout.CENTER);
+        defaultFocus = jComboBox1;
     }
 
     @Override
     protected void setFieldImpl() {
         final FieldDead dead = (FieldDead) getField();
-        jCheckBoxDead.setSelected(dead.getState());
-
+        jComboBox1.setSelectedItem(dead.toString());
+        
          // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
         resetKeyboardActions();
         KeyStroke escape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -41,7 +47,7 @@ public class BeanDead extends Bean {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 // restaure la valeur
-                jCheckBoxDead.setSelected(dead.getState());
+                jComboBox1.setSelectedItem(dead.toString());
             }
         });
     }
@@ -49,13 +55,28 @@ public class BeanDead extends Bean {
     @Override
     protected void replaceValueImpl(Field field) {
         final FieldDead dead = (FieldDead) field;
-        jCheckBoxDead.setSelected(dead.getState());
+        jComboBox1.setSelectedItem(dead.toString());
     }
 
     @Override
     protected void commitImpl()  {
         FieldDead dead = (FieldDead)getField();
-        dead.setState(jCheckBoxDead.isSelected());
+        dead.setValue(jComboBox1.getSelectedItem());
+    }
+
+    /**
+     * cette combobox ignore les combinaisons de touche ALT-VK_DOWN et ALT-VK_UP
+     */
+    private class MyCombobox extends JComboBox<String> {
+
+        @Override
+        public void processKeyEvent(KeyEvent e) {
+            if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP) && (e.getModifiers() & InputEvent.ALT_MASK) != 0 && !super.isPopupVisible()) {
+                getParent().dispatchEvent((AWTEvent) e);
+                return; //don't process the event
+            }
+            super.processKeyEvent(e);
+        }
     }
 
 }

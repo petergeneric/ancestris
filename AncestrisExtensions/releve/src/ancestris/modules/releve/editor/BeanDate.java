@@ -7,7 +7,6 @@ import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import genj.util.swing.DateWidget;
 import genj.util.swing.NestedBlockLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
@@ -66,7 +65,7 @@ public class BeanDate extends Bean {
             date2.getActionMap().put("Increase", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    // restaure la valeur
+                    // j'incremente la valeur
                     date1.setValue(date1.getValue().add(1, 0, 0));
                 }
             });
@@ -74,7 +73,7 @@ public class BeanDate extends Bean {
             date2.getActionMap().put("Decrease", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    // restaure la valeur
+                    // je decremente la valeur
                     date1.setValue(date1.getValue().add(-1, 0, 0));
                 }
             });
@@ -121,19 +120,17 @@ public class BeanDate extends Bean {
 
     @Override
     protected void replaceValueImpl(Field field) {
-         PropertyDate prop = ((FieldDate) field).getPropertyDate();
+        PropertyDate prop = ((FieldDate) field).getPropertyDate();
         if (prop == null) {
             PointInTime pit = new PointInTime();
             date1.setValue(pit);
-//            date2.setValue(pit);
-//            phrase.setText("");
-            //setFormat(PropertyDate.FORMATS[0]);
         } else {
             PropertyDate date = prop;
             date1.setValue(date.getStart());
-//            date2.setValue(date.getEnd());
-//            phrase.setText(date.getPhrase());
-            //setFormat(date.getFormat());
+        }
+        // je sélectionne le texte contenu dans le premier champ de la date
+        if (date1.getComponent(0) != null  && date1.getComponent(0) instanceof JTextField) {
+            ((JTextField)date1.getComponent(0)).selectAll();
         }
     }
 

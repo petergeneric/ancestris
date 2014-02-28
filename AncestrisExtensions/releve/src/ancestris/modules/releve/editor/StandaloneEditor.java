@@ -1,8 +1,10 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.MenuCommandProvider;
+import ancestris.modules.releve.ReleveOptionsPanel.ImageDirectoryModel;
+import ancestris.modules.releve.RelevePanel;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.PlaceManager;
+import ancestris.modules.releve.model.Record;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -12,6 +14,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,6 +29,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /*
@@ -40,12 +44,12 @@ import org.openide.util.NbPreferences;
  */
 public class StandaloneEditor extends javax.swing.JFrame {
 
-    private File folder = null;
-    private String[] fileNames;
-    boolean browserVisible = false;
-    Rectangle standaloneEditorBounds = new Rectangle();
-    int editorWidth ;
-    
+    private File currentImageDirectory = null;
+    private boolean browserVisible = false;
+    private Rectangle standaloneEditorBounds = new Rectangle();
+    private int editorWidth ;
+
+
     /**
      * Cree une nouvelle fenetre
      * Recupere la taille et la position de la session précédente
@@ -55,27 +59,26 @@ public class StandaloneEditor extends javax.swing.JFrame {
      * pour signaler sa fermeture
      */
     public StandaloneEditor() {
-        //super(new javax.swing.JFrame(), false);
         initComponents();
+
         ImageIcon icon = new ImageIcon(StandaloneEditor.class.getResource("/ancestris/modules/releve/images/Releve.png"));
         setIconImage(icon.getImage());
-        // J'applique un poids=1 pour que seule la largeur du composant de gauche soit mdofiées quand on change la taille de la fenetre
+        // J'applique un poids=1 pour que seule la largeur du composant de gauche soit modifiée quand on change la taille de la fenetre
         jSplitPane1.setResizeWeight(1.0);
-
 
         //setAlwaysOnTop(true);
         // je configure les editeurs
-        birthEditor.setStandaloneMode();
-        marriageEditor.setStandaloneMode();
-        deathEditor.setStandaloneMode();
-        miscEditor.setStandaloneMode();
-        
-        browserVisible = Boolean.parseBoolean(NbPreferences.forModule(StandaloneEditor.class).get("ImgageBrowserVisible", "false"));
-        editorWidth = Integer.parseInt(NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorWidth", "300"));
+        panelBirth.setStandaloneMode();
+        panelMarriage.setStandaloneMode();
+        panelDeath.setStandaloneMode();
+        panelMisc.setStandaloneMode();
+        panelAll.setStandaloneMode();
 
         // je configure la taille de la fenetre
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        browserVisible = Boolean.parseBoolean(NbPreferences.forModule(StandaloneEditor.class).get("ImgageBrowserVisible", "false"));
+        editorWidth = Integer.parseInt(NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorWidth", "300"));
         String size = NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorSize", "300,450,0,0");
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         String[] dimensions = size.split(",");
         if ( dimensions.length >= 4 ) {
             int width = Integer.parseInt(dimensions[0]);
@@ -101,36 +104,33 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
         // j'applique la taille de la fenetre avant de dimensionner jSplitPane1
         setBounds();
-//        validate();
 
-//        // je dimensionne le panneau droit de jSplitPane1
-//        if (browserVisible) {
-//            if (jSplitPane1.getWidth()  > editorWidth ) {
-//                jSplitPane1.setDividerLocation(jSplitPane1.getWidth() - editorWidth - jSplitPane1.getDividerSize() );
-//            }
-//        } else {
-//
-//        }
+        // listener pour intercepter l'evenement de fermeture de la fenetre.
+
+        addWindowListener( new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                componentClosed();
+            }
+        });
+
+ 
         // Image browser
+        // currentImageDirectory
         String imageDirectory = NbPreferences.forModule(StandaloneEditor.class).get("ImageDirectory", "");
         File f = new File(imageDirectory);
         if (f.exists()) {
-            folder = f;
-            populateImageList(folder);
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    populateImageList(folder);
-                }
-            });
+            currentImageDirectory = f;
+            populateImageList(currentImageDirectory);
         }
 
         ListSelectionListener lsl = new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                String fileName = listFiles.getSelectedValue().toString();
-                refreshShownImage(fileName, false);
+                if ( listFiles.getSelectedValue() != null ) {
+                    String fileName = listFiles.getSelectedValue().toString();
+                    showImage(fileName, false);
+                }
             }
         };
         listFiles.addListSelectionListener(lsl);
@@ -166,6 +166,96 @@ public class StandaloneEditor extends javax.swing.JFrame {
                 jButtonTopActionPerformed(null);
             }
         });
+
+        // je crée les raccourcis pour créer un nouveau relevé
+        String shortCut = "StandaloneShortcut";
+        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), shortCut);
+        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), shortCut);
+        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), shortCut);
+        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), shortCut);
+        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt T"), shortCut);
+        jTabbedPane1.getActionMap().put(shortCut, new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (actionEvent.getActionCommand().toUpperCase().equals("N")) {
+                    jTabbedPane1.setSelectedComponent(panelBirth);
+                    panelBirth.createRecord();
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("M")) {
+                    jTabbedPane1.setSelectedComponent(panelMarriage);
+                    panelMarriage.createRecord();
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("D")) {
+                    jTabbedPane1.setSelectedComponent(panelDeath);
+                    panelDeath.createRecord();
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("V")) {
+                    jTabbedPane1.setSelectedComponent(panelMisc);
+                    panelMisc.createRecord();
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("T")) {
+                    jTabbedPane1.setSelectedComponent(panelAll);
+                    panelAll.createRecord();
+                }
+
+            }
+        });
+
+    }
+
+     /**
+     * sauvegarde de la configuration a la fermeture du composant
+     */
+    public void closeComponent() {
+       componentClosed();
+       dispose();
+    }
+
+    /**
+     * sauvegarde de la configuration a la fermeture du composant
+     */
+    public void componentClosed() {
+        // Chaque panel sauvegarde la largeur des colonnes
+        panelBirth.componentClosed();
+        panelMarriage.componentClosed();
+        panelDeath.componentClosed();
+        panelMisc.componentClosed();
+        panelAll.componentClosed();
+
+        // j'affiche la fenetre dans le mode normal pour récuperer la
+        // position et la taille
+        if (getExtendedState() != JFrame.NORMAL) {
+            setExtendedState(JFrame.NORMAL);
+        }
+        // j'enregistre la taille dans les preferences
+        String size;
+        if (browserVisible) {
+            editorWidth = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation() - jSplitPane1.getDividerSize();
+            size = String.valueOf(this.getWidth()) + ","
+                    + String.valueOf(this.getHeight()) + ","
+                    + String.valueOf(this.getLocation().x) + ","
+                    + String.valueOf(this.getLocation().y);
+
+        } else {
+            editorWidth = this.getWidth() - jSplitPane1.getDividerSize();
+            size = String.valueOf(standaloneEditorBounds.width) + ","
+                    + String.valueOf(this.getHeight()) + ","
+                    + String.valueOf(this.getLocation().x - standaloneEditorBounds.width + editorWidth) + ","
+                    + String.valueOf(this.getLocation().y);
+        }
+
+        NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorSize", size);
+        NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorWidth", String.valueOf(editorWidth));
+
+        // je memorise le nom du repertoire courant des images
+        String imageDirectory = "";
+        if (currentImageDirectory != null) {
+            try {
+                imageDirectory = currentImageDirectory.getCanonicalPath();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            NbPreferences.forModule(StandaloneEditor.class).put("ImageDirectory", imageDirectory);
+        }
+
+        this.setVisible(false);
     }
 
     /**
@@ -175,95 +265,102 @@ public class StandaloneEditor extends javax.swing.JFrame {
      * StandaloneEditor() pour que la fenetre puisse afficher les données d'un
      * modele.
      *
-     * @param releveBirthModel
-     * @param releveMarriageModel
-     * @param releveDeathModel
-     * @param releveMiscModel
      */
-    public void setDataManager(DataManager dataManager, PlaceManager placeManager, final MenuCommandProvider menuCommandProvider) {
-        birthEditor.setModel(dataManager, DataManager.ModelType.birth, placeManager, menuCommandProvider);
-        marriageEditor.setModel(dataManager, DataManager.ModelType.marriage, placeManager, menuCommandProvider);
-        deathEditor.setModel(dataManager, DataManager.ModelType.death, placeManager, menuCommandProvider);
-        miscEditor.setModel(dataManager, DataManager.ModelType.misc, placeManager, menuCommandProvider);
+    public void setDataManager(DataManager dataManager, MenuCommandProvider menuCommandProvider,
+        int recordBirthIndex, int recordMarriageIndex, int recordDeathIndex, int recordMiscIndex, int recordAllIndex, int selectedPanel ) {
 
-        // je selection le premier releve
-        selectRecord(0, 0, 0, 0, 0);
+        panelBirth.setModel(dataManager, RelevePanel.PanelType.birth, menuCommandProvider);
+        panelMarriage.setModel(dataManager, RelevePanel.PanelType.marriage, menuCommandProvider);
+        panelDeath.setModel(dataManager, RelevePanel.PanelType.death, menuCommandProvider);
+        panelMisc.setModel(dataManager, RelevePanel.PanelType.misc, menuCommandProvider);
+        panelAll.setModel(dataManager, RelevePanel.PanelType.all, menuCommandProvider);
 
-        // je crée les raccourcis pour créer un nouveau relevé
-        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), jTabbedPane1);
-        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), jTabbedPane1);
-        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), jTabbedPane1);
-        jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), jTabbedPane1);
-        jTabbedPane1.getActionMap().put(jTabbedPane1, new AbstractAction() {
+        // je selectionne le panel
+        jTabbedPane1.setSelectedIndex(selectedPanel);
+        // je selectionne le relevé
+        panelBirth.selectRecord(recordBirthIndex);
+        panelMarriage.selectRecord(recordMarriageIndex);
+        panelDeath.selectRecord(recordDeathIndex);
+        panelMisc.selectRecord(recordMiscIndex);
+        panelAll.selectRecord(recordAllIndex);
 
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if ( actionEvent.getActionCommand().toUpperCase().equals("N") ) {
-                    jTabbedPane1.setSelectedComponent(birthEditor);
-                    birthEditor.createRecord();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("M") ) {
-                    jTabbedPane1.setSelectedComponent(marriageEditor);
-                    marriageEditor.createRecord();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("D") ) {
-                    jTabbedPane1.setSelectedComponent(deathEditor);
-                    deathEditor.createRecord();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("V") ) {
-                    jTabbedPane1.setSelectedComponent(miscEditor);
-                    miscEditor.createRecord();
-                }
+    }
+
+    /**
+     * selection un relevé
+     *  et affiche la photo si le browser est visible
+     * @param record
+     * @param recordIndex
+     */
+    public void selectRecord(DataManager dataManager, int panelIndex, int recordIndex) {
+
+        Record record = dataManager.getRecord(recordIndex);
+        if (record != null) {
+            jTabbedPane1.setSelectedIndex(panelIndex);
+
+            switch (panelIndex) {
+                case 0:
+                    panelBirth.selectRecord(recordIndex);
+                    break;
+                case 1:
+                    panelMarriage.selectRecord(recordIndex);
+                    break;
+                case 2:
+                    panelDeath.selectRecord(recordIndex);
+                    break;
+                case 3:
+                    panelMisc.selectRecord(recordIndex);
+                    break;
+                default:
+                    panelAll.selectRecord(recordIndex);
+                    break;
             }
-        });
-        
-         // listener pour intercepter l'evenement de fermeture de la fenetre.
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                
-                // j'affiche la fenetre dans le mode normal pour récupere la 
-                // position et la taille
-                if (getExtendedState() != JFrame.NORMAL) {
-                    setExtendedState(JFrame.NORMAL);
-                }
-                // j'enregistre la taille dans les preferences
-                String size ;
-                int editorWidth;
-                if ( browserVisible) {
-                    editorWidth = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation() - jSplitPane1.getDividerSize();
-                    size= String.valueOf(e.getWindow().getWidth())+","
-                            + String.valueOf(e.getWindow().getHeight()) + ","
-                            + String.valueOf(e.getWindow().getLocation().x) + ","
-                            + String.valueOf(e.getWindow().getLocation().y)
-                            ;
+            if (browserVisible) {
+                final String city = dataManager.getCityName();
+                final String cote = record.getCote().toString();
+                String freeComment = record.getFreeComment().toString();
+                final int page = parsePage(freeComment);
+                if (page != -1) {
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                            showImage(city, cote, page);
+                            setCursor(Cursor.getDefaultCursor());
+
+                        }
+                    });
 
                 } else {
-                     editorWidth = e.getWindow().getWidth() - jSplitPane1.getDividerSize();
-                     size= String.valueOf(standaloneEditorBounds.width)+","
-                            + String.valueOf(e.getWindow().getHeight()) + ","
-                            + String.valueOf( e.getWindow().getLocation().x - standaloneEditorBounds.width + editorWidth ) + ","
-                            + String.valueOf(e.getWindow().getLocation().y)
-                            ;
+                    browserPanel1.showImage(null);
+                    lbFileName.setText("");
+                    listFiles.clearSelection();
                 }
-                
-                NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorSize", size);
-
-                NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorWidth", String.valueOf(editorWidth));
-
-                // je memorise le nom du repertoire courant des images
-                String imageDirectory = "";
-                if (folder != null) {
-                    try {
-                        imageDirectory = folder.getCanonicalPath();
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                    NbPreferences.forModule(StandaloneEditor.class).put("ImageDirectory", imageDirectory);
-                }
-
-                // je signale a la classe principale du module que l'editeur est fermé.
-                menuCommandProvider.standaloneEditorClosed();
             }
-        });
+        }
     }
+
+
+    static private int parsePage(String freeComment) {
+        int i;
+        int page = -1;
+        // Je recherche  le dernier chiffre en partant de la droite
+        for (i = freeComment.length() - 1; i >= 0 && freeComment.charAt(i) >= '0' && freeComment.charAt(i) <= '9'; i--) {
+        }
+        i++;
+        // je cree le format pour préserver les zeros à gauche
+        String format = String.format("%%0%dd", freeComment.length() - i);
+        if (i < freeComment.length()) {
+            try {
+                page = new Integer(freeComment.substring(i, freeComment.length())).intValue();
+            } catch (NumberFormatException ex) {
+                page = -1;
+            }
+        }
+        return page;
+    }
+
 
     /**
      * initialise le titre de la fenetre
@@ -301,25 +398,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * selectionne les releves a afficher dans l'editeur
-     *
-     * @param recordBirthIndex
-     * @param recordMarriageIndex
-     * @param recordDeathIndex
-     * @param recordMiscIndex
-     */
-    public void selectRecord(int recordBirthIndex, int recordMarriageIndex, int recordDeathIndex, int recordMiscIndex, int selectedPanel) {
-        birthEditor.selectRecord(recordBirthIndex);
-        marriageEditor.selectRecord(recordMarriageIndex);
-        deathEditor.selectRecord(recordDeathIndex);
-        miscEditor.selectRecord(recordMiscIndex);
-        // je selectionne l'onglet
-        jTabbedPane1.setSelectedIndex(selectedPanel);
-
-    }
-
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     private void populateImageList(File folder) {
         File[] files = folder.listFiles(new FilenameFilter() {
             @Override
@@ -328,8 +407,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
                 return name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png");
             }
         });
-
-        fileNames = new String[files.length];
+        String[] fileNames = new String[files.length];
         for (int i = 0; i < files.length; i++)
             fileNames[i] = files[i].getName();
         Arrays.sort(fileNames, String.CASE_INSENSITIVE_ORDER);
@@ -337,24 +415,174 @@ public class StandaloneEditor extends javax.swing.JFrame {
     }
 
 
-    private void refreshShownImage(String fileName, boolean force) {
-        if (lbFileName.getText().equals(fileName) && !force)
+    private void showImage(String fileName, boolean forceRefesh) {
+        if (lbFileName.getText().equals(fileName) && !forceRefesh)
             return;
 
-        lbFileName.setText(fileName);
-        String fullFileName;
-        BufferedImage image;
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
-            fullFileName = folder.getCanonicalPath() + File.separator + fileName;
-            image = ImageIO.read(new File(fullFileName));
+            String fullFileName = currentImageDirectory.getCanonicalPath() + File.separator + fileName;
+            BufferedImage image = ImageIO.read(new File(fullFileName));
+            browserPanel1.showImage(image);
+            lbFileName.setText(fileName);
+            setCursor(Cursor.getDefaultCursor());
         } catch (IOException ex) {
             setCursor(Cursor.getDefaultCursor());
             return;
         }
 
-        browserPanel1.showImage(image);
-        setCursor(Cursor.getDefaultCursor());
+    }
+
+    private void showImage(String city, String cote, int page) {
+        //je cherche le repertoire
+        File imageFile = findReferenceImage( city,  cote,  page);
+        if (imageFile != null) {
+            try {
+                populateImageList(imageFile.getParentFile());
+                btnFolder.setText(imageFile.getParent());
+                BufferedImage image = ImageIO.read(imageFile);
+                browserPanel1.showImage(image);
+                if ( image != null) {
+                    currentImageDirectory = imageFile.getParentFile();
+                    lbFileName.setText(imageFile.getName());
+                    listFiles.setSelectedValue(imageFile.getName(), true);
+                } else {
+                    lbFileName.setText("");
+                    listFiles.clearSelection();
+                }
+            } catch (IOException ex) {
+                setCursor(Cursor.getDefaultCursor());
+            }
+        } else {
+            browserPanel1.showImage(null);
+            lbFileName.setText("");
+            listFiles.clearSelection();
+        }
+    }
+
+    private File findReferenceImage(String city, String cote, int page) {
+        File imageFile = null;
+
+        //je cherche le repertoire
+        DirectoryReferenceFilter cityFilter = new DirectoryReferenceFilter(city);
+        DirectoryReferenceFilter coteFilter = new DirectoryReferenceFilter(cote);
+        FileReferenceFilter pageFilter = new FileReferenceFilter(page);
+
+        for( File directory : ImageDirectoryModel.getModel().getImageBrowserDirectories() ) {
+            imageFile = findReferenceImage(directory, cityFilter, coteFilter, pageFilter);
+            if (imageFile != null) {
+                break;
+            }
+        }
+
+        return imageFile;
+    }
+
+
+
+    private File findReferenceImage(File directory, DirectoryReferenceFilter cityFilter, DirectoryReferenceFilter coteFilter, FileReferenceFilter pageFilter) {
+        File result = null;
+
+         if (directory.isDirectory()) {
+            // je cherche le sous repertoire de la cote
+            File coteDirectories[] = directory.listFiles(coteFilter);
+            if (coteDirectories != null) {
+                for (File subdir : coteDirectories) {
+                    // je cherche le fichier
+                    File files[] = subdir.listFiles(pageFilter);
+                    if (files != null && files.length > 0) {
+                        result = files[0];
+                    }
+                }
+
+                if (result == null) {
+                    // je cherche sous repertoire
+                    for (File subdir : directory.listFiles(new DirectoryFilter())) {
+                        result = findReferenceImage(subdir, cityFilter, coteFilter, pageFilter);
+                        if (result != null) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    static private class DirectoryReferenceFilter implements FileFilter {
+        String reference;
+
+        public DirectoryReferenceFilter(String reference) {
+            this.reference = reference.toLowerCase();
+        }
+
+        @Override
+        public boolean accept(File dir) {
+            return dir.isDirectory() && dir.getName().toLowerCase().contains(reference);
+        }
+    }
+
+    static private class DirectoryFilter implements FileFilter {
+        
+        public DirectoryFilter() {
+        }
+
+        @Override
+        public boolean accept(File dir) {
+            return dir.isDirectory();
+        }
+    }
+
+    static private class FileReferenceFilter implements FileFilter {
+        int searchedPage;
+
+
+        static final String[] EXTENSIONS = new String[]{
+            "jpeg", "jpg", "png", "gif", "bmp", "tiff", "tif"
+        };
+
+        public FileReferenceFilter(int searchedPage) {
+            this.searchedPage = searchedPage;
+        }
+
+        @Override
+        public boolean accept(File dir) {
+            if ( dir.isFile() ) {
+                String name = dir.getName().toLowerCase();
+
+                boolean extension = false;
+                for (final String ext : EXTENSIONS) {
+                    if (name.endsWith("." + ext)) {
+                        extension =true;
+                        break;
+                    }
+                }
+
+                if (extension) {
+                    int dotIndex = name.lastIndexOf('.');
+                    if (dotIndex > 0) {
+                        name = name.substring(0,dotIndex);
+                    }
+
+                    int page = parsePage(name);
+                    if (page != searchedPage) {
+                        int lastSeparatorPos = name.lastIndexOf('-');
+                        if (lastSeparatorPos != -1) {
+                            page = parsePage(name.substring(0, lastSeparatorPos));
+                        }
+                    }
+                    return  page == searchedPage ;
+                } else {
+                    return false;
+                }
+            } else {
+                // ce n'est pas un fichier
+                return false;
+            }
+
+            
+        }
     }
 
     /** This method is called from within the constructor to
@@ -387,17 +615,18 @@ public class StandaloneEditor extends javax.swing.JFrame {
         jScrollPaneImage = new javax.swing.JScrollPane();
         browserPanel1 = new ancestris.modules.releve.editor.BrowserPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        birthEditor = new ancestris.modules.releve.editor.ReleveEditor();
-        marriageEditor = new ancestris.modules.releve.editor.ReleveEditor();
-        deathEditor = new ancestris.modules.releve.editor.ReleveEditor();
-        miscEditor = new ancestris.modules.releve.editor.ReleveEditor();
+        panelBirth = new ancestris.modules.releve.RelevePanel();
+        panelMarriage = new ancestris.modules.releve.RelevePanel();
+        panelDeath = new ancestris.modules.releve.RelevePanel();
+        panelMisc = new ancestris.modules.releve.RelevePanel();
+        panelAll = new ancestris.modules.releve.RelevePanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jpanelImage.setLayout(new java.awt.BorderLayout());
 
         jPanel1.setPreferredSize(new java.awt.Dimension(0, 40));
-        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        jPanel1.setLayout(new java.awt.FlowLayout(0));
 
         btnFolder.setText(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.btnFolder.text")); // NOI18N
         btnFolder.addActionListener(new java.awt.event.ActionListener() {
@@ -460,11 +689,6 @@ public class StandaloneEditor extends javax.swing.JFrame {
         jPanelFiles.setPreferredSize(new java.awt.Dimension(150, 497));
         jPanelFiles.setLayout(new java.awt.BorderLayout());
 
-        listFiles.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "<choose a folder>" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         listFiles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listFiles.setMaximumSize(new java.awt.Dimension(500, 16));
         listFiles.setMinimumSize(new java.awt.Dimension(150, 16));
@@ -483,21 +707,17 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
         jPanelImageInfo.setPreferredSize(new java.awt.Dimension(585, 20));
 
-        lbFileName.setText(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.lbFileName.text")); // NOI18N
-
         javax.swing.GroupLayout jPanelImageInfoLayout = new javax.swing.GroupLayout(jPanelImageInfo);
         jPanelImageInfo.setLayout(jPanelImageInfoLayout);
         jPanelImageInfoLayout.setHorizontalGroup(
             jPanelImageInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelImageInfoLayout.createSequentialGroup()
-                .addComponent(lbFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addComponent(lbFileName, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanelImageInfoLayout.setVerticalGroup(
             jPanelImageInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelImageInfoLayout.createSequentialGroup()
-                .addComponent(lbFileName)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(lbFileName, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
         );
 
         jPanel4.add(jPanelImageInfo, java.awt.BorderLayout.NORTH);
@@ -506,11 +726,11 @@ public class StandaloneEditor extends javax.swing.JFrame {
         browserPanel1.setLayout(browserPanel1Layout);
         browserPanel1Layout.setHorizontalGroup(
             browserPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 270, Short.MAX_VALUE)
+            .addGap(0, 583, Short.MAX_VALUE)
         );
         browserPanel1Layout.setVerticalGroup(
             browserPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
+            .addGap(0, 475, Short.MAX_VALUE)
         );
 
         jScrollPaneImage.setViewportView(browserPanel1);
@@ -525,13 +745,11 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
         jSplitPane1.setLeftComponent(jpanelImage);
 
-        birthEditor.setPreferredSize(new java.awt.Dimension(180, 100));
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.birthEditor.TabConstraints.tabTitle"), birthEditor); // NOI18N
-
-        marriageEditor.setPreferredSize(new java.awt.Dimension(180, 100));
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.marriageEditor.TabConstraints.tabTitle"), marriageEditor); // NOI18N
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.deathEditor.TabConstraints.tabTitle"), deathEditor); // NOI18N
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.miscEditor.TabConstraints.tabTitle"), miscEditor); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.birthEditor.TabConstraints.tabTitle"), panelBirth); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.marriageEditor.TabConstraints.tabTitle"), panelMarriage); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.deathEditor.TabConstraints.tabTitle"), panelDeath); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.miscEditor.TabConstraints.tabTitle"), panelMisc); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.panelAll.TabConstraints.tabTitle"), panelAll); // NOI18N
 
         jSplitPane1.setRightComponent(jTabbedPane1);
 
@@ -543,22 +761,21 @@ public class StandaloneEditor extends javax.swing.JFrame {
     private void btnFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFolderActionPerformed
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if (folder != null) {
-            //saveVotes();
-            fc.setCurrentDirectory(folder);
+        if (currentImageDirectory != null) {
+            fc.setCurrentDirectory(currentImageDirectory);
         }
-        int fcr = fc.showDialog(this, "Select folder");
+        int fcr = fc.showDialog(this, NbBundle.getMessage(StandaloneEditor.class, "StandaloneEditor.btnFolder.text"));
         if (fcr != JFileChooser.APPROVE_OPTION)
             return;
         String folderName;
         try {
-            folder = fc.getSelectedFile();
-            folderName = folder.getCanonicalPath();
+            currentImageDirectory = fc.getSelectedFile();
+            folderName = currentImageDirectory.getCanonicalPath();
         } catch (IOException ex) {
             return;
         }
         btnFolder.setText(folderName);
-        populateImageList(folder);
+        populateImageList(currentImageDirectory);
 }//GEN-LAST:event_btnFolderActionPerformed
 
     private void jButtonLeftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLeftActionPerformed
@@ -572,7 +789,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
                  Toolkit.getDefaultToolkit().beep();
              }
              String fileName = listFiles.getSelectedValue().toString();
-             refreshShownImage(fileName, false);
+             showImage(fileName, false);
              jScrollPaneImage.getVerticalScrollBar().setValue(0);
              browserPanel1.moveToRight();
              browserPanel1.moveToBottom();
@@ -592,7 +809,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
                 Toolkit.getDefaultToolkit().beep();
             }
             String fileName = listFiles.getSelectedValue().toString();
-            refreshShownImage(fileName, false);
+            showImage(fileName, false);
             jScrollPaneImage.getVerticalScrollBar().setValue(0);
              browserPanel1.moveToLeft();
              browserPanel1.moveToTop();
@@ -633,10 +850,8 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ancestris.modules.releve.editor.ReleveEditor birthEditor;
     private ancestris.modules.releve.editor.BrowserPanel browserPanel1;
     private javax.swing.JButton btnFolder;
-    private ancestris.modules.releve.editor.ReleveEditor deathEditor;
     private javax.swing.JButton jButtonAdjust;
     private javax.swing.JButton jButtonBottom;
     private javax.swing.JButton jButtonLeft;
@@ -655,9 +870,12 @@ public class StandaloneEditor extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel jpanelImage;
     private javax.swing.JLabel lbFileName;
-    private javax.swing.JList listFiles;
-    private ancestris.modules.releve.editor.ReleveEditor marriageEditor;
-    private ancestris.modules.releve.editor.ReleveEditor miscEditor;
+    private javax.swing.JList<String> listFiles;
+    private ancestris.modules.releve.RelevePanel panelAll;
+    private ancestris.modules.releve.RelevePanel panelBirth;
+    private ancestris.modules.releve.RelevePanel panelDeath;
+    private ancestris.modules.releve.RelevePanel panelMarriage;
+    private ancestris.modules.releve.RelevePanel panelMisc;
     // End of variables declaration//GEN-END:variables
 
 }

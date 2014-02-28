@@ -90,7 +90,7 @@ public class BeanFirstName extends Bean implements CompletionListener {
      * @param keyList
      */
     @Override
-    public void keyUpdated(List<String> keyList) {
+    public void includedKeyUpdated(List<String> keyList) {
         cFirst.setDataList(keyList);
     }
 }

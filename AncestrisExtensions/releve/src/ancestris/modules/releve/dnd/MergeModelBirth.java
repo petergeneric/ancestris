@@ -204,9 +204,7 @@ class MergeModelBirth extends MergeModel {
     private void addRowIndi() throws Exception {
        if (currentIndi != null) {
             // j'affiche la source de la naissance
-            Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, currentIndi.getProperty("BIRT"));
-            addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
-            addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
+            addRowSource(RowType.EventSource, record.getEventSource(), currentIndi.getProperty("BIRT") );
 
             // j'affiche un separateur
             addRowSeparator();
@@ -217,7 +215,7 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiSex, record.getIndi().getSexString(), currentIndi.getPropertyValue("SEX"));
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , currentIndi.getBirthDate());
             addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            addRow(RowType.EventComment, record.getEventComment(), currentIndi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
+            addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), currentIndi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
             // j'affiche un separateur
             addRowSeparator();
 
@@ -225,8 +223,7 @@ class MergeModelBirth extends MergeModel {
             // selectedIndi est nul
 
             // j'affiche la source de la naissance
-            addRow(RowType.EventSource, record.getEventSource(),"" , MergeQuery.findSource(record, gedcom) );
-            addRow(RowType.EventPage,       record.getEventPage(), "", null);
+            addRowSource(RowType.EventSource, record.getEventSource(), null);
 
             // j'affiche un separateur
             addRowSeparator();
@@ -237,7 +234,7 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiSex, record.getIndi().getSexString(), "");
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , null);
             addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), "");
-            addRow(RowType.EventComment, record.getEventComment(), "");
+            addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), "");
             // j'affiche un separateur
             addRowSeparator();
         }
@@ -350,7 +347,7 @@ class MergeModelBirth extends MergeModel {
         }
 
         // je copie la source de la naissance du releve dans l'individu
-        if (isChecked(RowType.EventSource)) {
+        if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
             copySource((Source) getRow(RowType.EventSource).entityObject, birthProperty, record);
         }
 
@@ -369,7 +366,7 @@ class MergeModelBirth extends MergeModel {
 
             // j'ajoute le commentaire de la naissance au debut de la note existante.
             String value = propertyNote.getValue();
-            String comment = record.getEventComment();
+            String comment = record.getEventComment(showFrenchCalendarDate);
             if (!comment.isEmpty()) {
                 if (!value.isEmpty()) {
                     comment += "\n";
@@ -427,7 +424,7 @@ class MergeModelBirth extends MergeModel {
 
             // je copie la profession du pere
             if (isChecked(RowType.IndiFatherOccupation)) {
-                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), record);
+                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), true, record);
             }            
 
             // je copie le nom et le prenom de la mere
@@ -459,7 +456,7 @@ class MergeModelBirth extends MergeModel {
 
             // je met à jour la profession de la mere
             if (isChecked(RowType.IndiMotherOccupation)) {
-                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), record);
+                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), true, record);
             }
             
         }
@@ -516,7 +513,9 @@ class MergeModelBirth extends MergeModel {
                 }
         } else {
             if (selectedEntity instanceof Fam) {
-                summary = "Nouvel enfant de la famille sélectionnée";
+                //summary = "Nouvel enfant de la famille sélectionnée";
+                // l'enfant est déjà descendant la famille dans le gedcom
+                summary = "Modifier "+ currentIndi.toString(true);
             } else {
                 if ( getRow(RowType.IndiParentFamily).entityObject == null ) {
                     // l'enfant n'a pas de famille dans le gedcom

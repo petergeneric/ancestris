@@ -16,7 +16,9 @@ public class EditorBeanField {
      */
     static void init() {
         //   group                  Field                            Birth          Marriage       Death          Misc
+	//                                                           used   visible used   visible used   visible used   visible
 	init(GroupId.general,       FieldType.eventType,             false, false,  false, false,  false, false,  true,  true );
+        init(GroupId.general,       FieldType.secondDate,            false, false,  false, false,  false, false,  true,  true );
         init(GroupId.general,       FieldType.eventDate,             true,  true,   true,  true,   true,  true,   true,  true );
         init(GroupId.general,       FieldType.parish,     	     true,  true,   true,  true,   true,  true,   true,  true );
         init(GroupId.general,       FieldType.notary,                false, false,  false, false,  false, false,  true,  true );
@@ -43,7 +45,7 @@ public class EditorBeanField {
 	init(GroupId.indiFather,    FieldType.indiFatherLastName,    true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indiFather,    FieldType.indiFatherFirstName,   true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indiFather,    FieldType.indiFatherAge,         true,  true,   true,  true,   true,  true,   true,  true );
-	init(GroupId.indiFather,    FieldType.indiFatherDead,        false, false,  true,  true,   true,  true,   true,  true );
+	init(GroupId.indiFather,    FieldType.indiFatherDead,        true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indiFather,    FieldType.indiFatherOccupation,  true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indiFather,    FieldType.indiFatherResidence,   true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indiFather,    FieldType.indiFatherComment,     true,  true,   true,  true,   true,  true,   true,  true );
@@ -113,16 +115,16 @@ public class EditorBeanField {
 
     }
 
-    static void init(GroupId id, FieldType fieldType,
+    static void init(GroupId groupId, FieldType fieldType,
             boolean birthUse, boolean birthVisible,
             boolean marriageUse, boolean marriageVisible,
             boolean deathUse, boolean deathVisible,
             boolean miscUse, boolean miscVisible
             ) {
-            EditorBeanGroup.init( RecordType.birth,    id, new EditorBeanField( fieldType, birthUse, birthVisible ));
-            EditorBeanGroup.init( RecordType.marriage, id, new EditorBeanField( fieldType, marriageUse, marriageVisible ));
-            EditorBeanGroup.init( RecordType.death,    id, new EditorBeanField( fieldType, deathUse, deathVisible ));
-            EditorBeanGroup.init( RecordType.misc,     id, new EditorBeanField( fieldType, miscUse, miscVisible ));
+            EditorBeanGroup.addField( RecordType.birth,    groupId, new EditorBeanField( fieldType, birthUse, birthVisible ));
+            EditorBeanGroup.addField( RecordType.marriage, groupId, new EditorBeanField( fieldType, marriageUse, marriageVisible ));
+            EditorBeanGroup.addField( RecordType.death,    groupId, new EditorBeanField( fieldType, deathUse, deathVisible ));
+            EditorBeanGroup.addField( RecordType.misc,     groupId, new EditorBeanField( fieldType, miscUse, miscVisible ));
 
     }
 
@@ -286,6 +288,9 @@ public class EditorBeanField {
 
             case eventDate:
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Date");
+                break;
+            case secondDate:
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.secondDate");
                 break;
             case cote:
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Cote");

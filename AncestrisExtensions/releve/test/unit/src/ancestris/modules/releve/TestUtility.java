@@ -13,16 +13,21 @@ import genj.gedcom.TagPath;
 import genj.util.Origin;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import javax.swing.filechooser.FileSystemView;
+import junit.framework.TestCase;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Michel
  */
-public class TestUtility {
+public class TestUtility extends TestCase {
 
     public static File createFile( String data ) throws IOException  {
         FileWriter writer = null;
@@ -164,7 +169,6 @@ public class TestUtility {
 
 
 
-    
     protected static Component getComponentByName(Component parent, String name) {
 
         if (parent.getName() != null && parent.getName().equals(name)) {
@@ -181,5 +185,54 @@ public class TestUtility {
             }
         }
         return null;
+    }
+
+    public static final Object lock = new Object();
+    public static void waitForDialogClose(final java.awt.Window dialog) {
+        try {
+            Thread t = new Thread() {
+
+                @Override
+                public void run() {
+                    synchronized (lock) {
+                        while (dialog.isVisible()) {
+                            try {
+                                lock.wait();
+                            } catch (InterruptedException e) {
+                                //e.printStackTrace();
+                            }
+                        }
+                        lock.notifyAll();
+                    }
+                }
+            };
+            t.start();
+            dialog.addWindowListener(new WindowAdapter() {
+
+                @Override
+                public void windowClosing(WindowEvent arg0) {
+                    synchronized (lock) {
+                        dialog.setVisible(false);
+                        lock.notifyAll();
+                    }
+                }
+            });
+            t.join();
+        } catch (InterruptedException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+
+    public void testDefaultDirectory() {
+
+        FileSystemView fsv = FileSystemView.getFileSystemView();
+        File f = fsv.getDefaultDirectory();
+        System.out.println("testDefaultDirectory="+f);
+    }
+
+     public void testOS() {
+
+        System.out.println("testOS="+System.getProperty("os.name"));
     }
 }

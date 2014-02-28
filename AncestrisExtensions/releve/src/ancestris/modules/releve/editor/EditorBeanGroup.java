@@ -4,12 +4,11 @@ import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.model.DataManager.RecordType;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.KeyStroke;
 import org.openide.util.NbPreferences;
 
@@ -36,12 +35,11 @@ public class EditorBeanGroup {
         generalComment
     }
 
-    private GroupId id ;
-    //private RecordType recordType;
+    private GroupId groupId ;
     private boolean visible;
     private  KeyStroke keystroke;
     private String title;
-    private Vector<EditorBeanField> fields = null;
+    private ArrayList<EditorBeanField> fields = null;
 
     private final static HashMap<RecordType,ArrayList<EditorBeanGroup>> groupArray = new HashMap<RecordType,ArrayList<EditorBeanGroup>>(4);
     private final static HashMap<RecordType,HashMap<GroupId,EditorBeanGroup>> groupMap = new HashMap<RecordType,HashMap<GroupId,EditorBeanGroup>>(4);
@@ -137,8 +135,8 @@ public class EditorBeanGroup {
             groupArray.get(RecordType.misc).add( group);
     }
 
-    static public void init(RecordType recordType, GroupId id, EditorBeanField field) {
-        EditorBeanGroup group = groupMap.get(recordType).get(id);
+    static public void addField(RecordType recordType, GroupId groupId, EditorBeanField field) {
+        EditorBeanGroup group = groupMap.get(recordType).get(groupId);
         group.add(field);
     }
 
@@ -147,9 +145,9 @@ public class EditorBeanGroup {
         return groupArray.get(recordType);
     }
 
-    static public EditorBeanGroup getGroup(RecordType recordType, GroupId groupId) {
-        return groupMap.get(recordType).get(groupId);
-    }
+//    static public EditorBeanGroup getGroup(RecordType recordType, GroupId groupId) {
+//        return groupMap.get(recordType).get(groupId);
+//    }
 
     static public void loadPreferences() {
         for (RecordType recordType : RecordType.values()) {
@@ -157,13 +155,14 @@ public class EditorBeanGroup {
                 EditorBeanGroup group = groupIter.next();
                 for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext();) {
                     EditorBeanField field = fieldIter.next();
-                    String preferenceKey = "Editor." + group.id.name() + "." + field.getFieldType().name() + "." + recordType.name();
+                    String preferenceKey = "Editor." + group.groupId.name() + "." + field.getFieldType().name() + "." + recordType.name();
                     String defaultValue = field.isUsed() + ";" + field.isVisible();
                     String preferenceValue = NbPreferences.forModule(ReleveTopComponent.class).get(preferenceKey, defaultValue);
                     try {
                         StringTokenizer tokens = new StringTokenizer(preferenceValue, ";");
                         if (tokens.countTokens() == 2) {
-                            field.setUsed(Boolean.valueOf(tokens.nextToken()));
+                            // je n'utilise pas la sauvegarde de field.isUsed(), seulement la sauvegarde de field.isVisible()
+                            //field.setUsed(Boolean.valueOf(tokens.nextToken()));
                             field.setVisible(Boolean.valueOf(tokens.nextToken()));
                         }
 
@@ -181,7 +180,7 @@ public class EditorBeanGroup {
                 EditorBeanGroup group = groupIter.next();
                 for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext();) {
                     EditorBeanField field = fieldIter.next();
-                    String preferenceKey = "Editor."+group.id.name()+"."+field.getFieldType().name()+"."+recordType.name();
+                    String preferenceKey = "Editor."+group.groupId.name()+"."+field.getFieldType().name()+"."+recordType.name();
                     String preferenceValue = field.isUsed()+";"+field.isVisible();
                     NbPreferences.forModule(EditorBeanGroup.class).put( preferenceKey, preferenceValue);
                 }
@@ -193,14 +192,14 @@ public class EditorBeanGroup {
      * instance 
      */
 
-    public EditorBeanGroup(GroupId id, String title, KeyStroke ks) {
-        this.id = id;
+    public EditorBeanGroup(GroupId groupId, String title, KeyStroke ks) {
+        this.groupId = groupId;
         //this.recordType =recordType;
         this.visible = false; // sera mis a jour lors de l'ajout des champs
         this.title = title;
         this.keystroke = ks;
 
-        fields=new Vector<EditorBeanField>();                    
+        fields=new ArrayList<EditorBeanField>();
     }
 
     private void add(EditorBeanField field) {
@@ -211,8 +210,8 @@ public class EditorBeanGroup {
         }
     }
 
-    public GroupId getId() {
-        return id;
+    public GroupId getGroupId() {
+        return groupId;
     }
 
     public boolean isVisible() {

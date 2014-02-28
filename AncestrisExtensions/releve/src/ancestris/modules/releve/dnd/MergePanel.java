@@ -8,12 +8,23 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Indi;
+import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -27,11 +38,50 @@ public class MergePanel extends javax.swing.JPanel  {
     private MergeModel currentModel = null;
     private MergeParticipantType participant = null;
 
+    private JPopupMenu popupMenu;
+    MouseAdapter mouseAdapter;
+    private JMenuItem menuItemImportClipboard = new JMenuItem(NbBundle.getMessage(MergePanel.class, "MergePanel.menu.copyToClipboard"));
+
+
     /**
      * le construteur initialise l'affichage
      */
     public MergePanel() {        
         initComponents();
+
+         //je cree le popupmenu
+        ActionListener popupActionListener = new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (menuItemImportClipboard.equals(e.getSource())) {
+                    // je copie le relevé
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    StringSelection sel = new StringSelection(currentModel.record.getEventComment(currentModel.showFrenchCalendarDate));
+                    clipboard.setContents(sel, sel);
+                }
+            }
+
+        };
+        popupMenu = new JPopupMenu();
+        menuItemImportClipboard.addActionListener(popupActionListener);
+        //menuItemImportClipboard.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewFile.png")));
+        popupMenu.add(menuItemImportClipboard);
+
+        // je branche le clic du bouton droit de la souris sur l'afffichage
+        // du popupmenu
+        mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        };
+        mergeTable1.addMouseListener(mouseAdapter);
+
+
+
     }
 
     /**
@@ -169,12 +219,32 @@ public class MergePanel extends javax.swing.JPanel  {
         // je renseigne le titre de la fenetre
         mergeDialog.setTitle(currentModel.getTitle());
         // j'affiche l'entité dans l'arbre
-        if (model.getSelectedEntity() != null) {
-            mergeDialog.showEntityInDndSource(model.getSelectedEntity(), true);
+        if (currentModel.getSelectedEntity() != null) {
+            if ((currentModel instanceof MergeModelBirth || currentModel instanceof MergeModelDeath )
+                    && currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject != null) {
+                
+                Indi indi = (Indi) currentModel.getSelectedEntity();
+                Fam family = (Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject;
+                if (indi != null && family !=  null && indi.isDescendantOf(family) ) {
+                    // je mets la famille comme racine de l'arbre
+                    mergeDialog.showEntityInDndSource(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, true);
+                    // je selectionne le nouveau né
+                    mergeDialog.showEntityInDndSource(model.getSelectedEntity(), false);
+                } else {
+                    mergeDialog.showEntityInDndSource(model.getSelectedEntity(), true);
+                    // je selectionne sa famille
+                    mergeDialog.showEntityInDndSource(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, false);
+                }
+            } else {
+                mergeDialog.showEntityInDndSource(model.getSelectedEntity(), true);
+                mergeDialog.showEntityInDndSource(model.getSelectedEntity(), false);
+            }
         } else {
-            if (currentModel instanceof MergeModelBirth && currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityValue instanceof Fam) {
+            if ( currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject instanceof Fam) {
                 // je centre l'arbre sur la famille des parents
                 mergeDialog.showEntityInDndSource((Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, true);
+                // je selectionne sa famille
+                mergeDialog.showEntityInDndSource(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, false);
             }
         }
     }

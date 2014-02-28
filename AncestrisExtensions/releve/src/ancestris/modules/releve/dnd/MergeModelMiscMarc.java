@@ -289,10 +289,8 @@ public class MergeModelMiscMarc extends MergeModel {
             Property marcProperty = currentFamily.getProperty("MARC");
 
             // j'affiche la source du mariage
-            Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, marcProperty);
-            addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
-            addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
-
+            addRowSource(RowType.EventSource, record.getEventSource(), marcProperty);
+            
             // j'affiche un separateur
             addRowSeparator();
 
@@ -303,7 +301,7 @@ public class MergeModelMiscMarc extends MergeModel {
             // j'affiche le lieu du contrat de mariage
             addRow(RowType.EventPlace, record.getEventPlace(), marcProperty!= null ? marcProperty.getValue(new TagPath("MARC:PLAC"), "") : "");
             // j'affiche le commentaire
-            addRow(RowType.EventComment, record.getEventComment(), marcProperty!= null ? marcProperty.getValue(new TagPath("MARC:NOTE"), "") : "");
+            addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), marcProperty!= null ? marcProperty.getValue(new TagPath("MARC:NOTE"), "") : "");
 
             // j'affiche la date de l'acte de mariage
             addRow(RowType.MarriageDate, record.calculateMariageDateFromMarc(record.getEventDate()), currentFamily.getMarriageDate());
@@ -313,8 +311,8 @@ public class MergeModelMiscMarc extends MergeModel {
             // selectedFamily est nul
             
             // j'affiche la source 
-            addRow(RowType.EventSource, record.getEventSource(),"",  MergeQuery.findSource(record, gedcom));
-            addRow(RowType.EventPage,   record.getEventPage(), "", null);
+            addRowSource(RowType.EventSource, record.getEventSource(), null);
+
             // j'affiche un separateur
             addRowSeparator();
 
@@ -325,7 +323,7 @@ public class MergeModelMiscMarc extends MergeModel {
             // j'affiche le lieu de l'acte de mariage
             addRow(RowType.EventPlace, record.getEventPlace(), "");
             // j'affiche le commentaire
-            addRow(RowType.EventComment, record.getEventComment(), "");
+            addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), "");
             // j'affiche la date de l'acte de mariage
             addRow(RowType.MarriageDate, record.calculateMariageDateFromMarc(record.getEventDate()), null);
             // j'affiche un separateur
@@ -530,7 +528,7 @@ public class MergeModelMiscMarc extends MergeModel {
 
         // je copie la profession ou la residence de l'epoux
         if (isChecked(RowType.IndiOccupation) ) {
-            copyOccupation(husband, record.getIndi().getOccupation(), record.getIndi().getResidence(), record);
+            copyOccupation(husband, record.getIndi().getOccupation(), record.getIndi().getResidence(), true, record);
         }
 
         // je copie les données des parents de l'epoux
@@ -581,7 +579,7 @@ public class MergeModelMiscMarc extends MergeModel {
 
             // je copie la profession du pere
             if (isChecked(RowType.IndiFatherOccupation)) {
-                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), record);
+                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), true, record);
             }
 
             // je copie le nom et le prenom de la mere de l'epoux
@@ -613,7 +611,7 @@ public class MergeModelMiscMarc extends MergeModel {
 
             // je copie la profession de la mere de l'epoux
             if (isChecked(RowType.IndiMotherOccupation) ) {
-                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), record);
+                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), true, record);
             }
 
         } // parents de l'epoux
@@ -647,7 +645,7 @@ public class MergeModelMiscMarc extends MergeModel {
 
         // je copie la profession de l'epouse
         if (isChecked(RowType.WifeOccupation)) {
-            copyOccupation(wife, record.getWife().getOccupation(), record.getWife().getResidence(), record);
+            copyOccupation(wife, record.getWife().getOccupation(), record.getWife().getResidence(), true, record);
         }
 
 
@@ -699,7 +697,7 @@ public class MergeModelMiscMarc extends MergeModel {
 
             // je copie la profession du pere de l'epouse
             if (isChecked(RowType.WifeFatherOccupation) ) {
-                copyOccupation(father, record.getWife().getFatherOccupation(), record.getWife().getFatherResidence(), record);
+                copyOccupation(father, record.getWife().getFatherOccupation(), record.getWife().getFatherResidence(), true, record);
             }
 
             // je copie le nom et le prenom de la mere de l'epouse
@@ -731,7 +729,7 @@ public class MergeModelMiscMarc extends MergeModel {
 
             // je copie la profession de la mere de l'epouse
             if (isChecked(RowType.WifeMotherOccupation) ) {
-                copyOccupation(mother, record.getWife().getMotherOccupation(), record.getWife().getMotherResidence(), record);
+                copyOccupation(mother, record.getWife().getMotherOccupation(), record.getWife().getMotherResidence(), true, record);
             }
 
         } // parents de l'epouse
@@ -758,61 +756,170 @@ public class MergeModelMiscMarc extends MergeModel {
             }
         }
 
-        // je crée la propriété MARC (contrat de mariage)
-        Property marcProperty = currentFamily.getProperty("MARC");
-        if (marcProperty == null) {
-            marcProperty = currentFamily.addProperty("MARC", "");
-        }
-
-        // je copie la source du releve de contrat de mariage
-        if (isChecked(RowType.EventSource)) {
-            copySource((Source) getRow(RowType.EventSource).entityObject, marcProperty, record);
-        }
-
-        // je copie la date de contrat de mariage
-        if (isChecked(RowType.EventDate)) {
-            // je cherhche la date contrat de mariage si elle existe, meme si elle n'est pas valide
-            PropertyDate propertyDate = (PropertyDate) marcProperty.getProperty("DATE",false);
-            if (propertyDate == null) {
-                propertyDate = (PropertyDate) marcProperty.addProperty("DATE", "");
-            }
-            propertyDate.setValue(record.getEventDate().getValue());
-        }
-
-        // je copie le lieu du contrat de mariage
-        if (isChecked(RowType.EventPlace)) {
-            Property propertyPlace = marcProperty.getProperty("PLAC");
-            if (propertyPlace == null) {
-                // je cree le lieu .
-                propertyPlace = marcProperty.addProperty("PLAC", "");
-            }
-            propertyPlace.setValue(record.getEventPlace());
-        }
-
-        // je copie le commentaire du contrat de mariage.
-        if (isChecked(RowType.EventComment)) {
-            Property propertyNote = marcProperty.getProperty("NOTE");
-            if (propertyNote == null) {
-                // je cree une note .
-                propertyNote = marcProperty.addProperty("NOTE", "");
+        if( ! record.isInsinuation() ) {
+            // je crée la propriété MARC (contrat de mariage)
+            Property marcProperty = currentFamily.getProperty("MARC");
+            if (marcProperty == null) {
+                marcProperty = currentFamily.addProperty("MARC", "");
             }
 
-            // j'ajoute le commentaire du contrat de mariage au debut de la note existante.
-            String value = propertyNote.getValue();
-            String comment = record.getEventComment();
-            if (!comment.isEmpty()) {
-                if (!value.isEmpty()) {
-                    comment += "\n";
+            // je copie la date de contrat de mariage
+            if (isChecked(RowType.EventDate)) {
+                // je cherhche la date contrat de mariage si elle existe, meme si elle n'est pas valide
+                PropertyDate propertyDate = (PropertyDate) marcProperty.getProperty("DATE",false);
+                if (propertyDate == null) {
+                    propertyDate = (PropertyDate) marcProperty.addProperty("DATE", "");
                 }
-                comment += value;
-                propertyNote.setValue(comment);
+                propertyDate.setValue(record.getEventDate().getValue());
             }
-        }
 
+            // je copie la source du releve de contrat de mariage
+            if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
+                copySource((Source) getRow(RowType.EventSource).entityObject, marcProperty, record);
+            }
+
+            // je copie le lieu du contrat de mariage
+            if (isChecked(RowType.EventPlace)) {
+                Property propertyPlace = marcProperty.getProperty("PLAC");
+                if (propertyPlace == null) {
+                    // je cree le lieu .
+                    propertyPlace = marcProperty.addProperty("PLAC", "");
+                }
+                propertyPlace.setValue(record.getEventPlace());
+            }
+
+            // je copie le commentaire du contrat de mariage.
+            if (isChecked(RowType.EventComment)) {
+                Property propertyNote = marcProperty.getProperty("NOTE");
+                if (propertyNote == null) {
+                    // je cree une note .
+                    propertyNote = marcProperty.addProperty("NOTE", "");
+                }
+
+                // j'ajoute le commentaire du contrat de mariage au debut de la note existante.
+                String value = propertyNote.getValue();
+                String comment = record.getEventComment(showFrenchCalendarDate);
+                if (!comment.isEmpty()) {
+                    if (!value.isEmpty()) {
+                        comment += "\n";
+                    }
+                    comment += value;
+                    propertyNote.setValue(comment);
+                }
+            }
+        } else {
+            // c'est une insinuation
+
+            // je crée la propriété MARC (contrat de mariage)
+            Property marcProperty = currentFamily.getProperty("MARC");
+            if (marcProperty == null) {
+                marcProperty = currentFamily.addProperty("MARC", "");
+            }
+
+            // je copie la date de contrat de mariage
+            if (isChecked(RowType.EventDate)) {
+                // je cherhche la date contrat de mariage si elle existe, meme si elle n'est pas valide
+                PropertyDate propertyDate = (PropertyDate) marcProperty.getProperty("DATE",false);
+                if (propertyDate == null) {
+                    propertyDate = (PropertyDate) marcProperty.addProperty("DATE", "");
+                }
+                propertyDate.setValue(record.getEventDate().getValue());
+            }
+
+            // je copie le commentaire du contrat de mariage.
+            if (isChecked(RowType.EventComment)) {
+                Property propertyNote = marcProperty.getProperty("NOTE");
+                if (propertyNote == null) {
+                    // je cree une note .
+                    propertyNote = marcProperty.addProperty("NOTE", "");
+                }
+
+                // j'ajoute le commentaire du contrat de mariage au debut de la note existante.
+                String value = propertyNote.getValue();
+                String comment = record.makeInsinuationReferenceComment(showFrenchCalendarDate);
+                if (!comment.isEmpty()) {
+                    if (!value.isEmpty()) {
+                        comment += "\n";
+                    }
+                    comment += value;
+                    propertyNote.setValue(comment);
+                }
+            }
+
+            // je crée la propriété EVEN (contrat de mariage)
+            Property insinuationProperty = currentFamily.getProperty("EVEN");
+
+            if (insinuationProperty == null ) {
+                insinuationProperty = currentFamily.addProperty("EVEN", "", currentFamily.getPropertyPosition(marcProperty));
+            } else {
+                // je cree un nouveau tag EVEN si la date est différente
+                PropertyDate propertyDate = (PropertyDate) insinuationProperty.getProperty("DATE",false);
+                if (propertyDate == null) {
+                    insinuationProperty = currentFamily.addProperty("EVEN", "", currentFamily.getPropertyPosition(marcProperty));
+                } else if ( ! insinuationProperty.equals(record.getEventDate()) ) {
+                    insinuationProperty = currentFamily.addProperty("EVEN", "", currentFamily.getPropertyPosition(marcProperty));
+                }
+            }
+
+            // je copie la date de l'insinuation
+            if (isChecked(RowType.EventDate)) {
+                // je cherche la date d'insinuation si elle existe, meme si elle n'est pas valide
+                PropertyDate propertyDate = (PropertyDate) insinuationProperty.getProperty("DATE",false);
+                if (propertyDate == null) {
+                    propertyDate = (PropertyDate) insinuationProperty.addProperty("DATE", "");
+                }
+                propertyDate.setValue(record.getInsinuationDate().getValue());
+            }
+
+            // je copie la source du releve de l'insinuation
+            if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
+                copySource((Source) getRow(RowType.EventSource).entityObject, insinuationProperty, record);
+            }
+
+            // je copie le lieu de l'insinuation
+            if (isChecked(RowType.EventPlace)) {
+                Property propertyPlace = insinuationProperty.getProperty("PLAC");
+                if (propertyPlace == null) {
+                    // je cree le lieu .
+                    propertyPlace = insinuationProperty.addProperty("PLAC", "");
+                }
+                propertyPlace.setValue(record.getEventPlace());
+            }
+
+            // je copie le commentaire de l'insinuation
+            if (isChecked(RowType.EventComment)) {
+                Property propertyNote = insinuationProperty.getProperty("NOTE");
+                if (propertyNote == null) {
+                    // je cree une note .
+                    propertyNote = insinuationProperty.addProperty("NOTE", "");
+                }
+
+                // j'ajoute le commentaire de l'insinuation au debut de la note existante.
+                String value = propertyNote.getValue();
+                String comment = record.getEventComment(showFrenchCalendarDate);
+                if (!comment.isEmpty()) {
+                    if (!value.isEmpty()) {
+                        comment += "\n";
+                    }
+                    comment += value;
+                    propertyNote.setValue(comment);
+                }
+            }
+
+
+            
+
+        }
         // je crée la propriété MARR (mariage)
         Property marriageProperty = currentFamily.getProperty("MARR");
         if (marriageProperty == null) {
-            marriageProperty = currentFamily.addProperty("MARR", "");
+            Property marcProperty = currentFamily.getProperty("MARC");
+            if ( marcProperty != null) {
+                // je cree le mariage juste apres le contrat de mariage
+                marriageProperty = currentFamily.addProperty("MARR", "", 1+ currentFamily.getPropertyPosition(marcProperty));
+            } else {
+                marriageProperty = currentFamily.addProperty("MARR", "");
+            }
         }
 
         // je copie la date du mariage estimée a partir de la date du contrat de mariage

@@ -20,8 +20,8 @@ public class FieldSex extends Field {
 
     @Override
     public FieldSex clone() {
-		return (FieldSex) super.clone();
-  	}
+        return (FieldSex) super.clone();
+    }
 
     /**
      * Accessor for Sex
@@ -35,7 +35,7 @@ public class FieldSex extends Field {
     public int getSex() {
         return sex;
     }
-    
+
     public int getOppositeInt() {
         switch (sex) {
             case MALE:
@@ -57,7 +57,7 @@ public class FieldSex extends Field {
                 return UNKNOWN_STRING;
         }
     }
-    
+
     @Override
     public String getValue() {
         if (sexAsString != null) {
@@ -110,7 +110,6 @@ public class FieldSex extends Field {
         }
     }
 
-       
     @Override
     public String toString() {
         return getValue();
@@ -121,7 +120,7 @@ public class FieldSex extends Field {
         return false;
     }
 
-    static public String convertValue( int intValue) {
+    static public String convertValue(int intValue) {
         if (intValue == MALE) {
             return MALE_STRING;
         }

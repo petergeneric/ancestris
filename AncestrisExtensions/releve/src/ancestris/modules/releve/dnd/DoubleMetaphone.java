@@ -445,7 +445,8 @@ public class DoubleMetaphone  {
             //-- -ger-, -gy- --//
             result.append('K', 'J');
             index += 2;
-        } else if (contains(value, index + 1, 1, "E", "I", "Y") || 
+        //} else if (contains(value, index + 1, 1, "E", "I", "Y") ||  // michel
+        } else if (contains(value, index + 1, 1, "E", "É", "I", "Y") ||
                    contains(value, index - 1, 4, "AGGI", "OGGI")) {
             //-- Italian "biaggi" --//
             if ((contains(value, 0 ,4, "VAN ", "VON ") || contains(value, 0, 3, "SCH")) || contains(value, index + 1, 2, "ET")) {
