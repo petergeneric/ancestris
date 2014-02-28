@@ -175,43 +175,12 @@ public class CompletionProviderTest extends TestCase {
             assertEquals("Nombre de prenoms", 7,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
             assertEquals("Nombre de noms", 2,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
             assertEquals("Nombre de professions", 1,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
-            completionProvider.removeGedcomCompletion();
-            // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms", 0,  completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de noms", 0,  completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
         } catch (Exception ex) {
             fail("GedcomException "+ ex.toString());
         }
 
     }
-
-    /**
-     * Test of removeGedcomCompletion method, of class CompletionProvider.
-     */
-    public void testRemoveGedcom() {
-            try {
-            Gedcom gedcom = TestUtility.createGedcom2();
-            CompletionProvider completionProvider = new CompletionProvider();
-            completionProvider.addGedcomCompletion(gedcom);
-            // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms", 4, completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de noms", 2, completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de professions", 2, completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
-
-            completionProvider.removeGedcomCompletion();
-            // je verifie que les données ont bien été supprimées
-            assertEquals("Nombre de prenoms apres suppression", 0, completionProvider.getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de noms apres suppression", 0, completionProvider.getLastNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de professions apres suppression", 0, completionProvider.getOccupations(CompletionProvider.IncludeFilter.ALL).size());
-
-
-        } catch (GedcomException ex) {
-            fail("GedcomException " + ex.toString());
-        }
-    }
-
-
+    
     /**
      * test exlusion de prenom et de nom
      */

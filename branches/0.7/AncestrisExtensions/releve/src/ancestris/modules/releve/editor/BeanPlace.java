@@ -6,6 +6,7 @@ import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldPlace;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.List;
 
 /**
@@ -22,6 +23,8 @@ public class BeanPlace extends Bean implements CompletionListener {
         this.completionProvider = completionProvider;
         //tfield = new Java2sAutoTextField(completionProvider.getPlaces());
         tfield = new Java2sAutoComboBox(completionProvider.getPlaces(IncludeFilter.INCLUDED));
+        tfield.setMinimumSize(new Dimension(30,20));
+        tfield.setPreferredSize(new Dimension(30,20));
         completionProvider.addPlacesListener(this);
 
         tfield.setStrict(false);

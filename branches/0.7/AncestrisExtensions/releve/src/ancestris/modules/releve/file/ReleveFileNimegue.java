@@ -1,13 +1,14 @@
 package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.model.PlaceManager;
-import ancestris.modules.releve.model.ModelAbstract;
+import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.RecordMisc;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.file.FileManager.Line;
+import ancestris.modules.releve.model.DataManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -264,12 +265,6 @@ public class ReleveFileNimegue {
 
                         record.setGeneralComment(fields[BirthField.generalComment.ordinal()]);
 
-                        try {
-                            record.recordNo = Integer.valueOf(fields[BirthField.recordNo.ordinal()]);
-                        } catch (NumberFormatException ex) {
-                            record.recordNo = 0;
-                        }
-
                         fileBuffer.addRecord(record);
 
                     } else if (fields[MarrField.typeActe.ordinal()].equals("M")) {
@@ -383,12 +378,6 @@ public class ReleveFileNimegue {
 
                         record.setGeneralComment(fields[MarrField.generalComment.ordinal()]);
 
-                        try {
-                            record.recordNo = Integer.valueOf(fields[MarrField.recordNo.ordinal()]);
-                        } catch (NumberFormatException ex) {
-                            record.recordNo = 0;
-                        }
-
                         fileBuffer.addRecord(record);
 
                     } else if (fields[DeathField.typeActe.ordinal()].equals("D")) {
@@ -451,12 +440,6 @@ public class ReleveFileNimegue {
                                 fields[DeathField.witness2Comment.ordinal()]);
 
                         record.setGeneralComment(fields[DeathField.generalComment.ordinal()]);
-                        try {
-                            record.recordNo = Integer.valueOf(fields[DeathField.recordNo.ordinal()]);
-                        } catch (NumberFormatException ex) {
-                            record.recordNo = 0;
-                        }
-
                         fileBuffer.addRecord(record);
                     } else if (fields[MiscField.typeActe.ordinal()].equals("V")) {
                         RecordMisc record = new RecordMisc();
@@ -570,11 +553,6 @@ public class ReleveFileNimegue {
                                 fields[MiscField.witness4Comment.ordinal()]);
 
                         record.setGeneralComment(fields[MiscField.generalComment.ordinal()]);
-                        try {
-                            record.recordNo = Integer.valueOf(fields[MiscField.recordNo.ordinal()]);
-                        } catch (NumberFormatException ex) {
-                            record.recordNo = 0;
-                        }
                         fileBuffer.addRecord(record);
                         
                     } else {
@@ -603,14 +581,17 @@ public class ReleveFileNimegue {
      * @param fileName
      * TODO gérer la dat iincomplete
      */
-    public static StringBuilder saveFile(PlaceManager placeManager, ModelAbstract recordModel, File fileName, boolean append) {
+    public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, DataManager.RecordType recordType, File fileName, boolean append) {
         StringBuilder sb = new StringBuilder();
         try {
             //create BufferedReader to read csv file
             FileWriter writer = new FileWriter(fileName, append);
             for (int index = 0; index < recordModel.getRowCount(); index++) {
-                Line line = new Line(fieldSeparator);
                 Record record = recordModel.getRecord(index);
+                if( recordType != null && recordType != record.getType()) {
+                    continue;
+                }
+                Line line = new Line(fieldSeparator);
                 try {
                     if ( record instanceof RecordBirth ) {
                         line.appendNimegueFn("NIMEGUEV3");
@@ -669,7 +650,7 @@ public class ReleveFileNimegue {
                                     record.getWitness4Occupation().toString(),
                                     record.getWitness4Comment().toString());
                         }
-                        line.appendNimegueFn(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendNimegueFn(String.valueOf(index)); // numero d'enregistrement
 
                     } if ( record instanceof RecordMarriage ) {
 
@@ -785,7 +766,7 @@ public class ReleveFileNimegue {
                             record.getWitness4Occupation().toString() );
 
                         line.appendNimegueFn(record.getGeneralComment().toString());
-                        line.appendNimegueFn(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendNimegueFn(String.valueOf(index)); // numero d'enregistrement
 
                     } else if ( record instanceof RecordDeath ) {
 
@@ -864,7 +845,7 @@ public class ReleveFileNimegue {
                                     record.getWitness4Occupation().toString(),
                                     record.getWitness4Comment().toString());
                         }
-                        line.appendNimegueFn(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendNimegueFn(String.valueOf(index)); // numero d'enregistrement
 
                     } else if ( record instanceof RecordMisc ) {
 
@@ -987,7 +968,7 @@ public class ReleveFileNimegue {
                             record.getWitness4Occupation().toString() );
                         
                         line.appendNimegueFn(record.getGeneralComment().toString());
-                        line.appendNimegueFn(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendNimegueFn(String.valueOf(index)); // numero d'enregistrement
                     }
                     // Nimegue exige les retours chariot au format Windows CR+LF
                     line.appendNimegue("\r\n");

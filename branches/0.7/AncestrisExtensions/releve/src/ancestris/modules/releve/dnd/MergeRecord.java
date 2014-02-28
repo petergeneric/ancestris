@@ -1,6 +1,7 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.model.FieldDate;
+import ancestris.modules.releve.model.FieldDead;
 import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
@@ -61,7 +62,11 @@ public class MergeRecord {
      */
     protected MergeRecord( FieldPlace recordsInfoPlace, String sourceTitle, Record record)  {
         this.recordsInfoPlace = recordsInfoPlace;
-        this.sourceTitle = sourceTitle;
+        if (sourceTitle != null) {
+            this.sourceTitle = sourceTitle;
+        } else {
+            this.sourceTitle = "";
+        }
         this.record = record;
         if (record instanceof RecordBirth) {
             type = RecordType.Birth;
@@ -71,9 +76,9 @@ public class MergeRecord {
             type = RecordType.Death;
         } else {
             type = RecordType.Misc;
-            if (record.getEventType().toString().equals("CM") || record.getEventType().toString().toLowerCase().indexOf("mariage") != -1) {
+            if (record.getEventType().toString().toLowerCase().equals("cm") || record.getEventType().toString().toLowerCase().indexOf("mariage") != -1) {
                 eventTypeTag = EventTypeTag.MARC;
-            } else if (record.getEventType().toString().equals("Testament")) {
+            } else if (record.getEventType().toString().toLowerCase().equals("testament")) {
                 eventTypeTag = EventTypeTag.WILL;
             } else {
                 eventTypeTag = EventTypeTag.EVEN;
@@ -129,14 +134,7 @@ public class MergeRecord {
     }
     
     String getEventSource() {
-        if ( sourceTitle.isEmpty()) {
-            String cityName = recordsInfoPlace.getCityName();
-            //String cityCode = record.getEventPlace().getCityCode();
-            //return String.format("%s %s Etat civil", cityCode, cityName);
-            return String.format("Etat civil %s", cityName);
-        } else {
-            return sourceTitle;
-        }
+        return sourceTitle;
     }
 
     String getEventPage() {
@@ -154,12 +152,47 @@ public class MergeRecord {
     PropertyDate getEventDate() {
         return record.getEventDateProperty();
     }
-    String getEventDateDDMMYYYY() {
-        return record.getEventDateString();
+
+    String getEventDateDDMMYYYY(boolean showFrenchCalendarDate) {
+        String result = record.getEventDateString();
+        if (showFrenchCalendarDate) {
+            try {
+                String frenchCalendarDate = record.getEventDateProperty().getStart().getPointInTime(PointInTime.FRENCHR).toString();
+                if (!frenchCalendarDate.isEmpty()) {
+                    result += " (" + frenchCalendarDate + ")";
+                }
+            } catch (GedcomException ex) {
+                // rien a faire
+            }
+        }
+        return result;
+    }
+
+   PropertyDate getInsinuationDate() {
+        return record.getSecondDateProperty();
+    }
+
+    String getInsinuationDateDDMMYYYY(boolean showFrenchCalendarDate) {
+        String result = record.getSecondDateString();
+        if (showFrenchCalendarDate) {
+            try {
+                String frenchCalendarDate = record.getSecondDateProperty().getStart().getPointInTime(PointInTime.FRENCHR).toString();
+                if (!frenchCalendarDate.isEmpty()) {
+                    result += " (" + frenchCalendarDate + ")";
+                }
+            } catch (GedcomException ex) {
+                // rien a faire
+            }
+        }
+        return result;
     }
 
     String getEventPlace() {
         return recordsInfoPlace.toString();
+    }
+
+    boolean isInsinuation() {
+        return record.getSecondDateProperty() != null  && record.getSecondDateProperty().isComparable();
     }
 
     String getEventPlaceCityName() {
@@ -179,17 +212,23 @@ public class MergeRecord {
         return record.getNotary().toString();
     }
 
-    String getEventComment() {
+    String getEventComment(boolean showFrenchCalendarDate) {
+        String comment = "";
         switch (type) {
             case Birth:
-                return makeBirthComment();
+                comment = makeBirthComment(showFrenchCalendarDate);
+                break;
             case Marriage:
-                return makeMarriageComment();
+                comment = makeMarriageComment(showFrenchCalendarDate);
+                break;
             case Death:
-                return makeDeathComment();
+                comment = makeDeathComment(showFrenchCalendarDate);
+                break;
             default:
-                return makeMiscComment();
-        }        
+                comment = makeMiscComment(showFrenchCalendarDate);
+                break;
+        }
+        return comment.replaceAll(",+", ",");
     }
 
     //  indi ///////////////////////////////////////////////////////////////////
@@ -760,47 +799,13 @@ public class MergeRecord {
      *
      * @return
      */
-    private String makeBirthComment() {
+    private String makeBirthComment(boolean showFrenchCalendarDate) {
 
         String comment = "";
-        if (record.getIndiBirthDate() != null && !record.getIndiBirthDate().getValue().equals(record.getEventDateString())) {
-            // j'ajoute la date de l'acte dans le commentaire si elle différente de l'acte de naissance
-            comment = "Acte du "+getEventDateDDMMYYYY();
-        }
-
-        if (!record.getIndiComment().isEmpty()) {
-            // j'ajoute le commentaire de l'evenement
-            if (!comment.isEmpty()) {
-                comment += ", ";
-            }
-            comment += record.getIndiComment().toString();
-        }
-
-        String father = appendValue(
-                record.getIndiFatherFirstName().toString() + " " + record.getIndiFatherLastName().toString(),
-                record.getIndiFatherDead().toString(),
-                record.getIndiFatherOccupation().toString(),
-                record.getIndiFatherComment().toString());
-
-        if (!father.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Père" + ": " + father;
-        }
-
-        String mother = appendValue(
-                record.getIndiMotherFirstName().toString() + " " + record.getIndiMotherLastName().toString(),
-                record.getIndiMotherDead().toString(),
-                record.getIndiMotherOccupation().toString(),
-                record.getIndiMotherComment().toString());
-
-        if (!mother.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Mère" + ": " + mother;
-        }
+        comment = "Date de l'acte: "+getEventDateDDMMYYYY(showFrenchCalendarDate);       
+        comment = appendComment(comment, "Nouveau né", makeIndiComment(showFrenchCalendarDate));
+        comment = appendComment(comment, "Père", makeIndiFatherComment());
+        comment = appendComment(comment, "Mère", makeIndiMotherComment());
 
         String godFather = appendValue(
                 record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
@@ -830,31 +835,11 @@ public class MergeRecord {
                 record.getWitness4FirstName().toString() + " " + record.getWitness4LastName().toString(),
                 record.getWitness4Occupation().toString(),
                 record.getWitness4Comment().toString());
-        if (!witness.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Témoin(s)" + ": " + witness;
-        }
+        comment = appendComment(comment, "Témoin(s)",witness);
 
-        String generalComment = appendValue(
-                record.getGeneralComment().toString()
-           );
-        if (!generalComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += generalComment;
-        }
+        comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
+        comment = appendComment(comment, "Photo",record.getFreeComment().toString());
 
-        String freeComment = appendValue(
-                record.getFreeComment().toString() );
-        if (!freeComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Photo"+": "+freeComment;
-        }
         return comment;
     }
 
@@ -869,109 +854,24 @@ public class MergeRecord {
      *
      * @return
      */
-    private String makeMarriageComment() {
+    private String makeMarriageComment(boolean showFrenchCalendarDate) {
 
         String comment="";
-        String indiComment = appendValue(record.getIndiComment().toString(),
-                record.getIndiAge().toString());
+        comment = "Date de l'acte: "+getEventDateDDMMYYYY(showFrenchCalendarDate);
 
-       if ( !indiComment.isEmpty() ) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Commentaire epoux"+": " +indiComment;
-        }
+        comment = appendComment(comment, "Epoux", makeIndiComment(showFrenchCalendarDate));
+        comment = appendComment(comment, "Ex conjoint époux", makeIndiMarriedComment());
+        comment = appendComment(comment, "Père époux", makeIndiFatherComment());
+        comment = appendComment(comment, "Mère époux", makeIndiMotherComment());
 
-        String indiFatherComment = appendValue(
-                record.getIndiFatherComment().toString(),
-                record.getIndiFatherAge().toString());
-        if (!indiFatherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Commentaire père époux" + ": " + indiFatherComment;
-        }
+        comment = appendComment(comment, "Epouse", makeWifeComment(showFrenchCalendarDate));
+        comment = appendComment(comment, "Ex conjoint épouse", makeWifeMarriedComment());
+        comment = appendComment(comment, "Père épouse", makeWifeFatherComment());
+        comment = appendComment(comment, "Mère épouse", makeWifeMotherComment());
 
-        String indiMotherComment = appendValue(
-                record.getIndiMotherComment().toString(),
-                record.getIndiMotherAge().toString());
-        if (!indiMotherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Commentaire mère époux" + ": " + indiMotherComment;
-        }
-
-        String wifeComment = appendValue(record.getWifeComment().toString(),
-                record.getWifeAge().toString());
-
-        if ( !wifeComment.isEmpty() ) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Commentaire épouse"+": " +wifeComment;
-        }
-
-        String wifeFatherComment = appendValue(
-                record.getWifeFatherComment().toString(),
-                record.getWifeFatherAge().toString());
-        if (!wifeFatherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Commentaire père épouse" + ": " + wifeFatherComment;
-        }
-
-        String wifeMotherComment = appendValue(
-                record.getWifeMotherComment().toString(),
-                record.getWifeMotherAge().toString());
-        if (!wifeMotherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Commentaire mère épouse" + ": " + wifeMotherComment;
-        }
-
-
-        String witness = appendValue(
-                record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
-                record.getWitness1Occupation().toString(),
-                record.getWitness1Comment().toString(),
-                record.getWitness2FirstName().toString() + " " + record.getWitness2LastName().toString(),
-                record.getWitness2Occupation().toString(),
-                record.getWitness2Comment().toString(),
-                record.getWitness3FirstName().toString() + " " + record.getWitness3LastName().toString(),
-                record.getWitness3Occupation().toString(),
-                record.getWitness3Comment().toString(),
-                record.getWitness4FirstName().toString() + " " + record.getWitness4LastName().toString(),
-                record.getWitness4Occupation().toString(),
-                record.getWitness4Comment().toString());
-        if (!witness.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Témoin(s)" + ": " + witness;
-        }
-
-        String generalComment = appendValue(
-                record.getGeneralComment().toString()
-                );
-
-        if (!generalComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += generalComment;
-        }
-
-       String freeComment = appendValue(
-                record.getFreeComment().toString() );
-        if (!freeComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Photo"+": "+freeComment;
-        }
+        comment = appendComment(comment, "Témoin(s)", makeWitnessComment());
+        comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
+        comment = appendComment(comment, "Photo",record.getFreeComment().toString());
 
         return comment;
     }
@@ -988,78 +888,19 @@ public class MergeRecord {
      *
      * @return
      */
-    private String makeDeathComment() {
-        String comment = appendValue(record.getIndiComment().toString());
+    private String makeDeathComment(boolean showFrenchCalendarDate) {
+        String comment = "";
+        comment = "Date de l'acte: "+getEventDateDDMMYYYY(showFrenchCalendarDate);
 
-        if ( record.getIndiAge()!= null && !record.getIndiAge().isEmpty() ) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Age"+": " +record.getIndiAge().toString();
-        }
+        comment = appendComment(comment, "Défunt", makeIndiComment(showFrenchCalendarDate));
+        comment = appendComment(comment, "Conjoint", makeIndiMarriedComment());
+        comment = appendComment(comment, "Père", makeIndiFatherComment());
+        comment = appendComment(comment, "Mère", makeIndiMotherComment());
 
-        String father = appendValue(
-                record.getIndiFatherFirstName().toString() + " " + record.getIndiFatherLastName().toString(),
-                record.getIndiFatherDead().toString(),
-                record.getIndiFatherOccupation().toString(),
-                record.getIndiFatherComment().toString());
+        comment = appendComment(comment, "Témoin(s)", makeWitnessComment());
+        comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
+        comment = appendComment(comment, "Photo",record.getFreeComment().toString());
 
-        if (!father.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Père" + ": " + father;
-        }
-
-        String mother = appendValue(
-                record.getIndiMotherFirstName().toString() + " " + record.getIndiMotherLastName().toString(),
-                record.getIndiMotherDead().toString(),
-                record.getIndiMotherOccupation().toString(),
-                record.getIndiMotherComment().toString());
-
-        if (!mother.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Mère" + ": " + mother;
-        }
-
-        String witness = appendValue(
-                record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
-                record.getWitness1Occupation().toString(),
-                record.getWitness1Comment().toString(),
-                record.getWitness2FirstName().toString() + " " + record.getWitness2LastName().toString(),
-                record.getWitness2Occupation().toString(),
-                record.getWitness2Comment().toString(),
-                record.getWitness3FirstName().toString() + " " + record.getWitness3LastName().toString(),
-                record.getWitness3Occupation().toString(),
-                record.getWitness3Comment().toString(),
-                record.getWitness4FirstName().toString() + " " + record.getWitness4LastName().toString(),
-                record.getWitness4Occupation().toString(),
-                record.getWitness4Comment().toString());
-        if (!witness.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Témoin(s)" + ": " + witness;
-        }
-
-        String generalComment = appendValue(record.getGeneralComment().toString());
-        if (!generalComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Commentaire général"+": " + generalComment;
-        }
-
-        String freeComment = appendValue(
-                record.getFreeComment().toString() );
-        if (!freeComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Photo"+": "+freeComment;
-        }
         return comment;
     }
 
@@ -1075,132 +916,139 @@ public class MergeRecord {
      *
      * @return
      */
-    private String makeMiscComment() {
+    private String makeMiscComment(boolean showFrenchCalendarDate) {
         String comment="";
+        comment = "Date de l'acte: "+getEventDateDDMMYYYY(showFrenchCalendarDate);
+
+        // commentaire de l'insinuation
+        if( isInsinuation()) {
+            String insinuationComment = appendValue(
+                    "Insinuation de l'acte ''" + getEventType() + "'' du " + getEventDateDDMMYYYY(showFrenchCalendarDate),
+                    record.getNotary().isEmpty() ? "" : "retenu par " + getNotary());
+
+            if (!insinuationComment.isEmpty()) {
+                if (!comment.isEmpty() && comment.charAt(comment.length() - 1) != '\n') {
+                    comment += "\n";
+                }
+                comment += insinuationComment;
+            }
+        }
         
-        // commentaire de l'intervenant 1
-        String indiComment = appendValue(
+        comment = appendComment(comment, "Intervenant 1", makeIndiComment(showFrenchCalendarDate));
+        comment = appendComment(comment, "Conjoint intervenant 1", makeIndiMarriedComment());
+        comment = appendComment(comment, "Père intervenant 1", makeIndiFatherComment());
+        comment = appendComment(comment, "Mère intervenant 1", makeIndiMotherComment());
+
+        comment = appendComment(comment, "Intervenant 2", makeWifeComment(showFrenchCalendarDate));
+        comment = appendComment(comment, "Conjoint intervenant 2", makeWifeMarriedComment());
+        comment = appendComment(comment, "Père intervenant 2", makeWifeFatherComment());
+        comment = appendComment(comment, "Mère intervenant 2", makeWifeMotherComment());
+
+        comment = appendComment(comment, "Témoin(s)", makeWitnessComment());
+        comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
+        comment = appendComment(comment, "Photo",record.getFreeComment().toString());
+
+        return comment;
+    }
+
+    //
+    private String makeIndiComment(boolean showFrenchCalendarDate) {
+        String comment = appendValue(
                 record.getIndiFirstName() + " " + record.getIndiLastName(),
-                record.getIndiAge().toString(),
-                makeParticipantBirthComment(record.getIndiBirthDate(), record.getIndiBirthPlace()),
-                record.getIndiOccupation().toString(),
-                record.getIndiResidence().toString(),
+                record.getIndiAge()==null ? "" :record.getIndiAge().toString(),
+                makeParticipantBirthComment(record.getIndiBirthDate(), showFrenchCalendarDate, record.getIndiBirthPlace()),
+                record.getIndiOccupation()==null ? "" : record.getIndiOccupation().toString(),
+                appendPrefixValue("domicile", record.getIndiResidence()== null ? "" :record.getIndiResidence().toString()),
                 record.getIndiComment().toString()
                 );
+        return comment;
+    }
 
-       if ( !indiComment.isEmpty() ) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Intervenant 1"+": " +indiComment;
-        }
-
-        String indiMarriedComment = appendValue(
+    private String makeIndiMarriedComment(  ) {
+           String comment = appendValue(
                 record.getIndiMarriedFirstName() + " " + record.getIndiMarriedLastName(),
                 record.getIndiMarriedDead().toString(),
                 record.getIndiMarriedOccupation().toString(),
-                record.getIndiMarriedResidence().toString(),
+                appendPrefixValue("domicile", record.getIndiMarriedResidence().toString()),
                 record.getIndiMarriedComment().toString()
                 );
-        if (!indiMarriedComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Conjoint intervenant 1" + ": " + indiMarriedComment;
-        }
 
-        String indiFatherComment = appendValue(
+        return comment;
+    }
+
+    private String makeIndiFatherComment(  ) {
+        String comment = appendValue(
                 record.getIndiFatherFirstName() + " " + record.getIndiFatherLastName(),
                 record.getIndiFatherAge().toString(),
                 record.getIndiFatherDead().toString(),
                 record.getIndiFatherOccupation().toString(),
-                record.getIndiFatherResidence().toString(),
+                appendPrefixValue("domicile", record.getIndiFatherResidence().toString()),
                 record.getIndiFatherComment().toString()
                 );
-        if (!indiFatherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Père intervenant 1" + ": " + indiFatherComment;
-        }
+        return comment;
+    }
 
-        String indiMotherComment = appendValue(
+    private String makeIndiMotherComment(  ) {
+         String comment = appendValue(
                 record.getIndiMotherFirstName() + " " + record.getIndiMotherLastName(),
                 record.getIndiMotherAge().toString(),
                 record.getIndiMotherDead().toString(),
                 record.getIndiMotherOccupation().toString(),
-                record.getIndiMotherResidence().toString(),
+                appendPrefixValue("domicile", record.getIndiMotherResidence().toString()),
                 record.getIndiMotherComment().toString()
                 );
-        if (!indiMotherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Mère intervenant 1" + ": " + indiMotherComment;
-        }
+        return comment;
+    }
 
-        // commentaire de l'intervenant 2
-        String wifeComment = appendValue(
+    private String makeWifeComment( boolean showFrenchCalendarDate ) {
+        String comment = appendValue(
                 record.getWifeFirstName() + " " + record.getWifeLastName(),
                 record.getWifeAge().toString(),
-                makeParticipantBirthComment(record.getWifeBirthDate(), record.getWifeBirthPlace()),
+                makeParticipantBirthComment(record.getWifeBirthDate(), showFrenchCalendarDate, record.getWifeBirthPlace()),
                 record.getWifeOccupation().toString(),
-                record.getWifeResidence().toString(),
+                appendPrefixValue("domicile", record.getWifeResidence().toString()),
                 record.getWifeComment().toString()
                 );
+        return comment;
+    }
 
-        if ( !wifeComment.isEmpty() ) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n\n";
-            }
-            comment += "Intervenant 2"+": " +wifeComment;
-        }
-
-        String wifeMarriedComment = appendValue(
+    private String makeWifeMarriedComment(  ) {
+         String comment = appendValue(
                 record.getWifeMarriedFirstName() + " " + record.getWifeMarriedLastName(),
                 record.getWifeMarriedDead().toString(),
                 record.getWifeMarriedOccupation().toString(),
-                record.getWifeMarriedResidence().toString(),
+                appendPrefixValue("domicile", record.getWifeMarriedResidence().toString()),
                 record.getWifeMarriedComment().toString()
                 );
-        if (!wifeMarriedComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Conjoint intervenant 2" + ": " + wifeMarriedComment;
-        }
+        return comment;
+    }
 
-        String wifeFatherComment = appendValue(
+    private String makeWifeFatherComment(  ) {
+         String comment = appendValue(
                 record.getWifeFatherFirstName() + " " + record.getWifeFatherLastName(),
                 record.getWifeFatherAge().toString(),
                 record.getWifeFatherDead().toString(),
                 record.getWifeFatherOccupation().toString(),
-                record.getWifeFatherResidence().toString(),
+                appendPrefixValue("domicile", record.getWifeFatherResidence().toString()),
                 record.getWifeFatherComment().toString()
                 );
-        if (!wifeFatherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
-                comment += "\n";
-            }
-            comment += "Père intervenant 2" + ": " + wifeFatherComment;
-        }
+        return comment;
+    }
 
-        String wifeMotherComment = appendValue(
+    private String makeWifeMotherComment(  ) {
+        String comment = appendValue(
                 record.getWifeMotherFirstName() + " " + record.getWifeMotherLastName(),
                 record.getWifeMotherAge().toString(),
                 record.getWifeMotherDead().toString(),
                 record.getWifeMotherOccupation().toString(),
-                record.getWifeMotherResidence().toString(),
+                appendPrefixValue("domicile", record.getWifeMotherResidence().toString()),
                 record.getWifeMotherComment().toString()
                 );
-        if (!wifeMotherComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Mère intervenant 2" + ": " + wifeMotherComment;
-        }
+        return comment;
+    }
 
-        String witness = appendValue(
+     private String makeWitnessComment(  ) {
+        String comment = appendValue(
                 record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
                 record.getWitness1Occupation().toString(),
                 record.getWitness1Comment().toString(),
@@ -1213,44 +1061,44 @@ public class MergeRecord {
                 record.getWitness4FirstName().toString() + " " + record.getWitness4LastName().toString(),
                 record.getWitness4Occupation().toString(),
                 record.getWitness4Comment().toString());
-        if (!witness.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Témoin(s)" + ": " + witness;
-        }
+        return comment;
+    }
 
-        String generalComment = appendValue(record.getGeneralComment().toString());
-        if (!generalComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Commentaire général"+": " + generalComment;
-        }
 
-       String freeComment = appendValue(
-                record.getFreeComment().toString() );
-        if (!freeComment.isEmpty()) {
-            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
-                comment += "\n";
-            }
-            comment += "Photo"+": "+freeComment;
-        }
+    /**
+     * genere le commentaire mentionnant la reference à une insinuation 
+     * @return
+     */
+    protected String makeInsinuationReferenceComment(boolean showFrenchCalendarDate) {
+        String comment = "";
+
+        // commentaire de l'insinuation
+        comment = "Voir l'insinuation de l'acte ''" + getEventType() + "''"
+                + " du " + getInsinuationDateDDMMYYYY(showFrenchCalendarDate)
+                + " (" + getEventPlaceCityName() + ")"
+                + (getNotary().isEmpty() ? "" : " retenu par " + getNotary());
 
         return comment;
     }
 
-    private String makeParticipantBirthComment(FieldDate birthDate, FieldPlace birthPlace) {
+        
+    private String makeParticipantBirthComment(FieldDate birthDate, boolean showFrenchCalendarDate, FieldPlace birthPlace) {
         String comment = "";
         if (birthDate != null && !birthDate.isEmpty()) {
-            comment = "Naissance" + ": " + birthDate.getValue();
+            comment = "né le" + " " + birthDate.getValueDDMMYYYY();
+            if( showFrenchCalendarDate) {
+                String frenchCalendarDate = birthDate.getFrenchCalendarValue();
+                if (!frenchCalendarDate.isEmpty()) {
+                    comment += " (" + frenchCalendarDate + ")";
+                }
+            }
         }
 
         if (birthPlace != null && !birthPlace.isEmpty()) {
             if( comment.isEmpty() ) {
-                comment = "Naissance" + ": " + birthPlace.toString();
+                comment = "né à" + " " + birthPlace.toString();
             } else {
-                comment += " " + birthPlace.toString();
+                comment += " "+ "à" + " " +birthPlace.toString();
             }
         }
         return comment;
@@ -1259,25 +1107,60 @@ public class MergeRecord {
     /**
      * concatene plusieurs commentaires dans une chaine , séparés par une virgule
      */
-    private String appendValue(String value, String... otherValues) {
-        int fieldSize = value.length();
+    private String appendComment(String comment, String label, String newComment) {
+        if (!newComment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+                comment += "\n";
+            }
+            comment += label+": "+newComment;
+        }
+        return comment;
+    }
+
+    /**
+     * concatene plusieurs commentaires dans une chaine , séparés par une virgule
+     */
+    private String appendValue(String... otherValues) {
         StringBuilder sb = new StringBuilder();
-        sb.append(value.trim());
         for (String otherValue : otherValues) {
             // j'ajoute les valeurs supplémentaires séparées par des virgules
             if (!otherValue.trim().isEmpty()) {
                 // je concantene les valeurs en inserant une virgule dans
                 // si la valeur précedente n'est pas vide
-                if (fieldSize > 0) {
+                if (sb.length() > 0) {
                     sb.append(", ");
                 }
                 sb.append(otherValue.trim());
-                fieldSize += otherValue.length();
             }
         }
 
         return sb.toString();
     }
+    
+    /**
+     * concatene plusieurs commentaires dans une chaine , séparés par une virgule
+     */
+    private String appendPrefixValue(String prefix, String... otherValues) {
+        StringBuilder sb = new StringBuilder();
+        for (String otherValue : otherValues) {
+            // j'ajoute les valeurs supplémentaires séparées par des virgules
+            if (!otherValue.trim().isEmpty()) {
+                // je concantene les valeurs en inserant une virgule dans
+                // si la valeur précedente n'est pas vide
+                if (sb.length() > 0) {
+                    sb.append(", ");
+                }
+                sb.append(otherValue.trim());
+            }
+        }
+        if (sb.length() > 0 ) {
+            sb.insert(0, prefix + " ");
+        }
+
+        return sb.toString();
+    }
+
+
 
     
     static private PointInTime getYear(PointInTime pit) throws GedcomException {
@@ -1535,7 +1418,7 @@ public class MergeRecord {
      * @param monthBeforeBirth nombre de mois du deces avant la naissance de l'enfant (9 mois pour le pere, 0 mois pour la mere)
      * @return date de deces du parent
      */
-    private PropertyDate calculateParentDeathDate(boolean dead, PropertyDate childBirthDate, int monthBeforeBirth) throws Exception {
+    private PropertyDate calculateParentDeathDate(FieldDead.DeadState dead, PropertyDate childBirthDate, int monthBeforeBirth) throws Exception {
 
         PropertyDate parentDeathDate = new PropertyDate();
 
@@ -1560,7 +1443,7 @@ public class MergeRecord {
                 birthDateUsefull = false;
             }
 
-            if (dead) {
+            if (dead == FieldDead.DeadState.dead) {
                 if (birthDateUsefull) {
                     // le parent est decede entre la date de naissance et la date du releve
                     // parentDeathDate.setValue(String.format("BEF %d", getEventDate().getStart().getYear()));
@@ -1574,6 +1457,9 @@ public class MergeRecord {
                     // le parent est decede avant la date du releve
                     parentDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "date deces= avant la date du releve");
                 }
+            } else if (dead == FieldDead.DeadState.alive) {
+                // le parent est decede apres la date du releve
+                parentDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "date deces= apres la date du releve");
             } else {
                 if (birthDateUsefull) {
                     // le parent est decede apres la naissance 
@@ -1754,16 +1640,38 @@ public class MergeRecord {
             if (participant.getBirthPlace() != null && !participant.getBirthPlace().isEmpty()) {
                 return participant.getBirthPlace().toString();
             } else {
-                if (participantType == MergeParticipantType.participant1 && type == RecordType.Birth) {
-                    if (participant.getFatherResidence() != null && !participant.getFatherResidence().isEmpty()) {
-                        return participant.getFatherResidence().toString();
+                if ( type == RecordType.Birth) {
+                    if (participant.getResidence() != null && !participant.getResidence().isEmpty()) {
+                        return participant.getResidence().toString();
                     } else {
-                        return recordsInfoPlace.toString();
+                        if (participantType == MergeParticipantType.participant1) {
+                            if (participant.getFatherResidence() != null && !participant.getFatherResidence().isEmpty()) {
+                                return participant.getFatherResidence().toString();
+                            } else {
+                                return recordsInfoPlace.toString();
+                            }
+                        } else {
+                            return "";
+                        }
                     }
                 } else {
                     return "";
                 }
             }
+        }
+
+        /**
+         * retourne le lieu de naissance .
+         * Si c'est un acte de naissance et si IndiBirthPlace est vide
+         *      retourne IndiFatherResidence ou, à défaut, EventPlace
+         * @return
+         */
+        String getDeathPlace() {
+                if (participant.getResidence() != null && !participant.getResidence().isEmpty()) {
+                    return participant.getResidence().toString();
+                } else {
+                    return recordsInfoPlace.toString();
+                }
         }
         
         String getOccupation() {
@@ -1833,7 +1741,8 @@ public class MergeRecord {
                     MarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
                 } else if (participantType == MergeParticipantType.participant1 && getType() == RecordType.Death) {
                     // la date du mariage est avant le deces
-                    MarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
+                    // non car il n'est pas forcément marié
+                    //MarriedMarriageDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "mariage avant la date du relevé");
                 }
             }
             return MarriedMarriageDate;
@@ -1842,11 +1751,17 @@ public class MergeRecord {
         PropertyDate getMarriedDeathDate() throws Exception {
             if (MarriedDeathDate == null) {
                 MarriedDeathDate = new PropertyDate();
-                if (participant.getMarriedDead().getState() == true) {
-                    MarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "deces avant la date du relevé");
-                } else {
-                    // je ne sais pas
-                    //IndiMarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces aprés la date du relevé");
+
+                switch (participant.getMarriedDead().getState()) {
+                    case dead:
+                        MarriedDeathDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "deces avant la date du relevé");
+                        break;
+                    case alive:
+                        MarriedDeathDate.setValue(PropertyDate.AFTER, getYear(getEventDate().getStart()), null, "deces apres la date du relevé");
+                        break;
+                    default:
+                        // je ne sais pas
+                        break;
                 }
             }
             return MarriedDeathDate;
@@ -1900,7 +1815,7 @@ public class MergeRecord {
         PropertyDate getFatherDeathDate() throws Exception {
             if (FatherDeathDate == null) {
                 FatherDeathDate = calculateParentDeathDate(
-                        participant.getFatherDead() != null ? participant.getFatherDead().getState() : false,
+                        participant.getFatherDead() != null ? participant.getFatherDead().getState() : FieldDead.DeadState.unknown,
                         getBirthDate(),
                         9 // le pere peut être decede au plus tot apres la conception, soit 9 mois avant la naissance
                         );
@@ -1956,7 +1871,7 @@ public class MergeRecord {
         PropertyDate getMotherDeathDate() throws Exception {
             if (MotherDeathDate == null) {
                 MotherDeathDate = calculateParentDeathDate(
-                        participant.getMotherDead() != null ? participant.getMotherDead().getState() : false,
+                        participant.getMotherDead() != null ? participant.getMotherDead().getState() : FieldDead.DeadState.unknown,
                         getBirthDate(),
                         0 // le mere peut être decedee au plus tot 0 mois avant le naissance (par opposition au pere qui peut etre decede 9 mois avant la naissance)
                         );

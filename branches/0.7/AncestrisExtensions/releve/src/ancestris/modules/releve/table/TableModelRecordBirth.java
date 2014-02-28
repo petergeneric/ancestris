@@ -1,13 +1,14 @@
-package ancestris.modules.releve;
+package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.model.*;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.RowFilter;
+import javax.swing.RowFilter.Entry;
 
 /**
  *
  * @author Michel
  */
-public class TableModelBirth extends AbstractTableModel {
+public class TableModelRecordBirth extends TableModelRecordAbstract {
 
     final String columnName[] = {
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Id"),
@@ -20,14 +21,13 @@ public class TableModelBirth extends AbstractTableModel {
     };
     final Class columnType[] = {Integer.class, String.class, FieldSex.class, FieldDate.class, String.class, String.class, FieldPicture.class};
 
-    ModelAbstract dataModel;
-
     /**
      * Constructor
      * @param dataManager
      */
-    public TableModelBirth(ModelAbstract dataModel) {
-        this.dataModel = dataModel;
+    public TableModelRecordBirth(DataManager dataManager) {
+        super(dataManager);
+                
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -62,28 +62,29 @@ public class TableModelBirth extends AbstractTableModel {
      */
     @Override
     public Object getValueAt(int row, int col) {
+        Record record = getRecord(row);
         Object value;
         switch (col) {
             case 0:
-                value = new Integer(dataModel.getRecord(row).recordNo);
+                value = new Integer(row + 1);
                 break;
             case 1:
-                value = dataModel.getRecord(row).getIndiLastName().toString() + " " + dataModel.getRecord(row).getIndiFirstName().toString();
+                value = record.getIndiLastName().toString() + " " + record.getIndiFirstName().toString();
                 break;
             case 2:
-                value = dataModel.getRecord(row).getIndiSex();
+                value = record.getIndiSex();
                 break;
             case 3:
-                value = dataModel.getRecord(row).getEventDateProperty();
+                value = record.getEventDateProperty();
                 break;
             case 4:
-                value = dataModel.getRecord(row).getIndiFatherLastName().toString() + " " + dataModel.getRecord(row).getIndiFatherFirstName().toString();
+                value = record.getIndiFatherLastName().toString() + " " + record.getIndiFatherFirstName().toString();
                 break;
             case 5:
-                value = dataModel.getRecord(row).getIndiMotherLastName().toString() + " " + dataModel.getRecord(row).getIndiMotherFirstName().toString();
+                value = record.getIndiMotherLastName().toString() + " " + record.getIndiMotherFirstName().toString();
                 break;
             case 6:
-                value = dataModel.getRecord(row).getFreeComment();
+                value = record.getFreeComment();
                 break;
             default:
                 value = "";
@@ -91,10 +92,25 @@ public class TableModelBirth extends AbstractTableModel {
         }
         return value;
     }
+    
+    @Override
+    public RowFilter<TableModelRecordAbstract, Integer> getRecordFilter() {
+        return new RowFilter<TableModelRecordAbstract, Integer>() {
+
+            @Override
+            public boolean include(Entry<? extends TableModelRecordAbstract, ? extends Integer> entry) {
+                if (getRecord(entry.getIdentifier()).getType() == DataManager.RecordType.birth) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+    }
 
     @Override
-    public int getRowCount() {
-        return dataModel.getRowCount();
+    public String getModelName() {
+        return "birth";
     }
 
 }

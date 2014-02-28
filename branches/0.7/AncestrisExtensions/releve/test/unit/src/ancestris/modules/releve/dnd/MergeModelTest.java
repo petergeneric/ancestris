@@ -30,10 +30,10 @@ public class MergeModelTest extends TestCase {
             MergeModel mergeModel = new MergeModelBirth(mergeRecord, gedcom);
             PropertyDate marriageDate = new PropertyDate();
             
-            
+
             marriageDate.setValue("1 NOV 1970");
             mergeModel.addRow(RowType.MarriageDate, marriageDate, fam.getMarriageDate());
-            MergeModel.copyMarriageDate(fam, mergeModel.getRow(RowType.MarriageDate), mergeRecord);
+            mergeModel.copyMarriageDate(fam, mergeModel.getRow(RowType.MarriageDate), mergeRecord);
             assertEquals("Date marriage", marriageDate.getValue(), fam.getMarriageDate().getValue());
             assertEquals("Note marriage",
                     "Date de mariage 1 nov 1970 déduite de l'acte de naissance de sansfamille1 FATHERLASTNAME le 01/01/2000 (Paris)",
@@ -42,7 +42,7 @@ public class MergeModelTest extends TestCase {
             marriageDate.setValue("22 NOV 1972");
             mergeModel.addRow(RowType.MarriageDate, marriageDate, fam.getMarriageDate());
             mergeModel.addRow(RowType.MarriageDate, marriageDate, fam.getMarriageDate());
-            MergeModel.copyMarriageDate(fam, mergeModel.getRow(RowType.MarriageDate), mergeRecord);
+            mergeModel.copyMarriageDate(fam, mergeModel.getRow(RowType.MarriageDate), mergeRecord);
             assertEquals("Date marriage", marriageDate.getValue(), fam.getMarriageDate().getValue());
             assertEquals("Note marriage", 
                     "Date de mariage 22 nov 1972 déduite de l'acte de naissance de sansfamille1 FATHERLASTNAME le 01/01/2000 (Paris)",
@@ -64,8 +64,9 @@ public class MergeModelTest extends TestCase {
             Indi indi = (Indi)gedcom.getEntity("I1");
             String sourceTitle = "";
             MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, MergeModelBirthTest.createBirthRecord("sansfamille1"));
+            MergeModelBirth mergeModel = new MergeModelBirth(mergeRecord, gedcom);
 
-            MergeModel.copyOccupation(indi, mergeRecord.getIndi().getFatherOccupation(), mergeRecord.getIndi().getFatherResidence(), mergeRecord);
+            mergeModel.copyOccupation(indi, mergeRecord.getIndi().getFatherOccupation(), mergeRecord.getIndi().getFatherResidence(), true, mergeRecord);
             
             assertEquals("Nombre de profession", 2, indi.getProperties("OCCU").length);
             Property occupationProperty = indi.getProperties("OCCU")[0];

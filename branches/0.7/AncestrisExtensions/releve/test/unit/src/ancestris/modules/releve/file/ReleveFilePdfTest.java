@@ -46,9 +46,9 @@ public class ReleveFilePdfTest extends TestCase {
         misc.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         misc.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(misc,false);
-        dataManager.addRecord(misc,false);
-        StringBuilder sb = ReleveFilePdf.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(misc);
+        dataManager.addRecord(misc);
+        StringBuilder sb = ReleveFilePdf.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         file.delete();

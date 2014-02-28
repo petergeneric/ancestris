@@ -2,8 +2,6 @@ package ancestris.modules.releve;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
-import org.openide.awt.Actions;
 
 /**
  * Action pour creer une intance de ReleveTopComponent.
@@ -34,16 +32,5 @@ public final class ReleveOpenAction extends AbstractAction {
 //        }
         component.open();
         component.requestActive();
-
-        if (component != null) {
-            // j'affecte l'icone du menu de l'action au component
-            if (e.getSource() instanceof org.openide.awt.Actions.MenuItem) {
-                Actions.MenuItem action = (Actions.MenuItem) e.getSource();
-                if (action.getIcon() instanceof ImageIcon) {
-                    ImageIcon icon = (ImageIcon) action.getIcon();
-                    component.setIcon(icon.getImage());
-                }
-            }
-        }
     }
 }

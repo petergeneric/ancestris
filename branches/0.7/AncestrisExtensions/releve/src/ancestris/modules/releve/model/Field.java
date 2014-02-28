@@ -72,8 +72,9 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         freeComment,
         generalComment,
         eventDate,
+        secondDate,
         notary,
-        parish,
+        parish,    // 13 + 29 + 29 + 16 =  77
         //  indi ///////////////////////////////////////////////////////////////////
         indiFirstName,
         indiLastName,
@@ -106,7 +107,7 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         indiMotherDead,
         indiMotherOccupation,
         indiMotherResidence,
-        indiMotherComment,
+        indiMotherComment,  //29
         //  wife ///////////////////////////////////////////////////////////////////
         wifeFirstName,
         wifeLastName,
@@ -140,7 +141,7 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         wifeMotherDead,
         wifeMotherOccupation,
         wifeMotherResidence,
-        wifeMotherComment,
+        wifeMotherComment,  // 29
         // wintness ///////////////////////////////////////////////////////////////
         witness1FirstName,
         witness1LastName,
@@ -157,7 +158,7 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         witness4FirstName,
         witness4LastName,
         witness4Occupation,
-        witness4Comment
+        witness4Comment      // 16
     }
 
     @Override

@@ -77,16 +77,18 @@ public class MergeModelDeathTest extends TestCase {
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
 
-            assertEquals("Nombre model",3,models.size());
+            assertEquals("Nombre model",2,models.size());
             // je copie la premierse proposition dans l'entité
             models.get(0).copyRecordToEntity();
             
             assertEquals("indiDeathDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:DEAT:DATE").getValue());
-            assertEquals("indiDeathPlace",mergeRecord.getEventPlace(), indi.getPropertyByPath("INDI:DEAT:PLAC").getValue());
-            assertEquals("indiDeathComment","indicomment\n"
-                    + "Age: 3 années\n"
-                    + "Père: Fatherfirstname FATHERLASTNAME, fatherOccupation, indiFatherComment\n"
-                    + "Mère: Motherfirstname MOTHERLASTNAME, Décédé, motherOccupation, indiMotherComment\n"
+            assertEquals("indiDeathPlace",mergeRecord.getIndi().getResidence(), indi.getPropertyByPath("INDI:DEAT:PLAC").getValue());
+            assertEquals("indiDeathComment",
+                    "Date de l'acte: 01/01/2003\n"
+                    + "Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à indiBirthPlace, indioccupation, domicile indiResidence, indicomment\n"
+                    + "Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedResidence, marriedcomment\n"
+                    + "Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n"
+                    + "Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n"
                     + "Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n"
                     + "Commentaire général: generalcomment\n"
                     + "Photo: photo",
@@ -157,7 +159,7 @@ public class MergeModelDeathTest extends TestCase {
             RecordDeath recordDeath = createDeathRecord("sansfamille1");
             // je supprime la profession et le lieu de naissance
             recordDeath.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "", "", "", "indicomment");
-
+            
             String sourceTitle = "";
             MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, recordDeath);
             List<MergeModel> models;
@@ -169,16 +171,18 @@ public class MergeModelDeathTest extends TestCase {
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
 
-            assertEquals("Nombre model",3,models.size());
+            assertEquals("Nombre model",2,models.size());
             // je copie la premiere proposition dans l'entité
             models.get(0).copyRecordToEntity();
             
             assertEquals("indiDeathDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:DEAT:DATE").getValue());
             assertEquals("indiDeathPlace",mergeRecord.getEventPlace(), indi.getPropertyByPath("INDI:DEAT:PLAC").getValue());
-            assertEquals("indiDeathComment","indicomment\n"
-                    + "Age: 3 années\n"
-                    + "Père: Fatherfirstname FATHERLASTNAME, fatherOccupation, indiFatherComment\n"
-                    + "Mère: Motherfirstname MOTHERLASTNAME, Décédé, motherOccupation, indiMotherComment\n"
+            assertEquals("indiDeathComment",
+                    "Date de l'acte: 01/01/2003\n"
+                    + "Défunt: sansfamille1 FATHERLASTNAME, 3 années, indicomment\n"
+                    + "Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedResidence, marriedcomment\n"
+                    + "Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n"
+                    + "Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n"
                     + "Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n"
                     + "Commentaire général: generalcomment\n"
                     + "Photo: photo",
@@ -251,14 +255,15 @@ public class MergeModelDeathTest extends TestCase {
             List<MergeModel> models;
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",3,models.size());
+            assertEquals("Nombre model",2,models.size());
             models.get(0).copyRecordToEntity();
 
             String expected = "";
-            expected +="indicomment\n";
-            expected +="Age: "+record.getIndi().getAge().toString()+ "\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, fatherOccupation, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, Décédé, motherOccupation, indiMotherComment\n";
+            expected +="Date de l'acte: 01/01/2003\n";
+            expected +="Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à indiBirthPlace, indioccupation, domicile indiResidence, indicomment\n";
+            expected +="Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedResidence, marriedcomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire général: generalcomment\n";
             expected +="Photo: photo";
@@ -269,10 +274,11 @@ public class MergeModelDeathTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
-            expected ="indicomment\n";
-            expected +="Age: "+record.getIndi().getAge().toString()+ "\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, fatherOccupation, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, Décédé, motherOccupation, indiMotherComment\n";
+            expected ="Date de l'acte: 01/01/2003\n";
+            expected +="Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à indiBirthPlace, indioccupation, domicile indiResidence, indicomment\n";
+            expected +="Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedResidence, marriedcomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire général: generalcomment\n";
             expected +="Photo: photo\n";

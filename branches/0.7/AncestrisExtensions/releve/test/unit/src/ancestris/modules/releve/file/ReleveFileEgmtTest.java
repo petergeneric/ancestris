@@ -37,8 +37,8 @@ public class ReleveFileEgmtTest extends TestCase {
         birth.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         birth.setGeneralComment("generalcomment");
 
-        dataManager.addRecord(birth,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveBirthModel(), file, false);
+        dataManager.addRecord(birth);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.birth, file, false);
         assertEquals("verify save error", sb.length(), 0);
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -141,8 +141,8 @@ public class ReleveFileEgmtTest extends TestCase {
         marriage.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         marriage.setGeneralComment("generalcomment");
 
-        dataManager.addRecord(marriage,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveMarriageModel(), file, false);
+        dataManager.addRecord(marriage);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.marriage, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -260,8 +260,8 @@ public class ReleveFileEgmtTest extends TestCase {
         death.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         death.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(death,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveDeathModel(), file, false);
+        dataManager.addRecord(death);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.death, file, false);
         assertEquals("verify save error", "", sb.toString());
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -382,15 +382,15 @@ public class ReleveFileEgmtTest extends TestCase {
         misc.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "false", "72y");
         misc.setWife("wifefirstname", "wifelastname", "F", "22y", "02/02/1982", "wifeBirthPlace", "wifeoccupation", "wifeResidence", "wifecomment");
         misc.setWifeMarried("wifemarriedfirstname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "true");
-        misc.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "true", "60y");
-        misc.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "false", "62y");
+        misc.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "", "60y");
+        misc.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "feue", "62y");
         misc.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         misc.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         misc.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         misc.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(misc,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(misc);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -512,8 +512,8 @@ public class ReleveFileEgmtTest extends TestCase {
         misc.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         misc.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(misc,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(misc);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -642,8 +642,8 @@ public class ReleveFileEgmtTest extends TestCase {
         misc.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         misc.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(misc,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(misc);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -732,10 +732,19 @@ public class ReleveFileEgmtTest extends TestCase {
         assertEquals("Witness4Occupation",    "",misc2.getWitness4Occupation().toString());
         assertEquals("Witness4Comment",       "",misc2.getWitness4Comment().toString());
 
-        assertEquals("GeneralComment", "generalcomment, Participant: wifefirstname wifelastname, Age:22a, né le 02/02/1982 wifeBirthPlace, wifecomment, wifeoccupation, wifeResidence, Père du participant: wifefathername wifefatherlastname Age:60a Décédé wifefatheroccupation wifeFatherResidence wifefathercomment, Mère du participant: wifemothername wifemotherlastname Age:62a wifemotheroccupation wifeMotherResidence wifemothercomment, Conjoint du participant: wifemarriedfirstname wifemarriedlastname Décédé wifemarriedoccupation wifeMarriedResidence wifemothercomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment",misc2.getGeneralComment().toString());
+        assertEquals("GeneralComment", "generalcomment, Autre intervenant: wifefirstname wifelastname, Age:22a, né le 02/02/1982 wifeBirthPlace, wifecomment, wifeoccupation, wifeResidence, Père de l'intervenant: wifefathername wifefatherlastname Age:60a Décédé wifefatheroccupation wifeFatherResidence wifefathercomment, Mère de l'intervenant: wifemothername wifemotherlastname Age:62a wifemotheroccupation wifeMotherResidence wifemothercomment, Conjoint de l'intervenant: wifemarriedfirstname wifemarriedlastname Décédé wifemarriedoccupation wifeMarriedResidence wifemothercomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment",misc2.getGeneralComment().toString());
 
         file.delete();
 
     }
+
+
+     public void testFormatAgeToField() throws Exception {
+
+         assertEquals("formatAgeToField 76", "76y", ReleveFileEgmt.formatAgeToField("76"));
+         assertEquals("formatAgeToField 76", "76y", ReleveFileEgmt.formatAgeToField("76 ans"));
+         assertEquals("formatAgeToField 76", "8d", ReleveFileEgmt.formatAgeToField("8 jours"));
+
+     }
 
 }

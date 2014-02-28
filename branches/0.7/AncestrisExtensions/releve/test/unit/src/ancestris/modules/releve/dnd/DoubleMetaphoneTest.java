@@ -15,5 +15,11 @@ public class DoubleMetaphoneTest extends TestCase {
         assertTrue(MergeQuery.isSameLastName("BARTHE", "BARTHES"));
 
     }
-    
+
+    public void testIsSameName_E_Accent() {
+
+        assertTrue(MergeQuery.isSameLastName("VERGE", "VERGÉ"));
+
+    }
+
 }

@@ -143,7 +143,6 @@ public class ReleveFileGedcom {
 //                                fields[Field.witness4Comment.ordinal()]);
 
                         record.setGeneralComment(indi.getProperty("NOTE") != null ? indi.getProperty("NOTE").toString() : "");
-                        record.recordNo = lineNumber++;
                         fileBuffer.addRecord(record);
                     }
 
@@ -227,7 +226,6 @@ public class ReleveFileGedcom {
                                     indi.getBiologicalMother().getDeathDate(false) != null ? "true" : "false",
                                     "" ); // age;
                         }
-                        record.recordNo = lineNumber++;
                         fileBuffer.addRecord(record);
                     }
                 } else if (entity instanceof Fam) {
@@ -398,7 +396,6 @@ public class ReleveFileGedcom {
                                     "" ); // age;
                         }
                     }
-                    record.recordNo = lineNumber++;
                     fileBuffer.addRecord(record);
                 }
 

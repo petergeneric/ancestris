@@ -3,7 +3,6 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipant;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import ancestris.modules.releve.model.FieldSex;
-import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -12,15 +11,12 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertySex;
-import genj.gedcom.PropertySource;
-import genj.gedcom.Source;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Cette classe contient les requetes pour chercher des entités dans un gedcom
@@ -102,6 +98,7 @@ public class MergeQuery {
                 }
                 //meme prénom du pere
                 if (!participant.getFatherFirstName().isEmpty()
+                        && !father.getFirstName().isEmpty()
                         && !isSameFirstName(participant.getFatherFirstName(), father.getFirstName())) {
                     continue;
                 }
@@ -133,6 +130,7 @@ public class MergeQuery {
                 }
                 //meme prénom de la mere
                 if (!participant.getMotherFirstName().isEmpty()
+                        && !mother.getFirstName().isEmpty()
                         && !isSameFirstName(participant.getMotherFirstName(), mother.getFirstName())) {
                     continue;
                 }
@@ -1013,6 +1011,29 @@ public class MergeQuery {
                     }
                 }
 
+                // je verifie s'il a un conjoint en vie avec un nom différent et un prenom different
+                boolean oftherSpouseFound = false;
+                Fam [] spouseFamList = husband.getFamiliesWhereSpouse();
+                for (Fam fam : spouseFamList) {
+                    Indi wife = fam.getWife();
+
+                    if ( ! (isSameLastName(marriageRecord.getWife().getLastName(), wife.getLastName())
+                            && isSameLastName(marriageRecord.getWife().getFirstName(), wife.getFirstName())) ) {
+
+                        if (!isRecordBeforeThanDate(marriageDate, fam.getMarriageDate(), 0, 0)) {
+                            // si le mariage est apres le mariage avec l'autre conjoint
+                            // alors le mariage doit etre apres le deces de l'autre conjoint
+                            if (!isRecordAfterThanDate(marriageDate, wife.getDeathDate(), 0, 0)) {
+                                oftherSpouseFound = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(oftherSpouseFound){
+                    continue;
+                }
+
                 // j'ajoute l'epoux
                 husbands.add(husband);
 
@@ -1070,12 +1091,10 @@ public class MergeQuery {
 
                 }
 
-
                 // l'epouse doit avoir au moins minMarriageYearOld
                 if (!isRecordAfterThanDate(marriageDate, wife.getBirthDate(), 0, minMarriageYearOld)) {
                     continue;
                 }
-
 
                 Indi wifeMother = wife.getBiologicalMother();
                 if (wifeMother != null) {
@@ -1101,6 +1120,29 @@ public class MergeQuery {
                         continue;
                     }
 
+                }
+
+                 // je verifie s'il a un conjoint en vie avec un nom différent et un prenom different
+                boolean oftherSpouseFound = false;
+                Fam [] spouseFamList = wife.getFamiliesWhereSpouse();
+                for (Fam fam : spouseFamList) {
+                    Indi husband = fam.getHusband();
+
+                    if ( ! (isSameLastName(marriageRecord.getIndi().getLastName(), husband.getLastName())
+                            && isSameLastName(marriageRecord.getIndi().getFirstName(), husband.getFirstName())) ) {
+
+                        if (!isRecordBeforeThanDate(marriageDate, fam.getMarriageDate(), 0, 0)) {
+                            // si le mariage est apres le mariage avec l'autre conjoint
+                            // alors le mariage doit etre apres le deces de l'autre conjoint
+                            if (!isRecordAfterThanDate(marriageDate, husband.getDeathDate(), 0, 0)) {
+                                oftherSpouseFound = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(oftherSpouseFound){
+                    continue;
                 }
 
                 wifes.add(wife);
@@ -1159,7 +1201,8 @@ public class MergeQuery {
             // petit raccourci pour gagner du temps
             PropertyDate indiBirtDate = indi.getBirthDate();
             if (indiBirtDate != null) {
-                if (!isCompatible(participant.getBirthDate(), indiBirtDate)) {
+                // je tolere un jour d'écart pour la date de naissance
+                if (!isCompatible(participant.getBirthDate(), indiBirtDate, 1)) {
                     // la date de naissance de l'individu n'est pas compatible avec la date du relevé
                     continue;
                 }
@@ -1402,8 +1445,21 @@ public class MergeQuery {
      * @param entityDate
      * @return
      */
-//   
     static protected boolean isCompatible(PropertyDate recordDate, PropertyDate entityDate) {
+
+        return isCompatible( recordDate,  entityDate, 0) ;
+    }
+
+
+    /**
+     * retourne "true" si la date du releve est egale ou est compatible avec la
+     * date de l'entite du gedcom avec une marge exprimée en jour
+     *
+     * @param recordDate
+     * @param entityDate
+     * @return
+     */
+    static protected boolean isCompatible(PropertyDate recordDate, PropertyDate entityDate, int marge) {
         boolean result;
         if (recordDate == null ) {
             return true;
@@ -1466,7 +1522,6 @@ public class MergeQuery {
                 entityStart = pit.getJulianDay();
                 entityEnd =  entityStart;
             } else if (entityDate.getFormat() == PropertyDate.BETWEEN_AND || entityDate.getFormat() == PropertyDate.FROM_TO) {
-                PointInTime pit = new PointInTime();
                 entityStart = entityDate.getStart().getJulianDay();
                 entityEnd = entityDate.getEnd().getJulianDay();
             } else if (entityDate.getFormat() == PropertyDate.FROM || entityDate.getFormat() == PropertyDate.AFTER) {
@@ -1490,8 +1545,8 @@ public class MergeQuery {
             }
 
             // l'intersection des deux intervalles ne doit pas être vide.
-            if ( recordEnd >= entityStart   ) {
-               if  ( entityEnd >= recordStart) {
+            if ( recordEnd >= entityStart - marge   ) {
+               if  ( entityEnd >= recordStart - marge) {
                     result = true;
                 } else {
                    result = false;
@@ -1532,19 +1587,27 @@ public class MergeQuery {
 
     /**
      * retourne true si str1 est égal ou se prononce comme str2
+     *   ou si str1 est vide
      * @param str1
      * @param str2
      * @return
      */
     static protected boolean isSameLastName(String str1, String str2) {
-        String[] names1 = str1.split(",");
-        String[] names2 = str2.split(",");
         boolean result = false;
 
-        for( String name1 : names1) {
-            for( String name2 : names2) {
-                result |= dm.encode(name1).equals(dm.encode(name2));
+        if( str1 != null && ! str1.isEmpty()) {
+            String[] names1 = str1.split(",");
+            String[] names2 = str2.split(",");
+
+            for( String name1 : names1) {
+                String similarName1 = SimilarNameSet.getSimilarLastName().getSimilarName(name1);
+                for( String name2 : names2) {
+                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarLastName().getSimilarName(name2)));
+                }
             }
+        } else {
+            // 
+            return true;
         }
         return result;
         //return dm.encode(str1).equals(dm.encode(str2));
@@ -1558,7 +1621,7 @@ public class MergeQuery {
      * @return
      */
     static protected boolean isSameFirstName(String str1, String str2) {
-        return dm.encode(str1).equals(dm.encode(str2));
+        return dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str1)).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str2)));
         //return str1.equals(str2);
     }
 
@@ -2154,7 +2217,7 @@ public class MergeQuery {
 
 
      /**
-     * retourne un evenement du meme type et a la meme date s'il existe
+     * recherche un evenement du meme type et a la meme date
      * @param indi
      * @param eventType
      * @param eventDate
@@ -2191,36 +2254,36 @@ public class MergeQuery {
      * @param gedcom
      * @return
      */
-    static protected Source findSource(MergeRecord record, Gedcom gedcom) {
-        Source source = null;
-
-        /*
-        // je verifie si la source existe deja dans le gescom
-        String cityName = record.getEventPlaceCityName();
-        String cityCode = record.getEventPlaceCityCode();
-        String countyName = record.getEventPlaceCountyName();
-        //String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
-        String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);        
-        Pattern pattern = Pattern.compile(stringPatter);
-        Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
-        for (Entity gedComSource : sources) {
-            if (pattern.matcher(((Source)gedComSource).getTitle()).matches()) {
-                source = (Source)gedComSource;
-            }
-        }
-         */
-
-        String sourceTitle = record.getEventSource();
-        Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
-        for (Entity gedComSource : sources) {
-
-            if (((Source)gedComSource).getTitle().startsWith(sourceTitle)) {
-                source = (Source)gedComSource;
-            }
-        }
-
-        return source;
-    }
+//    static protected Source findRecordSource(MergeRecord record, Gedcom gedcom) {
+//        Source source = null;
+//
+//        /*
+//        // je verifie si la source existe deja dans le gescom
+//        String cityName = record.getEventPlaceCityName();
+//        String cityCode = record.getEventPlaceCityCode();
+//        String countyName = record.getEventPlaceCountyName();
+//        //String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
+//        String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);
+//        Pattern pattern = Pattern.compile(stringPatter);
+//        Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
+//        for (Entity gedComSource : sources) {
+//            if (pattern.matcher(((Source)gedComSource).getTitle()).matches()) {
+//                source = (Source)gedComSource;
+//            }
+//        }
+//         */
+//
+//        String sourceTitle = record.getEventSource();
+//        Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
+//        for (Entity gedComSource : sources) {
+//
+//            if (((Source)gedComSource).getTitle().startsWith(sourceTitle)) {
+//                source = (Source)gedComSource;
+//            }
+//        }
+//
+//        return source;
+//    }
 
     /**
      * retourne la source d'un evenement 
@@ -2228,26 +2291,26 @@ public class MergeQuery {
      * @param gedcom
      * @return
      */
-    static protected Property findPropertySource(MergeRecord record, Gedcom gedcom, Property eventProperty) {
-        Property sourceProperty = null;
-
-        if (eventProperty != null) {
-            Property[] sourceProperties = eventProperty.getProperties("SOUR", false);
-            for (int i = 0; i < sourceProperties.length; i++) {
-                // remarque : verification de classe PropertySource avant de faire le cast en PropertySource pour eliminer
-                // les cas anormaux , par exemple une source "multiline"
-                if ( sourceProperties[i] instanceof PropertySource) {
-                    Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
-                    if (record.getEventSource().compareTo(eventSource.getTitle()) == 0) {
-                        sourceProperty = sourceProperties[i];
-                        break;
-                    }
-                }
-            }
-        }
-
-        return sourceProperty;
-    }
+//    static protected Property getEntitySourceProperty(MergeRecord record, Property eventProperty) {
+//        Property sourceProperty = null;
+//
+//        if (eventProperty != null) {
+//            Property[] sourceProperties = eventProperty.getProperties("SOUR", false);
+//            for (int i = 0; i < sourceProperties.length; i++) {
+//                // remarque : verification de classe PropertySource avant de faire le cast en PropertySource pour eliminer
+//                // les cas anormaux , par exemple une source "multiline"
+//                if ( sourceProperties[i] instanceof PropertySource) {
+//                    Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
+//                    if (record.getEventSource().compareTo(eventSource.getTitle()) == 0) {
+//                        sourceProperty = sourceProperties[i];
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//
+//        return sourceProperty;
+//    }
 
      /**
      * retourne la source d'un evenement
@@ -2255,16 +2318,16 @@ public class MergeQuery {
      * @param gedcom
      * @return
      */
-    static protected String findSourceTitle(Property sourceProperty, Gedcom gedcom) {
-        String sourceTitle = "";
-
-        if (sourceProperty != null) {
-             Source eventSource = (Source) ((PropertySource) sourceProperty).getTargetEntity();
-             sourceTitle = eventSource.getTitle();
-        }
-
-        return sourceTitle;
-    }
+//    static protected String getSourceTitle(Property sourceProperty) {
+//        String sourceTitle = "";
+//
+//        if (sourceProperty != null) {
+//             Source eventSource = (Source) ((PropertySource) sourceProperty).getTargetEntity();
+//             sourceTitle = eventSource.getTitle();
+//        }
+//
+//        return sourceTitle;
+//    }
 
 
     /**
@@ -2273,19 +2336,19 @@ public class MergeQuery {
      * @param gedcom
      * @return page de la source , ou chaine vide si la source ou sa page n'existent pas
      */
-    static protected String findSourcePage( MergeRecord record, Property sourceProperty, Gedcom gedcom) {
-        String sourcePage = "";
-
-        if (sourceProperty != null) {
-            for (Property pageProperty : sourceProperty.getProperties("PAGE")) {
-                if (record.getEventPage().equals(pageProperty.getValue())) {
-                    sourcePage = pageProperty.getValue();
-                    break;
-                }
-            }
-        }
-
-        return sourcePage;
-    }
+//    static protected String getSourcePage( MergeRecord record, Property sourceProperty) {
+//        String sourcePage = "";
+//
+//        if (sourceProperty != null) {
+//            for (Property pageProperty : sourceProperty.getProperties("PAGE")) {
+//                if (record.getEventPage().equals(pageProperty.getValue())) {
+//                    sourcePage = pageProperty.getValue();
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return sourcePage;
+//    }
 
 }

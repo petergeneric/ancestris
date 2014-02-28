@@ -19,13 +19,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import javax.swing.filechooser.FileSystemView;
+import junit.framework.TestCase;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author Michel
  */
-public class TestUtility {
+public class TestUtility extends TestCase {
 
     public static File createFile( String data ) throws IOException  {
         FileWriter writer = null;
@@ -219,5 +221,18 @@ public class TestUtility {
         } catch (InterruptedException ex) {
             Exceptions.printStackTrace(ex);
         }
+    }
+
+
+    public void testDefaultDirectory() {
+
+        FileSystemView fsv = FileSystemView.getFileSystemView();
+        File f = fsv.getDefaultDirectory();
+        System.out.println("testDefaultDirectory="+f);
+    }
+
+     public void testOS() {
+
+        System.out.println("testOS="+System.getProperty("os.name"));
     }
 }

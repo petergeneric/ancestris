@@ -3,7 +3,11 @@ package ancestris.modules.releve.model;
 import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.file.FileBuffer;
+import genj.app.GedcomFileListener;
 import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
+import genj.gedcom.time.Calendar;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.openide.util.NbPreferences;
@@ -13,15 +17,13 @@ import org.openide.util.Utilities;
  *
  * @author Michel
  */
-public class DataManager implements PlaceManager {
+public class DataManager implements PlaceManager, GedcomFileListener  {
 
-    private ModelBirth releveBirthModel = new ModelBirth();
-    private ModelMarriage releveMarriageModel = new ModelMarriage();
-    private ModelDeath releveDeathModel  = new ModelDeath();
-    private ModelMisc releveMiscModel = new ModelMisc();
-    private ModelAll   releveAllModel = new ModelAll();
+    private RecordModel   dataModel = new RecordModel();
     private CompletionProvider completionProvider  = new CompletionProvider();
-
+    Gedcom completionGedcom;
+    File currentFile;
+    
     //options de copie
     boolean copyCoteEnabled = true;
     boolean copyEventDateEnabled = true;
@@ -31,10 +33,10 @@ public class DataManager implements PlaceManager {
     boolean duplicateControlEnabled = true;
     boolean valueControlEnabled = true;
     
-    // données volatiles
-    private int lastRecordNo = 0;
+    // données de la session
     private String defaultCote = "";
     private String defaultEventDate = "";
+    private Calendar defaultEventCalendar = null;
     private String defaultFreeComment = "";
     private String defaultNotary = "";
 
@@ -43,7 +45,7 @@ public class DataManager implements PlaceManager {
     public enum ModelType { birth, marriage, death, misc, all }
 
     public DataManager () {
-        loadOptions();
+        initOptions();
     }
 
     /**
@@ -52,11 +54,7 @@ public class DataManager implements PlaceManager {
      */
     public boolean isDirty() {
         boolean result = false;
-        result |= releveBirthModel.isDirty();
-        result |= releveMarriageModel.isDirty();
-        result |= releveDeathModel.isDirty();
-        result |= releveMiscModel.isDirty();
-        result |= releveAllModel.isDirty();
+        result |= dataModel.isDirty();
         result |= placeChanged;
         return result;
     }
@@ -66,16 +64,27 @@ public class DataManager implements PlaceManager {
      * @return
      */
     public void resetDirty() {
-        releveBirthModel.resetDirty();
-        releveMarriageModel.resetDirty();
-        releveDeathModel.resetDirty();
-        releveMiscModel.resetDirty();
-        releveAllModel.resetDirty();
+        dataModel.resetDirty();
         placeChanged = false;
     }
 
-    public int createRecord( ModelAbstract model) {
-        Record record = model.createRecord();
+    public Record createRecord(DataManager.RecordType recordType) {
+        Record record;
+        switch (recordType) {
+            case birth:
+                record = new RecordBirth();
+                break;
+            case death:
+                record = new RecordDeath();
+                break;
+            case marriage:
+                record = new RecordMarriage();
+                break;
+            case misc:
+            default:
+                record = new RecordMisc();
+                break;
+        }
 
         if (getCopyCoteEnabled() ) {
             record.setCote(defaultCote);
@@ -83,6 +92,7 @@ public class DataManager implements PlaceManager {
 
         if (getCopyEventDateEnabled() ) {
             record.setEventDate(defaultEventDate);
+            record.setEventCalendar(defaultEventCalendar);
         }
 
         if (getCopyFreeCommentEnabled() ) {
@@ -93,44 +103,18 @@ public class DataManager implements PlaceManager {
             record.setNotary(defaultNotary);
         }
 
-        return addRecord(record, true);
+        return record;
     }
 
     /**
      * ajoute un nouveau releve
      * le numero de releve est calculé automatiquement
-     * @param record
+     * @param newRecord
      * @return
      */
-    public int addRecord(Record record, boolean updateGui) {
-        int recordIndex = 0;
-
-        // j'ajoute le releve dans le modele correspondant
-        if (record instanceof RecordBirth) {
-            recordIndex = releveBirthModel.addRecord(record, updateGui);
-        } else  if (record instanceof RecordMarriage) {
-            recordIndex = releveMarriageModel.addRecord(record, updateGui);
-        } else  if (record instanceof RecordDeath) {
-            recordIndex = releveDeathModel.addRecord(record, updateGui);
-        } else  if (record instanceof RecordMisc) {
-            recordIndex = releveMiscModel.addRecord(record, updateGui);
-        }
-
-        releveAllModel.addRecord(record, updateGui);
-
-        // j'attribue un numero au releve s'il n'est pas déjà renseigné
-        if ( record.recordNo == 0 )  {
-            record.recordNo = getNextRecordNo();
-        }  else {
-            // le numéro est déjà rensigné.
-            // je mémorise ce numéro s'il est plus gand que ceux des relevés déjà
-            // présents.
-            if ( record.recordNo > lastRecordNo ) {
-                setNextRecordNo(record.recordNo);
-            }
-        }
-        //
-        getCompletionProvider().addRecord(record);
+    public int addRecord(Record newRecord) {
+        int recordIndex = dataModel.addRecord(newRecord);
+        getCompletionProvider().addRecord(newRecord);
         return recordIndex;
     }
    
@@ -143,38 +127,15 @@ public class DataManager implements PlaceManager {
      * @param forceDefaultPlace 1=remplace les lieux des releves par le lieu par défaut, 0=n'ajoute que les releves dont le lieu est le lieu par defaut
      */
     public void addRecords(FileBuffer fileBuffer, boolean append, String defaultPlace, int forceDefaultPlace) {
-        if (!append ) {
+        if (!append && dataModel.getRowCount()!=0) {
             removeAll();
             setPlace(defaultPlace);
         }
+        
+        dataModel.addRecords(fileBuffer.getRecords());
 
-        // je recupere le nombre de lignes
-        int firstRowBirth = releveBirthModel.getRowCount();
-        int firstRowMarriage = releveMarriageModel.getRowCount();
-        int firstRowDeath = releveDeathModel.getRowCount();
-        int firstRowMisc = releveMiscModel.getRowCount();
-        int firstRowAll = releveAllModel.getRowCount();
-
-        // j'ajoute les releves
         for (Record record : fileBuffer.getRecords()) {
-            this.addRecord(record, false);
-        }
-
-        // si des lignes ont été ajoutées , je previens les listeners
-        if (releveBirthModel.getRowCount() > firstRowBirth) {
-            releveBirthModel.fireTableRowsInserted(firstRowBirth, releveBirthModel.getRowCount() - 1);
-        }
-        if (releveMarriageModel.getRowCount() > firstRowMarriage) {
-            releveMarriageModel.fireTableRowsInserted(firstRowMarriage, releveMarriageModel.getRowCount() - 1);
-        }
-        if (releveDeathModel.getRowCount() > firstRowDeath) {
-            releveDeathModel.fireTableRowsInserted(firstRowDeath, releveDeathModel.getRowCount() - 1);
-        }
-        if (releveMiscModel.getRowCount() > firstRowMisc) {
-            releveMiscModel.fireTableRowsInserted(firstRowMisc, releveMiscModel.getRowCount() - 1);
-        }
-        if (releveAllModel.getRowCount() > firstRowAll) {
-            releveAllModel.fireTableRowsInserted(firstRowMisc, releveAllModel.getRowCount() - 1);
+            getCompletionProvider().addRecord(record);
         }
 
         // RAZ de l'etat du modele
@@ -183,51 +144,59 @@ public class DataManager implements PlaceManager {
         }
     }
 
-    public void removeRecord(Record record) {
-
-        // je libere le numero de record si c'est le dernier
-        setPreviousRecordNo(record.recordNo);
-        getCompletionProvider().removeRecord(record);
-
-        if (record instanceof RecordBirth) {
-            releveBirthModel.removeRecord(record);
-        } else  if (record instanceof RecordMarriage) {
-            releveMarriageModel.removeRecord(record);
-        } else  if (record instanceof RecordDeath) {
-            releveDeathModel.removeRecord(record);
-        } else  if (record instanceof RecordMisc) {
-            releveMiscModel.removeRecord(record);
-        }
-
-        releveAllModel.removeRecord(record);
+    /**
+     * insere un nouveau releve avant le relevé de reference
+     * @param newRecord
+     * @return
+     */
+    public void insertRecord(DataManager.RecordType recordType, int index) {
+        Record newRecord = createRecord(recordType);
+        dataModel.insertRecord(newRecord,index);
+        getCompletionProvider().addRecord(newRecord);
     }
 
+    public void removeRecord(Record record) {
+        getCompletionProvider().removeRecord(record);
+        dataModel.removeRecord(record);
+    }
+
+     public void swapRecordNext(Record record) {
+        dataModel.swapRecordNext(record);
+    }
+
+    public void swapRecordPrevious(Record record) {
+        dataModel.swapRecordPrevious(record);
+    }
+
+    /**
+     * supprime tout sauf les données de completion du gedcom
+     */
     public void removeAll() {
         getCompletionProvider().removeAll();
-        releveBirthModel.removeAll();
-        releveMarriageModel.removeAll();
-        releveDeathModel.removeAll();
-        releveMiscModel.removeAll();
-        releveAllModel.removeAll();
-        lastRecordNo = 0;
+        dataModel.removeAll();
         setPlace("");
         resetDirty();
-        loadOptions();
+        // je restaure les donnees de completion du gedcom
+        completionProvider.addGedcomCompletion(completionGedcom);
     }
 
-//    public void addGedcomCompletion ( Gedcom gedcom) {
-//        completionProvider.addGedcomCompletion(gedcom);
-//    }
-//
-//    public void removeGedcomCompletion ( ) {
-//        completionProvider.removeGedcomCompletion();
-//    }
+    public Record getRecord( int recordIndex ) {
+        return dataModel.getRecord(recordIndex);
+    }
+
+    /*
+     * verifie que les champs obligatoires sont renseignés
+     * @return retourne un message d'eeur ou une chaine vide s'il n'y a pas d'erreur 
+     */
+    public String verifyRecord( int recordIndex ) {
+        return dataModel.verifyRecord(recordIndex);
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs aux options
     ///////////////////////////////////////////////////////////////////////////
 
-    public final void loadOptions() {
+    public final void initOptions() {
         copyCoteEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyCoteEnabled", "true"));
         copyEventDateEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyEventDateEnabled", "true"));
         copyFreeCommentEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyFreeCommentEnabled", "true"));
@@ -244,12 +213,22 @@ public class DataManager implements PlaceManager {
             } else {
                 // rien a faire
             }            
-        } else {
-             completionProvider.removeGedcomCompletion();
-        }
+        } 
     }
 
-     //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
+    public void updateOptions( boolean copyCoteEnabled,  boolean copyEventDateEnabled,
+            boolean copyFreeCommentEnabled, boolean copyNotaryEnabled,
+            boolean duplicateControlEnabled, boolean valueControlEnabled
+            ) {
+        this.copyCoteEnabled = copyCoteEnabled;
+        this.copyEventDateEnabled = copyEventDateEnabled;
+        this.copyFreeCommentEnabled = copyFreeCommentEnabled;
+        this.copyNotaryEnabled = copyNotaryEnabled;
+        this.duplicateControlEnabled =  duplicateControlEnabled;
+        this.valueControlEnabled = valueControlEnabled;        
+    }
+
+    //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
     private Context getSelectedContext(boolean firstIfNoneSelected){
         Collection<? extends Context> selected = Utilities.actionsGlobalContext().lookupAll(Context.class);
 
@@ -294,7 +273,7 @@ public class DataManager implements PlaceManager {
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs numero de page
     ///////////////////////////////////////////////////////////////////////////
-    
+
 //    public String getDefaultCote() {
 //        return defaultCote;
 //    }
@@ -311,8 +290,9 @@ public class DataManager implements PlaceManager {
 //        return defaultNotary;
 //    }
 
-    public void setDefaultEventDate(String text) {
+    public void setDefaultEventDate(String text, Calendar calendar) {
         defaultEventDate = text;
+        defaultEventCalendar = calendar;
     }
 
     public void setDefaultFreeComment(String text) {
@@ -331,60 +311,8 @@ public class DataManager implements PlaceManager {
     // accesseurs aux modeles
     ///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * @return the releveBirthModel
-     */
-    public ModelAbstract getModel( ModelType modelType) {
-        switch (modelType) {
-            case birth:
-                return releveBirthModel;
-            case marriage:
-                return releveMarriageModel;
-            case death:
-                return releveDeathModel;
-            case misc:
-                return releveMiscModel;
-            case all:
-                return releveAllModel;
-            default:
-                return null;
-        }
-
-    }
-
-    /**
-     * @return the releveBirthModel
-     */
-    public ModelBirth getReleveBirthModel() {
-        return releveBirthModel;
-    }
-
-    /**
-     * @return the releveMarriageModel
-     */
-    public ModelMarriage getReleveMarriageModel() {
-        return releveMarriageModel;
-    }
-
-    /**
-     * @return the releveDeathModel
-     */
-    public ModelDeath getReleveDeathModel() {
-        return releveDeathModel;
-    }
-
-    /**
-     * @return the releveMiscModel
-     */
-    public ModelMisc getReleveMiscModel() {
-        return releveMiscModel;
-    }
-
-    /**
-     * @return the releveMiscModel
-     */
-    public ModelAll getReleveAllModel() {
-        return releveAllModel;
+    public RecordModel getDataModel() {
+        return dataModel;
     }
 
     public CompletionProvider getCompletionProvider() {
@@ -392,46 +320,12 @@ public class DataManager implements PlaceManager {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    //gestion du numero de dernier releve
-    ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     * incremente puis retourne le numero de releve
-     * @return
-     */
-    protected int getNextRecordNo() {
-        return ++lastRecordNo;
-    }
-
-    /**
-     * libere le numero de record si c'est le dernier
-     * @param recordNo
-     */
-    public void setPreviousRecordNo(int recordNo) {
-        if ( recordNo == lastRecordNo) {
-            lastRecordNo--;
-        }
-    }
-
-    /**
-     * impose le numero de dernier releve s'il est superieur a la valeur actuelle
-     * @param recordNo
-     */
-    void setNextRecordNo(int recordNo) {
-        if ( recordNo > lastRecordNo) {
-            lastRecordNo = recordNo;
-        }
-    }
-
-     ///////////////////////////////////////////////////////////////////////////
     //place manager
     ///////////////////////////////////////////////////////////////////////////
 
     // listeners devant être prevenus du changement de lieu
     private ArrayList<PlaceListener> placeListeners = new ArrayList<PlaceListener>(1);
     private FieldPlace recordsInfoPlace = new FieldPlace();
-    private String sourceTitle = "";
-    
     
     private boolean placeChanged = false;
     
@@ -524,21 +418,66 @@ public class DataManager implements PlaceManager {
         return recordsInfoPlace.getCountryName();
     }
 
+    public File getCurrentFile() {
+        return currentFile;
+    }
+
+    public void setCurrentFile(File currentFile) {
+        this.currentFile =  currentFile;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Implement GedcomFileListener
+    ///////////////////////////////////////////////////////////////////////////
+
     /**
-     * @return the sourceTitle
+     * desactive la completion avec gedcom si le fichier gedcom utilisé
+     * est fermé par l'utilisateur
+     * @param gedcom
      */
     @Override
-    public String getSourceTitle() {
-        return sourceTitle;
+    public void gedcomClosed(Gedcom gedcom) {
+        if ( completionGedcom != null && completionGedcom.equals(gedcom) ){
+            removeGedcomCompletion();
+        }
     }
 
-    /**
-     * @param sourceTitle the sourceTitle to set
-     */
-    public void setSourceTitle(String sourceTitle) {
-        this.sourceTitle = sourceTitle;
+    @Override
+    public void commitRequested(Context context) {
+        //rien à faire
     }
 
+    @Override
+    public void gedcomOpened(Gedcom gedcom) {
+        // rien à faire
+    }
 
+    public void setGedcomCompletion(boolean completion) {
+        if (completionGedcom == null && completion) {
+            Context context = getSelectedContext(true);
+            if (context != null && context.getGedcom() != null) {
+                addGedcomCompletion(context.getGedcom());
+            } else {
+                // rien a faire
+            }
+        } else if (completionGedcom != null && !completion) {
+            removeGedcomCompletion();
+        }
+    }
+
+    void addGedcomCompletion(Gedcom gedcom) {
+        completionGedcom = gedcom;
+        completionProvider.addGedcomCompletion(gedcom);        
+    }
+
+    void removeGedcomCompletion() {
+        // je reinitialise la completion
+        completionProvider.removeAll();
+        // j'ajoute les releves
+        for (Record record : dataModel.releveList) {
+            completionProvider.addRecord(record);
+        }
+        completionGedcom = null;
+    }
 
 }

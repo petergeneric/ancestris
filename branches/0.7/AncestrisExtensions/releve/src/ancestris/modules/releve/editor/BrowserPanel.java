@@ -165,12 +165,12 @@ public class BrowserPanel extends JPanel {
      * affiche une image
      */
     public void showImage(BufferedImage newImage) {
-        BufferedImage oldImage = this.image;
+        //BufferedImage oldImage = this.image;
         image = newImage;
-        // raz de l'iamge ajustee
+        // raz de l'image ajustee
         adjustImage = null;
         areaSrcx = areaSrcy = areaDestx = areaDesty = 0;
-        firePropertyChange(IMAGE_CHANGED_PROPERTY, (Image) oldImage, (Image) image);
+        //firePropertyChange(IMAGE_CHANGED_PROPERTY, (Image) oldImage, (Image) image);
         repaint();
     }
 
@@ -303,8 +303,7 @@ public class BrowserPanel extends JPanel {
     }
 
     public void setZoom(double newZoom, Point zoomingCenter) {
-        double oldZoom = getZoom();
-
+        
         if (image != null) {
             Coords imageP = panelToImageCoords(zoomingCenter);
 
@@ -328,9 +327,7 @@ public class BrowserPanel extends JPanel {
             originX += (correctedP.getIntX() - (int) panelP.x);
             originY += (correctedP.getIntY() - (int) panelP.y);
         }
-        firePropertyChange(ZOOM_LEVEL_CHANGED_PROPERTY, new Double(oldZoom),
-                new Double(getZoom()));
-
+        
         repaint();
     }
 
@@ -495,11 +492,19 @@ public class BrowserPanel extends JPanel {
     }
 
     private int getScreenImageWidth() {
-        return (int) (scale * image.getWidth());
+        if ( image != null){
+            return (int) (scale * image.getWidth());
+        } else {
+            return 0;
+        }
     }
 
     private int getScreenImageHeight() {
-        return (int) (scale * image.getHeight());
+        if ( image != null){
+            return (int) (scale * image.getHeight());
+        } else {
+            return 0;
+        }
     }
 
     private class WheelZoomDevice implements MouseWheelListener {
@@ -529,8 +534,7 @@ public class BrowserPanel extends JPanel {
                 adjustY += (previousMousePosition.y - (int) ajustPanelP.y);
             }
 
-            firePropertyChange(ZOOM_LEVEL_CHANGED_PROPERTY, new Double(oldZoom),
-                    new Double(getZoom()));
+            //firePropertyChange(ZOOM_LEVEL_CHANGED_PROPERTY, new Double(oldZoom), new Double(getZoom()));
 
             repaint();
         }
