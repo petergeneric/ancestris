@@ -59,42 +59,45 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
         public void actionPerformed(ActionEvent e) {
             SelectionDispatcher.muteSelection(true);
             DialogManager.ADialog editorDialog;
-            Gedcom gedcom = entity.getGedcom();
-            int undoNb = gedcom.getUndoNb();
+            if (entity != null) {
 
-            if (entity instanceof Indi) {
-                IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
-                individualEditorPanel.set((Indi) entity);
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
 
-                editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", entity),
-                        individualEditorPanel);
-                editorDialog.setDialogId(IndividualEditorPanel.class.getName());
-                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    individualEditorPanel.commit();
-                } else {
-                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                        gedcom.undoUnitOfWork(false);
+                if (entity instanceof Indi) {
+                    IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                    individualEditorPanel.set((Indi) entity);
+
+                    editorDialog = new DialogManager.ADialog(
+                            NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", entity),
+                            individualEditorPanel);
+                    editorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                    if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                        individualEditorPanel.commit();
+                    } else {
+                        while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                            gedcom.undoUnitOfWork(false);
+                        }
+                    }
+                } else if (entity instanceof Fam) {
+                    FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+                    familyEditorPanel.set((Fam) entity);
+
+                    editorDialog = new DialogManager.ADialog(
+                            NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", entity),
+                            familyEditorPanel);
+                    editorDialog.setDialogId(FamilyEditorPanel.class.getName());
+                    if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                        familyEditorPanel.commit();
+                    } else {
+                        while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                            gedcom.undoUnitOfWork(false);
+                        }
                     }
                 }
-            } else if (entity instanceof Fam) {
-                FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
-                familyEditorPanel.set((Fam) entity);
 
-                editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", entity),
-                        familyEditorPanel);
-                editorDialog.setDialogId(FamilyEditorPanel.class.getName());
-                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    familyEditorPanel.commit();
-                } else {
-                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                        gedcom.undoUnitOfWork(false);
-                    }
-                }
+                SelectionDispatcher.muteSelection(false);
             }
-
-            SelectionDispatcher.muteSelection(false);
         }
     }
 }
