@@ -266,7 +266,11 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
-                            mPlace = (PropertyPlace) mRoot.addProperty("PLAC", selectedPlace.format("all"));
+                            if (mPlace == null) {
+                                mPlace = (PropertyPlace) mRoot.addProperty("PLAC", selectedPlace.format("all"));
+                            } else {
+                                mPlace.setValue(getPlaceString());
+                            }
                         }
                     }); // end of doUnitOfWork
 
