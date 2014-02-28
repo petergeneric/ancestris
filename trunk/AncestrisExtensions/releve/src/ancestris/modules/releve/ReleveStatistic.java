@@ -51,10 +51,10 @@ public class ReleveStatistic extends javax.swing.JFrame {
    public void setModel(DataManager dataManager ) {
        int[] total = new int[5];
        if(dataManager != null) {
-           int nbRecord = dataManager.getReleveAllModel().getRowCount();
+           int nbRecord = dataManager.getDataModel().getRowCount();
            // je compte les releves par année
            for (int i = 0; i < nbRecord; i++) {
-               Record record = dataManager.getReleveAllModel().getRecord(i);
+               Record record = dataManager.getDataModel().getRecord(i);
                int year;
                try {
                    year = record.getEventDateProperty().getStart().getPointInTime(PointInTime.GREGORIAN).getYear();

@@ -1,12 +1,19 @@
-package ancestris.modules.releve.model;
+package ancestris.modules.releve.table;
 
+import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.FieldPicture;
+import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.RecordBirth;
+import ancestris.modules.releve.model.RecordDeath;
+import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.PropertyDate;
+import javax.swing.RowFilter;
 
 /**
  *
  * @author Michel
  */
-public class ModelAll extends ModelAbstract {
+public class TableModelRecordAll extends TableModelRecordAbstract {
 
     final String columnName[] = {
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Id"),
@@ -22,43 +29,8 @@ public class ModelAll extends ModelAbstract {
      * Constructor
      * @param dataManager
      */
-    public ModelAll() {
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement ModelAbstract methods
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * ajout un nouveau releve dans le modele
-     * @return indexRecord
-     */
-    @Override
-    public Record createRecord() {
-        return new RecordMisc();
-    }
-
-    /**
-     * constructeur de releve
-     * Cette methode doit etre appelee par le constructeur specifique createRecord()
-     * de chaque modele
-     * @param record
-     */
-    @Override
-    protected int addRecord(final Record record, boolean updateGui) {
-        releveList.add(record);
-        int recordIndex = releveList.size()-1;
-         if (updateGui) {
-            fireTableRowsInserted(recordIndex, recordIndex);
-        }
-        return recordIndex;
-    }
-
-    @Override
-     protected void removeRecord(final Record record) {
-
-        int recordIndex = releveList.indexOf(record);
-        releveList.remove(record);
-        fireTableRowsDeleted(recordIndex, recordIndex);
+    public TableModelRecordAll(DataManager dataManager) {
+        super(dataManager);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -75,8 +47,7 @@ public class ModelAll extends ModelAbstract {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Class<Class> getColumnClass(int column) {
+    public Class<?> getColumnClass(int column) {
         return columnType[column];
     }
     
@@ -86,7 +57,7 @@ public class ModelAll extends ModelAbstract {
         Record record = getRecord(row);
         switch (col) {
             case 0:
-                value = new Integer(record.recordNo);
+                value = new Integer(row + 1);
                 break;
             case 1:
                 value = record.getEventDateProperty();
@@ -127,31 +98,22 @@ public class ModelAll extends ModelAbstract {
         }
         return value;
     }
-
     
-//    /**
-//     * retourne la liste des champs affichables
-//     * @return
-//     */
-//
-//    @Override
-//    public BeanField[] getFieldList( int recordIndex ) {
-//
-//        Record record = getRecord(recordIndex);
-//
-//        if( record == null)  {
-//            return new BeanField[0];
-//        }
-//
-//         if (record instanceof RecordBirth) {
-//             return ModelBirth.getFieldList(record);
-//        } else if (record instanceof RecordMarriage) {
-//            return ModelMarriage.getFieldList(record);
-//        } else if (record instanceof RecordDeath) {
-//            return ModelDeath.getFieldList(record);
-//        } else {
-//            return ModelMisc.getFieldList(record);
-//        }
-//    }
+    @Override
+    public RowFilter<TableModelRecordAbstract, Integer> getRecordFilter() {
+        return new RowFilter<TableModelRecordAbstract, Integer>() {
+
+            @Override
+            public boolean include(Entry<? extends TableModelRecordAbstract, ? extends Integer> entry) {
+                return true;
+            }
+        };
+    }
+
+    @Override
+    public String getModelName() {
+        return "all";
+    }
+
 
 }

@@ -45,5 +45,13 @@ public class FieldDateTest extends TestCase {
 
     }
 
-    
+    /**
+     * Test of setValue method, of class FieldDate.
+     */
+    public void test_GetFranchValue() {
+        FieldDate fieldDate = new FieldDate();
+
+        fieldDate.setValue("01/01/1800");
+        assertEquals("set jj/mm/aaaa", "11 Nivô An VIII", fieldDate.getFrenchCalendarValue());
+    }
 }

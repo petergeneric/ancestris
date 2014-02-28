@@ -1,5 +1,6 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.model.FieldDead;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
@@ -121,7 +122,7 @@ public class MergeRecordTest extends TestCase {
                 mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, birthRecord);
                 birthRecord.getEventDateProperty().setValue("");
                 birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                birthRecord.getIndi().getFatherDead().setState(false);
+                birthRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.unknown);
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordBirth Date deces pere = null", "", deathDate.getValue());
 
@@ -129,7 +130,7 @@ public class MergeRecordTest extends TestCase {
                 mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, birthRecord);
                 birthRecord.getEventDateProperty().setValue("20 JAN 2000");
                 birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                birthRecord.getIndi().getFatherDead().setState(false);
+                birthRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.unknown);
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordBirth Date deces pere = BEF eventDate", "AFT 1999", deathDate.getValue());
 
@@ -137,7 +138,7 @@ public class MergeRecordTest extends TestCase {
                 mergeRecord = new MergeRecord(MergeModelBirthTest.getRecordsInfoPlace(), sourceTitle, birthRecord);
                 birthRecord.getEventDateProperty().setValue("20 JAN 2000");
                 birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("31 JAN 2000");
-                birthRecord.getIndi().getFatherDead().setState(true);
+                birthRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.dead);
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordBirth Date deces pere = BEF eventDate", "BET 1999 AND 2000", deathDate.getValue());
 
@@ -152,7 +153,7 @@ public class MergeRecordTest extends TestCase {
                 mergeRecord = new MergeRecord(MergeModelMarriageTest.getRecordsInfoPlace(), sourceTitle, marriageRecord);
                 marriageRecord.getEventDateProperty().setValue("");
                 marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                marriageRecord.getIndi().getFatherDead().setState(false);
+                marriageRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.unknown);
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordMarriage Date deces pere = null", "", deathDate.getValue());
 
@@ -160,7 +161,7 @@ public class MergeRecordTest extends TestCase {
                 mergeRecord = new MergeRecord(MergeModelMarriageTest.getRecordsInfoPlace(), sourceTitle,marriageRecord);
                 marriageRecord.getEventDateProperty().setValue("1 JAN 2021");
                 marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                marriageRecord.getIndi().getFatherDead().setState(true);
+                marriageRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.dead);
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordMarriage Date deces pere = BEF eventDate", "BEF 2021", deathDate.getValue());
 
@@ -168,7 +169,7 @@ public class MergeRecordTest extends TestCase {
                 mergeRecord = new MergeRecord(MergeModelMarriageTest.getRecordsInfoPlace(), sourceTitle, marriageRecord);
                 marriageRecord.getEventDateProperty().setValue("1 JAN 2021");
                 marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("31 JAN 2000");
-                marriageRecord.getIndi().getFatherDead().setState(false);
+                marriageRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.unknown);
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordMarriage Date deces pere = AFT IndiBirthDate - 9 mois", "AFT 1999", deathDate.getValue());
 

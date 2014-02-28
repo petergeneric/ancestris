@@ -23,8 +23,9 @@ public class MergeDialogTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             RecordMarriage record = MergeModelMarriageTest.createMarriageRecord("M1");
+            MergeRecord mergeRecord = new MergeRecord(MergeModelMarriageTest.getRecordsInfoPlace(),  "", record);
 
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, MergeModelMarriageTest.getRecordsInfoPlace(), MergeModelMarriageTest.getSourceTitle(), record, false);
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, mergeRecord, false);
             dialog.copyRecordToEntity();
             dialog.componentClosed();
             dialog.dispose();
@@ -55,7 +56,9 @@ public class MergeDialogTest extends TestCase {
             FieldPlace recordsInfoPlace = new FieldPlace();
             recordsInfoPlace.setValue("Paris,75000,,state,country");
             String sourceTitle = "";
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, recordsInfoPlace, sourceTitle, record, false);
+            MergeRecord mergeRecord = new MergeRecord(MergeModelMarriageTest.getRecordsInfoPlace(),  sourceTitle, record);
+
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, mergeRecord, false);
             dialog.copyRecordToEntity();
             dialog.componentClosed();
             dialog.dispose();
@@ -87,7 +90,8 @@ public class MergeDialogTest extends TestCase {
             FieldPlace recordsInfoPlace = new FieldPlace();
             recordsInfoPlace.setValue("Paris,75000,,state,country");
             String sourceTitle = "";
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, recordsInfoPlace, sourceTitle, record, false);
+            MergeRecord mergeRecord = new MergeRecord(MergeModelMarriageTest.getRecordsInfoPlace(),  sourceTitle, record);
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, mergeRecord, false);
             dialog.copyRecordToEntity();
             dialog.componentClosed();
             dialog.dispose();
@@ -119,7 +123,8 @@ public class MergeDialogTest extends TestCase {
             FieldPlace recordsInfoPlace = new FieldPlace();
             recordsInfoPlace.setValue("Paris,75000,,state,country");
             String sourceTitle = "";
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, recordsInfoPlace, sourceTitle, record, false);
+            MergeRecord mergeRecord = new MergeRecord(MergeModelMarriageTest.getRecordsInfoPlace(),  sourceTitle, record);
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, mergeRecord, false);
             dialog.copyRecordToEntity();
             dialog.componentClosed();
             dialog.dispose();

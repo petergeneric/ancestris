@@ -140,8 +140,8 @@ public class ReleveFileAncestrisV3Test extends TestCase {
         birth.setWitness3("wfirstname", "wlastname", "woccupation", "wcomment");
         birth.setWitness4("wfirstname", "wlastname", "woccupation", "wcomment");
 
-        dataManager.addRecord(birth,false);
-        StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getReleveBirthModel(), file, false);
+        dataManager.addRecord(birth);
+        StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.birth, file, false);
         assertEquals("verify save error", sb.length(), 0);
 
         FileBuffer fb = ReleveFileAncestrisV3.loadFile(file);
@@ -189,20 +189,20 @@ public class ReleveFileAncestrisV3Test extends TestCase {
         marriage.setCote("cote");
         marriage.setFreeComment("photo");
         marriage.setIndi("indifirstname", "indilastname", "M", "indiage", "01/02/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
-        marriage.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "indimarrieddead");
-        marriage.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "indifatherdead", "70y");
-        marriage.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "indimotherdead", "72y");
+        marriage.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "false");
+        marriage.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "false", "70y");
+        marriage.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "false", "72y");
         marriage.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
-        marriage.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "wifemarrieddead");
-        marriage.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "wifefatherdead", "70y");
-        marriage.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "wifemotherdead", "72y");
+        marriage.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "false");
+        marriage.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "false", "70y");
+        marriage.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "false", "72y");
         marriage.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         marriage.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         marriage.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         marriage.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(marriage,false);
-        StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getReleveMarriageModel(), file, false);
+        dataManager.addRecord(marriage);
+        StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.marriage, file, false);
         assertEquals("save result", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV3.loadFile(file);
@@ -245,16 +245,16 @@ public class ReleveFileAncestrisV3Test extends TestCase {
         death.setGeneralComment("generalcomment");
         death.setFreeComment("photo");
         death.setIndi("indifirstname", "indilastname", "M", "10y", "01/01/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
-        death.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "indimarrieddead");
-        death.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "indifatherdead", "70y");
-        death.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "indimotherdead", "72y");
+        death.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "false");
+        death.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "false", "70y");
+        death.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "false", "72y");
         death.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         death.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         death.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         death.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(death,false);
-        StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getReleveDeathModel(), file, false);
+        dataManager.addRecord(death);
+        StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.death, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV3.loadFile(file);
@@ -299,20 +299,20 @@ public class ReleveFileAncestrisV3Test extends TestCase {
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
         record.setIndi("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
-        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "indimarrieddead");
-        record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "indifatherdead", "70y");
-        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "indimotherdead", "72y");
+        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "false");
+        record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "false", "70y");
+        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "false", "72y");
         record.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
-        record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "wifemarrieddead");
-        record.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "wifefatherdead", "70y");
-        record.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "wifemotherdead", "72y");
+        record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "false");
+        record.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "false", "70y");
+        record.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "false", "72y");
         record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(record);
+        StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV3.loadFile(file);

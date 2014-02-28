@@ -126,8 +126,8 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getReleveBirthModel(), file, false);
+        dataManager.addRecord(record);
+        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.birth, file, false);
         assertEquals("verify save error", "", sb.toString());
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
@@ -250,8 +250,8 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-        dataManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getReleveMarriageModel(), file, false);
+        dataManager.addRecord(record);
+        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.marriage, file, false);
         assertEquals("save result", "", sb.toString());
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
@@ -369,8 +369,8 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getReleveDeathModel(), file, false);
+        dataManager.addRecord(record);
+        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.death, file, false);
         assertEquals("verify save error", "", sb.toString());
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
@@ -494,8 +494,8 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-        dataManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(record);
+        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("save result", "", sb.toString());
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);

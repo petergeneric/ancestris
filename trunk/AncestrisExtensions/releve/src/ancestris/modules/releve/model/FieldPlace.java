@@ -72,6 +72,44 @@ public class FieldPlace extends Field {
         return cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty() && locality.isEmpty();
     }
 
+    public String getDisplayValue() {
+        String placeString ="";
+        if (!getLocality().isEmpty()) {
+            placeString += getLocality();
+        }
+        if (!getCityName().isEmpty()) {
+            if(!placeString.isEmpty()) {
+                placeString += ",";
+            }
+            placeString += getCityName();
+        }
+        if (!getCityCode().isEmpty()) {
+            if(!placeString.isEmpty()) {
+                placeString += ",";
+            }
+            placeString += getCityCode();
+        }
+        if (!getCountyName().isEmpty()) {
+            if(!placeString.isEmpty()) {
+                placeString += ",";
+            }
+            placeString += getCountyName();
+        }
+        if (!getStateName().isEmpty()) {
+            if(!placeString.isEmpty()) {
+                placeString += ",";
+            }
+            placeString += getStateName();
+        }
+        if (!getCountryName().isEmpty()) {
+            if(!placeString.isEmpty()) {
+                placeString += ",";
+            }
+            placeString += getCountryName();
+        }
+        return placeString;
+    }
+
     public String getCityName() {
         return cityName;
     }

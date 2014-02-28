@@ -1,13 +1,14 @@
 package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.model.PlaceManager;
-import ancestris.modules.releve.model.ModelAbstract;
+import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.RecordMisc;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.file.FileManager.Line;
+import ancestris.modules.releve.model.DataManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -226,11 +227,11 @@ public class ReleveFileAncestrisV1 {
                                 fields[Field.witness4Comment.ordinal()]);
 
                         record.setGeneralComment(fields[Field.generalComment.ordinal()]);
-                        try {
-                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
-                        } catch ( NumberFormatException ex ) {
-                            record.recordNo = 0;
-                        }
+//                        try {
+//                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
+//                        } catch ( NumberFormatException ex ) {
+//                            record.recordNo = 0;
+//                        }
                         fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("M")) {
@@ -341,11 +342,11 @@ public class ReleveFileAncestrisV1 {
                                 fields[Field.witness4Comment.ordinal()]);
 
                         record.setGeneralComment(fields[Field.generalComment.ordinal()]);
-                        try {
-                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
-                        } catch (NumberFormatException ex) {
-                            record.recordNo = 0;
-                        }
+//                        try {
+//                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
+//                        } catch (NumberFormatException ex) {
+//                            record.recordNo = 0;
+//                        }
                         fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("D")) {
@@ -419,11 +420,11 @@ public class ReleveFileAncestrisV1 {
 
                         record.setGeneralComment(fields[Field.generalComment.ordinal()]);
 
-                        try {
-                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
-                        } catch (NumberFormatException ex) {
-                            record.recordNo = 0;
-                        }
+//                        try {
+//                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
+//                        } catch (NumberFormatException ex) {
+//                            record.recordNo = 0;
+//                        }
                         fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("V")) {
@@ -537,11 +538,11 @@ public class ReleveFileAncestrisV1 {
 
                         record.setGeneralComment(fields[Field.generalComment.ordinal()]);
 
-                        try {
-                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
-                        } catch (NumberFormatException ex) {
-                            record.recordNo = 0;
-                        }
+//                        try {
+//                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
+//                        } catch (NumberFormatException ex) {
+//                            record.recordNo = 0;
+//                        }
                         fileBuffer.addRecord(record);
                         
                     } else {
@@ -576,7 +577,7 @@ public class ReleveFileAncestrisV1 {
      *                      false : remplacer les données dans le fichier. 
      * @return StringBuilder est vide s'il n'y a pas d'erreur, sinon il contient les messages d'erreur.
      */
-    public static StringBuilder saveFile(PlaceManager placeManager, ModelAbstract recordModel, File fileName, boolean append) {
+    public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, DataManager.RecordType recordType, File fileName, boolean append) {
 
         StringBuilder sb = new StringBuilder();
         try {
@@ -585,6 +586,9 @@ public class ReleveFileAncestrisV1 {
             for (int index = 0; index < recordModel.getRowCount(); index++) {
                 Line line = new Line(fieldSeparator);
                 Record record = recordModel.getRecord(index);
+                if( recordType != null && recordType != record.getType()) {
+                    continue;
+                }
                 try {
                     if ( record instanceof RecordBirth ) {
                         line.appendCsvFn(fileSignature);
@@ -675,7 +679,7 @@ public class ReleveFileAncestrisV1 {
                         line.appendCsvFn(record.getWitness4Comment().toString());
 
                         line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
 
                     } if ( record instanceof RecordMarriage ) {
 
@@ -768,7 +772,7 @@ public class ReleveFileAncestrisV1 {
                         line.appendCsvFn(record.getWitness4Comment().toString());
 
                         line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
 
                     } else if ( record instanceof RecordDeath ) {
 
@@ -860,7 +864,7 @@ public class ReleveFileAncestrisV1 {
                         line.appendCsvFn(record.getWitness4Comment().toString());
 
                         line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
 
                     } else if ( record instanceof RecordMisc ) {
 
@@ -953,7 +957,7 @@ public class ReleveFileAncestrisV1 {
                         line.appendCsvFn(record.getWitness4Comment().toString());
 
                         line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
                     }
                     line.appendCsv("\n");
                     writer.write(line.toString());

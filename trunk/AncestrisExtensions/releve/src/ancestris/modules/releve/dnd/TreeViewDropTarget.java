@@ -107,15 +107,15 @@ public class TreeViewDropTarget {
         }
 
         @Override
-		public void dropActionChanged(DropTargetDragEvent dropTargetDragEvent) {
-		}
+        public void dropActionChanged(DropTargetDragEvent dropTargetDragEvent) {
+        }
 
         @Override
-		public synchronized void drop(DropTargetDropEvent dropTargetDropEvent) {
-			Point location = dropTargetDropEvent.getLocation();
+        public synchronized void drop(DropTargetDropEvent dropTargetDropEvent) {
+            Point location = dropTargetDropEvent.getLocation();
             Entity entity = null;
             entity = treeView.getEntityAt(location);
-            if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
+            if (entity == null || entity instanceof Indi || entity instanceof Fam) {
                 Transferable t = dropTargetDropEvent.getTransferable();
 
                 // Check for types of data that we support
@@ -125,7 +125,7 @@ public class TreeViewDropTarget {
                     try {
                         if ( treeView.getGedcom() != null ) {
                             TransferableRecord.TransferableData data = (TransferableData) t.getTransferData(TransferableRecord.recordFlavor);
-                            MergeDialog.show(treeView, treeView.getGedcom(), entity, data.recordsInfoPlace, data.sourceTitle, data.record, true);
+                            MergeDialog.show(treeView, treeView.getGedcom(), entity, data.mergeRecord, true);
                             dropTargetDropEvent.dropComplete(true);
                         } else {
                             dropTargetDropEvent.dropComplete(false);

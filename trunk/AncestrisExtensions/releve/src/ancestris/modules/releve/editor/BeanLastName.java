@@ -105,7 +105,7 @@ public class BeanLastName extends Bean implements CompletionListener {
      * @param keyList
      */
     @Override
-    public void keyUpdated(List<String> keyList) {
+    public void includedKeyUpdated(List<String> keyList) {
         cLast.setDataList(keyList);
     }
 }

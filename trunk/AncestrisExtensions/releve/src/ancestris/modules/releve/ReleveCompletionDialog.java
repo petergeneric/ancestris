@@ -13,6 +13,8 @@ import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -100,7 +102,7 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
                break;
             case occupation:
                columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.occupation");
-               valueList = dataManager.getCompletionProvider().getOccupations(IncludeFilter.ALL);
+               valueList = dataManager.getCompletionProvider().getPlaces(IncludeFilter.ALL);
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             default:
@@ -180,6 +182,7 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableExclude = new javax.swing.JTable();
         jPanelButton = new javax.swing.JPanel();
+        jButtonCopyToClipboard = new javax.swing.JButton();
         jButtonDelete = new javax.swing.JButton();
         jButtonOk = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
@@ -219,6 +222,15 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         getContentPane().add(jPaneTable, java.awt.BorderLayout.CENTER);
 
         jPanelButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jButtonCopyToClipboard.setText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.jButtonCopyToClipboard.text")); // NOI18N
+        jButtonCopyToClipboard.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.jButtonCopyToClipboard.toolTipText")); // NOI18N
+        jButtonCopyToClipboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCopyToClipboardActionPerformed(evt);
+            }
+        });
+        jPanelButton.add(jButtonCopyToClipboard);
 
         jButtonDelete.setText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.jButtonDelete.text")); // NOI18N
         jButtonDelete.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.jButtonDelete.tooltip")); // NOI18N
@@ -275,6 +287,21 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed
 
+    private void jButtonCopyToClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCopyToClipboardActionPerformed
+        final String LINE_BREAK = "\n";
+        Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+        StringBuilder clipboardStr = new StringBuilder();
+
+        // je copie les valeurs dans
+        int n = model.getRowCount();
+        for(int i = 0; i <n ; i++) {
+            clipboardStr.append(model.getValueAt(i,1).toString()).append(LINE_BREAK);
+        }
+        StringSelection sel = new StringSelection(clipboardStr.toString());
+        CLIPBOARD.setContents(sel, sel);
+    }//GEN-LAST:event_jButtonCopyToClipboardActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -291,6 +318,7 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel comment;
     private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonCopyToClipboard;
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonOk;
     private javax.swing.JPanel jPaneTable;
