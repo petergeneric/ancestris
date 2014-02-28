@@ -371,17 +371,16 @@ class MergeModelMiscOther extends MergeModel {
                // participant 1
                // je recherche la source de l'évènement deja existant
                Property eventProperty = MergeQuery.findPropertyEvent(currentIndi,record.getEventType(),record.getEventDate());
-               Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, eventProperty);
                // j'affiche la source de l'évènement
-               addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
-               addRow(RowType.EventPage, record.getEventPage(), MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
+               addRowSource(RowType.EventSource, record.getEventSource(), eventProperty);
+
                addRowSeparator();
 
                // j'affiche la date, le lieu et les commentaires de l'évènement
                addRow(RowType.EventType, record.getEventType(), eventProperty);
                addRow(RowType.EventDate, record.getEventDate(), eventProperty != null ? (PropertyDate) eventProperty.getProperty("DATE") : null);
                addRow(RowType.EventPlace, record.getEventPlace(), eventProperty != null ? eventProperty.getPropertyValue("PLAC") : "");
-               addRow(RowType.EventComment, record.getEventComment(), eventProperty != null ? eventProperty.getPropertyValue("NOTE") : "");
+               addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), eventProperty != null ? eventProperty.getPropertyValue("NOTE") : "");
                addRowSeparator();
            } else {
                // participant 2
@@ -393,14 +392,13 @@ class MergeModelMiscOther extends MergeModel {
 
             if (participantType == MergeParticipantType.participant1) {
                // j'affiche la source de la naissance
-               addRow(RowType.EventSource, record.getEventSource(), "", MergeQuery.findSource(record, gedcom));
-               addRow(RowType.EventPage, record.getEventPage(), "", null);
+               addRowSource(RowType.EventSource, record.getEventSource(), null);
                addRowSeparator();
 
                // j'affiche la date, le lieu et les commentaires de l'évènement
                addRow(RowType.EventDate, record.getEventDate(), null);
                addRow(RowType.EventPlace, record.getEventPlace(), "");
-               addRow(RowType.EventComment, record.getEventComment(), "");
+               addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), "");
                addRowSeparator();
             } else {
                // participant 2
@@ -572,7 +570,7 @@ class MergeModelMiscOther extends MergeModel {
 
         // je copie la profession de l'individu
         if (isChecked(RowType.IndiOccupation)) {
-            copyOccupation(currentIndi, participant.getOccupation(), participant.getResidence(), record);
+            copyOccupation(currentIndi, participant.getOccupation(), participant.getResidence(), true, record);
         }
 
         // je copie l'evenement
@@ -594,7 +592,11 @@ class MergeModelMiscOther extends MergeModel {
                 if (propertyDate == null) {
                     propertyDate = (PropertyDate) eventProperty.addProperty("DATE", "");
                 }
-                propertyDate.setValue(record.getEventDate().getValue());
+                if( record.isInsinuation()) {
+                    propertyDate.setValue(record.getInsinuationDate().getValue());
+                } else {
+                    propertyDate.setValue(record.getEventDate().getValue());
+                }
             }
 
             // je copie le lieu de l'evenement
@@ -603,7 +605,7 @@ class MergeModelMiscOther extends MergeModel {
             }
 
             // je copie la source de l'evenement
-            if (isChecked(RowType.EventSource)) {
+            if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
                 copySource((Source) getRow(RowType.EventSource).entityObject, eventProperty, record);
             }
 
@@ -617,7 +619,7 @@ class MergeModelMiscOther extends MergeModel {
 
                 // j'ajoute le commentaire general au debut de la note existante.
                 String value = propertyNote.getValue();
-                String comment = record.getEventComment();
+                String comment = record.getEventComment(showFrenchCalendarDate);
                 if (!comment.isEmpty()) {
                     if (!value.isEmpty()) {
                         comment += "\n";
@@ -660,7 +662,7 @@ class MergeModelMiscOther extends MergeModel {
 
             // je copie la profession du conjoint
             if (isChecked(RowType.IndiMarriedOccupation)) {
-                copyOccupation(exSpouse, participant.getMarriedOccupation(), participant.getMarriedResidence(), record);
+                copyOccupation(exSpouse, participant.getMarriedOccupation(), participant.getMarriedResidence(), true, record);
             }
 
             // je copie la famille avec le conjoint
@@ -738,7 +740,7 @@ class MergeModelMiscOther extends MergeModel {
 
                 // je copie la profession du pere
                 if (isChecked(RowType.IndiFatherOccupation)) {
-                    copyOccupation(father, participant.getFatherOccupation(), participant.getFatherResidence(), record);
+                    copyOccupation(father, participant.getFatherOccupation(), participant.getFatherResidence(), true, record);
                 }
             }
 
@@ -776,7 +778,7 @@ class MergeModelMiscOther extends MergeModel {
 
                 // je met à jour la profession de la mere
                 if (isChecked(RowType.IndiMotherOccupation)) {
-                    copyOccupation(mother, participant.getMotherOccupation(), participant.getMotherResidence(), record);
+                    copyOccupation(mother, participant.getMotherOccupation(), participant.getMotherResidence(), true, record);
                 }
             }
         }

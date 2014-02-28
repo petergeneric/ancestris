@@ -10,10 +10,10 @@ import java.awt.Component;
 
 public interface MenuCommandProvider {
     public void showPopupMenu(Component invoker, int x, int y);
-    public void showStandalone(boolean show);
+    public void showStandalone();
+    public void showStandalone(int panelIndex, int recordNo);
     public void showConfigPanel();
     public void showOptionPanel();
     public void showToFront();
-    public void standaloneEditorClosed();
     public void setBrowserVisible(boolean visible);
 }

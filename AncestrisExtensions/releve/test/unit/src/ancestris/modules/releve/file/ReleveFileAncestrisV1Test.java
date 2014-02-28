@@ -140,8 +140,8 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         birth.setWitness3("wfirstname", "wlastname", "woccupation", "wcomment");
         birth.setWitness4("wfirstname", "wlastname", "woccupation", "wcomment");
 
-        dataManager.addRecord(birth,false);
-        StringBuilder sb = ReleveFileAncestrisV1.saveFile(dataManager, dataManager.getReleveBirthModel(), file, false);
+        dataManager.addRecord(birth);
+        StringBuilder sb = ReleveFileAncestrisV1.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.birth, file, false);
         assertEquals("verify save error", "", sb.toString());
 
         FileBuffer fb = ReleveFileAncestrisV1.loadFile(file);
@@ -204,8 +204,8 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         marriage.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         marriage.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(marriage,false);
-        StringBuilder sb = ReleveFileAncestrisV1.saveFile(dataManager, dataManager.getReleveMarriageModel(), file, false);
+        dataManager.addRecord(marriage);
+        StringBuilder sb = ReleveFileAncestrisV1.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.marriage, file, false);
         assertEquals("save result", "", sb.toString());
 
         FileBuffer fb = ReleveFileAncestrisV1.loadFile(file);
@@ -265,8 +265,8 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         death.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         death.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(death,false);
-        StringBuilder sb = ReleveFileAncestrisV1.saveFile(dataManager, dataManager.getReleveDeathModel(), file, false);
+        dataManager.addRecord(death);
+        StringBuilder sb = ReleveFileAncestrisV1.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.death, file, false);
         assertEquals("verify save error", "", sb.toString());
 
         FileBuffer fb = ReleveFileAncestrisV1.loadFile(file);
@@ -332,8 +332,8 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dataManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileAncestrisV1.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(record);
+        StringBuilder sb = ReleveFileAncestrisV1.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         System.out.println(sb);
         assertEquals("verify save error", "", sb.toString());
 

@@ -173,7 +173,7 @@ public class ReleveFileEgmt {
                             } else {
                                 record.setGeneralComment(fields[EgmtField.generalComment.ordinal()]);
                             }
-                            record.recordNo = lineNumber;
+                            //record.recordNo = lineNumber;
                             fileBuffer.addRecord(record);
 
                         } else if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("mariage")) {
@@ -266,7 +266,7 @@ public class ReleveFileEgmt {
                             } else {
                                 record.setGeneralComment(fields[EgmtField.generalComment.ordinal()]);
                             }
-                            record.recordNo = lineNumber;
+                            //record.recordNo = lineNumber;
                             fileBuffer.addRecord(record);
 
                         } else if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("décès")) {
@@ -338,7 +338,7 @@ public class ReleveFileEgmt {
                             } else {
                                 record.setGeneralComment(fields[EgmtField.generalComment.ordinal()]);
                             }
-                            record.recordNo = lineNumber;
+                            //record.recordNo = lineNumber;
                             fileBuffer.addRecord(record);
 
                         } else  {
@@ -462,7 +462,7 @@ public class ReleveFileEgmt {
                             } else {
                                 record.setGeneralComment(fields[EgmtField.generalComment.ordinal()]);
                             }
-                            record.recordNo = lineNumber;
+                            //record.recordNo = lineNumber;
                             fileBuffer.addRecord(record);
 
                         }
@@ -492,7 +492,7 @@ public class ReleveFileEgmt {
      *
      * @param fileName
      */
-    public static StringBuilder saveFile(PlaceManager placeManager, ModelAbstract recordModel, File fileName, boolean append) {
+    public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, DataManager.RecordType recordType, File fileName, boolean append) {
         StringBuilder sb = new StringBuilder();
 
         try {
@@ -506,9 +506,11 @@ public class ReleveFileEgmt {
             }
             
             for (int index = 0; index < recordModel.getRowCount(); index++) {
-                
-                Line line = new Line(fieldSeparator);
                 final Record record = recordModel.getRecord(index);
+                if( recordType != null && recordType != record.getType()) {
+                    continue;
+                }
+                Line line = new Line(fieldSeparator);
                 try {
                     if ( record instanceof RecordBirth ) {
                        line.appendCsvFn("naissance");
@@ -529,9 +531,23 @@ public class ReleveFileEgmt {
                     }
                     line.appendCsvFn(record.getCote().toString());
                     line.appendCsvFn(record.getFreeComment().toString());
-                    line.appendCsvFn(String.format("%02d", record.getEventDateProperty().getStart().getDay()+1));
-                    line.appendCsvFn(String.format("%02d", record.getEventDateProperty().getStart().getMonth()+1));
-                    line.appendCsvFn(String.format("%4d", record.getEventDateProperty().getStart().getYear()));
+                    if ( record.getEventDateProperty().getStart().getDay() != Integer.MAX_VALUE ) {
+                       line.appendCsvFn(String.format("%02d", record.getEventDateProperty().getStart().getDay()+1));
+                    } else {
+                       line.appendCsvFn(""); // Day
+                    }
+                    if ( record.getEventDateProperty().getStart().getMonth() != Integer.MAX_VALUE ) {
+                       line.appendCsvFn(String.format("%02d", record.getEventDateProperty().getStart().getMonth()+1));
+                    } else {
+                       line.appendCsvFn(""); // Month
+                    }
+
+                    if ( record.getEventDateProperty().getStart().getYear() != Integer.MAX_VALUE ) {
+                       line.appendCsvFn(String.format("%02d", record.getEventDateProperty().getStart().getYear()));
+                    } else {
+                       line.appendCsvFn(""); // Year
+                    }
+
 
                     line.appendCsvFn(record.getIndiLastName().getValue());
                     line.appendCsvFn(record.getIndiFirstName().getValue());
@@ -621,7 +637,7 @@ public class ReleveFileEgmt {
                             );
 
                         line.appendCsvFn(record.getWifeFatherFirstName().toString());
-                        line.appendCsvFn(record.getWifeFatherDead().getValue());
+                        line.appendCsvFn(record.getWifeFatherDead().toString());
                         line.appendCsvFn(record.getWifeFatherComment().toString(), 
                             record.getWifeFatherOccupation().toString(),
                             record.getWifeFatherResidence().getDisplayValue(),
@@ -736,7 +752,7 @@ public class ReleveFileEgmt {
 
                         // Participant 2
                         String participantName = appendLabelValue(
-                                "Participant:",  // label
+                                "Autre intervenant:",  // label
                                 record.getWifeFirstName().toString(),
                                 record.getWifeLastName().toString()
                                 );
@@ -749,7 +765,7 @@ public class ReleveFileEgmt {
                                 );
 
                         String participantFather = appendLabelValue(
-                                "Père du participant:" ,
+                                "Père de l'intervenant:" ,
                                 record.getWifeFatherFirstName().toString(),
                                 record.getWifeFatherLastName().toString(),
                                 formatAgeToComment(record.getWifeFatherAge()),
@@ -760,7 +776,7 @@ public class ReleveFileEgmt {
                                 );
 
                         String participantMother = appendLabelValue(
-                                "Mère du participant:" ,
+                                "Mère de l'intervenant:" ,
                                 record.getWifeMotherFirstName().toString(),
                                 record.getWifeMotherLastName().toString(),
                                 formatAgeToComment(record.getWifeMotherAge()),
@@ -771,7 +787,7 @@ public class ReleveFileEgmt {
                                 );
 
                         String participantMarried = appendLabelValue(
-                                "Conjoint du participant:",
+                                "Conjoint de l'intervenant:",
                                 record.getWifeMarriedFirstName().toString(),
                                 record.getWifeMarriedLastName().toString(),
                                 record.getWifeMarriedDead().toString(),
@@ -839,6 +855,12 @@ public class ReleveFileEgmt {
                     line.appendCsvFn(record.getWitness2FirstName().toString());
                     line.appendCsvFn(record.getWitness2Comment().toString(),
                          record.getWitness2Occupation().toString() );
+
+                    String insinuation = "";
+                    if( record.getSecondDateProperty().isValid()) {
+                        insinuation = "insinué le "+ record.getSecondDateString();
+                    }
+
                     line.appendCsv(
                         record.getGeneralComment().toString(),
                         otherParticipant,
@@ -854,7 +876,8 @@ public class ReleveFileEgmt {
                             record.getWitness4LastName().toString(),
                             record.getWitness4Occupation().toString(),
                             record.getWitness4Comment().toString()
-                            )
+                            ),
+                        insinuation
                     );
                     
 
@@ -982,9 +1005,10 @@ public class ReleveFileEgmt {
      * @return 
      */
     static Pattern agePattern = Pattern.compile( "([0-9]*)" );
-    static private String formatAgeToField(String ageString) {
+    static protected String formatAgeToField(String ageString) {
         String ageField;
         ageString = ageString.trim();
+        ageString = ageString.replace(" ", "").replace("ans", "y").replace("an", "y").replace("mois", "m").replace("jours", "d").replace("jour", "d");
         Matcher m = agePattern.matcher(ageString);
         if( m.matches() ) {
             // je considere qu'un nombre seul (sans unité) est un nombre d'années
@@ -1053,7 +1077,7 @@ public class ReleveFileEgmt {
         line.appendCsvFn("Infos marrraine");
         line.appendCsv("Infos diverses");
 
-        line.appendCsv("\n");
+        line.appendCsv("\r\n");
         return line;
     }
    

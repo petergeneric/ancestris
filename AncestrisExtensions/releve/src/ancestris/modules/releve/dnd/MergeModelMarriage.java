@@ -303,10 +303,8 @@ public class MergeModelMarriage extends MergeModel {
             Property marriageProperty = currentFamily.getProperty("MARR");
 
             // j'affiche la source du mariage
-            Property sourceProperty = MergeQuery.findPropertySource(record, gedcom, marriageProperty);
-            addRow(RowType.EventSource, record.getEventSource(), MergeQuery.findSourceTitle(sourceProperty, gedcom), MergeQuery.findSource(record, gedcom));
-            addRow(RowType.EventPage, record.getEventPage(),  MergeQuery.findSourcePage(record, sourceProperty, gedcom), null);
-
+            addRowSource(RowType.EventSource, record.getEventSource(), marriageProperty);
+            
             // j'affiche un separateur
             addRowSeparator();
 
@@ -317,15 +315,15 @@ public class MergeModelMarriage extends MergeModel {
             // j'affiche le lieu de l'acte de mariage
             addRow(RowType.EventPlace, record.getEventPlace(), marriageProperty!= null ? marriageProperty.getValue(new TagPath("MARR:PLAC"), "") : "");
             // j'affiche le commentaire
-            addRow(RowType.EventComment, record.getEventComment(), marriageProperty!= null ? marriageProperty.getValue(new TagPath("MARR:NOTE"), "") : "");
+            addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), marriageProperty!= null ? marriageProperty.getValue(new TagPath("MARR:NOTE"), "") : "");
             // j'affiche un separateur
             addRowSeparator();
         } else {
             // selectedFamily est nul
             
             // j'affiche la source 
-            addRow(RowType.EventSource, record.getEventSource(),"",  MergeQuery.findSource(record, gedcom));
-            addRow(RowType.EventPage,   record.getEventPage(), "", null);
+            addRowSource(RowType.EventSource, record.getEventSource(), null);
+
             // j'affiche un separateur
             addRowSeparator();
 
@@ -336,7 +334,7 @@ public class MergeModelMarriage extends MergeModel {
             // j'affiche le lieu de l'acte de mariage
             addRow(RowType.EventPlace, record.getEventPlace(), "");
             // j'affiche le commentaire
-            addRow(RowType.EventComment, record.getEventComment(), "");
+            addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), "");
             // j'affiche un separateur
             addRowSeparator();
         }
@@ -541,7 +539,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie la profession de l'epoux
         if (isChecked(RowType.IndiOccupation)) {
-            copyOccupation(husband, record.getIndi().getOccupation(), record.getIndi().getResidence(), record);
+            copyOccupation(husband, record.getIndi().getOccupation(), record.getIndi().getResidence(), true, record);
         }
 
         // je copie les données des parents de l'epoux
@@ -593,7 +591,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la profession du pere
             if (isChecked(RowType.IndiFatherOccupation)) {
-                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), record);
+                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), true, record);
             }
 
             // je copie le nom et le prenom de la mere de l'epoux
@@ -625,7 +623,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la profession de la mere de l'epoux
             if (isChecked(RowType.IndiMotherOccupation) ) {
-                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), record);
+                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), true, record);
             }
 
         } // parents de l'epoux
@@ -659,7 +657,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie la profession de l'epouse
         if (isChecked(RowType.WifeOccupation)) {
-            copyOccupation(wife, record.getWife().getOccupation(), record.getWife().getResidence(), record);
+            copyOccupation(wife, record.getWife().getOccupation(), record.getWife().getResidence(), true, record);
         }
 
 
@@ -712,7 +710,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la profession du pere de l'epouse
             if (isChecked(RowType.WifeFatherOccupation) ) {
-                copyOccupation(father, record.getWife().getFatherOccupation(), record.getWife().getFatherResidence(), record);
+                copyOccupation(father, record.getWife().getFatherOccupation(), record.getWife().getFatherResidence(), true, record);
             }
 
             // je copie le nom et le prenom de la mere de l'epouse
@@ -744,7 +742,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la profession de la mere de l'epouse
             if (isChecked(RowType.WifeMotherOccupation) ) {
-                copyOccupation(mother, record.getWife().getMotherOccupation(), record.getWife().getMotherResidence(), record);
+                copyOccupation(mother, record.getWife().getMotherOccupation(), record.getWife().getMotherResidence(), true, record);
             }
 
         } // parents de l'epouse
@@ -778,7 +776,7 @@ public class MergeModelMarriage extends MergeModel {
         }
 
         // je copie la source du releve de mariage 
-        if (isChecked(RowType.EventSource)) {
+        if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
             copySource((Source) getRow(RowType.EventSource).entityObject, marriageProperty, record);
         }
 
@@ -809,7 +807,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // j'ajoute le commentaire du mariageau debut de la note existante.
             String value = propertyNote.getValue();
-            String comment = record.getEventComment();
+            String comment = record.getEventComment(showFrenchCalendarDate);
             if (!comment.isEmpty()) {
                 if (!value.isEmpty()) {
                     comment += "\n";

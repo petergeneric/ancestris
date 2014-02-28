@@ -1,45 +1,61 @@
 package ancestris.modules.releve.model;
 
+import java.util.Locale;
+
 /**
  *
  * @author Michel
  */
 public class FieldDead extends Field {
 
-    private boolean value;
-    static String deadLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead").toLowerCase();
+    public enum DeadState { unknown, dead, alive }
+    private DeadState value = DeadState.unknown;
+    public static String deadLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead");
+    public static String aliveLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Alive");
+    public static String unknownLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Unknown");
 
-    public boolean getState() {
+    public DeadState getState() {
         return value;
     }
 
-    public void setState(boolean state) {
+    public void setState(DeadState state) {
         value = state;
     }
 
     @Override
     public String getValue() {
-        return String.valueOf(value);
+        switch (value) {
+            case dead  : return DeadState.dead.name();
+            case alive : return DeadState.alive.name();
+            default: return "";
+        }
     }
 
     @Override
-    public void setValue(Object value) {
-        if (value.toString().toLowerCase().startsWith(deadLabel)
-                || "dead".equals(value.toString())
-                || "true".equals(value.toString())) {
-             this.value = true;
+    public void setValue(Object stringValue) {
+        String inputValue = stringValue.toString().toLowerCase();
+        if ( "true".equalsIgnoreCase( inputValue)
+                || inputValue.indexOf(deadLabel.toLowerCase()) != -1
+                || inputValue.indexOf("dead") != -1
+                || inputValue.indexOf("dcd") != -1
+                || inputValue.indexOf("feu") != -1
+                ) {
+             value = DeadState.dead;
+        } else if (inputValue.indexOf(aliveLabel.toLowerCase()) != -1
+                || "alive".equalsIgnoreCase(stringValue.toString())) {
+             value = DeadState.alive;
         } else {
-            this.value = Boolean.getBoolean(value.toString());
+            value = DeadState.unknown;
         }
     }
 
 
     @Override
     public String toString() {
-        if (value) {
-            return java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead");
-        } else {
-            return "";
+        switch (value) {
+            case dead  : return deadLabel;
+            case alive : return aliveLabel;
+            default: return "";
         }
     }
 
@@ -50,7 +66,7 @@ public class FieldDead extends Field {
 
     @Override
     public FieldDead clone() {
-		return (FieldDead) super.clone();
-  	}
-    
+        return (FieldDead) super.clone();
+    }
+
 }

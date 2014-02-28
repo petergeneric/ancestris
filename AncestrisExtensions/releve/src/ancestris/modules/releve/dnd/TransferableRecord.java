@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class TransferableRecord  implements Transferable {
 
-    final protected static DataFlavor recordFlavor = new DataFlavor(Record.class, "Record");
+    final protected static DataFlavor recordFlavor = new DataFlavor(MergeRecord.class, "MergeRecord");
 
     // liste des types transférables
     protected static DataFlavor[] supportedFlavors = {
@@ -30,10 +30,8 @@ public class TransferableRecord  implements Transferable {
      * @param record
      * @param sourceComponent
      */
-    public TransferableRecord(FieldPlace recordsInfoPlace, String sourceTitle, Record record, Component sourceComponent) {
-        this.data.recordsInfoPlace = recordsInfoPlace;
-        this.data.sourceTitle = sourceTitle;
-        this.data.record = record;
+    public TransferableRecord(MergeRecord mergeRecord, Component sourceComponent) {
+        this.data.mergeRecord = mergeRecord;
         this.data.sourceComponent = sourceComponent;
     }
 
@@ -63,9 +61,7 @@ public class TransferableRecord  implements Transferable {
      * necessaire parce que  getTransferData() ne peut retourner qu'un objet
      */
     protected class TransferableData {
-        protected FieldPlace recordsInfoPlace;
-        protected String sourceTitle;
-        protected Record record;
+        protected MergeRecord mergeRecord;
         protected Component sourceComponent;
     }
 }

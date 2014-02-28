@@ -26,7 +26,6 @@ public class BeanNotary extends Bean implements CompletionListener {
         setLayout(new java.awt.BorderLayout());
         jCombobox = new Java2sAutoComboBox(completionProvider.getNotaries(IncludeFilter.INCLUDED));
         jCombobox.setStrict(false);
-        jCombobox.setUpperAllFirstChar(true);
         jCombobox.addChangeListener(changeSupport);
         add(jCombobox, java.awt.BorderLayout.CENTER);
         defaultFocus = jCombobox;

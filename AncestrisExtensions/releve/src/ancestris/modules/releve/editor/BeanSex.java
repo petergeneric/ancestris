@@ -66,15 +66,18 @@ public class BeanSex extends Bean {
         jComboBox1.setSelectedIndex(sex.getSex());
     }
 
+    /**
+     * cette combobox ignore les combinaisons de touche ALT-VK_DOWN et ALT-VK_UP
+     */
     private class MyCombobox extends JComboBox {
 
-    @Override
-    public void processKeyEvent(KeyEvent e) {
-        if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP) && (e.getModifiers() & InputEvent.ALT_MASK)!= 0 && !super.isPopupVisible()) {
-            getParent().dispatchEvent((AWTEvent)e);
-            return; //don't process the event
+        @Override
+        public void processKeyEvent(KeyEvent e) {
+            if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP) && (e.getModifiers() & InputEvent.ALT_MASK) != 0 && !super.isPopupVisible()) {
+                getParent().dispatchEvent((AWTEvent) e);
+                return; //don't process the event
+            }
+            super.processKeyEvent(e);
         }
-        super.processKeyEvent(e);
     }
-}
 }

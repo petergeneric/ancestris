@@ -4,7 +4,7 @@ import ancestris.modules.releve.model.Record;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.ModelAbstract;
+import ancestris.modules.releve.model.RecordModel;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;
@@ -33,6 +33,8 @@ public class ReleveQuickSearch implements SearchProvider {
         FieldType.wifeFirstName , FieldType.wifeMarriedFirstName,  FieldType.wifeFatherFirstName , FieldType.wifeMotherFirstName,
         FieldType.witness1FirstName, FieldType.witness2FirstName, FieldType.witness3FirstName, FieldType.witness4FirstName,
 
+        FieldType.generalComment
+
     } ;
 
     @Override
@@ -43,13 +45,13 @@ public class ReleveQuickSearch implements SearchProvider {
                 //searchInModel( tc, tc.getDataManager().getReleveMarriageModel(), request, response);
                 //searchInModel( tc, tc.getDataManager().getReleveDeathModel(), request, response);
                 //searchInModel( tc, tc.getDataManager().getReleveMiscModel(), request, response);
-                searchInModel( tc, tc.getDataManager().getReleveAllModel(), request, response);
+                searchInModel( tc, tc.getDataManager().getDataModel(), request, response);
             }
         }
     }
 
 
-    private void searchInModel(ReleveTopComponent tc, ModelAbstract model, SearchRequest request, SearchResponse response ) {
+    private void searchInModel(ReleveTopComponent tc, RecordModel model, SearchRequest request, SearchResponse response ) {
         for (int indexRecord=0; indexRecord < model.getRowCount(); indexRecord++) {
             Record record = model.getRecord(indexRecord);
 
@@ -108,11 +110,27 @@ public class ReleveQuickSearch implements SearchProvider {
                             case witness4LastName:
                                 resultDisplay = record.getWitness4FirstName().toString()+ " " + record.getWitness4LastName().toString();
                                 break;
+                            case generalComment:
+                                String text = field.toString();
+                                int index1 = text.toLowerCase().indexOf(request.getText().toLowerCase());
+                                int index2 = text.indexOf(" ",index1);
+                                int index3 = 0;
+                                if ( index2 != -1) {
+                                    index3 = text.indexOf(" ",index2);
+                                    if ( index3 == -1) {
+                                        index3 = text.length() -1;
+                                    }
+                                } else {
+                                    index3 = text.length() -1;
+                                }
+                                resultDisplay = text.substring(index1, index3)  + " ...";
+                                break;
                             default:
                                 resultDisplay = field.toString();
                                 break;
                         }
-                        if (!response.addResult(createAction(tc, record,fieldType), resultDisplay + ", relevé du " + record.getEventDateString())) {
+
+                        if (!response.addResult(createAction(tc, record,fieldType), tc.getDataManager().getCityName() + " " + resultDisplay + ", relevé du " + record.getEventDateString())) {
                             return;
                         }
                     }
@@ -127,6 +145,7 @@ public class ReleveQuickSearch implements SearchProvider {
             @Override
             public void run() {
                 //System.out.println("Found record "+ record.getIndiFirstName().toString());
+                tc.showToFront();
                 tc.selectField(record, fieldType);
             }
         };

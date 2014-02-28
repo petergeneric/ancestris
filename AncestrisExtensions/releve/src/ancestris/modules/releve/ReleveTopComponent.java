@@ -4,12 +4,14 @@ import ancestris.app.TreeTopComponent;
 import ancestris.modules.releve.file.FileManager;
 import ancestris.modules.releve.file.ReleveFileExport;
 import ancestris.modules.releve.file.ReleveFileDialog;
-import ancestris.modules.releve.model.ModelAbstract;
+import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.editor.StandaloneEditor;
-import ancestris.view.AncestrisDockModes;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.copyFam.CopyFamPanel;
+import ancestris.modules.releve.table.ErrorBuffer;
+import ancestris.modules.releve.table.TableModelRecordCheck;
+import ancestris.modules.releve.table.ResultDialog;
 import ancestris.modules.releve.dnd.TreeViewDropTarget;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.file.ReleveFileAncestrisV2;
@@ -56,17 +58,12 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.*;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-// de AncestrisPlugin.lookupAll(ReleveTopComponent.class)
-@RetainLocation(AncestrisDockModes.PROPERTIES)
-// je declare la classe ServiceProvider pour que ses instances soient visibles
-//@ServiceProvider(service=ReleveTopComponent.class)
 public final class ReleveTopComponent extends TopComponent implements MenuCommandProvider {    
     private static final String PREFERRED_ID = "ReleveTopComponent";
     private static final String FILE_DIRECTORY = "FileDirectory";
@@ -80,18 +77,24 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     private JMenuItem menuItemImport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
     private JMenuItem menuItemImportClipboard = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.title"));
     private JMenuItem menuItemExport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
+    private JMenuItem menuItemDelete   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.delete"));
+
+    private JMenuItem menuItemSwapNext    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapnext"));
+    private JMenuItem menuItemSwapPrevious= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapprevious"));
+    private JMenuItem menuItemInsert     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.insert"));
+    private JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));
     private JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
     private JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
     private JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
     private StandaloneEditor standaloneEditor;
     private File currentFile = null;
-
+    
     public ReleveTopComponent() {
         super();
         initComponents();
         setName(NbBundle.getMessage(ReleveTopComponent.class, "CTL_ReleveTopComponent"));
         setToolTipText(NbBundle.getMessage(ReleveTopComponent.class, "HINT_ReleveTopComponent"));
-        setIcon(null);
+        setIcon(ImageUtilities.loadImage("ancestris/modules/releve/images/Releve.png", true));
 
         //je cree le popupmenu
         popup = new JPopupMenu();
@@ -121,8 +124,27 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemExport.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ExportFile16.png")));
         popup.add(menuItemExport);
 
-        // statistics, demo records, help
+        // create, insert,  delelete
         popup.addSeparator();
+        menuItemInsert.addActionListener(popupMouseHandler);
+        menuItemInsert.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewRecord.png")));
+        popup.add(menuItemInsert);
+        menuItemDelete.addActionListener(popupMouseHandler);
+        menuItemDelete.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/DeleteRecord.png")));
+        popup.add(menuItemDelete);
+
+        // swap, statistics, demo records, help
+        popup.addSeparator();
+        menuItemSwapPrevious.addActionListener(popupMouseHandler);
+        menuItemSwapPrevious.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowup16.png")));
+        popup.add(menuItemSwapPrevious);
+        menuItemSwapNext.addActionListener(popupMouseHandler);
+        menuItemSwapNext.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowdown16.png")));
+        popup.add(menuItemSwapNext);
+
+        menuItemCheck.addActionListener(popupMouseHandler);
+        menuItemCheck.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/check16.png")));
+        popup.add(menuItemCheck);
         menuItemStatistics.addActionListener(popupMouseHandler);
         menuItemStatistics.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
         popup.add(menuItemStatistics);
@@ -167,14 +189,16 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     public void componentOpened() {
         super.componentOpened();
         // je crée les raccourcis pour créer un nouveau relevé
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt T"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt G"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt K"), this);
-        getActionMap().put(this, new AbstractAction() {
+        String shortCut = "MainShortcut";
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt T"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt G"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt K"), shortCut);
+
+        getActionMap().put(shortCut, new AbstractAction() {
 
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -192,7 +216,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                     panelMisc.createRecord();
                 } else if ( actionEvent.getActionCommand().toUpperCase().equals("T") ) {
                     jTabbedPane1.setSelectedComponent(panelAll);
-                    panelMisc.createRecord();
+                    panelAll.createRecord();
                 } else if ( actionEvent.getActionCommand().toUpperCase().equals("K") ) {
                     CopyFamPanel.showStatistics();
                 } else if ( actionEvent.getActionCommand().toUpperCase().equals("G") ) {
@@ -227,19 +251,17 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             }
         });
 
-        setCurrentFile(null);
         AncestrisPlugin.register(this);
         // je cree le modele de données
         dataManager = new DataManager();
-        panelBirth.setModel(dataManager, DataManager.ModelType.birth, dataManager, this);
-        panelMarriage.setModel(dataManager, DataManager.ModelType.marriage, dataManager, this);
-        panelDeath.setModel(dataManager, DataManager.ModelType.death, dataManager, this);
-        panelMisc.setModel(dataManager, DataManager.ModelType.misc, dataManager, this);
-        panelAll.setModel(dataManager, DataManager.ModelType.all, dataManager, this);
+        panelBirth.setModel(dataManager, RelevePanel.PanelType.birth, this);
+        panelMarriage.setModel(dataManager, RelevePanel.PanelType.marriage, this);
+        panelDeath.setModel(dataManager, RelevePanel.PanelType.death, this);
+        panelMisc.setModel(dataManager, RelevePanel.PanelType.misc,  this);
+        panelAll.setModel(dataManager, RelevePanel.PanelType.all,  this);
 
+        setCurrentFile(null);
         
-        //panelConfig.setTopComponent(this);
-
         // je charge le fichier de la session précédente
         String lastFileName =  NbPreferences.forModule(ReleveTopComponent.class).get(
                     "LastFileName", "");
@@ -276,8 +298,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         if (result) {
             // Remarque : j'ajoute donc l'enregistrement des preferences ici 
-            // car Netbeans n'appelle pas componentClosed() quand on ferme 
-            // l'application ancestris.
+            // au lieu de componentClosed() car Netbeans n'appelle pas componentClosed()
+            // quand on ferme l'application ancestris sans avoir fermé le TopComponent
             
             // Chaque panel sauvegarde la largeur des colonnes
             panelBirth.componentClosed();
@@ -292,6 +314,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                         "LastFileName",
                         currentFile.getAbsolutePath());
             }
+
+            // je ferme l'editeur independant
+            if ( standaloneEditor != null) {
+                standaloneEditor.closeComponent();
+            }
         }
         return result;
     }
@@ -305,22 +332,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     @Override
     public void componentClosed() {
         // je ferme l'editeur independant
-        showStandalone(false);
-
-        // sauvegarde la largeur des colonnes
-        panelBirth.componentClosed();
-        panelMarriage.componentClosed();
-        panelDeath.componentClosed();
-        panelMisc.componentClosed();
-        panelAll.componentClosed();
-
-        // j'enregistre le nom du fichier courant
-        if (currentFile != null) {
-            NbPreferences.forModule(ReleveTopComponent.class).put(
-                    "LastFileName",
-                    currentFile.getAbsolutePath());
+        if ( standaloneEditor != null) {
+            standaloneEditor.closeComponent();
         }
-        
         //
         AncestrisPlugin.unregister(this);
     }
@@ -338,19 +352,19 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     void selectField(Record record, Field.FieldType fieldType) {
         if (record instanceof RecordBirth) {
             jTabbedPane1.setSelectedComponent(panelBirth);
-            panelBirth.selectRecord(dataManager.getReleveBirthModel().getIndex(record));
+            panelBirth.selectRecord(dataManager.getDataModel().getIndex(record));
             panelBirth.selectField(fieldType);
         } else  if (record instanceof RecordMarriage) {
             jTabbedPane1.setSelectedComponent(panelMarriage);
-            panelMarriage.selectRecord(dataManager.getReleveMarriageModel().getIndex(record));
+            panelMarriage.selectRecord(dataManager.getDataModel().getIndex(record));
             panelMarriage.selectField(fieldType);
         } else  if (record instanceof RecordDeath) {
             jTabbedPane1.setSelectedComponent(panelDeath);
-            panelDeath.selectRecord(dataManager.getReleveDeathModel().getIndex(record));
+            panelDeath.selectRecord(dataManager.getDataModel().getIndex(record));
             panelDeath.selectField(fieldType);
         } else  if (record instanceof RecordMisc) {
             jTabbedPane1.setSelectedComponent(panelMisc);
-            panelMisc.selectRecord(dataManager.getReleveMiscModel().getIndex(record));
+            panelMisc.selectRecord(dataManager.getDataModel().getIndex(record));
             panelMisc.selectField(fieldType);
         }
     }
@@ -410,6 +424,16 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 importClipboard();
             } else if (menuItemExport.equals(e.getSource())) {
                 exportFile();
+            } else if (menuItemInsert.equals(e.getSource())) {
+                insertRecord();
+            } else if (menuItemDelete.equals(e.getSource())) {
+                deleteRecord();
+            } else if (menuItemSwapNext.equals(e.getSource())) {
+                swapRecordNext();
+            } else if (menuItemSwapPrevious.equals(e.getSource())) {
+                swapRecordPrevious();
+            } else if (menuItemCheck.equals(e.getSource())) {
+                showCheck();
             } else if (menuItemStatistics.equals(e.getSource())) {
                 showStatistics();
             } else if (menuItemDemoFile.equals(e.getSource())) {
@@ -418,6 +442,91 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 showHelp();
             }
         }
+    }
+
+    public void insertRecord() {
+        switch (jTabbedPane1.getSelectedIndex()) {
+            case 0:
+                panelBirth.insertRecord();
+                break;
+            case 1:
+                panelMarriage.insertRecord();
+                break;
+            case 2:
+                panelDeath.insertRecord();
+                break;
+            case 3:
+                panelMisc.insertRecord();
+                break;
+            default:
+                panelAll.insertRecord();
+                break;
+        }
+    }
+
+    public void deleteRecord() {
+        switch (jTabbedPane1.getSelectedIndex()) {
+            case 0:
+                panelBirth.removeRecord();
+                break;
+            case 1:
+                panelMarriage.removeRecord();
+                break;
+            case 2:
+                panelDeath.removeRecord();
+                break;
+            case 3:
+                panelMisc.removeRecord();
+                break;
+            default:
+                panelAll.removeRecord();
+                break;
+        }
+    }
+
+    public void swapRecordNext() {
+         switch (jTabbedPane1.getSelectedIndex()) {
+            case 0:
+                panelBirth.swapRecordNext();
+                break;
+            case 1:
+                panelMarriage.swapRecordNext();
+                break;
+            case 2:
+                panelDeath.swapRecordNext();
+                break;
+            case 3:
+                panelMisc.swapRecordNext();
+                break;
+            default:
+                panelAll.swapRecordNext();
+        }
+    }
+
+    public void swapRecordPrevious() {
+         switch (jTabbedPane1.getSelectedIndex()) {
+            case 0:
+                panelBirth.swapRecordPrevious();
+                break;
+            case 1:
+                panelMarriage.swapRecordPrevious();
+                break;
+            case 2:
+                panelDeath.swapRecordPrevious();
+                break;
+            case 3:
+                panelMisc.swapRecordPrevious();
+                break;
+            default:
+                panelAll.swapRecordPrevious();
+        }
+    }
+
+
+    public void showCheck() {
+        ErrorBuffer errorBuffer = new ErrorBuffer();
+        TableModelRecordCheck modelCheck = new TableModelRecordCheck(dataManager.getDataModel());
+        ResultDialog.show(null, this, modelCheck, errorBuffer, currentFile);
     }
 
     public void showStatistics() {
@@ -507,7 +616,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         String title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/Bundle").getString("LOAD_FILE");
 
         // je desactive le listener UNDO
-        ModelAbstract.setUndoEnabled(false);
+        RecordModel.setUndoEnabled(false);
 
         try {
 
@@ -556,7 +665,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 //                        default:
 //                            append = true;
 //                            //  l'utilsateur annule l'operation
-//                            ModelAbstract.setUndoEnabled(true);
+//                            RecordModel.setUndoEnabled(true);
 //                            return;
 //                    }
 //                }
@@ -644,32 +753,12 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
                     // je selectionne le premier releve dans chaque table, s'il n'y a
                     // pas de releve deja selectionne
-                    if (!append ) {                        
-                        if( dataManager.getReleveBirthModel().getRowCount() > 0 ) {
-                            panelBirth.selectRow(0);
-                        } else  {
-                            panelBirth.selectRow(-1);
-                        }
-                        if (dataManager.getReleveMarriageModel().getRowCount() > 0) {
-                            panelMarriage.selectRow(0);
-                        } else  {
-                            panelMarriage.selectRow(-1);
-                        }
-                        if (dataManager.getReleveDeathModel().getRowCount() > 0) {
-                            panelDeath.selectRow(0);
-                        } else  {
-                            panelDeath.selectRow(-1);
-                        }
-                        if (dataManager.getReleveMiscModel().getRowCount() > 0) {
-                            panelMisc.selectRow(0);
-                        } else  {
-                            panelMisc.selectRow(-1);
-                        }
-                        if (dataManager.getReleveAllModel().getRowCount() > 0) {
-                            panelAll.selectRow(0);
-                        } else  {
-                            panelAll.selectRow(-1);
-                        }
+                    if (!append ) {    
+                        panelBirth.selectRow(0);
+                        panelMarriage.selectRow(0);
+                        panelDeath.selectRow(0);
+                        panelMisc.selectRow(0);
+                        panelAll.selectRow(0);
                     }
 
                     // je selectionne le premier onglet
@@ -684,14 +773,16 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         } catch (Exception ex) {
             String message = ex.getMessage();
-            if (message != null && message.isEmpty()) {
-                message = ex.toString();
-            }
+            ex.printStackTrace(System.err);
             Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+            if (ex.getMessage() == null || message.isEmpty()) {
+                JOptionPane.showMessageDialog(this, ex.getClass().getName()+ " See console log", title, JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+            }
         }
         // je retablis le listener UNDO
-        ModelAbstract.setUndoEnabled(true);
+        RecordModel.setUndoEnabled(true);
     }
 
     /**
@@ -855,7 +946,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      */
     protected void saveFile() {
         if ( currentFile != null) {
-            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV3);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV4);
             if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
                 dataManager.resetDirty();
@@ -931,7 +1022,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             // afin de pouvoir le ré-utiliser meme si l'enregistrement s'est mal passé.
             NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, resultFile.getParent().toString());
             // j'enregistre les données dans le fichier
-            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV3);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV4);
 
              if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
@@ -1201,13 +1292,13 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         int rc = chooser.showDialog(component, buttonLabel);
 
         // check resultFile
-        File resultFile = chooser.getSelectedFile();
-        if (rc != JFileChooser.APPROVE_OPTION || resultFile == null) {
+        File outputFile = chooser.getSelectedFile();
+        if (rc != JFileChooser.APPROVE_OPTION || outputFile == null) {
             return ;
         }
 
         // choose an existing file?
-        if (resultFile.exists() && askForOverwrite) {
+        if (outputFile.exists() && askForOverwrite) {
             Toolkit.getDefaultToolkit().beep();
             rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), Action2.yesNo(), component);
             if (rc != 0) {
@@ -1215,9 +1306,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             }
         }
 
-        if (resultFile != null) {
+        if (outputFile != null) {
             // j'enregistre le répertoire du fichier
-            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, resultFile.getParent().toString());
+            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, outputFile.getParent().toString());
 
             // je recupere le type de fichier choisi
             FileManager.FileFormat fileFormat = FileManager.FileFormat.FILE_TYPE_UNKNOW;
@@ -1230,22 +1321,22 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             }
 
             // j'ajoute l'extension par defaut si l'utilisateur n'a pas mis d'extension
-            if ( ! resultFile.getName().contains(".") ) {
-                resultFile = new File (resultFile.getAbsolutePath()+"."+extension);
+            if ( ! outputFile.getName().contains(".") ) {
+                outputFile = new File (outputFile.getAbsolutePath()+"."+extension);
             }
 
             // j'enregistre les modeles choisis la liste des modeles à enregistrer
             StringBuilder saveResult = new StringBuilder();
             if (jRadioButtonAll.isSelected()) {
-                FileManager.saveFile(dataManager, dataManager, resultFile, fileFormat);
+                FileManager.saveFile(dataManager, dataManager, outputFile, fileFormat);
             } else if (jRadioButtonBirth.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveBirthModel());
+                FileManager.saveFile(dataManager, outputFile, fileFormat, dataManager.getDataModel(), DataManager.RecordType.birth);
             } else if (jRadioButtonMarriage.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveMarriageModel());
+                FileManager.saveFile(dataManager, outputFile, fileFormat, dataManager.getDataModel(), DataManager.RecordType.marriage);
             } else if (jRadioButtonDeath.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveDeathModel());
+                FileManager.saveFile(dataManager, outputFile, fileFormat, dataManager.getDataModel(), DataManager.RecordType.death);
             } else if (jRadioButtonMisc.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveMiscModel());
+                FileManager.saveFile(dataManager, outputFile, fileFormat, dataManager.getDataModel(), DataManager.RecordType.misc);
             }
             if (! saveResult.toString().isEmpty()) {
                 // j'affiche les erreurs rencontrées
@@ -1267,8 +1358,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         // je passe à la suite
         if (result) {
-            dataManager.removeAll();
-
             FileBuffer fileBuffer;
             try {
                 InputStream is = getClass().getResourceAsStream("/ancestris/modules/releve/file/bourbons.txt");
@@ -1277,31 +1366,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 dataManager.setPlace(fileBuffer.getPlaces().get(0));
                 setCurrentFile(null);
                 dataManager.resetDirty();
-                if (dataManager.getReleveBirthModel().getRowCount() > 0) {
-                    panelBirth.selectRow(0);
-                } else {
-                    panelBirth.selectRow(-1);
-                }
-                if (dataManager.getReleveMarriageModel().getRowCount() > 0) {
-                    panelMarriage.selectRow(0);
-                } else {
-                    panelMarriage.selectRow(-1);
-                }
-                if (dataManager.getReleveDeathModel().getRowCount() > 0) {
-                    panelDeath.selectRow(0);
-                } else {
-                    panelDeath.selectRow(-1);
-                }
-                if (dataManager.getReleveMiscModel().getRowCount() > 0) {
-                    panelMisc.selectRow(0);
-                } else {
-                    panelMisc.selectRow(-1);
-                }
-                if (dataManager.getReleveAllModel().getRowCount() > 0) {
-                    panelAll.selectRow(0);
-                } else {
-                    panelAll.selectRow(-1);
-                }
+                panelBirth.selectRow(0);
+                panelMarriage.selectRow(0);
+                panelDeath.selectRow(0);
+                panelMisc.selectRow(0);
+                panelAll.selectRow(0);
 
                 setCurrentFile(new File(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.demoRecord")));
 
@@ -1318,6 +1387,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      */
     private void setCurrentFile ( File releveFile ) {
         currentFile = releveFile;
+        dataManager.setCurrentFile(currentFile);
         String name;
 
         if (currentFile != null ) {
@@ -1334,6 +1404,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             standaloneEditor.setTitle(name);
         }
 
+    }
+
+    public File getCurrentFile() {
+        return currentFile; 
     }
    
     ///////////////////////////////////////////////////////////////////////////
@@ -1376,53 +1450,58 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      * @param show
      */
     @Override
-    public void showStandalone(boolean show) {
-        if (show) {
-            if (standaloneEditor == null) {
-                standaloneEditor = new StandaloneEditor();
-                standaloneEditor.setVisible(true);
-                standaloneEditor.setDataManager(dataManager, dataManager, this,
-                        panelBirth.getCurrentRecordIndex(),
-                        panelMarriage.getCurrentRecordIndex(),
-                        panelDeath.getCurrentRecordIndex(),
-                        panelMisc.getCurrentRecordIndex(),
-                        panelAll.getCurrentRecordIndex(),
-                        jTabbedPane1.getSelectedIndex()
-                        );
-                // je lui donne le meme titre que ReleveTopComponent
-                standaloneEditor.setTitle(this.getName());
-                
-            } else {
-                // Si l'editeur existe déjà, je l'affiche au premier plan
-                standaloneEditor.toFront();
-                // je la desiconifie 
-                standaloneEditor.setState ( java.awt.Frame.NORMAL );
-            }
-        } else {
-            // je fermer l'editeur
-            if (standaloneEditor != null) {
-                standaloneEditor.setVisible(false);
-                standaloneEditor.dispose();
-                standaloneEditor = null;
-            }
+    public void showStandalone() {        
+        // je recupere l'index du releve selectionne dans la table
+        int recordIndex;
+
+        switch (jTabbedPane1.getSelectedIndex()) {
+            case 0:
+                recordIndex = panelBirth.getCurrentRecordIndex();
+                break;
+            case 1:
+                recordIndex = panelMarriage.getCurrentRecordIndex();
+                break;
+            case 2:
+                recordIndex = panelDeath.getCurrentRecordIndex();
+                break;
+            case 3:
+                recordIndex = panelMisc.getCurrentRecordIndex();
+                break;
+            default:
+                recordIndex = panelAll.getCurrentRecordIndex();
+                break;
+
         }
+        showStandalone(jTabbedPane1.getSelectedIndex(), recordIndex);
+        
     }
 
-
-    /**
-     * Cette methode est appelée par l'editeur independant quand l'utilisateur 
-     * ferme sa fenetre.
-     * @param show
-     */
     @Override
-    public void standaloneEditorClosed() {
-        // j'efface la reference de l'editeur
-         standaloneEditor = null;
+    public void showStandalone(int panelIndex, int recordIndex) {
+        if (standaloneEditor == null) {
+            standaloneEditor = new StandaloneEditor();
+            standaloneEditor.setDataManager(dataManager, this,
+                    panelBirth.getCurrentRecordIndex(),
+                    panelMarriage.getCurrentRecordIndex(),
+                    panelDeath.getCurrentRecordIndex(),
+                    panelMisc.getCurrentRecordIndex(),
+                    panelAll.getCurrentRecordIndex(),
+                    jTabbedPane1.getSelectedIndex());
+            // je lui donne le meme titre que ReleveTopComponent
+            standaloneEditor.setTitle(this.getName());
+        }
+
+        standaloneEditor.toFront();
+        standaloneEditor.setVisible(true);
+        if ( standaloneEditor.getState() == java.awt.Frame.ICONIFIED) {
+            standaloneEditor.setState(java.awt.Frame.NORMAL);
+        }
+        standaloneEditor.selectRecord(dataManager, panelIndex, recordIndex);        
     }
 
     /**
      * Affiche/masque le browser d'image dans l'editeur standalone
-     * (transmets la commande a l'editeur standealaone)
+     * (transmets la commande a l'editeur standalone)
      * @param visible
      */
     @Override

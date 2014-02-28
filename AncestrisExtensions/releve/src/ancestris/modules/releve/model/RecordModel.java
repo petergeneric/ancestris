@@ -3,32 +3,24 @@ package ancestris.modules.releve.model;
 import ancestris.modules.releve.ReleveEditorListener;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import javax.swing.table.AbstractTableModel;
 
 /**
  *
  * @author Michel
  */
-public abstract class ModelAbstract extends AbstractTableModel  {
+public class RecordModel {
 
-    protected List<Record> releveList = new ArrayList<Record>();
+    protected ArrayList<Record> releveList = new ArrayList<Record>();
     private boolean dirty = false;
     
     // liste des editeurs succeptibles d'être en train de modifier un releve
     private ArrayList<ReleveEditorListener> editorListeners = new ArrayList<ReleveEditorListener>(1);
+    private ArrayList<RecordModelListener> recordModelListeners = new ArrayList<RecordModelListener>(1);
 
-    public ModelAbstract() {
+    public RecordModel() {
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement ModelAbstract methods
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * appelle le constructeur de releve specifique du modele
-     * @return
-     */
-    public abstract Record createRecord();
 
     /**
      * constructeur de releve
@@ -36,9 +28,10 @@ public abstract class ModelAbstract extends AbstractTableModel  {
      * de chaque modele
      * @param record
      */
-    protected int addRecord(final Record record, boolean updateGui) {
+    protected int addRecord(final Record record) {
         releveList.add(record);
-      
+        int recordIndex = releveList.size()-1;
+
         // keep undo
         lock.addChange(new Undo() {
         @Override
@@ -47,11 +40,74 @@ public abstract class ModelAbstract extends AbstractTableModel  {
                 return null;
             }
         });
-        int recordIndex = releveList.size()-1;
-        if (updateGui) {
-            fireTableRowsInserted(recordIndex, recordIndex);
-        }
+        fireRecordModelInserted(recordIndex, recordIndex);
         return recordIndex;
+    }
+
+    /**
+     * ajoute plusieurs releves
+     * Cette methode est plus efficace que adRecord() car elle notifie les
+     * listeners une seule fois
+     * Attention : cette methode ne memorise pas les records ajoutés dans Undo
+     * @param record
+     */
+    protected void addRecords(List<Record> records) {
+        // j'ajoute les releves
+        for (Record record : records) {
+            releveList.add(record);
+        }
+        fireAllChanged();
+    }
+
+    /**
+     * insere un relevé à la place de celui qui est a l'index recordIndex
+     * @param record
+     */
+    protected void insertRecord(final Record record, int recordIndex) {
+        releveList.add(recordIndex,record);
+        
+        // keep undo
+        lock.addChange(new Undo() {
+        @Override
+            Record undo() {
+                removeRecord(record);
+                return null;
+            }
+        });
+        fireRecordModelInserted(recordIndex, recordIndex);
+    }
+
+    
+    protected void swapRecordNext(final Record record) {
+         // keep undo
+        lock.addChange(new Undo() {
+
+            @Override
+            Record undo() {
+                int recordIndex = releveList.indexOf(record);
+                Collections.swap(releveList, recordIndex-1, recordIndex);
+                return record;
+            }
+        });
+        int recordIndex = releveList.indexOf(record);
+        Collections.swap(releveList, recordIndex, recordIndex+1);
+        fireRecordModelUpdated(recordIndex, recordIndex+1);
+    }
+    
+    protected void swapRecordPrevious(final Record record) {
+        // keep undo
+        lock.addChange(new Undo() {
+
+            @Override
+            Record undo() {
+                int recordIndex = releveList.indexOf(record);
+                Collections.swap(releveList, recordIndex, recordIndex+1);
+                return record;
+            }
+        });
+        int recordIndex = releveList.indexOf(record);
+        Collections.swap(releveList, recordIndex-1, recordIndex);
+        fireRecordModelUpdated(recordIndex-1, recordIndex);
     }
 
     protected void removeRecord(final Record record) {
@@ -60,14 +116,14 @@ public abstract class ModelAbstract extends AbstractTableModel  {
 
             @Override
             Record undo() {
-                addRecord(record, true);
+                addRecord(record);
                 return record;
             }
         });
 
         int recordIndex = releveList.indexOf(record);
         releveList.remove(record);
-        fireTableRowsDeleted(recordIndex, recordIndex);
+        fireRecordModelDeleted(recordIndex, recordIndex);
     }
 
     /**
@@ -77,17 +133,16 @@ public abstract class ModelAbstract extends AbstractTableModel  {
      */
     protected void removeAll() {
         try {
-        // je vide le modele
-        int previousRowCount = getRowCount();
-        releveList.clear();
-        if (previousRowCount > 0) {
-            fireTableRowsDeleted(0, previousRowCount - 1);
-        }
-        lock.clear();
-        resetDirty();
-        } catch (NullPointerException e ){
+            // je vide le modele
+            int previousRowCount = releveList.size();
+            releveList.clear();
+            if (previousRowCount > 0) {
+                fireRecordModelDeleted(0, previousRowCount - 1);
+            }
+            lock.clear();
+            resetDirty();
+        } catch (NullPointerException e) {
             e.printStackTrace();
-
         }
     }
 
@@ -120,7 +175,11 @@ public abstract class ModelAbstract extends AbstractTableModel  {
     public int getIndex(Record record) {
         return releveList.indexOf(record);
     }
-    
+
+    public int getRowCount() {
+        return releveList.size();
+    }
+
     public boolean isDirty() {
         return dirty;
     }
@@ -128,44 +187,11 @@ public abstract class ModelAbstract extends AbstractTableModel  {
     public void resetDirty() {
         dirty = false;
     }
-
-       
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement AbstractTableModel methods
-    ///////////////////////////////////////////////////////////////////////////
-    @Override
-    public abstract int getColumnCount();
-
-    @Override
-    public abstract String getColumnName(int col);
-
-    @Override
-    public abstract Object getValueAt(int row, int col);
-
-    @Override
-    public int getRowCount() {
-        return releveList.size();
-    }
     
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement AbstractEditorModel methods
-    ///////////////////////////////////////////////////////////////////////////
-//    final static KeyStroke ks1 = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK);
-//    final static KeyStroke ks2 = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK);
-//    final static KeyStroke ks3 = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK);
-//    final static KeyStroke ks4 = KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.ALT_DOWN_MASK);
-//    final static KeyStroke ks5 = KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.ALT_DOWN_MASK);
-//    final static KeyStroke ks6 = KeyStroke.getKeyStroke(KeyEvent.VK_6, InputEvent.ALT_DOWN_MASK);
-//    final static KeyStroke ks7 = KeyStroke.getKeyStroke(KeyEvent.VK_7, InputEvent.ALT_DOWN_MASK);
-//    final static KeyStroke ks8 = KeyStroke.getKeyStroke(KeyEvent.VK_8, InputEvent.ALT_DOWN_MASK);
-//    final static KeyStroke ks9 = KeyStroke.getKeyStroke(KeyEvent.VK_9, InputEvent.ALT_DOWN_MASK);
-
-    //public abstract BeanField[] getFieldList( int row );
-
     ///////////////////////////////////////////////////////////////////////////
     // Implement Undo methods
     ///////////////////////////////////////////////////////////////////////////
-    public void fieldChanged(final Record record, final Field field, final Object oldValue) {
+    public void notiFyFieldChanged(final Record record, final Field field, final Object oldValue) {
 
         // keep undo
         lock.addChange(new Undo() {
@@ -176,8 +202,52 @@ public abstract class ModelAbstract extends AbstractTableModel  {
                 return record;
             }
         });
+        int recordIndex = getIndex(record);
+        fireRecordModelUpdated(recordIndex, recordIndex);
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Manager VerificationListener
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @param validationListeners the validationListeners to set
+     */
+    public void addRecordModelListener(RecordModelListener listener) {
+        recordModelListeners.add(listener);
+    }
+
+    /**
+     * @param validationListeners the validationListeners to set
+     */
+    public void removeRecordModelListener(RecordModelListener listener) {
+        recordModelListeners.remove(listener);
+    }
+
+    public void fireRecordModelInserted (int firstIndex, int lastIndex) {
+          for (RecordModelListener listener : recordModelListeners) {
+            listener.recordInserted(firstIndex, lastIndex);
+        }
+    }
+
+    public void fireRecordModelDeleted (int firstIndex, int lastIndex) {
+          for (RecordModelListener listener : recordModelListeners) {
+            listener.recordDeleted(firstIndex, lastIndex);
+        }
+    }
+
+    public void fireRecordModelUpdated (int firstIndex, int lastIndex) {
+          for (RecordModelListener listener : recordModelListeners) {
+            listener.recordUpdated(firstIndex, lastIndex);
+        }
+    }
+
+    public void fireAllChanged () {
+          for (RecordModelListener listener : recordModelListeners) {
+            listener.allChanged();
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Manager VerificationListener
@@ -197,30 +267,14 @@ public abstract class ModelAbstract extends AbstractTableModel  {
         editorListeners.remove(listener);
     }
 
-    public String verifyRecord( ) {
-        StringBuilder errorMessage = new StringBuilder();
-
-        for (ReleveEditorListener listener : editorListeners) {
-            int recordIndex = listener.getCurrentRecordIndex();
-
-            try {
-                Record record = releveList.get(recordIndex);
-
-                if (record.getEventDateString().isEmpty()) {
-                    errorMessage.append("La date de l'évènement est vide").append("\n");
-                }
-                if (record.getIndiLastName().isEmpty() && record.getIndiFirstName().isEmpty()) {
-                    errorMessage.append("Le nom et le prénom sont vides").append("\n");
-                }
-            } catch (IndexOutOfBoundsException e) {
-                // rien a faire
-            }
-        }
-
-        return errorMessage.toString();
-    }
-
-     public String verifyRecord( int recordIndex ) {
+    /**
+     * verifie si les chmaps obligatoires sont renseignés
+     *  - date de l'evenemen
+     *  - nom ou prénom de l'individu
+     * @param recordIndex
+     * @return
+     */
+    public String verifyRecord( int recordIndex ) {
         StringBuilder errorMessage = new StringBuilder();
 
         try {

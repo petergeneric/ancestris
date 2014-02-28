@@ -9,6 +9,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.util.List;
+import javax.swing.JFrame;
 import junit.framework.TestCase;
 
 /**
@@ -72,7 +73,8 @@ public class MergeModelMiscOtherTest extends TestCase {
             List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
             assertEquals("Nombre model",3,models.size());
 
-            MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, getRecordsInfoPlace(), sourceTitle, miscRecord, false);
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, mergeRecord, false);
+
             //TestUtility.waitForDialogClose(dialog);
 
             //models.get(0).copyRecordToEntity();
@@ -157,7 +159,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
             assertEquals("Nombre model",3,models.size());
 
-            MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, getRecordsInfoPlace(), sourceTitle, miscRecord, false);
+            MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, mergeRecord, false);
             //TestUtility.waitForDialogClose(dialog);
 
             //models.get(0).copyRecordToEntity();

@@ -1,10 +1,11 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.dnd.TransferableRecord.TransferableData;
-import ancestris.modules.releve.ReleveTable;
+import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.table.ReleveTable;
 import ancestris.modules.releve.model.FieldPlace;
-import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.table.TableModelRecordAbstract;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
@@ -16,6 +17,11 @@ import javax.swing.TransferHandler;
  * @author Michel
  */
 public class RecordTransferHandle extends TransferHandler {
+    private DataManager dataManager;
+
+    public RecordTransferHandle(DataManager dataManager) {
+        this.dataManager = dataManager;
+    }
 
     @Override
     public int getSourceActions(JComponent c) {
@@ -23,17 +29,24 @@ public class RecordTransferHandle extends TransferHandler {
     }
 
     @Override
-    public Transferable createTransferable(JComponent c) {
-        if (c instanceof ReleveTable ) {
-            ReleveTable table = (ReleveTable) c ;
-
-            // je recupere le clone du releve 
-            Record record = ((ModelAbstract)table.getModel()).getRecord(table.convertRowIndexToModel(table.getSelectedRow()));
+    public Transferable createTransferable(JComponent component) {
+        if (component instanceof ReleveTable ) {
+            ReleveTable table = (ReleveTable) component ;
+            TableModelRecordAbstract model = (TableModelRecordAbstract) table.getModel();
+            // je recupere le clone du releve
+            Record record = model.getRecord(table.convertRowIndexToModel(table.getSelectedRow()));
             Record clonedRecord = record.clone();
             // je complete le lieu dans le releve
             FieldPlace recordsInfoPlace = new FieldPlace();
-            recordsInfoPlace.setValue(table.getPlaceManager().getPlace());
-            return new TransferableRecord(recordsInfoPlace, table.getPlaceManager().getSourceTitle(), clonedRecord, c);
+            recordsInfoPlace.setValue(model.getPlace());
+            String sourceTitle;
+            if (dataManager.getCurrentFile() != null ) {
+                sourceTitle = MergeOptionPanel.SourceModel.getModel().getSource(dataManager.getCurrentFile().getName());
+            } else {
+                sourceTitle = "";
+            }
+            MergeRecord mergeRecord = new MergeRecord(recordsInfoPlace, sourceTitle, clonedRecord);
+            return new TransferableRecord(mergeRecord, component);
         } else {
             return null;
         }
@@ -61,33 +74,33 @@ public class RecordTransferHandle extends TransferHandler {
         return true;
     }
 
-    /**
-     * import d'un relevé
-     * @param support
-     * @return
-     */
-    @Override
-    public boolean importData(TransferHandler.TransferSupport support) {
-        if (!canImport(support)) {
-            return false;
-        }
-
-        try {
-            TransferableData data = null;
-            data = (TransferableData) support.getTransferable().getTransferData(TransferableRecord.recordFlavor);
-            if (support.getComponent() instanceof ReleveTable) {
-                ReleveTable table = (ReleveTable) support.getComponent();
-                table.dropRecord(data.record);
-                return true;
-            }
-        } catch (UnsupportedFlavorException e) {
-            return false;
-        } catch (IOException e) {
-            return false;
-        }
-        return false;
-
-    }
+//    /**
+//     * import d'un relevé
+//     * @param support
+//     * @return
+//     */
+//    @Override
+//    public boolean importData(TransferHandler.TransferSupport support) {
+//        if (!canImport(support)) {
+//            return false;
+//        }
+//
+//        try {
+//            TransferableData data = null;
+//            data = (TransferableData) support.getTransferable().getTransferData(TransferableRecord.recordFlavor);
+//            if (support.getComponent() instanceof ReleveTable) {
+//                ReleveTable table = (ReleveTable) support.getComponent();
+//                table.dropRecord(data.record);
+//                return true;
+//            }
+//        } catch (UnsupportedFlavorException e) {
+//            return false;
+//        } catch (IOException e) {
+//            return false;
+//        }
+//        return false;
+//
+//    }
 
     @Override
     protected void exportDone(JComponent source, Transferable data, int action) {

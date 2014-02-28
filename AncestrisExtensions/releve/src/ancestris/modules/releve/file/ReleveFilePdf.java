@@ -1,18 +1,18 @@
 package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.model.PlaceManager;
-import ancestris.modules.releve.model.ModelAbstract;
+import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.RecordMisc;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.file.FileManager.Line;
+import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.FieldAge;
 import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.PDFFormat;
-import genj.gedcom.PropertyDate;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.TreeMap;
 
 /**
  *
@@ -109,7 +107,7 @@ public class ReleveFilePdf {
      *                      false : remplacer les données dans le fichier.
      * @return StringBuilder est vide s'il n'y a pas d'erreur, sinon il contient les messages d'erreur.
      */
-    public static StringBuilder saveFile(PlaceManager placeManager, ModelAbstract recordModel, File fileName, boolean append) {
+    public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, DataManager.RecordType recordType, File fileName, boolean append) {
 
         StringBuilder sb = new StringBuilder();
         try {
@@ -120,14 +118,17 @@ public class ReleveFilePdf {
             for(int i=0; i < recordModel.getRowCount(); i++) {
                 recordTree.add(recordModel.getRecord(i));
             }
-            Collections.sort(recordTree, new RecordComparator());
+            //Collections.sort(recordTree, new RecordComparator());
             
             doc = new Document("");
 
             // j'ajoute les autres lignes
             for (int index = 0; index < recordTree.size(); index++) {
-                Line line = new Line(fieldSeparator);
                 Record record = recordTree.get(index);
+                if( recordType != null && recordType != record.getType()) {
+                    continue;
+                }
+                Line line = new Line(fieldSeparator);
                 try {
                     if ( record instanceof RecordBirth ) {
                         line.appendCsvFn(fileSignature);
@@ -238,7 +239,7 @@ public class ReleveFilePdf {
                         line.appendCsvFn(record.getWitness4Comment().toString());
 
                         line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
 
                     } if ( record instanceof RecordMarriage ) {
 
@@ -351,7 +352,7 @@ public class ReleveFilePdf {
                         line.appendCsvFn(record.getWitness4Comment().toString());
 
                         line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
 
                     } else if ( record instanceof RecordDeath ) {
 
@@ -463,7 +464,7 @@ public class ReleveFilePdf {
                         line.appendCsvFn(record.getWitness4Comment().toString());
 
                         line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
 
                     } else if ( record instanceof RecordMisc ) {
 
@@ -482,11 +483,16 @@ public class ReleveFilePdf {
                                 record.getEventDateString(),
                                 record.getEventType().getName(),
                                 participantNames,
+                                record.getSecondDateString(),
                                 record.getCote().toString(),
                                 record.getFreeComment().toString()
                                 );
 
-                        writeValue(1,"Intervant 1:",
+                        writeValue(1,"Notaire:",
+                            record.getNotary().toString()
+                            );
+
+                        writeValue(1,"Intervenant 1:",
                                 record.getIndiFirstName().toString(),
                                 record.getIndiLastName().toString()
                                 );
@@ -559,7 +565,7 @@ public class ReleveFilePdf {
                                 );
                         
                         ///////////////////////////////////////////////////////
-                        writeValue(1,"Intervant 2:",
+                        writeValue(1,"Intervenant 2:",
                                 record.getWifeFirstName().toString(),
                                 record.getWifeLastName().toString()
                                 );
@@ -655,7 +661,7 @@ public class ReleveFilePdf {
                          writeValue(1,"Info:",
                                 record.getGeneralComment().toString()
                                 );
-                        line.appendCsv(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
                     }
 
                 } catch (Exception e) {
@@ -682,7 +688,7 @@ public class ReleveFilePdf {
         StringBuilder sb1 = new StringBuilder();
         StringBuilder sb2 = new StringBuilder();
 
-        for (int i = 0; i < otherValues.length -2; i++) {
+        for (int i = 0; i < otherValues.length -3; i++) {
 
             // j'ajoute les valeurs supplémentaires séparées par des virgules
             if (!otherValues[i].trim().isEmpty()) {
@@ -695,7 +701,7 @@ public class ReleveFilePdf {
             }
         }
 
-        for (int i = otherValues.length -2; i < otherValues.length; i++) {
+        for (int i = otherValues.length -3; i < otherValues.length; i++) {
 
             // j'ajoute les valeurs supplémentaires séparées par des virgules
             if (!otherValues[i].trim().isEmpty()) {
@@ -712,8 +718,8 @@ public class ReleveFilePdf {
             doc.nextParagraph("start-indent=0pt,space-before=10pt");
             doc.addText(" ");
             doc.startTable("width=100%");
-            doc.addTableColumn("column-width=80%");
-            doc.addTableColumn("column-width=20%");
+            doc.addTableColumn("column-width=70%");
+            doc.addTableColumn("column-width=30%");
             doc.nextTableRow("text-align=left");
             doc.addText(sb1.toString(), "text-decoration=underline,font-size=11pt,font-weight=bold");
             doc.nextTableCell("text-align=right");
@@ -751,7 +757,7 @@ public class ReleveFilePdf {
         if( sb.length() > 0) {
             doc.nextParagraph("start-indent="+20*indent+"pt");
             if (!label.trim().isEmpty()) {
-                doc.addText(label.trim(), "font-size=10pt,font-weight=bold");
+                doc.addText(label.trim()+ " ", "font-size=10pt,font-weight=bold");
             }
             doc.addText(sb.toString(),"font-size=10pt");
         }

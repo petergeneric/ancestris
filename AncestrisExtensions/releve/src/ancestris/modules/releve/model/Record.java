@@ -2,6 +2,7 @@ package ancestris.modules.releve.model;
 
 import ancestris.modules.releve.model.Field.FieldType;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.time.Calendar;
 
 /**
  *
@@ -9,12 +10,12 @@ import genj.gedcom.PropertyDate;
  */
 public abstract class Record implements Cloneable{
 
-    public int recordNo;
     protected FieldEventType eventType;
     //protected FieldPlace eventPlace;
     protected FieldSimpleValue cote;
     protected FieldPicture freeComment;
     protected FieldDate eventDate;
+    protected FieldDate secondDate;
     protected FieldComment generalComment;
     protected FieldNotary notary;
     protected FieldSimpleValue parish;
@@ -308,7 +309,8 @@ public abstract class Record implements Cloneable{
 
     public Record() {
         eventDate = new FieldDate();
-        cote = new FieldSimpleValue(); 
+        secondDate = new FieldDate();
+        cote = new FieldSimpleValue();
         parish = new FieldSimpleValue(); 
         freeComment = new FieldPicture();
         generalComment = new FieldComment();
@@ -339,6 +341,9 @@ public abstract class Record implements Cloneable{
 
             if (eventDate != null) {
                 object.eventDate = eventDate.clone();
+            }
+            if (secondDate != null) {
+                object.secondDate = secondDate.clone();
             }
             if (cote != null) {
                 object.cote = cote.clone();
@@ -381,10 +386,6 @@ public abstract class Record implements Cloneable{
         return object;
     }
 
-    public int getRecordNo() {
-        return  recordNo;
-    }
-
     public FieldEventType getEventType() {
         return  eventType;
     }
@@ -395,6 +396,14 @@ public abstract class Record implements Cloneable{
 
     public String getEventDateString() {
         return eventDate.getValue();
+    }
+
+    public PropertyDate getSecondDateProperty() {
+        return secondDate.getPropertyDate();
+    }
+
+    public String getSecondDateString() {
+        return secondDate.getValue();
     }
 
 //    public String getStateName() {
@@ -774,6 +783,9 @@ public abstract class Record implements Cloneable{
                 case eventDate:
                     field = eventDate;
                     break;
+                case secondDate:
+                    field = secondDate;
+                    break;
                 case notary:
                     field = notary;
                     break;
@@ -902,7 +914,7 @@ public abstract class Record implements Cloneable{
                 case wifeComment:
                     field = wife.comment;
                     break;
-                //wife.married///////////////////////////////////////////////////////////			//wife.married///////////////////////////////////////////////////////////
+                //wife.married///////////////////////////////////////////////////////////
                 case wifeMarriedFirstName:
                     field = wife.marriedFirstName;
                     break;
@@ -1031,13 +1043,24 @@ public abstract class Record implements Cloneable{
         eventDate.setValue(dateString);
     }
 
-    public void setEventDateString(String value) {
-        eventDate.setValue(value);
+    public void setEventCalendar(Calendar calendar) {
+        if ( calendar != null) {
+            eventDate.setCalendar(calendar);
+        }
     }
 
     public void setEventDate(String strDay, String strMonth, String strYear) throws NumberFormatException {
         eventDate.setValue(strDay, strMonth, strYear);
     }
+
+    public void setSecondDate(String dateString) {
+        secondDate.setValue(dateString);
+    }
+
+    public void setSecondDate(String strDay, String strMonth, String strYear) throws NumberFormatException {
+        secondDate.setValue(strDay, strMonth, strYear);
+    }
+
 
 //    public void setStateName(String value) {
 //        eventPlace.setStateName(value);
@@ -1093,7 +1116,6 @@ public abstract class Record implements Cloneable{
             indi.age.setValue(stringAge.trim());
         }
         if (indi.birthDate != null) {
-            // la date de naissance n'est pas utilisée pour une naissance car c'est la même que la date de l'evenement
             indi.birthDate.setValue(stringBirthDate.trim());
         }
         if (indi.birthPlace != null) {

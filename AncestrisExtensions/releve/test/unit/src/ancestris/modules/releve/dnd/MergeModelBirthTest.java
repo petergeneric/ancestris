@@ -128,13 +128,14 @@ public class MergeModelBirthTest extends TestCase {
             models.get(0).copyRecordToEntity();
 
             String expected = "";
-            expected +="Acte du 01/01/2000, indicomment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, fatherOccupation, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, Décédé, motherOccupation, indiMotherComment\n";
+            expected +="Date de l'acte: 01/01/2000\n";
+            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à indiBirthplace, indicomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFtaerResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
-            expected +="generalcomment\n";
+            expected +="Commentaire général: generalcomment\n";
             expected +="Photo: photo";
             assertEquals("comment1",expected, indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
 
@@ -143,13 +144,14 @@ public class MergeModelBirthTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
-            expected ="Acte du 01/01/2000, indicomment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, fatherOccupation, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, Décédé, motherOccupation, indiMotherComment\n";
+            expected ="Date de l'acte: 01/01/2000\n";
+            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à indiBirthplace, indicomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFtaerResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
-            expected +="generalcomment\n";
+            expected +="Commentaire général: generalcomment\n";
             expected +="Photo: photo\n";
             expected += "oldcomment";
             assertEquals("comment2",expected, indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
@@ -212,7 +214,7 @@ public class MergeModelBirthTest extends TestCase {
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
             assertEquals("Nb birthsource",2,sourceLink.length );
             assertEquals("Source title 0","BMS Paris", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
-            assertEquals("Source title 1","Etat civil Brest", ((Source)((PropertyXRef)sourceLink[1]).getTargetEntity()).getTitle() );
+            assertEquals("Source title 1","", ((Source)((PropertyXRef)sourceLink[1]).getTargetEntity()).getTitle() );
 
         } catch (Exception ex) {
             fail(ex.getMessage());

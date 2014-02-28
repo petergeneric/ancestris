@@ -7,28 +7,22 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.model.PlaceListener;
-import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldSex;
-import ancestris.modules.releve.model.ModelAbstract;
+import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.Record;
-import ancestris.modules.releve.ReleveTopComponent;
-import ancestris.modules.releve.ReleveEditorListener;
-import ancestris.modules.releve.TableSelectionListener;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.DataManager.ModelType;
+import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldEventType;
 import ancestris.modules.releve.model.FieldNotary;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -38,44 +32,24 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  *
  * @author Michel
  */
-public class ReleveEditor extends javax.swing.JPanel implements FocusListener, ReleveEditorListener, TableSelectionListener, TableModelListener, PlaceListener {
+public class ReleveEditor extends javax.swing.JPanel implements FocusListener, PlaceListener {
 
-    DataManager dataManager = null;
-    ModelAbstract recordModel = null;
-    int currentRecordIndex = -1;
-    boolean standaloneMode = false;
-    /**
-     * bean ayant le focus par defaut (utilisé a la creation d'un releve
-     */
-    Bean defaultBeanFocus = null;
-    private MenuCommandProvider menuCommandeProvider;
+    private DataManager dataManager = null;
+    private RecordModel recordModel = null;
+    private MenuCommandProvider menuCommandeProvider = null;
+    private Bean currentFocusedBean = null;
 
     public ReleveEditor() {
         initComponents();
-
-        // je force la largeur du jbutton pour contenir le texte en entier et 
-        // et la hauteur egale aux autres boutons
-        Rectangle2D rect = jButtonFile.getFont().getStringBounds(jButtonFile.getText(), jButtonFile.getFontMetrics(jButtonFile.getFont()).getFontRenderContext());
-        jButtonFile.setPreferredSize(new Dimension((int)rect.getWidth()+jButtonFile.getMargin().left+jButtonFile.getMargin().right+8+jButtonFile.getInsets().left+jButtonFile.getInsets().right, 25));
-        
-        jButtonPrevious.setVisible(false);
-        jTextFielRecordNo.setVisible(false);
-        jButtonNext.setVisible(false);
-
-        jButtonDelete.setEnabled(false);
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(20);
         //jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0));
@@ -83,38 +57,23 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_UP,InputEvent.ALT_MASK));
         jScrollPane1.getActionMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,InputEvent.ALT_MASK));
 
-        // je crée les raccourcis pour créer les nouveaux relevés
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt S"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt Z"), this);
-        
-        // je crée le racourci pour reseigner le nom de l'indiividu dans le nom du père de l'individu
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt X"), this);
+        String shortCut = "EditorShortcut";
+        // je crée le racourci pour reseigner le nom de l'individu dans le nom du père de l'individu
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt X"), shortCut);
         // je crée le racourci pour copier le nom de l'épouse dans le nom du père de l'épouse
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt Y"), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt Y"), shortCut);
         // je crée le racourci pour donner le focus a l'age de l'individu
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt A"), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt A"), shortCut);
         // je crée le racourci pour copier la date de l'evenement dans la date de naissance
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt B"), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt B"), shortCut);
         // je crée le racourci pour copier la meme valeur que celle de l'enregistrement précédent
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS , InputEvent.ALT_MASK), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke(KeyEvent.VK_PLUS , InputEvent.ALT_MASK ) , this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS , InputEvent.ALT_MASK), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke(KeyEvent.VK_PLUS , InputEvent.ALT_MASK ) , shortCut);
 
-        getActionMap().put(this, new AbstractAction() {
+        getActionMap().put(shortCut, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( actionEvent.getActionCommand().toUpperCase().equals("C") ) {
-                    jButtonNewActionPerformed(actionEvent);
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("S") ) {
-                    jButtonDeleteActionPerformed(actionEvent);
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("Z") ) {
-                    Record record = recordModel.undo();
-                    if (record != null ) {
-                        selectRecord(recordModel.getIndex(record));
-                    } else {
-                        selectRecord(-1);
-                    }
-                    recordModel.fireTableDataChanged();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("X") ) {
+                if ( actionEvent.getActionCommand().toUpperCase().equals("X") ) {
                     copyIndiNameToIndiFatherName();
                 } else if ( actionEvent.getActionCommand().toUpperCase().equals("Y") ) {
                     copyWifeNameToWifeFatherName();
@@ -138,43 +97,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      * @param dataManager
      * @param modelType
      */
-    public void setModel(DataManager dataManager, DataManager.ModelType modelType, PlaceManager placeManager, MenuCommandProvider menuCommandeProvider) {
+    public void setModel(DataManager dataManager, MenuCommandProvider menuCommandeProvider) {
         this.dataManager = dataManager;
-        this.recordModel = dataManager.getModel(modelType);
+        this.recordModel = dataManager.getDataModel();
         this.menuCommandeProvider = menuCommandeProvider;
-        // j'abonne l'editeur aux changements de données du modele
-        if( standaloneMode) {
-            recordModel.addTableModelListener(this);
-        } else {
-            // je branche la selection de releve de la table vers l'editeur
-            recordModel.addReleveEditorListener(this);
-        }
-
+        
         // j'abonne l'editeur aux changements de lieu
-        placeManager.addPlaceListener(this);
-        jLabelPlace.setText(placeManager.getPlace());
-
-        // je complete le tooltip du bouton "créer" en fonction du modele
-        String toolTipText = org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText");
-
-        switch (modelType) {
-            case birth:
-                jButtonNew.setToolTipText(toolTipText+ " (ALT-N)");
-                break;
-            case marriage:
-                jButtonNew.setToolTipText(toolTipText+ " (ALT-M)");
-                break;
-            case death:
-                jButtonNew.setToolTipText(toolTipText+ " (ALT-D)");
-                break;
-            case misc:
-                jButtonNew.setToolTipText(toolTipText+ " (ALT-V)");
-                break;
-             case all:
-                jButtonNew.setVisible(false);
-                jButtonStandalone.setVisible(true);
-                break;
-        }
+        dataManager.addPlaceListener(this);
+        jLabelPlace.setText(dataManager.getPlace());
     }
 
      /**
@@ -213,7 +143,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         
         Field indiLastNameField = null;
         Field indiFatherLastNameField = null;
-        Bean indiFatherNameBean = null;
+        Bean indiFatherLastNameBean = null;
 
         // je cherche le champ contenant le nom de l'individu
         for(Component component : fieldsPanel.getComponents()) {
@@ -232,7 +162,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                Bean bean = ((Bean) component);
                if ( bean.getFieldType() == Field.FieldType.indiFatherLastName ) {
                     indiFatherLastNameField = bean.getField();
-                    indiFatherNameBean = bean;
+                    indiFatherLastNameBean = bean;
                     break;
                 }
             }
@@ -240,12 +170,33 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         // je copie le nom
         if ( indiLastNameField != null && indiFatherLastNameField != null ) {
-            recordModel.fieldChanged(indiFatherNameBean.getRecord(), indiFatherLastNameField, indiLastNameField.getValue());
+            // d'abord, je commite le champ en cours d'édition
+            commitCurrentFocusedBean();
+
+            recordModel.notiFyFieldChanged(indiFatherLastNameBean.getRecord(), indiFatherLastNameField, indiLastNameField.getValue());
             indiFatherLastNameField.setValue(indiLastNameField.getValue());
             // je refraichis l'affichage
-            indiFatherNameBean.refresh();
-            // je donne le focus au bean indiFatherNameBean
-            indiFatherNameBean.requestFocusInWindow();
+            indiFatherLastNameBean.refresh();
+            
+            // je cherche le champ contenant le prenom du pere de l'individu
+            Bean indiFatherFirstNameBean = null;
+            for (Component component : fieldsPanel.getComponents()) {
+                if (component instanceof Bean) {
+                    Bean bean = ((Bean) component);
+                    if (bean.getFieldType() == Field.FieldType.indiFatherFirstName) {
+                        indiFatherFirstNameBean = bean;
+                        break;
+                    }
+                }
+            }
+            if (indiFatherFirstNameBean != null) {
+                // je donne le focus au bean indiFatherFirstNameBean
+                indiFatherFirstNameBean.requestFocusInWindow();
+            } else {
+                // je donne le focus au bean indiFatherLastNameBean
+                indiFatherLastNameBean.requestFocusInWindow();
+            }
+
         } else {
             // j'emets un beep
             Toolkit.getDefaultToolkit().beep();
@@ -260,9 +211,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     private void copyWifeNameToWifeFatherName() {
         Field wifeLastNameField = null;
         Field wifeFatherLastNameField = null;
-        Bean wifeFatherNameBean = null;
+        Bean wifeFatherLastNameBean = null;
+        Bean wifeFatherFirstNameBean = null;
 
-        // je cherche le champ contenant le nom de l'individu
+        // je cherche le champ contenant le nom de la femme
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);
@@ -279,7 +231,18 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 Bean bean = ((Bean) component);
                if ( bean.getFieldType() == Field.FieldType.wifeFatherLastName ) {
                     wifeFatherLastNameField = bean.getField();
-                    wifeFatherNameBean = bean;
+                    wifeFatherLastNameBean = bean;
+                    break;
+                }
+            }
+        }
+
+        // je cherche le champ contenant le prenom du pere de la femme
+        for(Component component : fieldsPanel.getComponents()) {
+            if ( component instanceof Bean) {
+                Bean bean = ((Bean) component);
+               if ( bean.getFieldType() == Field.FieldType.wifeFatherFirstName ) {
+                    wifeFatherFirstNameBean = bean;
                     break;
                 }
             }
@@ -287,14 +250,21 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         // je copie le nom
         if ( wifeLastNameField != null && wifeFatherLastNameField != null ) {
-            recordModel.fieldChanged(wifeFatherNameBean.getRecord(), wifeFatherLastNameField, wifeLastNameField.getValue());
-            wifeFatherLastNameField.setValue(wifeLastNameField.getValue());
-        
+            // d'abord, je commite le champ en cours d'édition
+            commitCurrentFocusedBean();
+            
+            wifeFatherLastNameField.setValue(wifeLastNameField.getValue());        
+            recordModel.notiFyFieldChanged(wifeFatherLastNameBean.getRecord(), wifeFatherLastNameField, wifeLastNameField.getValue());
             // je refraichis l'affichage
-            wifeFatherNameBean.refresh();
+            wifeFatherLastNameBean.refresh();
 
-            // je donne le focus au bean wifeFatherNameBean
-            wifeFatherNameBean.requestFocusInWindow();
+            if (wifeFatherFirstNameBean != null) {
+                // je donne le focus au bean indiFatherFirstNameBean
+                wifeFatherFirstNameBean.requestFocusInWindow();
+            } else {
+                // je donne le focus au bean wifeFatherLastNameBean
+                wifeFatherLastNameBean.requestFocusInWindow();
+            }
         } else {
             // j'emets un beep
             Toolkit.getDefaultToolkit().beep();
@@ -336,7 +306,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         // je copie le nom
         if ( eventDate != null && indiBirthDate != null ) {
-            recordModel.fieldChanged(indiBirthDateBean.getRecord(), eventDate, indiBirthDate.getValue());
+            // d'abord, je commite le champ en cours d'édition
+            commitCurrentFocusedBean();
+
+            recordModel.notiFyFieldChanged(indiBirthDateBean.getRecord(), eventDate, indiBirthDate.getValue());
             indiBirthDate.setValue(eventDate.getValue());
         
             // je refraichis l'affichage
@@ -357,14 +330,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      * 
      */
     private void copyPreviousRecordField() {
-        // je recupere le dernier releve créé
-        //Record previousRecord = recordModel.getPreviousRecord(recordModel.getRecord(currentRecordIndex));
-        Record previousRecord = dataManager.getModel(ModelType.all).getPreviousRecord(recordModel.getRecord(currentRecordIndex));
-        if (previousRecord == null) {
-            // j'emets un beep
-            Toolkit.getDefaultToolkit().beep();
-            return;
-        }
+        
 
         // je cherche le champ courant qui a le focus
         Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -373,50 +339,24 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             Toolkit.getDefaultToolkit().beep();
             return;
         }
-        // je recupere le bean parent
-        Component parent = focused.getParent();
-        while ((parent != null) && !(parent instanceof Bean)) {
-            parent = parent.getParent();
+        
+        // je recupere le releve créé précédemment
+        Record previousRecord = dataManager.getDataModel().getPreviousRecord(currentFocusedBean.getRecord());
+        if (previousRecord == null) {
+            // j'emets un beep
+            Toolkit.getDefaultToolkit().beep();
+            return;
         }
-        Bean bean = (Bean) parent;
+
+
         // je recupere le champ du meme type dans le releve precedent
-        Field previousField = previousRecord.getField(bean.getFieldType());
+        Field previousField = previousRecord.getField(currentFocusedBean.getFieldType());
         // je copie la donnée du meme champ du releve precedent dans le bean
         // Attention : je ne copie pas la donnée directement dans le champ du releve courant pour
         // que les controles puissent s'effectuer comme si l'utilisateur avait saisi
         // la nouvelle valeur dans le bean
-        bean.replaceValue(previousField);
+        currentFocusedBean.replaceValue(previousField);
     }
-
-    /**
-     * cree un nouveau relevé
-     * Cette methode est appelée
-     */
-     public void createRecord() {
-        // avant de creer le nouveau releve , je verifie la coherence du releve courant
-        String errorMessage = recordModel.verifyRecord(currentRecordIndex);
-        if (errorMessage.isEmpty()) {
-            // je cree un nouveau releve
-            currentRecordIndex = recordModel.getRowCount();
-            currentRecordIndex = dataManager.createRecord(recordModel);
-//            int recordIndex = dataManager.addRecord(record, true);
-//            if (dataManager.getCopyFreeCommentEnabled() ) {
-//                // je valorise le numero de photo avec la valeur par defaut
-//                String defaultValue = dataManager.getDefaultFreeComment();
-//                record.setFreeComment(defaultValue);
-//            }
-
-            // je memorise l'index du nouveau releve
-            // ATTENTION : currentRecordIndex sert a distinguer l'editeur normal
-            // de l'editeur indépendant dans tableChanged()
-            //currentRecordIndex = recordIndex;
-        } else {
-            // j'affiche le message d'erreur
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, errorMessage, "Relevé", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
 
     /**
      * affiche un relevé
@@ -424,192 +364,184 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      * @param record
      */
     public void selectRecord(int recordIndex) {
-        
+
         fieldsPanel.setVisible(false);
         fieldsPanel.setFocusTraversalPolicyProvider(true);
         fieldsPanel.setFocusCycleRoot(true);
         fieldsPanel.resetKeyboardActions();
         fieldsPanel.removeAll();
         int lineNo = 0;
-        
-        if (recordModel != null) {
-            //BeanField[] beanFields = recordModel.getFieldList(recordIndex);
-            // j'affiche les beans en fonction du type de champ
-//            for (int fieldNo = 0; fieldNo < beanFields.length; fieldNo++) {
-//                BeanField beanField = beanFields[fieldNo];
-//                Field field = beanField.getField();
-//                String label = beanField.getLabel();
 
+        if (recordModel != null) {
             KeyStroke keyStroke = null;
-            defaultBeanFocus = null;
             Record record = recordModel.getRecord(recordIndex);
             if (record != null) {
-            for (Iterator<EditorBeanGroup> groupIter =  EditorBeanGroup.getGroups(record.getType()).iterator() ; groupIter.hasNext(); ) {
-                EditorBeanGroup group =groupIter.next();
-                if( ! group.isVisible() ) {
-                        continue;
-                }
-                // le raccourci sera associé du premier champ du groupe qui va être créé
-                keyStroke = group.getKeystroke();
-                addRow(lineNo, group.getTitle(), null, keyStroke);
-                lineNo++;
-                
-                for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext(); ) {
-                    EditorBeanField editorBeanField = fieldIter.next();
-                    if( ! editorBeanField.isVisible() ) {
+                for (Iterator<EditorBeanGroup> groupIter = EditorBeanGroup.getGroups(record.getType()).iterator(); groupIter.hasNext();) {
+                    EditorBeanGroup group = groupIter.next();
+                    if (!group.isVisible()) {
                         continue;
                     }
-                    String label = editorBeanField.getLabel();
-            
-                    Bean bean = null;
-
-                    switch (editorBeanField.getFieldType()) {
-    //                    case title:
-    //                        // label separateur de rubrique
-    //                        keyStroke = ((FieldTitle) field).getKeyStroke();
-    //                        break;
-    //
-                        case eventType:
-                            bean = new BeanEventType(dataManager.getCompletionProvider());
-                            break;
-
-                        case indiBirthDate:
-                            label = label.substring(0,5)+". (Alt-B)";
-                            bean = new BeanDate();
-                            break;
-                        case eventDate:
-                        case wifeBirthDate:
-                            bean = new BeanDate();
-                            break;
-
-                        case indiLastName:
-                        case indiMarriedLastName:
-                        case indiMotherLastName:
-                        case wifeLastName:
-                        case wifeMarriedLastName:
-                        case wifeMotherLastName:
-                        case witness1LastName:
-                        case witness2LastName:
-                        case witness3LastName:
-                        case witness4LastName:
-                            // j'affiche le bean d'edition du nom
-                            bean = new BeanLastName(dataManager.getCompletionProvider());
-                            break;
-                        case indiFatherLastName:
-                            label += " (Alt-X)";
-                            bean = new BeanLastName(dataManager.getCompletionProvider());
-                            break;
-                        case wifeFatherLastName:
-                            label += " (Alt-Y)";
-                            bean = new BeanLastName(dataManager.getCompletionProvider());
-                            break;
-
-                        case indiFirstName:
-                        case indiMarriedFirstName:
-                        case indiFatherFirstName:
-                        case indiMotherFirstName:
-                        case wifeFirstName:
-                        case wifeMarriedFirstName:
-                        case wifeFatherFirstName:
-                        case wifeMotherFirstName:
-                        case witness1FirstName:
-                        case witness2FirstName:
-                        case witness3FirstName:
-                        case witness4FirstName:
-                            bean = new BeanFirstName(dataManager.getCompletionProvider());
-                            break;
-
-                        case indiSex:
-                        //case indiMarriedSex:
-                        case wifeSex:
-                        //case wifeMarriedSex:
-                            bean = new BeanSex();
-                            break;
-
-                        case indiAge:
-                            label += " (Alt-A)";
-                            bean = new BeanAge();
-                            break;
-
-                        case indiFatherAge:
-                        case indiMotherAge:
-                        case wifeAge:
-                        case wifeFatherAge:
-                        case wifeMotherAge:
-                            bean = new BeanAge();
-                            break;
-
-                        case indiMarriedDead:
-                        case indiFatherDead:
-                        case indiMotherDead:
-                        case wifeMarriedDead:
-                        case wifeFatherDead:
-                        case wifeMotherDead:
-                            bean = new BeanDead();
-                            break;
-
-                        case indiOccupation:
-                        case indiMarriedOccupation:
-                        case indiFatherOccupation:
-                        case indiMotherOccupation:
-                        case wifeOccupation:
-                        case wifeMarriedOccupation:
-                        case wifeFatherOccupation:
-                        case wifeMotherOccupation:
-                        case witness1Occupation:
-                        case witness2Occupation:
-                        case witness3Occupation:
-                        case witness4Occupation:
-                            bean = new BeanOccupation(dataManager.getCompletionProvider());
-                            break;
-
-                        case indiBirthPlace:
-                        case wifePlace:
-                        case indiResidence:
-                        case indiMarriedResidence:
-                        case indiFatherResidence:
-                        case indiMotherResidence:
-                        case wifeResidence:
-                        case wifeMarriedResidence:
-                        case wifeFatherResidence:
-                        case wifeMotherResidence:
-                            bean = new BeanPlace(dataManager.getCompletionProvider());
-                            break;
-
-                        case indiComment:
-                        case indiMarriedComment:
-                        case indiFatherComment:
-                        case indiMotherComment:
-                        case wifeComment:
-                        case wifeMarriedComment:
-                        case wifeFatherComment:
-                        case wifeMotherComment:
-                        case witness1Comment:
-                        case witness2Comment:
-                        case witness3Comment:
-                        case witness4Comment:
-                        case cote:
-                        case parish:
-                        case generalComment:
-                            bean = new BeanSimpleValue();
-                            break;
-
-                        case freeComment:
-                            bean = new BeanFreeComment();
-                            break;
-
-                        case notary:
-                            bean = new BeanNotary(dataManager.getCompletionProvider());
-                            break;
-                    }
-
-                    addRow(lineNo, label, bean, keyStroke);
-                    bean.setContext(record, editorBeanField.getFieldType());
-                    keyStroke = null;
+                    // le raccourci sera associé du premier champ du groupe qui va être créé
+                    keyStroke = group.getKeystroke();
+                    addRow(lineNo, group.getTitle(), null, keyStroke);
                     lineNo++;
+
+                    for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext();) {
+                        EditorBeanField editorBeanField = fieldIter.next();
+                        if (!editorBeanField.isVisible()) {
+                            continue;
+                        }
+                        String label = editorBeanField.getLabel();
+
+                        Bean bean = null;
+
+                        switch (editorBeanField.getFieldType()) {
+                            //                    case title:
+                            //                        // label separateur de rubrique
+                            //                        keyStroke = ((FieldTitle) field).getKeyStroke();
+                            //                        break;
+                            //
+                            case eventType:
+                                bean = new BeanEventType(dataManager.getCompletionProvider());
+                                break;
+
+                            case indiBirthDate:
+                                label = label.substring(0, 5) + ". (Alt-B)";
+                                bean = new BeanDate();
+                                break;
+                            case eventDate:
+                            case secondDate:
+                            case wifeBirthDate:
+                                bean = new BeanDate();
+                                break;
+
+                            case indiLastName:
+                            case indiMarriedLastName:
+                            case indiMotherLastName:
+                            case wifeLastName:
+                            case wifeMarriedLastName:
+                            case wifeMotherLastName:
+                            case witness1LastName:
+                            case witness2LastName:
+                            case witness3LastName:
+                            case witness4LastName:
+                                // j'affiche le bean d'edition du nom
+                                bean = new BeanLastName(dataManager.getCompletionProvider());
+                                break;
+                            case indiFatherLastName:
+                                label += " (Alt-X)";
+                                bean = new BeanLastName(dataManager.getCompletionProvider());
+                                break;
+                            case wifeFatherLastName:
+                                label += " (Alt-Y)";
+                                bean = new BeanLastName(dataManager.getCompletionProvider());
+                                break;
+
+                            case indiFirstName:
+                            case indiMarriedFirstName:
+                            case indiFatherFirstName:
+                            case indiMotherFirstName:
+                            case wifeFirstName:
+                            case wifeMarriedFirstName:
+                            case wifeFatherFirstName:
+                            case wifeMotherFirstName:
+                            case witness1FirstName:
+                            case witness2FirstName:
+                            case witness3FirstName:
+                            case witness4FirstName:
+                                bean = new BeanFirstName(dataManager.getCompletionProvider());
+                                break;
+
+                            case indiSex:
+                            //case indiMarriedSex:
+                            case wifeSex:
+                                //case wifeMarriedSex:
+                                bean = new BeanSex();
+                                break;
+
+                            case indiAge:
+                                label += " (Alt-A)";
+                                bean = new BeanAge();
+                                break;
+
+                            case indiFatherAge:
+                            case indiMotherAge:
+                            case wifeAge:
+                            case wifeFatherAge:
+                            case wifeMotherAge:
+                                bean = new BeanAge();
+                                break;
+
+                            case indiMarriedDead:
+                            case indiFatherDead:
+                            case indiMotherDead:
+                            case wifeMarriedDead:
+                            case wifeFatherDead:
+                            case wifeMotherDead:
+                                bean = new BeanDead();
+                                break;
+
+                            case indiOccupation:
+                            case indiMarriedOccupation:
+                            case indiFatherOccupation:
+                            case indiMotherOccupation:
+                            case wifeOccupation:
+                            case wifeMarriedOccupation:
+                            case wifeFatherOccupation:
+                            case wifeMotherOccupation:
+                            case witness1Occupation:
+                            case witness2Occupation:
+                            case witness3Occupation:
+                            case witness4Occupation:
+                                bean = new BeanOccupation(dataManager.getCompletionProvider());
+                                break;
+
+                            case indiBirthPlace:
+                            case wifePlace:
+                            case indiResidence:
+                            case indiMarriedResidence:
+                            case indiFatherResidence:
+                            case indiMotherResidence:
+                            case wifeResidence:
+                            case wifeMarriedResidence:
+                            case wifeFatherResidence:
+                            case wifeMotherResidence:
+                                bean = new BeanPlace(dataManager.getCompletionProvider());
+                                break;
+
+                            case indiComment:
+                            case indiMarriedComment:
+                            case indiFatherComment:
+                            case indiMotherComment:
+                            case wifeComment:
+                            case wifeMarriedComment:
+                            case wifeFatherComment:
+                            case wifeMotherComment:
+                            case witness1Comment:
+                            case witness2Comment:
+                            case witness3Comment:
+                            case witness4Comment:
+                            case cote:
+                            case parish:
+                            case generalComment:
+                                bean = new BeanSimpleValue();
+                                break;
+
+                            case freeComment:
+                                bean = new BeanFreeComment();
+                                break;
+
+                            case notary:
+                                bean = new BeanNotary(dataManager.getCompletionProvider());
+                                break;
+                        }
+
+                        addRow(lineNo, label, bean, keyStroke);
+                        bean.setContext(record, editorBeanField.getFieldType());
+                        keyStroke = null;
+                        lineNo++;
+                    }
                 }
-                
-            }
             }
 
             // j'ajoute un label pour occuper le bas du panel
@@ -622,24 +554,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             JLabel jLabelEnd = new javax.swing.JLabel();
             fieldsPanel.add(jLabelEnd, gridBagConstraints);
 
-            // je memorise le numero du releve
-            currentRecordIndex = recordIndex;
-            // j'affiche le numero du relevé.
-            // j'active le bouton Delete si le releve courant est valide
-            if ( currentRecordIndex == -1 ) {
-                jButtonDelete.setEnabled(false);
-            } else {
-                jButtonDelete.setEnabled(true);               
-            }
-            //Record record = recordModel.getRecord(currentRecordIndex);
-            if (record!= null) {
-                jTextFielRecordNo.setText(String.valueOf(record.recordNo));
-            } else {
-                jTextFielRecordNo.setText("");
-            }
         }
-        fieldsPanel.setVisible(true);
         fieldsPanel.revalidate();
+        fieldsPanel.setVisible(true);
     }
 
      private void addRow(int lineNo, String label, final Bean bean, KeyStroke keyStroke) {
@@ -662,6 +579,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
             gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
             gridBagConstraints.weightx = 1.0;
+            bean.setMinimumSize(new Dimension(30,20));
             fieldsPanel.add(bean, gridBagConstraints);
             this.addLastFocusListeners(bean);
 
@@ -676,12 +594,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     }
                 });
             }
-
-            // je donne le focus au premier bean editable
-            if (defaultBeanFocus == null ) {
-                defaultBeanFocus = bean;
-            }
-
+           
         } else {
             // j'ajoute le label étalé dans les colonnes 0 et 1
             GridBagConstraints gridBagConstraints;
@@ -704,89 +617,11 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             fieldsPanel.add(jLabel1, gridBagConstraints);           
         }
     }
-    
-    public void setStandaloneMode() {
-        jButtonFile.setVisible(false);
-        jButtonPrevious.setVisible(true);
-        jButtonNext.setVisible(true);
-        jTextFielRecordNo.setVisible(true);
-        standaloneMode = true;        
-    }
-
 
     ///////////////////////////////////////////////////////////////////////////
-    // Implement TableModelListener
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * affiche le releve qui vient d'être ajouté ou supprimé dans le modele
-     */
-    /**
-     * Cette methode est appelée par le modele de données 
-     * ATTENTION : elle n'est utilisée que par l'editeur independant
-     * (L'éditeur normal est mis à jour par ReleveTable.TableChanged() pour
-     * prendree en compte le tri choisi par l'utilisateur, voir rowSelected() )
-     * @param e e.getFirstRow() contient l'index du nouveau releve
-     */
-    @Override
-    public void tableChanged(TableModelEvent e) {
-        switch (e.getType()) {
-
-            case TableModelEvent.INSERT:
-                // je verifie si c'est le meme qui est source de la notification 
-                if ( e.getFirstRow() == currentRecordIndex ) {
-                    selectRecord(e.getFirstRow());
-                    // je place le curseur sur le premier champ de l'editeur quand on cree un nouveau releve
-                    if (defaultBeanFocus != null) {
-                        defaultBeanFocus.requestFocusInWindow();
-                    }
-                }
-                break;
-            case TableModelEvent.DELETE:
-                if ( currentRecordIndex >0 ) {
-                    selectRecord(currentRecordIndex -1);
-                } else {
-                    if (recordModel.getRowCount() > 0  ) {
-                        selectRecord(currentRecordIndex );
-                    } else {
-                        selectRecord(-1);
-                    }
-                }
-                break;
-            case TableModelEvent.UPDATE :
-                // TODO : afficher les modifications si c'est le meme releve courant dans l'editeur
-                break;
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement TableSelectionListener
+    // Implement FocusListener
     ///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Affiche le releve sélectionné dans l'editeur
-     * Cette methode est appelee par ReleveTable a chaque nouvelle selection dans la table du releve
-     * @param modelRow
-     */
-    @Override
-    public void rowSelected(int recordIndex , boolean isNewRecord) {
-        selectRecord( recordIndex);
-        if (isNewRecord && defaultBeanFocus != null) {
-            defaultBeanFocus.requestFocusInWindow();
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement ReleveEditorListener
-    ///////////////////////////////////////////////////////////////////////////
-    @Override
-    public int getCurrentRecordIndex() {
-        return currentRecordIndex;
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement ReleveEditorListener
-    ///////////////////////////////////////////////////////////////////////////
     /**
      * Met en surbrillance un bean qui récupère le focus
      * Cette méthode est appelée par le systeme quand un bean recupere le focus.
@@ -799,10 +634,18 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     public void focusGained(FocusEvent focusEvent) {
         final JComponent focused = (JComponent) focusEvent.getSource();
 
+        // je recupere le bean parent
+        Component parent = focused.getParent();
+        while ((parent != null) && !(parent instanceof Bean)) {
+            parent = parent.getParent();
+        }
+        // je mémorise le bean courant
+        currentFocusedBean = (Bean) parent;
+
         // j'active la surbrillance du champ
         focused.setBackground(new Color(200, 255, 255));
 
-        // je scolle la fenetre de l'editeur pour voir le champ
+        // je scrolle la fenetre de l'editeur pour voir le champ
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -816,10 +659,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         });
     }
 
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement FocusListener
-    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * controle et commite les données d'un bean qui perd le focus.
@@ -844,15 +683,16 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         final JComponent focused = (JComponent) focusEvent.getSource();
         // je supprime la surbrillance du champ
         focused.setBackground(new Color(255, 255, 255));
+       
+        commitCurrentFocusedBean();
+    }
 
-        // je recupere le bean parent
-        Component parent = focused.getParent();
-        while ((parent != null) && !(parent instanceof Bean)) {
-            parent = parent.getParent();
-        }
-        Bean bean = (Bean) parent;
+    public void commitCurrentFocusedBean() {
+
+
+        Bean bean = currentFocusedBean;
         // j'applique les modifications
-        if (bean.hasChanged()) {
+        if (bean != null && bean.hasChanged()) {
 
             Record record = bean.getRecord();
             FieldType fieldType =  bean.getFieldType();
@@ -928,8 +768,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     // je demande à l'utilisateur s'il veut enregistrer cette nouvelle valeur
                     Toolkit.getDefaultToolkit().beep();
                     int choice = JOptionPane.showConfirmDialog(this,
-                            String.format(NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.confirmNewValue"), EditorBeanField.getLabel(bean.getFieldType()), newValue),
-                            NbBundle.getMessage(ReleveTopComponent.class, "ReleveOptionsPanel.jCheckBoxNewValueControl.text"),
+                            String.format(NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.confirmNewValue.question"), EditorBeanField.getLabel(bean.getFieldType()), newValue),
+                            NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.confirmNewValue.title"),
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     // choice = 0 si l'utilisateur a cliqué sur OK 
@@ -949,9 +789,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 }
             }
 
-            // je memorise l'ancienne valeur pour undo
+            // je memorise l'ancienne valeur pour undo et notifie les listeners du changement
             if (recordModel != null && !oldValue.equals(bean.getField().toString()) ) {
-                recordModel.fieldChanged(record, bean.getField(), oldValue);
+                recordModel.notiFyFieldChanged(record, bean.getField(), oldValue);
             }
 
             //je mets à jour la liste de completion des noms, prénoms, professions et type d'évènements
@@ -1048,8 +888,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     String message = String.format(NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.duplicateRecord"));
                     message += "\n id=";
                     for ( int index =0; index <duplicateRecords.length; index ++ ) {
-                        Record duplicate = duplicateRecords[index];
-                        message += Integer.toString(duplicate.getRecordNo());
+                        message += Integer.toString(recordModel.getIndex(record)+1);
                         if ( index < duplicateRecords.length-1) {
                            message += ", ";
                         }
@@ -1063,7 +902,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             // je memorise les valeurs
             if (fieldType == Field.FieldType.eventDate && dataManager.getCopyEventDateEnabled() == true  ) {
                 // je copie le numero de photo dans la valeur par defaut
-                dataManager.setDefaultEventDate(bean.getField().toString());
+                dataManager.setDefaultEventDate(bean.getField().toString(), ((FieldDate)bean.getField()).getPropertyDate().getStart().getCalendar());
             }
             if (fieldType == Field.FieldType.freeComment && dataManager.getCopyFreeCommentEnabled() == true  ) {
                 // je copie le numero de photo dans la valeur par defaut
@@ -1076,10 +915,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             if ( fieldType == Field.FieldType.cote  && dataManager.getCopyCoteEnabled() == true  ) {
                 // je copie la cote dans la valeur par defaut
                 dataManager.setDefaultCote(bean.getField().toString());
-            }
-
-            if (recordModel != null) {
-                recordModel.fireTableRowsUpdated(currentRecordIndex, currentRecordIndex);
             }
         }
     }
@@ -1110,15 +945,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        editorBar = new javax.swing.JPanel();
-        jButtonFile = new javax.swing.JButton();
-        jButtonConfig = new javax.swing.JButton();
-        jButtonNew = new javax.swing.JButton();
-        jButtonDelete = new javax.swing.JButton();
-        jButtonPrevious = new javax.swing.JButton();
-        jTextFielRecordNo = new javax.swing.JTextField();
-        jButtonNext = new javax.swing.JButton();
-        jButtonStandalone = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jPanelPlace = new javax.swing.JPanel();
@@ -1129,90 +955,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         setMinimumSize(new java.awt.Dimension(200, 300));
         setOpaque(false);
         setLayout(new java.awt.BorderLayout());
-
-        editorBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        editorBar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        jButtonFile.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonFile.text")); // NOI18N
-        jButtonFile.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButtonFile.setPreferredSize(new java.awt.Dimension(49, 25));
-        jButtonFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonFileActionPerformed(evt);
-            }
-        });
-        editorBar.add(jButtonFile);
-
-        jButtonConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Settings.png"))); // NOI18N
-        jButtonConfig.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonConfig.toolTipText")); // NOI18N
-        jButtonConfig.setPreferredSize(new java.awt.Dimension(29, 25));
-        jButtonConfig.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonConfigActionPerformed(evt);
-            }
-        });
-        editorBar.add(jButtonConfig);
-
-        jButtonNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewRecord.png"))); // NOI18N
-        jButtonNew.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText")); // NOI18N
-        jButtonNew.setActionCommand("CreateRecord"); // NOI18N
-        jButtonNew.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButtonNew.setPreferredSize(new java.awt.Dimension(29, 25));
-        jButtonNew.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNewActionPerformed(evt);
-            }
-        });
-        editorBar.add(jButtonNew);
-
-        jButtonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/DeleteRecord.png"))); // NOI18N
-        jButtonDelete.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonDelete.toolTipText")); // NOI18N
-        jButtonDelete.setActionCommand("RemoveRecord"); // NOI18N
-        jButtonDelete.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButtonDelete.setPreferredSize(new java.awt.Dimension(29, 25));
-        jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDeleteActionPerformed(evt);
-            }
-        });
-        editorBar.add(jButtonDelete);
-
-        jButtonPrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Back.png"))); // NOI18N
-        jButtonPrevious.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonPrevious.toolTipText")); // NOI18N
-        jButtonPrevious.setMargin(new java.awt.Insets(2, 4, 2, 4));
-        jButtonPrevious.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPreviousActionPerformed(evt);
-            }
-        });
-        editorBar.add(jButtonPrevious);
-
-        jTextFielRecordNo.setEditable(false);
-        jTextFielRecordNo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFielRecordNo.setPreferredSize(new java.awt.Dimension(26, 20));
-        editorBar.add(jTextFielRecordNo);
-
-        jButtonNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Forward.png"))); // NOI18N
-        jButtonNext.setToolTipText("Next"); // NOI18N
-        jButtonNext.setMargin(new java.awt.Insets(2, 4, 2, 4));
-        jButtonNext.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNextActionPerformed(evt);
-            }
-        });
-        editorBar.add(jButtonNext);
-
-        jButtonStandalone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/editor.png"))); // NOI18N
-        jButtonStandalone.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonStandalone.toolTipText")); // NOI18N
-        jButtonStandalone.setMargin(new java.awt.Insets(2, 4, 2, 4));
-        jButtonStandalone.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStandaloneActionPerformed(evt);
-            }
-        });
-        editorBar.add(jButtonStandalone);
-
-        add(editorBar, java.awt.BorderLayout.NORTH);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
@@ -1247,104 +989,17 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewActionPerformed
-        createRecord();
-	}//GEN-LAST:event_jButtonNewActionPerformed
-
-    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
-        int choice = JOptionPane.showConfirmDialog(this,
-                "Confirmez-vous la suppression ?",
-                "Relevé",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-            );
-        switch (choice)  {
-            case 0: // YES
-                dataManager.removeRecord(recordModel.getRecord(currentRecordIndex));
-                break;
-            default: // CANCEL
-                //rien à faire
-        }
-    }//GEN-LAST:event_jButtonDeleteActionPerformed
-
-    private void jButtonPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviousActionPerformed
-        // avant de creer de changer de releve , je verifie la coherence du releve courant
-        String errorMessage = recordModel.verifyRecord(currentRecordIndex);
-        if (errorMessage.isEmpty()) {
-            if (currentRecordIndex > 0) {
-                selectRecord(currentRecordIndex -1);
-            } else {
-                Toolkit.getDefaultToolkit().beep();
-                selectRecord(recordModel.getRowCount() -1);
-            }
-
-        } else {
-            // j'affiche le message d'erreur
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, errorMessage, "Relevé", JOptionPane.ERROR_MESSAGE);
-        }
-
-    }//GEN-LAST:event_jButtonPreviousActionPerformed
-
-    private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
-        // avant de changer de releve , je verifie la coherence du releve courant
-        String errorMessage = recordModel.verifyRecord(currentRecordIndex);
-        if (errorMessage.isEmpty()) {
-            if (currentRecordIndex < recordModel.getRowCount() -1 ) {
-                selectRecord(currentRecordIndex +1);
-            } else {
-                Toolkit.getDefaultToolkit().beep();
-                selectRecord(0);
-            }
-
-        } else {
-            // j'affiche le message d'erreur
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, errorMessage, "Relevé", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_jButtonNextActionPerformed
-
-    private void jButtonStandaloneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStandaloneActionPerformed
-        if ( standaloneMode == false ) {
-            // j'affiche l'editeur standalone
-            menuCommandeProvider.showStandalone(true);
-        } else {
-            // j'affiche l'editeur de la fenetre principale au premier plan
-            menuCommandeProvider.showToFront();
-        }
-    }//GEN-LAST:event_jButtonStandaloneActionPerformed
-
-    private void jButtonConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigActionPerformed
-        // J'affiche le panneau des options
-        menuCommandeProvider.showOptionPanel();
-    }//GEN-LAST:event_jButtonConfigActionPerformed
-
     private void jButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaceActionPerformed
         menuCommandeProvider.showConfigPanel();
     }//GEN-LAST:event_jButtonPlaceActionPerformed
 
-    private void jButtonFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileActionPerformed
-        // j'affiche le menu Fichier
-        menuCommandeProvider.showPopupMenu(jButtonFile, 0, jButtonFile.getHeight());
-    }//GEN-LAST:event_jButtonFileActionPerformed
-
-   
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel editorBar;
     private javax.swing.JPanel fieldsPanel;
-    private javax.swing.JButton jButtonConfig;
-    private javax.swing.JButton jButtonDelete;
-    private javax.swing.JButton jButtonFile;
-    private javax.swing.JButton jButtonNew;
-    private javax.swing.JButton jButtonNext;
     private javax.swing.JButton jButtonPlace;
-    private javax.swing.JButton jButtonPrevious;
-    private javax.swing.JButton jButtonStandalone;
     private javax.swing.JLabel jLabelPlace;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelPlace;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextFielRecordNo;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -1364,8 +1019,24 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         }
     }
 
+     /**
+     * donne le focus au premier champ
+     * @param fieldType type du champ
+     */
+    public void selectFirstField() {
+        // je cherche le champ du type demandé et je lui donne le focus
+        for(Component component : fieldsPanel.getComponents()) {
+            if ( component instanceof Bean) {
+                Bean bean = ((Bean) component);
+                bean.requestFocusInWindow();
+                break;
+            }
+        }
+    }
+
+
     /**
-     * rafraichis l'affichage de la valeur d'un champ dans son bean 
+     * rafraichis l'affichage d'un champ dans son bean 
      * 
      * @param fieldType
      */
@@ -1381,8 +1052,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             }
         }
     }
-
-    
 
     /**
      * met a jour le lieu en tete de l'editeur

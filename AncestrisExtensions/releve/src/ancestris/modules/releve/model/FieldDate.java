@@ -2,6 +2,7 @@ package ancestris.modules.releve.model;
 
 import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,7 +45,7 @@ public class FieldDate extends Field implements Cloneable {
     }
 
     /**
-     * retounr le date au format JJ/MM/AAAA
+     * retourne le date au format JJ/MM/AAAA
      * @return
      */
     public String getValueDDMMYYYY() {
@@ -52,15 +53,31 @@ public class FieldDate extends Field implements Cloneable {
             String result;
             // je recupere la date dans le calendrier gregorien
             PointInTime pit = eventDate.getStart().getPointInTime(PointInTime.GREGORIAN);
-            if (pit.getYear() == PointInTime.UNKNOWN )  {
+            if (pit.getYear() == PointInTime.UNKNOWN  || pit.getYear() == Integer.MIN_VALUE)  {
                 result = "";
-            } else if ( pit.getMonth() == PointInTime.UNKNOWN) {
+            } else if ( pit.getMonth() == PointInTime.UNKNOWN || pit.getMonth() == Integer.MIN_VALUE) {
                 result = String.format("%04d", pit.getYear());
-            } else if ( pit.getDay() == PointInTime.UNKNOWN) {
+            } else if ( pit.getDay() == PointInTime.UNKNOWN || pit.getDay() == Integer.MIN_VALUE) {
                 result = String.format("%02d/%04d", pit.getMonth()+1, pit.getYear());
             } else {
                 result = String.format("%02d/%02d/%04d", pit.getDay()+1, pit.getMonth()+1, pit.getYear());
             }
+            return result;
+        } catch (GedcomException ex) {
+            return "";
+        }
+    }
+
+     /**
+     * retourne le date au format JJ/MM/AAAA
+     * @return
+     */
+    public String getFrenchCalendarValue() {
+        try {
+            String result;
+            // je recupere la date dans le calendrier français
+            PointInTime pit = eventDate.getStart().getPointInTime(PointInTime.FRENCHR);
+            result = pit.toString();
             return result;
         } catch (GedcomException ex) {
             return "";
@@ -136,6 +153,17 @@ public class FieldDate extends Field implements Cloneable {
             throw new NumberFormatException("Error "+strDay+ " " +ex);
         }
 
+    }
+
+    public void setCalendar(Calendar calendar) {
+        try {
+            eventDate.getStart().set(calendar);
+        } catch (GedcomException ex) {
+        }
+    }
+
+    public Calendar getCalendar() {
+        return eventDate.getStart().getCalendar();
     }
 
     public PropertyDate getPropertyDate() {
