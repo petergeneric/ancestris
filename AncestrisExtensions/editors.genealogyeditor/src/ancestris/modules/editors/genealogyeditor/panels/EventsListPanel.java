@@ -201,7 +201,7 @@ public class EventsListPanel extends javax.swing.JPanel {
             ADialog eventEditorDialog = new ADialog(
                     NbBundle.getMessage(
                     EventEditorPanel.class, "EventEditorPanel.edit.title",
-                    PropertyTag2Name.getTagName(event.getTag())),
+                    new Object[] {PropertyTag2Name.getTagName(event.getTag()) , mRoot}),
                     eventEditorPanel);
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
@@ -279,7 +279,7 @@ public class EventsListPanel extends javax.swing.JPanel {
                     ADialog eventEditorDialog = new ADialog(
                             NbBundle.getMessage(EventEditorPanel.class,
                             "EventEditorPanel.create.title",
-                            eventType),
+                            new Object[] {PropertyTag2Name.getTagName(mEvent.getTag()), mRoot}),
                             eventEditorPanel);
 
                     eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
@@ -312,7 +312,7 @@ public class EventsListPanel extends javax.swing.JPanel {
                 ADialog eventEditorDialog = new ADialog(
                         NbBundle.getMessage(EventEditorPanel.class,
                         "EventEditorPanel.edit.title",
-                        PropertyTag2Name.getTagName(event.getTag())),
+                        new Object[] {PropertyTag2Name.getTagName(event.getTag()) , mRoot}),
                         eventEditorPanel);
                 eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
