@@ -5,6 +5,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Source;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
@@ -104,22 +105,30 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                     }
                 }
                 case 3: {
-                    Property[] multimediaObjects = source.getProperties("OBJE");
-                    if (multimediaObjects.length > 0) {
+                    ArrayList<Property> multimediaObjects = new ArrayList(Arrays.asList(source.getProperties("OBJE")));
+                    if (source instanceof PropertySource) {
+                        Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
+                        multimediaObjects.addAll(Arrays.asList(targetEntity.getProperties("OBJE")));
+                    }
+                    if (multimediaObjects.size() > 0) {
                         return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.yes");
                     } else {
                         return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.no");
                     }
                 }
-                 case 4: {
-                    Property[] notes = source.getProperties("NOTE");
-                    if (notes.length > 0) {
+                case 4: {
+                    ArrayList<Property> notes = new ArrayList(Arrays.asList(source.getProperties("NOTE")));
+                    if (source instanceof PropertySource) {
+                        Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
+                        notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
+                    }
+                    if (notes.size() > 0) {
                         return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.note.value.yes");
                     } else {
                         return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.note.value.no");
                     }
                 }
-               default: {
+                default: {
                     return "";
                 }
             }
