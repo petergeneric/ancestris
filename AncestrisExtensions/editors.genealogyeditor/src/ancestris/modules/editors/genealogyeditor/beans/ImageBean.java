@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.beans;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -21,7 +22,7 @@ import org.openide.util.Exceptions;
 public class ImageBean extends javax.swing.JPanel {
 
     private BufferedImage resizedImage;
-    private InputStream imageInputStream = null;
+    BufferedImage loadImage;
 
     /**
      * Creates new form ImageBean
@@ -41,9 +42,15 @@ public class ImageBean extends javax.swing.JPanel {
     private void initComponents() {
 
         setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/beans/Bundle").getString("ImageBean.toolTipText"), new Object[] {})); // NOI18N
-        setMinimumSize(new java.awt.Dimension(30, 40));
+        setMinimumSize(new java.awt.Dimension(150, 200));
+        setName(org.openide.util.NbBundle.getMessage(ImageBean.class, "ImageBean.name")); // NOI18N
         setPreferredSize(new java.awt.Dimension(150, 200));
         setRequestFocusEnabled(false);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -57,10 +64,15 @@ public class ImageBean extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        resizedImage = resizeImage(loadImage, this.getWidth(), this.getHeight());
+    }//GEN-LAST:event_formComponentResized
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     public void setImage(Property multimediaObject) {
         Property file;
+        InputStream imageInputStream;
 
         if (multimediaObject != null) {
             if (multimediaObject instanceof PropertyMedia) {
@@ -83,8 +95,8 @@ public class ImageBean extends javax.swing.JPanel {
         }
 
         try {
-            BufferedImage loadImage = ImageIO.read(imageInputStream);
-            resizedImage = resizeImage(loadImage, 90, 120);
+            loadImage = ImageIO.read(imageInputStream);
+            resizedImage = resizeImage(loadImage, this.getPreferredSize().width, this.getPreferredSize().height);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -93,11 +105,24 @@ public class ImageBean extends javax.swing.JPanel {
     public BufferedImage resizeImage(BufferedImage img, int newW, int newH) {
         int w = img.getWidth();
         int h = img.getHeight();
-        BufferedImage dimg = new BufferedImage(newW, newH, img.getType());
-        Graphics2D g = dimg.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
-        g.dispose();
+        float percentW = (float) newW / (float) w;
+        float percentH = (float) newH / (float) h;
+        System.out.println("requested size:" + newW + " ; " + newH);
+        BufferedImage dimg;
+        if (h * percentW < newH) {
+            dimg = new BufferedImage((int) (w * percentW), (int) (h * percentW), img.getType());
+            Graphics2D g = dimg.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(img, 0, 0, (int) (w * percentW), (int) (h * percentW), 0, 0, w, h, null);
+            g.dispose();
+        } else {
+            dimg = new BufferedImage((int) (w * percentH), (int) (h * percentH), img.getType());
+            Graphics2D g = dimg.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(img, 0, 0, (int) (w * percentH), (int) (h * percentH), 0, 0, w, h, null);
+            g.dispose();
+        }
+        System.out.println("obtain size:" + dimg.getWidth() + " ; " + dimg.getHeight());
         return dimg;
     }
 
