@@ -580,99 +580,88 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         if (mEventType == INDIVIDUAL_EVENT_TYPE) {
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
-            if (age == null) {
-                age = (PropertyAge) mEvent.addProperty("AGE", "");
-                age.setGuessed(true);
-                individualAgeTextField.setEditable(false);
+            if (age != null) {
+                individualAgeTextField.setText(age.getValue());
             }
-            individualAgeTextField.setText(age.getValue());
             /*
              * Remove modification of age property
              * Need to be better handle
-             * 
-            individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mIndividualAgeModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mIndividualAgeModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mIndividualAgeModified = true;
-                }
-            });
-            *
-            */
+             *
+             * individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+             *
+             * @Override
+             * public void changedUpdate(DocumentEvent e) {
+             * mIndividualAgeModified = true;
+             * }
+             *
+             * @Override
+             * public void removeUpdate(DocumentEvent e) {
+             * mIndividualAgeModified = true;
+             * }
+             *
+             * @Override
+             * public void insertUpdate(DocumentEvent e) {
+             * mIndividualAgeModified = true;
+             * }
+             * });
+             *
+             */
         } else if (mEventType == FAMILY_EVENT_TYPE) {
             PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
-            if (husbandAge == null) {
-                Property husband = mEvent.addProperty("HUSB", "");
-                husband.setGuessed(true);
-                husbandAgeTextField.setEditable(false);
-                husbandAge = (PropertyAge) husband.addProperty("AGE", "");
+            if (husbandAge != null) {
+                husbandAgeTextField.setText(husbandAge.getValue());
             }
-            husbandAgeTextField.setText(husbandAge.getValue());
             /*
              * Remove modification of age property
              * Need to be better handle
-             * 
+             *
              * husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+             *
+             * @Override
+             * public void changedUpdate(DocumentEvent e) {
+             * mHusbandAgeModified = true;
+             * }
+             *
+             * @Override
+             * public void removeUpdate(DocumentEvent e) {
+             * mHusbandAgeModified = true;
+             * }
+             *
+             * @Override
+             * public void insertUpdate(DocumentEvent e) {
+             * mHusbandAgeModified = true;
+             * }
+             * });
+             *
+             */
 
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mHusbandAgeModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mHusbandAgeModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mHusbandAgeModified = true;
-                }
-            });
-            * 
-            */
-
+            PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
+            if (wifeAge != null) {
+                wifeAgeTextField.setText(wifeAge.getValue());
+            }
             /*
              * Remove modification of age property
              * Need to be better handle
-             * 
-             * PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
-            if (wifeAge == null) {
-                Property wife = mEvent.addProperty("WIFE", "");
-                wife.setGuessed(true);
-                wifeAgeTextField.setEditable(false);
-                wifeAge = (PropertyAge) wife.addProperty("AGE", "");
-            }
-            wifeAgeTextField.setText(wifeAge.getValue());
-            wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mWifeAgeModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mWifeAgeModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mWifeAgeModified = true;
-                }
-            });
-            * 
-            */
+             *
+             * wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+             *
+             * @Override
+             * public void changedUpdate(DocumentEvent e) {
+             * mWifeAgeModified = true;
+             * }
+             *
+             * @Override
+             * public void removeUpdate(DocumentEvent e) {
+             * mWifeAgeModified = true;
+             * }
+             *
+             * @Override
+             * public void insertUpdate(DocumentEvent e) {
+             * mWifeAgeModified = true;
+             * }
+             * });
+             *
+             */
         } else {
             agePanel.setVisible(false);
         }
