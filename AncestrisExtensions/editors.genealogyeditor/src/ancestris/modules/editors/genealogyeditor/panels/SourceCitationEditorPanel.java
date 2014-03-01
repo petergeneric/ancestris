@@ -5,7 +5,9 @@ import ancestris.modules.editors.genealogyeditor.models.EventsRoleComboBoxModel;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
@@ -662,9 +664,19 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         }
         mDataQualityModified = false;
 
-        noteCitationsListPanel.setNotesList(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("NOTE")));
-
-        multimediaObjectCitationsListPanel.set(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("OBJE")));
+        ArrayList<Property> notes = new ArrayList(Arrays.asList(mSourceCitation.getProperties("NOTE")));
+        if (mSourceCitation instanceof PropertySource) {
+            Source targetEntity = (Source) ((PropertySource) mSourceCitation).getTargetEntity();
+            notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
+        }
+        noteCitationsListPanel.setNotesList(mSourceCitation, notes);
+        
+        ArrayList<Property> multimediaObjects = new ArrayList(Arrays.asList(mSourceCitation.getProperties("OBJE")));
+        if (mSourceCitation instanceof PropertySource) {
+            Source targetEntity = (Source) ((PropertySource) mSourceCitation).getTargetEntity();
+            multimediaObjects.addAll(Arrays.asList(targetEntity.getProperties("OBJE")));
+        }
+        multimediaObjectCitationsListPanel.set(mSourceCitation, multimediaObjects);
     }
 
     public Property commit() {
