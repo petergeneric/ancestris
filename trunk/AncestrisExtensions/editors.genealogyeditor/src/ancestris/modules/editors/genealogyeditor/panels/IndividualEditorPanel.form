@@ -81,10 +81,12 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="sexBeanPanel" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="individualIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="individualIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="privateRecordToggleButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="privateRecordToggleButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="individualIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="individualIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -183,7 +185,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventsListPanel" alignment="0" pref="830" max="32767" attributes="0"/>
+                  <Component id="eventsListPanel" alignment="0" pref="846" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -217,7 +219,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesChildTreeTablePanel" alignment="0" pref="830" max="32767" attributes="0"/>
+                  <Component id="familiesChildTreeTablePanel" alignment="0" pref="846" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -251,7 +253,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="familiesSpouseTreeTablePanel" alignment="0" pref="830" max="32767" attributes="0"/>
+                  <Component id="familiesSpouseTreeTablePanel" alignment="0" pref="846" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -288,7 +290,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="830" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="846" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -319,7 +321,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="namesListPanel" alignment="0" pref="830" max="32767" attributes="0"/>
+                  <Component id="namesListPanel" alignment="0" pref="846" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -350,7 +352,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="830" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="846" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -381,7 +383,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="associationsListPanel" alignment="0" pref="830" max="32767" attributes="0"/>
+                  <Component id="associationsListPanel" alignment="0" pref="846" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -410,7 +412,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="830" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="846" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

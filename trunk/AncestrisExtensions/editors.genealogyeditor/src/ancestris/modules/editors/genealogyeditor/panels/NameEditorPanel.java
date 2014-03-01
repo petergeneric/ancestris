@@ -34,8 +34,11 @@ public class NameEditorPanel extends javax.swing.JPanel {
     public NameEditorPanel() {
         initComponents();
         jCheckBox1.setSelected(false);
+        firstNamePrefixLabel.setVisible(false);
         firstNamePrefixTextField.setVisible(false);
+        familyNamePrefixLabel.setVisible(false);
         familyNamePrefixTextField.setVisible(false);
+        firstNameSuffixLabel.setVisible(false);
         firstNameSuffixTextField.setVisible(false);
     }
 
@@ -51,15 +54,18 @@ public class NameEditorPanel extends javax.swing.JPanel {
         jCheckBox1 = new javax.swing.JCheckBox();
         nameTypeLabel = new javax.swing.JLabel();
         nameTypeComboBox = new javax.swing.JComboBox<String>();
-        firstnameLabel = new javax.swing.JLabel();
+        firstNamePrefixLabel = new javax.swing.JLabel();
         firstNamePrefixTextField = new javax.swing.JTextField();
         firstNameTextField = new javax.swing.JTextField();
-        familyNameLabel = new javax.swing.JLabel();
+        familyNamePrefixLabel = new javax.swing.JLabel();
         familyNamePrefixTextField = new javax.swing.JTextField();
         familyNameTextField = new javax.swing.JTextField();
         firstNameSuffixTextField = new javax.swing.JTextField();
         nicknameLabel = new javax.swing.JLabel();
         nicknameTextField = new javax.swing.JTextField();
+        firstnameLabel = new javax.swing.JLabel();
+        familyNameLabel = new javax.swing.JLabel();
+        firstNameSuffixLabel = new javax.swing.JLabel();
 
         jCheckBox1.setText(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.jCheckBox1.text")); // NOI18N
         jCheckBox1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -79,8 +85,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        firstnameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        firstnameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstnameLabel.text"), new Object[] {})); // NOI18N
+        firstNamePrefixLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        firstNamePrefixLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNamePrefixLabel.text"), new Object[] {})); // NOI18N
 
         firstNamePrefixTextField.setColumns(8);
         firstNamePrefixTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
@@ -128,8 +134,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        familyNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        familyNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNameLabel.text"), new Object[] {})); // NOI18N
+        familyNamePrefixLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        familyNamePrefixLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNamePrefixLabel.text"), new Object[] {})); // NOI18N
 
         familyNamePrefixTextField.setColumns(8);
         familyNamePrefixTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNamePrefixTextField.toolTipText"), new Object[] {})); // NOI18N
@@ -228,42 +234,58 @@ public class NameEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        firstnameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        firstnameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstnameLabel.text"), new Object[] {})); // NOI18N
+
+        familyNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        familyNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNameLabel.text"), new Object[] {})); // NOI18N
+
+        firstNameSuffixLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        firstNameSuffixLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNameSuffixLabel.text"), new Object[] {})); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
                         .addComponent(jCheckBox1)
-                        .addGap(34, 34, 34)
-                        .addComponent(nameTypeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(nameTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(familyNameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-                            .addComponent(firstnameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(nicknameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(familyNamePrefixLabel)
+                            .addComponent(firstNamePrefixLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                            .addComponent(familyNamePrefixTextField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(familyNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(firstnameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(familyNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(familyNameTextField)
-                                    .addComponent(firstNameTextField))
+                                .addComponent(firstNameSuffixLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(nicknameTextField)
-                                .addGap(168, 168, 168)))))
+                            .addComponent(firstNameTextField)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(nicknameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nicknameTextField)))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {familyNameLabel, familyNamePrefixLabel, firstNamePrefixLabel, firstnameLabel, nicknameLabel});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -276,13 +298,16 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(firstNamePrefixLabel)
                     .addComponent(firstnameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(familyNameLabel)
+                    .addComponent(familyNamePrefixLabel)
                     .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(familyNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(familyNameLabel)
+                    .addComponent(firstNameSuffixLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nicknameLabel)
@@ -298,21 +323,30 @@ public class NameEditorPanel extends javax.swing.JPanel {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         if (jCheckBox1.isSelected()) {
+            firstNamePrefixLabel.setVisible(true);
             firstNamePrefixTextField.setVisible(true);
+            familyNamePrefixLabel.setVisible(true);
             familyNamePrefixTextField.setVisible(true);
+            firstNameSuffixLabel.setVisible(true);
             firstNameSuffixTextField.setVisible(true);
         } else {
+            firstNamePrefixLabel.setVisible(false);
             firstNamePrefixTextField.setVisible(false);
+            familyNamePrefixLabel.setVisible(false);
             familyNamePrefixTextField.setVisible(false);
+            firstNameSuffixLabel.setVisible(false);
             firstNameSuffixTextField.setVisible(false);
         }
         revalidate();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel familyNameLabel;
+    private javax.swing.JLabel familyNamePrefixLabel;
     private javax.swing.JTextField familyNamePrefixTextField;
     private javax.swing.JTextField familyNameTextField;
+    private javax.swing.JLabel firstNamePrefixLabel;
     private javax.swing.JTextField firstNamePrefixTextField;
+    private javax.swing.JLabel firstNameSuffixLabel;
     private javax.swing.JTextField firstNameSuffixTextField;
     private javax.swing.JTextField firstNameTextField;
     private javax.swing.JLabel firstnameLabel;
@@ -415,21 +449,30 @@ public class NameEditorPanel extends javax.swing.JPanel {
 
             if (firstnamePrefix != null || firstNameSuffix != null || familyNamePrefix != null) {
                 jCheckBox1.setSelected(true);
+                firstNamePrefixLabel.setVisible(true);
                 firstNamePrefixTextField.setVisible(true);
+                familyNamePrefixLabel.setVisible(true);
                 familyNamePrefixTextField.setVisible(true);
+                firstNameSuffixLabel.setVisible(true);
                 firstNameSuffixTextField.setVisible(true);
             } else {
                 jCheckBox1.setSelected(false);
+                firstNamePrefixLabel.setVisible(false);
                 firstNamePrefixTextField.setVisible(false);
+                familyNamePrefixLabel.setVisible(false);
                 familyNamePrefixTextField.setVisible(false);
+                firstNameSuffixLabel.setVisible(false);
                 firstNameSuffixTextField.setVisible(false);
             }
         } else {
             nameTypeComboBox.setSelectedIndex(1);
             nameTypeModified = false;
             jCheckBox1.setSelected(false);
+            firstNamePrefixLabel.setVisible(false);
             firstNamePrefixTextField.setVisible(false);
+            familyNamePrefixLabel.setVisible(false);
             familyNamePrefixTextField.setVisible(false);
+            firstNameSuffixLabel.setVisible(false);
             firstNameSuffixTextField.setVisible(false);
         }
         revalidate();
