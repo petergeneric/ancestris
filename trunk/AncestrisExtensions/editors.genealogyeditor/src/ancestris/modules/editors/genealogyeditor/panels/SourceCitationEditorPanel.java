@@ -7,7 +7,6 @@ import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
@@ -474,6 +473,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private void linkToSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToSourceButtonActionPerformed
 
         SourcesListPanel sourcesListPanel = new SourcesListPanel(mRoot.getGedcom());
+        sourcesListPanel.setToolBarVisible(false);
+        
         ADialog sourcesListDialog = new ADialog(NbBundle.getMessage(PlacesListPanel.class,
                 "SourcesListPanel.linkTo.title"), sourcesListPanel);
         sourcesListDialog.setDialogId(SourcesListPanel.class.getName());
@@ -664,17 +665,21 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         }
         mDataQualityModified = false;
 
-        ArrayList<Property> notes = new ArrayList(Arrays.asList(mSourceCitation.getProperties("NOTE")));
+        ArrayList<Property> notes = new <Property> ArrayList();
         if (mSourceCitation instanceof PropertySource) {
             Source targetEntity = (Source) ((PropertySource) mSourceCitation).getTargetEntity();
-            notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
+            if (targetEntity != null) {
+                notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
+            }
         }
         noteCitationsListPanel.setNotesList(mSourceCitation, notes);
-        
+
         ArrayList<Property> multimediaObjects = new ArrayList(Arrays.asList(mSourceCitation.getProperties("OBJE")));
         if (mSourceCitation instanceof PropertySource) {
             Source targetEntity = (Source) ((PropertySource) mSourceCitation).getTargetEntity();
-            multimediaObjects.addAll(Arrays.asList(targetEntity.getProperties("OBJE")));
+            if (targetEntity != null) {
+                multimediaObjects.addAll(Arrays.asList(targetEntity.getProperties("OBJE")));
+            }
         }
         multimediaObjectCitationsListPanel.set(mSourceCitation, multimediaObjects);
     }

@@ -223,4 +223,8 @@ public class SourcesListPanel extends javax.swing.JPanel {
             return null;
         }
     }
+
+    public void setToolBarVisible(boolean b) {
+        sourcesToolBar.setVisible(b);
+    }
 }

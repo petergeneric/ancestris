@@ -1,9 +1,14 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.RepositoriesTableModel;
-import genj.gedcom.Property;
-import genj.gedcom.Repository;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -13,6 +18,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private RepositoriesTableModel mRepositoriesTableModel = new RepositoriesTableModel();
+    private Repository mRepository;
 
     /**
      * Creates new form SourcesListPanel
@@ -35,6 +41,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         addRepositoryButton = new javax.swing.JButton();
         editRepositoryButton = new javax.swing.JButton();
         deleteRepositoryButton = new javax.swing.JButton();
+        linkToRepositoryButton = new javax.swing.JButton();
         repositoriesTableScrollPane = new javax.swing.JScrollPane();
         repositoriesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
@@ -77,7 +84,24 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         });
         repositoriesToolBar.add(deleteRepositoryButton);
 
+        linkToRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.linkToRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToRepositoryButton.setFocusable(false);
+        linkToRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToRepositoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkToRepositoryButtonActionPerformed(evt);
+            }
+        });
+        repositoriesToolBar.add(linkToRepositoryButton);
+
         repositoriesTable.setModel(mRepositoriesTableModel);
+        repositoriesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                repositoriesTableMouseClicked(evt);
+            }
+        });
         repositoriesTableScrollPane.setViewportView(repositoriesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -97,11 +121,58 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRepositoryButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mRepository = (Repository) gedcom.createEntity(Gedcom.REPO);
+                }
+            }); // end of doUnitOfWork
+
+            RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+            repositoryEditorPanel.setRepository(mRepository);
+
+            DialogManager.ADialog editorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.create.title"),
+                    repositoryEditorPanel);
+            editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+
+            if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                repositoryEditorPanel.commit();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }//GEN-LAST:event_addRepositoryButtonActionPerformed
 
     private void editRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRepositoryButtonActionPerformed
         int selectedRow = repositoriesTable.getSelectedRow();
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         if (selectedRow != -1) {
+            int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
+            RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+            repositoryEditorPanel.setRepository(mRepositoriesTableModel.getValueAt(rowIndex));
+
+            DialogManager.ADialog editorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", mRepositoriesTableModel.getValueAt(rowIndex)),
+                    repositoryEditorPanel);
+            editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+
+            if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                repositoryEditorPanel.commit();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
         }
     }//GEN-LAST:event_editRepositoryButtonActionPerformed
 
@@ -109,10 +180,65 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteRepositoryButtonActionPerformed
 
+    private void linkToRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToRepositoryButtonActionPerformed
+        List<Repository> repositoriesList = new ArrayList<Repository>((Collection<Repository>) mRoot.getGedcom().getEntities(Gedcom.REPO));
+
+        RepositoriesListPanel repositoriesListPanel = new RepositoriesListPanel();
+        repositoriesListPanel.set(mRoot, repositoriesList);
+        repositoriesListPanel.setToolBarVisible(false);
+        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(RepositoriesListPanel.class, "RepositoriesListPanel.linkTo.title"),
+                repositoriesListPanel);
+        individualsListDialog.setDialogId(RepositoriesListPanel.class.getName());
+
+        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Repository selectedRepository = repositoriesListPanel.getSelectedNote();
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        Property addProperty = mRoot.addProperty("REPO", '@' + selectedRepository.getId() + '@');
+                        ((PropertyRepository) addProperty).link();
+                    }
+                }); // end of doUnitOfWork
+                mRepositoriesTableModel.add(selectedRepository);
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }//GEN-LAST:event_linkToRepositoryButtonActionPerformed
+
+    private void repositoriesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_repositoriesTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = repositoriesTable.getSelectedRow();
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
+            if (selectedRow != -1) {
+                int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
+                RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+                repositoryEditorPanel.setRepository(mRepositoriesTableModel.getValueAt(rowIndex));
+
+                DialogManager.ADialog editorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", mRepositoriesTableModel.getValueAt(rowIndex)),
+                        repositoryEditorPanel);
+                editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+
+                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    repositoryEditorPanel.commit();
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_repositoriesTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRepositoryButton;
     private javax.swing.JButton deleteRepositoryButton;
     private javax.swing.JButton editRepositoryButton;
+    private javax.swing.JButton linkToRepositoryButton;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable repositoriesTable;
     private javax.swing.JScrollPane repositoriesTableScrollPane;
     private javax.swing.JToolBar repositoriesToolBar;
@@ -121,5 +247,19 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
     public void set(Property root, List<Repository> repositoriesList) {
         this.mRoot = root;
         mRepositoriesTableModel.update(repositoriesList);
+    }
+
+    public void setToolBarVisible(boolean b) {
+        repositoriesToolBar.setVisible(b);
+    }
+
+    public Repository getSelectedNote() {
+        int selectedRow = repositoriesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
+            return mRepositoriesTableModel.getValueAt(rowIndex);
+        } else {
+            return null;
+        }
     }
 }
