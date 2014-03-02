@@ -18,7 +18,7 @@ import org.openide.util.Utilities;
 
 @ActionID(category = "Edit",
 id = "ancestris.modules.editors.genealogyeditor.actions.GenealogyEditorCreateRepositoryAction")
-@ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/Repository.png",
+@ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/repository_add.png",
 displayName = "#CTL_GenealogyEditorCreateRepositoryAction")
 @ActionReferences({
     @ActionReference(path = "Toolbars/GenealogyEditor", position = 600)
