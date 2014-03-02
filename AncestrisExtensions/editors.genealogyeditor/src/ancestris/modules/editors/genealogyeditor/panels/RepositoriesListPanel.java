@@ -192,7 +192,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         individualsListDialog.setDialogId(RepositoriesListPanel.class.getName());
 
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            final Repository selectedRepository = repositoriesListPanel.getSelectedNote();
+            final Repository selectedRepository = repositoriesListPanel.getSelectedRepository();
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -253,7 +253,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         repositoriesToolBar.setVisible(b);
     }
 
-    public Repository getSelectedNote() {
+    public Repository getSelectedRepository() {
         int selectedRow = repositoriesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
