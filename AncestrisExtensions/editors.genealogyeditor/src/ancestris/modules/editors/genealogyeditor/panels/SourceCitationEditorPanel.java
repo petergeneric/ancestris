@@ -270,7 +270,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             .addComponent(sourceDataScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
         );
 
-        sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceDataPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), SourceDataPanel); // NOI18N
+        sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceDataPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), SourceDataPanel); // NOI18N
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
