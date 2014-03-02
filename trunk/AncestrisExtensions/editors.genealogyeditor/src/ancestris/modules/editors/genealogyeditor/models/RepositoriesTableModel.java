@@ -71,7 +71,7 @@ public class RepositoriesTableModel extends AbstractTableModel {
         addAll(repositoriesList);
     }
 
-    public Entity getValueAt(int row) {
+    public Repository getValueAt(int row) {
         if (row < repositoriesList.size()) {
             return repositoriesList.get(row);
         } else {
