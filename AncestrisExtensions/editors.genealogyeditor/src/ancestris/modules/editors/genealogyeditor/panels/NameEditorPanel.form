@@ -21,8 +21,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="jCheckBox1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="nameTypeLabel" pref="120" max="32767" attributes="0"/>
+                      <EmptySpace pref="72" max="32767" attributes="0"/>
+                      <Component id="nameTypeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="nameTypeComboBox" min="-2" pref="289" max="-2" attributes="0"/>
                   </Group>
@@ -33,10 +33,10 @@
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="firstNamePrefixTextField" pref="209" max="32767" attributes="0"/>
+                          <Component id="firstNamePrefixTextField" max="32767" attributes="0"/>
                           <Component id="familyNamePrefixTextField" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="familyNameLabel" linkSize="2" min="-2" pref="101" max="-2" attributes="0"/>
                           <Component id="firstnameLabel" linkSize="2" min="-2" pref="101" max="-2" attributes="0"/>
@@ -44,10 +44,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="familyNameTextField" pref="0" max="32767" attributes="0"/>
+                              <Component id="familyNameTextField" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="firstNameSuffixLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="firstNameSuffixTextField" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="firstNameTextField" max="32767" attributes="0"/>
@@ -57,6 +57,7 @@
                       <Component id="nicknameLabel" linkSize="2" min="-2" pref="101" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="nicknameTextField" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="179" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
