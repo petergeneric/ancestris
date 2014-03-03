@@ -175,8 +175,25 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                         }
                     }
                 }); // end of doUnitOfWork
-                imageBean.setImage(mMultiMediaObject);
-                repaint();
+
+                String objetFormat = null;
+                if (mMultiMediaObject instanceof PropertyMedia) {
+                    Property propertyFormat = ((Media) ((PropertyMedia) mMultiMediaObject).getTargetEntity()).getProperty("FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                } else {
+                    Property propertyFormat = mMultiMediaObject.getProperty("FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                }
+
+                // bmp | gif | jpeg
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg"))) {
+                    imageBean.setImage(mMultiMediaObject);
+                    repaint();
+                }
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -220,7 +237,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             Property propertyNote = mMultiMediaObject.getProperty("NOTE");
             if (propertyNote != null) {
                 noteTextTextArea.setText(propertyNote.getValue());
-            } 
+            }
         } else {
             Property propertyTitle = mMultiMediaObject.getProperty("TITL");
             multiMediaObjectTitleTextField.setText(propertyTitle != null ? propertyTitle.getValue() : "");

@@ -193,42 +193,22 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
             Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
-            MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
-            multiMediaObjectEditorPanel.set(multiMediaObject);
 
-            String multiMediaObjectTitle;
+            String objetFormat = null;
             if (multiMediaObject instanceof PropertyMedia) {
-                multiMediaObjectTitle = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getTitle();
+                Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                if (propertyFormat != null) {
+                    objetFormat = propertyFormat.getValue();
+                }
             } else {
-                Property propertyTitle = multiMediaObject.getProperty("TITL");
-                multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
-            }
-
-            DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
-                    multiMediaObjectEditorPanel);
-            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
-
-            if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                multiMediaObjectEditorPanel.commit();
-                multiMediaObjectCitationsTableModel.clear();
-                multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
-            } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
+                Property propertyFormat = multiMediaObject.getProperty("FORM");
+                if (propertyFormat != null) {
+                    objetFormat = propertyFormat.getValue();
                 }
             }
-        }
-    }//GEN-LAST:event_editMMObjecButtonActionPerformed
 
-    private void multiMediaObjectCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_multiMediaObjectCitationsTableMouseClicked
-        if (evt.getClickCount() >= 2) {
-            Gedcom gedcom = mRoot.getGedcom();
-            int undoNb = gedcom.getUndoNb();
-            int selectedRow = multiMediaObjectCitationsTable.getSelectedRow();
-            if (selectedRow != -1) {
-                int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
-                Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
+            // bmp | gif | jpeg
+            if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg"))) {
                 MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
                 multiMediaObjectEditorPanel.set(multiMediaObject);
 
@@ -254,11 +234,65 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
+            }
+        }
+    }//GEN-LAST:event_editMMObjecButtonActionPerformed
 
+    private void multiMediaObjectCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_multiMediaObjectCitationsTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
+            int selectedRow = multiMediaObjectCitationsTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
+                Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
+
+                String objetFormat = null;
+                if (multiMediaObject instanceof PropertyMedia) {
+                    Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                } else {
+                    Property propertyFormat = multiMediaObject.getProperty("FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                }
+
+                // bmp | gif | jpeg
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg"))) {
+
+                    MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                    multiMediaObjectEditorPanel.set(multiMediaObject);
+
+                    String multiMediaObjectTitle;
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        multiMediaObjectTitle = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getTitle();
+                    } else {
+                        Property propertyTitle = multiMediaObject.getProperty("TITL");
+                        multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
+                    }
+
+                    DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
+                            NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
+                            multiMediaObjectEditorPanel);
+                    multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+
+                    if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                        multiMediaObjectEditorPanel.commit();
+                        multiMediaObjectCitationsTableModel.clear();
+                        multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+                    } else {
+                        while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                            gedcom.undoUnitOfWork(false);
+                        }
+                    }
+
+                }
             }
         }
     }//GEN-LAST:event_multiMediaObjectCitationsTableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton deleteMMObjectButton;

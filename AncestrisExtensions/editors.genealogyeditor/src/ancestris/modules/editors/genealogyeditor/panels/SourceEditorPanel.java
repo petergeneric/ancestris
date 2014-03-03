@@ -66,7 +66,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         agencyTextField = new javax.swing.JTextField();
         sourceInformationTabbedPane = new javax.swing.JTabbedPane();
         registeredEventsPanel = new javax.swing.JPanel();
-        eventTypePanel1 = new ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel();
+        eventTypePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel();
         repositoriesPanel = new javax.swing.JPanel();
         repositoriesListPanel = new ancestris.modules.editors.genealogyeditor.panels.RepositoriesListPanel();
         notesPanel = new javax.swing.JPanel();
@@ -98,11 +98,11 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         registeredEventsPanel.setLayout(registeredEventsPanelLayout);
         registeredEventsPanelLayout.setHorizontalGroup(
             registeredEventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventTypePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
         registeredEventsPanelLayout.setVerticalGroup(
             registeredEventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventTypePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.registeredEventsPanel.TabConstraints.tabTitle"), new Object[] {}), registeredEventsPanel); // NOI18N
@@ -224,7 +224,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField agencyTextField;
     private javax.swing.JLabel authorLabel;
     private javax.swing.JTextField authorTextField;
-    private ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel eventTypePanel1;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel eventTypePanel;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private javax.swing.JPanel multimediaObjectPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NotesListPanel notesListPanel;
@@ -273,10 +273,10 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         Property sourceData = mSource.getProperty("DATA");
         if (sourceData != null) {
             Property[] sourceDataEvents = sourceData.getProperties("EVEN");
-            eventTypePanel1.setEventTypesList(sourceData, Arrays.asList(sourceDataEvents));
+            eventTypePanel.setEventTypesList(sourceData, Arrays.asList(sourceDataEvents));
         } else {
             sourceData = mSource.addProperty("DATA", "");
-            eventTypePanel1.setEventTypesList(sourceData, null);
+            eventTypePanel.setEventTypesList(sourceData, null);
 
         }
 
