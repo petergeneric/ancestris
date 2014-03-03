@@ -440,11 +440,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             });
 
             Property propertyPhone;
-            if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                propertyPhone = mAddress.getProperty("PHON");
-            } else {
-                propertyPhone = mAddress.getProperty("_PHON");
-            }
+            propertyPhone = mAddress.getProperty("PHON");
             phoneTextField.setText(propertyPhone != null ? propertyPhone.getValue() : "");
             phoneTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -646,22 +642,13 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                                 propertyCountry.setValue(countryTextField.getText());
                             }
                         }
-                        
+
                         if (mPhoneModified) {
-                            if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                                Property propertyPhone = mAddress.getProperty("PHON");
-                                if (propertyPhone == null) {
-                                    mAddress.addProperty("PHON", phoneTextField.getText());
-                                } else {
-                                    propertyPhone.setValue(phoneTextField.getText());
-                                }
+                            Property propertyPhone = mAddress.getProperty("PHON");
+                            if (propertyPhone == null) {
+                                mAddress.addProperty("PHON", phoneTextField.getText());
                             } else {
-                                Property propertyPhone = mAddress.getProperty("_PHON");
-                                if (propertyPhone == null) {
-                                    mAddress.addProperty("_PHON", phoneTextField.getText());
-                                } else {
-                                    propertyPhone.setValue(phoneTextField.getText());
-                                }
+                                propertyPhone.setValue(phoneTextField.getText());
                             }
                         }
 
@@ -700,7 +687,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                                 }
                             }
                         }
-                        
+
                         if (mHttpAddrModified) {
                             if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                                 Property propertyhttpAddr = mAddress.getProperty("WWW");
