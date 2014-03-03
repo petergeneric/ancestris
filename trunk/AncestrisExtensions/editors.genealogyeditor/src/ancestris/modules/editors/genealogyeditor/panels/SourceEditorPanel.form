@@ -148,17 +148,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventTypePanel1" alignment="0" pref="539" max="32767" attributes="0"/>
+                  <Component id="eventTypePanel" alignment="0" pref="539" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventTypePanel1" alignment="0" pref="299" max="32767" attributes="0"/>
+                  <Component id="eventTypePanel" alignment="0" pref="299" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel" name="eventTypePanel1">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel" name="eventTypePanel">
             </Component>
           </SubComponents>
         </Container>
