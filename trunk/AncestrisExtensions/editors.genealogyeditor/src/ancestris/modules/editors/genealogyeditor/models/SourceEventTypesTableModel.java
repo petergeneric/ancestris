@@ -44,7 +44,15 @@ public class SourceEventTypesTableModel extends AbstractTableModel {
         if (row < mEventTypesList.size()) {
             Property eventType = mEventTypesList.get(row);
             if (column == 0) {
-                return PropertyTag2Name.getTagName(eventType.getValue());
+                String result = "";
+                for (String tag : eventType.getValue().split(",")) {
+                    if (result.isEmpty()) {
+                        result += PropertyTag2Name.getTagName(tag);
+                    } else {
+                        result += ", " + PropertyTag2Name.getTagName(tag);
+                    }
+                }
+                return result;
             } else if (column == 1) {
                 Property date = eventType.getProperty("DATE");
                 if (date != null) {
