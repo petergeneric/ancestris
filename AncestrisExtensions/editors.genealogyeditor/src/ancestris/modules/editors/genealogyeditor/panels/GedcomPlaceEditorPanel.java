@@ -269,7 +269,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                             if (mPlace == null) {
                                 mPlace = (PropertyPlace) mRoot.addProperty("PLAC", selectedPlace.format("all"));
                             } else {
-                                mPlace.setValue(getPlaceString());
+                                mPlace.setValue(selectedPlace.format("all"));
                             }
                         }
                     }); // end of doUnitOfWork
