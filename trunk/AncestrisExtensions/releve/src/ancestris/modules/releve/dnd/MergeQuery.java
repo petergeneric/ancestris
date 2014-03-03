@@ -560,17 +560,21 @@ public class MergeQuery {
                         && !isSameFirstName(marriageRecord.getIndi().getFirstName(), husband.getFirstName())) {
                     continue;
                 }
-                // l'epoux doit avoir au moins minMarriageYearOld
-                if (!isRecordAfterThanDate(marriageDate, husband.getBirthDate(), 0, minMarriageYearOld)) {
-                    continue;
-                }
-                // l'epoux ne doit pas etre decede avant le mariage
-                if (!isRecordBeforeThanDate(marriageDate, husband.getDeathDate(), 0, 0)) {
-                    continue;
-                }
-
+                
                 // l'epoux doit avoir une date de naissance compatible
                 if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate())) {
+                    continue;
+                }
+                
+                // si la date de naissance de l'individu n'est pas precisée , l'epoux doit avoir au moins minMarriageYearOld 
+                if ( ! marriageRecord.getIndi().getBirthDate().isValid() ) {
+                    if (!isRecordAfterThanDate(marriageDate, husband.getBirthDate(), 0, minMarriageYearOld)) {
+                        continue;
+                    }
+                }
+                
+                // l'epoux ne doit pas etre decede avant le mariage
+                if (!isRecordBeforeThanDate(marriageDate, husband.getDeathDate(), 0, 0)) {
                     continue;
                 }
 
@@ -643,18 +647,20 @@ public class MergeQuery {
                     continue;
                 }
 
-                // l'epouse doit avoir au moins minMarriageYearOld
-                if (!isRecordAfterThanDate(marriageDate, wife.getBirthDate(), 0, minMarriageYearOld)) {
+                // l'epouse doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate())) {
                     continue;
+                }
+
+                // si la date de naissance de la femme n'est pas precisée, l'epouse doit avoir au moins minMarriageYearOld
+                if (!marriageRecord.getWife().getBirthDate().isValid()) {
+                    if (!isRecordAfterThanDate(marriageDate, wife.getBirthDate(), 0, minMarriageYearOld)) {
+                        continue;
+                    }
                 }
 
                 // l'epouse ne doit pas etre decedee avant le mariage
                 if (!isRecordBeforeThanDate(marriageDate, wife.getDeathDate(), 0, 0)) {
-                    continue;
-                }
-
-                // l'epouse doit avoir une date de naissance compatible
-                if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate())) {
                     continue;
                 }
 
@@ -941,18 +947,21 @@ public class MergeQuery {
                         && !isSameFirstName(marriageRecord.getIndi().getFirstName(), husband.getFirstName())) {
                     continue;
                 }
-                // l'epoux doit avoir au moins minMarriageYearOld
-                if (!isRecordAfterThanDate(marriageDate, husband.getBirthDate(), 0, minMarriageYearOld)) {
+                
+                // l'epoux doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate())) {
                     continue;
+                }
+
+                // si la date de naissance de l'individu n'est pas precisée , l'epoux doit avoir au moins minMarriageYearOld 
+                if ( ! marriageRecord.getIndi().getBirthDate().isValid() ) {
+                    if (!isRecordAfterThanDate(marriageDate, husband.getBirthDate(), 0, minMarriageYearOld)) {
+                        continue;
+                    }
                 }
 
                 // l'epoux ne doit pas etre decede avant le mariage
                 if (!isRecordBeforeThanDate(marriageDate, husband.getDeathDate(), 0, 0)) {
-                    continue;
-                }
-
-                // l'epoux doit avoir une date de naissance compatible
-                if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate())) {
                     continue;
                 }
 
@@ -1050,13 +1059,21 @@ public class MergeQuery {
                         && !isSameFirstName(marriageRecord.getWife().getFirstName(), wife.getFirstName())) {
                     continue;
                 }
-                // l'epouse ne doit pas etre decedee avant  le mariage
-                if (!isRecordBeforeThanDate(marriageDate, wife.getDeathDate(), 0, 0)) {
-                    continue;
-                }
-
+                
                 // l'epouse doit avoir une date de naissance compatible
                 if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate())) {
+                    continue;
+                }
+                
+                // si la date de naissance de la femme n'est pas precisée, l'epouse doit avoir au moins minMarriageYearOld
+                if (!marriageRecord.getWife().getBirthDate().isValid()) {
+                    if (!isRecordAfterThanDate(marriageDate, wife.getBirthDate(), 0, minMarriageYearOld)) {
+                        continue;
+                    }
+                }
+                
+                // l'epouse ne doit pas etre decedee avant  le mariage
+                if (!isRecordBeforeThanDate(marriageDate, wife.getDeathDate(), 0, 0)) {
                     continue;
                 }
 
@@ -1122,7 +1139,7 @@ public class MergeQuery {
 
                 }
 
-                 // je verifie s'il a un conjoint en vie avec un nom différent et un prenom different
+                // je verifie s'il a un conjoint en vie avec un nom différent et un prenom different
                 boolean oftherSpouseFound = false;
                 Fam [] spouseFamList = wife.getFamiliesWhereSpouse();
                 for (Fam fam : spouseFamList) {
