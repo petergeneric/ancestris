@@ -363,56 +363,56 @@ public class MergeTable extends JTable {
     /**
      * convertit en HTML et "wrappe" le texte d'un tooltip
      * @param tip
-     * @param length
+     * @param maxLength longueur maximale des lignes
      * @return
      */
-    public static String wrapToolTip(String tip, int length) {
+    public static String wrapToolTip(String tip, int maxLength) {
         // marge de detection d'un espace pour wrapper
-        final int SPACE_BUFFER = 20;
-        List<String> lines = new ArrayList<String>();
-        int maxLength = 0;
-        while (maxLength < tip.length()) {
-            String overLong;
-            if (maxLength + length + SPACE_BUFFER < tip.length()) {
-                overLong = tip.substring(maxLength, maxLength + length + SPACE_BUFFER);
-            } else {
-                overLong = tip.substring(maxLength);
-            }
-                int firstReturn = overLong.indexOf('\n');
-                if ( firstReturn > -1 ) {
-                    // je decoupe au niveau du caractere '\n'
-                    lines.add(tip.substring(maxLength, maxLength + firstReturn)+ "</br>");
-                    maxLength = maxLength + firstReturn + 1;
-                } else {
-                    int lastSpace = overLong.lastIndexOf(' ');
-                    if (lastSpace >= length) {
-                        // je decoupe au niveau dernier espace
-                        lines.add(tip.substring(maxLength, maxLength + lastSpace)+ "</br>");
-                        maxLength = maxLength + lastSpace + 1;
-                    } else {
-                        // je prends toute la ligne
-                        if (maxLength + length + SPACE_BUFFER < tip.length()) {
-                            lines.add(tip.substring(maxLength, length));
-                            maxLength = maxLength + length;
-                        } else {
-                            // je prends toute la ligne
-                            lines.add(tip.substring(maxLength));
-                            break;
-                        }
-                    }
-                }
-            //} else {
-            //    // je prends toute la ligne
-            //    lines.add(tip.substring(maxLength));
-            //    break;
-            //}
-        }
+        final int MARGING = 20;
+        int position = 0;
 
         StringBuilder sb = new StringBuilder("<html>");
-        for (int i = 0; i < lines.size() - 1; i++) {
-            sb.append(lines.get(i)).append("<br>");
+        while (position < tip.length()) {
+            String buffer;                    
+            if (position + maxLength + MARGING > tip.length()) {
+                buffer = tip.substring(position);
+            } else {
+                buffer = tip.substring(position, position + maxLength + MARGING );
+            }
+                
+            int firstReturn = buffer.indexOf('\n');
+            if (firstReturn != -1) {
+                // je decoupe au niveau du caractere '\n'
+                sb.append(tip.substring(position, position + firstReturn)).append("<br>");
+                position = position + firstReturn + 1;
+            } else {
+                if ( buffer.length() > maxLength ) {
+                    // je cherche une découpe entre les mots
+                    int lastSpace = buffer.lastIndexOf(' ');
+                    if (lastSpace != -1) {
+                        // je decoupe au dernier espace (je ne copie pas l'espace
+                        sb.append(tip.substring(position, position + lastSpace)).append("<br>");
+                        position = position + lastSpace + 1;
+                    } else {
+                        int separator = buffer.lastIndexOf(',');
+                        if (separator != -1) {
+                            // je decoupe au dernier separateur
+                            sb.append(tip.substring(position, position + separator + 1)).append("<br>");
+                            position = position + separator + 1;
+                        } else {
+                            // je decoupe arbitrairement à la longueur max
+                            sb.append(tip.substring(position, position + maxLength +1)).append("<br>");
+                            position = position + maxLength;
+                        }
+                    }
+                } else {
+                    // je prends toute la ligne
+                    sb.append(tip.substring(position));
+                    break;
+                }
+            }
         }
-        sb.append(lines.get(lines.size() - 1));
+        
         sb.append(("</html>"));
         return sb.toString();
     }
