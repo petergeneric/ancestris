@@ -241,8 +241,6 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
                 if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     multiMediaObjectEditorPanel.commit();
-                    multiMediaObjectCitationsTableModel.clear();
-                    multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
@@ -309,8 +307,6 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
                     if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                         multiMediaObjectEditorPanel.commit();
-                        multiMediaObjectCitationsTableModel.clear();
-                        multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
                     } else {
                         while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                             gedcom.undoUnitOfWork(false);
