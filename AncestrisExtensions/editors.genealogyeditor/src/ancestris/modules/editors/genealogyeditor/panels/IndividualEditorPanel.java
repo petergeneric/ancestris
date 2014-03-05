@@ -326,30 +326,64 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
         } else {
-            MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
-            multiMediaObjectEditorPanel.set(mMultiMediaObject);
-            String multiMediaObjectTitle;
-            if (mMultiMediaObject instanceof PropertyMedia) {
-                multiMediaObjectTitle = ((Media) ((PropertyMedia) mMultiMediaObject).getTargetEntity()).getTitle();
-            } else {
-                Property propertyTitle = mMultiMediaObject.getProperty("TITL");
-                multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
-            }
-            DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", multiMediaObjectTitle),
-                    multiMediaObjectEditorPanel);
-            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
-
-            if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                multiMediaObjectEditorPanel.commit();
-                if (mMultiMediaObject instanceof Media) {
-                    mIndividual.addMedia((Media) mMultiMediaObject);
+            for (Property multiMediaObject : mIndividual.getProperties("OBJE")) {
+                String objetFormat = null;
+                if (mIndividual.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                } else {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
                 }
-                imageBean.setImage(mMultiMediaObject);
-                repaint();
-            } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
+
+                // bmp | gif | jpeg
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg"))) {
+
+                    MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                    multiMediaObjectEditorPanel.set(mMultiMediaObject);
+                    String multiMediaObjectTitle;
+                    if (mMultiMediaObject instanceof PropertyMedia) {
+                        multiMediaObjectTitle = ((Media) ((PropertyMedia) mMultiMediaObject).getTargetEntity()).getTitle();
+                    } else {
+                        Property propertyTitle = mMultiMediaObject.getProperty("TITL");
+                        multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
+                    }
+                    DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
+                            NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", multiMediaObjectTitle),
+                            multiMediaObjectEditorPanel);
+                    multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+
+                    if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                        multiMediaObjectEditorPanel.commit();
+                        if (mMultiMediaObject instanceof Media) {
+                            mIndividual.addMedia((Media) mMultiMediaObject);
+                        }
+                        imageBean.setImage(mMultiMediaObject);
+                        repaint();
+                    } else {
+                        while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                            gedcom.undoUnitOfWork(false);
+                        }
+                    }
+                    break;
                 }
             }
         }
@@ -393,8 +427,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
      */
     public void set(Indi individual) {
         this.mIndividual = individual;
-
-        if (!mIndividual.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+        String gedcomVersion = mIndividual.getGedcom().getGrammar().getVersion();
+        if (!gedcomVersion.equals("5.5.1")) {
             privateRecordToggleButton.setVisible(false);
         }
 
@@ -509,7 +543,40 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         /*
          * +1 <<MULTIMEDIA_LINK>>
          */
-        imageBean.setImage(individual.getProperty("OBJE"));
+        for (Property multiMediaObject : individual.getProperties("OBJE")) {
+            String objetFormat = null;
+            if (gedcomVersion.equals("5.5.1")) {
+                if (multiMediaObject instanceof PropertyMedia) {
+                    Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                } else {
+                    Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                }
+            } else {
+                if (multiMediaObject instanceof PropertyMedia) {
+                    Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                } else {
+                    Property propertyFormat = multiMediaObject.getProperty("FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                }
+            }
+
+            // bmp | gif | jpeg
+            if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg"))) {
+                imageBean.setImage(multiMediaObject);
+                break;
+            }
+        }
         multimediaObjectCitationsListPanel.set(individual, Arrays.asList(individual.getProperties("OBJE")));
     }
 
