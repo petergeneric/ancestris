@@ -3,13 +3,11 @@ package ancestris.modules.editors.genealogyeditor.beans;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
@@ -22,13 +20,19 @@ import org.openide.util.Exceptions;
 public class ImageBean extends javax.swing.JPanel {
 
     private BufferedImage resizedImage;
-    BufferedImage loadImage;
+    private BufferedImage loadImage = null;
 
     /**
      * Creates new form ImageBean
      */
     public ImageBean() {
         super();
+        InputStream imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
+        try {
+            loadImage = ImageIO.read(imageInputStream);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         initComponents();
     }
 
@@ -65,7 +69,9 @@ public class ImageBean extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        resizedImage = resizeImage(loadImage, this.getWidth(), this.getHeight());
+        if (loadImage != null) {
+            resizedImage = resizeImage(loadImage, getWidth(), getHeight());
+        }
     }//GEN-LAST:event_formComponentResized
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -83,22 +89,12 @@ public class ImageBean extends javax.swing.JPanel {
             if (file != null && file instanceof PropertyFile && ((PropertyFile) file).getFile().exists()) {
                 try {
                     imageInputStream = new FileInputStream(((PropertyFile) file).getFile());
-                } catch (FileNotFoundException ex) {
+                    loadImage = ImageIO.read(imageInputStream);
+                    resizedImage = resizeImage(loadImage, this.getPreferredSize().width, this.getPreferredSize().height);
+                } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
-                    imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
                 }
-            } else {
-                imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
             }
-        } else {
-            imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
-        }
-
-        try {
-            loadImage = ImageIO.read(imageInputStream);
-            resizedImage = resizeImage(loadImage, this.getPreferredSize().width, this.getPreferredSize().height);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
         }
     }
 
