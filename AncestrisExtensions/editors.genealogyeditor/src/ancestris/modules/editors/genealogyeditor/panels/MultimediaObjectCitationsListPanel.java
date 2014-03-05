@@ -195,20 +195,34 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
 
             String objetFormat = null;
-            if (multiMediaObject instanceof PropertyMedia) {
-                Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
-                if (propertyFormat != null) {
-                    objetFormat = propertyFormat.getValue();
+            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                if (multiMediaObject instanceof PropertyMedia) {
+                    Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                } else {
+                    Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
                 }
             } else {
-                Property propertyFormat = multiMediaObject.getProperty("FORM");
-                if (propertyFormat != null) {
-                    objetFormat = propertyFormat.getValue();
+                if (multiMediaObject instanceof PropertyMedia) {
+                    Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
+                } else {
+                    Property propertyFormat = multiMediaObject.getProperty("FORM");
+                    if (propertyFormat != null) {
+                        objetFormat = propertyFormat.getValue();
+                    }
                 }
             }
 
             // bmp | gif | jpeg
-            if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg"))) {
+            if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg"))) {
                 MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
                 multiMediaObjectEditorPanel.set(multiMediaObject);
 
@@ -248,20 +262,34 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
 
                 String objetFormat = null;
-                if (multiMediaObject instanceof PropertyMedia) {
-                    Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
-                    if (propertyFormat != null) {
-                        objetFormat = propertyFormat.getValue();
+                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
                     }
                 } else {
-                    Property propertyFormat = multiMediaObject.getProperty("FORM");
-                    if (propertyFormat != null) {
-                        objetFormat = propertyFormat.getValue();
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
                     }
                 }
 
                 // bmp | gif | jpeg
-                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg"))) {
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg"))) {
 
                     MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
                     multiMediaObjectEditorPanel.set(multiMediaObject);
