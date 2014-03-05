@@ -222,7 +222,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
 
             // bmp | gif | jpeg
-            if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg"))) {
+            if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
                 MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
                 multiMediaObjectEditorPanel.set(multiMediaObject);
 
@@ -287,7 +287,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 }
 
                 // bmp | gif | jpeg
-                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg"))) {
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
 
                     MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
                     multiMediaObjectEditorPanel.set(multiMediaObject);

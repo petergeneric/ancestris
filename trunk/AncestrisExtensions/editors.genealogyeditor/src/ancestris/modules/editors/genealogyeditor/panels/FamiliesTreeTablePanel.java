@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -21,6 +23,7 @@ import javax.swing.tree.TreePath;
 import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
+import org.jdesktop.swingx.decorator.IconHighlighter;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -111,8 +114,28 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                 }
             }
         };
-        ColorHighlighter hl = new ColorHighlighter(MyHighlightPredicate, familiesTreeTable.getBackground(), Color.blue);
-        familiesTreeTable.addHighlighter(hl);
+        HighlightPredicate FamilyIconpredicate = new HighlightPredicate() {
+
+            @Override
+            public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+                int rowIndex = adapter.row;
+                TreePath path = familiesTreeTable.getPathForRow(rowIndex);
+                Object lastPathComponent = path.getLastPathComponent();
+                if (lastPathComponent instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+                    if (node.getUserObject() instanceof PropertyXRef) {
+                        Entity entity = ((PropertyXRef) node.getUserObject()).getTargetEntity();
+                        return entity instanceof Fam;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        };
+        familiesTreeTable.addHighlighter(new ColorHighlighter(MyHighlightPredicate, familiesTreeTable.getBackground(), Color.blue));
+        familiesTreeTable.addHighlighter(new IconHighlighter(FamilyIconpredicate, new ImageIcon("ancestris/modules/editors/genealogyeditor/resources/indi_add.png")));
     }
 
     /**
