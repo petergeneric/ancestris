@@ -257,7 +257,7 @@ public class MergeQuery {
                 }
 
                 // naissance de l'epoux
-                if (!isCompatible(participant.getBirthDate(), husband.getBirthDate() )) {
+                if (!isCompatible(participant.getBirthDate(), husband.getBirthDate(), 1 )) {
                     continue;
                 }
 
@@ -333,7 +333,7 @@ public class MergeQuery {
                 }
 
                 // naissance de l'epoux
-                if (!isCompatible(participant.getBirthDate(), wife.getBirthDate() )) {
+                if (!isCompatible(participant.getBirthDate(), wife.getBirthDate(), 1 )) {
                     continue;
                 }
 
@@ -562,7 +562,7 @@ public class MergeQuery {
                 }
                 
                 // l'epoux doit avoir une date de naissance compatible
-                if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate())) {
+                if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate(), 1)) {
                     continue;
                 }
                 
@@ -648,7 +648,7 @@ public class MergeQuery {
                 }
 
                 // l'epouse doit avoir une date de naissance compatible
-                if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate())) {
+                if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate(), 1)) {
                     continue;
                 }
 
@@ -949,7 +949,7 @@ public class MergeQuery {
                 }
                 
                 // l'epoux doit avoir une date de naissance compatible
-                if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate())) {
+                if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate(), 1)) {
                     continue;
                 }
 
@@ -1061,7 +1061,7 @@ public class MergeQuery {
                 }
                 
                 // l'epouse doit avoir une date de naissance compatible
-                if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate())) {
+                if (!isCompatible(marriageRecord.getWife().getBirthDate(), wife.getBirthDate(), 1)) {
                     continue;
                 }
                 
@@ -1415,7 +1415,7 @@ public class MergeQuery {
                 
                 // date de naissance compatible
                 if (indiBirtDate != null) {
-                    if (!isCompatible(recordBirthDate, indiBirtDate)) {
+                    if (!isCompatible(recordBirthDate, indiBirtDate, 1)) {
                         // la date de naissance de l'individu n'est pas compatible avec la date du relevé
                         continue;
                     }

@@ -146,7 +146,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     }
 
     /**
-     * insere un nouveau releve avant le relevé de reference
+     * insère un nouveau relevé avant le relevé de référence
      * @param newRecord
      * @return
      */
@@ -168,9 +168,13 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     public void swapRecordPrevious(Record record) {
         dataModel.swapRecordPrevious(record);
     }
+    
+    public void renumberRecords(Record record, int[] tableIndexList) {
+        dataModel.renumberRecords(record, tableIndexList);
+    }
 
     /**
-     * supprime tout sauf les données de completion du gedcom
+     * supprime tout sauf les données de complétion du gedcom
      */
     public void removeAll() {
         getCompletionProvider().removeAll();

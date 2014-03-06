@@ -1,13 +1,14 @@
 package ancestris.modules.releve.table;
 
 /**
- * Interface pour les listeners de la selection de releves dans la table
+ * Interface pour les listeners de la sélection de relevés dans la table
  * @author Michel
  */
 public interface TableSelectionListener {
-    void tableRecordSelected (int recordIndex, boolean isNew);
+    public void tableRecordSelected (int recordIndex, boolean isNew);
     public int getCurrentRecordIndex();
-    boolean verifyRecord();
-    void swapRecordNext();
-    void swapRecordPrevious();
+    public boolean verifyRecord();
+    public void swapRecordNext();
+    public void swapRecordPrevious();
+    public void renumberRecords();
 }

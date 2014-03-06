@@ -227,24 +227,24 @@ public class MergePanel extends javax.swing.JPanel  {
                 Fam family = (Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject;
                 if (indi != null && family !=  null && indi.isDescendantOf(family) ) {
                     // je mets la famille comme racine de l'arbre
-                    mergeDialog.showEntityInDndSource(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, true);
+                    mergeDialog.setRoot(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject);
                     // je selectionne le nouveau né
-                    mergeDialog.showEntityInDndSource(model.getSelectedEntity(), false);
+                    mergeDialog.show(model.getSelectedEntity());
                 } else {
-                    mergeDialog.showEntityInDndSource(model.getSelectedEntity(), true);
+                    mergeDialog.setRoot(model.getSelectedEntity());
                     // je selectionne sa famille
-                    mergeDialog.showEntityInDndSource(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, false);
+                    mergeDialog.show(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject);
                 }
             } else {
-                mergeDialog.showEntityInDndSource(model.getSelectedEntity(), true);
-                mergeDialog.showEntityInDndSource(model.getSelectedEntity(), false);
+                mergeDialog.setRoot(model.getSelectedEntity());
+                mergeDialog.show(model.getSelectedEntity());
             }
         } else {
             if ( currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject instanceof Fam) {
                 // je centre l'arbre sur la famille des parents
-                mergeDialog.showEntityInDndSource((Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, true);
+                mergeDialog.setRoot((Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject);
                 // je selectionne sa famille
-                mergeDialog.showEntityInDndSource(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, false);
+                mergeDialog.show(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject);
             }
         }
     }

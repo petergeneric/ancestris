@@ -77,6 +77,8 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
+        jPanelSimilar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
         jButtonSimilarFirstNames.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jButtonSimilarFirstNames.text")); // NOI18N
         jButtonSimilarFirstNames.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -116,7 +118,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
                 {null, null}
             },
             new String [] {
-                "Fichier", "Source"
+                "Title1", "Title2"
             }
         ));
         jTableSource.setMaximumSize(new java.awt.Dimension(2147483647, 500));

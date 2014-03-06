@@ -428,14 +428,13 @@ public class StandaloneEditor extends javax.swing.JFrame {
             setCursor(Cursor.getDefaultCursor());
         } catch (IOException ex) {
             setCursor(Cursor.getDefaultCursor());
-            return;
         }
 
     }
 
     private void showImage(String city, String cote, int page) {
         //je cherche le repertoire
-        File imageFile = findReferenceImage( city,  cote,  page);
+        File imageFile = findImage( city,  cote,  page);
         if (imageFile != null) {
             try {
                 populateImageList(imageFile.getParentFile());
@@ -460,47 +459,139 @@ public class StandaloneEditor extends javax.swing.JFrame {
         }
     }
 
-    private File findReferenceImage(String city, String cote, int page) {
+    private File findImage(String city, String cote, int page) {
         File imageFile = null;
 
         //je cherche le repertoire
-        DirectoryReferenceFilter cityFilter = new DirectoryReferenceFilter(city);
-        DirectoryReferenceFilter coteFilter = new DirectoryReferenceFilter(cote);
+        DirectoryCityFilter cityFilter = new DirectoryCityFilter(city);
+        DirectoryCoteFilter coteFilter = new DirectoryCoteFilter(cote);
         FileReferenceFilter pageFilter = new FileReferenceFilter(page);
 
-        for( File directory : ImageDirectoryModel.getModel().getImageBrowserDirectories() ) {
-            imageFile = findReferenceImage(directory, cityFilter, coteFilter, pageFilter);
-            if (imageFile != null) {
-                break;
+        if (!cote.isEmpty()) {
+            for (File directory : ImageDirectoryModel.getModel().getImageBrowserDirectories()) {
+                imageFile = findImage(directory, cityFilter, coteFilter, pageFilter);
+                if (imageFile != null) {
+                    break;
+                }
+            }
+        }
+        
+        if (imageFile == null) {
+            // je cherche sans la cote
+            for (File directory : ImageDirectoryModel.getModel().getImageBrowserDirectories()) {
+                imageFile = findImage(directory, cityFilter, pageFilter);
+                if (imageFile != null) {
+                    break;
+                }
             }
         }
 
         return imageFile;
     }
 
-
-
-    private File findReferenceImage(File directory, DirectoryReferenceFilter cityFilter, DirectoryReferenceFilter coteFilter, FileReferenceFilter pageFilter) {
+    private File findImage(File directory, DirectoryCityFilter cityFilter, DirectoryCoteFilter coteFilter, FileReferenceFilter pageFilter) {
         File result = null;
 
          if (directory.isDirectory()) {
-            // je cherche le sous repertoire de la cote
-            File coteDirectories[] = directory.listFiles(coteFilter);
-            if (coteDirectories != null) {
-                for (File subdir : coteDirectories) {
-                    // je cherche le fichier
-                    File files[] = subdir.listFiles(pageFilter);
-                    if (files != null && files.length > 0) {
-                        result = files[0];
+            // je cherche la ville dans le repertoire courant
+            File cityDirectories[] = directory.listFiles(cityFilter); 
+            for (File citySubDir : cityDirectories) {                
+                // je cherche la cote dans les sous repertoires
+                result = findImage(citySubDir, coteFilter, pageFilter);
+                if (result != null) {
+                    break;
+                }              
+            }
+            
+            // je cherche la ville et la cote dans les sous-repertoires
+            if (result == null) {
+                for (File subdir : directory.listFiles(new DirectoryFilter())) {
+                    result = findImage(subdir, cityFilter, coteFilter, pageFilter);
+                    if (result != null) {
+                        break;
                     }
                 }
+            }
+        }
 
-                if (result == null) {
-                    // je cherche sous repertoire
-                    for (File subdir : directory.listFiles(new DirectoryFilter())) {
-                        result = findReferenceImage(subdir, cityFilter, coteFilter, pageFilter);
-                        if (result != null) {
-                            break;
+        return result;
+    }
+    
+    private File findImage(File directory, DirectoryCityFilter cityFilter, FileReferenceFilter pageFilter) {
+        File result = null;
+
+        if (directory.isDirectory()) {
+            // je cherche la ville dans le repertoire courant
+            File cityDirectories[] = directory.listFiles(cityFilter); 
+            for (File citySubDir : cityDirectories) {
+                // je cherche l'image dans le sous repertoire
+                result = findImage(citySubDir, pageFilter);
+                if (result != null) {
+                    break;
+                }
+            }    
+            
+            // je cherche la ville dans les sous-repertoires
+            if (result == null) {
+                for (File subdir : directory.listFiles(new DirectoryFilter())) {
+                    result = findImage(subdir, cityFilter, pageFilter);
+                    if (result != null) {
+                        break;
+                    }
+                }
+            }
+           
+        }
+
+        return result;
+    }
+    
+    private File findImage(File directory, DirectoryCoteFilter coteFilter, FileReferenceFilter pageFilter) {
+        File result = null;
+
+        if (directory.isDirectory()) {
+            // je cherche la cote dans le repertoire courant
+            File coteDirectories[] = directory.listFiles(coteFilter); 
+            for (File coteSubDir : coteDirectories) {
+                // je cherche l'image dans les sous repertoires de la cote             
+                result = findImage(coteSubDir, pageFilter);
+                if (result != null) {
+                    break;
+                }                
+            }    
+            
+            // je cherche la cote dans les sous-repertoires
+            if (result == null) {
+                for (File subdir : directory.listFiles(new DirectoryFilter())) {
+                    result = findImage(subdir, coteFilter, pageFilter);
+                    if (result != null) {
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        return result;
+    }
+    
+     private File findImage(File directory, FileReferenceFilter pageFilter) {
+        File result = null;
+
+        if (directory.isDirectory()) {
+            // je cherche l'image dans le repertoire courant
+            File[]  files= directory.listFiles(pageFilter);
+            if (files != null && files.length > 0) {
+                result = files[0];
+            }
+            if (result == null ) {
+               // je cherche l'image dans les sous repertoires
+                File cityDirectories[] = directory.listFiles(new DirectoryFilter());
+                for (File subDir : cityDirectories) {
+                    if (result == null) {
+                        files = subDir.listFiles(pageFilter);
+                        if (files != null && files.length > 0) {
+                            result = files[0];
                         }
                     }
                 }
@@ -510,16 +601,29 @@ public class StandaloneEditor extends javax.swing.JFrame {
         return result;
     }
 
-    static private class DirectoryReferenceFilter implements FileFilter {
-        String reference;
+    static private class DirectoryCityFilter implements FileFilter {
+        String city;
 
-        public DirectoryReferenceFilter(String reference) {
-            this.reference = reference.toLowerCase();
+        public DirectoryCityFilter(String reference) {
+            this.city = reference.toLowerCase();
         }
 
         @Override
         public boolean accept(File dir) {
-            return dir.isDirectory() && dir.getName().toLowerCase().contains(reference);
+            return dir.isDirectory() && dir.getName().toLowerCase().contains(city);
+        }
+    }
+
+    static private class DirectoryCoteFilter implements FileFilter {
+        String cote;
+
+        public DirectoryCoteFilter(String reference) {
+            this.cote = reference.toLowerCase();
+        }
+
+        @Override
+        public boolean accept(File dir) {
+            return dir.isDirectory() && dir.getName().toLowerCase().contains(cote);
         }
     }
 
