@@ -6,22 +6,16 @@
 
 package ancestris.modules.releve.dnd;
 
-import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
-import ancestris.modules.releve.model.FieldPlace;
-import ancestris.modules.releve.model.Record;
-import ancestris.view.SelectionDispatcher;
-import genj.gedcom.Context;
+import ancestris.modules.releve.dnd.ViewWrapperManager.AbstractViewWrapper;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
-import genj.tree.TreeView;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -35,7 +29,7 @@ import org.openide.util.NbPreferences;
  */
 public class MergeDialog extends javax.swing.JFrame implements EntityActionManager {
 
-    private Component dndSourceComponent = null;
+    private AbstractViewWrapper dndSourceComponent = null;
     private Entity selectedEntity = null;
     private Gedcom gedcom=null;
     private MergeRecord mergeRecord = null;
@@ -47,7 +41,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     * @param selectedEntity
     * @param record
     */
-    public static MergeDialog show(Component parent, final Gedcom gedcom, final Entity selectedEntity, final MergeRecord mergeRecord, boolean visible) {
+    public static MergeDialog show(Component sourceComponenent, final Gedcom gedcom, final Entity selectedEntity, final MergeRecord mergeRecord, boolean visible) {
 
         final MergeDialog dialog = new MergeDialog();
         try {
@@ -60,7 +54,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                 }
             });
             dialog.setVisible(visible);
-            dialog.initData(parent, mergeRecord, gedcom, selectedEntity);
+            dialog.initData(sourceComponenent, mergeRecord, gedcom, selectedEntity);
             return dialog;
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
@@ -69,9 +63,9 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
             Toolkit.getDefaultToolkit().beep();
             String title = "";
             if (ex.getMessage() == null) {
-                JOptionPane.showMessageDialog(parent, ex.getClass().getName()+ " See console log", title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(sourceComponenent, ex.getClass().getName()+ " See console log", title, JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(parent, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(sourceComponenent, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
             }
             return null;
         }
@@ -79,7 +73,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     }
 
     /**
-     * Constructeur d'une fenetre
+     * Constructeur 
      */
     protected MergeDialog() {
         //super(SwingUtilities.windowForComponent(parent));
@@ -139,13 +133,13 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     }
 
     /**
-     * Initialise le modele de données du comparateur
+     * Initialise le modèle de données du comparateur
      * @param selectedEntity
      * @param record
      */
-    protected void initData(Component parent, MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity ) throws Exception {
+    protected void initData(Component sourceComponent, MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity ) throws Exception {
         List<MergeModel> models;
-        this.dndSourceComponent = parent;
+        this.dndSourceComponent = ViewWrapperManager.createViewWrapper(sourceComponent);
         this.mergeRecord = mergeRecord;
         this.gedcom = gedcom;
         this.selectedEntity = selectedEntity;
@@ -218,29 +212,24 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
 
     
     /**
-     * afffiche l'entité dans le dnd source
+     * affiche l'entité dans le dnd source
      * @param entity
      * @param setRoot positionne l'entité comme racine de l'arbre si la source de Dnd est un arbre
      */
     @Override
-    public void showEntityInDndSource(Entity entity, boolean setRoot) {
-        if (dndSourceComponent instanceof TreeView) {
-            TreeView treeView = (TreeView) dndSourceComponent;
-            if (setRoot) {
-                // je declare l'entité comme racine de l'arbre
-                treeView.setRoot(entity);
-            } else {
-                // je centre la vue sur l'entité
-                Context newContext = new Context(entity);
-                //treeView.setContext(newContext, true);
-                // je propage la selection l'entité a tous les outils utilisant le gedcom de l'entité
-                // je simuule un clic avec le bouton 1 de la souris sur l'entité
-                //  attention : il faut que la source de l'evenement soit un composant fils de treeView
-                MouseEvent e = new MouseEvent(treeView.getComponent(0), MouseEvent.MOUSE_PRESSED, 0, MouseEvent.BUTTON1, 0, 0, 1, false);
-                SelectionDispatcher.fireSelection(e, newContext);
-            }
-            treeView.show(entity);            
-        }
+    public void setRoot(Entity entity) {
+        // je declare l'entité comme racine de l'arbre
+        dndSourceComponent.setRoot(entity);
+    }
+    
+    /**
+     * affiche l'entité dans le dnd source
+     * @param entity
+     * @param setRoot positionne l'entité comme racine de l'arbre
+     */
+    @Override
+    public void show(Entity entity) {
+        dndSourceComponent.show(entity);
     }
     
     /**
@@ -338,9 +327,9 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     /**
-     * copie les données du releve dans l'entité selectionnée
+     * copie les données du relevé dans l'entité sélectionnée
      * puis affiche l'entité dans l'arbre dynamic (si la cible du dnd est l'arbre)
-     * puis ferme la fenetre 
+     * puis ferme la fenêtre 
      * @param evt
      */
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
@@ -349,34 +338,32 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
             copyRecordToEntity();
 
             // j'affiche l'entité dans l'arbre dynamic
-            if (dndSourceComponent instanceof TreeView) {
-                final MergeModel currentModel = mergePanel1.getCurrentModel();
-                if (currentModel.getSelectedEntity() != null) {
-                    if (currentModel.getSelectedEntity() instanceof Indi) {
-                        Indi selectedIndi = (Indi) currentModel.getSelectedEntity();
-                        if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
-                            // je centre sur la famille des parents
-                            showEntityInDndSource(selectedIndi.getFamilyWhereBiologicalChild(), true);
-                            if ( mergeRecord.getType() == MergeRecord.RecordType.Birth 
-                                 ||  mergeRecord.getType()== MergeRecord.RecordType.Death ) {
-                                // j'affiche l'individu
-                                showEntityInDndSource(selectedIndi, false);
-                            }
-
-                        } else {
-                            // je centre l'arbre sur l'entité
-                            showEntityInDndSource(currentModel.getSelectedEntity(), true);
+            final MergeModel currentModel = mergePanel1.getCurrentModel();
+            if (currentModel.getSelectedEntity() != null) {
+                if (currentModel.getSelectedEntity() instanceof Indi) {
+                    Indi selectedIndi = (Indi) currentModel.getSelectedEntity();
+                    if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
+                        // je centre sur la famille des parents
+                        setRoot(selectedIndi.getFamilyWhereBiologicalChild());
+                        if (mergeRecord.getType() == MergeRecord.RecordType.Birth
+                                || mergeRecord.getType() == MergeRecord.RecordType.Death) {
+                            // j'affiche l'individu
+                            show(selectedIndi);
                         }
+
                     } else {
                         // je centre l'arbre sur l'entité
-                        showEntityInDndSource(currentModel.getSelectedEntity(), true);
+                        setRoot(currentModel.getSelectedEntity());
                     }
-                }               
+                } else {
+                    // je centre l'arbre sur l'entité
+                    setRoot(currentModel.getSelectedEntity());
+                }    
             }
             componentClosed();
             setVisible(false);
             dispose();
-        } catch (Throwable throwable) {
+        } catch (Exception throwable) {
             // je ferme la fenetre avant d'afficher le message d'erreur
             componentClosed();
             setVisible(false);

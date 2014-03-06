@@ -28,7 +28,6 @@ import javax.swing.DropMode;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -53,7 +52,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
     public RelevePanel() {
         initComponents();
         // J'applique un poids=1 pour que seule la largeur du composant de gauche soit mdofiée quand on change la taille de la fenetre
-        jSplitPane1.setResizeWeight(1.0);
+        jSplitPane1.setResizeWeight(1);
         // j'ajoute l'editeur a l'ecoute de la selection de ligne dans la table
         //releveTable.setTableSelectionListener(releveEditor);
 
@@ -84,9 +83,8 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
                 } else if ( actionEvent.getActionCommand().toUpperCase().equals("Z") ) {
                     Record record = dataManager.getDataModel().undo();
                     if (record != null ) {
+                        // je selectionne le relevé concerné par undo
                         selectRecord(dataManager.getDataModel().getIndex(record));
-                    } else {
-                        selectRecord(-1);
                     }
                 }
             }
@@ -94,7 +92,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         });
     }
 
-    public void setModel(final DataManager dataManager, PanelType panelType,
+    public void setModel(final DataManager dataManager, final PanelType panelType,
             MenuCommandProvider menuComandProvider) {
 
         this.menuCommandProvider = menuComandProvider;
@@ -131,8 +129,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         releveEditor.setModel(dataManager, menuComandProvider);
 
         
-        jScrollPaneTable.setViewportView(releveTable);
-        jSplitPane1.setResizeWeight(1.0);
+        //jScrollPaneTable.setViewportView(releveTable);
         
         // je recupere le toolTipText du bouton
         String toolTipText = org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText");
@@ -161,28 +158,13 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
                 break;
         }
 
-        // j'initialise la largeur de l'editeur avec la largeur de la session precedente
-        // Remarque : il faut differer le changement de taille car sinon jSplitPane1.getSize() est nul
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-//                jSplitPane1.setDividerLocation(jSplitPane1.getSize().width
-//                             - jSplitPane1.getInsets().right
-//                             - jSplitPane1.getDividerSize()
-//                             - releveEditor.getEditorWidth());
-
-                int editorWidth = getEditorWidth();
-                // je dimensionne le panneau droit de jSplitPane1
-                if (jSplitPane1.getWidth() > editorWidth) {
-                jSplitPane1.setDividerLocation(jSplitPane1.getWidth() - editorWidth - jSplitPane1.getDividerSize());
-                }
-
-            }
-        });
+        if (standaloneMode == false) {
+            int editorWidth = getEditorWidth();
+            jSplitPane1.getRightComponent().setPreferredSize(new Dimension(editorWidth, jSplitPane1.getRightComponent().getHeight()));
+        }
         
     }
-
+    
     /**
      * sauvegarde de la configuration a la fermeture du composant
      */
@@ -194,8 +176,10 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
 //                - jSplitPane1.getDividerSize()
 //                - jSplitPane1.getDividerLocation() );
 
-        int editorWidth = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation() - jSplitPane1.getDividerSize();
-        putEditorWidth(editorWidth );
+        if ( standaloneMode == false) {
+            int editorWidth = jSplitPane1.getRightComponent().getWidth();
+            putEditorWidth(editorWidth );
+        }
     }
 
     /**
@@ -391,7 +375,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
 
         editorPanel.add(editorBar, java.awt.BorderLayout.NORTH);
 
-        releveEditor.setFont(new java.awt.Font("Arial", 2, 11));
+        releveEditor.setFont(new java.awt.Font("Arial", 2, 11)); // NOI18N
         releveEditor.setMinimumSize(new java.awt.Dimension(100, 300));
         editorPanel.add(releveEditor, java.awt.BorderLayout.CENTER);
 
@@ -619,6 +603,20 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
             releveTable.selectRecord(currentRecordIndex-1);
         }
     }
+    
+    @Override
+    public void renumberRecords() {
+        // avant de déplacer le  releve , je verifie la coherence du releve courant
+        if (verifyRecord()) {
+            
+            int[] tableIndexList = new int[releveTable.getRowCount()];
+            for(int i =0 ; i < tableIndexList.length; i++) {
+                tableIndexList[i] = releveTable.convertRowIndexToView(i);                
+            }
+            dataManager.renumberRecords(dataManager.getRecord(currentRecordIndex), tableIndexList);
+            //releveTable.selectRecord(currentRecordIndex);
+        }
+    }
 
     public void removeRecord() {
 
@@ -659,7 +657,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
     @Override
     public boolean verifyRecord() {
         releveEditor.commitCurrentFocusedBean();
-        String errorMessage = dataManager.verifyRecord(currentRecordIndex);
+        String errorMessage = dataManager.verifyRecord(currentRecordIndex); 
         if (errorMessage.isEmpty()) {
             return true;
         } else {
@@ -686,16 +684,16 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
     }
 
     public int getEditorWidth() {
-        return Integer.valueOf(NbPreferences.forModule(RelevePanel.class).get(
+        int width = Integer.valueOf(NbPreferences.forModule(RelevePanel.class).get(
                 panelType.name() + "Width", "270"));
+        return width;
     }
 
     public void putEditorWidth(int width) {
         NbPreferences.forModule(RelevePanel.class).put(
                 panelType.name() + "Width", String.valueOf(width));
     }
-
-
+    
     ///////////////////////////////////////////////////////////////////////////
     // Implement TableSelectionListener methods
     ///////////////////////////////////////////////////////////////////////////
@@ -715,8 +713,8 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
     public int getCurrentRecordIndex() {
         return currentRecordIndex;
     }
-
-
     
+    
+
 
 }

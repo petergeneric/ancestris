@@ -4,6 +4,7 @@ import ancestris.modules.releve.ReleveEditorListener;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -109,6 +110,47 @@ public class RecordModel {
         Collections.swap(releveList, recordIndex-1, recordIndex);
         fireRecordModelUpdated(recordIndex-1, recordIndex);
     }
+    
+    void renumberRecords(final Record record, int[] tableIndexList) {
+        
+        final int[] revertTableIndexList = new int[tableIndexList.length]; 
+        for(int i= 0; i < revertTableIndexList.length ; i++) {
+            revertTableIndexList[tableIndexList[i]] = i;
+        }
+        
+        lock.addChange(new Undo() {
+
+            @Override
+            Record undo() {
+                Collections.sort(releveList, new OrderArrayList(revertTableIndexList));
+                fireAllChanged();
+                return record;
+            }
+        });
+        Collections.sort(releveList, new OrderArrayList(tableIndexList));
+        fireAllChanged();
+    }
+    
+    public class OrderArrayList extends ArrayList<Record> implements Comparator<Record> {
+
+        int[] tableIndexList;
+        
+        private OrderArrayList(int[] tableIndexList) {
+            this.tableIndexList = tableIndexList;
+        }
+
+        @Override
+        public int compare(Record itemO, Record itemT) {
+            if (tableIndexList[releveList.indexOf(itemO)] >= tableIndexList[releveList.indexOf(itemT)]) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+
+    }
+
+
 
     protected void removeRecord(final Record record) {
         // keep undo
@@ -268,8 +310,8 @@ public class RecordModel {
     }
 
     /**
-     * verifie si les chmaps obligatoires sont renseignés
-     *  - date de l'evenemen
+     * vérifie si les champs obligatoires sont renseignés
+     *  - date de l'évènement
      *  - nom ou prénom de l'individu
      * @param recordIndex
      * @return

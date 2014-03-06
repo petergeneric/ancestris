@@ -1,6 +1,5 @@
 package ancestris.modules.releve;
 
-import ancestris.modules.views.tree.TreeTopComponent;
 import ancestris.modules.releve.file.FileManager;
 import ancestris.modules.releve.file.ReleveFileExport;
 import ancestris.modules.releve.file.ReleveFileDialog;
@@ -12,7 +11,6 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.table.ErrorBuffer;
 import ancestris.modules.releve.table.TableModelRecordCheck;
 import ancestris.modules.releve.table.ResultDialog;
-import ancestris.modules.releve.dnd.TreeViewDropTarget;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.file.ReleveFileAncestrisV2;
 import ancestris.modules.releve.file.ReleveFileGedcom;
@@ -24,9 +22,9 @@ import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Context;
-import genj.tree.TreeView;
 import genj.util.EnvironmentChecker;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.modules.releve.dnd.ViewWrapperManager;
 import ancestris.util.swing.DialogManager;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -58,13 +56,14 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.*;
+import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-//@RetainLocation(AncestrisDockModes.PROPERTIES)
+@RetainLocation("explorer")
 // je declare la classe ServiceProvider pour que ses instances soient visibles
 //@ServiceProvider(service=ReleveTopComponent.class)
 public final class ReleveTopComponent extends TopComponent implements MenuCommandProvider {    
@@ -84,6 +83,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
     private JMenuItem menuItemSwapNext    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapnext"));
     private JMenuItem menuItemSwapPrevious= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapprevious"));
+    private JMenuItem menuItemReorder     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.reorder"));
+    
     private JMenuItem menuItemInsert     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.insert"));
     private JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));
     private JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
@@ -128,7 +129,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemExport.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ExportFile16.png")));
         popup.add(menuItemExport);
 
-        // create, insert,  delelete
+        // create, insert,  delete
         popup.addSeparator();
         menuItemInsert.addActionListener(popupMouseHandler);
         menuItemInsert.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewRecord.png")));
@@ -145,6 +146,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemSwapNext.addActionListener(popupMouseHandler);
         menuItemSwapNext.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowdown16.png")));
         popup.add(menuItemSwapNext);
+        menuItemReorder.addActionListener(popupMouseHandler);
+        menuItemReorder.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/reorder16.png")));
+        popup.add(menuItemReorder);
 
         menuItemCheck.addActionListener(popupMouseHandler);
         menuItemCheck.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/check16.png")));
@@ -283,12 +287,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         //imageView = new ImageViewActionProvider();
         
         
-        // j'active le DnD avec les Treeview deja ouverts
-        for (TreeTopComponent tc : AncestrisPlugin.lookupAll(TreeTopComponent.class)) {
-            TreeView view = (TreeView) tc.getView();
-            TreeViewDropTarget viewDropTarget = new TreeViewDropTarget();
-            viewDropTarget.createDropTarget(view);
-        }
+        // j'active le DnD pour les Treeview
+        ViewWrapperManager.addTreeViewListener();  
+        
     }
 
     /**
@@ -345,6 +346,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         if ( standaloneEditor != null) {
             standaloneEditor.closeComponent();
         }
+        
+        // j'arrete le listener des vues
+        ViewWrapperManager.removeTreeViewListener();
+        
         //
         AncestrisPlugin.unregister(this);
     }
@@ -442,7 +447,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 swapRecordNext();
             } else if (menuItemSwapPrevious.equals(e.getSource())) {
                 swapRecordPrevious();
-            } else if (menuItemCheck.equals(e.getSource())) {
+             } else if (menuItemReorder.equals(e.getSource())) {
+                renumberRecords();
+             } else if (menuItemCheck.equals(e.getSource())) {
                 showCheck();
             } else if (menuItemStatistics.equals(e.getSource())) {
                 showStatistics();
@@ -529,6 +536,14 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 break;
             default:
                 panelAll.swapRecordPrevious();
+        }
+    }
+
+    public void renumberRecords() {
+        if ( jTabbedPane1.getSelectedComponent().equals(panelAll)) {
+            panelAll.renumberRecords();            
+        } else {
+            
         }
     }
 

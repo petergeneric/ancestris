@@ -6,10 +6,7 @@
 
 package ancestris.modules.releve;
 
-import ancestris.modules.views.tree.TreeTopComponent;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.modules.releve.dnd.TreeViewDropTarget;
-import genj.tree.TreeView;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
@@ -101,18 +98,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
     }
 
-
-    /**
-     * active le drag and drop avec toutes les vues ouvertes
-     */
-    public void activateDndWithTreeView() {
-       for (TreeTopComponent tc : AncestrisPlugin.lookupAll(TreeTopComponent.class)) {
-            TreeView view = (TreeView) tc.getView();
-            TreeViewDropTarget viewDropTarget = new TreeViewDropTarget();
-            viewDropTarget.createDropTarget(view);
-        }
-    }
-
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -131,7 +116,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jCheckBoxGedcomCompletion = new javax.swing.JCheckBox();
         jCheckBoxCopyFreeComment = new javax.swing.JCheckBox();
         jCheckBoxCopyEventDate = new javax.swing.JCheckBox();
-        jCheckBoxBrowser = new javax.swing.JCheckBox();
         jCheckBoxCopyNotary = new javax.swing.JCheckBox();
         jCheckBoxCopyCote = new javax.swing.JCheckBox();
         jPanelExludeCompletion = new javax.swing.JPanel();
@@ -139,17 +123,17 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jButtonLastNameCompletion = new javax.swing.JButton();
         jButtonOccupationCompletion = new javax.swing.JButton();
         jButtonConfigEditor = new javax.swing.JButton();
-        jButtonActivateDnd = new javax.swing.JButton();
         jLabelFiller = new javax.swing.JLabel();
         mergeOptionPanel = new ancestris.modules.releve.dnd.MergeOptionPanel();
         jPanelImageBrowser = new javax.swing.JPanel();
+        jCheckBoxBrowser = new javax.swing.JCheckBox();
         jLabelDirectory = new javax.swing.JLabel();
         jButtonAddDirectory = new javax.swing.JButton();
         jButtonRemoveDirectory = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<String>();
         jButtonSwapPreviousDirectory = new javax.swing.JButton();
         jButtonSwapNextDirectory = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<String>();
         fillerPanelVertical = new javax.swing.JPanel();
 
         setForeground(new java.awt.Color(200, 45, 45));
@@ -160,7 +144,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jPanel2.setFocusTraversalPolicyProvider(true);
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jPanelEditor.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jPanelEditor.border.title"), 0, 0, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanelEditor.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jPanelEditor.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         jPanelEditor.setLayout(new java.awt.GridBagLayout());
 
         jCheckBoxDuplicateRecord.setSelected(true);
@@ -203,17 +187,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelEditor.add(jCheckBoxCopyEventDate, gridBagConstraints);
-
-        jCheckBoxBrowser.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxBrowser.text")); // NOI18N
-        jCheckBoxBrowser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxBrowserActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelEditor.add(jCheckBoxBrowser, gridBagConstraints);
 
         jCheckBoxCopyNotary.setSelected(true);
         jCheckBoxCopyNotary.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxCopyNotary.text")); // NOI18N
@@ -269,18 +242,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPanelEditor.add(jButtonConfigEditor, gridBagConstraints);
-
-        jButtonActivateDnd.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonActivateDnd.text")); // NOI18N
-        jButtonActivateDnd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonActivateDndActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jPanelEditor.add(jButtonActivateDnd, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -300,16 +261,35 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         jPanel2.add(mergeOptionPanel, gridBagConstraints);
 
-        jPanelImageBrowser.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.PanelImageBrowser"), 0, 0, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanelImageBrowser.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.PanelImageBrowser"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         jPanelImageBrowser.setMaximumSize(new java.awt.Dimension(500, 130));
         jPanelImageBrowser.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBoxBrowser.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxBrowser.text")); // NOI18N
+        jCheckBoxBrowser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxBrowserActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 10);
+        jPanelImageBrowser.add(jCheckBoxBrowser, gridBagConstraints);
+
+        jLabelDirectory.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jLabelDirectory.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
         jPanelImageBrowser.add(jLabelDirectory, gridBagConstraints);
 
         jButtonAddDirectory.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonAddDirectory.text")); // NOI18N
@@ -320,7 +300,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
         jPanelImageBrowser.add(jButtonAddDirectory, gridBagConstraints);
 
@@ -332,9 +312,33 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
         jPanelImageBrowser.add(jButtonRemoveDirectory, gridBagConstraints);
+
+        jButtonSwapPreviousDirectory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowup16.png"))); // NOI18N
+        jButtonSwapPreviousDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSwapPreviousDirectoryActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
+        jPanelImageBrowser.add(jButtonSwapPreviousDirectory, gridBagConstraints);
+
+        jButtonSwapNextDirectory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowdown16.png"))); // NOI18N
+        jButtonSwapNextDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSwapNextDirectoryActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
+        jPanelImageBrowser.add(jButtonSwapNextDirectory, gridBagConstraints);
 
         jScrollPane2.setMaximumSize(new java.awt.Dimension(800, 130));
         jScrollPane2.setMinimumSize(new java.awt.Dimension(50, 23));
@@ -348,38 +352,20 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         jPanelImageBrowser.add(jScrollPane2, gridBagConstraints);
 
-        jButtonSwapPreviousDirectory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowup16.png"))); // NOI18N
-        jButtonSwapPreviousDirectory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSwapPreviousDirectoryActionPerformed(evt);
-            }
-        });
-        jPanelImageBrowser.add(jButtonSwapPreviousDirectory, new java.awt.GridBagConstraints());
-
-        jButtonSwapNextDirectory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowdown16.png"))); // NOI18N
-        jButtonSwapNextDirectory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSwapNextDirectoryActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
-        jPanelImageBrowser.add(jButtonSwapNextDirectory, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 2);
         jPanel2.add(jPanelImageBrowser, gridBagConstraints);
 
         fillerPanelVertical.setEnabled(false);
@@ -411,14 +397,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
                 tc.getDataManager().setGedcomCompletion(jCheckBoxGedcomCompletion.isSelected());
         }
     }//GEN-LAST:event_jCheckBoxGedcomCompletionActionPerformed
-
-    /**
-     * active drag-and-drop sur les vues du gedcom courant
-     * @param evt
-     */
-    private void jButtonActivateDndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActivateDndActionPerformed
-        activateDndWithTreeView();
-    }//GEN-LAST:event_jButtonActivateDndActionPerformed
 
     private void jButtonLastNameCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLastNameCompletionActionPerformed
         // TODO add your handling code here:
@@ -504,7 +482,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel fillerPanelVertical;
-    private javax.swing.JButton jButtonActivateDnd;
     private javax.swing.JButton jButtonAddDirectory;
     private javax.swing.JButton jButtonConfigEditor;
     private javax.swing.JButton jButtonFirstNameCompletion;

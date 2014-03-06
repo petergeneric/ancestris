@@ -65,9 +65,9 @@ public class MergeTable extends JTable {
                     Entity entity = (Entity) ((MergeModel) getModel()).getValueAt(row, column);
                     if (entityActionManager != null && entity != null) {
                         if (e.getClickCount() == 2) {
-                            entityActionManager.showEntityInDndSource(entity, true);
+                            entityActionManager.setRoot(entity);
                         } else {
-                            entityActionManager.showEntityInDndSource(entity, false);
+                            entityActionManager.show(entity);
                         }
                     }
                 }

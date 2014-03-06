@@ -71,7 +71,7 @@ public class TreeViewDropTarget {
     }
 
     /**
-     * cette classe decrit le comportement du drop d'un relvé dans un TreeView
+     * cette classe décrit le comportement du drop d'un relevé dans un TreeView
      */
     private class TreeViewDropTargetListener implements DropTargetListener {
 
@@ -113,8 +113,7 @@ public class TreeViewDropTarget {
         @Override
         public synchronized void drop(DropTargetDropEvent dropTargetDropEvent) {
             Point location = dropTargetDropEvent.getLocation();
-            Entity entity = null;
-            entity = treeView.getEntityAt(location);
+            Entity entity = treeView.getEntityAt(location);
             if (entity == null || entity instanceof Indi || entity instanceof Fam) {
                 Transferable t = dropTargetDropEvent.getTransferable();
 
