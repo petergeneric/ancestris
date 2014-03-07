@@ -25,8 +25,7 @@
           <Group type="102" alignment="1" attributes="0">
               <Component id="sourceEventsToolBar" min="-2" pref="23" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="sourceEventsScrollPane" min="-2" pref="158" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <Component id="sourceEventsScrollPane" pref="170" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
