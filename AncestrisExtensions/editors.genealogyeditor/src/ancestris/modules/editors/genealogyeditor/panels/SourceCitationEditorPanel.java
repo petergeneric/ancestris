@@ -419,6 +419,10 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 mReferencedSource = sourceEditorPanel.commit();
                 mSourceCitation.setValue('@' + mReferencedSource.getId() + '@');
                 ((PropertySource) mSourceCitation).link();
+                SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
+                addSourceButton.setVisible(false);
+                deleteSourceButton.setVisible(true);
+                editSourceButton.setVisible(true);
             } else {
                 mReferencedSource = null;
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -474,7 +478,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         SourcesListPanel sourcesListPanel = new SourcesListPanel(mRoot.getGedcom());
         sourcesListPanel.setToolBarVisible(false);
-        
+
         ADialog sourcesListDialog = new ADialog(NbBundle.getMessage(PlacesListPanel.class,
                 "SourcesListPanel.linkTo.title"), sourcesListPanel);
         sourcesListDialog.setDialogId(SourcesListPanel.class.getName());
@@ -491,6 +495,10 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
+
+            addSourceButton.setVisible(false);
+            deleteSourceButton.setVisible(true);
+            editSourceButton.setVisible(true);
         }
     }//GEN-LAST:event_linkToSourceButtonActionPerformed
 
