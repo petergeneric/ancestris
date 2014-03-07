@@ -276,7 +276,7 @@
  <SOUR type="Source" img="Source">
   <DATA type="PropertySimpleReadOnly" img="Attribute">
    <EVEN default="1" type="PropertyChoiceValue" img="Event">
-    <DATE type="PropertySimpleValue" img="Date"/>
+   <DATE super="INDI:BIRT:DATE"/>
     <PLAC super="INDI:BIRT:PLAC"/>
    </EVEN>
    <AGNC type="PropertySimpleValue" img="Attribute"/>
