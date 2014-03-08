@@ -4,6 +4,8 @@ import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.openide.util.Exceptions;
 
 /**
@@ -24,6 +26,7 @@ import org.openide.util.Exceptions;
 public class RepositoryEditorPanel extends javax.swing.JPanel {
 
     private Repository mRepository;
+    private boolean mRepositoryNameModified = false;
 
     /**
      * Creates new form RepositoryEditorPanel
@@ -174,6 +177,23 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
         Property repositoryName = mRepository.getProperty("NAME");
         repositoryNameTextField.setText(repositoryName != null ? repositoryName.getValue() : "");
+        repositoryNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                mRepositoryNameModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mRepositoryNameModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                mRepositoryNameModified = true;
+            }
+        });
 
         Property address = mRepository.getProperty("ADDR");
         addressEditorPanel.set(mRepository, address);
@@ -191,13 +211,21 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
     public Repository commit() {
         try {
-            mRepository.getGedcom().doUnitOfWork(new UnitOfWork() {
+            if (mRepositoryNameModified) {
+                mRepository.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                }
-            }); // end of doUnitOfWork
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
 
+                        Property repositoryName = mRepository.getProperty("NAME");
+                        if (repositoryName == null) {
+                            mRepository.addProperty("NAME", repositoryNameTextField.getText());
+                        } else {
+                            repositoryName.setValue(repositoryNameTextField.getText());
+                        }
+                    }
+                }); // end of doUnitOfWork
+            }
             addressEditorPanel.commit();
 
             return mRepository;
