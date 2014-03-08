@@ -7,6 +7,7 @@ import genj.gedcom.PropertyMedia;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
 
@@ -29,6 +30,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
 
     List<Property> multimediaObjectsRefList = new ArrayList<Property>();
     private String[] columnsName = {
+        "",
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.ID.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.title.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"), //        "Image"
@@ -53,13 +55,20 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
             Property multimediaObject = multimediaObjectsRefList.get(row);
             if (multimediaObject instanceof PropertyMedia) {
                 switch (column) {
-                    case 0:
+                    case 0:{
+                        Property file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
+                        if (file != null && file instanceof PropertyFile) {
+                            return FileSystemView.getFileSystemView().getSystemIcon(((PropertyFile) file).getFile());
+                        }
+                        return "";
+                    }
+                    case 1:
                         return ((Media) ((PropertyMedia) multimediaObject).getTargetEntity()).getId();
 
-                    case 1: {
+                    case 2: {
                         return ((Media) ((PropertyMedia) multimediaObject).getTargetEntity()).getTitle();
                     }
-                    case 2: {
+                    case 3: {
                         Property file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             return ((PropertyFile) file).getFile().getAbsolutePath();
@@ -67,23 +76,22 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             return "";
                         }
                     }
-                    case 3: {
-                        Property file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
-                        if (file != null && file instanceof PropertyFile) {
-                            ImageIcon imageIcon = createImageIcon(((PropertyFile) file).getFile().getAbsolutePath(), "");
-                            return imageIcon != null ? imageIcon : "bad luck";
-                        }
-                        return "";
-                    }
                     default:
                         return "";
-
                 }
             } else {
                 switch (column) {
-                    case 0:
+                    case 0:{
+                        Property file = multimediaObject.getProperty("FILE", true);
+                        if (file != null && file instanceof PropertyFile) {
+                            return FileSystemView.getFileSystemView().getSystemIcon(((PropertyFile) file).getFile());
+                        }
                         return "";
-                    case 1: {
+                    }
+                        
+                    case 1:
+                        return "";
+                    case 2: {
                         Property title = multimediaObject.getProperty("TITL", true);
                         if (title != null) {
                             return title.getValue();
@@ -91,21 +99,13 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             return "";
                         }
                     }
-                    case 2: {
+                    case 3: {
                         Property file = multimediaObject.getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             return ((PropertyFile) file).getFile().getAbsolutePath();
                         } else {
                             return "";
                         }
-                    }
-                    case 3: {
-                        Property file = multimediaObject.getProperty("FILE", true);
-                        if (file != null && file instanceof PropertyFile) {
-                            ImageIcon imageIcon = createImageIcon(((PropertyFile) file).getFile().getAbsolutePath(), "");
-                            return imageIcon != null ? imageIcon : "bad luck";
-                        }
-                        return "";
                     }
                     default:
                         return "";
