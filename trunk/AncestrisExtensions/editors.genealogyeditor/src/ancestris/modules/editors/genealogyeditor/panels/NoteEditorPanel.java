@@ -188,25 +188,25 @@ public class NoteEditorPanel extends javax.swing.JPanel {
             }
 
             noteTextTextArea.setText(mNote.getValue() != null ? mNote.getValue() : "");
-            noteTextTextArea.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mNoteModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mNoteModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mNoteModified = true;
-                }
-            });
-
         }
+
+        noteTextTextArea.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                mNoteModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mNoteModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                mNoteModified = true;
+            }
+        });
     }
 
     public Property commit() {
