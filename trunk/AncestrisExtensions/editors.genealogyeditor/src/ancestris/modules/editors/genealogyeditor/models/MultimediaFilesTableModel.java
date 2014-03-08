@@ -1,9 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
-import genj.gedcom.Media;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
-import genj.gedcom.PropertyMedia;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +28,7 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
     List<File> multimediaFilesList = new ArrayList<File>();
     private String[] columnsName = {
         "",
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"), //        "Image"
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultimediaFilesTableModel.column.fileName.title"), //        "Image"
     };
 
     public MultimediaFilesTableModel() {
