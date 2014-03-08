@@ -127,8 +127,8 @@
         </Component>
         <Component class="javax.swing.JTextField" name="eventIDTextField">
           <Properties>
-            <Property name="columns" type="int" value="8"/>
             <Property name="editable" type="boolean" value="false"/>
+            <Property name="columns" type="int" value="8"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="EventEditorPanel.eventIDTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -179,6 +179,9 @@
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="2"/>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="EventEditorPanel.eventCauseTextArea.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>
@@ -192,6 +195,11 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="eventTypeTextField">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="EventEditorPanel.eventTypeTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
         </Component>
         <Component class="javax.swing.JToggleButton" name="privateRecordToggleButton">
           <Properties>
@@ -261,8 +269,8 @@
             </Component>
             <Component class="javax.swing.JTextField" name="husbandAgeTextField">
               <Properties>
-                <Property name="columns" type="int" value="4"/>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="columns" type="int" value="4"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="wifeAgeLabel">
@@ -274,8 +282,8 @@
             </Component>
             <Component class="javax.swing.JTextField" name="wifeAgeTextField">
               <Properties>
-                <Property name="columns" type="int" value="4"/>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="columns" type="int" value="4"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -317,8 +325,8 @@
             </Component>
             <Component class="javax.swing.JTextField" name="individualAgeTextField">
               <Properties>
-                <Property name="columns" type="int" value="4"/>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="columns" type="int" value="4"/>
               </Properties>
             </Component>
           </SubComponents>
