@@ -3,6 +3,8 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -13,6 +15,7 @@ import org.openide.util.NbBundle;
 public class NoteEditorPanel extends javax.swing.JPanel {
 
     private Property mNote;
+    private boolean mNoteModified = false;
     private Gedcom mGedcom;
     private Property mParent;
 
@@ -185,31 +188,55 @@ public class NoteEditorPanel extends javax.swing.JPanel {
             }
 
             noteTextTextArea.setText(mNote.getValue() != null ? mNote.getValue() : "");
+            noteTextTextArea.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mNoteModified = true;
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mNoteModified = true;
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mNoteModified = true;
+                }
+            });
+
         }
     }
 
     public Property commit() {
 
-        try {
-            mGedcom.doUnitOfWork(new UnitOfWork() {
+        if (mNoteModified) {
+            try {
+                mGedcom.doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    if (mNote == null) {
-                        if (inlineNoteCheckBox.isSelected()) {
-                            mNote = mParent.addProperty("NOTE", noteTextTextArea.getText());
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (mNote == null) {
+                            if (inlineNoteCheckBox.isSelected()) {
+                                mNote = mParent.addProperty("NOTE", noteTextTextArea.getText());
+                            } else {
+                                mNote = gedcom.createEntity(Gedcom.NOTE);
+                                mNote.setValue(noteTextTextArea.getText());
+                            }
                         } else {
-                            mNote = gedcom.createEntity(Gedcom.NOTE);
                             mNote.setValue(noteTextTextArea.getText());
                         }
                     }
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+                }); // end of doUnitOfWork
+                return mNote;
+
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+                return null;
+            }
+        } else {
             return null;
-        } finally {
-            return mNote;
         }
     }
 }
