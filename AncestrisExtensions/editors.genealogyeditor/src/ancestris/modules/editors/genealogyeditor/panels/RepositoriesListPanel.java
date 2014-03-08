@@ -141,7 +141,16 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
             editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
 
             if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                repositoryEditorPanel.commit();
+                final Repository repository = repositoryEditorPanel.commit();
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        Property addProperty = mRoot.addProperty("REPO", '@' + repository.getId() + '@');
+                        ((PropertyRepository) addProperty).link();
+                    }
+                }); // end of doUnitOfWork
+                mRepositoriesTableModel.add(repository);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
