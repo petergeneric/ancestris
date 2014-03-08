@@ -18,6 +18,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     private IndividualReferencesTableModel mIndividualReferencesTableModel = new IndividualReferencesTableModel();
     private Fam mRoot;
     private Indi mIndividual;
+    PropertyXRef mAddedChild = null;
 
     /**
      * Creates new form IndividualsListPanel
@@ -121,15 +122,18 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildrenButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
         try {
             mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mIndividual = (Indi) gedcom.createEntity(Gedcom.INDI);
-                    String lastName = null;
+                    mAddedChild = mRoot.addChild(mIndividual);
+                    String lastName = "";
                     if (mRoot.getHusband() != null) {
-                        lastName = mRoot.getHusband().getLastName();
+                        lastName = mRoot.getHusband().getLastName() ;
                     } else if (mRoot.getWife() != null) {
                         lastName = mRoot.getWife().getLastName();
                     }
@@ -147,17 +151,12 @@ public class ChildrenListPanel extends javax.swing.JPanel {
             individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                final Indi individual = individualEditorPanel.commit();
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        PropertyXRef addChild = mRoot.addChild(individual);
-                        mIndividualReferencesTableModel.add(addChild);
-                    }
-                }); // end of doUnitOfWork
+                individualEditorPanel.commit();
+                mIndividualReferencesTableModel.add(mAddedChild);
             } else {
-                mRoot.getGedcom().undoUnitOfWork(false);
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
