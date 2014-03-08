@@ -263,7 +263,6 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void set(Property multiMediaObject) {
-        // if multiMediaObject.getParent() ==  null then Media
         if (multiMediaObject instanceof PropertyMedia) {
             mMultiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
         } else {
@@ -284,7 +283,6 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             multiMediaObjectTitleTextField.setText(propertyTitle != null ? propertyTitle.getValue() : "");
             multiMediaObjectIDTextField.setVisible(false);
             multiMediaObjectIDLabel.setVisible(false);
-            multiMediaObjectTabbedPane.setVisible(false);
         }
 
         Property file = mMultiMediaObject.getProperty("FILE", true);
