@@ -22,22 +22,23 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="sourceTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="sourceIDLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="agencyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="authorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="sourceIDTextField" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
                           <Component id="authorTextField" alignment="0" max="32767" attributes="0"/>
                           <Component id="sourceTitleTextField" alignment="0" max="32767" attributes="0"/>
                           <Component id="agencyTextField" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Component id="sourceInformationTabbedPane" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="sourceIDLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="sourceIDTextField" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -83,8 +84,8 @@
     </Component>
     <Component class="javax.swing.JTextField" name="sourceIDTextField">
       <Properties>
-        <Property name="columns" type="int" value="8"/>
         <Property name="editable" type="boolean" value="false"/>
+        <Property name="columns" type="int" value="8"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.sourceIDTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
