@@ -1,9 +1,13 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
+import ancestris.modules.editors.genealogyeditor.models.MultimediaFilesTableModel;
 import genj.gedcom.*;
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -18,6 +22,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private Property mMultiMediaObject;
+    private MultimediaFilesTableModel mMultimediaFilesTableModel = new MultimediaFilesTableModel();
 
     /**
      * Creates new form MultiMediaObjectEditorPanel
@@ -36,19 +41,21 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         multiMediaObjectIDLabel = new javax.swing.JLabel();
         multiMediaObjectIDTextField = new javax.swing.JTextField();
         multiMediaObjectTabbedPane = new javax.swing.JTabbedPane();
-        noteTextPanel = new javax.swing.JPanel();
-        noteTextToolBar = new javax.swing.JToolBar();
-        noteTextScrollPane = new javax.swing.JScrollPane();
-        noteTextTextArea = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
+        filesToolBar = new javax.swing.JToolBar();
+        addFileButton = new javax.swing.JButton();
+        editFileButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        multimediaFilesTable = new javax.swing.JTable();
+        notesPanel = new javax.swing.JPanel();
+        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
         noteReferencesPanel = new javax.swing.JPanel();
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
         multiMediaObjectTitleLabel = new javax.swing.JLabel();
         multiMediaObjectTitleTextField = new javax.swing.JTextField();
-        imageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
 
         multiMediaObjectIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultiMediaObjectEditorPanel.multiMediaObjectIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -56,62 +63,88 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         multiMediaObjectIDTextField.setEditable(false);
         multiMediaObjectIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultiMediaObjectEditorPanel.multiMediaObjectIDTextField.text"), new Object[] {})); // NOI18N
 
-        noteTextToolBar.setFloatable(false);
-        noteTextToolBar.setRollover(true);
+        filesToolBar.setFloatable(false);
+        filesToolBar.setRollover(true);
 
-        noteTextTextArea.setColumns(20);
-        noteTextTextArea.setRows(5);
-        noteTextScrollPane.setViewportView(noteTextTextArea);
+        addFileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addFileButton.setToolTipText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.addFileButton.toolTipText")); // NOI18N
+        addFileButton.setFocusable(false);
+        addFileButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addFileButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addFileButtonActionPerformed(evt);
+            }
+        });
+        filesToolBar.add(addFileButton);
 
-        javax.swing.GroupLayout noteTextPanelLayout = new javax.swing.GroupLayout(noteTextPanel);
-        noteTextPanel.setLayout(noteTextPanelLayout);
-        noteTextPanelLayout.setHorizontalGroup(
-            noteTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteTextToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
-            .addComponent(noteTextScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
+        editFileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editFileButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultiMediaObjectEditorPanel.editFileButton.toolTipText"), new Object[] {})); // NOI18N
+        editFileButton.setFocusable(false);
+        editFileButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editFileButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editFileButtonActionPerformed(evt);
+            }
+        });
+        filesToolBar.add(editFileButton);
+
+        multimediaFilesTable.setModel(mMultimediaFilesTableModel);
+        multimediaFilesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                multimediaFilesTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(multimediaFilesTable);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(filesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
-        noteTextPanelLayout.setVerticalGroup(
-            noteTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(noteTextPanelLayout.createSequentialGroup()
-                .addComponent(noteTextToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(filesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
 
-        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.noteTextPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteTextPanel); // NOI18N
+        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+
+        javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
+        notesPanel.setLayout(notesPanelLayout);
+        notesPanelLayout.setHorizontalGroup(
+            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+        );
+        notesPanelLayout.setVerticalGroup(
+            notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(notesPanelLayout.createSequentialGroup()
+                .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+
+        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
         javax.swing.GroupLayout noteReferencesPanelLayout = new javax.swing.GroupLayout(noteReferencesPanel);
         noteReferencesPanel.setLayout(noteReferencesPanelLayout);
         noteReferencesPanelLayout.setHorizontalGroup(
             noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
         );
         noteReferencesPanelLayout.setVerticalGroup(
             noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel); // NOI18N
 
         multiMediaObjectTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         multiMediaObjectTitleLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.multiMediaObjectTitleLabel.text")); // NOI18N
-
-        imageBean.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                imageBeanMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout imageBeanLayout = new javax.swing.GroupLayout(imageBean);
-        imageBean.setLayout(imageBeanLayout);
-        imageBeanLayout.setHorizontalGroup(
-            imageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 156, Short.MAX_VALUE)
-        );
-        imageBeanLayout.setVerticalGroup(
-            imageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -120,19 +153,16 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(multiMediaObjectTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addComponent(multiMediaObjectTabbedPane)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(multiMediaObjectTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(multiMediaObjectTitleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                        .addComponent(multiMediaObjectTitleTextField)
                         .addGap(10, 10, 10)
                         .addComponent(multiMediaObjectIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(multiMediaObjectIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(imageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(multiMediaObjectTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(20, 20, 20))
+                        .addComponent(multiMediaObjectIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,29 +174,27 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                     .addComponent(multiMediaObjectTitleLabel)
                     .addComponent(multiMediaObjectTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(multiMediaObjectTabbedPane)
-                    .addComponent(imageBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(multiMediaObjectTabbedPane)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void imageBeanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageBeanMouseClicked
+    private void addFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileButtonActionPerformed
         FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(ImageBean.class, "ImageBean.fileType"), "jpg", "jpeg", "png", "gif");
-        final JFileChooser imageFileChooser = new JFileChooser();
+        final JFileChooser fileChooser = new JFileChooser();
 
-        imageFileChooser.setFileFilter(imageFileFilter);
-        imageFileChooser.setAcceptAllFileFilterUsed(true);
+        fileChooser.setFileFilter(imageFileFilter);
+        fileChooser.setAcceptAllFileFilterUsed(true);
 //        if (mImageFile != null) {
 //            imageFileChooser.setSelectedFile(mImageFile);
 //        }
-        if (imageFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        File imageFile = imageFileChooser.getSelectedFile();
+                        File imageFile = fileChooser.getSelectedFile();
                         Property file = mMultiMediaObject.getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             ((PropertyFile) file).addFile(imageFile, imageFile.getName());
@@ -176,42 +204,60 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
-                String objetFormat = null;
-                if (mMultiMediaObject instanceof PropertyMedia) {
-                    Property propertyFormat = ((Media) ((PropertyMedia) mMultiMediaObject).getTargetEntity()).getProperty("FORM");
-                    if (propertyFormat != null) {
-                        objetFormat = propertyFormat.getValue();
-                    }
-                } else {
-                    Property propertyFormat = mMultiMediaObject.getProperty("FORM");
-                    if (propertyFormat != null) {
-                        objetFormat = propertyFormat.getValue();
-                    }
-                }
-
-                // bmp | gif | jpeg
-                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg"))) {
-                    imageBean.setImage(mMultiMediaObject);
-                    repaint();
-                }
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-    }//GEN-LAST:event_imageBeanMouseClicked
+    }//GEN-LAST:event_addFileButtonActionPerformed
+
+    private void multimediaFilesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_multimediaFilesTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = multimediaFilesTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
+                File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex);
+                try {
+                    Desktop.getDesktop().open(multiMediafile);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_multimediaFilesTableMouseClicked
+
+    private void editFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFileButtonActionPerformed
+        int selectedRow = multimediaFilesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
+            File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex);
+            try {
+                Desktop.getDesktop().edit(multiMediafile);
+            } catch (UnsupportedOperationException ex) {
+                try {
+                    Desktop.getDesktop().edit(multiMediafile);
+                } catch (IOException ex1) {
+                    Exceptions.printStackTrace(ex1);
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }//GEN-LAST:event_editFileButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.Box.Filler filler1;
-    private ancestris.modules.editors.genealogyeditor.beans.ImageBean imageBean;
+    private javax.swing.JButton addFileButton;
+    private javax.swing.JButton editFileButton;
+    private javax.swing.JToolBar filesToolBar;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel multiMediaObjectIDLabel;
     private javax.swing.JTextField multiMediaObjectIDTextField;
     private javax.swing.JTabbedPane multiMediaObjectTabbedPane;
     private javax.swing.JLabel multiMediaObjectTitleLabel;
     private javax.swing.JTextField multiMediaObjectTitleTextField;
+    private javax.swing.JTable multimediaFilesTable;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel noteReferencesPanel;
-    private javax.swing.JPanel noteTextPanel;
-    private javax.swing.JScrollPane noteTextScrollPane;
-    private javax.swing.JTextArea noteTextTextArea;
-    private javax.swing.JToolBar noteTextToolBar;
+    private javax.swing.JPanel notesPanel;
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -223,7 +269,6 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             mMultiMediaObject = multiMediaObject;
         }
         mRoot = mMultiMediaObject.getParent() == null ? mMultiMediaObject : mMultiMediaObject.getParent();
-        imageBean.setImage(mMultiMediaObject);
         if (mMultiMediaObject instanceof Media) {
             multiMediaObjectIDTextField.setText(((Media) mMultiMediaObject).getId());
             multiMediaObjectTitleTextField.setText(((Media) mMultiMediaObject).getTitle());
@@ -233,11 +278,6 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                 entitiesList.add(entityRef.getTargetEntity());
             }
             referencesListPanel.set((Media) mMultiMediaObject, entitiesList);
-
-            Property propertyNote = mMultiMediaObject.getProperty("NOTE");
-            if (propertyNote != null) {
-                noteTextTextArea.setText(propertyNote.getValue());
-            }
         } else {
             Property propertyTitle = mMultiMediaObject.getProperty("TITL");
             multiMediaObjectTitleTextField.setText(propertyTitle != null ? propertyTitle.getValue() : "");
@@ -245,6 +285,16 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             multiMediaObjectIDLabel.setVisible(false);
             multiMediaObjectTabbedPane.setVisible(false);
         }
+
+        Property file = mMultiMediaObject.getProperty("FILE", true);
+        if (file != null && file instanceof PropertyFile) {
+            mMultimediaFilesTableModel.add(((PropertyFile) file).getFile());
+        }
+
+        /*
+         * +1 <<NOTE_STRUCTURE>>
+         */
+        noteCitationsListPanel.setNotesList(mMultiMediaObject, Arrays.asList(mMultiMediaObject.getProperties("NOTE")));
     }
 
     public Property commit() {
@@ -255,12 +305,6 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                 public void perform(Gedcom gedcom) throws GedcomException {
                     if (mMultiMediaObject instanceof Media) {
                         ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText());
-                        Property propertyNote = mMultiMediaObject.getProperty("NOTE");
-                        if (propertyNote == null) {
-                            mMultiMediaObject.addProperty("NOTE", noteTextTextArea.getText());
-                        } else {
-                            propertyNote.setValue(noteTextTextArea.getText());
-                        }
                     } else {
                         Property propertyTitle = mMultiMediaObject.getProperty("TITL");
                         if (propertyTitle == null) {
