@@ -219,10 +219,13 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         eventCauseTextArea.setColumns(20);
         eventCauseTextArea.setRows(2);
+        eventCauseTextArea.setToolTipText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.eventCauseTextArea.toolTipText")); // NOI18N
         eventCauseScrollPane.setViewportView(eventCauseTextArea);
 
         EventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         EventTypeLabel.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.EventTypeLabel.text")); // NOI18N
+
+        eventTypeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.eventTypeTextField.toolTipText")); // NOI18N
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
         privateRecordToggleButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
