@@ -1,9 +1,16 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.AssociationsTableModel;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyAssociation;
+import genj.gedcom.UnitOfWork;
 import java.util.List;
+import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -11,8 +18,9 @@ import java.util.List;
  */
 public class AssociationsListPanel extends javax.swing.JPanel {
 
-    private Entity rootEntity;
-    private AssociationsTableModel mAssociationsTableModel = new AssociationsTableModel();
+    private Entity mRootEntity;
+    private PropertyAssociation mAssociation;
+    private final AssociationsTableModel mAssociationsTableModel = new AssociationsTableModel();
 
     /**
      * Creates new form ReferencesListPanel
@@ -33,6 +41,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
 
         associationsToolBar = new javax.swing.JToolBar();
         addReferenceButton = new javax.swing.JButton();
+        editSourceButton = new javax.swing.JButton();
         associationsTableScrollPane = new javax.swing.JScrollPane();
         associationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
@@ -51,7 +60,24 @@ public class AssociationsListPanel extends javax.swing.JPanel {
         });
         associationsToolBar.add(addReferenceButton);
 
+        editSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationsListPanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
+        editSourceButton.setFocusable(false);
+        editSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editSourceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editSourceButtonActionPerformed(evt);
+            }
+        });
+        associationsToolBar.add(editSourceButton);
+
         associationsTable.setModel(mAssociationsTableModel);
+        associationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                associationsTableMouseClicked(evt);
+            }
+        });
         associationsTableScrollPane.setViewportView(associationsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -71,17 +97,97 @@ public class AssociationsListPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addReferenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReferenceButtonActionPerformed
-        // TODO add your handling code here:
+        Gedcom gedcom = mRootEntity.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mAssociation = (PropertyAssociation) mRootEntity.addProperty("ASSO", "@@");
+
+                }
+            }); // end of doUnitOfWork
+            AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
+            associationEditorPanel.set(mAssociation);
+
+            DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(IndividualEditorPanel.class, "AssociationEditorPanel.create.title"),
+                    associationEditorPanel);
+            associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
+
+            if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }//GEN-LAST:event_addReferenceButtonActionPerformed
+
+    private void editSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceButtonActionPerformed
+        int selectedRow = associationsTable.getSelectedRow();
+        Gedcom gedcom = mRootEntity.getGedcom();
+        if (selectedRow != -1) {
+            int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
+            int undoNb = gedcom.getUndoNb();
+            AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
+            associationEditorPanel.set(mAssociationsTableModel.getValueAt(rowIndex));
+
+            DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(IndividualEditorPanel.class, "AssociationEditorPanel.edit.title"),
+                    associationEditorPanel);
+            associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
+
+            if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_editSourceButtonActionPerformed
+
+    private void associationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_associationsTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            int selectedRow = associationsTable.getSelectedRow();
+            Gedcom gedcom = mRootEntity.getGedcom();
+            if (selectedRow != -1) {
+                int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
+                int undoNb = gedcom.getUndoNb();
+                AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
+                associationEditorPanel.set(mAssociationsTableModel.getValueAt(rowIndex));
+
+                DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(IndividualEditorPanel.class, "AssociationEditorPanel.edit.title"),
+                        associationEditorPanel);
+                associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
+
+                if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_associationsTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addReferenceButton;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable associationsTable;
     private javax.swing.JScrollPane associationsTableScrollPane;
     private javax.swing.JToolBar associationsToolBar;
+    private javax.swing.JButton editSourceButton;
     // End of variables declaration//GEN-END:variables
 
     public void setAssociationsList(Entity rootEntity, List<PropertyAssociation> associationsList) {
-        this.rootEntity = rootEntity;
+        this.mRootEntity = rootEntity;
         mAssociationsTableModel.update(associationsList);
     }
 
