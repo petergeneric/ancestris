@@ -12,16 +12,11 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  *
- * MULTIMEDIA_LINK:=
- * [
- * n OBJE @<XREF:OBJE>@
- * |
- * n OBJE
- * +1 FILE <MULTIMEDIA_FILE_REFN>
+ * MULTIMEDIA_LINK:= [ n OBJE @<XREF:OBJE>@ | n OBJE +1 FILE
+ * <MULTIMEDIA_FILE_REFN>
  * +2 FORM <MULTIMEDIA_FORMAT>
  * +3 MEDI <SOURCE_MEDIA_TYPE>
- * +1 TITL <DESCRIPTIVE_TITLE>
- * ]
+ * +1 TITL <DESCRIPTIVE_TITLE> ]
  */
 public class MultimediaFilesTableModel extends AbstractTableModel {
 
@@ -48,16 +43,20 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < multimediaFilesList.size()) {
             File multimediaFile = multimediaFilesList.get(row);
-            switch (column) {
-                case 0: {
-                    return FileSystemView.getFileSystemView().getSystemIcon(multimediaFile);
-                }
+            if (multimediaFile.exists()) {
+                switch (column) {
+                    case 0: {
+                        return FileSystemView.getFileSystemView().getSystemIcon(multimediaFile);
+                    }
 
-                case 1: {
-                    return multimediaFile.getAbsolutePath();
+                    case 1: {
+                        return multimediaFile.getAbsolutePath();
+                    }
+                    default:
+                        return "";
                 }
-                default:
-                    return "";
+            } else {
+                return "";
             }
         } else {
             return "";
