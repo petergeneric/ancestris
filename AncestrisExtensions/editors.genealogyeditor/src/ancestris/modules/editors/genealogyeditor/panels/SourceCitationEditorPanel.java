@@ -193,6 +193,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 mSourceReferencedTitleModified = true;
             }
         });
+        SourceReferencedTitleTextField.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceReferencedTitleTextField.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout SourceReferencePanelLayout = new javax.swing.GroupLayout(SourceReferencePanel);
         SourceReferencePanel.setLayout(SourceReferencePanelLayout);
@@ -222,6 +223,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         ReferencedEventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         ReferencedEventTypeLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.ReferencedEventTypeLabel.text")); // NOI18N
 
+        ReferencedEventTypeComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.ReferencedEventTypeComboBox.toolTipText")); // NOI18N
         ReferencedEventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ReferencedEventTypeComboBoxActionPerformed(evt);
@@ -232,11 +234,16 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         eventRoleLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.eventRoleLabel.text")); // NOI18N
 
         eventRoleComboBox.setModel(new EventsRoleComboBoxModel());
+        eventRoleComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.eventRoleComboBox.toolTipText")); // NOI18N
         eventRoleComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eventRoleComboBoxActionPerformed(evt);
             }
         });
+
+        sourceCitationTabbedPane.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.sourceCitationTabbedPane.toolTipText")); // NOI18N
+
+        SourceDataPanel.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceDataPanel.toolTipText")); // NOI18N
 
         sourceDataTextArea.setColumns(20);
         sourceDataTextArea.setRows(5);
@@ -272,6 +279,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceDataPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), SourceDataPanel); // NOI18N
 
+        noteCitationsListPanel.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.noteCitationsListPanel.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
@@ -284,6 +293,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         );
 
         sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+
+        multiMediaPanel.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.multiMediaPanel.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout multiMediaPanelLayout = new javax.swing.GroupLayout(multiMediaPanel);
         multiMediaPanel.setLayout(multiMediaPanelLayout);
@@ -303,6 +314,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         dataQualityComboBox.setEditable(true);
         dataQualityComboBox.setModel(new ConfidenceLevelComboBoxModel ());
+        dataQualityComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.dataQualityComboBox.toolTipText")); // NOI18N
         dataQualityComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dataQualityComboBoxActionPerformed(evt);
@@ -311,6 +323,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         recordingDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         recordingDateLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.recordingDateLabel.text")); // NOI18N
+
+        recordingDate.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.recordingDate.toolTipText")); // NOI18N
 
         pageLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         pageLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.pageLabel.text")); // NOI18N
@@ -768,7 +782,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                         mDataQualityModified = false;
                         Property dataQuality = mSourceCitation.getProperty("QUAY");
                         if (dataQuality == null) {
-                            mSourceCitation.addProperty("QUAY", dataQualityComboBox.getSelectedItem().toString());
+                            mSourceCitation.addProperty("QUAY", Integer.toString (dataQualityComboBox.getSelectedIndex()));
                         } else {
                             dataQuality.setValue(dataQualityComboBox.getSelectedItem().toString());
                         }
