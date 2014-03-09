@@ -615,7 +615,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
             final Property sourceData = sourceCitation.getProperty("DATA");
             if (sourceData != null) {
-                PropertyDate date = (PropertyDate) sourceData.getProperty("DATE");
+                PropertyDate date = (PropertyDate) sourceData.getProperty("DATE", false);
                 if (date == null) {
                     try {
                         mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
