@@ -198,8 +198,8 @@ public class EventEditorPanel extends javax.swing.JPanel {
         multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
         notesPanel = new javax.swing.JPanel();
         noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        HelpTextArea = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        helpEditorPane = new javax.swing.JEditorPane();
 
         eventIdLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventIdLabel.text"), new Object[] {})); // NOI18N
 
@@ -408,16 +408,11 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
-        HelpTextArea.setEditable(false);
-        HelpTextArea.setColumns(20);
-        HelpTextArea.setLineWrap(true);
-        HelpTextArea.setRows(5);
-        HelpTextArea.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.HelpTextArea.text")); // NOI18N
-        HelpTextArea.setToolTipText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.HelpTextArea.toolTipText")); // NOI18N
-        HelpTextArea.setWrapStyleWord(true);
-        HelpTextArea.setDisabledTextColor(javax.swing.UIManager.getDefaults().getColor("TextField.selectionBackground"));
-        HelpTextArea.setEnabled(false);
-        jScrollPane1.setViewportView(HelpTextArea);
+        helpEditorPane.setEditable(false);
+        helpEditorPane.setContentType("text/html"); // NOI18N
+        helpEditorPane.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.helpEditorPane.text")); // NOI18N
+        helpEditorPane.setEnabled(false);
+        jScrollPane2.setViewportView(helpEditorPane);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -429,7 +424,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(eventInformationTabbedPane, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(agePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -442,13 +437,12 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(eventInformationTabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel EventTypeLabel;
-    private javax.swing.JTextArea HelpTextArea;
     private javax.swing.JLabel IndividualAgeLabel;
     private ancestris.modules.beans.ADateBean aDateBean;
     private javax.swing.JPanel agePanel;
@@ -465,12 +459,13 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel familyAgePanel;
     private javax.swing.JPanel galleryPanel;
     private ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel gedcomPlacePanel;
+    private javax.swing.JEditorPane helpEditorPane;
     private javax.swing.JLabel husbandAgeLabel;
     private javax.swing.JTextField husbandAgeTextField;
     private javax.swing.JPanel individualAgePanel;
     private javax.swing.JTextField individualAgeTextField;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
