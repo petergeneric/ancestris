@@ -542,7 +542,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        mFamily.setWife(mHusband);
+                        mFamily.setHusband(mHusband);
                     }
                 }); // end of doUnitOfWork
                 husbandNameTextField.setText(mHusband.getName());
