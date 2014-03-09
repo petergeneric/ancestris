@@ -23,7 +23,7 @@
                   <Component id="SourceReferencePanel" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel5" pref="115" max="32767" attributes="0"/>
+                          <Component id="jLabel5" max="32767" attributes="0"/>
                           <Component id="ReferencedEventTypeLabel" max="32767" attributes="0"/>
                           <Component id="eventRoleLabel" max="32767" attributes="0"/>
                       </Group>
