@@ -108,7 +108,9 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                     ArrayList<Property> multimediaObjects = new ArrayList(Arrays.asList(source.getProperties("OBJE")));
                     if (source instanceof PropertySource) {
                         Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
-                        multimediaObjects.addAll(Arrays.asList(targetEntity.getProperties("OBJE")));
+                        if (targetEntity != null) {
+                            multimediaObjects.addAll(Arrays.asList(targetEntity.getProperties("OBJE")));
+                        }
                     }
                     if (multimediaObjects.size() > 0) {
                         return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.yes");
