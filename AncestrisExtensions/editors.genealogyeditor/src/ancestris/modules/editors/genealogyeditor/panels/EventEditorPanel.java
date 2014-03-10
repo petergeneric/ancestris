@@ -127,6 +127,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     private PropertyEvent mEvent = null;
     private Property mRoot;
     private PropertyPlace mPlace;
+    private PropertyDate mDate;
     private boolean mEventCauseModified = false;
     private boolean mIndividualAgeModified = false;
     private boolean mHusbandAgeModified = false;
@@ -587,11 +588,21 @@ public class EventEditorPanel extends javax.swing.JPanel {
             privateRecordToggleButton.setSelected(true);
         }
 
-        PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
-        if (date == null) {
-            date = (PropertyDate) mEvent.addProperty("DATE", "");
+        mDate = (PropertyDate) mEvent.getProperty("DATE", false);
+        if (mDate == null) {
+            try {
+                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
-        aDateBean.setContext(date);
+        aDateBean.setContext(mDate);
         aDateBean.addChangeListener(new DateBeanListener());
 
         if (mEventType == INDIVIDUAL_EVENT_TYPE) {

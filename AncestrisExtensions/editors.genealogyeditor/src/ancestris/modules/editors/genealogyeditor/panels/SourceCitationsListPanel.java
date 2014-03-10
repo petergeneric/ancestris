@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.SourceCitationsTableModel;
+import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -111,13 +112,24 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
         Gedcom gedcom = mRoot.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
+        final SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
         // create a the source link
-        sourceCitationEditorPanel.setSource(mRoot, mRoot.addProperty("SOUR", "@@"));
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    sourceCitationEditorPanel.setSource(mRoot, mRoot.addProperty("SOUR", "@@"));
+                }
+            }); // end of doUnitOfWork
+
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
 
         ADialog sourceCitationEditorDialog = new ADialog(
                 NbBundle.getMessage(SourceCitationEditorPanel.class,
-                "SourceCitationEditorPanel.create.title"), sourceCitationEditorPanel);
+                        "SourceCitationEditorPanel.create.title"), sourceCitationEditorPanel);
         sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
         if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -157,19 +169,26 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
 
         if (selectedRow != -1) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                            SourceCitationsListPanel.class, "SourceCitationsListPanel.deleteSourceCitation.title"),
+                    NbBundle.getMessage(
+                            SourceCitationsListPanel.class, "SourceCitationsListPanel.deleteSourceCitation.text",
+                            mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        int rowIndex = sourceCitationsTable.convertRowIndexToModel(selectedRow);
-                        mRoot.delProperty(mSourceCitationsTableModel.remove(rowIndex));
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                        mRoot.delProperty(mSourceCitationsTableModel.remove(sourceCitationsTable.convertRowIndexToModel(selectedRow)));
+                        }
+                    }); // end of doUnitOfWork
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
-        }
+         }
     }//GEN-LAST:event_deleteSourceCitationButtonActionPerformed
 
     private void sourceCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceCitationsTableMouseClicked

@@ -176,8 +176,26 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
     private void deleteNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNoteButtonActionPerformed
         int selectedRow = noteCitationsTable.getSelectedRow();
         if (selectedRow != -1) {
-            int rowIndex = noteCitationsTable.convertRowIndexToModel(selectedRow);
-            mRoot.delProperty(mNoteCitationsTableModel.remove(rowIndex));
+            final int rowIndex = noteCitationsTable.convertRowIndexToModel(selectedRow);
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                            NoteCitationsListPanel.class, "NoteCitationsListPanel.deleteNote.title"),
+                    NbBundle.getMessage(
+                            NoteCitationsListPanel.class, "NoteCitationsListPanel.deleteNote.text",
+                            mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mRoot.delProperty(mNoteCitationsTableModel.remove(rowIndex));
+                        }
+                    }); // end of doUnitOfWork
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
         }
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
 

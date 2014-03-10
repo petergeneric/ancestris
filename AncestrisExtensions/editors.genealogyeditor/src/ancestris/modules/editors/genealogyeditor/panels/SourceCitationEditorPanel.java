@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.ConfidenceLevelComboBoxModel;
 import ancestris.modules.editors.genealogyeditor.models.EventsRoleComboBoxModel;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
+import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
@@ -17,28 +18,19 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  *
- * SOURCE_CITATION:=
- * [ pointer to source record (preferred)
- * n SOUR @<XREF:SOUR>@
+ * SOURCE_CITATION:= [ pointer to source record (preferred) n SOUR @<XREF:SOUR>@
  * +1 PAGE <WHERE_WITHIN_SOURCE>
  * +1 EVEN <EVENT_TYPE_CITED_FROM>
  * +2 ROLE <ROLE_IN_EVENT>
- * +1 DATA
- * +2 DATE <ENTRY_RECORDING_DATE>
+ * +1 DATA +2 DATE <ENTRY_RECORDING_DATE>
  * +2 TEXT <TEXT_FROM_SOURCE>
  * +3 [CONC|CONT] <TEXT_FROM_SOURCE>
- * +1 <<MULTIMEDIA_LINK>>
- * +1 <<NOTE_STRUCTURE>>
- * +1 QUAY <CERTAINTY_ASSESSMENT>
- * | Systems not using source records
- * n SOUR <SOURCE_DESCRIPTION>
+ * +1 <<MULTIMEDIA_LINK>> +1 <<NOTE_STRUCTURE>> +1 QUAY <CERTAINTY_ASSESSMENT>
+ * | Systems not using source records n SOUR <SOURCE_DESCRIPTION>
  * +1 [CONC|CONT] <SOURCE_DESCRIPTION>
  * +1 TEXT <TEXT_FROM_SOURCE>
  * +2 [CONC|CONT] <TEXT_FROM_SOURCE>
- * +1 <<MULTIMEDIA_LINK>>
- * +1 <<NOTE_STRUCTURE>>
- * +1 QUAY <CERTAINTY_ASSESSMENT>
- * ]
+ * +1 <<MULTIMEDIA_LINK>> +1 <<NOTE_STRUCTURE>> +1 QUAY <CERTAINTY_ASSESSMENT> ]
  */
 public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
@@ -431,8 +423,14 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mReferencedSource = sourceEditorPanel.commit();
-                mSourceCitation.setValue('@' + mReferencedSource.getId() + '@');
-                ((PropertySource) mSourceCitation).link();
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mSourceCitation.setValue('@' + mReferencedSource.getId() + '@');
+                        ((PropertySource) mSourceCitation).link();
+                    }
+                }); // end of doUnitOfWork
                 SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
                 addSourceButton.setVisible(false);
                 deleteSourceButton.setVisible(true);
@@ -473,16 +471,24 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
 
         if (mReferencedSource != null) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                            SourceCitationEditorPanel.class, "SourceCitationEditorPanel.deleteSourceCitation.title"),
+                    NbBundle.getMessage(
+                            SourceCitationEditorPanel.class, "SourceCitationEditorPanel.deleteSourceCitation.text",
+                            mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mSourceCitation.delProperty(mReferencedSource);
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mSourceCitation.delProperty(mReferencedSource);
+                        }
+                    }); // end of doUnitOfWork
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
             mReferencedSource = null;
         }
@@ -503,9 +509,15 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             }
             mReferencedSource = sourcesListPanel.getSelectedSource();
             SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
-            mSourceCitation.setValue('@' + mReferencedSource.getId() + '@');
             try {
-                ((PropertySource) mSourceCitation).link();
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mSourceCitation.setValue('@' + mReferencedSource.getId() + '@');
+                        ((PropertySource) mSourceCitation).link();
+                    }
+                }); // end of doUnitOfWork
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -782,7 +794,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                         mDataQualityModified = false;
                         Property dataQuality = mSourceCitation.getProperty("QUAY");
                         if (dataQuality == null) {
-                            mSourceCitation.addProperty("QUAY", Integer.toString (dataQualityComboBox.getSelectedIndex()));
+                            mSourceCitation.addProperty("QUAY", Integer.toString(dataQualityComboBox.getSelectedIndex()));
                         } else {
                             dataQuality.setValue(dataQualityComboBox.getSelectedItem().toString());
                         }

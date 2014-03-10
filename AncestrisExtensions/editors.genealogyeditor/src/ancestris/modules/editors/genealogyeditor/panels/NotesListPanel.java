@@ -150,7 +150,7 @@ public class NotesListPanel extends javax.swing.JPanel {
                     noteEditorPanel);
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                final Note commitedNote = (Note)noteEditorPanel.commit();
+                final Note commitedNote = (Note) noteEditorPanel.commit();
                 mNotesTableModel.add(commitedNote);
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -196,8 +196,27 @@ public class NotesListPanel extends javax.swing.JPanel {
     private void deleteNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNoteButtonActionPerformed
         int selectedRow = notesTable.getSelectedRow();
         if (selectedRow != -1) {
-            int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
-            mRoot.delProperty(mNotesTableModel.remove(rowIndex));
+            final int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                            NotesListPanel.class, "NotesListPanel.deleteNote.title"),
+                    NbBundle.getMessage(
+                            NotesListPanel.class, "NotesListPanel.deleteNote.text",
+                            mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mRoot.delProperty(mNotesTableModel.remove(rowIndex));
+
+                        }
+                    }); // end of doUnitOfWork
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
         }
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
 
