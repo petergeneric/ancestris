@@ -269,14 +269,22 @@ public class SourceEditorPanel extends javax.swing.JPanel {
          * +2 AGNC <RESPONSIBLE_AGENCY>
          * +2 <<NOTE_STRUCTURE>>
          */
-        Property sourceData = mSource.getProperty("DATA");
+        final Property sourceData = mSource.getProperty("DATA");
         if (sourceData != null) {
             Property[] sourceDataEvents = sourceData.getProperties("EVEN");
             eventTypePanel.setEventTypesList(sourceData, Arrays.asList(sourceDataEvents));
         } else {
-            sourceData = mSource.addProperty("DATA", "");
-            eventTypePanel.setEventTypesList(sourceData, null);
+            try {
+                mSource.getGedcom().doUnitOfWork(new UnitOfWork() {
 
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        eventTypePanel.setEventTypesList(mSource.addProperty("DATA", ""), null);
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
 
         /*

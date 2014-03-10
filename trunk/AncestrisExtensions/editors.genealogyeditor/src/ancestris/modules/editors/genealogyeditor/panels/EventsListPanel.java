@@ -264,7 +264,6 @@ public class EventsListPanel extends javax.swing.JPanel {
                         Property addProperty = mRoot.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
                         if (addProperty instanceof PropertyEvent) {
                             mEvent = (PropertyEvent) addProperty;
-                            mEvent.addProperty("DATE", "");
                         } else {
                             System.out.println(addProperty.getClass());
                         }
