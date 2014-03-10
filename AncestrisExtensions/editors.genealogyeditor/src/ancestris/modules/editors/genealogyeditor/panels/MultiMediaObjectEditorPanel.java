@@ -196,7 +196,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         if (mMultiMediaObject.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                                mMultiMediaObject.addFile(imageFile, imageFile.getName());
+                            mMultiMediaObject.addFile(imageFile, imageFile.getName());
                         } else {
                             Property file = mMultiMediaObject.getProperty("FILE", false);
 
@@ -226,16 +226,18 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
             File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex);
-            try {
-                Desktop.getDesktop().edit(multiMediafile);
-            } catch (UnsupportedOperationException ex) {
+            if (multiMediafile.exists()) {
                 try {
-                    Desktop.getDesktop().open(multiMediafile);
-                } catch (IOException ex1) {
-                    Exceptions.printStackTrace(ex1);
+                    Desktop.getDesktop().edit(multiMediafile);
+                } catch (UnsupportedOperationException ex) {
+                    try {
+                        Desktop.getDesktop().open(multiMediafile);
+                    } catch (IOException ex1) {
+                        Exceptions.printStackTrace(ex1);
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
             }
         }
     }//GEN-LAST:event_editFileButtonActionPerformed
