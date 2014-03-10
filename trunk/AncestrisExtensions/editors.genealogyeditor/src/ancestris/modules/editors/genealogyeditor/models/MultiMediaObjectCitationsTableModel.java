@@ -15,16 +15,11 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  *
- * MULTIMEDIA_LINK:=
- * [
- * n OBJE @<XREF:OBJE>@
- * |
- * n OBJE
- * +1 FILE <MULTIMEDIA_FILE_REFN>
+ * MULTIMEDIA_LINK:= [ n OBJE @<XREF:OBJE>@ | n OBJE +1 FILE
+ * <MULTIMEDIA_FILE_REFN>
  * +2 FORM <MULTIMEDIA_FORMAT>
  * +3 MEDI <SOURCE_MEDIA_TYPE>
- * +1 TITL <DESCRIPTIVE_TITLE>
- * ]
+ * +1 TITL <DESCRIPTIVE_TITLE> ]
  */
 public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
 
@@ -55,7 +50,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
             Property multimediaObject = multimediaObjectsRefList.get(row);
             if (multimediaObject instanceof PropertyMedia) {
                 switch (column) {
-                    case 0:{
+                    case 0: {
                         Property file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             return FileSystemView.getFileSystemView().getSystemIcon(((PropertyFile) file).getFile());
@@ -81,14 +76,14 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                 }
             } else {
                 switch (column) {
-                    case 0:{
+                    case 0: {
                         Property file = multimediaObject.getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
                             return FileSystemView.getFileSystemView().getSystemIcon(((PropertyFile) file).getFile());
                         }
                         return "";
                     }
-                        
+
                     case 1:
                         return "";
                     case 2: {
@@ -118,7 +113,11 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
 
     @Override
     public Class getColumnClass(int column) {
-        return getValueAt(0, column).getClass();
+        if (getValueAt(0, column) != null) {
+            return getValueAt(0, column).getClass();
+        } else {
+            return String.class;
+        }
     }
 
     @Override
