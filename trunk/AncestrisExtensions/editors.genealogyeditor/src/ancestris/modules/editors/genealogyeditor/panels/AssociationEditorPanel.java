@@ -11,6 +11,8 @@ import genj.gedcom.UnitOfWork;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -38,6 +40,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
     private PropertyAssociation mAssociation;
     private Indi mIndividual;
+    private boolean mRelationModified = false;
 
     /**
      * Creates new form AssociationEditorPanel
@@ -180,7 +183,6 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                         mAssociation.setValue('@' + mIndividual.getId() + '@');
                         mAssociation.link();
                     }
-
                 }); // end of doUnitOfWork
                 referenceIndividualTextField.setText(mIndividual.getName());
 
@@ -211,14 +213,53 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             linkToIndividualButton.setVisible(false);
             referenceIndividualTextField.setText(targetEntity.getDisplayValue());
         }
-        
+
         Property property = association.getProperty("RELA", false);
         if (property != null) {
             relationTextField.setText(property.getValue());
         }
+        relationTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                mRelationModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mRelationModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                mRelationModified = true;
+            }
+        });
 
         noteCitationsListPanel.setNotesList(association, Arrays.asList(association.getProperties("NOTE")));
 
         sourceCitationsListPanel.set(association, Arrays.asList(association.getProperties("SOUR")));
+    }
+
+    PropertyAssociation commit() {
+        if (mRelationModified) {
+            try {
+                mAssociation.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        Property property = mAssociation.getProperty("RELA", false);
+                        if (property == null) {
+                            mAssociation.addProperty("RELA", relationTextField.getText());
+                        } else {
+                            property.setValue(relationTextField.getText());
+                        }
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return mAssociation;
     }
 }
