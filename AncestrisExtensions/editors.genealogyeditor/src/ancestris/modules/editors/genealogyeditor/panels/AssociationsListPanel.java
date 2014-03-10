@@ -105,7 +105,6 @@ public class AssociationsListPanel extends javax.swing.JPanel {
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mAssociation = (PropertyAssociation) mRootEntity.addProperty("ASSO", "@@");
-
                 }
             }); // end of doUnitOfWork
             AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
@@ -117,7 +116,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
             associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
             if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-
+                mAssociationsTableModel.add(associationEditorPanel.commit());
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -143,7 +142,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
             associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
             if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-
+                associationEditorPanel.commit();
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -168,7 +167,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
                 associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
                 if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-
+                    associationEditorPanel.commit();
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
@@ -188,9 +187,6 @@ public class AssociationsListPanel extends javax.swing.JPanel {
 
     public void setAssociationsList(Entity rootEntity, List<PropertyAssociation> associationsList) {
         this.mRootEntity = rootEntity;
-        mAssociationsTableModel.update(associationsList);
-    }
-
-    public void commit() {
+        mAssociationsTableModel.addAll(associationsList);
     }
 }

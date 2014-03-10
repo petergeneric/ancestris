@@ -47,13 +47,22 @@ public class AssociationsTableModel extends AbstractTableModel {
         return columnsName[col];
     }
 
-    public void update(List<PropertyAssociation> propertyAssociationList) {
-        this.propertyAssociationList = propertyAssociationList;
-
+    public PropertyAssociation getValueAt(int row) {
+        return propertyAssociationList.get(row);
+    }
+    
+    public void add(PropertyAssociation propertyAssociation) {
+        propertyAssociationList.add(propertyAssociation);
         fireTableDataChanged();
     }
 
-    public PropertyAssociation getValueAt(int row) {
-        return propertyAssociationList.get(row);
+    public void addAll(List<PropertyAssociation> propertyAssociationList) {
+        propertyAssociationList.addAll(propertyAssociationList);
+        fireTableDataChanged();
+    }
+    public PropertyAssociation remove(int row) {
+        PropertyAssociation source = propertyAssociationList.remove(row);
+        fireTableDataChanged();
+        return source;
     }
 }
