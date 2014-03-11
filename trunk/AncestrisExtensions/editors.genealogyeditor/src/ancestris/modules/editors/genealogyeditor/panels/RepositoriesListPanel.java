@@ -202,18 +202,20 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
 
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Repository selectedRepository = repositoriesListPanel.getSelectedRepository();
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+            if (selectedRepository != null) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        Property addProperty = mRoot.addProperty("REPO", '@' + selectedRepository.getId() + '@');
-                        ((PropertyRepository) addProperty).link();
-                    }
-                }); // end of doUnitOfWork
-                mRepositoriesTableModel.add(selectedRepository);
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            Property addProperty = mRoot.addProperty("REPO", '@' + selectedRepository.getId() + '@');
+                            ((PropertyRepository) addProperty).link();
+                        }
+                    }); // end of doUnitOfWork
+                    mRepositoriesTableModel.add(selectedRepository);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }//GEN-LAST:event_linkToRepositoryButtonActionPerformed
