@@ -41,10 +41,10 @@ public class RepositoriesTableModel extends AbstractTableModel {
             if (column == 0) {
                 return repository.getId();
             } else if (column == 1) {
-                return EntityTag2Name.getTagName(repository.getTag());
-            } else {
                 Property name = repository.getProperty("NAME");
                 return name != null ? name.getValue() : "";
+            } else {
+                return "";
             }
         } else {
             return "";
