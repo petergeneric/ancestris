@@ -191,6 +191,13 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             try {
                 final File imageFile = fileChooser.getSelectedFile();
+
+                String current = new java.io.File(".").getPath();
+                System.out.println("Current dir:" + current);
+
+                String relative = new File(new java.io.File(".").getPath()).toURI().relativize(imageFile.toURI()).getPath();
+                System.out.println("relative dir:" + relative);
+                
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override

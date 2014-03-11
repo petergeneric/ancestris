@@ -62,14 +62,14 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         countyLabel = new javax.swing.JLabel();
         stateLabel = new javax.swing.JLabel();
         countryLabel = new javax.swing.JLabel();
-        hamletComboBox = new javax.swing.JComboBox();
-        cityComboBox = new javax.swing.JComboBox();
-        geoIDComboBox = new javax.swing.JComboBox();
-        stateComboBox = new javax.swing.JComboBox();
-        parishComboBox = new javax.swing.JComboBox();
-        zipCodeComboBox = new javax.swing.JComboBox();
-        countyComboBox = new javax.swing.JComboBox();
-        countryComboBox = new javax.swing.JComboBox();
+        hamletComboBox = new javax.swing.JComboBox<String>();
+        cityComboBox = new javax.swing.JComboBox<String>();
+        geoIDComboBox = new javax.swing.JComboBox<String>();
+        stateComboBox = new javax.swing.JComboBox<String>();
+        parishComboBox = new javax.swing.JComboBox<String>();
+        zipCodeComboBox = new javax.swing.JComboBox<String>();
+        countyComboBox = new javax.swing.JComboBox<String>();
+        countryComboBox = new javax.swing.JComboBox<String>();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -99,21 +99,21 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         countryLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(countryLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.countryLabel.text")); // NOI18N
 
-        hamletComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
+        hamletComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
-        cityComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
+        cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
-        geoIDComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
+        geoIDComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
-        stateComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
+        stateComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
-        parishComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
+        parishComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
-        zipCodeComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
+        zipCodeComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
-        countyComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
+        countyComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
-        countryComboBox.setModel(new javax.swing.DefaultComboBoxModel(mPlaceFormat));
+        countryComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -184,23 +184,23 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox cityComboBox;
+    private javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JLabel cityLabel;
-    private javax.swing.JComboBox countryComboBox;
+    private javax.swing.JComboBox<String> countryComboBox;
     private javax.swing.JLabel countryLabel;
-    private javax.swing.JComboBox countyComboBox;
+    private javax.swing.JComboBox<String> countyComboBox;
     private javax.swing.JLabel countyLabel;
-    private javax.swing.JComboBox geoIDComboBox;
+    private javax.swing.JComboBox<String> geoIDComboBox;
     private javax.swing.JLabel geoIDLabel;
-    private javax.swing.JComboBox hamletComboBox;
+    private javax.swing.JComboBox<String> hamletComboBox;
     private javax.swing.JLabel hamletLabel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JComboBox parishComboBox;
+    private javax.swing.JComboBox<String> parishComboBox;
     private javax.swing.JLabel parishLabel;
-    private javax.swing.JComboBox stateComboBox;
+    private javax.swing.JComboBox<String> stateComboBox;
     private javax.swing.JLabel stateLabel;
-    private javax.swing.JComboBox zipCodeComboBox;
+    private javax.swing.JComboBox<String> zipCodeComboBox;
     private javax.swing.JLabel zipCodeLabel;
     // End of variables declaration//GEN-END:variables
 

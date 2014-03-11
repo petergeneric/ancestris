@@ -105,7 +105,7 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                     }
                 }
                 case 3: {
-                    ArrayList<Property> multimediaObjects = new ArrayList(Arrays.asList(source.getProperties("OBJE")));
+                    ArrayList<Property> multimediaObjects = new ArrayList<Property>(Arrays.asList(source.getProperties("OBJE")));
                     if (source instanceof PropertySource) {
                         Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
                         if (targetEntity != null) {
@@ -119,7 +119,7 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                     }
                 }
                 case 4: {
-                    ArrayList<Property> notes = new ArrayList(Arrays.asList(source.getProperties("NOTE")));
+                    ArrayList<Property> notes = new ArrayList<Property>(Arrays.asList(source.getProperties("NOTE")));
                     if (source instanceof PropertySource) {
                         Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
                         notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
