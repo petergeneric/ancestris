@@ -699,7 +699,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         }
         mDataQualityModified = false;
 
-        ArrayList<Property> notes = new <Property> ArrayList();
+        ArrayList<Property> notes = new ArrayList<Property>();
         if (mSourceCitation instanceof PropertySource) {
             Source targetEntity = (Source) ((PropertySource) mSourceCitation).getTargetEntity();
             if (targetEntity != null) {
@@ -708,7 +708,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         }
         noteCitationsListPanel.setNotesList(mSourceCitation, notes);
 
-        ArrayList<Property> multimediaObjects = new ArrayList(Arrays.asList(mSourceCitation.getProperties("OBJE")));
+        ArrayList<Property> multimediaObjects = new ArrayList<Property>(Arrays.asList(mSourceCitation.getProperties("OBJE")));
         if (mSourceCitation instanceof PropertySource) {
             Source targetEntity = (Source) ((PropertySource) mSourceCitation).getTargetEntity();
             if (targetEntity != null) {

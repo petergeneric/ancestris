@@ -700,11 +700,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     }
                 }
             }); // end of doUnitOfWork
+            
+            return mPlace;
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
             return null;
-        } finally {
-            return mPlace;
         }
     }
 }

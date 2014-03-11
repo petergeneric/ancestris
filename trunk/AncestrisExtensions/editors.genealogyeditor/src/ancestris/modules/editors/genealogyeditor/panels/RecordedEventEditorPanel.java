@@ -93,7 +93,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         gedcomPlacePanel = new ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel();
-        eventTypeComboBox = new javax.swing.JComboBox(mEvents);
+        eventTypeComboBox = new javax.swing.JComboBox<String>(mEvents);
         recordedEventLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
         aDateBean = new ancestris.modules.beans.ADateBean();
@@ -144,7 +144,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ADateBean aDateBean;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JComboBox eventTypeComboBox;
+    private javax.swing.JComboBox<String> eventTypeComboBox;
     private ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel gedcomPlacePanel;
     private javax.swing.JLabel recordedEventLabel;
     // End of variables declaration//GEN-END:variables

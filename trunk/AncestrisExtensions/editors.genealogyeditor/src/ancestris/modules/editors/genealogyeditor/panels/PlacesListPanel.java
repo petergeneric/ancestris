@@ -43,7 +43,7 @@ public class PlacesListPanel extends javax.swing.JPanel {
                 propertySet = new HashSet<PropertyPlace>();
                 placesMap.put(gedcomPlace, propertySet);
             }
-            propertySet.add((PropertyPlace) propertyPlace);
+            propertySet.add(propertyPlace);
         }
 
         mPlacesListTableModel.update(placesMap);
@@ -62,7 +62,7 @@ public class PlacesListPanel extends javax.swing.JPanel {
 
         searchPlaceLabel = new javax.swing.JLabel();
         filterGedcomPlaceTextField = new javax.swing.JTextField();
-        searchPlaceComboBox = new javax.swing.JComboBox();
+        searchPlaceComboBox = new javax.swing.JComboBox<String>();
         filterGedcomPlaceButton = new javax.swing.JButton();
         clearFilterGedcomPlaceButton = new javax.swing.JButton();
         placesListTableScrollPane = new javax.swing.JScrollPane();
@@ -77,7 +77,7 @@ public class PlacesListPanel extends javax.swing.JPanel {
             }
         });
 
-        searchPlaceComboBox.setModel(new DefaultComboBoxModel(mPlaceFormat));
+        searchPlaceComboBox.setModel(new DefaultComboBoxModel<String>(mPlaceFormat));
 
         filterGedcomPlaceButton.setText(org.openide.util.NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.filterGedcomPlaceButton.text")); // NOI18N
         filterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -152,7 +152,7 @@ public class PlacesListPanel extends javax.swing.JPanel {
     private javax.swing.JTextField filterGedcomPlaceTextField;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable placesListTable;
     private javax.swing.JScrollPane placesListTableScrollPane;
-    private javax.swing.JComboBox searchPlaceComboBox;
+    private javax.swing.JComboBox<String> searchPlaceComboBox;
     private javax.swing.JLabel searchPlaceLabel;
     // End of variables declaration//GEN-END:variables
 

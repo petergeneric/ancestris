@@ -13,7 +13,7 @@ import org.openide.util.NbBundle;
  */
 public class IndividualReferencesTableModel extends AbstractTableModel {
 
-    private List<PropertyXRef> individualsList = new ArrayList();
+    private List<PropertyXRef> individualsList = new ArrayList<PropertyXRef>();
     private String[] columnsName = {
         NbBundle.getMessage(IndividualReferencesTableModel.class, "IndividualsTableModel.column.ID.title"),
         NbBundle.getMessage(IndividualReferencesTableModel.class, "IndividualsTableModel.column.Name.title"),

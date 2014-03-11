@@ -59,7 +59,7 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
     @Override
     public String getColumnName(int column) {
         if (column < familyColumnsName.length) {
-            return (String) familyColumnsName[column];
+            return familyColumnsName[column];
         } else {
             return "";
         }

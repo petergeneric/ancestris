@@ -84,7 +84,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         PropertyTag2Name.getTagName("RESI"),
         PropertyTag2Name.getTagName("EVEN")
     };
-    DefaultComboBoxModel mEventsModel = new DefaultComboBoxModel(new String[]{"empty"});
+    DefaultComboBoxModel <String>mEventsModel = new DefaultComboBoxModel<String>(new String[]{"empty"});
     private boolean updateOnGoing = false;
 
     /**
