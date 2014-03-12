@@ -154,7 +154,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventTypePanel" alignment="0" pref="299" max="32767" attributes="0"/>
+                  <Component id="eventTypePanel" alignment="0" pref="166" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -183,20 +183,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="repositoriesListPanel" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="repositoryCitationsListPanel" alignment="1" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="repositoriesListPanel" alignment="0" pref="299" max="32767" attributes="0"/>
+                  <Component id="repositoryCitationsListPanel" alignment="0" pref="166" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.RepositoriesListPanel" name="repositoriesListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.RepositoryCitationsListPanel" name="repositoryCitationsListPanel">
             </Component>
           </SubComponents>
         </Container>
@@ -225,7 +222,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="299" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="166" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -262,7 +259,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="referencesListPanel" alignment="0" pref="299" max="32767" attributes="0"/>
+                  <Component id="referencesListPanel" alignment="0" pref="166" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -293,7 +290,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="299" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="166" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

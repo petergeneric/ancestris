@@ -68,7 +68,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         registeredEventsPanel = new javax.swing.JPanel();
         eventTypePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel();
         repositoriesPanel = new javax.swing.JPanel();
-        repositoriesListPanel = new ancestris.modules.editors.genealogyeditor.panels.RepositoriesListPanel();
+        repositoryCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.RepositoryCitationsListPanel();
         notesPanel = new javax.swing.JPanel();
         noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
         referencesPanel = new javax.swing.JPanel();
@@ -102,7 +102,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         registeredEventsPanelLayout.setVerticalGroup(
             registeredEventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.registeredEventsPanel.TabConstraints.tabTitle"), new Object[] {}), registeredEventsPanel); // NOI18N
@@ -113,13 +113,11 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         repositoriesPanel.setLayout(repositoriesPanelLayout);
         repositoriesPanelLayout.setHorizontalGroup(
             repositoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, repositoriesPanelLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(repositoriesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(repositoryCitationsListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         repositoriesPanelLayout.setVerticalGroup(
             repositoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(repositoriesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(repositoryCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.repositoriesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/repository.png")), repositoriesPanel); // NOI18N
@@ -134,7 +132,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -151,7 +149,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
@@ -164,7 +162,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         multimediaObjectPanelLayout.setVerticalGroup(
             multimediaObjectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.multimediaObjectPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multimediaObjectPanel); // NOI18N
@@ -231,8 +229,8 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     private javax.swing.JPanel referencesPanel;
     private javax.swing.JPanel registeredEventsPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.RepositoriesListPanel repositoriesListPanel;
     private javax.swing.JPanel repositoriesPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.RepositoryCitationsListPanel repositoryCitationsListPanel;
     private javax.swing.JLabel sourceIDLabel;
     private javax.swing.JTextField sourceIDTextField;
     private javax.swing.JTabbedPane sourceInformationTabbedPane;
@@ -321,11 +319,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         /*
          * +1 <<SOURCE_REPOSITORY_CITATION>>
          */
-        List<Repository> repositporiesList = new ArrayList<Repository>();
-        for (PropertyRepository repositoryRef : mSource.getProperties(PropertyRepository.class)) {
-            repositporiesList.add((Repository) repositoryRef.getTargetEntity());
-        }
-        repositoriesListPanel.set(mSource, repositporiesList);
+        repositoryCitationsListPanel.set(mSource, mSource.getProperties(PropertyRepository.class));
 
         /*
          * +1 REFN <USER_REFERENCE_NUMBER>

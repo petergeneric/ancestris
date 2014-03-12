@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.Property;
+import genj.gedcom.PropertyRepository;
 import genj.gedcom.Repository;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +12,15 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class RepositoriesTableModel extends AbstractTableModel {
+public class RepositoryCitationsTableModel extends AbstractTableModel {
 
-    List<Repository> mRepositoriesList = new ArrayList<Repository>();
+    List<PropertyRepository> mRepositoriesList = new ArrayList<PropertyRepository>();
     private String[] columnsName = {
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.ID.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.name.title")
     };
 
-    public RepositoriesTableModel() {
+    public RepositoryCitationsTableModel() {
     }
 
     @Override
@@ -35,7 +36,7 @@ public class RepositoriesTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         if (row < mRepositoriesList.size()) {
-            Repository repository = mRepositoriesList.get(row);
+            Repository repository = (Repository) mRepositoriesList.get(row).getTargetEntity();
             if (column == 0) {
                 return repository.getId();
             } else if (column == 1) {
@@ -54,28 +55,28 @@ public class RepositoriesTableModel extends AbstractTableModel {
         return columnsName[col];
     }
 
-    public void add(Repository entity) {
+    public void add(PropertyRepository entity) {
         this.mRepositoriesList.add(entity);
         fireTableDataChanged();
     }
 
-    public void addAll(List<Repository> mRepositoriesList) {
+    public void addAll(List<PropertyRepository> mRepositoriesList) {
         this.mRepositoriesList.addAll(mRepositoriesList);
         fireTableDataChanged();
     }
 
-    public Property remove(int row) {
-        Property note = mRepositoriesList.remove(row);
+    public PropertyRepository remove(int row) {
+        PropertyRepository repositoryCitation = mRepositoriesList.remove(row);
         fireTableDataChanged();
-        return note;
+        return repositoryCitation;
     }
     
-    public void update(List<Repository> mRepositoriesList) {
+    public void update(List<PropertyRepository> mRepositoriesList) {
         this.mRepositoriesList.clear();
         addAll(mRepositoriesList);
     }
 
-    public Repository getValueAt(int row) {
+    public PropertyRepository getValueAt(int row) {
         if (row < mRepositoriesList.size()) {
             return mRepositoriesList.get(row);
         } else {
