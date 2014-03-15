@@ -3,11 +3,6 @@ package ancestris.modules.editors.genealogyeditor.actions;
 import ancestris.api.editor.AncestrisEditor;
 import ancestris.modules.editors.genealogyeditor.panels.FamilyEditorPanel;
 import ancestris.modules.editors.genealogyeditor.panels.IndividualEditorPanel;
-import ancestris.modules.editors.standard.EntityEditor;
-import ancestris.modules.editors.standard.actions.AActions;
-import ancestris.modules.editors.standard.actions.ACreateChild;
-import ancestris.modules.editors.standard.actions.ACreateParent;
-import ancestris.modules.editors.standard.actions.ACreateSpouse;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -23,7 +18,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author dominique
  */
 @ServiceProvider(service = AncestrisEditor.class)
-public class AncestrisEditorAction extends AncestrisEditor {
+public class GenealogyEditorAction extends AncestrisEditor {
 
     @Override
     public boolean canEdit(Property property) {
@@ -51,7 +46,7 @@ public class AncestrisEditorAction extends AncestrisEditor {
         return AActions.alwaysEnabled(
                 new ACreateParent(child, sex, this),
                 "",
-                org.openide.util.NbBundle.getMessage(EntityEditor.class, "action.createparent.title"),
+                org.openide.util.NbBundle.getMessage(GenealogyEditorAction.class, "action.createparent.title"),
                 "ancestris/modules/editors/standard/images/add-child.png", // NOI18N
                 true);
     }
@@ -61,7 +56,7 @@ public class AncestrisEditorAction extends AncestrisEditor {
         return AActions.alwaysEnabled(
                 new ACreateChild(indi, this),
                 "",
-                org.openide.util.NbBundle.getMessage(EntityEditor.class, "action.createchild.title", indi),
+                org.openide.util.NbBundle.getMessage(GenealogyEditorAction.class, "action.createchild.title", indi),
                 "ancestris/modules/editors/standard/images/add-child.png", // NOI18N
                 true);
     }
@@ -71,7 +66,7 @@ public class AncestrisEditorAction extends AncestrisEditor {
         return AActions.alwaysEnabled(
                 new ACreateSpouse(indi, this),
                 "",
-                org.openide.util.NbBundle.getMessage(EntityEditor.class, "action.addspouse.title"),
+                org.openide.util.NbBundle.getMessage(GenealogyEditorAction.class, "action.addspouse.title"),
                 "ancestris/modules/editors/standard/images/add-spouse.png", // NOI18N
                 true);
     }
