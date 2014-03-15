@@ -78,6 +78,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         });
         individualsToolBar.add(deleteIndividualButton);
 
+        individualsTable.setAutoCreateRowSorter(true);
         individualsTable.setModel(mIndividualsTableModel);
         individualsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

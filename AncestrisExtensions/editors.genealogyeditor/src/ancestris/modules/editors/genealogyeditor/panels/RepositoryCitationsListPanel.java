@@ -97,6 +97,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
         });
         repositoriesToolBar.add(linkToRepositoryButton);
 
+        repositoriesTable.setAutoCreateRowSorter(true);
         repositoriesTable.setModel(mRepositoryCitationsTableModel);
         repositoriesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

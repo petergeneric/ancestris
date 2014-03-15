@@ -78,6 +78,7 @@ public class SourceEventTypeListPanel extends javax.swing.JPanel {
         });
         sourceEventsToolBar.add(editSourceEventButton);
 
+        sourceEventsTable.setAutoCreateRowSorter(true);
         sourceEventsTable.setModel(mSourceEventTypesTableModel);
         sourceEventsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
