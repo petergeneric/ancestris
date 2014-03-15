@@ -50,6 +50,7 @@ public class ReferencesListPanel extends javax.swing.JPanel {
         });
         referencesToolBar.add(addReferenceButton);
 
+        referencesTable.setAutoCreateRowSorter(true);
         referencesTable.setModel(mReferencesTableModel);
         referencesTableScrollPane.setViewportView(referencesTable);
 

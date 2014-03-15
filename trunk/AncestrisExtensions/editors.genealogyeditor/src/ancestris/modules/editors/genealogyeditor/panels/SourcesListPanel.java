@@ -86,6 +86,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
         });
         sourcesToolBar.add(deleteSourceButton);
 
+        sourcesTable.setAutoCreateRowSorter(true);
         sourcesTable.setModel(mSourcesTableModel);
         sourcesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
