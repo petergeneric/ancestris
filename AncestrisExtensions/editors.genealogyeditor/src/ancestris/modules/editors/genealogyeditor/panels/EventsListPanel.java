@@ -5,6 +5,8 @@ import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
+import genj.gedcom.time.PointInTime;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.TableModel;
@@ -18,6 +20,18 @@ import org.openide.util.NbBundle;
  * @author dominique
  */
 public class EventsListPanel extends javax.swing.JPanel {
+
+    private class DateComparator implements Comparator<String> {
+
+        @Override
+        public int compare(String t, String t1) {
+            PropertyDate start = new PropertyDate();
+            start.setValue(t);
+            PropertyDate end = new PropertyDate();
+            end.setValue(t1);
+            return start.compareTo(end);
+        }
+    }
 
     public final static int INDIVIDUAL_EVENT_TYPE_LIST = 1;
     public final static int FAMILY_EVENT_TYPE_LIST = 2;
@@ -84,7 +98,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         PropertyTag2Name.getTagName("RESI"),
         PropertyTag2Name.getTagName("EVEN")
     };
-    DefaultComboBoxModel <String>mEventsModel = new DefaultComboBoxModel<String>(new String[]{"empty"});
+    DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{"empty"});
     private boolean updateOnGoing = false;
 
     /**
@@ -99,6 +113,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         initComponents();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(eventsTable.getModel());
         eventsTable.setID(EventsListPanel.class.getName());
+        sorter.setComparator(2, new DateComparator());
         eventsTable.setRowSorter(sorter);
     }
 
@@ -200,8 +215,8 @@ public class EventsListPanel extends javax.swing.JPanel {
 
             ADialog eventEditorDialog = new ADialog(
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "EventEditorPanel.edit.title",
-                    new Object[] {PropertyTag2Name.getTagName(event.getTag()) , mRoot}),
+                            EventEditorPanel.class, "EventEditorPanel.edit.title",
+                            new Object[]{PropertyTag2Name.getTagName(event.getTag()), mRoot}),
                     eventEditorPanel);
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
@@ -225,12 +240,12 @@ public class EventsListPanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
-                    PropertyTag2Name.getTagName(event.getTag())),
+                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
+                            PropertyTag2Name.getTagName(event.getTag())),
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
-                    PropertyTag2Name.getTagName(event.getTag()),
-                    mRoot));
+                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
+                            PropertyTag2Name.getTagName(event.getTag()),
+                            mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -277,8 +292,8 @@ public class EventsListPanel extends javax.swing.JPanel {
 
                     ADialog eventEditorDialog = new ADialog(
                             NbBundle.getMessage(EventEditorPanel.class,
-                            "EventEditorPanel.create.title",
-                            new Object[] {PropertyTag2Name.getTagName(mEvent.getTag()), mRoot}),
+                                    "EventEditorPanel.create.title",
+                                    new Object[]{PropertyTag2Name.getTagName(mEvent.getTag()), mRoot}),
                             eventEditorPanel);
 
                     eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
@@ -310,8 +325,8 @@ public class EventsListPanel extends javax.swing.JPanel {
 
                 ADialog eventEditorDialog = new ADialog(
                         NbBundle.getMessage(EventEditorPanel.class,
-                        "EventEditorPanel.edit.title",
-                        new Object[] {PropertyTag2Name.getTagName(event.getTag()) , mRoot}),
+                                "EventEditorPanel.edit.title",
+                                new Object[]{PropertyTag2Name.getTagName(event.getTag()), mRoot}),
                         eventEditorPanel);
                 eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
 
