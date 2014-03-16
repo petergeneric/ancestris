@@ -103,7 +103,6 @@ public class ImageBean extends javax.swing.JPanel {
         int h = img.getHeight();
         float percentW = (float) newW / (float) w;
         float percentH = (float) newH / (float) h;
-        System.out.println("requested size:" + newW + " ; " + newH);
         BufferedImage dimg;
         if (h * percentW < newH) {
             dimg = new BufferedImage((int) (w * percentW), (int) (h * percentW), img.getType());
