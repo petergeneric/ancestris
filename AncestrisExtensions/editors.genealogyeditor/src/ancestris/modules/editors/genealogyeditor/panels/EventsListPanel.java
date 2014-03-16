@@ -5,10 +5,14 @@ import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
-import genj.gedcom.time.PointInTime;
+import java.awt.Component;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTable;
+import javax.swing.JTextPane;
+import javax.swing.JViewport;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.DialogDescriptor;
@@ -21,18 +25,43 @@ import org.openide.util.NbBundle;
  */
 public class EventsListPanel extends javax.swing.JPanel {
 
-    private class DateComparator implements Comparator<String> {
+    private class DateComparator implements Comparator<PropertyDate> {
 
         @Override
-        public int compare(String t, String t1) {
-            PropertyDate start = new PropertyDate();
-            start.setValue(t);
-            PropertyDate end = new PropertyDate();
-            end.setValue(t1);
-            return start.compareTo(end);
+        public int compare(PropertyDate t, PropertyDate t1) {
+            return t.compareTo(t1);
         }
     }
 
+    public class TextPaneTableCellRenderer extends JViewport implements TableCellRenderer {
+
+        JTextPane textPane;
+
+        public TextPaneTableCellRenderer() {
+            textPane = new JTextPane();
+            add(textPane);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                textPane.setBackground(table.getSelectionBackground());
+                textPane.setForeground(table.getSelectionForeground());
+            } else {
+                textPane.setBackground(table.getBackground());
+                textPane.setForeground(table.getForeground());
+            }
+            
+            if (value instanceof PropertyDate) {
+                textPane.setText(((PropertyDate) value).getDisplayValue());
+            } else if (value instanceof PropertyPlace) {
+                textPane.setText(((PropertyPlace)value).format("all"));
+            }
+
+            table.setRowHeight(row, (int) getPreferredSize().getHeight());
+            return this;
+        }
+    }
     public final static int INDIVIDUAL_EVENT_TYPE_LIST = 1;
     public final static int FAMILY_EVENT_TYPE_LIST = 2;
     private Property mRoot;
@@ -115,10 +144,9 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsTable.setID(EventsListPanel.class.getName());
         sorter.setComparator(2, new DateComparator());
         eventsTable.setRowSorter(sorter);
-    }
+        eventsTable.setDefaultRenderer(PropertyDate.class, new TextPaneTableCellRenderer());
+        eventsTable.setDefaultRenderer(PropertyPlace.class, new TextPaneTableCellRenderer());
 
-    private String[] getEventTypeList() {
-        return null;
     }
 
     /**
@@ -180,6 +208,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.add(deleteEventButton);
 
         eventsTable.setModel(mEventsTableModel);
+        eventsTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
         eventsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 eventsTableMouseClicked(evt);
