@@ -2,7 +2,9 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.models.MultimediaFilesTableModel;
+import ancestris.modules.editors.genealogyeditor.table.EditorTable;
 import genj.gedcom.*;
+import genj.util.Registry;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -182,22 +184,18 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
     private void addFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileButtonActionPerformed
         FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(ImageBean.class, "ImageBean.fileType"), "jpg", "jpeg", "png", "gif");
         final JFileChooser fileChooser = new JFileChooser();
-
+        Registry registry = Registry.get(MultiMediaObjectEditorPanel.class);
+        
+        System.out.println(registry.get("rootPath", new java.io.File(".")));
         fileChooser.setFileFilter(imageFileFilter);
         fileChooser.setAcceptAllFileFilterUsed(true);
-//        if (mImageFile != null) {
-//            imageFileChooser.setSelectedFile(mImageFile);
-//        }
+        fileChooser.setSelectedFile(new File (registry.get("rootPath", ".")));
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            registry.put("rootPath", fileChooser.getSelectedFile());
+
             try {
                 final File imageFile = fileChooser.getSelectedFile();
 
-                String current = new java.io.File(".").getPath();
-                System.out.println("Current dir:" + current);
-
-                String relative = new File(new java.io.File(".").getPath()).toURI().relativize(imageFile.toURI()).getPath();
-                System.out.println("relative dir:" + relative);
-                
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
