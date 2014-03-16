@@ -49,12 +49,12 @@ public class EventsTableModel extends AbstractTableModel {
             } else if (column == 1) {
                 PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
                 if (place != null) {
-                    return place.format("all");
+                    return place;
                 } else {
                     return "";
                 }
             } else if (column == 2) {
-                return propertyEvent.getDate() != null ? propertyEvent.getDate().getDisplayValue() : "";
+                return propertyEvent.getDate() != null ? propertyEvent.getDate() : "";
             } else {
                 return "";
             }
@@ -68,6 +68,11 @@ public class EventsTableModel extends AbstractTableModel {
         return columnsName[col];
     }
 
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return getValueAt(0, columnIndex).getClass();
+    }
+    
     public void addAll(List<PropertyEvent> eventsList) {
         this.eventsList.addAll(eventsList);
         fireTableDataChanged();
