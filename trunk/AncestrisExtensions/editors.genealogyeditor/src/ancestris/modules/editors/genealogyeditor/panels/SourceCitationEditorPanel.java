@@ -504,27 +504,29 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         sourcesListDialog.setDialogId(SourcesListPanel.class.getName());
 
         if (sourcesListDialog.show() == DialogDescriptor.OK_OPTION) {
-            if (mReferencedSource != null) {
-                ((PropertySource) mSourceCitation).unlink();
-            }
-            mReferencedSource = sourcesListPanel.getSelectedSource();
-            SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+            if (sourcesListPanel.getSelectedSource() != null) {
+                if (mReferencedSource != null) {
+                    ((PropertySource) mSourceCitation).unlink();
+                }
+                mReferencedSource = sourcesListPanel.getSelectedSource();
+                SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mSourceCitation.setValue('@' + mReferencedSource.getId() + '@');
-                        ((PropertySource) mSourceCitation).link();
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mSourceCitation.setValue('@' + mReferencedSource.getId() + '@');
+                            ((PropertySource) mSourceCitation).link();
+                        }
+                    }); // end of doUnitOfWork
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
 
-            addSourceButton.setVisible(false);
-            deleteSourceButton.setVisible(true);
-            editSourceButton.setVisible(true);
+                addSourceButton.setVisible(false);
+                deleteSourceButton.setVisible(true);
+                editSourceButton.setVisible(true);
+            }
         }
     }//GEN-LAST:event_linkToSourceButtonActionPerformed
 
