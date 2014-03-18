@@ -83,7 +83,6 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         });
         repositoriesToolBar.add(deleteRepositoryButton);
 
-        repositoriesTable.setAutoCreateRowSorter(true);
         repositoriesTable.setModel(mRepositoriesTableModel);
         repositoriesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

@@ -86,7 +86,6 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         });
         sourcesToolBar.add(deleteSourceCitationButton);
 
-        sourceCitationsTable.setAutoCreateRowSorter(true);
         sourceCitationsTable.setModel(mSourceCitationsTableModel);
         sourceCitationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

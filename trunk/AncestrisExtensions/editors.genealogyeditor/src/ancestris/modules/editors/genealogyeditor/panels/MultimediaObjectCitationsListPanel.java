@@ -83,7 +83,6 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         });
         galleryToolBar.add(deleteMMObjectButton);
 
-        multiMediaObjectCitationsTable.setAutoCreateRowSorter(true);
         multiMediaObjectCitationsTable.setModel(multiMediaObjectCitationsTableModel);
         multiMediaObjectCitationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
