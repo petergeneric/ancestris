@@ -30,7 +30,6 @@ public class PlacesListPanel extends javax.swing.JPanel {
 
         mPlacesListTableModel = new GedcomPlaceTableModel(mPlaceFormat);
         initComponents();
-        placesListTable.setID(PlacesListPanel.class.getName());
 
         this.mGedcom = gedcom;
         List<PropertyPlace> gedcomPlacesList = GedcomUtilities.searchProperties(gedcom, PropertyPlace.class, GedcomUtilities.ENT_ALL);
@@ -49,6 +48,7 @@ public class PlacesListPanel extends javax.swing.JPanel {
         mPlacesListTableModel.update(placesMap);
         mPlaceTableSorter = new TableRowSorter<TableModel>(placesListTable.getModel());
         placesListTable.setRowSorter(mPlaceTableSorter);
+        placesListTable.setID(PlacesListPanel.class.getName());
     }
 
     /**
