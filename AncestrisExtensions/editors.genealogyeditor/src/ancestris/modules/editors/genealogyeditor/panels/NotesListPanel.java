@@ -106,7 +106,6 @@ public class NotesListPanel extends javax.swing.JPanel {
         });
         notesToolBar.add(linkToNoteButton);
 
-        notesTable.setAutoCreateRowSorter(true);
         notesTable.setModel(mNotesTableModel);
         notesTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
         notesTable.addMouseListener(new java.awt.event.MouseAdapter() {

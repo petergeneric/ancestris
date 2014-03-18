@@ -79,7 +79,6 @@ public class NamesListPanel extends javax.swing.JPanel {
         });
         namesToolBar.add(deleteNameButton);
 
-        namesTable.setAutoCreateRowSorter(true);
         namesTable.setModel(mNamesTableModel);
         namesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

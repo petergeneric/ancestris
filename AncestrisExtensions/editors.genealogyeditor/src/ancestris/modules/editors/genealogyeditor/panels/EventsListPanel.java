@@ -141,12 +141,11 @@ public class EventsListPanel extends javax.swing.JPanel {
         mEventTypeList = eventTypeList;
         initComponents();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(eventsTable.getModel());
-        eventsTable.setID(EventsListPanel.class.getName());
         sorter.setComparator(2, new DateComparator());
         eventsTable.setRowSorter(sorter);
         eventsTable.setDefaultRenderer(PropertyDate.class, new TextPaneTableCellRenderer());
         eventsTable.setDefaultRenderer(PropertyPlace.class, new TextPaneTableCellRenderer());
-
+        eventsTable.setID(EventsListPanel.class.getName());
     }
 
     /**
