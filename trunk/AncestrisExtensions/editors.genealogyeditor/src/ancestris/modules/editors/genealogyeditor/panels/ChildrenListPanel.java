@@ -133,7 +133,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
                     mAddedChild = mRoot.addChild(mIndividual);
                     String lastName = "";
                     if (mRoot.getHusband() != null) {
-                        lastName = mRoot.getHusband().getLastName() ;
+                        lastName = mRoot.getHusband().getLastName();
                     } else if (mRoot.getWife() != null) {
                         lastName = mRoot.getWife().getLastName();
                     }
@@ -190,12 +190,12 @@ public class ChildrenListPanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "ChildrenListPanel.deleteChildConfirmation.title",
-                    individualRef.getTargetEntity()),
+                            EventEditorPanel.class, "ChildrenListPanel.deleteChildConfirmation.title",
+                            individualRef.getTargetEntity()),
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "ChildrenListPanel.deleteChildConfirmation.text",
-                    individualRef.getTargetEntity(),
-                    mRoot));
+                            EventEditorPanel.class, "ChildrenListPanel.deleteChildConfirmation.text",
+                            individualRef.getTargetEntity(),
+                            mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -225,18 +225,20 @@ public class ChildrenListPanel extends javax.swing.JPanel {
 
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Indi selectedIndividual = individualsListPanel.getSelectedIndividual();
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+            if (selectedIndividual != null) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        PropertyXRef addChild = mRoot.addChild(selectedIndividual);
-                        mIndividualReferencesTableModel.add(addChild);
-                    }
-                }); // end of doUnitOfWork
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            PropertyXRef addChild = mRoot.addChild(selectedIndividual);
+                            mIndividualReferencesTableModel.add(addChild);
+                        }
+                    }); // end of doUnitOfWork
 
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }//GEN-LAST:event_linkToChildrenButtonActionPerformed
