@@ -39,25 +39,25 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
         @Override
         public void columnAdded(TableColumnModelEvent tcme) {
-            logger.log(Level.INFO, "columnAdded: {0}", tcme.getFromIndex());
+            logger.log(Level.FINE, "columnAdded: {0}", tcme.getFromIndex());
         }
 
         @Override
         public void columnRemoved(TableColumnModelEvent tcme) {
-            logger.log(Level.INFO, "columnRemoved: {0}", tcme.getFromIndex());
+            logger.log(Level.FINE, "columnRemoved: {0}", tcme.getFromIndex());
         }
 
         @Override
         public void columnMoved(TableColumnModelEvent tcme) {
-            logger.log(Level.INFO, "columnMoved: {0}", tcme.getFromIndex());
+            logger.log(Level.FINE, "columnMoved: {0}", tcme.getFromIndex());
         }
 
         @Override
         public void columnMarginChanged(ChangeEvent ce) {
-            logger.log(Level.INFO, "columnMarginChanged: {0}", ce.toString());
+            logger.log(Level.FINE, "columnMarginChanged: {0}", ce.toString());
             for (int index = 0; index < familiesTreeTable.getColumnCount(); index++) {
                 int preferredWidth = familiesTreeTable.getColumn(index).getPreferredWidth();
-                logger.log(Level.INFO, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
+                logger.log(Level.FINE, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
                 mRegistry.put(mTableId + ".column" + index + ".size", preferredWidth);
             }
         }
@@ -91,7 +91,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         for (int index = 0; index < familiesTreeTable.getColumnModel().getColumnCount(); index++) {
             int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
             familiesTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
-            logger.log(Level.INFO, "setID: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
+            logger.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
         }
         HighlightPredicate MyHighlightPredicate = new HighlightPredicate() {
 
