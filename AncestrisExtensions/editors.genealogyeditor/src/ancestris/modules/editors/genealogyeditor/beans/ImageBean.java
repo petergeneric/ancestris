@@ -117,7 +117,6 @@ public class ImageBean extends javax.swing.JPanel {
             g.drawImage(img, 0, 0, (int) (w * percentH), (int) (h * percentH), 0, 0, w, h, null);
             g.dispose();
         }
-        System.out.println("obtain size:" + dimg.getWidth() + " ; " + dimg.getHeight());
         return dimg;
     }
 
