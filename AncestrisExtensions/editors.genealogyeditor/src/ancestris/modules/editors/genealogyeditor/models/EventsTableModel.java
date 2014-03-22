@@ -1,12 +1,17 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.UnitOfWork;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -38,23 +43,35 @@ public class EventsTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         if (row < eventsList.size()) {
-            PropertyEvent propertyEvent = eventsList.get(row);
+            final PropertyEvent propertyEvent = eventsList.get(row);
             if (column == 0) {
                 if (!propertyEvent.getTag().equals("EVEN")) {
                     return PropertyTag2Name.getTagName(propertyEvent.getTag());
                 } else {
                     Property eventType = propertyEvent.getProperty("TYPE");
-                    return eventType != null ?eventType.getValue():"";
+                    return eventType != null ? eventType.getValue() : "";
                 }
             } else if (column == 1) {
                 PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
-                if (place != null) {
-                    return place;
-                } else {
-                    return "";
+                if (place == null) {
+                    // For sorting problem we need to create a PLAC tag
+                    try {
+                        propertyEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                propertyEvent.addProperty("PLAC", "");
+                            }
+                        }); // end of doUnitOfWork
+                        place = (PropertyPlace) propertyEvent.getProperty("PLAC");
+
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
+                return place;
             } else if (column == 2) {
-                return propertyEvent.getDate() != null ? propertyEvent.getDate() : "";
+                return propertyEvent.getDate() != null ? propertyEvent.getDate() : new PropertyDate();
             } else {
                 return "";
             }
@@ -72,7 +89,7 @@ public class EventsTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         return getValueAt(0, columnIndex).getClass();
     }
-    
+
     public void addAll(List<PropertyEvent> eventsList) {
         this.eventsList.addAll(eventsList);
         fireTableDataChanged();
