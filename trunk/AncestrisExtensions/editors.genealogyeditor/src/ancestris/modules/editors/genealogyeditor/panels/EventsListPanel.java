@@ -10,9 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
-import javax.swing.JViewport;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.DialogDescriptor;
@@ -33,32 +31,20 @@ public class EventsListPanel extends javax.swing.JPanel {
         }
     }
 
-    public class TextPaneTableCellRenderer extends JViewport implements TableCellRenderer {
+    public class EventsListTableCellRenderer extends DefaultTableCellRenderer {
 
-        JTextPane textPane;
-
-        public TextPaneTableCellRenderer() {
-            textPane = new JTextPane();
-            add(textPane);
+        public EventsListTableCellRenderer() {
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (isSelected) {
-                textPane.setBackground(table.getSelectionBackground());
-                textPane.setForeground(table.getSelectionForeground());
-            } else {
-                textPane.setBackground(table.getBackground());
-                textPane.setForeground(table.getForeground());
-            }
-            
-            if (value instanceof PropertyDate) {
-                textPane.setText(((PropertyDate) value).getDisplayValue());
-            } else if (value instanceof PropertyPlace) {
-                textPane.setText(((PropertyPlace)value).format("all"));
-            }
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-            table.setRowHeight(row, (int) getPreferredSize().getHeight());
+            if (value instanceof PropertyDate) {
+                setText(((PropertyDate) value).getDisplayValue());
+            } else if (value instanceof PropertyPlace) {
+                setText(((PropertyPlace)value).format("all"));
+            }
             return this;
         }
     }
@@ -143,8 +129,8 @@ public class EventsListPanel extends javax.swing.JPanel {
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(eventsTable.getModel());
         sorter.setComparator(2, new DateComparator());
         eventsTable.setRowSorter(sorter);
-        eventsTable.setDefaultRenderer(PropertyDate.class, new TextPaneTableCellRenderer());
-        eventsTable.setDefaultRenderer(PropertyPlace.class, new TextPaneTableCellRenderer());
+        eventsTable.setDefaultRenderer(PropertyDate.class, new EventsListTableCellRenderer());
+        eventsTable.setDefaultRenderer(PropertyPlace.class, new EventsListTableCellRenderer());
         eventsTable.setID(EventsListPanel.class.getName());
     }
 
@@ -207,7 +193,6 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.add(deleteEventButton);
 
         eventsTable.setModel(mEventsTableModel);
-        eventsTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
         eventsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 eventsTableMouseClicked(evt);
