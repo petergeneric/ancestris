@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.*;
 import java.awt.CardLayout;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -99,9 +100,9 @@ import org.openide.util.Exceptions;
  * ]
  */
 public class EventEditorPanel extends javax.swing.JPanel {
-
+    
     private class DateBeanListener implements ChangeListener {
-
+        
         @Override
         public void stateChanged(ChangeEvent e) {
             if (mEventType == INDIVIDUAL_EVENT_TYPE) {
@@ -123,6 +124,27 @@ public class EventEditorPanel extends javax.swing.JPanel {
     }
     public final static int INDIVIDUAL_EVENT_TYPE = 1;
     public final static int FAMILY_EVENT_TYPE = 2;
+    private final ArrayList<String> mIndividualAttributesTags = new ArrayList<String>() {
+        {
+            /*
+             * INDIVIDUAL_ATTRIBUTE
+             */
+            add("CAST");
+            add("DSCR");
+            add("EDUC");
+            add("IDNO");
+            add("NATI");
+            add("NCHI");
+            add("NMR");
+            add("OCCU");
+            add("PROP");
+            add("RELI");
+            add("RESI");
+            add("SSN");
+            add("TITL");
+            add("FACT");
+        }
+    };
     private int mEventType = INDIVIDUAL_EVENT_TYPE;
     private Property mEvent = null;
     private Property mRoot;
@@ -141,7 +163,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     public EventEditorPanel() {
         this(INDIVIDUAL_EVENT_TYPE);
     }
-
+    
     public EventEditorPanel(int eventType) {
         mEventType = eventType;
         initComponents();
@@ -252,15 +274,13 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         .addComponent(EventTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(eventTypeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(eventTypeTextField)
                     .addComponent(eventNameTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(eventCauseLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eventCauseLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -276,20 +296,19 @@ public class EventEditorPanel extends javax.swing.JPanel {
                     .addComponent(eventIdLabel)
                     .addComponent(eventIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(eventNameLabel)
-                        .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(privateRecordToggleButton))
-                    .addComponent(dateLabel))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(privateRecordToggleButton)
+                    .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateLabel)
+                    .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eventNameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventCauseLabel)
                     .addComponent(eventCauseScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(EventTypeLabel)
-                        .addComponent(eventTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(eventTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(eventCauseLabel))))
         );
 
         agePanel.setLayout(new java.awt.CardLayout());
@@ -310,14 +329,14 @@ public class EventEditorPanel extends javax.swing.JPanel {
             familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(familyAgePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(husbandAgeLabel)
+                .addComponent(husbandAgeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(husbandAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(husbandAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(97, 97, 97)
+                .addComponent(wifeAgeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wifeAgeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wifeAgeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                .addGap(83, 83, 83))
+                .addComponent(wifeAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(215, 215, 215))
         );
         familyAgePanelLayout.setVerticalGroup(
             familyAgePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -486,59 +505,12 @@ public class EventEditorPanel extends javax.swing.JPanel {
     public void set(Property root, Property event) {
         this.mRoot = root;
         this.mEvent = event;
-
+        
         if (!mEvent.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
             privateRecordToggleButton.setVisible(false);
         }
-
-        if (!mEvent.getTag().equals("EVEN") && !mEvent.getTag().equals("FACT")) {
-            // Event Name
-            eventNameTextField.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
-
-            Property eventType = mEvent.getProperty("TYPE");
-            if (eventType != null) {
-                eventTypeTextField.setText(eventType.getValue());
-            }
-            eventTypeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-            });
-
-            Property eventCause = mEvent.getProperty("CAUS", false);
-            if (eventCause != null) {
-                eventCauseTextArea.setText(eventCause.getValue());
-            }
-            eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-            });
-        } else {
+        
+        if (mEvent.getTag().equals("EVEN")) {
             // Event Name
             Property eventType = mEvent.getProperty("TYPE", false);
             if (eventType != null) {
@@ -546,36 +518,126 @@ public class EventEditorPanel extends javax.swing.JPanel {
             }
             eventNameTextField.setEditable(true);
             eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
-
+                
                 @Override
                 public void changedUpdate(DocumentEvent e) {
                     mEventNameModified = true;
                 }
-
+                
                 @Override
                 public void removeUpdate(DocumentEvent e) {
                     mEventNameModified = true;
                 }
-
+                
                 @Override
                 public void insertUpdate(DocumentEvent e) {
                     mEventNameModified = true;
                 }
             });
-
+            
             eventCauseTextArea.setText(mEvent.getValue());
             eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
-
+                
                 @Override
                 public void changedUpdate(DocumentEvent e) {
                     mEventCauseModified = true;
                 }
-
+                
                 @Override
                 public void removeUpdate(DocumentEvent e) {
                     mEventCauseModified = true;
                 }
-
+                
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+            });
+        } else if (mIndividualAttributesTags.contains(event.getTag())) {
+            eventNameLabel.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
+            eventNameTextField.setText(mEvent.getValue());
+            eventNameTextField.setEditable(true);
+            eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+                
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mEventNameModified = true;
+                }
+                
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mEventNameModified = true;
+                }
+                
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mEventNameModified = true;
+                }
+            });
+            
+            Property eventCause = mEvent.getProperty("CAUS", false);
+            if (eventCause != null) {
+                eventCauseTextArea.setText(eventCause.getValue());
+            }
+            eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
+                
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+                
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+                
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+            });
+        } else {
+            // Event Name
+            eventNameLabel.setVisible(false);
+            eventNameTextField.setVisible(false);
+            Property eventType = mEvent.getProperty("TYPE");
+            if (eventType != null) {
+                eventTypeTextField.setText(eventType.getValue());
+            }
+            eventTypeTextField.getDocument().addDocumentListener(new DocumentListener() {
+                
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mEventTypeModified = true;
+                }
+                
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mEventTypeModified = true;
+                }
+                
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    mEventTypeModified = true;
+                }
+            });
+            
+            Property eventCause = mEvent.getProperty("CAUS", false);
+            if (eventCause != null) {
+                eventCauseTextArea.setText(eventCause.getValue());
+            }
+            eventCauseTextArea.getDocument().addDocumentListener(new DocumentListener() {
+                
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+                
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    mEventCauseModified = true;
+                }
+                
                 @Override
                 public void insertUpdate(DocumentEvent e) {
                     mEventCauseModified = true;
@@ -589,12 +651,12 @@ public class EventEditorPanel extends javax.swing.JPanel {
         if (restrictionNotice != null) {
             privateRecordToggleButton.setSelected(true);
         }
-
+        
         mDate = (PropertyDate) mEvent.getProperty("DATE", false);
         if (mDate == null) {
             try {
                 mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
-
+                    
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         mDate = (PropertyDate) mEvent.addProperty("DATE", "");
@@ -606,7 +668,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         }
         aDateBean.setContext(mDate);
         aDateBean.addChangeListener(new DateBeanListener());
-
+        
         if (mEventType == INDIVIDUAL_EVENT_TYPE) {
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
             if (age != null) {
@@ -663,7 +725,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
              * });
              *
              */
-
+            
             PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
             if (wifeAge != null) {
                 wifeAgeTextField.setText(wifeAge.getValue());
@@ -694,12 +756,12 @@ public class EventEditorPanel extends javax.swing.JPanel {
         } else {
             agePanel.setVisible(false);
         }
-
+        
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         if (mPlace == null) {
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
+                    
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         mPlace = (PropertyPlace) mEvent.addProperty(PropertyPlace.TAG, "");
@@ -709,21 +771,21 @@ public class EventEditorPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
         }
-
+        
         gedcomPlacePanel.set(mEvent, mPlace);
-
+        
         Property[] sourcesList = mEvent.getProperties("SOUR");
         sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
-
+        
         noteCitationsListPanel.setNotesList(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
-
+        
         multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
     }
-
+    
     public Property commit() {
         try {
             mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
+                
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     if (mEvent.getTag().equals("EVEN")) {
@@ -762,7 +824,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                         }
                     }
                     aDateBean.commit();
-
+                    
                     Property restrictionNotice = mEvent.getProperty("RESN", true);
                     if (privateRecordToggleButton.isSelected()) {
                         if (restrictionNotice == null) {
@@ -773,7 +835,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
                             mEvent.delProperty(restrictionNotice);
                         }
                     }
-
+                    
                     if (mEventType == INDIVIDUAL_EVENT_TYPE) {
                         if (mIndividualAgeModified) {
                             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
