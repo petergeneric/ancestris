@@ -5,7 +5,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import org.openide.util.NbBundle;
  */
 public class EventsTableModel extends AbstractTableModel {
 
-    List<PropertyEvent> eventsList = new ArrayList<PropertyEvent>();
+    List<Property> eventsList = new ArrayList<Property>();
     String[] columnsName = {
         NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.eventType"),
         NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.place"),
@@ -43,7 +42,7 @@ public class EventsTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         if (row < eventsList.size()) {
-            final PropertyEvent propertyEvent = eventsList.get(row);
+            final Property propertyEvent = eventsList.get(row);
             if (column == 0) {
                 if (!propertyEvent.getTag().equals("EVEN")) {
                     return PropertyTag2Name.getTagName(propertyEvent.getTag());
@@ -71,7 +70,8 @@ public class EventsTableModel extends AbstractTableModel {
                 }
                 return place;
             } else if (column == 2) {
-                return propertyEvent.getDate() != null ? propertyEvent.getDate() : new PropertyDate();
+                PropertyDate date = (PropertyDate) propertyEvent.getProperty("DATE");
+                return date != null ? date : new PropertyDate();
             } else {
                 return "";
             }
@@ -90,22 +90,22 @@ public class EventsTableModel extends AbstractTableModel {
         return getValueAt(0, columnIndex).getClass();
     }
 
-    public void addAll(List<PropertyEvent> eventsList) {
+    public void addAll(List<Property> eventsList) {
         this.eventsList.addAll(eventsList);
         fireTableDataChanged();
     }
 
-    public void add(PropertyEvent event) {
+    public void add(Property event) {
         this.eventsList.add(event);
         fireTableDataChanged();
     }
 
-    public PropertyEvent getValueAt(int row) {
+    public Property getValueAt(int row) {
         return eventsList.get(row);
     }
 
-    public PropertyEvent remove(int row) {
-        PropertyEvent event = eventsList.remove(row);
+    public Property remove(int row) {
+        Property event = eventsList.remove(row);
         fireTableDataChanged();
         return event;
     }

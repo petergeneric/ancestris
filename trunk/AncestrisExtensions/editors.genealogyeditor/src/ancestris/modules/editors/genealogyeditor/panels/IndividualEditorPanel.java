@@ -2,6 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.openide.DialogDescriptor;
@@ -42,6 +43,53 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
     private Indi mIndividual;
     private Property mMultiMediaObject;
+    private ArrayList<String> mEventsTags = new ArrayList<String>() {
+        {
+            /*
+             * INDIVIDUAL_EVENT
+             */
+            add("BIRT");
+            add("CHR");
+            add("DEAT");
+            add("BURI");
+            add("CREM");
+            add("ADOP");
+            add("BAPM");
+            add("BARM");
+            add("BASM");
+            add("BLES");
+            add("CHRA");
+            add("CONF");
+            add("FCOM");
+            add("ORDN");
+            add("NATU");
+            add("EMIG");
+            add("IMMI");
+            add("CENS");
+            add("PROB");
+            add("WILL");
+            add("GRAD");
+            add("RETI");
+            add("EVEN");
+            /*
+             * INDIVIDUAL_ATTRIBUTE
+             */
+            add("CAST");
+            add("DSCR");
+            add("EDUC");
+            add("IDNO");
+            add("NATI");
+            add("NCHI");
+            add("NMR");
+            add("OCCU");
+            add("PROP");
+            add("RELI");
+            add("RESI");
+            add("SSN");
+            add("TITL");
+            add("FACT");
+        }
+    };
 
     /**
      * Creates new form IndividualEditorPanel
@@ -307,9 +355,11 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
                         multiMediaObjectEditorPanel);
-                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class
+                        .getName());
 
-                if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                if (multiMediaObjectEditorDialog.show()
+                        == DialogDescriptor.OK_OPTION) {
                     multiMediaObjectEditorPanel.commit();
                     if (mMultiMediaObject instanceof Media) {
                         mIndividual.addMedia((Media) mMultiMediaObject);
@@ -364,13 +414,16 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                     } else {
                         Property propertyTitle = mMultiMediaObject.getProperty("TITL");
                         multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
+
                     }
                     DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
                             NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", multiMediaObjectTitle),
                             multiMediaObjectEditorPanel);
-                    multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+                    multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class
+                            .getName());
 
-                    if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    if (multiMediaObjectEditorDialog.show()
+                            == DialogDescriptor.OK_OPTION) {
                         multiMediaObjectEditorPanel.commit();
                         if (mMultiMediaObject instanceof Media) {
                             mIndividual.addMedia((Media) mMultiMediaObject);
@@ -382,6 +435,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                             gedcom.undoUnitOfWork(false);
                         }
                     }
+
                     break;
                 }
             }
@@ -473,8 +527,14 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
          * +1 <<INDIVIDUAL_EVENT_STRUCTURE>>
          * +1 <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>
          */
-        eventsListPanel.setEventsList(individual, individual.getProperties(PropertyEvent.class));
-
+        ArrayList<Property> individualEvents = new ArrayList<Property>();
+        for (Property property : individual.getProperties()) {
+            if (mEventsTags.contains(property.getTag())) {
+                individualEvents.add(property);
+            }
+        }
+        eventsListPanel.setEventsList(individual, individualEvents);
+        
         /*
          * +1 <<LDS_INDIVIDUAL_ORDINANCE>>
          * Not Used
@@ -576,6 +636,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 break;
             }
         }
+
         multimediaObjectCitationsListPanel.set(individual, Arrays.asList(individual.getProperties("OBJE")));
     }
 

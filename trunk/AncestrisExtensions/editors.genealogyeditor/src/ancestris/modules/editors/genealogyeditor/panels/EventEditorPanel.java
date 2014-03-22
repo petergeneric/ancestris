@@ -124,7 +124,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     public final static int INDIVIDUAL_EVENT_TYPE = 1;
     public final static int FAMILY_EVENT_TYPE = 2;
     private int mEventType = INDIVIDUAL_EVENT_TYPE;
-    private PropertyEvent mEvent = null;
+    private Property mEvent = null;
     private Property mRoot;
     private PropertyPlace mPlace;
     private PropertyDate mDate;
@@ -359,7 +359,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         placePanel.setLayout(placePanelLayout);
         placePanelLayout.setHorizontalGroup(
             placePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(gedcomPlacePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(gedcomPlacePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
         );
         placePanelLayout.setVerticalGroup(
             placePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -483,7 +483,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
     /**
      * @param event the event to set
      */
-    public void set(Property root, PropertyEvent event) {
+    public void set(Property root, Property event) {
         this.mRoot = root;
         this.mEvent = event;
 
@@ -720,7 +720,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
     }
 
-    public PropertyEvent commit() {
+    public Property commit() {
         try {
             mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 

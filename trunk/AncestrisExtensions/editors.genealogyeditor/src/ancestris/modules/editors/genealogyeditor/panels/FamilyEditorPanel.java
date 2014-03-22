@@ -35,6 +35,22 @@ import org.openide.util.NbBundle;
  */
 public class FamilyEditorPanel extends javax.swing.JPanel {
 
+    final private ArrayList<String> mFamilyEventsTags = new ArrayList<String>() {
+        {
+            add("ANUL");
+            add("CENS");
+            add("DIV");
+            add("DIVF");
+            add("MARR");
+            add("ENGA");
+            add("MARB");
+            add("MARC");
+            add("MARL");
+            add("MARS");
+            add("RESI");
+            add("EVEN");
+        }
+    };
     private Fam mFamily;
     private Indi mHusband;
     private Indi mWife;
@@ -643,11 +659,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private void removeHusbandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeHusbandButtonActionPerformed
         DialogManager createYesNo = DialogManager.createYesNo(
                 NbBundle.getMessage(
-                EventEditorPanel.class, "FamilyEditorPanel.deleteHusbandConfirmation.title"),
+                        EventEditorPanel.class, "FamilyEditorPanel.deleteHusbandConfirmation.title"),
                 NbBundle.getMessage(
-                EventEditorPanel.class, "FamilyEditorPanel.deleteHusbandConfirmation.text",
-                mFamily.getHusband(),
-                mFamily));
+                        EventEditorPanel.class, "FamilyEditorPanel.deleteHusbandConfirmation.text",
+                        mFamily.getHusband(),
+                        mFamily));
         if (createYesNo.show() == DialogManager.YES_OPTION) {
             try {
                 mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -671,11 +687,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private void removeWifeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeWifeButtonActionPerformed
         DialogManager createYesNo = DialogManager.createYesNo(
                 NbBundle.getMessage(
-                EventEditorPanel.class, "FamilyEditorPanel.deleteWifeConfirmation.title"),
+                        EventEditorPanel.class, "FamilyEditorPanel.deleteWifeConfirmation.title"),
                 NbBundle.getMessage(
-                EventEditorPanel.class, "FamilyEditorPanel.deleteWifeConfirmation.text",
-                mFamily.getHusband(),
-                mFamily));
+                        EventEditorPanel.class, "FamilyEditorPanel.deleteWifeConfirmation.text",
+                        mFamily.getHusband(),
+                        mFamily));
         if (createYesNo.show() == DialogManager.YES_OPTION) {
             try {
                 mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -764,7 +780,12 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         /*
          * +1 <<FAMILY_EVENT_STRUCTURE>>
          */
-        List<PropertyEvent> eventsList = mFamily.getProperties(PropertyEvent.class);
+        ArrayList<Property> eventsList = new ArrayList<Property>();
+        for (Property property : mFamily.getProperties()) {
+            if (mFamilyEventsTags.contains(property.getTag())) {
+                eventsList.add(property);
+            }
+        }
         eventsListPanel.setEventsList(mFamily, eventsList);
 
         /*
