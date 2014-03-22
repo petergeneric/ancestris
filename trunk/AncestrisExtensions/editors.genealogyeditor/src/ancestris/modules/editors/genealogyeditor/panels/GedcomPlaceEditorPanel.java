@@ -355,46 +355,57 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
         this.mPlace = place;
         this.mRoot = root;
+        mPlaceFormat = PropertyPlace.getFormat(mRoot.getGedcom());
 
-        if (place != null) {
-            mPlaceFormat = PropertyPlace.getFormat(place.getGedcom());
+        try {
+            if (!modulePreferences.nodeExists(mRoot.getGedcom().getName())) {
 
-            try {
-                if (!modulePreferences.nodeExists(place.getGedcom().getName())) {
+                PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
 
-                    PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
-
-                    DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
-                            NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
-                            gedcomPlaceFormatEditorPanel);
-                    gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
-                    node = modulePreferences.node(place.getGedcom().getName());
-                    if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                        mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
-                        node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
-                        node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
-                        node.putInt("placeOrder.index.city", mPlaceOrder[2]);
-                        node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
-                        node.putInt("placeOrder.index.geoID", mPlaceOrder[4]);
-                        node.putInt("placeOrder.index.county", mPlaceOrder[5]);
-                        node.putInt("placeOrder.index.state", mPlaceOrder[6]);
-                        node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
-                    }
-                } else {
-                    node = modulePreferences.node(place.getGedcom().getName());
-                    mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", mPlaceOrder[0]);
-                    mPlaceOrder[1] = node.getInt("placeOrder.index.parish", mPlaceOrder[1]);
-                    mPlaceOrder[2] = node.getInt("placeOrder.index.city", mPlaceOrder[2]);
-                    mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", mPlaceOrder[3]);
-                    mPlaceOrder[4] = node.getInt("placeOrder.index.geoID", mPlaceOrder[4]);
-                    mPlaceOrder[5] = node.getInt("placeOrder.index.county", mPlaceOrder[5]);
-                    mPlaceOrder[6] = node.getInt("placeOrder.index.state", mPlaceOrder[6]);
-                    mPlaceOrder[7] = node.getInt("placeOrder.index.Country", mPlaceOrder[7]);
+                DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
+                        gedcomPlaceFormatEditorPanel);
+                gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
+                node = modulePreferences.node(place.getGedcom().getName());
+                if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
+                    node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
+                    node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
+                    node.putInt("placeOrder.index.city", mPlaceOrder[2]);
+                    node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
+                    node.putInt("placeOrder.index.geoID", mPlaceOrder[4]);
+                    node.putInt("placeOrder.index.county", mPlaceOrder[5]);
+                    node.putInt("placeOrder.index.state", mPlaceOrder[6]);
+                    node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
                 }
-            } catch (BackingStoreException ex) {
+            } else {
+                node = modulePreferences.node(mRoot.getGedcom().getName());
+                mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", mPlaceOrder[0]);
+                mPlaceOrder[1] = node.getInt("placeOrder.index.parish", mPlaceOrder[1]);
+                mPlaceOrder[2] = node.getInt("placeOrder.index.city", mPlaceOrder[2]);
+                mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", mPlaceOrder[3]);
+                mPlaceOrder[4] = node.getInt("placeOrder.index.geoID", mPlaceOrder[4]);
+                mPlaceOrder[5] = node.getInt("placeOrder.index.county", mPlaceOrder[5]);
+                mPlaceOrder[6] = node.getInt("placeOrder.index.state", mPlaceOrder[6]);
+                mPlaceOrder[7] = node.getInt("placeOrder.index.Country", mPlaceOrder[7]);
+            }
+        } catch (BackingStoreException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        if (mPlace == null) {
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+                    
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mPlace = (PropertyPlace) mRoot.addProperty(PropertyPlace.TAG, "");
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-
+        } else {
             for (int index = 0; index < mPlaceOrder.length; index++) {
                 if (mPlaceOrder[index] != -1) {
                     if (mPlaceOrder[index] < mPlaceFormat.length) {
