@@ -52,23 +52,15 @@ public class EventsTableModel extends AbstractTableModel {
                 }
             } else if (column == 1) {
                 PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
-                if (place == null) {
-                    // For sorting problem we need to create a PLAC tag
-                    try {
-                        propertyEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                propertyEvent.addProperty("PLAC", "");
-                            }
-                        }); // end of doUnitOfWork
-                        place = (PropertyPlace) propertyEvent.getProperty("PLAC");
-
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                if (place != null)
+                    return place.format("all");
+                else {
+                    Property address = propertyEvent.getProperty("ADDR");
+                    if(address != null)
+                        return address.getValue();
+                    else 
+                        return "";
                 }
-                return place;
             } else if (column == 2) {
                 PropertyDate date = (PropertyDate) propertyEvent.getProperty("DATE");
                 return date != null ? date : new PropertyDate();

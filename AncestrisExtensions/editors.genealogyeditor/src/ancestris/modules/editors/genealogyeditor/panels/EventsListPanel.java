@@ -43,8 +43,6 @@ public class EventsListPanel extends javax.swing.JPanel {
 
             if (value instanceof PropertyDate) {
                 setText(((PropertyDate) value).getDisplayValue());
-            } else if (value instanceof PropertyPlace) {
-                setText(((PropertyPlace) value).format("all"));
             }
             return this;
         }
@@ -135,7 +133,6 @@ public class EventsListPanel extends javax.swing.JPanel {
         sorter.setComparator(2, new DateComparator());
         eventsTable.setRowSorter(sorter);
         eventsTable.setDefaultRenderer(PropertyDate.class, new EventsListTableCellRenderer());
-        eventsTable.setDefaultRenderer(PropertyPlace.class, new EventsListTableCellRenderer());
         eventsTable.setID(EventsListPanel.class.getName());
     }
 
