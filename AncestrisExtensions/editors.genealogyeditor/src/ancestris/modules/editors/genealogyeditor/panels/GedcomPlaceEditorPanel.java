@@ -38,7 +38,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         5 // country
     };
     JComponent mGedcomFields[][];
-    boolean mPlaceCreated = false;
     boolean mPlaceModified = false;
     boolean updateOnGoing = false;
 
@@ -394,20 +393,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
 
-        if (mPlace == null) {
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mPlace = (PropertyPlace) mRoot.addProperty(PropertyPlace.TAG, "");
-                        mPlaceCreated = true;
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else {
+        if (mPlace != null) {
             for (int index = 0; index < mPlaceOrder.length; index++) {
                 if (mPlaceOrder[index] != -1) {
                     if (mPlaceOrder[index] < mPlaceFormat.length) {
@@ -432,7 +418,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
+                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[0], gedcomHamletTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 1);
                     } else {
@@ -450,7 +436,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void insertUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[0], gedcomHamletTextField.getText());
+                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[0], gedcomHamletTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 1);
                     } else {
@@ -486,7 +472,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[2], gedcomCityTextField.getText());
+                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[2], gedcomCityTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 3);
                     } else {
@@ -504,7 +490,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void insertUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[2], gedcomCityTextField.getText());
+                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[2], gedcomCityTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 3);
                     } else {
@@ -540,7 +526,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[5], gedcomCountyTextField.getText());
+                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[5], gedcomCountyTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 6);
                     } else {
@@ -558,7 +544,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void insertUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[5], gedcomCountyTextField.getText());
+                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[5], gedcomCountyTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 6);
                     } else {
@@ -594,7 +580,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[6], gedcomStateTextField.getText());
+                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[6], gedcomStateTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 7);
                     } else {
@@ -612,7 +598,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void insertUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = mPlace.getSameChoices(mPlaceOrder[6], gedcomStateTextField.getText());
+                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[6], gedcomStateTextField.getText());
                     if (sameChoices.length > 0) {
                         updatePlace(sameChoices[0], 7);
                     } else {
@@ -708,13 +694,13 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             Property longitude = null;
 
             if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                Property map = mPlace.getProperty("MAP");
+                Property map = place.getProperty("MAP");
                 if (map != null) {
                     latitude = map.getProperty("LATI");
                     longitude = map.getProperty("LONG");
                 }
             } else {
-                Property map = mPlace.getProperty("_MAP");
+                Property map = place.getProperty("_MAP");
                 if (map != null) {
                     latitude = map.getProperty("_LATI");
                     longitude = map.getProperty("_LONG");
@@ -771,6 +757,9 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
+                        if (mPlace == null) {
+                            mPlace = (PropertyPlace) mRoot.addProperty(PropertyPlace.TAG, "");
+                        }
                         mPlace.setValue(getPlaceString());
 
                         if (!gedcomLatitudeTextField.getText().isEmpty() && !gedcomLongitudeTextField.getText().isEmpty()) {
@@ -825,19 +814,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
                 return null;
             }
-        } else if (mPlaceCreated) {
-            try {
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mRoot.delProperty(mPlace);
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            return null;
         } else {
             return mPlace;
         }

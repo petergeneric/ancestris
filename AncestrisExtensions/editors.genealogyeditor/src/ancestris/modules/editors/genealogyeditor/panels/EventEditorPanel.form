@@ -63,20 +63,20 @@
                       <Component id="eventNameLabel" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="eventTypeTextField" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="eventTypeTextField" pref="224" max="32767" attributes="0"/>
                       <Component id="eventNameTextField" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="eventCauseLabel" min="-2" max="-2" attributes="0"/>
-                      <Component id="dateLabel" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="eventCauseLabel" max="32767" attributes="0"/>
+                      <Component id="dateLabel" min="-2" pref="63" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="aDateBean" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
                           <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="eventCauseScrollPane" max="32767" attributes="0"/>
@@ -91,25 +91,26 @@
                       <Component id="eventIdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="eventIDTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="2" attributes="0">
-                          <Component id="aDateBean" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="eventNameLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="eventNameTextField" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="privateRecordToggleButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="aDateBean" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="eventCauseLabel" min="-2" max="-2" attributes="0"/>
-                      <Component id="eventCauseScrollPane" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="EventTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="eventTypeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="eventCauseScrollPane" max="32767" attributes="0"/>
+                      <Component id="eventCauseLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -193,6 +194,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="eventTypeTextField">
           <Properties>
+            <Property name="columns" type="int" value="16"/>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="EventEditorPanel.eventTypeTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
@@ -239,7 +241,7 @@
                       <Component id="wifeAgeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="wifeAgeTextField" min="-2" pref="104" max="-2" attributes="0"/>
-                      <EmptySpace pref="211" max="32767" attributes="0"/>
+                      <EmptySpace pref="342" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -299,7 +301,7 @@
                       <Component id="IndividualAgeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="individualAgeTextField" min="-2" pref="153" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="476" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="657" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
