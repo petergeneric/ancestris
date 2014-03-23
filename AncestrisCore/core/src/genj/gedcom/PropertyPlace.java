@@ -211,10 +211,10 @@ public class PropertyPlace extends PropertyChoiceValue {
   /**
    * Accessor - all places with the same jurisdiction for given hierarchy level
    */
-  public PropertyPlace[] getSameChoices(int hierarchyLevel, String jurisdiction) {
+  public static PropertyPlace[] getSameChoices(Gedcom gedcom, int hierarchyLevel, String jurisdiction) {
     if (jurisdiction==null)
       return null;
-    Collection<Property> places = getGedcom().getReferenceSet(TAG+"."+hierarchyLevel).getReferences(jurisdiction);
+    Collection<Property> places = gedcom.getReferenceSet(TAG+"."+hierarchyLevel).getReferences(jurisdiction);
     return places.toArray(new PropertyPlace[places.size()]);
   }
 
