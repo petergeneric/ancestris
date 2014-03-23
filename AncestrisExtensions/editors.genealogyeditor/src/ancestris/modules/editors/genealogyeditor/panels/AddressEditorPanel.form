@@ -19,7 +19,6 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="eMailAddrLabel" min="-2" max="-2" attributes="0"/>
                   <Component id="httpAddrLabel" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="phoneLabel" min="-2" max="-2" attributes="0"/>
@@ -32,35 +31,29 @@
                   <Component id="addrLine1TextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="addrLine2TextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="addrLine3TextField" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="phoneTextField" pref="143" max="32767" attributes="0"/>
+                  <Component id="AddrLineTextField" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="cityTextField" alignment="0" max="32767" attributes="0"/>
                           <Component id="stateTextField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="phoneTextField" alignment="0" pref="138" max="32767" attributes="0"/>
+                          <Component id="httpAddrTextField" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="postalCodeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="postalCodeTextField" pref="126" max="32767" attributes="0"/>
-                                  <Component id="countryTextField" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="faxLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="faxTextField" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="postalCodeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="faxLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="eMailAddrLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="faxTextField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="countryTextField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="postalCodeTextField" alignment="0" pref="122" max="32767" attributes="0"/>
+                          <Component id="eMailAddrTextField" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="AddrLineTextField" max="32767" attributes="0"/>
-                  <Component id="httpAddrTextField" max="32767" attributes="0"/>
-                  <Component id="eMailAddrTextField" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -102,9 +95,6 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="httpAddrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="httpAddrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="eMailAddrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="eMailAddrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
