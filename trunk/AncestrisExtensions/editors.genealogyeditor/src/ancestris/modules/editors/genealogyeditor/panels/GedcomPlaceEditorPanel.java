@@ -38,6 +38,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         5 // country
     };
     JComponent mGedcomFields[][];
+    boolean mPlaceCreated = false;
     boolean mPlaceModified = false;
     boolean updateOnGoing = false;
 
@@ -366,7 +367,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                         NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
                         gedcomPlaceFormatEditorPanel);
                 gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
-                node = modulePreferences.node(place.getGedcom().getName());
+                node = modulePreferences.node(mRoot.getGedcom().getName());
                 if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
                     node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
@@ -396,10 +397,11 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         if (mPlace == null) {
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-                    
+
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         mPlace = (PropertyPlace) mRoot.addProperty(PropertyPlace.TAG, "");
+                        mPlaceCreated = true;
                     }
                 }); // end of doUnitOfWork
             } catch (GedcomException ex) {
@@ -823,6 +825,19 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
                 return null;
             }
+        } else if (mPlaceCreated) {
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mRoot.delProperty(mPlace);
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return null;
         } else {
             return mPlace;
         }
