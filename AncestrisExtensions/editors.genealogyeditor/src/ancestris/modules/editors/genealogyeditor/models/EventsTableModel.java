@@ -1,16 +1,12 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
-import genj.gedcom.UnitOfWork;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -19,6 +15,27 @@ import org.openide.util.NbBundle;
  */
 public class EventsTableModel extends AbstractTableModel {
 
+    /*
+     * INDIVIDUAL_ATTRIBUTE
+     */
+    private final ArrayList<String> mIndividualAttributesTags = new ArrayList<String>() {
+        {
+            add("CAST");
+            add("DSCR");
+            add("EDUC");
+            add("IDNO");
+            add("NATI");
+            add("NCHI");
+            add("NMR");
+            add("OCCU");
+            add("PROP");
+            add("RELI");
+            add("RESI");
+            add("SSN");
+            add("TITL");
+            add("FACT");
+        }
+    };
     List<Property> eventsList = new ArrayList<Property>();
     String[] columnsName = {
         NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.eventType"),
@@ -44,22 +61,25 @@ public class EventsTableModel extends AbstractTableModel {
         if (row < eventsList.size()) {
             final Property propertyEvent = eventsList.get(row);
             if (column == 0) {
-                if (!propertyEvent.getTag().equals("EVEN")) {
-                    return PropertyTag2Name.getTagName(propertyEvent.getTag());
-                } else {
+                if (propertyEvent.getTag().equals("EVEN") || propertyEvent.getTag().equals("FACT")) {
                     Property eventType = propertyEvent.getProperty("TYPE");
                     return eventType != null ? eventType.getValue() : "";
+                } else if (mIndividualAttributesTags.contains(propertyEvent.getTag())) {
+                    return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue();
+                } else {
+                    return PropertyTag2Name.getTagName(propertyEvent.getTag());
                 }
             } else if (column == 1) {
                 PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
-                if (place != null)
+                if (place != null) {
                     return place.format("all");
-                else {
+                } else {
                     Property address = propertyEvent.getProperty("ADDR");
-                    if(address != null)
+                    if (address != null) {
                         return address.getValue();
-                    else 
+                    } else {
                         return "";
+                    }
                 }
             } else if (column == 2) {
                 PropertyDate date = (PropertyDate) propertyEvent.getProperty("DATE");
