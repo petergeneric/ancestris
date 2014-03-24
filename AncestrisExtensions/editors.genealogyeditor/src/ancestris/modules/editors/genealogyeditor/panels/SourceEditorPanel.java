@@ -67,6 +67,14 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         sourceInformationTabbedPane = new javax.swing.JTabbedPane();
         registeredEventsPanel = new javax.swing.JPanel();
         eventTypePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel();
+        sourceTextPanel = new javax.swing.JPanel();
+        sourceTextScrollPane = new javax.swing.JScrollPane();
+        sourceTextTextArea = new javax.swing.JTextArea();
+        SourceTextToolBar = new javax.swing.JToolBar();
+        publicationFactsPanel = new javax.swing.JPanel();
+        publicationFactsToolBar = new javax.swing.JToolBar();
+        publicationFactsScrollPane = new javax.swing.JScrollPane();
+        publicationFactsTextArea = new javax.swing.JTextArea();
         repositoriesPanel = new javax.swing.JPanel();
         repositoryCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.RepositoryCitationsListPanel();
         notesPanel = new javax.swing.JPanel();
@@ -100,14 +108,60 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         registeredEventsPanel.setLayout(registeredEventsPanelLayout);
         registeredEventsPanelLayout.setHorizontalGroup(
             registeredEventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
         );
         registeredEventsPanelLayout.setVerticalGroup(
             registeredEventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+            .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.registeredEventsPanel.TabConstraints.tabTitle"), new Object[] {}), registeredEventsPanel); // NOI18N
+
+        sourceTextTextArea.setColumns(20);
+        sourceTextTextArea.setRows(5);
+        sourceTextScrollPane.setViewportView(sourceTextTextArea);
+
+        SourceTextToolBar.setRollover(true);
+
+        javax.swing.GroupLayout sourceTextPanelLayout = new javax.swing.GroupLayout(sourceTextPanel);
+        sourceTextPanel.setLayout(sourceTextPanelLayout);
+        sourceTextPanelLayout.setHorizontalGroup(
+            sourceTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sourceTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
+            .addComponent(SourceTextToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        sourceTextPanelLayout.setVerticalGroup(
+            sourceTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sourceTextPanelLayout.createSequentialGroup()
+                .addComponent(SourceTextToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sourceTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE))
+        );
+
+        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.sourceTextPanel.TabConstraints.tabTitle"), sourceTextPanel); // NOI18N
+
+        publicationFactsToolBar.setRollover(true);
+
+        publicationFactsTextArea.setColumns(20);
+        publicationFactsTextArea.setRows(5);
+        publicationFactsScrollPane.setViewportView(publicationFactsTextArea);
+
+        javax.swing.GroupLayout publicationFactsPanelLayout = new javax.swing.GroupLayout(publicationFactsPanel);
+        publicationFactsPanel.setLayout(publicationFactsPanelLayout);
+        publicationFactsPanelLayout.setHorizontalGroup(
+            publicationFactsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(publicationFactsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(publicationFactsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
+        );
+        publicationFactsPanelLayout.setVerticalGroup(
+            publicationFactsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(publicationFactsPanelLayout.createSequentialGroup()
+                .addComponent(publicationFactsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(publicationFactsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE))
+        );
+
+        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.publicationFactsPanel.TabConstraints.tabTitle"), publicationFactsPanel); // NOI18N
 
         repositoriesPanel.setRequestFocusEnabled(false);
 
@@ -119,7 +173,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         repositoriesPanelLayout.setVerticalGroup(
             repositoriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(repositoryCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+            .addComponent(repositoryCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.repositoriesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/repository.png")), repositoriesPanel); // NOI18N
@@ -134,7 +188,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -151,7 +205,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
@@ -164,7 +218,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
         multimediaObjectPanelLayout.setVerticalGroup(
             multimediaObjectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.multimediaObjectPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multimediaObjectPanel); // NOI18N
@@ -228,6 +282,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToolBar SourceTextToolBar;
     private javax.swing.JLabel abbreviationLabel;
     private javax.swing.JTextField abbreviationTextField;
     private javax.swing.JLabel agencyLabel;
@@ -239,6 +294,10 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel multimediaObjectPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
+    private javax.swing.JPanel publicationFactsPanel;
+    private javax.swing.JScrollPane publicationFactsScrollPane;
+    private javax.swing.JTextArea publicationFactsTextArea;
+    private javax.swing.JToolBar publicationFactsToolBar;
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     private javax.swing.JPanel referencesPanel;
     private javax.swing.JPanel registeredEventsPanel;
@@ -247,6 +306,9 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel sourceIDLabel;
     private javax.swing.JTextField sourceIDTextField;
     private javax.swing.JTabbedPane sourceInformationTabbedPane;
+    private javax.swing.JPanel sourceTextPanel;
+    private javax.swing.JScrollPane sourceTextScrollPane;
+    private javax.swing.JTextArea sourceTextTextArea;
     private javax.swing.JLabel sourceTitleLabel;
     private javax.swing.JTextField sourceTitleTextField;
     // End of variables declaration//GEN-END:variables
@@ -321,14 +383,16 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         /*
          * +1 PUBL <SOURCE_PUBLICATION_FACTS>
          * +2 [CONC|CONT] <SOURCE_PUBLICATION_FACTS>
-         * Not used
          */
+        Property publicationFacts = mSource.getProperty("PUBL");
+        sourceTextTextArea.setText(publicationFacts != null ? publicationFacts.getValue() : "");
 
         /*
          * +1 TEXT <TEXT_FROM_SOURCE>
          * +2 [CONC|CONT] <TEXT_FROM_SOURCE>
-         * Not used
          */
+        Property sourceText = mSource.getProperty("TEXT");
+        sourceTextTextArea.setText(sourceText != null ? sourceText.getValue() : "");
 
         /*
          * +1 <<SOURCE_REPOSITORY_CITATION>>
@@ -382,6 +446,17 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                         mSource.addProperty("TITL", sourceTitleTextField.getText());
                     } else {
                         sourceTitle.setValue(sourceTitleTextField.getText());
+                    }
+                    Property publicationFacts = mSource.getProperty("PUBL");
+                    if (sourceTitle == null) {
+                        mSource.addProperty("PUBL", sourceTextTextArea.getText());
+                    } else {
+                        publicationFacts.setValue(sourceTextTextArea.getText());
+                    }                    Property sourceText = mSource.getProperty("TEXT");
+                    if (sourceTitle == null) {
+                        mSource.addProperty("TEXT", sourceTextTextArea.getText());
+                    } else {
+                        sourceText.setValue(sourceTextTextArea.getText());
                     }
                     Property abbreviation = mSource.getProperty("ABBR");
                     if (abbreviation == null) {
