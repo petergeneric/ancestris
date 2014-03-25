@@ -24,6 +24,7 @@ import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
+import org.openide.util.actions.Presenter;
 
 /**
  * Toolbar abstraction.
@@ -47,6 +48,11 @@ public class ToolBar {
         bar.setVisible(true);
         component.setFocusable(false);
         notEmpty.set(true);
+    }
+
+    public void add(Presenter.Toolbar component) {
+        if (component != null)
+        bar.add(component.getToolbarPresenter());
     }
 
     public void addSeparator() {

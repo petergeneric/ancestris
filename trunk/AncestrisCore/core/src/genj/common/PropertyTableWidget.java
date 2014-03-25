@@ -20,6 +20,7 @@
 package genj.common;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.TableFilterWidget;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -62,6 +63,7 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -71,6 +73,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  * A widget that shows entities in rows and columns
@@ -125,6 +128,10 @@ public class PropertyTableWidget extends JPanel  {
   //FIXME: we must change this dependency
     public Component getTableComponent() {
         return table;
+    }
+    
+    public void setFilterWidget(TableFilterWidget filter){
+        table.setFilterWidget(filter);
     }
   
   /**
@@ -357,17 +364,19 @@ public class PropertyTableWidget extends JPanel  {
   /**
    * Table Content
    */
-  private class Table extends JTable {
+  private class Table extends JTable implements TableFilterWidget.TableFilterListener{
     
     private PropertyTableModel propertyModel;
     private SortableTableModel sortableModel = new SortableTableModel();
     private int defaultRowHeight;
+    private TableRowSorter<SortableTableModel> sorter;
+    private TableFilterWidget filterText;
     
     /**
      * Constructor
      */
     Table() {
-
+        
       setPropertyTableModel(null);
       setDefaultRenderer(Object.class, new Renderer());
       getTableHeader().setReorderingAllowed(false);
@@ -383,6 +392,8 @@ public class PropertyTableWidget extends JPanel  {
       // prep sortable model
       setModel(sortableModel);
       sortableModel.setTableHeader(getTableHeader());
+      sorter = new TableRowSorter<SortableTableModel>(sortableModel);
+      setRowSorter(sorter);
       
       // 20050721 we want the same focus forward/backwards keys as everyone else
       setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
@@ -428,7 +439,34 @@ public class PropertyTableWidget extends JPanel  {
       // done
     }
     
-    @Override
+    private void setFilterWidget(TableFilterWidget filter){
+        filterText = filter;
+        if (filterText!=null)
+       filterText.addFilterListener(this);        
+    }
+
+    /** 
+     * Update the row filter regular expression from the expression in
+     * the text box.
+     */
+        @Override
+    public void filter(String text, int col) {
+        RowFilter<TableModel, Object> rf;
+        //If current expression doesn't parse, don't update.
+        try {
+            if (col <0){
+                rf = RowFilter.regexFilter("(?i)"+text);
+            } else {
+                rf = RowFilter.regexFilter("(?i)"+text,col);
+            }
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+        sorter.setRowFilter(rf);
+    }
+ 
+ 
+     @Override
     public TransferHandler getTransferHandler() {
       if (transferer==null)
         transferer = new Transferer();
@@ -596,7 +634,11 @@ public class PropertyTableWidget extends JPanel  {
       // remember
       this.propertyModel = propertyModel;
       // pass through 
-      sortableModel.setTableModel(new Model(propertyModel));
+      Model model = new Model(propertyModel);
+      sortableModel.setTableModel(model);
+      if (filterText!=null)
+      filterText.setHeaders(model);
+      
       // done
     }
     
