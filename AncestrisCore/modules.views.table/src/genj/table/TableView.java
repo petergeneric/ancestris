@@ -21,6 +21,7 @@
 package genj.table;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.TableFilterWidget;
 import ancestris.view.ExplorerHelper;
 import genj.common.AbstractPropertyTableModel;
 import genj.common.PropertyTableModel;
@@ -171,6 +172,9 @@ public class TableView extends View {
     public static boolean getFollowEntity() {
         return REGISTRY.get("entity.follow", false);
     }
+    
+    // filter
+    private TableFilterWidget filter = new TableFilterWidget();
 
     public static void setFollowEntity(boolean followEntity) {
         REGISTRY.put("entity.follow", followEntity);
@@ -201,6 +205,8 @@ public class TableView extends View {
         if (modes.containsKey(tag)) {
             currentMode = getMode(tag);
         }
+        
+        propertyTable.setFilterWidget(filter);
 
         // shortcuts KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK)
         //XXX: shortcut should be placed in @Action... Annotations (layer)
@@ -261,6 +267,7 @@ public class TableView extends View {
 
         // give mode a change to grab what it wants to preserve
         if (currentModel != null && currentMode != null) {
+            currentMode.setColFilter(filter.getColFilter());
             currentMode.save();
         }
 
@@ -271,6 +278,7 @@ public class TableView extends View {
         if (currentModel != null) {
             propertyTable.setModel(new Model(currentModel.getGedcom(), currentMode));
             propertyTable.setColumnLayout(currentMode.layout);
+            filter.setColFilter(currentMode.getColFilter());
         }
     }
 
@@ -361,6 +369,7 @@ public class TableView extends View {
         toolbar.add(new JToggleButton(sticky));
 
         toolbar.add(new Settings());
+        toolbar.add(filter);
 
     }
 
@@ -586,6 +595,7 @@ public class TableView extends View {
         private String[] defaults;
         private TagPath[] paths;
         private String layout;
+        private int colFilter;
 
         /** constructor */
         private Mode(String t, String[] d) {
@@ -593,15 +603,25 @@ public class TableView extends View {
             tag = t;
             defaults = d;
             paths = TagPath.toArray(defaults);
+            colFilter = 0;
 
             // look
             setTip(resources.getString("mode.tip", Gedcom.getName(tag, true)));
             setImage(Gedcom.getEntityImage(tag));
         }
 
+        public int getColFilter() {
+            return colFilter;
+        }
+
+        public void setColFilter(int colFilter) {
+            this.colFilter = colFilter;
+        }
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             setSelected(true);
+            filter.setColFilter(getColFilter());
         }
 
         @Override
@@ -651,6 +671,7 @@ public class TableView extends View {
             }
             r.put(tag + ".paths", paths);
             r.put(tag + ".layout", layout);
+            r.put(tag + ".colfilter", currentMode.getColFilter());
         }
 
         /** tag */
