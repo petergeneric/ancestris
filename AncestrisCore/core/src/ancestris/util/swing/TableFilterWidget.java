@@ -11,6 +11,7 @@
  */
 package ancestris.util.swing;
 
+import static ancestris.util.swing.Bundle.*;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
 import java.awt.Color;
@@ -27,8 +28,12 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.NbBundle;
 import org.openide.util.actions.Presenter;
 
+@NbBundle.Messages({
+    "allfilter=All"
+})
 public final class TableFilterWidget implements Presenter.Toolbar {
 
     private static FilterCombo filter;
@@ -48,7 +53,7 @@ public final class TableFilterWidget implements Presenter.Toolbar {
 
     public void setHeaders(AbstractTableModel model) {
         headers = new ArrayList<String>();
-        headers.add("tout");
+        headers.add(allfilter());
         for (int c = 0; c < model.getColumnCount(); c++) {
             headers.add(model.getColumnName(c));
         }

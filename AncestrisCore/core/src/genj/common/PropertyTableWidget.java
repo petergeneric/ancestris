@@ -455,9 +455,9 @@ public class PropertyTableWidget extends JPanel  {
         //If current expression doesn't parse, don't update.
         try {
             if (col <0){
-                rf = RowFilter.regexFilter("(?i)"+text);
+                rf = RowFilter.regexFilter("(?i)(?u)"+text);
             } else {
-                rf = RowFilter.regexFilter("(?i)"+text,col);
+                rf = RowFilter.regexFilter("(?i)(?u)"+text,col);
             }
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
