@@ -267,7 +267,7 @@ public class TableView extends View {
 
         // give mode a change to grab what it wants to preserve
         if (currentModel != null && currentMode != null) {
-            currentMode.setColFilter(filter.getColFilter());
+//            currentMode.setColFilter(filter.getColFilter());
             currentMode.save();
         }
 
@@ -621,7 +621,6 @@ public class TableView extends View {
         @Override
         public void actionPerformed(ActionEvent e) {
             setSelected(true);
-            filter.setColFilter(getColFilter());
         }
 
         @Override
@@ -635,7 +634,7 @@ public class TableView extends View {
         /** load properties from registry */
         private void load() {
             load(getGedcom());
-        }
+        }//            r.put(tag + ".colfilter", currentMode.getColFilter());
 
         private void load(Gedcom gedcom) {
             Registry r = (gedcom == null) ? REGISTRY : gedcom.getRegistry();
@@ -646,6 +645,7 @@ public class TableView extends View {
             }
 
             layout = r.get(tag + ".layout", defaultLayouts.get(tag));
+            setColFilter(r.get(tag + ".colfilter", 0));
         }
 
         /** set paths */
@@ -668,10 +668,11 @@ public class TableView extends View {
             // grab current column widths & sort column
             if (currentMode == this && propertyTable.getModel() != null) {
                 layout = propertyTable.getColumnLayout();
+                colFilter = filter.getColFilter();
             }
             r.put(tag + ".paths", paths);
             r.put(tag + ".layout", layout);
-            r.put(tag + ".colfilter", currentMode.getColFilter());
+            r.put(tag + ".colfilter", getColFilter());
         }
 
         /** tag */
