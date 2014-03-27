@@ -231,26 +231,30 @@ public class PropertyTableWidget extends JPanel  {
       ListSelectionModel cols = table.getColumnModel().getSelectionModel();
       table.clearSelection();
       
-      Point cell = new Point();
-      for (Property prop : props) {
-  
-        // add cell selection
-        cell = table.getCell(prop);
-        if (cell.y>=0) {
-          rows.addSelectionInterval(cell.y,cell.y);
-          if (cell.x>=0)
-            cols.addSelectionInterval(cell.x,cell.x);
-        } else {
-          int row = table.getRow(prop);
-          if (row>=0) {
-            rows.addSelectionInterval(row,row);
-            cols.addSelectionInterval(0,table.getColumnCount()-1);
-            cell.y=row;
-          }
-          continue;
-        }
+        Point cell = new Point();
+        for (Property prop : props) {
 
-      }
+            // add cell selection
+            cell = table.getCell(prop);
+            if (cell.y >= 0) {
+                cell.y = table.convertRowIndexToView(cell.y);
+                rows.addSelectionInterval(cell.y, cell.y);
+                if (cell.x >= 0) {
+                    cell.x = table.convertColumnIndexToView(cell.x);
+                    cols.addSelectionInterval(cell.x, cell.x);
+                }
+            } else {
+                int row = table.getRow(prop);
+                if (row >= 0) {
+                    row = table.convertRowIndexToView(row);
+                    rows.addSelectionInterval(row, row);
+                    cols.addSelectionInterval(0, table.getColumnCount() - 1);
+                    cell.y = row;
+                }
+                continue;
+            }
+
+        }
       
       // scroll to last selection
       if (cell.y>=0) {
@@ -600,7 +604,11 @@ public class PropertyTableWidget extends JPanel  {
       return -1;
     }
     
-    
+    /**
+     * return model cell coordinate for property.
+     * @param property
+     * @return 
+     */
     Point getCell(Property property) {
       
       Point p = new Point(-1,-1);

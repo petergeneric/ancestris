@@ -57,14 +57,16 @@ public final class TableFilterWidget implements Presenter.Toolbar {
         for (int c = 0; c < model.getColumnCount(); c++) {
             headers.add(model.getColumnName(c));
         }
+        // initialize tooltip
+        getFilter().setIndex(getFilter().getIndex());
     }
 
     public void setColFilter(int colFilter) {
-        getFilter().index = colFilter;
+        getFilter().setIndex(colFilter);
     }
 
     public int getColFilter() {
-        return getFilter().index;
+        return getFilter().getIndex();
     }
 
     public void addFilterListener(TableFilterListener listener) {
@@ -74,7 +76,7 @@ public final class TableFilterWidget implements Presenter.Toolbar {
     private class FilterCombo extends JPanel {
 
         private final Icon POPUP = GraphicsHelper.getIcon(Color.BLACK, 0, 0, 8, 0, 4, 4);
-        private int index = 0;
+        private int index;
         private Popup pick = new Popup();
         private final JTextField filterText;
         private TableFilterListener filterListener;
@@ -112,12 +114,22 @@ public final class TableFilterWidget implements Presenter.Toolbar {
                     });
 
             add(filterText);
+            setIndex(0);
             add(pick);
         }
-
+        
+        private void setIndex(int index){
+            this.index = index;
+            if (!headers.isEmpty())
+                pick.setToolTipText(headers.get(index));
+        }
+        private int getIndex(){
+            return index;
+        }
+        
         private void invokeFilter() {
             if (filterListener != null) {
-                filterListener.filter(filterText.getText(), index - 1);
+                filterListener.filter(filterText.getText(), getIndex() - 1);
             }
         }
 
@@ -136,11 +148,11 @@ public final class TableFilterWidget implements Presenter.Toolbar {
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            index = j;
+                            setIndex(j);
                             FilterCombo.this.invokeFilter();
                         }
                     });
-                    if (index == i) {
+                    if (getIndex() == i) {
                         item.setFont(item.getFont().deriveFont(Font.BOLD));
                     }
                     addItem(item);
