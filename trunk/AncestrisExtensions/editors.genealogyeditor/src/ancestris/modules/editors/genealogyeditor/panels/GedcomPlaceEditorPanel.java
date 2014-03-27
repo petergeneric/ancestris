@@ -393,23 +393,24 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
 
-        if (mPlace != null) {
-            for (int index = 0; index < mPlaceOrder.length; index++) {
-                if (mPlaceOrder[index] != -1) {
-                    if (mPlaceOrder[index] < mPlaceFormat.length) {
-                        ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
-                        List<String> jurisdictions = Arrays.asList(place.getAllJurisdictions(mPlaceOrder[index], true));
-                        if (jurisdictions != null) {
-                            AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
-                        }
+        for (int index = 0; index < mPlaceOrder.length; index++) {
+            if (mPlaceOrder[index] != -1) {
+                if (mPlaceOrder[index] < mPlaceFormat.length) {
+                    ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
+                    List<String> jurisdictions = Arrays.asList(PropertyPlace.getAllJurisdictions(mRoot.getGedcom(), mPlaceOrder[index], true));
+                    if (jurisdictions != null) {
+                        AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
                     }
-                } else {
-                    ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
-                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
-                    mGedcomFields[index][1].setVisible(false);
                 }
+            } else {
+                ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
+                ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
+                mGedcomFields[index][1].setVisible(false);
             }
-            updatePlace(place, 0);
+        }
+        
+        if (mPlace != null) {
+            updatePlace(mPlace, 0);
         }
 
         gedcomHamletTextField.getDocument().addDocumentListener(new DocumentListener() {
