@@ -172,7 +172,6 @@ public class TableView extends View {
     public static boolean getFollowEntity() {
         return REGISTRY.get("entity.follow", false);
     }
-    
     // filter
     private TableFilterWidget filter = new TableFilterWidget();
 
@@ -205,7 +204,7 @@ public class TableView extends View {
         if (modes.containsKey(tag)) {
             currentMode = getMode(tag);
         }
-        
+
         propertyTable.setFilterWidget(filter);
 
         // shortcuts KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK)
@@ -309,6 +308,7 @@ public class TableView extends View {
             }
             propertyTable.setModel(new Model(context.getGedcom(), currentMode));
             propertyTable.setColumnLayout(currentMode.layout);
+            filter.setColFilter(currentMode.getColFilter());
         }
 
         // pick good mode
@@ -617,7 +617,7 @@ public class TableView extends View {
         public void setColFilter(int colFilter) {
             this.colFilter = colFilter;
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             setSelected(true);
@@ -634,7 +634,7 @@ public class TableView extends View {
         /** load properties from registry */
         private void load() {
             load(getGedcom());
-        }//            r.put(tag + ".colfilter", currentMode.getColFilter());
+        }
 
         private void load(Gedcom gedcom) {
             Registry r = (gedcom == null) ? REGISTRY : gedcom.getRegistry();
