@@ -47,7 +47,7 @@ arborescence de l'aide ?
             <tocitem text="Preferências - Configuração" target="ancestris.app.options.menu1" />
             <tocitem text="Especificações Gedcom" target="ancestris.app.gedcom.standard" />
             <tocitem text="Modelos - Camadas" target="ancestris.app.blueprints" />
-            <tocitem text="Roaming do Ancestris" target="ancestris.app.nomade" />
+            <tocitem text="Ancestris nómada" target="ancestris.app.nomade" />
             <tocitem text="Escreva a sua primeira extensão" target="ancestris.app.plugins.development" />
         </tocitem>
         <tocitem expand="true" text="Como obter ajuda" target="ancestris.app.aids">
