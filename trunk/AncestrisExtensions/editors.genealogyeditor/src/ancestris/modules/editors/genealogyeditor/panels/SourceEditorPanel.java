@@ -385,7 +385,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
          * +2 [CONC|CONT] <SOURCE_PUBLICATION_FACTS>
          */
         Property publicationFacts = mSource.getProperty("PUBL");
-        sourceTextTextArea.setText(publicationFacts != null ? publicationFacts.getValue() : "");
+        publicationFactsTextArea.setText(publicationFacts != null ? publicationFacts.getValue() : "");
 
         /*
          * +1 TEXT <TEXT_FROM_SOURCE>
@@ -448,11 +448,12 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                         sourceTitle.setValue(sourceTitleTextField.getText());
                     }
                     Property publicationFacts = mSource.getProperty("PUBL");
-                    if (sourceTitle == null) {
+                    if (publicationFacts == null) {
                         mSource.addProperty("PUBL", sourceTextTextArea.getText());
                     } else {
                         publicationFacts.setValue(sourceTextTextArea.getText());
-                    }                    Property sourceText = mSource.getProperty("TEXT");
+                    }
+                    Property sourceText = mSource.getProperty("TEXT");
                     if (sourceTitle == null) {
                         mSource.addProperty("TEXT", sourceTextTextArea.getText());
                     } else {
