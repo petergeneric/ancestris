@@ -19,31 +19,28 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultRowSorter;
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
-import javax.swing.RowSorter;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.Presenter;
 
 @NbBundle.Messages({
     "allfilter=All",
-    "exactmatch=Exact Match"
+    "exactmatch=Exact Match",
+    "occurrences.label={0} occurrences"
 })
 public final class TableFilterWidget implements Presenter.Toolbar {
 
@@ -62,17 +59,7 @@ public final class TableFilterWidget implements Presenter.Toolbar {
         return filter;
     }
 
-    public void setHeaders(AbstractTableModel model) {
-        headers = new ArrayList<String>();
-        headers.add(allfilter());
-        for (int c = 0; c < model.getColumnCount(); c++) {
-            headers.add(model.getColumnName(c));
-        }
-        // initialize tooltip
-        getFilter().setIndex(getFilter().getIndex());
-    }
-
-    public void setColFilter(int colFilter) {
+    public void setColumn(int colFilter) {
         getFilter().setIndex(colFilter);
     }
 
@@ -82,6 +69,27 @@ public final class TableFilterWidget implements Presenter.Toolbar {
 
     public void setSorter(DefaultRowSorter sorter) {
         getFilter().sorter = sorter;
+        // get headers from underlying model
+        if (sorter != null) {
+            setHeaders((TableModel) sorter.getModel());
+        }
+    }
+
+    private void setHeaders(TableModel model) {
+        headers = new ArrayList<String>();
+        headers.add(allfilter());
+        for (int c = 0; c < model.getColumnCount(); c++) {
+            headers.add(model.getColumnName(c));
+        }
+        // initialize tooltip
+        getFilter().setIndex(getFilter().getIndex());
+    }
+
+    /**
+     * refresh filtered view
+     */
+    public void refresh() {
+        getFilter().invokeFilter();
     }
 
     private class FilterCombo extends JPanel {
@@ -91,8 +99,8 @@ public final class TableFilterWidget implements Presenter.Toolbar {
         private Popup pick = new Popup();
         private final JTextField filterText;
         private final JCheckBox exactMatch;
-//        private TableFilterListener filterListener;
         private DefaultRowSorter sorter;
+        private JLabel number;
 
         /**
          * Constructor
@@ -134,6 +142,10 @@ public final class TableFilterWidget implements Presenter.Toolbar {
                     invokeFilter();
                 }
             });
+            number = new JLabel();
+            number.setHorizontalAlignment(SwingConstants.RIGHT);
+            number.setPreferredSize(new Dimension(120, 12));
+            add(number);
             add(filterText);
             setIndex(0);
             add(pick);
@@ -141,9 +153,14 @@ public final class TableFilterWidget implements Presenter.Toolbar {
         }
 
         private void setIndex(int index) {
+            if (index < 0 || index > headers.size()) {
+                index = 0;
+            }
             this.index = index;
             if (!headers.isEmpty()) {
-                pick.setToolTipText(headers.get(index));
+                if (index < headers.size()) {
+                    pick.setToolTipText(headers.get(index));
+                }
             }
         }
 
@@ -174,10 +191,12 @@ public final class TableFilterWidget implements Presenter.Toolbar {
                     return;
                 }
                 sorter.setRowFilter(rf);
+                String numberText = "";
+                if (!filterText.getText().isEmpty()) {
+                    numberText = occurrences_label(sorter.getViewRowCount());
+                }
+                number.setText(numberText + " ");
             }
-        }
-
-        public void filter(String text, int col) {
         }
 
         private class Popup extends PopupWidget {
@@ -207,10 +226,5 @@ public final class TableFilterWidget implements Presenter.Toolbar {
                 super.showPopup();
             }
         }
-    }
-
-    public interface TableFilterListener {
-
-        public void filter(String text, int col);
     }
 }
