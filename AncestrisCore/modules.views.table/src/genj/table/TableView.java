@@ -266,7 +266,6 @@ public class TableView extends View {
 
         // give mode a change to grab what it wants to preserve
         if (currentModel != null && currentMode != null) {
-//            currentMode.setColFilter(filter.getColFilter());
             currentMode.save();
         }
 
@@ -277,7 +276,8 @@ public class TableView extends View {
         if (currentModel != null) {
             propertyTable.setModel(new Model(currentModel.getGedcom(), currentMode));
             propertyTable.setColumnLayout(currentMode.layout);
-            filter.setColFilter(currentMode.getColFilter());
+            filter.setColumn(currentMode.getColFilter());
+            filter.refresh();
         }
     }
 
@@ -308,7 +308,7 @@ public class TableView extends View {
             }
             propertyTable.setModel(new Model(context.getGedcom(), currentMode));
             propertyTable.setColumnLayout(currentMode.layout);
-            filter.setColFilter(currentMode.getColFilter());
+            filter.setColumn(currentMode.getColFilter());
         }
 
         // pick good mode

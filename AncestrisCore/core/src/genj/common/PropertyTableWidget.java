@@ -28,13 +28,10 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyName;
-import genj.gedcom.TagPath;
 import genj.io.BasicTransferable;
 import genj.util.WordBuffer;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.LinkWidget;
-import genj.util.swing.SortableTableModel;
-import genj.util.swing.SortableTableModel.Directive;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -63,7 +60,6 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import javax.swing.RowFilter;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -298,9 +294,7 @@ public class PropertyTableWidget extends JPanel {
         // e.g. 4, 40, 60, 70, 48, 0, -1, 1, 1 
         // for a table with 4 columns and two sort directives
 
-        SortableTableModel model = (SortableTableModel) table.getModel();
         TableColumnModel columns = table.getColumnModel();
-        List<Directive> directives = model.getDirectives();
 
         WordBuffer result = new WordBuffer(",");
         result.append(columns.getColumnCount());
@@ -309,11 +303,6 @@ public class PropertyTableWidget extends JPanel {
             result.append(columns.getColumn(c).getWidth());
         }
 
-        for (int d = 0; d < directives.size(); d++) {
-            SortableTableModel.Directive dir = directives.get(d);
-            result.append(dir.getColumn());
-            result.append(dir.getDirection());
-        }
 
         return result.toString();
     }
@@ -323,7 +312,6 @@ public class PropertyTableWidget extends JPanel {
      */
     public void setColumnLayout(String layout) {
 
-        SortableTableModel model = (SortableTableModel) table.getModel();
         TableColumnModel columns = table.getColumnModel();
 
         try {
@@ -337,39 +325,8 @@ public class PropertyTableWidget extends JPanel {
                 col.setPreferredWidth(w);
             }
 
-            model.cancelSorting();
-            while (tokens.hasMoreTokens()) {
-                int c = Integer.parseInt(tokens.nextToken());
-                int d = Integer.parseInt(tokens.nextToken());
-                if (c < columns.getColumnCount()) {
-                    model.setSortingStatus(c, d);
-                }
-            }
-
         } catch (Throwable t) {
             // ignore
-        }
-    }
-
-    /**
-     * Return current sort status
-     */
-    public int[] getColumnDirections() {
-        SortableTableModel model = (SortableTableModel) table.getModel();
-        int[] result = new int[model.getColumnCount()];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = model.getSortingStatus(i);
-        }
-        return result;
-    }
-
-    /**
-     * Set sorted columns
-     */
-    public void setColumnDirections(int[] set) {
-        SortableTableModel model = (SortableTableModel) table.getModel();
-        for (int i = 0; i < set.length && i < model.getColumnCount(); i++) {
-            model.setSortingStatus(i, set[i]);
         }
     }
 
@@ -379,9 +336,8 @@ public class PropertyTableWidget extends JPanel {
     private class Table extends JTable {
 
         private PropertyTableModel propertyModel;
-        private SortableTableModel sortableModel = new SortableTableModel();
         private int defaultRowHeight;
-        private TableRowSorter<SortableTableModel> sorter;
+        private TableRowSorter<Model> sorter;
         private TableFilterWidget filterText;
 
         /**
@@ -390,22 +346,15 @@ public class PropertyTableWidget extends JPanel {
         Table() {
 
             setPropertyTableModel(null);
-            setDefaultRenderer(Object.class, new Renderer());
+            Renderer r = new Renderer();
+            r.setFont(getFont());
+            defaultRowHeight = r.getPreferredSize().height;
+            setDefaultRenderer(Object.class, r);
             getTableHeader().setReorderingAllowed(false);
 
             getColumnModel().getSelectionModel().addListSelectionListener(this);
             // 20091208 JTable already implements and add itself as listener
             //getSelectionModel().addListSelectionListener(this);
-
-            Renderer r = new Renderer();
-            r.setFont(getFont());
-            defaultRowHeight = r.getPreferredSize().height;
-
-            // prep sortable model
-            setModel(sortableModel);
-            sortableModel.setTableHeader(getTableHeader());
-            sorter = new TableRowSorter<SortableTableModel>(sortableModel);
-            setRowSorter(sorter);
 
             // 20050721 we want the same focus forward/backwards keys as everyone else
             setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
@@ -436,16 +385,6 @@ public class PropertyTableWidget extends JPanel {
                 }
             });
 
-            // listen to changes for generating shortcuts
-            sortableModel.addTableModelListener(new TableModelListener() {
-
-                @Override
-                public void tableChanged(TableModelEvent e) {
-                    if (e.getLastRow() == Integer.MAX_VALUE) {
-                        createShortcuts();
-                    }
-                }
-            });
             panelShortcuts.addComponentListener(new ComponentAdapter() {
 
                 @Override
@@ -476,7 +415,7 @@ public class PropertyTableWidget extends JPanel {
         public int[] getSelectedRows() {
             int[] rows = super.getSelectedRows();
             for (int r = 0; r < rows.length; r++) {
-                rows[r] = sortableModel.modelIndex(rows[r]);
+                rows[r] = convertRowIndexToModel(rows[r]);
             }
             return rows;
         }
@@ -589,15 +528,15 @@ public class PropertyTableWidget extends JPanel {
             panelShortcuts.repaint();
 
             // anything we can offer? need ascending sorted column and at least 10 rows
-            if (!sortableModel.isSorting()) {
-                return;
-            }
+//            if (!sortableModel.isSorting()) {
+//                return;
+//            }
 
-            SortableTableModel.Directive directive = sortableModel.getDirectives().get(0);
+//            SortableTableModel.Directive directive = sortableModel.getDirectives().get(0);
 //      if (directive.getDirection()<=0)
 //        return;
 
-            createShortcuts(directive.getColumn(), directive.getDirection(), panelShortcuts);
+//            createShortcuts(directive.getColumn(), directive.getDirection(), panelShortcuts);
 
             // done
         }
@@ -607,7 +546,7 @@ public class PropertyTableWidget extends JPanel {
             PropertyTableModel model = getPropertyTableModel();
             for (int i = 0; i < model.getNumRows(); i++) {
                 if (model.getRowRoot(i).contains(prop)) {
-                    return ((SortableTableModel) getModel()).viewIndex(i);
+                    return convertRowIndexToView(i);
                 }
             }
             return -1;
@@ -628,10 +567,10 @@ public class PropertyTableWidget extends JPanel {
                 return p;
             }
 
-            SortableTableModel model = (SortableTableModel) getModel();
+            TableModel model = getModel();
             for (int i = 0; i < model.getRowCount(); i++) {
 
-                int r = model.modelIndex(i);
+                int r = i;
 
                 for (int j = 0; j < model.getColumnCount(); j++) {
                     if (model.getValueAt(r, j) == property) {
@@ -645,7 +584,7 @@ public class PropertyTableWidget extends JPanel {
         }
 
         Property getRowRoot(int index) {
-            return propertyModel.getRowRoot(sortableModel.modelIndex(index));
+            return propertyModel.getRowRoot(convertRowIndexToModel(index));
         }
 
         /**
@@ -655,10 +594,28 @@ public class PropertyTableWidget extends JPanel {
             // remember
             this.propertyModel = propertyModel;
             // pass through 
-            Model model = new Model(propertyModel);
-            sortableModel.setTableModel(model);
+            if (propertyModel == null) {
+                return;
+            }
+
+            Model tableModel = new Model(propertyModel);
+            setModel(tableModel);
+            sorter = new TableRowSorter<Model>(tableModel);
+            setRowSorter(sorter);
+
+            // listen to changes for generating shortcuts
+            tableModel.addTableModelListener(new TableModelListener() {
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getLastRow() == Integer.MAX_VALUE) {
+                        createShortcuts();
+                    }
+                }
+            });
+
             if (filterText != null) {
-                filterText.setHeaders(model);
+                filterText.setSorter(sorter);
             }
 
             // done
@@ -696,13 +653,13 @@ public class PropertyTableWidget extends JPanel {
                         continue;
                     }
                     // 20050721 check arguments - Swing might not always send something smart here
-                    SortableTableModel model = (SortableTableModel) getModel();
+                    TableModel model = getModel();
                     if (r < 0 || r >= model.getRowCount() || c < 0 || c >= model.getColumnCount()) {
                         continue;
                     }
                     Property prop = (Property) getValueAt(r, c);
                     if (prop == null) {
-                        prop = propertyModel.getRowRoot(model.modelIndex(r));
+                        prop = propertyModel.getRowRoot(convertRowIndexToModel(r));
                     }
                     // keep it
                     if (before.contains(prop)) {
@@ -754,7 +711,7 @@ public class PropertyTableWidget extends JPanel {
             if (ged == null) {
                 return null;
             }
-            SortableTableModel model = (SortableTableModel) getModel();
+            TableModel model = getModel();
 
             // one row one col?
             List<Property> properties = new ArrayList<Property>();
@@ -779,7 +736,7 @@ public class PropertyTableWidget extends JPanel {
 
                     // add representation for each row that wasn't represented by a property
                     if (!rowRepresented) {
-                        properties.add(propertyModel.getRowRoot(model.modelIndex(rows[r])));
+                        properties.add(propertyModel.getRowRoot(convertRowIndexToModel(rows[r])));
                     }
 
                     // next selected row
@@ -793,7 +750,7 @@ public class PropertyTableWidget extends JPanel {
         /**
          * The logical model
          */
-        private class Model extends AbstractTableModel implements PropertyTableModelListener, SortableTableModel.RowComparator {
+        private class Model extends AbstractTableModel implements PropertyTableModelListener {//, SortableTableModel.RowComparator {
 
             /** our model */
             private PropertyTableModel model;
@@ -864,14 +821,6 @@ public class PropertyTableWidget extends JPanel {
                 }
             }
 
-            @Override
-            public int compare(Object valueA, Object valueB, int col) {
-                if (propertyModel instanceof AbstractPropertyTableModel) {
-                    return ((AbstractPropertyTableModel) propertyModel).compare((Property) valueA, (Property) valueB, col);
-                }
-                return AbstractPropertyTableModel.defaultCompare((Property) valueA, (Property) valueB, col);
-            }
-
             /**
              * patched column name
              */
@@ -881,40 +830,15 @@ public class PropertyTableWidget extends JPanel {
             }
 
             /** num columns */
+            @Override
             public int getColumnCount() {
                 return model != null ? model.getNumCols() : 0;
             }
 
             /** num rows */
+            @Override
             public int getRowCount() {
                 return model != null ? model.getNumRows() : 0;
-            }
-
-            /** path in column */
-            private TagPath getPath(int col) {
-                return model != null ? model.getColPath(col) : null;
-            }
-
-            /** context */
-            private Context getContextAt(int row, int col) {
-                // nothing to do?
-                if (model == null) {
-                    return null;
-                }
-                // selected property?
-                Property prop = getPropertyAt(row, col);
-                if (prop != null) {
-                    return new Context(prop);
-                }
-
-                // selected row at least?
-                Property root = model.getRowRoot(row);
-                if (root != null) {
-                    return new Context(root.getEntity());
-                }
-
-                // fallback
-                return new Context(model.getGedcom());
             }
 
             /** property */
@@ -939,11 +863,10 @@ public class PropertyTableWidget extends JPanel {
                 return getPropertyAt(row, col);
             }
 
-            /**
-             * get property by row
-             */
-            private Property getProperty(int row) {
-                return model.getRowRoot(row);
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                // getValueAt always return a gedcom property
+                return Property.class;
             }
         } //Model
 
@@ -996,8 +919,9 @@ public class PropertyTableWidget extends JPanel {
             /**
              * Create a Transferable to use as the source for a data transfer.
              *
-             * @param c
-* The component holding the data to be transfered. This argument is provided to enable sharing of TransferHandlers by multiple components.
+             * @param c The component holding the data to be transfered.
+             * This argument is provided to enable sharing of TransferHandlers by
+             * multiple components.
              *
              * @return The representation of the data to be transfered.
              *
@@ -1026,7 +950,7 @@ public class PropertyTableWidget extends JPanel {
                 for (int row = 0; row < rows.length; row++) {
                     htmlBuf.append("<tr>\n");
                     for (int col = 0; col < cols.length; col++) {
-                        Property obj = (Property) table.getValueAt(sortableModel.viewIndex(rows[row]), cols[col]);
+                        Property obj = (Property) table.getValueAt(convertRowIndexToView(rows[row]), cols[col]);
                         String val = AbstractPropertyTableModel.getDefaultCellValue(obj, row, col);
                         plainBuf.append(val).append("\t");
                         htmlBuf.append("  <td>").append(val).append("</td>\n");
