@@ -286,7 +286,7 @@ public class MergeModelMiscMarc extends MergeModel {
     private void addRowFamily() {
         if (currentFamily != null) {
             // je recupere le contrat de mariage existant
-            Property marcProperty = currentFamily.getProperty("MARC");
+            Property marcProperty = currentFamily.getProperty(record.getTag());
 
             // j'affiche la source du mariage
             addRowSource(RowType.EventSource, record.getEventSource(), marcProperty);
@@ -758,9 +758,9 @@ public class MergeModelMiscMarc extends MergeModel {
 
         if( ! record.isInsinuation() ) {
             // je crée la propriété MARC (contrat de mariage)
-            Property marcProperty = currentFamily.getProperty("MARC");
+            Property marcProperty = currentFamily.getProperty(record.getTag());
             if (marcProperty == null) {
-                marcProperty = currentFamily.addProperty("MARC", "");
+                marcProperty = currentFamily.addProperty(record.getTag(), "");
             }
 
             // je copie la date de contrat de mariage
@@ -774,8 +774,8 @@ public class MergeModelMiscMarc extends MergeModel {
             }
 
             // je copie la source du releve de contrat de mariage
-            if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
-                copySource((Source) getRow(RowType.EventSource).entityObject, marcProperty, record);
+            if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
+                copySource((Source) getRow(RowType.EventSource).entityObject, marcProperty, isChecked(RowType.EventPage), record);
             }
 
             // je copie le lieu du contrat de mariage
@@ -811,9 +811,9 @@ public class MergeModelMiscMarc extends MergeModel {
             // c'est une insinuation
 
             // je crée la propriété MARC (contrat de mariage)
-            Property marcProperty = currentFamily.getProperty("MARC");
+            Property marcProperty = currentFamily.getProperty(record.getTag());
             if (marcProperty == null) {
-                marcProperty = currentFamily.addProperty("MARC", "");
+                marcProperty = currentFamily.addProperty(record.getTag(), "");
             }
 
             // je copie la date de contrat de mariage
@@ -872,8 +872,8 @@ public class MergeModelMiscMarc extends MergeModel {
             }
 
             // je copie la source du releve de l'insinuation
-            if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
-                copySource((Source) getRow(RowType.EventSource).entityObject, insinuationProperty, record);
+            if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
+                copySource((Source) getRow(RowType.EventSource).entityObject, insinuationProperty, isChecked(RowType.EventPage), record);
             }
 
             // je copie le lieu de l'insinuation
@@ -910,20 +910,22 @@ public class MergeModelMiscMarc extends MergeModel {
             
 
         }
-        // je crée la propriété MARR (mariage)
-        Property marriageProperty = currentFamily.getProperty("MARR");
-        if (marriageProperty == null) {
-            Property marcProperty = currentFamily.getProperty("MARC");
-            if ( marcProperty != null) {
-                // je cree le mariage juste apres le contrat de mariage
-                marriageProperty = currentFamily.addProperty("MARR", "", 1+ currentFamily.getPropertyPosition(marcProperty));
-            } else {
-                marriageProperty = currentFamily.addProperty("MARR", "");
-            }
+        // je crée la propriété MARR (mariage) si elle n'existe pas
+        // ou je mets à jour la date 
+        PropertyDate recordDate = record.getEventDate();
+        PropertyDate mariageDate = currentFamily.getMarriageDate(); 
+        PropertyDate mergeDate ;
+        if (mariageDate != null) {
+            mergeDate = MergeQuery.getMostAccurateDate(recordDate, mariageDate);
+        } else {
+            mergeDate = recordDate;
+        }
+         
+        if ( mergeDate != null && mergeDate != mariageDate) {
+            // je copie la date du mariage estimée a partir de la date du contrat de mariage
+            copyMarriageDate(currentFamily, getRow(RowType.MarriageDate), record );            
         }
 
-        // je copie la date du mariage estimée a partir de la date du contrat de mariage
-        copyMarriageDate(currentFamily, getRow(RowType.MarriageDate), record );
         return currentFamily;
     }
 
@@ -945,7 +947,7 @@ public class MergeModelMiscMarc extends MergeModel {
     protected String getTitle() {
         String husband = record.getIndi().getFirstName() + " "+ record.getIndi().getLastName();
         String wife = record.getWife().getFirstName() + " "+ record.getWife().getLastName()+ " " + record.getEventDate().getDisplayValue();
-        return MessageFormat.format(NbBundle.getMessage(MergeDialog.class, "MergeModel.title.miscMarc"), husband, wife);
+        return MessageFormat.format("%s de %s x %s", record.getEventType(), husband, wife);
     }
 
     /**
@@ -1019,7 +1021,13 @@ public class MergeModelMiscMarc extends MergeModel {
             summary += wifeParents;
 
         } else {
-            summary =  "Modifier le contrat de mariage" + " ";
+            
+            if( getRow(RowType.EventDate).entityValue == null) {
+                summary = "Ajouter: " + record.getEventType()+ " de ";
+            } else {
+                summary = "Modifier: " + record.getEventType() + " de ";
+            }
+           
             if (currentFamily.getHusband() != null) {
                 summary += currentFamily.getHusband().toString(false);
             } else {

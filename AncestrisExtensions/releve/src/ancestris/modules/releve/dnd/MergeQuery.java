@@ -294,7 +294,7 @@ public class MergeQuery {
                 }
 
                 // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
-                if (!isCompatible(participant.getMarriedDeathDate(), wife.getDeathDate() )) {
+                if (!isCompatible(participant.getMarriedDeathDate(), wife.getDeathDate(), 1 )) {
                     continue;
                 }
 
@@ -366,7 +366,7 @@ public class MergeQuery {
                 }
 
                 // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
-                if (!isCompatible(participant.getMarriedDeathDate(), husband.getDeathDate() )) {
+                if (!isCompatible(participant.getMarriedDeathDate(), husband.getDeathDate(), 1 )) {
                     continue;
                 }
 
@@ -579,7 +579,7 @@ public class MergeQuery {
                 }
 
                 // l'epoux doit avoir une date de deces compatible
-                if (!isCompatible(marriageRecord.getIndi().getDeathDate(), husband.getDeathDate())) {
+                if (!isCompatible(marriageRecord.getIndi().getDeathDate(), husband.getDeathDate(), 1)) {
                     continue;
                 }
 
@@ -665,7 +665,7 @@ public class MergeQuery {
                 }
 
                 // l'epouse doit avoir une date de deces compatible
-                if (!isCompatible(marriageRecord.getWife().getDeathDate(), wife.getDeathDate())) {
+                if (!isCompatible(marriageRecord.getWife().getDeathDate(), wife.getDeathDate(), 1)) {
                     continue;
                 }
 
@@ -966,7 +966,7 @@ public class MergeQuery {
                 }
 
                 // l'epoux doit avoir une date de deces compatible
-                if (!isCompatible(marriageRecord.getIndi().getDeathDate(), husband.getDeathDate())) {
+                if (!isCompatible(marriageRecord.getIndi().getDeathDate(), husband.getDeathDate(), 1)) {
                     continue;
                 }
 
@@ -1078,7 +1078,7 @@ public class MergeQuery {
                 }
 
                 // l'epouse doit avoir une date de deces compatible
-                if (!isCompatible(marriageRecord.getWife().getDeathDate(), wife.getDeathDate())) {
+                if (!isCompatible(marriageRecord.getWife().getDeathDate(), wife.getDeathDate(), 1)) {
                     continue;
                 }
 
@@ -1229,7 +1229,7 @@ public class MergeQuery {
             // petit raccourci pour gagner du temps
             PropertyDate indiDeathDate = indi.getDeathDate();
             if (indiDeathDate != null) {
-                if (!isCompatible(participant.getDeathDate(), indiDeathDate)) {
+                if (!isCompatible(participant.getDeathDate(), indiDeathDate, 1)) {
                     continue;
                 }
             }
@@ -1440,7 +1440,7 @@ public class MergeQuery {
                 // date de décés compatible
                 PropertyDate childDeathDate = child.getDeathDate();
                 if (childDeathDate != null) {
-                    if (!isCompatible(birthRecord.getIndi().getDeathDate(), childDeathDate)) {
+                    if (!isCompatible(birthRecord.getIndi().getDeathDate(), childDeathDate, 1)) {
                         // la date de décès de l'individu n'est pas compatible avec la date du relevé
                         continue;
                     }
@@ -1476,7 +1476,7 @@ public class MergeQuery {
      * @param entityDate
      * @return
      */
-    static protected boolean isCompatible(PropertyDate recordDate, PropertyDate entityDate, int marge) {
+    public static boolean isCompatible(PropertyDate recordDate, PropertyDate entityDate, int marge) {
         boolean result;
         if (recordDate == null ) {
             return true;
@@ -1609,7 +1609,7 @@ public class MergeQuery {
      * @param str2
      * @return
      */
-    static protected boolean isSameLastName(String str1, String str2) {
+    static public boolean isSameLastName(String str1, String str2) {
         boolean result = false;
 
         if( str1 != null && ! str1.isEmpty()) {
@@ -1637,7 +1637,7 @@ public class MergeQuery {
      * @param str2
      * @return
      */
-    static protected boolean isSameFirstName(String str1, String str2) {
+    public static boolean isSameFirstName(String str1, String str2) {
         return dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str1)).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str2)));
         //return str1.equals(str2);
     }
@@ -1921,7 +1921,7 @@ public class MergeQuery {
      *      gedcomDate si la date de l'entité est plus précise
      *      mergeDate  si une intersection plus precise existe entre les deux dates
      */
-    static protected PropertyDate getMostAccurateDate(PropertyDate recordDate, PropertyDate gedcomDate) {
+    static public PropertyDate getMostAccurateDate(PropertyDate recordDate, PropertyDate gedcomDate) {
         PropertyDate result;
         try {
 
@@ -2247,7 +2247,7 @@ public class MergeQuery {
             if (iterationEvent.getPropertyValue("TYPE").equals(eventType)) {
                 PropertyDate iterationDate =  (PropertyDate) iterationEvent.getProperty("DATE",false);
                 if (iterationDate != null) {
-                    if ( MergeQuery.isCompatible(eventDate, iterationDate)) {
+                    if ( MergeQuery.isCompatible(eventDate, iterationDate, 1)) {
                         foundEvent = (PropertyEvent) iterationEvent;
                         //foundDate = iterationDate;
                     }

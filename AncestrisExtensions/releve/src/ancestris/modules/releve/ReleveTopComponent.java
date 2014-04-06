@@ -1,5 +1,6 @@
 package ancestris.modules.releve;
 
+import ancestris.modules.releve.imageBrowser.ImageViewActionProvider;
 import ancestris.modules.releve.file.FileManager;
 import ancestris.modules.releve.file.ReleveFileExport;
 import ancestris.modules.releve.file.ReleveFileDialog;
@@ -27,6 +28,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.modules.releve.dnd.ViewWrapperManager;
 import ancestris.util.swing.DialogManager;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -46,6 +48,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -72,27 +75,29 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     protected Registry registry;
     private DataManager dataManager;
     private JPopupMenu popup;
-    private JMenuItem menuItemNewFile   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.new"));
-    private JMenuItem menuItemLoadFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.open"));
-    private JMenuItem menuItemSave      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save"));
-    private JMenuItem menuItemSaveAs    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.saveas"));
-    private JMenuItem menuItemImport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
-    private JMenuItem menuItemImportClipboard = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.title"));
-    private JMenuItem menuItemExport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
-    private JMenuItem menuItemDelete   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.delete"));
+    private final JMenuItem menuItemNewFile   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.new"));
+    private final JMenuItem menuItemLoadFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.open"));
+    private final JMenuItem menuItemSave      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save"));
+    private final JMenuItem menuItemSaveAs    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.saveas"));
+    private final JMenuItem menuItemImport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
+    private final JMenuItem menuItemImportClipboard = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.title"));
+    private final JMenuItem menuItemExport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
+    private final JMenuItem menuItemDelete   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.delete"));
 
-    private JMenuItem menuItemSwapNext    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapnext"));
-    private JMenuItem menuItemSwapPrevious= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapprevious"));
-    private JMenuItem menuItemReorder     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.reorder"));
+    private final JMenuItem menuItemInsert      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.insert"));
+    private final JMenuItem menuItemSwapNext    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapnext"));
+    private final JMenuItem menuItemSwapPrevious= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapprevious"));
+    private final JMenuItem menuItemReorder     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.reorder"));
+    private final JCheckBoxMenuItem menuItemGedcomLink  = new JCheckBoxMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.gedcomLink"));
     
-    private JMenuItem menuItemInsert     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.insert"));
-    private JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));
-    private JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
-    private JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
-    private JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
+    private final JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));
+    private final JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
+    private final JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
+    private final JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
+    
     private StandaloneEditor standaloneEditor;
     private File currentFile = null;
-    //private ImageViewActionProvider imageView;
+    private ImageViewActionProvider ImageViewActionProvider;
     
     public ReleveTopComponent() {
         super();
@@ -149,6 +154,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemReorder.addActionListener(popupMouseHandler);
         menuItemReorder.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/reorder16.png")));
         popup.add(menuItemReorder);
+        menuItemGedcomLink.addActionListener(popupMouseHandler);
+        menuItemGedcomLink.setSelected(false);
+       // menuItemGedcomLink.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/gedcomLink.png")));
+        popup.add(menuItemGedcomLink);
 
         menuItemCheck.addActionListener(popupMouseHandler);
         menuItemCheck.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/check16.png")));
@@ -212,7 +221,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             public void actionPerformed(ActionEvent actionEvent) {
                 if ( actionEvent.getActionCommand().toUpperCase().equals("N") ) {
                     jTabbedPane1.setSelectedComponent(panelBirth);
-                    panelBirth.createRecord();
+                        panelBirth.createRecord();
                 } else if ( actionEvent.getActionCommand().toUpperCase().equals("M") ) {
                     jTabbedPane1.setSelectedComponent(panelMarriage);
                     panelMarriage.createRecord();
@@ -284,7 +293,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         //LookupTreeView lo = new LookupTreeView();
         //lo.init();
         
-        //imageView = new ImageViewActionProvider();
+        ImageViewActionProvider = new ImageViewActionProvider();
         
         
         // j'active le DnD pour les Treeview
@@ -349,6 +358,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         
         // j'arrete le listener des vues
         ViewWrapperManager.removeTreeViewListener();
+        
+        // je désactive l'action
+        ImageViewActionProvider = null;
         
         //
         AncestrisPlugin.unregister(this);
@@ -449,6 +461,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 swapRecordPrevious();
              } else if (menuItemReorder.equals(e.getSource())) {
                 renumberRecords();
+             } else if (menuItemGedcomLink.equals(e.getSource())) {
+                showGedcomLink(menuItemGedcomLink.isSelected());
              } else if (menuItemCheck.equals(e.getSource())) {
                 showCheck();
             } else if (menuItemStatistics.equals(e.getSource())) {
@@ -547,6 +561,15 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }
     }
 
+    public void showGedcomLink(boolean state) {
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        try {
+            dataManager.showGedcomLink(state);
+        } catch (Exception ex) {
+            
+        }
+        setCursor(Cursor.getDefaultCursor());
+    }
 
     public void showCheck() {
         ErrorBuffer errorBuffer = new ErrorBuffer();
@@ -1557,11 +1580,21 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         jTabbedPane1.setVerifyInputWhenFocusTarget(false);
 
+        panelBirth.setMinimumSize(new java.awt.Dimension(100, 100));
+        panelBirth.setName(""); // NOI18N
         panelBirth.setRequestFocusEnabled(false);
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelBirth.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), panelBirth); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), panelBirth); // NOI18N
+
+        panelMarriage.setMinimumSize(new java.awt.Dimension(100, 100));
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMarriage.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Marriage.png")), panelMarriage); // NOI18N
+
+        panelDeath.setMinimumSize(new java.awt.Dimension(100, 100));
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelDeath.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Death.png")), panelDeath); // NOI18N
+
+        panelMisc.setMinimumSize(new java.awt.Dimension(100, 100));
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/misc.png")), panelMisc); // NOI18N
+
+        panelAll.setMinimumSize(new java.awt.Dimension(100, 100));
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelAll.TabConstraints.tabTitle"), panelAll); // NOI18N
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);

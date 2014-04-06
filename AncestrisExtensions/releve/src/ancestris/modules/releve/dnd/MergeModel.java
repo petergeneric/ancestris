@@ -90,8 +90,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         } else if (mergeRecord.getType() == MergeRecord.RecordType.Death) {
             models = MergeModelDeath.createMergeModelDeath(mergeRecord, gedcom, selectedEntity, showNewParents);
         } else if (mergeRecord.getType() == MergeRecord.RecordType.Misc) {
-            if (mergeRecord.getEventTypeTag() == MergeRecord.EventTypeTag.MARC) {
-                // Contrat de mariage
+            if (mergeRecord.getEventTypeTag() == MergeRecord.EventTypeTag.MARB 
+                    || mergeRecord.getEventTypeTag() == MergeRecord.EventTypeTag.MARC
+                    || mergeRecord.getEventTypeTag() == MergeRecord.EventTypeTag.MARL ) {
+                // Contrat de mariage ou bans de mariage
                 models = MergeModelMiscMarc.createMergeModelMiscMarc(mergeRecord, gedcom, selectedEntity, showNewParents);
             } else if (mergeRecord.getEventTypeTag() == MergeRecord.EventTypeTag.WILL) {
                 // Testament
@@ -371,9 +373,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     Source source = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
                     if (recordSourceTitle.compareTo(source.getTitle()) == 0) {
                         entityEventSource = source;
-                        // je verifie si elle contient le meme numero de page
+                        // je verifie si elle contient le meme numero de page ou la meme cote
                         for (Property pageProperty : sourceProperties[i].getProperties("PAGE")) {
-                            if (record.getEventPage().equals(pageProperty.getValue())) {
+                            if (( !record.getEventCote().isEmpty() && pageProperty.getValue().contains(record.getEventCote()) )
+                                || ( !record.getEventPage().isEmpty() && pageProperty.getValue().contains(record.getEventPage())) ) {
                                 entityEventPage = pageProperty.getValue();
                                 break;
                             }
@@ -432,7 +435,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         }
         mergeRow.merge_initial = mergeRow.merge;
 
-        addRow(RowType.EventPage, record.getEventPage(), entityEventPage);
+        addRow(RowType.EventPage, record.makeEventPage(), entityEventPage);
     }
 
     /**
@@ -633,7 +636,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     protected abstract Entity getSelectedEntity();
 
     /**
-     * cree une association entre associatedProperty et l'entité séelctionné dans 
+     * crée une association entre associatedProperty et l'entité sélectionné dans 
      * le modele
      * @param associatedProperty1
      * @throws Exception
@@ -741,6 +744,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
     /**
      * coche ou décoche une ligne en fonction de son type
+     *  - met à jour l'état des lignes filles
+     *  - met à jour l'état des lignes parents
      * @param rowType 
      * @param state
      */
@@ -813,7 +818,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param record
      * @throws Exception
      */
-    static protected void copySource(Source source, Property eventProperty, MergeRecord record) throws Exception {
+    static protected void copySource(Source source, Property eventProperty, boolean pageIsChecked, MergeRecord record) throws Exception {
         PropertyXRef sourcexref = null;
         if (source != null) {
             // je verifie si la source est déjà associée à la naissance
@@ -852,11 +857,27 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         }
 
         // j'ajoute la page
-        if (sourcexref != null && !record.getEventPage().isEmpty()) {
-            String value = record.getEventPage();
-            sourcexref.addProperty("PAGE", value);
+        if (sourcexref != null && pageIsChecked) {
+            String coteValue = record.getEventCote();
+            String pageValue = record.getEventPage();
+            
+            // je cherche les tags PAGE déjà existant contenat la cote ou la page
+            Property foundPage = null;
+            Property[] entityPageList  = sourcexref.getProperties("PAGE");
+            for (Property entityPage : entityPageList) {
+                if ( (!coteValue.isEmpty() && entityPage.getValue().contains(coteValue)) 
+                    || (!pageValue.isEmpty() && entityPage.getValue().contains(pageValue))) {
+                    foundPage = entityPage;
+                }
+            }
+            if (foundPage == null) {
+                // je cree une nouvelle propriété PAGE
+                sourcexref.addProperty("PAGE", record.makeEventPage());
+            } else {
+                // je modifie le propriété PAGE
+                foundPage.setValue(record.makeEventPage());
+            }
         }
-
     }
 
     /**
@@ -1051,8 +1072,30 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                                 record.getEventDateDDMMYYYY(showFrenchCalendarDate),
                                 record.getEventPlaceCityName() + (record.getNotary().isEmpty() ? "" : ", " + record.getNotary()));
                         break;
+                    case MARB:
+                        noteText = MessageFormat.format(noteText + " " + "l''acte de bans de mariage entre {2} {3} et {4} {5} le {6} ({7})",
+                                propertyDate.getDisplayValue(),
+                                record.getEventType(),
+                                record.getIndi().getFirstName(),
+                                record.getIndi().getLastName(),
+                                record.getWife().getFirstName(),
+                                record.getWife().getLastName(),
+                                record.getEventDateDDMMYYYY(showFrenchCalendarDate),
+                                record.getEventPlaceCityName() + (record.getNotary().isEmpty() ? "" : ", " + record.getNotary()));
+                        break;
                     case MARC:
                         noteText = MessageFormat.format(noteText + " " + "l''acte de contrat de mariage entre {2} {3} et {4} {5} le {6} ({7})",
+                                propertyDate.getDisplayValue(),
+                                record.getEventType(),
+                                record.getIndi().getFirstName(),
+                                record.getIndi().getLastName(),
+                                record.getWife().getFirstName(),
+                                record.getWife().getLastName(),
+                                record.getEventDateDDMMYYYY(showFrenchCalendarDate),
+                                record.getEventPlaceCityName() + (record.getNotary().isEmpty() ? "" : ", " + record.getNotary()));
+                        break;
+                    case MARL:
+                        noteText = MessageFormat.format(noteText + " " + "l''acte de certificat de mariage entre {2} {3} et {4} {5} le {6} ({7})",
                                 propertyDate.getDisplayValue(),
                                 record.getEventType(),
                                 record.getIndi().getFirstName(),
@@ -1193,7 +1236,14 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         if (getParentRow(rowType) != null) {
             label = "  ";
         }
-        label += NbBundle.getMessage(MergeModel.class, "MergeModel." + rowType.toString());
+        if ( record.getType() == RecordType.Misc && rowType == RowType.MarriageFamily ) {
+            // j'affiche le type d'évènement présent dans le relevé
+            label += record.getEventType();
+        } else {
+            // j'affiche le libellé par défaut
+            label += NbBundle.getMessage(MergeModel.class, "MergeModel." + rowType.toString());
+        }
+        
         return label;
     }
 

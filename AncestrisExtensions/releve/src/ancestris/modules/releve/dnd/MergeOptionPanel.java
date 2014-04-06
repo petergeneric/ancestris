@@ -6,7 +6,6 @@
 
 package ancestris.modules.releve.dnd;
 
-import ancestris.modules.releve.ReleveOptionsPanel.ImageDirectoryModel;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.io.File;
@@ -48,7 +47,11 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
     }
 
-    public void saveData() {
+    public void loadPreferences() {
+        SourceModel.getModel().loadPreferences();
+    }
+    
+    public void savePreferences() {
         SourceModel.getModel().savePreferences();
     }
 
@@ -334,7 +337,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
                         .append(element.sourceName)
                         .append(";");
             }
-            NbPreferences.forModule(ImageDirectoryModel.class).put(
+            NbPreferences.forModule(SourceModel.class).put(
                     SOURCE_PREFERENCE, values.toString());
         }
 

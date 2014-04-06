@@ -1,6 +1,5 @@
 package ancestris.modules.releve.model;
 
-import ancestris.modules.releve.ReleveEditorListener;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,8 +15,6 @@ public class RecordModel {
     protected ArrayList<Record> releveList = new ArrayList<Record>();
     private boolean dirty = false;
     
-    // liste des editeurs succeptibles d'être en train de modifier un releve
-    private ArrayList<ReleveEditorListener> editorListeners = new ArrayList<ReleveEditorListener>(1);
     private ArrayList<RecordModelListener> recordModelListeners = new ArrayList<RecordModelListener>(1);
 
     public RecordModel() {
@@ -174,18 +171,14 @@ public class RecordModel {
      * et reinitialise Dirty
      */
     protected void removeAll() {
-        try {
-            // je vide le modele
-            int previousRowCount = releveList.size();
-            releveList.clear();
-            if (previousRowCount > 0) {
-                fireRecordModelDeleted(0, previousRowCount - 1);
-            }
-            lock.clear();
-            resetDirty();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        // je vide le modele
+        int previousRowCount = releveList.size();
+        releveList.clear();
+        if (previousRowCount > 0) {
+            fireRecordModelDeleted(0, previousRowCount - 1);
         }
+        lock.clear();
+        resetDirty();
     }
 
     public Record getRecord(int index) {
@@ -233,7 +226,8 @@ public class RecordModel {
     ///////////////////////////////////////////////////////////////////////////
     // Implement Undo methods
     ///////////////////////////////////////////////////////////////////////////
-    public void notiFyFieldChanged(final Record record, final Field field, final Object oldValue) {
+    public void notiFyFieldChanged(final Record record, final Field.FieldType fieldType, final Field field, final Object oldValue) {
+        final int recordIndex = getIndex(record);
 
         // keep undo
         lock.addChange(new Undo() {
@@ -241,11 +235,11 @@ public class RecordModel {
             @Override
             Record undo() {
                 field.setValue(oldValue);
+                fireRecordModelUpdated(recordIndex, fieldType);
                 return record;
             }
         });
-        int recordIndex = getIndex(record);
-        fireRecordModelUpdated(recordIndex, recordIndex);
+        fireRecordModelUpdated(recordIndex, fieldType);
     }
 
 
@@ -285,6 +279,13 @@ public class RecordModel {
         }
     }
 
+    public void fireRecordModelUpdated (int recordIndex, Field.FieldType filedType) {
+          for (RecordModelListener listener : recordModelListeners) {
+            listener.recordUpdated(recordIndex, filedType);
+        }
+    }
+
+    
     public void fireAllChanged () {
           for (RecordModelListener listener : recordModelListeners) {
             listener.allChanged();
@@ -294,21 +295,7 @@ public class RecordModel {
     ///////////////////////////////////////////////////////////////////////////
     // Manager VerificationListener
     ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @param validationListeners the validationListeners to set
-     */
-    public void addReleveEditorListener(ReleveEditorListener listener) {
-        editorListeners.add(listener);
-    }
-
-    /**
-     * @param validationListeners the validationListeners to set
-     */
-    public void removeReleveEditorListener(ReleveEditorListener listener) {
-        editorListeners.remove(listener);
-    }
-
+   
     /**
      * vérifie si les champs obligatoires sont renseignés
      *  - date de l'évènement

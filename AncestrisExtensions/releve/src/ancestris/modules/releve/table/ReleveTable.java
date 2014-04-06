@@ -1,11 +1,14 @@
 package ancestris.modules.releve.table;
 
-import ancestris.modules.releve.dnd.RecordTransferHandle;
+import ancestris.modules.releve.dnd.ViewWrapperManager;
 import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
+import ancestris.modules.releve.model.GedcomLink;
 import ancestris.modules.releve.model.Record;
+import genj.gedcom.Entity;
 import genj.gedcom.PropertyDate;
 import genj.util.swing.HeadlessLabel;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -15,7 +18,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
 import javax.swing.AbstractAction;
-import javax.swing.DropMode;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -34,7 +36,7 @@ import org.openide.util.NbPreferences;
  */
 public class ReleveTable extends JTable {
 
-    private TableSelectionListener selectionListener = null;
+    private RelevePanelListener panelListener = null;
 
     public ReleveTable () {
         super();
@@ -45,6 +47,7 @@ public class ReleveTable extends JTable {
         
         // j'ajoute le renderer pour l'affichage des dates et le choix de la font
         setDefaultRenderer(Object.class, new Renderer());
+        setDefaultRenderer(Integer.class, new Renderer());
         
         Renderer r = new Renderer();
         r.setFont(getFont());
@@ -69,8 +72,7 @@ public class ReleveTable extends JTable {
         getActionMap().put("shortCutKeyDown", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                //swapRecordNext();
-                selectionListener.swapRecordNext();
+                panelListener.swapRecordNext();
                 System.out.println("down");
             }
         });
@@ -80,8 +82,7 @@ public class ReleveTable extends JTable {
         getActionMap().put("shortCutKeyUp", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                //swapRecordPrevious();
-                selectionListener.swapRecordPrevious();
+                panelListener.swapRecordPrevious();
                 System.out.println("up");
             }
         });
@@ -118,11 +119,34 @@ public class ReleveTable extends JTable {
         super.setModel(tableModel);
         // j'applique le nouveau layout
         loadColumnLayout();
+        
+        addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JTable target = (JTable) e.getSource();
+                int row = target.rowAtPoint(e.getPoint());
+                int column = target.columnAtPoint(e.getPoint());
+
+                if (column == 0) {
+                    GedcomLink gedcomLink = (GedcomLink) getModel().getValueAt(convertRowIndexToModel(row), -1);
+                    Entity entity = gedcomLink.getEntity();
+                    
+                    
+                    if (entity != null) {
+                        if (e.getClickCount() == 2) {
+                             ViewWrapperManager.setRootAllTreeview(entity);
+                        } else {
+                            ViewWrapperManager.showEntityAllTreeview(entity);
+                        }
+                    }
+                }
+            }        
+        });
     }
 
     public void componentClosed() {
         saveColumnLayout();
-        ((TableModelRecordAbstract)getModel()).destroy();
     }
 
     public void dropRecord(Record record) {
@@ -131,7 +155,7 @@ public class ReleveTable extends JTable {
 
     /**
      * affiche un relevé
-     * si le releve est null, nettoie l'affichage
+     * si le relevé est nul, nettoie l'affichage
      * @param record
      */
     public void selectRecord(int recordIndex) {
@@ -158,8 +182,8 @@ public class ReleveTable extends JTable {
     /**
      * @param validationListeners the validationListeners to set
      */
-    public void setTableSelectionListener(TableSelectionListener listener) {
-        selectionListener = listener;
+    public void setTableSelectionListener(RelevePanelListener listener) {
+        panelListener = listener;
     }
 
     /**
@@ -168,13 +192,13 @@ public class ReleveTable extends JTable {
      * @param isNewRecord true si c'est un nouveau releve, false si c'est
      */
     public void fireTableSelectionListener(int recordIndex, boolean isNewRecord) {
-        if ( selectionListener != null) {
-            selectionListener.tableRecordSelected(recordIndex, isNewRecord);
+        if ( panelListener != null) {
+            panelListener.tableRecordSelected(recordIndex, isNewRecord);
         }
     }
 
     /**
-     * Verification de la ligne courante avant de selectionner une autre ligne
+     * Vérification de la ligne courante avant de sélectionner une autre ligne
      * avec un clic gauche de la souris
      * @param e
      */
@@ -185,8 +209,8 @@ public class ReleveTable extends JTable {
             boolean result = true;
             if (getSelectedRowCount() > 0) {
                 if (getSelectedRow() != -1) {
-                    if (convertRowIndexToModel(getSelectedRow()) != selectionListener.getCurrentRecordIndex()) {
-                        result = selectionListener.verifyRecord();                        
+                    if (convertRowIndexToModel(getSelectedRow()) != panelListener.getCurrentRecordIndex()) {
+                        result = panelListener.verifyRecord();                        
                     }
                 }
             }
@@ -210,7 +234,7 @@ public class ReleveTable extends JTable {
      */
     @Override
     public void changeSelection(int rowIndex, int columnIndex, final boolean toggle, final boolean extend) {
-        if (selectionListener.verifyRecord() == true) {
+        if (panelListener.verifyRecord() == true) {
             // j'execute le traitement par defaut
             super.changeSelection(rowIndex, columnIndex, toggle, extend);
             if (!toggle && !extend) {
@@ -314,13 +338,39 @@ public class ReleveTable extends JTable {
             }
 
             // je choisis les couleurs
+            boolean gedcomLinked = false;
+            
+            if ( col == 0) {
+                GedcomLink gedcomLink = (GedcomLink) table.getModel().getValueAt(table.convertRowIndexToModel(row), -1);
+                if (gedcomLink != null && gedcomLink.getCompareResult()== GedcomLink.CompareResult.EQUAL) {
+                    gedcomLinked = true;
+                }
+            }
+            
             if (selected) {
-                setBackground(table.getSelectionBackground());
-                setForeground(table.getSelectionForeground());
-                setOpaque(true);
+                // noir sur fond magenta
+                if (gedcomLinked) {
+                    // noir sur fond magenta
+                    setForeground(table.getSelectionForeground());
+                    setBackground(Color.MAGENTA);
+                    setOpaque(true);
+                } else {
+                    setBackground(table.getSelectionBackground());
+                    setForeground(table.getSelectionForeground());
+                    setOpaque(true);
+                }
             } else {
-                setForeground(table.getForeground());
-                setOpaque(false);
+
+                if (gedcomLinked) {
+                    // noir sur fond rose
+                    setForeground(table.getForeground());
+                    setBackground(Color.PINK);
+                    setOpaque(true);
+                } else {
+                    setForeground(table.getForeground());
+                    setOpaque(false);
+                }
+
             }
             // ready
             return this;

@@ -9,7 +9,6 @@ import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;

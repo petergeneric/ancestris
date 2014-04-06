@@ -1,4 +1,4 @@
-package ancestris.modules.releve.editor;
+package ancestris.modules.releve.imageBrowser;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -28,15 +27,15 @@ import javax.swing.SwingUtilities;
 
 /**
  * Affiche une image
- * Commandes publiques :
- *    BrowserPanel()
- *        constructeur
- *    void showImage(BufferedImage newImage)
- *        affiche une image
- *    void adjustAreaColor()
- *        ajuste les couleur d'une zone a selectionner avec la souris
+ Commandes publiques :
+    ImagePanel()
+        constructeur
+    void showImage(BufferedImage newImage)
+        affiche une image
+    void adjustAreaColor()
+        ajuste les couleur d'une zone a selectionner avec la souris
  */
-public class BrowserPanel extends JPanel {
+public class ImagePanel extends JPanel {
 
     public static final String ZOOM_LEVEL_CHANGED_PROPERTY = "zoomLevel";
     public static final String ZOOM_INCREMENT_CHANGED_PROPERTY = "zoomIncrement";
@@ -72,7 +71,7 @@ public class BrowserPanel extends JPanel {
     /**
      * constructeur 
      */
-    public BrowserPanel() {
+    public ImagePanel() {
         setOpaque(false);
 
         // definitions pour la zone de selection
@@ -160,7 +159,7 @@ public class BrowserPanel extends JPanel {
         // je selectionne le curseur de deplacement
         setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
     }
-
+    
     /**
      * affiche une image
      */
@@ -438,7 +437,7 @@ public class BrowserPanel extends JPanel {
         areaSrcx = areaSrcy = areaDestx = areaDesty = 0;
         mouseMode = MouseMode.MOVE;
         setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-
+        System.out.println("ImagePanel MOVE_CURSOR");
         repaint();
     }
 

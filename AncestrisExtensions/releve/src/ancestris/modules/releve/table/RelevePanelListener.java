@@ -4,7 +4,7 @@ package ancestris.modules.releve.table;
  * Interface pour les listeners de la sélection de relevés dans la table
  * @author Michel
  */
-public interface TableSelectionListener {
+public interface RelevePanelListener {
     public void tableRecordSelected (int recordIndex, boolean isNew);
     public int getCurrentRecordIndex();
     public boolean verifyRecord();

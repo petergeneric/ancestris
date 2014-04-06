@@ -102,7 +102,7 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
                break;
             case occupation:
                columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.occupation");
-               valueList = dataManager.getCompletionProvider().getPlaces(IncludeFilter.ALL);
+               valueList = dataManager.getCompletionProvider().getOccupations(IncludeFilter.ALL);
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             default:

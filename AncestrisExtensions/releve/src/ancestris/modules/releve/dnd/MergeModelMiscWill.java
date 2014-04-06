@@ -498,8 +498,8 @@ class MergeModelMiscWill extends MergeModel {
                 }
 
                 // je copie la source du testament
-                if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
-                    copySource((Source) getRow(RowType.EventSource).entityObject, willProperty, record);
+                if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
+                    copySource((Source) getRow(RowType.EventSource).entityObject, willProperty, isChecked(RowType.EventPage), record);
                 }
 
                 // je copie le commentaire du testament
@@ -586,8 +586,8 @@ class MergeModelMiscWill extends MergeModel {
                 }
 
                 // je copie la source du releve de l'insinuation
-                if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
-                    copySource((Source) getRow(RowType.EventSource).entityObject, insinuationProperty, record);
+                if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
+                    copySource((Source) getRow(RowType.EventSource).entityObject, insinuationProperty, isChecked(RowType.EventPage), record);
                 }
 
                 // je copie le lieu de l'insinuation

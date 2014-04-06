@@ -35,6 +35,8 @@ public class MergeRecord {
      */
     protected static enum EventTypeTag {
         MARC,
+        MARB,
+        MARL,
         WILL,
         EVEN
     }
@@ -76,8 +78,15 @@ public class MergeRecord {
             type = RecordType.Death;
         } else {
             type = RecordType.Misc;
-            if (record.getEventType().toString().toLowerCase().equals("cm") || record.getEventType().toString().toLowerCase().indexOf("mariage") != -1) {
-                eventTypeTag = EventTypeTag.MARC;
+            String eventType = record.getEventType().toString().toLowerCase();
+            if (eventType.equals("cm") || eventType.indexOf("mariage") != -1) {
+                if ( eventType.contains("ban") || eventType.contains("publication")) {
+                    eventTypeTag = EventTypeTag.MARB;
+                } else if ( eventType.contains("certificat") ) {
+                    eventTypeTag = EventTypeTag.MARL;
+                } else{
+                    eventTypeTag = EventTypeTag.MARC;
+                }
             } else if (record.getEventType().toString().toLowerCase().equals("testament")) {
                 eventTypeTag = EventTypeTag.WILL;
             } else {
@@ -117,6 +126,50 @@ public class MergeRecord {
     EventTypeTag getEventTypeTag() {
         return eventTypeTag;
     }
+    
+     public String getTag() {
+        String tag;
+        switch (eventTypeTag) {
+            case MARB :
+                tag = "MARB";
+                break;
+            case MARC :
+                tag = "MARC";
+                break;
+            case MARL :
+                tag = "MARL";
+                break;
+            case WILL : 
+                tag = "WILL";
+                break;
+            default:
+                tag = "EVEN";
+                break;
+        }
+        return tag;
+    }
+     
+    public String getTagLabel() {
+        String tag;
+        switch (eventTypeTag) {
+            case MARB :
+                tag = "les bans de mariage";
+                break;
+            case MARC :
+                tag = "le contrat de mariage";
+                break;
+            case MARL :
+                tag = "le certtificat de mariage";
+                break;
+            case WILL : 
+                tag = "le testament";
+                break;
+            default:
+                tag = "l'évènement";
+                break;
+        }
+        return tag;
+    }
 
     String getEventTypeWithDate() {
         String eventTypeWithDate = record.getEventType().toString();
@@ -137,16 +190,12 @@ public class MergeRecord {
         return sourceTitle;
     }
 
+    String getEventCote() {
+        return record.getCote().toString();
+    }
+
     String getEventPage() {
-        String eventPage = "";
-        eventPage = record.getCote().toString();
-        if( !record.getFreeComment().isEmpty() ) {
-            if ( !eventPage.isEmpty()) {
-                eventPage += ", ";
-            }
-            eventPage += record.getFreeComment().toString();
-        }
-        return eventPage;
+        return record.getFreeComment().toString();
     }
 
     PropertyDate getEventDate() {
@@ -1103,6 +1152,19 @@ public class MergeRecord {
         }
         return comment;
     }
+    
+    protected String makeEventPage() {
+        String eventPage = "";
+        eventPage = record.getCote().toString();
+        if( !record.getFreeComment().isEmpty() ) {
+            if ( !eventPage.isEmpty()) {
+                eventPage += ", ";
+            }
+            eventPage += record.getFreeComment().toString();
+        }
+        return eventPage;
+    }
+
 
     /**
      * concatene plusieurs commentaires dans une chaine , séparés par une virgule
@@ -1210,7 +1272,8 @@ public class MergeRecord {
             if ( !recordBirthDate.isComparable() ) {
                 resultDate.setValue(getEventDate().getValue());
             }
-        } else if (type == RecordType.Marriage  || (type == RecordType.Misc && eventTypeTag == EventTypeTag.MARC )) {
+        } else if (type == RecordType.Marriage  
+                || (type == RecordType.Misc && (eventTypeTag == EventTypeTag.MARB || eventTypeTag == EventTypeTag.MARC || eventTypeTag == EventTypeTag.MARL) )) {
 
             if ( ! recordBirthDate.isComparable() &&  record.getEventDateProperty().isComparable()) {
                 // la date de naissance n'est pas valide, 
@@ -1348,6 +1411,32 @@ public class MergeRecord {
         return resultDate;
     }
 
+/**
+     * calcule la date de deces de l'individu ou de l'epouse
+     *  si record=RecordBirth :
+     *    retourne "apres" la date de l'évènement arrondie à l'année.
+     *  si record=RecordMarriage :
+     *    retourne "apres" la date de mariage l'évènement arrondie à l'année
+     *  si record=RecordDeath 
+     *    retourne la date l'évènement.
+     *  si record=RecordMisc
+     *    retourne la date "a partir de" la date de l'évènement arrondie a l'année. 
+     * 
+     * @param birthDate date de naissance de l'individu ou de l'épouse
+     * @param age       age de l'individu ou de l'épouse
+     * @param marriedMarriageDate     date de mariage avec l'ex conjoint (null si pas d'ex conjoint
+     * @return
+     */
+    private PropertyDate calculateDeathDate() throws Exception {
+        PropertyDate resultDate = new PropertyDate();
+        if (type == RecordType.Death) {
+            resultDate.setValue(getEventDate().getValue());
+        } else {            
+            resultDate.setValue(PropertyDate.FROM, getYear(getEventDate().getStart()), null, "date décès= à partir de la date de l'évènement");            
+        }
+
+        return resultDate;
+    }
 
     
     /**
@@ -1620,12 +1709,7 @@ public class MergeRecord {
 
         PropertyDate getDeathDate() throws Exception {
             if (DeathDate == null) {
-                if (type == RecordType.Death) {
-                    DeathDate = getEventDate();
-                } else {
-                    // date de deces inconnue
-                    DeathDate = new PropertyDate();
-                }
+                DeathDate = calculateDeathDate();                
             }
             return DeathDate;
         }

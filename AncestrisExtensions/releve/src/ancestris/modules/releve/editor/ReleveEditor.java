@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.Iterator;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -172,8 +171,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         if ( indiLastNameField != null && indiFatherLastNameField != null ) {
             // d'abord, je commite le champ en cours d'édition
             commitCurrentFocusedBean();
-
-            recordModel.notiFyFieldChanged(indiFatherLastNameBean.getRecord(), indiFatherLastNameField, indiLastNameField.getValue());
+            
+            recordModel.notiFyFieldChanged(indiFatherLastNameBean.getRecord(), currentFocusedBean.getFieldType(), indiFatherLastNameField, indiLastNameField.getValue());
             indiFatherLastNameField.setValue(indiLastNameField.getValue());
             // je refraichis l'affichage
             indiFatherLastNameBean.refresh();
@@ -254,7 +253,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
             commitCurrentFocusedBean();
             
             wifeFatherLastNameField.setValue(wifeLastNameField.getValue());        
-            recordModel.notiFyFieldChanged(wifeFatherLastNameBean.getRecord(), wifeFatherLastNameField, wifeLastNameField.getValue());
+            recordModel.notiFyFieldChanged(wifeFatherLastNameBean.getRecord(), currentFocusedBean.getFieldType(), wifeFatherLastNameField, wifeLastNameField.getValue());
             // je refraichis l'affichage
             wifeFatherLastNameBean.refresh();
 
@@ -303,13 +302,13 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                 }
             }
         }
-
+        
         // je copie le nom
         if ( eventDate != null && indiBirthDate != null ) {
             // d'abord, je commite le champ en cours d'édition
             commitCurrentFocusedBean();
 
-            recordModel.notiFyFieldChanged(indiBirthDateBean.getRecord(), eventDate, indiBirthDate.getValue());
+            recordModel.notiFyFieldChanged(indiBirthDateBean.getRecord(), currentFocusedBean.getFieldType(), eventDate, indiBirthDate.getValue());
             indiBirthDate.setValue(eventDate.getValue());
         
             // je refraichis l'affichage
@@ -376,8 +375,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
             KeyStroke keyStroke = null;
             Record record = recordModel.getRecord(recordIndex);
             if (record != null) {
-                for (Iterator<EditorBeanGroup> groupIter = EditorBeanGroup.getGroups(record.getType()).iterator(); groupIter.hasNext();) {
-                    EditorBeanGroup group = groupIter.next();
+                for (EditorBeanGroup group : EditorBeanGroup.getGroups(record.getType())) {
                     if (!group.isVisible()) {
                         continue;
                     }
@@ -385,9 +383,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     keyStroke = group.getKeystroke();
                     addRow(lineNo, group.getTitle(), null, keyStroke);
                     lineNo++;
-
-                    for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext();) {
-                        EditorBeanField editorBeanField = fieldIter.next();
+                    for (EditorBeanField editorBeanField : group.getFields()) {
                         if (!editorBeanField.isVisible()) {
                             continue;
                         }
@@ -453,7 +449,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                                 break;
 
                             case indiSex:
-                            //case indiMarriedSex:
+                                //case indiMarriedSex:
                             case wifeSex:
                                 //case wifeMarriedSex:
                                 bean = new BeanSex();
@@ -791,7 +787,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
 
             // je memorise l'ancienne valeur pour undo et notifie les listeners du changement
             if (recordModel != null && !oldValue.equals(bean.getField().toString()) ) {
-                recordModel.notiFyFieldChanged(record, bean.getField(), oldValue);
+                recordModel.notiFyFieldChanged(record, bean.getFieldType(), bean.getField(), oldValue);
             }
 
             //je mets à jour la liste de completion des noms, prénoms, professions et type d'évènements
@@ -952,9 +948,12 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         jButtonPlace = new javax.swing.JButton();
         fieldsPanel = new javax.swing.JPanel();
 
-        setMinimumSize(new java.awt.Dimension(200, 300));
+        setMinimumSize(null);
         setOpaque(false);
+        setPreferredSize(null);
         setLayout(new java.awt.BorderLayout());
+
+        jScrollPane1.setPreferredSize(null);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
@@ -1040,7 +1039,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
      * 
      * @param fieldType
      */
-    private void refreshBeanField(FieldType fieldType) {
+    public void refreshBeanField(FieldType fieldType) {
         // je cherche le champ contenant le nom de l'individu
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {

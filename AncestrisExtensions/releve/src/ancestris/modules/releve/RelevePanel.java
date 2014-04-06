@@ -7,11 +7,12 @@
 package ancestris.modules.releve;
 
 import ancestris.modules.releve.dnd.RecordTransferHandle;
-import ancestris.modules.releve.table.TableSelectionListener;
+import ancestris.modules.releve.table.RelevePanelListener;
 import ancestris.modules.releve.editor.ReleveEditor;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.RecordModelListener;
 import ancestris.modules.releve.table.TableModelRecordAbstract;
 import ancestris.modules.releve.table.TableModelRecordAll;
 import ancestris.modules.releve.table.TableModelRecordBirth;
@@ -35,7 +36,7 @@ import org.openide.util.NbPreferences;
  *
  * @author Michel
  */
-public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListener, TableSelectionListener  {
+public class RelevePanel extends javax.swing.JPanel implements RelevePanelListener  {
     private boolean standaloneMode = false;
     private MenuCommandProvider menuCommandProvider;
     private DataManager dataManager = null;
@@ -53,8 +54,6 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         initComponents();
         // J'applique un poids=1 pour que seule la largeur du composant de gauche soit mdofiée quand on change la taille de la fenetre
         jSplitPane1.setResizeWeight(1);
-        // j'ajoute l'editeur a l'ecoute de la selection de ligne dans la table
-        //releveTable.setTableSelectionListener(releveEditor);
 
         // je force la largeur du jButtonFile pour contenir le texte en entier et
         // et la hauteur egale aux autres boutons
@@ -99,7 +98,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         this.dataManager = dataManager;
         this.panelType = panelType;
 
-        TableModelRecordAbstract tableModel;
+        final TableModelRecordAbstract tableModel;
         switch (panelType) {
             case birth:
                 tableModel = new TableModelRecordBirth(dataManager);
@@ -125,10 +124,67 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         releveTable.setDropMode(DropMode.USE_SELECTION);
         releveTable.setTransferHandler(new RecordTransferHandle(dataManager));
         releveTable.setDragEnabled(true);
-
-        releveEditor.setModel(dataManager, menuComandProvider);
-
         
+        releveEditor.setModel(dataManager, menuComandProvider);
+        
+        RecordModelListener listener = new RecordModelListener() {
+
+            @Override
+            public void recordInserted(int firstIndex, int lastIndex) {
+                // je mets à jour la table 
+                tableModel.fireTableRowsInserted(firstIndex, lastIndex);
+                // je mets à jour l'editeur
+                if( firstIndex <= currentRecordIndex &&currentRecordIndex <= lastIndex ) {
+                    // je refraichis l'affichage de tous les champs
+                    releveEditor.selectRecord(currentRecordIndex);
+                }
+            }
+
+            @Override
+            public void recordDeleted(int firstIndex, int lastIndex) {
+                // je mets à jour la table 
+                tableModel.fireTableRowsDeleted(firstIndex, lastIndex);
+                // je mets à jour l'editeur
+                if( firstIndex <= currentRecordIndex &&currentRecordIndex <= lastIndex ) {
+                    releveEditor.selectRecord(-1);
+                }
+                
+            }
+
+            @Override
+            public void recordUpdated(int firstIndex, int lastIndex) {
+                 // je mets à jour la table 
+                tableModel.fireTableRowsUpdated(firstIndex, lastIndex);
+                // je mets à jour l'editeur
+                if( firstIndex <= currentRecordIndex &&currentRecordIndex <= lastIndex ) {
+                    // je refraichis l'affichage de tous les champs
+                    releveEditor.selectRecord(currentRecordIndex);
+                }
+            }
+
+            @Override
+            public void recordUpdated(int recordIndex, Field.FieldType filedType) {
+                // je mets à jour la table 
+                tableModel.fireTableRowsUpdated(recordIndex, recordIndex);
+                // je mets à jour l'editeur
+                if( recordIndex == currentRecordIndex  ) {
+                    releveEditor.refreshBeanField(filedType);
+                }
+            }
+            
+            @Override
+            public void allChanged() {
+                // je mets à jour la table 
+                tableModel.fireTableDataChanged();
+                // je mets à jour l'editeur
+                releveEditor.selectRecord(-1);
+            }
+
+            
+        };
+        
+        dataManager.getDataModel().addRecordModelListener(listener);
+                
         //jScrollPaneTable.setViewportView(releveTable);
         
         // je recupere le toolTipText du bouton
@@ -238,6 +294,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
     /**
      * active le listener de la souris pour l'affichage du popupmenu quand
      * on clique avec le bouton droit de la souris
+     * @param mouseListener
      */
     @Override
     public void addMouseListener(MouseListener mouseListener) {
@@ -535,7 +592,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         }
     }
 
-    void insertRecord() {
+    public void insertRecord() {
         // avant de creer le nouveau releve , je verifie la coherence du releve courant
         if (verifyRecord()) {
             // je cree un nouveau releve
@@ -584,9 +641,8 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         } 
     }
 
-    @Override
     public void swapRecordNext() {
-        // avant de deplacer le  releve , je verifie la coherence du releve courant
+        // avant de deplacer le releve , je verifie la coherence du releve courant
         if (verifyRecord()) {
             // j'echange la position du releve avec le suivant
             dataManager.swapRecordNext(dataManager.getRecord(currentRecordIndex));
@@ -596,7 +652,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
 
     @Override
     public void swapRecordPrevious() {
-        // avant de déplacer le  releve , je verifie la coherence du releve courant
+        // avant de déplacer le releve , je verifie la coherence du releve courant
         if (verifyRecord()) {
             // j'echange la position du releve avec le suivant
             dataManager.swapRecordPrevious(dataManager.getRecord(currentRecordIndex));
@@ -606,7 +662,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
     
     @Override
     public void renumberRecords() {
-        // avant de déplacer le  releve , je verifie la coherence du releve courant
+        // avant de renuméroter les relevés , je vérifie la coherence du releve courant
         if (verifyRecord()) {
             
             int[] tableIndexList = new int[releveTable.getRowCount()];
@@ -620,9 +676,9 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
 
     public void removeRecord() {
 
-         Toolkit.getDefaultToolkit().beep();
+        Toolkit.getDefaultToolkit().beep();
         int choice = JOptionPane.showConfirmDialog(this,
-                "Confirmez-vous la suppression ?",
+                NbBundle.getMessage(ReleveTopComponent.class, "RelevePanel.removeRecord.message"),
                 dialogTitle,
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
@@ -683,19 +739,19 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
 
     }
 
-    public int getEditorWidth() {
+    private int getEditorWidth() {
         int width = Integer.valueOf(NbPreferences.forModule(RelevePanel.class).get(
                 panelType.name() + "Width", "270"));
         return width;
     }
 
-    public void putEditorWidth(int width) {
+    private void putEditorWidth(int width) {
         NbPreferences.forModule(RelevePanel.class).put(
                 panelType.name() + "Width", String.valueOf(width));
     }
     
     ///////////////////////////////////////////////////////////////////////////
-    // Implement TableSelectionListener methods
+    // Implement RelevePanelListener methods
     ///////////////////////////////////////////////////////////////////////////
 
     @Override
@@ -704,6 +760,11 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         // je memorise le numero du releve
         currentRecordIndex = recordIndex;
     }
+
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // Implement ReleveEditorListener methods
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * retourne l'index du releve courant
@@ -714,7 +775,9 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveEditorListe
         return currentRecordIndex;
     }
     
+    ///////////////////////////////////////////////////////////////////////////
+    // Implement RelevePanelListener methods
+    ///////////////////////////////////////////////////////////////////////////
     
-
-
+    
 }

@@ -97,6 +97,27 @@ public class ViewWrapperManager {
         }
     }
     
+    static public void setRootAllTreeview(Entity entity) {
+        // j'active le drag and drop pour toutes les vues ouvertes avec meme gedcom que l'entité
+        for (TreeTopComponent tc : AncestrisPlugin.lookupAll(TreeTopComponent.class)) {
+            TreeView treeView = (TreeView) tc.getView();
+            if (treeView.getGedcom().equals(entity.getGedcom())) {
+                TreeViewWrapper treeViewWrapper = new TreeViewWrapper(treeView);
+                treeViewWrapper.setRoot(entity);
+            }
+        }
+    }
+    
+    static public void showEntityAllTreeview(Entity entity) {
+        // j'active le drag and drop pour toutes les vues ouvertes avec meme gedcom que l'entité
+        for (TreeTopComponent tc : AncestrisPlugin.lookupAll(TreeTopComponent.class)) {
+            TreeView treeView = (TreeView) tc.getView();
+            if (treeView.getGedcom().equals(entity.getGedcom())) {
+                TreeViewWrapper treeViewWrapper = new TreeViewWrapper(treeView);
+                treeViewWrapper.show(entity);
+            }
+        }
+    }
     
    /**
     * 
@@ -159,11 +180,12 @@ public class ViewWrapperManager {
         @Override
         public void show(Entity entity) {
 
-            // solution 1 : ne fonctionne qu'avec Anectris 0.7 
+            // solution 1 : ne fonctionne qu'avec Ancestris 0.7 
             // je centre la vue sur l'entité
             //treeView.setContext(new Context(entity), true);
             
             // solution 2 : pas ortodoxe , mais ça marche 
+            // je centre la vue sur l'entité
             // il faudra demander à Daniel s'il peut rendre la méthode publique 
             try {
                 // je centre l'entité dans la vue

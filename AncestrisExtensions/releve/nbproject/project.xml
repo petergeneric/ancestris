@@ -146,5 +146,8 @@
                 <binary-origin>release/modules/ext/swingbits.jar</binary-origin>
             </class-path-extension>
         </data>
+        <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>retouver</word>
+        </spellchecker-wordlist>
     </configuration>
 </project>

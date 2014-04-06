@@ -20,8 +20,9 @@ import org.openide.util.Utilities;
  */
 public class DataManager implements PlaceManager, GedcomFileListener  {
 
-    private RecordModel   dataModel = new RecordModel();
-    private CompletionProvider completionProvider  = new CompletionProvider();
+    private final RecordModel   dataModel = new RecordModel();
+    private final CompletionProvider completionProvider  = new CompletionProvider();
+    private final GedcomLinkProvider gedcomLinkProvider = new GedcomLinkProvider();    
     Gedcom completionGedcom;
     File currentFile;
     
@@ -115,7 +116,8 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
      */
     public int addRecord(Record newRecord) {
         int recordIndex = dataModel.addRecord(newRecord);
-        getCompletionProvider().addRecord(newRecord);
+        completionProvider.addRecord(newRecord);
+        gedcomLinkProvider.addRecord(newRecord);
         return recordIndex;
     }
    
@@ -136,9 +138,11 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         dataModel.addRecords(fileBuffer.getRecords());
 
         for (Record record : fileBuffer.getRecords()) {
-            getCompletionProvider().addRecord(record);
+            completionProvider.addRecord(record);
+            gedcomLinkProvider.addRecord(record);
         }
-
+        
+        
         // RAZ de l'etat du modele
         if (!append) {
             resetDirty();
@@ -153,11 +157,13 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     public void insertRecord(DataManager.RecordType recordType, int index) {
         Record newRecord = createRecord(recordType);
         dataModel.insertRecord(newRecord,index);
-        getCompletionProvider().addRecord(newRecord);
+        completionProvider.addRecord(newRecord);
+        gedcomLinkProvider.addRecord(newRecord);
     }
 
     public void removeRecord(Record record) {
-        getCompletionProvider().removeRecord(record);
+        gedcomLinkProvider.addRecord(record);
+        completionProvider.removeRecord(record);
         dataModel.removeRecord(record);
     }
 
@@ -179,10 +185,11 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     public void removeAll() {
         getCompletionProvider().removeAll();
         dataModel.removeAll();
-        setPlace("");
-        resetDirty();
+        gedcomLinkProvider.removeAll();
         // je restaure les donnees de completion du gedcom
         completionProvider.addGedcomCompletion(completionGedcom);
+        setPlace("");
+        resetDirty();
     }
 
     public Record getRecord( int recordIndex ) {
@@ -209,16 +216,19 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         duplicateControlEnabled =  Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("DuplicateRecordControlEnabled", "true"));
         valueControlEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("ValueControlEnabled", "true"));
         boolean completion = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("GedcomCompletionEnabled", "true"));
-        if ( completion ) {
-            //Context context = Utilities.actionsGlobalContext().lookup(Context.class);
-            //Context context = App.center.getSelectedContext(true);
-            Context context = getSelectedContext(true);
-            if (context != null && context.getGedcom() != null) {
-                completionProvider.addGedcomCompletion(context.getGedcom());
-            } else {
-                // rien a faire
-            }            
-        } 
+        
+        setGedcomCompletion(completion);
+        
+//        if ( completion ) {
+//            //Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+//            //Context context = App.center.getSelectedContext(true);
+//            Context context = getSelectedContext(true);
+//            if (context != null && context.getGedcom() != null) {
+//                completionProvider.addGedcomCompletion(context.getGedcom());
+//            } else {
+//                // rien a faire
+//            }            
+//        } 
     }
 
     public void updateOptions( boolean copyCoteEnabled,  boolean copyEventDateEnabled,
@@ -334,8 +344,8 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     ///////////////////////////////////////////////////////////////////////////
 
     // listeners devant être prevenus du changement de lieu
-    private ArrayList<PlaceListener> placeListeners = new ArrayList<PlaceListener>(1);
-    private FieldPlace recordsInfoPlace = new FieldPlace();
+    private final ArrayList<PlaceListener> placeListeners = new ArrayList<PlaceListener>(1);
+    private final FieldPlace recordsInfoPlace = new FieldPlace();
     
     private boolean placeChanged = false;
     
@@ -490,4 +500,17 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         completionGedcom = null;
     }
 
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // accesseurs gedcomToLink
+    ///////////////////////////////////////////////////////////////////////////
+
+    public void showGedcomLink(boolean state) {
+        gedcomLinkProvider.init(dataModel, completionGedcom, state);        
+    }
+    
+    public GedcomLink getGedcomLink(Record record) {
+        return gedcomLinkProvider.getgedcomLink(record);
+    }
+    
 }

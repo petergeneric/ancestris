@@ -348,9 +348,9 @@ class MergeModelBirth extends MergeModel {
 
         // je copie la source de la naissance du releve dans l'individu
         if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
-            copySource((Source) getRow(RowType.EventSource).entityObject, birthProperty, record);
+            copySource((Source) getRow(RowType.EventSource).entityObject, birthProperty, isChecked(RowType.EventPage), record);
         }
-
+        
         // je copie le lieu de la naissance .
         if (isChecked(RowType.IndiBirthPlace)) {
             copyPlace(record.getIndi().getBirthPlace(),  birthProperty);

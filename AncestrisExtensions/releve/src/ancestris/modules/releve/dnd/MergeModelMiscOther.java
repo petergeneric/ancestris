@@ -605,8 +605,8 @@ class MergeModelMiscOther extends MergeModel {
             }
 
             // je copie la source de l'evenement
-            if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
-                copySource((Source) getRow(RowType.EventSource).entityObject, eventProperty, record);
+            if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
+                copySource((Source) getRow(RowType.EventSource).entityObject, eventProperty, isChecked(RowType.EventPage), record);
             }
 
             // je copie le commentaire de l'evenement

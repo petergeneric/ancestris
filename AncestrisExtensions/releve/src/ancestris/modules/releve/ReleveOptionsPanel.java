@@ -7,16 +7,7 @@
 package ancestris.modules.releve;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileSystemView;
-import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /**
@@ -35,7 +26,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
      * charge les valeurs des options
      * appelé à chaque update de ReleveOptionsPanelController
      */
-    void load() {
+    void loadPreferences() {
         jCheckBoxCopyCote.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("CopyCoteEnabled", "true")));
         jCheckBoxCopyEventDate.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("CopyEventDateEnabled", "true")));
         jCheckBoxCopyFreeComment.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("CopyFreeCommentEnabled", "true")));
@@ -44,13 +35,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jCheckBoxDuplicateRecord.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("DuplicateRecordControlEnabled", "true")));
         jCheckBoxNewValueControl.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("ValueControlEnabled", "true")));
         jCheckBoxGedcomCompletion.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("GedcomCompletionEnabled", "true")));
-        jCheckBoxBrowser.setSelected(Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("ImgageBrowserVisible", "false")));
-
-        // je charge la liste des repertoires du browser d'images
-        jList1.setModel(ImageDirectoryModel.getModel());
-        if (ImageDirectoryModel.getModel().size() > 0 ) {
-            jList1.setSelectedIndex(0);
-        }
 
         // je charge les sources
         Collection< ? extends ReleveTopComponent> tcList = AncestrisPlugin.lookupAll(ReleveTopComponent.class);
@@ -59,6 +43,8 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
             ReleveTopComponent currentTc = tcList.iterator().next();
             mergeOptionPanel.initData(null, currentTc.getCurrentFile());
         }
+        
+        browserOptionsPanel1.loadPreferences();
 
     }
 
@@ -66,7 +52,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
      * enregistre les valeurs des options
      * appelé à chaque applyChanges  de ReleveOptionsPanelController
      */
-    void store() {
+    void savePreferences() {
         // options de copie des données dans les nouveaux releves
         NbPreferences.forModule(ReleveTopComponent.class).put("CopyCoteEnabled", String.valueOf(jCheckBoxCopyCote.isSelected()));
         NbPreferences.forModule(ReleveTopComponent.class).put("CopyEventDateEnabled", String.valueOf(jCheckBoxCopyEventDate.isSelected()));
@@ -78,10 +64,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         // completion avec un Gedcom
         NbPreferences.forModule(ReleveTopComponent.class).put("GedcomCompletionEnabled", String.valueOf(jCheckBoxGedcomCompletion.isSelected()));
 
-        NbPreferences.forModule(ReleveTopComponent.class).put("ImgageBrowserVisible", String.valueOf(jCheckBoxBrowser.isSelected()));
-
-        ImageDirectoryModel.getModel().savePreferences();
-
+        
         // je notifie les composants pour rafraichir les options
         for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
             tc.getDataManager().updateOptions(
@@ -94,10 +77,11 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
                     );
         }
 
-        mergeOptionPanel.saveData();
+        mergeOptionPanel.savePreferences();
+        browserOptionsPanel1.savePreferences();
 
     }
-
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -125,15 +109,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jButtonConfigEditor = new javax.swing.JButton();
         jLabelFiller = new javax.swing.JLabel();
         mergeOptionPanel = new ancestris.modules.releve.dnd.MergeOptionPanel();
-        jPanelImageBrowser = new javax.swing.JPanel();
-        jCheckBoxBrowser = new javax.swing.JCheckBox();
-        jLabelDirectory = new javax.swing.JLabel();
-        jButtonAddDirectory = new javax.swing.JButton();
-        jButtonRemoveDirectory = new javax.swing.JButton();
-        jButtonSwapPreviousDirectory = new javax.swing.JButton();
-        jButtonSwapNextDirectory = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<String>();
+        browserOptionsPanel1 = new ancestris.modules.releve.imageBrowser.BrowserOptionsPanel();
         fillerPanelVertical = new javax.swing.JPanel();
 
         setForeground(new java.awt.Color(200, 45, 45));
@@ -263,110 +239,13 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         jPanel2.add(mergeOptionPanel, gridBagConstraints);
-
-        jPanelImageBrowser.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.PanelImageBrowser"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
-        jPanelImageBrowser.setMaximumSize(new java.awt.Dimension(500, 130));
-        jPanelImageBrowser.setLayout(new java.awt.GridBagLayout());
-
-        jCheckBoxBrowser.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxBrowser.text")); // NOI18N
-        jCheckBoxBrowser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxBrowserActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 10);
-        jPanelImageBrowser.add(jCheckBoxBrowser, gridBagConstraints);
-
-        jLabelDirectory.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jLabelDirectory.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
-        jPanelImageBrowser.add(jLabelDirectory, gridBagConstraints);
-
-        jButtonAddDirectory.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonAddDirectory.text")); // NOI18N
-        jButtonAddDirectory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAddDirectoryActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
-        jPanelImageBrowser.add(jButtonAddDirectory, gridBagConstraints);
-
-        jButtonRemoveDirectory.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonRemoveDirectory.text")); // NOI18N
-        jButtonRemoveDirectory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRemoveDirectoryActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
-        jPanelImageBrowser.add(jButtonRemoveDirectory, gridBagConstraints);
-
-        jButtonSwapPreviousDirectory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowup16.png"))); // NOI18N
-        jButtonSwapPreviousDirectory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSwapPreviousDirectoryActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
-        jPanelImageBrowser.add(jButtonSwapPreviousDirectory, gridBagConstraints);
-
-        jButtonSwapNextDirectory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowdown16.png"))); // NOI18N
-        jButtonSwapNextDirectory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSwapNextDirectoryActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
-        jPanelImageBrowser.add(jButtonSwapNextDirectory, gridBagConstraints);
-
-        jScrollPane2.setMaximumSize(new java.awt.Dimension(800, 130));
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(50, 23));
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(300, 60));
-        jScrollPane2.setRequestFocusEnabled(false);
-
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.setMaximumSize(new java.awt.Dimension(32767, 32767));
-        jList1.setMinimumSize(new java.awt.Dimension(100, 80));
-        jScrollPane2.setViewportView(jList1);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridheight = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        jPanelImageBrowser.add(jScrollPane2, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 2);
-        jPanel2.add(jPanelImageBrowser, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        jPanel2.add(browserOptionsPanel1, gridBagConstraints);
 
         fillerPanelVertical.setEnabled(false);
         fillerPanelVertical.setFocusable(false);
@@ -412,85 +291,17 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         ReleveEditorConfigDialog.showEditorConfigPanel();
     }//GEN-LAST:event_jButtonConfigEditorActionPerformed
 
-    private void jCheckBoxBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxBrowserActionPerformed
-        // je notifie les editeurs pour rafraichir l'affichage
-        for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
-            tc.setBrowserVisible(jCheckBoxBrowser.isSelected());
-        }
-
-        // j'enregistre immediatement la nouvelle valeur pour qu'elle soit disponible pour les nouveaux editeurs
-        NbPreferences.forModule(ReleveTopComponent.class).put("ImgageBrowserVisible", String.valueOf(jCheckBoxBrowser.isSelected()));
-
-    }//GEN-LAST:event_jCheckBoxBrowserActionPerformed
-
     private void jButtonOccupationCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOccupationCompletionActionPerformed
         ReleveCompletionDialog.showOccupationCompletionPanel();
     }//GEN-LAST:event_jButtonOccupationCompletionActionPerformed
 
-    private void jButtonAddDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddDirectoryActionPerformed
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        File defaultDirectory;
-        if (jList1.getSelectedValue() != null) {
-            defaultDirectory = new File(jList1.getSelectedValue());
-        } else {
-//            String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
-//            defaultDirectory = new File(defaultDir);
-            FileSystemView fsv = FileSystemView.getFileSystemView();
-            defaultDirectory = fsv.getDefaultDirectory();
-        }
-        if (defaultDirectory != null) {
-            fileChooser.setCurrentDirectory(defaultDirectory);
-        }
-        int fcr = fileChooser.showDialog(this, NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.dialogTitle.text"));
-        if (fcr == JFileChooser.APPROVE_OPTION) {
-            try {
-                String directory = fileChooser.getSelectedFile().getCanonicalPath();
-                int index = ImageDirectoryModel.getModel().indexOf(directory);
-                if ( index == -1 ) {
-                    ImageDirectoryModel.getModel().addElement(directory);
-                }
-                jList1.setSelectedValue(directory, true);
-            } catch (IOException ex) {
-                return;
-            }
-        }
-        
-
-    }//GEN-LAST:event_jButtonAddDirectoryActionPerformed
-
-    private void jButtonRemoveDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveDirectoryActionPerformed
-        for (Iterator<String> it = jList1.getSelectedValuesList().iterator(); it.hasNext();) {
-            String directory = it.next();
-            ImageDirectoryModel.getModel().removeElement(directory);
-        }
-    }//GEN-LAST:event_jButtonRemoveDirectoryActionPerformed
-
-    private void jButtonSwapPreviousDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSwapPreviousDirectoryActionPerformed
-        int index = jList1.getSelectedIndex();
-        if ( ImageDirectoryModel.getModel().swapPrevious(index) ) {
-            jList1.setSelectedIndex(index -1);
-        }
-    }//GEN-LAST:event_jButtonSwapPreviousDirectoryActionPerformed
-
-    private void jButtonSwapNextDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSwapNextDirectoryActionPerformed
-         int index = jList1.getSelectedIndex();
-        if ( ImageDirectoryModel.getModel().swapNext(index) ) {
-            jList1.setSelectedIndex(index +1);
-        }
-    }//GEN-LAST:event_jButtonSwapNextDirectoryActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private ancestris.modules.releve.imageBrowser.BrowserOptionsPanel browserOptionsPanel1;
     private javax.swing.JPanel fillerPanelVertical;
-    private javax.swing.JButton jButtonAddDirectory;
     private javax.swing.JButton jButtonConfigEditor;
     private javax.swing.JButton jButtonFirstNameCompletion;
     private javax.swing.JButton jButtonLastNameCompletion;
     private javax.swing.JButton jButtonOccupationCompletion;
-    private javax.swing.JButton jButtonRemoveDirectory;
-    private javax.swing.JButton jButtonSwapNextDirectory;
-    private javax.swing.JButton jButtonSwapPreviousDirectory;
-    private javax.swing.JCheckBox jCheckBoxBrowser;
     private javax.swing.JCheckBox jCheckBoxCopyCote;
     private javax.swing.JCheckBox jCheckBoxCopyEventDate;
     private javax.swing.JCheckBox jCheckBoxCopyFreeComment;
@@ -498,15 +309,11 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JCheckBox jCheckBoxDuplicateRecord;
     private javax.swing.JCheckBox jCheckBoxGedcomCompletion;
     private javax.swing.JCheckBox jCheckBoxNewValueControl;
-    private javax.swing.JLabel jLabelDirectory;
     private javax.swing.JLabel jLabelFiller;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelEditor;
     private javax.swing.JPanel jPanelExludeCompletion;
-    private javax.swing.JPanel jPanelImageBrowser;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private ancestris.modules.releve.dnd.MergeOptionPanel mergeOptionPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -514,84 +321,5 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     
     
 
-    // modele
-    static public class ImageDirectoryModel extends DefaultListModel<String> {
-        final static String ImageBrowserDirectoryPreference = "ImageBrowserDirectories";
-        private static ImageDirectoryModel imageDirectoryModel = null;
-
-        public File[] getImageBrowserDirectories() {
-            ArrayList<File> directories = new ArrayList<File>();
-            for (int i = 0; i < imageDirectoryModel.size(); i++) {
-                File directory = new File(imageDirectoryModel.get(i));
-                if( directory.exists()) {
-                    directories.add(directory);
-                }
-            }
-
-            return directories.toArray(new File[0]);
-        }
-
-        static public ImageDirectoryModel getModel() {
-
-            if (imageDirectoryModel == null) {
-                imageDirectoryModel = new ImageDirectoryModel();
-                imageDirectoryModel.loadPreferences();
-            }
-            return imageDirectoryModel;
-        }
-       
-        /**
-         * charge les repertoires
-         */
-        private void loadPreferences() {
-            this.clear();
-            // je recupere la liste des valeurs similaires
-            String similarString = NbPreferences.forModule(ImageDirectoryModel.class).get(
-                    ImageBrowserDirectoryPreference, "");
-            String[] values = similarString.split(";");
-            for (int i = 0; i < values.length; i++) {
-                if (!values[i].isEmpty()) {
-                    this.addElement(values[i]);
-                }
-            }
-        }
-
-        /**
-         * enregistre les repertoire
-         */
-        private void savePreferences() {
-            StringBuilder values = new StringBuilder();
-
-            for (int i = 0; i < this.size(); i++) {
-                values.append(this.get(i)).append(";");
-            }
-            NbPreferences.forModule(ImageDirectoryModel.class).put(
-                    ImageBrowserDirectoryPreference, values.toString());
-        }
-
-         private boolean swapNext(int index ) {
-             if ( index < size() -1 && index != -1) {
-                 String directory = remove(index);
-                 insertElementAt(directory, index+1);
-                 return true;
-             } else {
-                 Toolkit.getDefaultToolkit().beep();
-                 return false;
-             }
-
-         }
-
-         private boolean swapPrevious(int index ) {
-             if ( index > 0) {
-                 String directory = remove(index);
-                 insertElementAt(directory, index-1);
-                  return true;
-             } else {
-                 Toolkit.getDefaultToolkit().beep();
-                 return false;
-             }
-
-         }
-        
-    }
+    
 }
