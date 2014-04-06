@@ -21,13 +21,13 @@ public final class ReleveOptionsPanelController extends OptionsPanelController {
 
     @Override
     public void update() {
-        getPanel().load();
+        getPanel().loadPreferences();
         changed = false;
     }
 
     @Override
     public void applyChanges() {
-        getPanel().store();
+        getPanel().savePreferences();
         changed = false;
     }
 

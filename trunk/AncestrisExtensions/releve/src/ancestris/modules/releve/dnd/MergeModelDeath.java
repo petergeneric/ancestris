@@ -150,8 +150,13 @@ class MergeModelDeath extends MergeModel {
                     if (sameIndiFamily != null) {
                         models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, sameIndiFamily));
                     } else {
-                        for (Fam family : families) {
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, family));
+                        if ( families.size() > 0 ) {
+                            for (Fam family : families) {
+                                models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, family));
+                            }
+                        } else {
+                            // j'ajoute l'individu selectionné sans famille
+                            models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, (Fam) null));
                         }
                     }
                 }
@@ -525,8 +530,8 @@ class MergeModelDeath extends MergeModel {
             copyPlace(record.getIndi().getDeathPlace(),  deathProperty);
             
             // je copie la source du deces du releve dans l'individu
-            if (isChecked(RowType.EventSource)|| isChecked(RowType.EventPage)) {
-                copySource((Source) getRow(RowType.EventSource).entityObject, deathProperty, record);
+            if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage) ) {
+                copySource((Source) getRow(RowType.EventSource).entityObject, deathProperty, isChecked(RowType.EventPage), record);
             }
 
             // je copie le commentaire du deces

@@ -11,5 +11,6 @@
         <tocitem text="Fichier EGMT" target="Releve.fileEgmt"/>
         <tocitem text="Fichier NIMEGUE" target="Releve.fileNimegue"/>
         <tocitem text="Copie vers gedcom" target="Releve.copytogedcom"/>
+        <tocitem text="Visionneuse de photo d'actes" target="Releve.imagebrowser"/>
     </tocitem>
 </toc>
