@@ -9,5 +9,5 @@
     <mapID target="Releve.file" url="Releve-file.html"/>
     <mapID target="Releve.fileAncestris" url="Releve-fileAncestris.html"/>
     <mapID target="Releve.fileEgmt" url="Releve-fileEgmt.html"/>
-    <mapID target="Releve.imagebrowser" url="Releve-imagebrowser.html"/>    
+    <mapID target="Releve.imageBrowser" url="Releve-imagebrowser.html"/>    
 </map>

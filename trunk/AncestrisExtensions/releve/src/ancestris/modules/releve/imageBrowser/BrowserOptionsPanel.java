@@ -10,6 +10,9 @@ import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -84,6 +87,7 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jButtonHelp = new javax.swing.JButton();
         jCheckBoxBrowser = new javax.swing.JCheckBox();
         jCheckBoxMenu = new javax.swing.JCheckBox();
         jLabelDirectory = new javax.swing.JLabel();
@@ -96,6 +100,22 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(BrowserOptionsPanel.class, "BrowserOptionsPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         setLayout(new java.awt.GridBagLayout());
+
+        jButtonHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png"))); // NOI18N
+        jButtonHelp.setBorder(null);
+        jButtonHelp.setMargin(null);
+        jButtonHelp.setMinimumSize(new java.awt.Dimension(16, 16));
+        jButtonHelp.setPreferredSize(new java.awt.Dimension(20, 20));
+        jButtonHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonHelpActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(jButtonHelp, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxBrowser, org.openide.util.NbBundle.getMessage(BrowserOptionsPanel.class, "BrowserOptionsPanel.jCheckBoxBrowser.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -247,9 +267,18 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonSwapNextDirectoryActionPerformed
 
+    private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
+        String id = "Releve.imageBrowser";
+        Help help = Lookup.getDefault().lookup(Help.class);
+        if (help != null && help.isValidID(id, true).booleanValue()) {
+            help.showHelp(new HelpCtx(id));
+        }
+    }//GEN-LAST:event_jButtonHelpActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddDirectory;
+    private javax.swing.JButton jButtonHelp;
     private javax.swing.JButton jButtonRemoveDirectory;
     private javax.swing.JButton jButtonSwapNextDirectory;
     private javax.swing.JButton jButtonSwapPreviousDirectory;
