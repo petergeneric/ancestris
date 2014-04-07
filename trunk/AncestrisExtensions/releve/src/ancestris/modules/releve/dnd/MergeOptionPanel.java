@@ -39,7 +39,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             jTableSource.getSelectionModel().setSelectionInterval(0, 0);
         }
 
-        if( sourceModel.exist(currentFile.getName())) {
+        if( currentFile != null && sourceModel.exist(currentFile.getName())) {
             jButtonAddSource.setVisible(false);
         } else {
             jButtonAddSource.setVisible(true);
