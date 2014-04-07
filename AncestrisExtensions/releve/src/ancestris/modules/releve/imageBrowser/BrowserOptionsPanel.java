@@ -24,11 +24,6 @@ import org.openide.util.NbPreferences;
 
 public class BrowserOptionsPanel extends javax.swing.JPanel {
     
-    static boolean viewMenuCache; 
-    static boolean cacheInitialized = false; 
-        
-    
-
     /**
      * Creates new form BrowserOptionsPanel
      */
@@ -37,9 +32,9 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
     }
 
     public void loadPreferences() {
-        jCheckBoxBrowser.setSelected(Boolean.parseBoolean(NbPreferences.forModule(BrowserOptionsPanel.class).get("ImgageBrowserVisible", "false")));
+        jCheckBoxBrowser.setSelected(Boolean.parseBoolean(NbPreferences.forModule(BrowserOptionsPanel.class).get("ImageBrowserVisible", "false")));
         jCheckBoxMenu.setSelected(Boolean.parseBoolean(NbPreferences.forModule(BrowserOptionsPanel.class).get("ViewMenuVisible", "false")));
-
+        
         // je charge les repertoires 
         jList1.setModel(ImageDirectoryModel.getModel());
         if (ImageDirectoryModel.getModel().size() > 0 ) {
@@ -50,9 +45,6 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
     public void savePreferences() {
         NbPreferences.forModule(BrowserOptionsPanel.class).put("ImageBrowserVisible", String.valueOf(jCheckBoxBrowser.isSelected()));
         NbPreferences.forModule(BrowserOptionsPanel.class).put("ViewMenuVisible", String.valueOf(jCheckBoxMenu.isSelected()));
-
-        // je mets le cache a jour
-        viewMenuCache = jCheckBoxMenu.isSelected();
 
         // je notifie les editeurs pour rafraichir l'affichage
         for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
@@ -69,12 +61,7 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
     } 
 
     static public boolean getViewMenuVisible() {
-        // j'utilise un cache car cette méthode est souvent appelée
-        if (cacheInitialized == false ) {
-            viewMenuCache = Boolean.parseBoolean(NbPreferences.forModule(BrowserOptionsPanel.class).get("ViewMenuVisible", "false"));
-            cacheInitialized = true;
-        }
-        return viewMenuCache; 
+        return Boolean.parseBoolean(NbPreferences.forModule(BrowserOptionsPanel.class).get("ViewMenuVisible", "false"));
     } 
 
     /**
@@ -121,10 +108,9 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 10);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jCheckBoxBrowser, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxMenu, org.openide.util.NbBundle.getMessage(BrowserOptionsPanel.class, "BrowserOptionsPanel.jCheckBoxMenu.text")); // NOI18N
@@ -132,9 +118,9 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jCheckBoxMenu, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabelDirectory, org.openide.util.NbBundle.getMessage(BrowserOptionsPanel.class, "BrowserOptionsPanel.jLabelDirectory.text")); // NOI18N
@@ -144,7 +130,7 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jLabelDirectory, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonAddDirectory, org.openide.util.NbBundle.getMessage(BrowserOptionsPanel.class, "BrowserOptionsPanel.jButtonAddDirectory.text")); // NOI18N
