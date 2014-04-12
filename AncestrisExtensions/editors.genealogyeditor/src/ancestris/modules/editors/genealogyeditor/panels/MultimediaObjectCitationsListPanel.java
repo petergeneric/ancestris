@@ -3,7 +3,9 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectCitationsTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
@@ -39,6 +41,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
         galleryToolBar = new javax.swing.JToolBar();
         addMMObjectButton = new javax.swing.JButton();
+        linkMMObjectButton = new javax.swing.JButton();
         editMMObjecButton = new javax.swing.JButton();
         deleteMMObjectButton = new javax.swing.JButton();
         multiMediaObjectCitationsScrollPane = new javax.swing.JScrollPane();
@@ -58,6 +61,18 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
         });
         galleryToolBar.add(addMMObjectButton);
+
+        linkMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.linkMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
+        linkMMObjectButton.setFocusable(false);
+        linkMMObjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkMMObjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkMMObjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkMMObjectButtonActionPerformed(evt);
+            }
+        });
+        galleryToolBar.add(linkMMObjectButton);
 
         editMMObjecButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editMMObjecButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.editMMObjecButton.toolTipText"), new Object[] {})); // NOI18N
@@ -255,11 +270,43 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_multiMediaObjectCitationsTableMouseClicked
+
+    private void linkMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkMMObjectButtonActionPerformed
+        List<Media> notesList = new ArrayList<Media>((Collection<Media>) mRoot.getGedcom().getEntities(Gedcom.OBJE));
+
+        MultimediaObjectListPanel multimediaObjectListPanel = new MultimediaObjectListPanel();
+        multimediaObjectListPanel.setNotesList(mRoot, notesList);
+        DialogManager.ADialog multimediaObjectListDialog = new DialogManager.ADialog(
+            NbBundle.getMessage(MultimediaObjectListPanel.class, "MultimediaObjectListPanel.linkTo.title"),
+            multimediaObjectListPanel);
+        multimediaObjectListDialog.setDialogId(MultimediaObjectListPanel.class.getName());
+
+        if (multimediaObjectListDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Media selectedMultimediaObject = multimediaObjectListPanel.getSelectedMultiMediaObject();
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mRoot.addMedia(selectedMultimediaObject);
+                    }
+                }); // end of doUnitOfWork
+
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+            multiMediaObjectCitationsTableModel.clear();
+            multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+        }
+    }//GEN-LAST:event_linkMMObjectButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton deleteMMObjectButton;
     private javax.swing.JButton editMMObjecButton;
     private javax.swing.JToolBar galleryToolBar;
+    private javax.swing.JButton linkMMObjectButton;
     private javax.swing.JScrollPane multiMediaObjectCitationsScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable multiMediaObjectCitationsTable;
     // End of variables declaration//GEN-END:variables

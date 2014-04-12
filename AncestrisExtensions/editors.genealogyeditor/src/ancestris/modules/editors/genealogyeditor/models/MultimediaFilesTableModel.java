@@ -43,7 +43,7 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < multimediaFilesList.size()) {
             File multimediaFile = multimediaFilesList.get(row);
-            if (multimediaFile.exists()) {
+            if (multimediaFile != null && multimediaFile.exists()) {
                 switch (column) {
                     case 0: {
                         return FileSystemView.getFileSystemView().getSystemIcon(multimediaFile);
