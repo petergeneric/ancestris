@@ -16,9 +16,9 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
 @ActionID(category = "Edit",
-id = "ancestris.modules.editors.genealogyeditor.GenealogyEditorAction")
+        id = "ancestris.modules.editors.genealogyeditor.GenealogyEditorAction")
 @ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/edit.png",
-displayName = "#CTL_IndividualEditorAction")
+        displayName = "#CTL_IndividualEditorAction")
 @ActionReferences({
     @ActionReference(path = "Toolbars/GenealogyEditor", position = 100)
 })
@@ -83,6 +83,23 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 editorDialog.setDialogId(NoteEditorPanel.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     noteEditorPanel.commit();
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
+            } else if (entity instanceof Media) {
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
+                MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                multiMediaObjectEditorPanel.set((Media) entity);
+
+                editorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.edit.title", entity),
+                        multiMediaObjectEditorPanel);
+                editorDialog.setDialogId(SourceEditorPanel.class.getName());
+                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    multiMediaObjectEditorPanel.commit();
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);

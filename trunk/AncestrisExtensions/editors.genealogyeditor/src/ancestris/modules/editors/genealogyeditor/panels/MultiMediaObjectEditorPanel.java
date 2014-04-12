@@ -2,7 +2,6 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.models.MultimediaFilesTableModel;
-import ancestris.modules.editors.genealogyeditor.table.EditorTable;
 import genj.gedcom.*;
 import genj.util.Registry;
 import java.awt.Desktop;
@@ -54,7 +53,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         multimediaFilesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
         notesPanel = new javax.swing.JPanel();
         noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
-        noteReferencesPanel = new javax.swing.JPanel();
+        multiMediaObjectReferencesPanel = new javax.swing.JPanel();
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
         multiMediaObjectTitleLabel = new javax.swing.JLabel();
         multiMediaObjectTitleTextField = new javax.swing.JTextField();
@@ -132,18 +131,18 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
 
         multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
-        javax.swing.GroupLayout noteReferencesPanelLayout = new javax.swing.GroupLayout(noteReferencesPanel);
-        noteReferencesPanel.setLayout(noteReferencesPanelLayout);
-        noteReferencesPanelLayout.setHorizontalGroup(
-            noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout multiMediaObjectReferencesPanelLayout = new javax.swing.GroupLayout(multiMediaObjectReferencesPanel);
+        multiMediaObjectReferencesPanel.setLayout(multiMediaObjectReferencesPanelLayout);
+        multiMediaObjectReferencesPanelLayout.setHorizontalGroup(
+            multiMediaObjectReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
         );
-        noteReferencesPanelLayout.setVerticalGroup(
-            noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        multiMediaObjectReferencesPanelLayout.setVerticalGroup(
+            multiMediaObjectReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
         );
 
-        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel); // NOI18N
+        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), multiMediaObjectReferencesPanel); // NOI18N
 
         multiMediaObjectTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         multiMediaObjectTitleLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.multiMediaObjectTitleLabel.text")); // NOI18N
@@ -185,11 +184,11 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(ImageBean.class, "ImageBean.fileType"), "jpg", "jpeg", "png", "gif");
         final JFileChooser fileChooser = new JFileChooser();
         Registry registry = Registry.get(MultiMediaObjectEditorPanel.class);
-        
+
         System.out.println(registry.get("rootPath", new java.io.File(".")));
         fileChooser.setFileFilter(imageFileFilter);
         fileChooser.setAcceptAllFileFilterUsed(true);
-        fileChooser.setSelectedFile(new File (registry.get("rootPath", ".")));
+        fileChooser.setSelectedFile(new File(registry.get("rootPath", ".")));
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             registry.put("rootPath", fileChooser.getSelectedFile());
 
@@ -269,12 +268,12 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel multiMediaObjectIDLabel;
     private javax.swing.JTextField multiMediaObjectIDTextField;
+    private javax.swing.JPanel multiMediaObjectReferencesPanel;
     private javax.swing.JTabbedPane multiMediaObjectTabbedPane;
     private javax.swing.JLabel multiMediaObjectTitleLabel;
     private javax.swing.JTextField multiMediaObjectTitleTextField;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable multimediaFilesTable;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
-    private javax.swing.JPanel noteReferencesPanel;
     private javax.swing.JPanel notesPanel;
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     // End of variables declaration//GEN-END:variables
@@ -300,6 +299,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             multiMediaObjectTitleTextField.setText(propertyTitle != null ? propertyTitle.getValue() : "");
             multiMediaObjectIDTextField.setVisible(false);
             multiMediaObjectIDLabel.setVisible(false);
+            multiMediaObjectTabbedPane.removeTabAt(multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "MultiMediaObjectEditorPanel.multiMediaObjectReferencesPanel.TabConstraints.tabTitle")));
         }
 
         for (Property multimediaFile : mMultiMediaObject.getProperties("FILE", true)) {
