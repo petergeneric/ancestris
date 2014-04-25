@@ -1,10 +1,16 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
+import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -41,9 +47,27 @@ import org.openide.util.NbBundle;
  */
 public final class IndividualEditorPanel extends javax.swing.JPanel {
 
+    private class EventsListSelectionHandler implements ListSelectionListener {
+
+        @Override
+        public void valueChanged(ListSelectionEvent lse) {
+            ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
+            if (lse.getValueIsAdjusting() == false && lsm.isSelectionEmpty() == false) {
+                individualEventEditorPanel.commit();
+                if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
+                    individualEventEditorPanel.set(mIndividual, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
+                }
+            }
+        }
+
+    }
     private Indi mIndividual;
+    private Property mEvent = null;
     private Property mMultiMediaObject;
-    private ArrayList<String> mEventsTags = new ArrayList<String>() {
+    private boolean updateOnGoing = false;
+    private EventsListModel mEventsListModel = new EventsListModel();
+
+    private ArrayList<String> mIndividualEventsTags = new ArrayList<String>() {
         {
             /*
              * INDIVIDUAL_EVENT
@@ -90,6 +114,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             add("FACT");
         }
     };
+    private DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
 
     /**
      * Creates new form IndividualEditorPanel
@@ -116,7 +141,14 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         privateRecordToggleButton = new javax.swing.JToggleButton();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
         eventsPanel = new javax.swing.JPanel();
-        eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel(EventsListPanel.INDIVIDUAL_EVENT_TYPE_LIST);
+        individualEventEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.IndividualEventEditorPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jToolBar1 = new javax.swing.JToolBar();
+        jLabel1 = new javax.swing.JLabel();
+        eventTypeComboBox = new javax.swing.JComboBox<String>();
+        deleteEventButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        eventsList = new javax.swing.JList();
         familiesChildPanel = new javax.swing.JPanel();
         familiesChildTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel(FamiliesReferenceTreeTablePanel.EDIT_FAMC);
         familiesSpousePanel = new javax.swing.JPanel();
@@ -137,8 +169,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         individualIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDLabel.text"), new Object[] {})); // NOI18N
 
-        individualIDTextField.setColumns(8);
         individualIDTextField.setEditable(false);
+        individualIDTextField.setColumns(8);
         individualIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDTextField.text"), new Object[] {})); // NOI18N
         individualIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
@@ -201,15 +233,67 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         individualInformationTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
 
+        individualEventEditorPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jToolBar1.setRollover(true);
+
+        jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.jLabel1.text"), new Object[] {})); // NOI18N
+        jToolBar1.add(jLabel1);
+
+        eventTypeComboBox.setModel(mEventsModel);
+        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
+        eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventTypeComboBoxActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(eventTypeComboBox);
+
+        deleteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.deleteEventButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteEventButton.setFocusable(false);
+        deleteEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteEventButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(deleteEventButton);
+
+        eventsList.setModel(mEventsListModel);
+        eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(eventsList);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1)
+                .addGap(0, 0, 0))
+        );
+
         javax.swing.GroupLayout eventsPanelLayout = new javax.swing.GroupLayout(eventsPanel);
         eventsPanel.setLayout(eventsPanelLayout);
         eventsPanelLayout.setHorizontalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 942, Short.MAX_VALUE)
+            .addGroup(eventsPanelLayout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+            .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
@@ -218,7 +302,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         familiesChildPanel.setLayout(familiesChildPanelLayout);
         familiesChildPanelLayout.setHorizontalGroup(
             familiesChildPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesChildTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 942, Short.MAX_VALUE)
+            .addComponent(familiesChildTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         familiesChildPanelLayout.setVerticalGroup(
             familiesChildPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,7 +317,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         familiesSpousePanel.setLayout(familiesSpousePanelLayout);
         familiesSpousePanelLayout.setHorizontalGroup(
             familiesSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 942, Short.MAX_VALUE)
+            .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         familiesSpousePanelLayout.setVerticalGroup(
             familiesSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,7 +332,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 942, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,7 +345,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         namesPanel.setLayout(namesPanelLayout);
         namesPanelLayout.setHorizontalGroup(
             namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(namesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 942, Short.MAX_VALUE)
+            .addComponent(namesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         namesPanelLayout.setVerticalGroup(
             namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,7 +358,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 942, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,7 +371,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         referencesPanel.setLayout(referencesPanelLayout);
         referencesPanelLayout.setHorizontalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(associationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 942, Short.MAX_VALUE)
+            .addComponent(associationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,7 +384,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 942, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,7 +400,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(individualInformationTabbedPane)
                     .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -441,9 +525,83 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_imageBeanMouseClicked
+
+    private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
+        if (!updateOnGoing) {
+            Gedcom gedcom = mIndividual.getGedcom();
+            mEvent = null;
+            final String eventType = eventTypeComboBox.getSelectedItem().toString();
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mEvent = mIndividual.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
+                    }
+                }); // end of doUnitOfWork
+
+                if (mEvent != null) {
+                    ArrayList<Property> eventsProperties = new ArrayList<Property>();
+                    for (Property property : mIndividual.getProperties()) {
+                        if (mIndividualEventsTags.contains(property.getTag())) {
+                            eventsProperties.add(property);
+                        }
+                    }
+                    seteventTypeComboBox(eventsProperties);
+                    mEventsListModel.add(mEvent);
+                    individualEventEditorPanel.set(mIndividual, mEvent);
+
+                }
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }//GEN-LAST:event_eventTypeComboBoxActionPerformed
+
+    private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEventButtonActionPerformed
+        final int index = eventsList.getSelectedIndex();
+        Gedcom gedcom = mIndividual.getGedcom();
+
+        if (index != -1) {
+            Property event = mEventsListModel.getValueAt(index);
+
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
+                            PropertyTag2Name.getTagName(event.getTag())),
+                    NbBundle.getMessage(
+                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
+                            PropertyTag2Name.getTagName(event.getTag()),
+                            mIndividual));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mIndividual.delProperty(mEventsListModel.remove(index));
+                        }
+                    }); // end of doUnitOfWork
+                    ArrayList<Property> eventsProperties = new ArrayList<Property>();
+                    for (Property property : mIndividual.getProperties()) {
+                        if (mIndividualEventsTags.contains(property.getTag())) {
+                            eventsProperties.add(property);
+                        }
+                    }
+                    seteventTypeComboBox(eventsProperties);
+                    eventsList.setSelectedIndex(0);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_deleteEventButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel associationsListPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.EventsListPanel eventsListPanel;
+    private javax.swing.JButton deleteEventButton;
+    private javax.swing.JComboBox<String> eventTypeComboBox;
+    private javax.swing.JList eventsList;
     private javax.swing.JPanel eventsPanel;
     private javax.swing.JPanel familiesChildPanel;
     private ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel familiesChildTreeTablePanel;
@@ -452,9 +610,14 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JPanel generalPanel;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean imageBean;
+    private ancestris.modules.editors.genealogyeditor.panels.IndividualEventEditorPanel individualEventEditorPanel;
     private javax.swing.JLabel individualIDLabel;
     private javax.swing.JTextField individualIDTextField;
     private javax.swing.JTabbedPane individualInformationTabbedPane;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToolBar jToolBar1;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel nameEditorPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NamesListPanel namesListPanel;
@@ -497,6 +660,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         Property restrictionNotice = individual.getProperty("RESN", true);
         if (restrictionNotice != null) {
             privateRecordToggleButton.setSelected(true);
+        } else {
+            privateRecordToggleButton.setSelected(false);
         }
 
         /*
@@ -529,12 +694,15 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
          */
         ArrayList<Property> individualEvents = new ArrayList<Property>();
         for (Property property : individual.getProperties()) {
-            if (mEventsTags.contains(property.getTag())) {
+            if (mIndividualEventsTags.contains(property.getTag())) {
                 individualEvents.add(property);
             }
         }
-        eventsListPanel.set(individual, individualEvents);
-        
+        mEventsListModel.addAll(individualEvents);
+        eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
+        eventsList.setSelectedIndex(0);
+        seteventTypeComboBox(individualEvents);
+
         /*
          * +1 <<LDS_INDIVIDUAL_ORDINANCE>>
          * Not Used
@@ -667,5 +835,23 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
             return null;
         }
+    }
+
+    private void seteventTypeComboBox(List<Property> eventsList) {
+        updateOnGoing = true;
+        mEventsModel.removeAllElements();
+
+        for (String tag : mIndividualEventsTags) {
+            mEventsModel.addElement(PropertyTag2Name.getTagName(tag));
+        }
+        for (Property event : eventsList) {
+            /*
+             * Filter by events already present
+             */
+            if (!event.getTag().equals("EVEN") && !event.getTag().equals("GRAD")) {
+                mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
+            }
+        }
+        updateOnGoing = false;
     }
 }

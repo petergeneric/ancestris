@@ -252,6 +252,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
 
     public void set(Property root, List<Property> notesList) {
         this.mRoot = root;
+        mNoteCitationsTableModel.clear();
         mNoteCitationsTableModel.addAll(notesList);
     }
 

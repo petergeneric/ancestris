@@ -154,6 +154,11 @@ public class SourceCitationsTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    public void clear() {
+        mSourcesList.clear();
+        fireTableDataChanged();
+    }
+
     public Property getValueAt(int row) {
         return mSourcesList.get(row);
     }
