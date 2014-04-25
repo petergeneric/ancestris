@@ -22,7 +22,7 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class EventsListPanel extends javax.swing.JPanel {
+public class EventsTablePanel extends javax.swing.JPanel {
 
     private class DateComparator implements Comparator<PropertyDate> {
 
@@ -122,18 +122,18 @@ public class EventsListPanel extends javax.swing.JPanel {
     /**
      * Creates new form EventsListPanel
      */
-    public EventsListPanel() {
+    public EventsTablePanel() {
         this(INDIVIDUAL_EVENT_TYPE_LIST);
     }
 
-    public EventsListPanel(int eventTypeList) {
+    public EventsTablePanel(int eventTypeList) {
         mEventTypeList = eventTypeList;
         initComponents();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(eventsTable.getModel());
         sorter.setComparator(2, new DateComparator());
         eventsTable.setRowSorter(sorter);
         eventsTable.setDefaultRenderer(PropertyDate.class, new EventsListTableCellRenderer());
-        eventsTable.setID(EventsListPanel.class.getName());
+        eventsTable.setID(EventsTablePanel.class.getName());
     }
 
     /**
@@ -157,12 +157,12 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.setFloatable(false);
         eventsToolBar.setRollover(true);
 
-        jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.jLabel1.text"), new Object[] {})); // NOI18N
+        jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsTablePanel.jLabel1.text"), new Object[] {})); // NOI18N
         eventsToolBar.add(jLabel1);
         eventsToolBar.add(filler1);
 
         eventTypeComboBox.setModel(mEventsModel);
-        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
+        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsTablePanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
         eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eventTypeComboBoxActionPerformed(evt);
@@ -171,7 +171,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.add(eventTypeComboBox);
 
         editEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.editEventButton.toolTipText"), new Object[] {})); // NOI18N
+        editEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsTablePanel.editEventButton.toolTipText"), new Object[] {})); // NOI18N
         editEventButton.setFocusable(false);
         editEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -183,7 +183,7 @@ public class EventsListPanel extends javax.swing.JPanel {
         eventsToolBar.add(editEventButton);
 
         deleteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsListPanel.deleteEventButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsTablePanel.deleteEventButton.toolTipText"), new Object[] {})); // NOI18N
         deleteEventButton.setFocusable(false);
         deleteEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

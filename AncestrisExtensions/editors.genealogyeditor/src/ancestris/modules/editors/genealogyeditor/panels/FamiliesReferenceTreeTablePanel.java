@@ -258,12 +258,12 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addFamilyButtonActionPerformed
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
-        FamiliesListPanel familiesListPanel = new FamiliesListPanel(LIST_FAM);
+        FamiliesTablePanel familiesListPanel = new FamiliesTablePanel(LIST_FAM);
         familiesListPanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
         DialogManager.ADialog familiesListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(FamiliesListPanel.class, "FamiliesListPanel.linkto.title"),
+                NbBundle.getMessage(FamiliesTablePanel.class, "FamiliesListPanel.linkto.title"),
                 familiesListPanel);
-        familiesListDialog.setDialogId(FamiliesListPanel.class.getName());
+        familiesListDialog.setDialogId(FamiliesTablePanel.class.getName());
 
         if (familiesListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Fam selectedFamily = familiesListPanel.getSelectedFamily();

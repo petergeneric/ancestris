@@ -314,6 +314,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
     public void set(Property root, List<Property> multiMediasList) {
         mGedcomVersion = root.getGedcom().getGrammar().getVersion();
         this.mRoot = root;
+        multiMediaObjectCitationsTableModel.clear();
         multiMediaObjectCitationsTableModel.addAll(multiMediasList);
     }
 }

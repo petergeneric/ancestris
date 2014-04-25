@@ -229,6 +229,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
     public void set(Property root, List<Property> sourcesList) {
         this.mRoot = root;
+        mSourceCitationsTableModel.clear ();
         mSourceCitationsTableModel.addAll(sourcesList);
     }
 }

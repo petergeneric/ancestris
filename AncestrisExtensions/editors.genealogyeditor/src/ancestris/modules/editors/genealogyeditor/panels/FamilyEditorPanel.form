@@ -523,14 +523,14 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.EventsListPanel" name="eventsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.EventsTablePanel" name="eventsListPanel">
               <Properties>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="null"/>
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.EventsListPanel(EventsListPanel.FAMILY_EVENT_TYPE_LIST)"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.panels.EventsTablePanel(ancestris.modules.editors.genealogyeditor.panels.EventsTablePanel.FAMILY_EVENT_TYPE_LIST)"/>
               </AuxValues>
             </Component>
           </SubComponents>

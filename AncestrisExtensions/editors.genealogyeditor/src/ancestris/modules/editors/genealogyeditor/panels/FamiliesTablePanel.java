@@ -15,7 +15,7 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class FamiliesListPanel extends javax.swing.JPanel {
+public class FamiliesTablePanel extends javax.swing.JPanel {
 
     public static int LIST_FAM = 0;
     public static int EDIT_FAMC = 1;
@@ -28,17 +28,17 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     /**
      * Creates new form FamiliesListPanel
      */
-    public FamiliesListPanel() {
+    public FamiliesTablePanel() {
         mFamilyEditingType = LIST_FAM;
         mFamiliesTableModel = new FamiliesTableModel(FamiliesTableModel.FAMILY_LIST);
         initComponents();
-        familyNamesTable.setID(FamiliesListPanel.class.getName());
+        familyNamesTable.setID(FamiliesTablePanel.class.getName());
         if (mFamilyEditingType == LIST_FAM) {
             familyNamesToolBar.setVisible(false);
         }
     }
 
-    public FamiliesListPanel(int familyEditingType) {
+    public FamiliesTablePanel(int familyEditingType) {
         mFamilyEditingType = familyEditingType;
         if (mFamilyEditingType == EDIT_FAMC) {
             mFamiliesTableModel = new FamiliesTableModel(FamiliesTableModel.FAMILY_CHILD);
@@ -48,7 +48,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
             mFamiliesTableModel = new FamiliesTableModel(FamiliesTableModel.FAMILY_LIST);
         }
         initComponents();
-        familyNamesTable.setID(FamiliesListPanel.class.getName());
+        familyNamesTable.setID(FamiliesTablePanel.class.getName());
         if (mFamilyEditingType == LIST_FAM) {
             familyNamesToolBar.setVisible(false);
         }
@@ -251,12 +251,12 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteFamilyNameButtonActionPerformed
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
-        FamiliesListPanel familiesListPanel = new FamiliesListPanel(LIST_FAM);
+        FamiliesTablePanel familiesListPanel = new FamiliesTablePanel(LIST_FAM);
         familiesListPanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
         DialogManager.ADialog familiesListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(FamiliesListPanel.class, "FamiliesListPanel.linkto.title"),
+                NbBundle.getMessage(FamiliesTablePanel.class, "FamiliesListPanel.linkto.title"),
                 familiesListPanel);
-        familiesListDialog.setDialogId(FamiliesListPanel.class.getName());
+        familiesListDialog.setDialogId(FamiliesTablePanel.class.getName());
 
         if (familiesListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Fam selectedFamily = familiesListPanel.getSelectedFamily();
