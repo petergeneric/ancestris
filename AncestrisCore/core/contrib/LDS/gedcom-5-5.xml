@@ -79,6 +79,11 @@
    <SOUR super="INDI:NAME:SOUR"/>
    <OBJE super="INDI:NAME:SOUR:OBJE"/>
    <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam"/>
+<!--  <ASSO hide="0" type="PropertyAssociation" img="Association">
+   <RELA default="1" cardinality="0:1" type="PropertyRelationship" img="Type"/>
+   <SOUR super="INDI:SOUR"/>
+   <NOTE super="INDI:NAME:NOTE"/>
+  </ASSO>-->
   </BIRT>
   <ADOP cardinality="0:M" super="INDI:BIRT" img="Adoption">
    <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam">

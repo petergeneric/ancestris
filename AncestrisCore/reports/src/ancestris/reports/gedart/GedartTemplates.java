@@ -16,6 +16,38 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 //				"gedart/templates");
 //		putAll(new GedartTemplates(gedartDir));
 
+            
+// XXX: copied from almanach:            
+//        @Override
+//        protected void loadFromResources(File[] loaded) {
+//            Set<String> seen = new HashSet<String>();
+//            for (File file:loaded){
+//                seen.add(file.getName());
+//            }
+//            final String PCKNAME = "genj.almanac.resources";
+//            try {
+//                for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile(".*/[^/]*\\.almanac"))) {
+//                    String name = res.substring(PCKNAME.length() + 1);
+//                    if (seen.contains(name))
+//                        continue;
+//                    try {
+//                        load(new BufferedReader(
+//                                new InputStreamReader(
+//                                Almanac.class.getResourceAsStream("/" + PCKNAME.replace('.', '/') + "/" +name))));
+//                    } catch (Exception ex) {
+//                        LOG.log(Level.WARNING, "IO Problem reading " + res, ex);
+//                        Exceptions.printStackTrace(ex);
+//                    }
+//                }
+//            } catch (ClassNotFoundException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        }
+            
+            
+            
+            
+            
 		// second templates in {user.home.ancestris}/gedart/contrib-templates
 		File dir = new File(EnvironmentChecker.getProperty(
 				"user.home.ancestris/gedart/contrib-templates", "?",

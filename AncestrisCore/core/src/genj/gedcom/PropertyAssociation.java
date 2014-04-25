@@ -22,9 +22,20 @@ package genj.gedcom;
 import genj.util.WordBuffer;
 
 /**
- * Gedcom Property : ASSO
+ * Gedcom Property : ASSO.
  * Property wrapping the condition of a property having an association 
  * to another entity
+ * There are two forms for association tag:
+ * <ul><li> the first is the default used by Ancestris and is fully compliant to 
+ *   the gedcom standard. In this form, the ASSO tag is allowed only under an INDI ta g
+ *   and the RELA contain a tag place to identify the event involved in this association.
+ *   this tag path is an Ancestris feature and not use by any other genealogy software
+ *   but remains gedcom compliant as there is no specification for RELA tag value.
+ * <li> the second is not fully compliant to the standard but seems to be widely used.
+ *   In this form, the ASSO tag is put under the related event and points to the INDI
+ *   involved in this association.
+ * </ul>
+ * this class can understand both form
  */
 public class PropertyAssociation extends PropertyXRef {
   
@@ -36,6 +47,15 @@ public class PropertyAssociation extends PropertyXRef {
     assertTag("ASSO");
   }
 
+  private boolean tagAssoIsInEvent(){
+    if (!(getParent() instanceof Indi))
+        return true;
+
+    Property rela = getProperty("RELA");
+    if (rela!=null&&rela.getValue().contains("@"))
+            return false;
+    return true;
+}
   /**
    * We're trying to give a bit more information than the
    * default display value (target.getEntity().toString())
@@ -43,23 +63,43 @@ public class PropertyAssociation extends PropertyXRef {
    *  Birth Meier, Nils (I008) 25 May 1970 Rendsburg
    * @see genj.gedcom.PropertyXRef#getDisplayValue()
    */
+    @Override
   public String getDisplayValue() {
-    
-    // find target
-    PropertyXRef target = getTarget();
-    if (target==null)
-      return super.getDisplayValue();
-    
-    // check its parent
-    Property parent = target.getParent();
+      if (tagAssoIsInEvent()){
+          return getRelaDisplayValue(getTargetEntity());
+      } else {
+        // find target
+        PropertyXRef target = getTarget();
+        Property parent = null;
+        if (target!=null)
+            parent = target.getParent();
+          return getRelaInEventDisplayValue(parent);
+      }
+  }
+//  rela for this property is indi
+//  
+    private String getRelaInEventDisplayValue(Property parent){
+//    // find target
+//    PropertyXRef target = getTarget();
+//    if (target==null)
+//      return super.getDisplayValue();
+//    
+//    // check its parent
+//    Property parent = target.getParent();
     if (parent==null)
       return super.getDisplayValue();
     
     // collect some info e.g.
     //  Meier, Nils (I008) - Birth - 25 May 1970 - Rendsburg
     WordBuffer result = new WordBuffer(" - ");
-    result.append(parent.getEntity());
-    
+
+    Property relaProp = getProperty("RELA");
+    String rela = "";
+    if (rela!=null&&relaProp.getDisplayValue().length()>0) 
+        rela = " ("+relaProp.getDisplayValue() + ")";
+
+    result.append(parent.getEntity()+rela);
+
     result.append(Gedcom.getName(parent.getTag()));
     
     Property date = parent.getProperty("DATE");
@@ -70,6 +110,7 @@ public class PropertyAssociation extends PropertyXRef {
     if (place!=null)
       result.append(place);
     
+    
     // done
     return result.toString();
   }
@@ -77,20 +118,39 @@ public class PropertyAssociation extends PropertyXRef {
   /**
    * @see genj.gedcom.PropertyXRef#getForeignDisplayValue()
    */
+    @Override
   protected String getForeignDisplayValue() {
-    // do we know a relationship?
-    Property rela = getProperty("RELA");
-    if (rela!=null&&rela.getDisplayValue().length()>0) 
-      return rela.getDisplayValue() + ": " + getEntity().toString();
-    // fallback
-    return super.getForeignDisplayValue();
+      if (tagAssoIsInEvent()){
+          return getRelaInEventDisplayValue(getParent());
+      } else {
+          return getRelaDisplayValue(getEntity());
+      }
   }
+  /**
+   * when an INDI is associated to a property (which can be an event, an INDI 
+   * or a FAM, a RELAtion is establish between the two.
+   */
+    
+    /**
+     * Display 
+     * indi is rela in event
+     * target = indi associated to this event
+     */    
+    private String getRelaDisplayValue(Entity target){
+        // do we know a relationship?
+        Property rela = getProperty("RELA");
+        if (rela!=null&&rela.getDisplayValue().length()>0) 
+        return rela.getDisplayValue() + ": " + target.toString();
+        // fallback
+        return super.getForeignDisplayValue();
+    }
   
   /**
    * Returns a warning string that describes what happens when this
    * property would be deleted
    * @return warning as <code>String</code>, <code>null</code> when no warning
    */
+    @Override
   public String getDeleteVeto() {
     // warn if linked
     if (getTargetEntity()==null) 
