@@ -49,7 +49,7 @@ public final class GenealogyEditorCreateRepositoryAction implements ActionListen
                     }
                 }); // end of doUnitOfWork
                 RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
-                repositoryEditorPanel.setRepository(mRepository);
+                repositoryEditorPanel.set(mRepository);
 
                 DialogManager.ADialog editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.create.title"),

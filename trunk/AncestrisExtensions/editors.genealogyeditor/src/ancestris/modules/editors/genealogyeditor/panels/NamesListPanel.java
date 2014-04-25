@@ -165,7 +165,7 @@ public class NamesListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar namesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setNamesList(Indi root, List<PropertyName> namesList) {
+    public void set(Indi root, List<PropertyName> namesList) {
         this.root = root;
         mNamesTableModel.update(namesList);
     }

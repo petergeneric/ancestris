@@ -544,7 +544,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             }
         }
 
-        individualsListPanel.setIndividualsList(mFamily, individualsList);
+        individualsListPanel.set(mFamily, individualsList);
         individualsListPanel.setToolBarVisible(false);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.husband"),
@@ -583,7 +583,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 individualsList.add(individual);
             }
         }
-        individualsListPanel.setIndividualsList(mFamily, individualsList);
+        individualsListPanel.set(mFamily, individualsList);
         individualsListPanel.setToolBarVisible(false);
 
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
@@ -786,7 +786,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 eventsList.add(property);
             }
         }
-        eventsListPanel.setEventsList(mFamily, eventsList);
+        eventsListPanel.set(mFamily, eventsList);
 
         /*
          * +1 HUSB @<XREF:INDI>@
@@ -829,7 +829,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         /*
          * +1 CHIL @<XREF:INDI>@
          */
-        childrensListPanel.setChildrensList(mFamily, mFamily.getProperties(PropertyChild.class));
+        childrensListPanel.set(mFamily, mFamily.getProperties(PropertyChild.class));
 
         /*
          * +1 NCHI <COUNT_OF_CHILDREN>
@@ -862,7 +862,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         /*
          * +1 <<NOTE_STRUCTURE>>
          */
-        noteCitationsListPanel.setNotesList(mFamily, Arrays.asList(mFamily.getProperties("NOTE")));
+        noteCitationsListPanel.set(mFamily, Arrays.asList(mFamily.getProperties("NOTE")));
 
         /*
          * +1 <<MULTIMEDIA_LINK>>

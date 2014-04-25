@@ -845,7 +845,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
         Property[] sourcesList = mEvent.getProperties("SOUR");
         sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
 
-        noteCitationsListPanel.setNotesList(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
+        noteCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
 
         multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
     }

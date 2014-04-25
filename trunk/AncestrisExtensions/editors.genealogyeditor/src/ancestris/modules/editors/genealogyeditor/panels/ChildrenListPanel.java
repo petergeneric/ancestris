@@ -217,7 +217,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         IndividualsListPanel individualsListPanel = new IndividualsListPanel();
         List<Indi> individualsList = new ArrayList<Indi>(mRoot.getGedcom().getIndis());
         individualsListPanel.setToolBarVisible(false);
-        individualsListPanel.setIndividualsList(mRoot, individualsList);
+        individualsListPanel.set(mRoot, individualsList);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.child"),
                 individualsListPanel);
@@ -272,7 +272,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     private javax.swing.JButton linkToChildrenButton;
     // End of variables declaration//GEN-END:variables
 
-    public void setChildrensList(Fam root, List<? extends PropertyXRef> individualsList) {
+    public void set(Fam root, List<? extends PropertyXRef> individualsList) {
         this.mRoot = root;
         mIndividualReferencesTableModel.addAll(individualsList);
     }

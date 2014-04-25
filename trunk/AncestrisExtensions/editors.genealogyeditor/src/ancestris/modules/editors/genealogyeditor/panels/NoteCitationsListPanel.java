@@ -203,7 +203,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
 
         NotesListPanel notesListPanel = new NotesListPanel();
-        notesListPanel.setNotesList(mRoot, notesList);
+        notesListPanel.set(mRoot, notesList);
         notesListPanel.setToolBarVisible(false);
         DialogManager.ADialog notesListListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(NotesListPanel.class, "NotesListPanel.linkTo.title"),
@@ -250,7 +250,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar notesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setNotesList(Property root, List<Property> notesList) {
+    public void set(Property root, List<Property> notesList) {
         this.mRoot = root;
         mNoteCitationsTableModel.addAll(notesList);
     }

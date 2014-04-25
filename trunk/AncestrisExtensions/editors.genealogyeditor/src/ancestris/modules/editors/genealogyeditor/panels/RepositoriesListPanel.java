@@ -120,7 +120,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
             }); // end of doUnitOfWork
 
             RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
-            repositoryEditorPanel.setRepository(mRepository);
+            repositoryEditorPanel.set(mRepository);
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.create.title"),
@@ -155,7 +155,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
             RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
-            repositoryEditorPanel.setRepository(mRepositoriesTableModel.getValueAt(rowIndex));
+            repositoryEditorPanel.set(mRepositoriesTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", mRepositoriesTableModel.getValueAt(rowIndex)),
@@ -210,7 +210,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
             if (selectedRow != -1) {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
                 RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
-                repositoryEditorPanel.setRepository(mRepositoriesTableModel.getValueAt(rowIndex));
+                repositoryEditorPanel.set(mRepositoriesTableModel.getValueAt(rowIndex));
 
                 DialogManager.ADialog editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", mRepositoriesTableModel.getValueAt(rowIndex)),

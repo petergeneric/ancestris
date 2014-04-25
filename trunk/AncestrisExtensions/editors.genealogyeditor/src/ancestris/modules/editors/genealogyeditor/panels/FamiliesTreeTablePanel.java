@@ -273,7 +273,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
         FamiliesListPanel familiesListPanel = new FamiliesListPanel(LIST_FAM);
-        familiesListPanel.setFamiliesList(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
+        familiesListPanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
         DialogManager.ADialog familiesListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(FamiliesListPanel.class, "FamiliesListPanel.linkto.title"),
                 familiesListPanel);

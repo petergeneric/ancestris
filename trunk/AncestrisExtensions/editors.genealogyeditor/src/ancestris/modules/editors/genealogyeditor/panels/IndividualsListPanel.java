@@ -194,7 +194,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar individualsToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setIndividualsList(Property root, List<Indi> individualsList) {
+    public void set(Property root, List<Indi> individualsList) {
         this.mRoot = root;
         mIndividualsTableModel.update(individualsList);
     }

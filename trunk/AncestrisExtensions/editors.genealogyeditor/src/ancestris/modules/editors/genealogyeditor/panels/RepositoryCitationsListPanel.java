@@ -134,7 +134,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
             }); // end of doUnitOfWork
 
             RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
-            repositoryEditorPanel.setRepository(mRepository);
+            repositoryEditorPanel.set(mRepository);
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.create.title"),
@@ -169,7 +169,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
             RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
-            repositoryEditorPanel.setRepository((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
+            repositoryEditorPanel.set((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", mRepositoryCitationsTableModel.getValueAt(rowIndex)),
@@ -224,7 +224,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
             if (selectedRow != -1) {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
                 RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
-                repositoryEditorPanel.setRepository((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
+                repositoryEditorPanel.set((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
 
                 DialogManager.ADialog editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title",

@@ -275,7 +275,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         List<Media> notesList = new ArrayList<Media>((Collection<Media>) mRoot.getGedcom().getEntities(Gedcom.OBJE));
 
         MultimediaObjectListPanel multimediaObjectListPanel = new MultimediaObjectListPanel();
-        multimediaObjectListPanel.setNotesList(mRoot, notesList);
+        multimediaObjectListPanel.set(mRoot, notesList);
         DialogManager.ADialog multimediaObjectListDialog = new DialogManager.ADialog(
             NbBundle.getMessage(MultimediaObjectListPanel.class, "MultimediaObjectListPanel.linkTo.title"),
             multimediaObjectListPanel);

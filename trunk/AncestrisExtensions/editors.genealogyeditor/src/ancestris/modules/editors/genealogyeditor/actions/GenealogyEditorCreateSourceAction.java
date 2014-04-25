@@ -50,7 +50,7 @@ public final class GenealogyEditorCreateSourceAction implements ActionListener {
                 }); // end of doUnitOfWork
 
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-                sourceEditorPanel.setSource(mSource);
+                sourceEditorPanel.set(mSource);
 
                 DialogManager.ADialog sourceEditorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.create.title"),

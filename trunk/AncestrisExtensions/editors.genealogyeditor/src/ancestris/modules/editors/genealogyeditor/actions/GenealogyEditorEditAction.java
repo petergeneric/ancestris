@@ -109,7 +109,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 Gedcom gedcom = entity.getGedcom();
                 int undoNb = gedcom.getUndoNb();
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-                sourceEditorPanel.setSource((Source) entity);
+                sourceEditorPanel.set((Source) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title", entity),
@@ -126,7 +126,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                 Gedcom gedcom = entity.getGedcom();
                 int undoNb = gedcom.getUndoNb();
                 RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
-                repositoryEditorPanel.setRepository((Repository) entity);
+                repositoryEditorPanel.set((Repository) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", entity),

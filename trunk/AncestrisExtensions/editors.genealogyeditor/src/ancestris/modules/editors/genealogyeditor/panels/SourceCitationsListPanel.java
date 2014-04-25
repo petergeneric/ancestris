@@ -125,7 +125,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            sourceCitationEditorPanel.setSource(mRoot, mSourceCitation);
+            sourceCitationEditorPanel.set(mRoot, mSourceCitation);
 
             ADialog sourceCitationEditorDialog = new ADialog(
                     NbBundle.getMessage(SourceCitationEditorPanel.class,
@@ -151,7 +151,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
             Gedcom gedcom = mRoot.getGedcom();
             int undoNb = gedcom.getUndoNb();
             SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
-            sourceCitationEditorPanel.setSource(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
+            sourceCitationEditorPanel.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
             ADialog sourceCitationEditorDialog = new ADialog(
                     NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
                     sourceCitationEditorPanel);
@@ -203,7 +203,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 Gedcom gedcom = mRoot.getGedcom();
                 int undoNb = gedcom.getUndoNb();
                 SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
-                sourceCitationEditorPanel.setSource(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
+                sourceCitationEditorPanel.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
                 ADialog sourceEditorDialog = new ADialog(NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
                         sourceCitationEditorPanel);
                 sourceEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());

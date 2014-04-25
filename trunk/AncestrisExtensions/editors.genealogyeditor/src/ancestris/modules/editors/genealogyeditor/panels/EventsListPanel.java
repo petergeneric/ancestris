@@ -374,7 +374,7 @@ public class EventsListPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
-    public void setEventsList(Property root, List<Property> eventsList) {
+    public void set(Property root, List<Property> eventsList) {
         this.mRoot = root;
         seteventTypeComboBox(eventsList);
         mEventsTableModel.addAll(eventsList);

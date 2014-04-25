@@ -166,7 +166,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         IndividualsListPanel individualsListPanel = new IndividualsListPanel();
         List<Indi> individualsList = new ArrayList<Indi>(mAssociation.getGedcom().getIndis());
 
-        individualsListPanel.setIndividualsList(mAssociation, individualsList);
+        individualsListPanel.set(mAssociation, individualsList);
         individualsListPanel.setToolBarVisible(false);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.husband"),
@@ -236,7 +236,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        noteCitationsListPanel.setNotesList(association, Arrays.asList(association.getProperties("NOTE")));
+        noteCitationsListPanel.set(association, Arrays.asList(association.getProperties("NOTE")));
 
         sourceCitationsListPanel.set(association, Arrays.asList(association.getProperties("SOUR")));
     }
