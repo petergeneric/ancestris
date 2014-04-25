@@ -32,8 +32,10 @@ public final class SubmitterVisualPanel extends JPanel {
         this.changeListener = changeListner;
 
         Submitter subm = gedcom.getSubmitter();
-        submitterAddress.setContext(subm,null);
-        submitterName.setContext(subm, new TagPath("NAME"), subm.getProperty("NAME"));
+        if (subm != null) {
+            submitterAddress.setContext(subm,null);
+            submitterName.setContext(subm, new TagPath("NAME"), subm.getProperty("NAME"));
+        }
     }
 
     @Override

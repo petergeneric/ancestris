@@ -175,10 +175,10 @@ public class ReportGedart extends Report {
                 }
 		
 		thetemplate = usetemplate.getPath();
-		LOG.log(Level.INFO,"template:"+thetemplate );
+		LOG.log(Level.INFO, "template:{0}", thetemplate);
 		extension = usetemplate.getFormat();
 		// if only one item, special case
-		File file = null;
+		File file;
 		boolean isOneEntity = ((indis.length + fams.length) <= 1);
 		if (isOneEntity) {
 			isTodo = false;
