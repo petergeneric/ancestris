@@ -326,7 +326,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     /*
      * SOURCE_RECORD:=
      */
-    public void setSource(Source source) {
+    public void set(Source source) {
         this.mSource = source;
 
         /*
@@ -421,7 +421,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         for (PropertyNote noteRef : mSource.getProperties(PropertyNote.class)) {
             notesList.add((Note) noteRef.getTargetEntity());
         }
-        noteCitationsListPanel.setNotesList(mSource, Arrays.asList(mSource.getProperties("NOTE")));
+        noteCitationsListPanel.set(mSource, Arrays.asList(mSource.getProperties("NOTE")));
 
         /*
          * +1 <<MULTIMEDIA_LINK>>

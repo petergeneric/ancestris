@@ -63,7 +63,7 @@ public class MultimediaObjectListPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.table.EditorTable MultimediaObjectsTable;
     // End of variables declaration//GEN-END:variables
 
-    public void setNotesList(Property root, List<Media> MultimediaObjectsList) {
+    public void set(Property root, List<Media> MultimediaObjectsList) {
         this.mRoot = root;
         mMultiMediaObjectsTableModel.update(MultimediaObjectsList);
     }

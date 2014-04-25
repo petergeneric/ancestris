@@ -511,7 +511,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         } else {
             nameEditorPanel.set(individual, null);
         }
-        namesListPanel.setNamesList(individual, namesList);
+        namesListPanel.set(individual, namesList);
 
         /*
          * +1 SEX <SEX_VALUE>
@@ -533,7 +533,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 individualEvents.add(property);
             }
         }
-        eventsListPanel.setEventsList(individual, individualEvents);
+        eventsListPanel.set(individual, individualEvents);
         
         /*
          * +1 <<LDS_INDIVIDUAL_ORDINANCE>>
@@ -592,7 +592,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         /*
          * +1 <<NOTE_STRUCTURE>>
          */
-        noteCitationsListPanel.setNotesList(individual, Arrays.asList(individual.getProperties("NOTE")));
+        noteCitationsListPanel.set(individual, Arrays.asList(individual.getProperties("NOTE")));
 
         /*
          * +1 <<SOURCE_CITATION>>

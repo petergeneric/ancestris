@@ -169,7 +169,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
     /**
      * @param repository the repository to set
      */
-    public void setRepository(Repository repository) {
+    public void set(Repository repository) {
         this.mRepository = repository;
 
         repositoryIDTextField.setText(mRepository.getId());
@@ -204,7 +204,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
         referencesListPanel.set(mRepository, entitiesList);
 
-        noteCitationsListPanel.setNotesList(mRepository, Arrays.asList(mRepository.getProperties("NOTE")));
+        noteCitationsListPanel.set(mRepository, Arrays.asList(mRepository.getProperties("NOTE")));
 
     }
 

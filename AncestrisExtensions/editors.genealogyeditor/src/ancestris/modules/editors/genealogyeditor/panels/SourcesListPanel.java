@@ -122,7 +122,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
             }); // end of doUnitOfWork
 
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.setSource(mSource);
+            sourceEditorPanel.set(mSource);
 
             ADialog sourceEditorDialog = new ADialog(
                     NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.create.title"),
@@ -147,7 +147,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
             int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
             int undoNb = mGedcom.getUndoNb();
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.setSource(mSourcesTableModel.getValueAt(rowIndex));
+            sourceEditorPanel.set(mSourcesTableModel.getValueAt(rowIndex));
             ADialog sourceEditorDialog = new ADialog(
                     NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
                     sourceEditorPanel);
@@ -189,7 +189,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
             if (selectedRow != -1) {
                 int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
                 SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-                sourceEditorPanel.setSource(mSourcesTableModel.getValueAt(rowIndex));
+                sourceEditorPanel.set(mSourcesTableModel.getValueAt(rowIndex));
                 ADialog sourceEditorDialog = new ADialog(
                         NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
                         sourceEditorPanel);

@@ -224,7 +224,7 @@ public class NotesListPanel extends javax.swing.JPanel {
         List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
 
         NotesListPanel notesListPanel = new NotesListPanel();
-        notesListPanel.setNotesList(mRoot, notesList);
+        notesListPanel.set(mRoot, notesList);
         notesListPanel.setToolBarVisible(false);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
@@ -283,7 +283,7 @@ public class NotesListPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar notesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setNotesList(Property root, List<Note> notesList) {
+    public void set(Property root, List<Note> notesList) {
         this.mRoot = root;
         mNotesTableModel.update(notesList);
     }

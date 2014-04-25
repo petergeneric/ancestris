@@ -252,7 +252,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
         FamiliesListPanel familiesListPanel = new FamiliesListPanel(LIST_FAM);
-        familiesListPanel.setFamiliesList(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
+        familiesListPanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
         DialogManager.ADialog familiesListDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(FamiliesListPanel.class, "FamiliesListPanel.linkto.title"),
                 familiesListPanel);
@@ -320,7 +320,7 @@ public class FamiliesListPanel extends javax.swing.JPanel {
     private javax.swing.JButton linkToFamilyButton;
     // End of variables declaration//GEN-END:variables
 
-    public void setFamiliesList(Property root, List<Fam> familiesList) {
+    public void set(Property root, List<Fam> familiesList) {
         this.mRoot = root;
         mFamiliesTableModel.update(familiesList);
     }

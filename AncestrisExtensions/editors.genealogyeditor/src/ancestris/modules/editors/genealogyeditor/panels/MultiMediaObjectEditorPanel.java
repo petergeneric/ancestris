@@ -311,7 +311,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         /*
          * +1 <<NOTE_STRUCTURE>>
          */
-        noteCitationsListPanel.setNotesList(mMultiMediaObject, Arrays.asList(mMultiMediaObject.getProperties("NOTE")));
+        noteCitationsListPanel.set(mMultiMediaObject, Arrays.asList(mMultiMediaObject.getProperties("NOTE")));
     }
 
     public Property commit() {

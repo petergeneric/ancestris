@@ -414,7 +414,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             }); // end of doUnitOfWork
 
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.setSource(mReferencedSource);
+            sourceEditorPanel.set(mReferencedSource);
 
             ADialog sourceEditorDialog = new ADialog(
                     NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.create.title"),
@@ -451,7 +451,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             Gedcom gedcom = mRoot.getGedcom();
             int undoNb = gedcom.getUndoNb();
             SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.setSource(mReferencedSource);
+            sourceEditorPanel.set(mReferencedSource);
             ADialog sourceEditorDialog = new ADialog(
                     NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
                     sourceEditorPanel);
@@ -590,7 +590,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     // +1 <<NOTE_STRUCTURE>>
     //]
 
-    void setSource(Property root, final Property sourceCitation) {
+    void set(Property root, final Property sourceCitation) {
 
         mRoot = root;
         mSourceCitation = sourceCitation;
@@ -708,7 +708,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
             }
         }
-        noteCitationsListPanel.setNotesList(mSourceCitation, notes);
+        noteCitationsListPanel.set(mSourceCitation, notes);
 
         ArrayList<Property> multimediaObjects = new ArrayList<Property>(Arrays.asList(mSourceCitation.getProperties("OBJE")));
         if (mSourceCitation instanceof PropertySource) {
