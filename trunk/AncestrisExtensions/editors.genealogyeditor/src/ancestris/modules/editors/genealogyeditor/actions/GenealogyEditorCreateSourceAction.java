@@ -21,7 +21,7 @@ id = "ancestris.modules.editors.genealogyeditor.actions.GenealogyEditorCreateSou
 @ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/source_add.png",
 displayName = "#CTL_GenealogyEditorCreateSourceAction")
 @ActionReferences({
-    @ActionReference(path = "Toolbars/GenealogyEditor", position = 500)
+    @ActionReference(path = "Toolbars/GenealogyEditor", position = 600)
 })
 @Messages("CTL_GenealogyEditorCreateSourceAction=Create a new source")
 public final class GenealogyEditorCreateSourceAction implements ActionListener {
