@@ -28,7 +28,7 @@ import org.openide.util.Utilities;
         iconBase = "ancestris/modules/editors/genealogyeditor/resources/Media.png",
         displayName = "#CTL_GenealogyEditorCreateMultiMediaAction"
 )
-@ActionReference(path = "Toolbars/GenealogyEditor", position = 0)
+@ActionReference(path = "Toolbars/GenealogyEditor", position = 500)
 @Messages("CTL_GenealogyEditorCreateMultiMediaAction=Create new multimedia object")
 public final class GenealogyEditorCreateMultiMediaAction implements ActionListener {
 
