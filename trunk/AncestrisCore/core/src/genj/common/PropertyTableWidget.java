@@ -20,7 +20,6 @@
 package genj.common;
 
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.ATableHeaderRenderer;
 import ancestris.util.swing.TableFilterWidget;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -35,10 +34,8 @@ import genj.util.swing.HeadlessLabel;
 import genj.util.swing.LinkWidget;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -55,8 +52,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultRowSorter;
-import javax.swing.Icon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -65,27 +60,16 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import javax.swing.RowSorter;
-import javax.swing.RowSorter.SortKey;
-import javax.swing.SortOrder;
-import javax.swing.SwingConstants;
 import javax.swing.TransferHandler;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import org.netbeans.swing.etable.ETable;
 
 /**
  * A widget that shows entities in rows and columns
@@ -367,7 +351,7 @@ public class PropertyTableWidget extends JPanel {
             defaultRowHeight = r.getPreferredSize().height;
             setDefaultRenderer(Object.class, r);
             getTableHeader().setReorderingAllowed(false);
-//            getTableHeader().setDefaultRenderer(new ATableHeaderRenderer(getTableHeader().getDefaultRenderer()));
+
             getColumnModel().getSelectionModel().addListSelectionListener(this);
             // 20091208 JTable already implements and add itself as listener
             //getSelectionModel().addListSelectionListener(this);
@@ -1056,120 +1040,4 @@ public class PropertyTableWidget extends JPanel {
 //      // done
 //    }
 //  } //DateShortcutGenerator
-    
-class MultiSortTableCellHeaderRenderer extends DefaultTableCellRenderer
-{
-    protected SortIcon sortIcon = new SortIcon(8);
-
-    public MultiSortTableCellHeaderRenderer()
-    {
-        setHorizontalAlignment(0);
-        setHorizontalTextPosition(10);
-    }
-
-
-    public Component getTableCellRendererComponent(JTable table, Object value,
-                          boolean isSelected, boolean hasFocus, int row, int column)
-    {
-        JTableHeader tableHeader = table.getTableHeader();
-        Color fg = null;
-        Color bg = null;
-        Border border = null;
-        Icon icon = null;
-
-        if (hasFocus)
-        {
-            fg = UIManager.getColor("TableHeader.focusCellForeground");
-            bg = UIManager.getColor("TableHeader.focusCellBackground");
-            border = UIManager.getBorder("TableHeader.focusCellBorder");
-        }
-
-        if (fg == null)
-            fg = tableHeader.getForeground();
-        if (bg == null)
-            bg = tableHeader.getBackground();
-        if (border == null)
-            border = UIManager.getBorder("TableHeader.cellBorder");
-        if (!tableHeader.isPaintingForPrint() && table.getRowSorter() != null)
-            icon = getSortIcon(table, table.convertColumnIndexToModel(column));
-
-        setFont(tableHeader.getFont());
-        setText(value != null && value != "" ? value.toString() : " ");
-        setBorder(border);
-        setIcon(icon);
-
-        return this;
-    }
-
-
-    protected Icon getSortIcon(JTable table, int column)
-    {
-        List<? extends SortKey> sortKeys = table.getRowSorter().getSortKeys();
-        if (sortKeys == null || sortKeys.isEmpty())
-            return null;
-
-        int priority = 0;
-        for (SortKey sortKey : sortKeys)
-        {
-            if (sortKey.getColumn() == column)
-            {
-                sortIcon.setPriority(priority);
-                sortIcon.setSortOrder(sortKey.getSortOrder());
-                return sortIcon;
-            }
-
-            priority++;
-        }
-
-        return null;
-    }
-}
-
-
-class SortIcon implements Icon, SwingConstants
-{
-    private int baseSize;
-    private int size;
-    private int direction;
-    private BasicArrowButton iconRenderer;
-    private double[] sizePercentages = {1.0, .85, .70, .55, .40, .25, .10};
-
-    public SortIcon(int size)
-    {
-        this.baseSize = this.size = size;
-        iconRenderer = new BasicArrowButton(direction);
-    }
-
-
-    public void setPriority(int priority)
-    {
-        size = (int) (baseSize * sizePercentages[priority]);
-    }
-
-
-    public void setSortOrder(SortOrder sortOrder)
-    {
-        direction = sortOrder == SortOrder.ASCENDING ? NORTH : SOUTH;
-    }
-
-
-    public void paintIcon(Component c, Graphics g, int x, int y)
-    {
-        iconRenderer.paintTriangle(g, x, y, size, direction, true);
-    }
-
-
-    public int getIconWidth()
-    {
-        return size;
-    }
-
-
-
-    public int getIconHeight()
-    {
-        return size / 2;
-    }
-}
-    
 } //PropertyTableWidget
