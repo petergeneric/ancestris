@@ -141,7 +141,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         privateRecordToggleButton = new javax.swing.JToggleButton();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
         eventsPanel = new javax.swing.JPanel();
-        individualEventEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.IndividualEventEditorPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
@@ -149,6 +149,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         deleteEventButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         eventsList = new javax.swing.JList();
+        individualEventEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.IndividualEventEditorPanel();
         familiesChildPanel = new javax.swing.JPanel();
         familiesChildTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel(FamiliesReferenceTreeTablePanel.EDIT_FAMC);
         familiesSpousePanel = new javax.swing.JPanel();
@@ -235,8 +236,6 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         individualInformationTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
 
-        individualEventEditorPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
         jToolBar1.setRollover(true);
 
         jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.jLabel1.text"), new Object[] {})); // NOI18N
@@ -271,31 +270,40 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1)
                 .addGap(0, 0, 0))
         );
 
+        jSplitPane1.setLeftComponent(jPanel1);
+
+        individualEventEditorPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jSplitPane1.setRightComponent(individualEventEditorPanel);
+
         javax.swing.GroupLayout eventsPanelLayout = new javax.swing.GroupLayout(eventsPanel);
         eventsPanel.setLayout(eventsPanelLayout);
         eventsPanelLayout.setHorizontalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(eventsPanelLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsPanelLayout.createSequentialGroup()
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
@@ -635,6 +643,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel nameEditorPanel;
