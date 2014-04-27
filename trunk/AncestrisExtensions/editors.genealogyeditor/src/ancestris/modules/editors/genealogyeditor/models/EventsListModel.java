@@ -66,8 +66,10 @@ public class EventsListModel extends AbstractListModel<String> {
     }
 
     public void addAll(List<Property> eventsList) {
-        this.eventsList.addAll(eventsList);
-        fireIntervalAdded(this, 0, this.eventsList.size() - 1);
+        if (!eventsList.isEmpty()) {
+            this.eventsList.addAll(eventsList);
+            fireIntervalAdded(this, 0, this.eventsList.size() - 1);
+        }
     }
 
     public void add(Property event) {
