@@ -163,6 +163,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         associationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel();
         galleryPanel = new javax.swing.JPanel();
         multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
+        changeDateLabel = new javax.swing.JLabel();
+        changeDateTextField = new javax.swing.JTextField();
 
         setMinimumSize(new java.awt.Dimension(758, 380));
         setName(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.name"), new Object[] {})); // NOI18N
@@ -292,7 +294,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -393,6 +395,11 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         individualInformationTabbedPane.addTab("Gallery", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
 
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.changeDateLabel.text")); // NOI18N
+
+        changeDateTextField.setEditable(false);
+        changeDateTextField.setText(org.openide.util.NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.changeDateTextField.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -401,7 +408,12 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(individualInformationTabbedPane)
-                    .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(850, 850, 850)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -411,6 +423,10 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(individualInformationTabbedPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(changeDateLabel)
+                    .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -599,6 +615,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel associationsListPanel;
+    private javax.swing.JLabel changeDateLabel;
+    private javax.swing.JTextField changeDateTextField;
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JComboBox<String> eventTypeComboBox;
     private javax.swing.JList eventsList;
@@ -752,11 +770,15 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
          *
          * +1 RIN <AUTOMATED_RECORD_ID>
          * Not used
-         *
-         * +1 <<CHANGE_DATE>>
-         * Handle by gedcom doUnitOfWork
          */
-
+        /*
+         * +1 <<CHANGE_DATE>>
+         */
+        Property changeDate = mIndividual.getProperty("CHAN");
+        if (changeDate != null) {
+            changeDateTextField.setText(((PropertyChange)changeDate).getDisplayValue());
+        }
+        
         /*
          * +1 <<NOTE_STRUCTURE>>
          */
