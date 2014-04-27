@@ -599,19 +599,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             String searchedPlace = gedcomTownTextField.getText() + "," + gedcomCountryTextField.getText();
             searchPlaceTextField.setText(searchedPlace);
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
-
-            if (searchedPlace.isEmpty() == false) {
-                searchPlaceButton.setEnabled(false);
-                GeonamesPlacesList geonamesPlacesList1 = new GeonamesPlacesList();
-                geonamesPlacesList1.searchPlace(searchedPlace, geonamePlacesListModel);
-                geonamesPlacesList1.getTask().addTaskListener(new TaskListener() {
-
-                    @Override
-                    public void taskFinished(Task task) {
-                        searchPlaceButton.setEnabled(true);
-                    }
-                });
-            }
         }
     }
 
