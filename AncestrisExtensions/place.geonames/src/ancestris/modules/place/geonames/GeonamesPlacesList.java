@@ -1,5 +1,6 @@
 package ancestris.modules.place.geonames;
 
+import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.api.place.Place;
 import ancestris.api.place.SearchPlace;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class GeonamesPlacesList implements SearchPlace {
 
                     try {
                         logger.log(Level.INFO, "Start searching ...");
-                        WebService.setUserName("lemovice");
+                        WebService.setUserName(GeonamesOptions.getInstance().getUserName());
 
                         ToponymSearchCriteria toponymSearchCriteria = new ToponymSearchCriteria();
                         toponymSearchCriteria.setStyle(Style.FULL);
