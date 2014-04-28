@@ -28,8 +28,8 @@ public class StartupOptions {
     private String jdkHomePath = "";
     private String userDirPath = "";
     private String macuserDirPath = "";
-    private Map<String, String> hParam = new HashMap<String, String>(10);
-    private File ancestrisUserConfFile = new File(System.getProperty("netbeans.user") + "/etc/ancestris.conf");
+    private final Map<String, String> hParam = new HashMap<String, String>(10);
+    private final File ancestrisUserConfFile = new File(System.getProperty("netbeans.user") + "/etc/ancestris.conf");
     private Properties ancestrisConfProps;
 
     public StartupOptions() {
@@ -52,7 +52,9 @@ public class StartupOptions {
             }
             prefix = "netbeans_";
         }
-        loadConf(ancestrisConfProps, prefix);
+        if (ancestrisConfProps != null){
+            loadConf(ancestrisConfProps, prefix);
+        }
     }
 
     public void applyChanges() {

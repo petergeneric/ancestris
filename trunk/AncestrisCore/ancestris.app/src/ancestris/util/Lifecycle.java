@@ -12,8 +12,11 @@
 package ancestris.util;
 
 import ancestris.app.App;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.LifecycleManager;
 import org.openide.NotifyDescriptor;
@@ -28,14 +31,18 @@ public class Lifecycle {
     public static void askForRestart(String message) {
         ResourceBundle bundle = NbBundle.getBundle(App.class);
 
-        String msg = message==null?bundle.getString("NeedRestart.text"):message;
+        String msg = message == null ? bundle.getString("NeedRestart.text") : message;
 
-        NotifyDescriptor nd = new NotifyDescriptor(msg,bundle.getString("NeedRestart.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
-        DialogDisplayer.getDefault().notify(nd);
-        if (nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
-            LifecycleManager.getDefault().markForRestart();
-            LifecycleManager.getDefault().exit();
-        }
+        DialogDescriptor dd = new DialogDescriptor(msg, bundle.getString("NeedRestart.title"), false, NotifyDescriptor.OK_CANCEL_OPTION, null,
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent arg0) {
+                        if (arg0.getSource() == NotifyDescriptor.OK_OPTION) {
+                            LifecycleManager.getDefault().markForRestart();
+                            LifecycleManager.getDefault().exit();
+                        }
+                    }
+                });
+        DialogDisplayer.getDefault().notifyLater(dd);
     }
 
     public static void askForRestart() {
@@ -43,21 +50,25 @@ public class Lifecycle {
     }
 
     public static void askForStopAndStart(String message, Locale locale) {
-        ResourceBundle bundle= locale == null?
-            NbBundle.getBundle(App.class):
-            NbBundle.getBundle(findName(App.class), locale,App.class.getClassLoader());
+        ResourceBundle bundle = locale == null
+                ? NbBundle.getBundle(App.class)
+                : NbBundle.getBundle(findName(App.class), locale, App.class.getClassLoader());
 
-        String msg = message==null?bundle.getString("NeedStopStart.text"):message;
+        String msg = message == null ? bundle.getString("NeedStopStart.text") : message;
 
-        NotifyDescriptor nd = new NotifyDescriptor(msg,bundle.getString("NeedStopStart.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
-        DialogDisplayer.getDefault().notify(nd);
-        if (nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
-            LifecycleManager.getDefault().exit();
-        }
+        DialogDescriptor dd = new DialogDescriptor(msg, bundle.getString("NeedStopStart.title"), false, NotifyDescriptor.OK_CANCEL_OPTION, null,
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent arg0) {
+                        if (arg0.getSource() == NotifyDescriptor.OK_OPTION) {
+                            LifecycleManager.getDefault().exit();
+                        }
+                    }
+                });
+        DialogDisplayer.getDefault().notifyLater(dd);
     }
 
     public static void askForStopAndStart() {
-        askForStopAndStart(null,null);
+        askForStopAndStart(null, null);
     }
 
     // Code from NbBundel source
