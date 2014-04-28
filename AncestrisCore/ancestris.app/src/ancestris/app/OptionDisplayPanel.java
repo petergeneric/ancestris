@@ -259,11 +259,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 //XXX:        editPrefs.put("isOpenEditor", getOpenEditor());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
-        if (needRestart) // the markForRestart is not applicable here as the restart process loop done in nbexec file
-        // doesn't reread app.conf file wich is read once before the loop.
+        if (needRestart) 
+        // the markForRestart is not applicable here as the restart process loop done in nbexec file
+        // doesn't reread app.conf file which is read once before the loop.
         // W/O modifying nbexec and windows dll, the startup  settings are not re-read
         // So, as in a basic usage of ancestris the language preference will not be set by the user,
-        // we tell the user to stop the start again ancestris. This way all the new startup settings are correctly read
+        // we tell the user to stop then start again ancestris. This way all the new startup settings are correctly read
         {
             Lifecycle.askForStopAndStart(null, getLanguage());
         }
