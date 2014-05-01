@@ -416,4 +416,13 @@ public class MergeQueryTest extends TestCase {
 
     }
  
+    public void testIsFirstLastName() {
+
+        assertTrue(MergeQuery.isSameFirstName("Marianne", "Marianne, Pétronille"));
+        assertTrue(MergeQuery.isSameFirstName("Petronille", "Marianne, Pétronille"));
+        assertTrue(MergeQuery.isSameFirstName("Petronille, Marianne", "Marianne"));
+        assertTrue(MergeQuery.isSameFirstName("Marianne, Pétronille", "Pétronille"));
+        assertFalse(MergeQuery.isSameFirstName("Marianne, Pétronille", "Anne"));
+        
+    }
 }

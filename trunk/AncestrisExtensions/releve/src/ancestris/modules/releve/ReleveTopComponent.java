@@ -566,7 +566,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         try {
             dataManager.showGedcomLink(state);
         } catch (Exception ex) {
-            
+            ex.printStackTrace();
         }
         setCursor(Cursor.getDefaultCursor());
     }
@@ -1583,7 +1583,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         panelBirth.setMinimumSize(new java.awt.Dimension(100, 100));
         panelBirth.setName(""); // NOI18N
         panelBirth.setRequestFocusEnabled(false);
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), panelBirth); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelBirth.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), panelBirth); // NOI18N
 
         panelMarriage.setMinimumSize(new java.awt.Dimension(100, 100));
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMarriage.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Marriage.png")), panelMarriage); // NOI18N
