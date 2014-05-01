@@ -211,7 +211,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         //je cherche l'image
         File imageFile = null;
         if (!cote.isEmpty()) {
-            // si page  n'est pas un nombre, je cherche d'abord un fichier conteantn page
+            // si page  n'est pas un nombre, je cherche d'abord un fichier contenant le nom de la page
             if (isNumeric == false) {
                 for (File directory : BrowserOptionsPanel.ImageDirectoryModel.getModel().getImageBrowserDirectories()) {
                     imageFile = findImage(directory, cityFilter, coteFilter, pageNameFilter);
@@ -414,10 +414,10 @@ public class BrowserPanel extends javax.swing.JPanel {
 
     static private class FilePageNameFilter extends FilePageFilter {
 
-        String searchedPage;
+        String pageName;
 
-        public FilePageNameFilter(String searchedPage) {
-            this.searchedPage = searchedPage.toLowerCase();
+        public FilePageNameFilter(String pageName) {
+            this.pageName = pageName.toLowerCase();
         }
 
         @Override
@@ -434,7 +434,7 @@ public class BrowserPanel extends javax.swing.JPanel {
                 }
 
                 if (extension) {
-                    return name.toLowerCase().contains(searchedPage);
+                    return name.toLowerCase().contains(pageName);
                 } else {
                     return false;
                 }
@@ -448,10 +448,10 @@ public class BrowserPanel extends javax.swing.JPanel {
 
     static private class FilePageNumberFilter extends FilePageFilter {
 
-        int searchedPage;
+        int pageNumber;
 
         public FilePageNumberFilter(int searchedPage) {
-            this.searchedPage = searchedPage;
+            this.pageNumber = searchedPage;
         }
 
         @Override
@@ -474,13 +474,22 @@ public class BrowserPanel extends javax.swing.JPanel {
                     }
 
                     int page = parsePage(name);
-                    if (page != searchedPage) {
+                    if (page != pageNumber) {
                         int lastSeparatorPos = name.lastIndexOf('-');
                         if (lastSeparatorPos != -1) {
                             page = parsePage(name.substring(0, lastSeparatorPos));
                         }
                     }
-                    return page == searchedPage;
+                    if (page != pageNumber) {
+                        int firstSeparatorPos = name.indexOf('-');
+                        if (firstSeparatorPos != -1) {
+                            int secondSeparatorPos = name.indexOf('-',firstSeparatorPos+1);
+                            if (secondSeparatorPos != -1) {
+                                page = parsePage(name.substring(firstSeparatorPos+1, secondSeparatorPos));
+                            }
+                        }
+                    }
+                    return page == pageNumber;
                 } else {
                     return false;
                 }

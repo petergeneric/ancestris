@@ -4,11 +4,15 @@ import ancestris.modules.releve.dnd.MergeQuery;
 import static ancestris.modules.releve.dnd.MergeQuery.isSameFirstName;
 import static ancestris.modules.releve.dnd.MergeQuery.isSameLastName;
 import genj.gedcom.Fam;
+import static genj.gedcom.Fam.PATH_FAMMARRDATE;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
+import genj.gedcom.TagPath;
+import genj.gedcom.time.PointInTime;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -23,6 +27,13 @@ public class GedcomLinkProvider {
     private Gedcom gedcom = null; 
     private boolean showGedcomLink = false;
     
+    static final TagPath marrDateTag = new TagPath("FAM:MARR:DATE");
+    static final TagPath marbDateTag = new TagPath("FAM:MARB:DATE");
+    static final TagPath marcDateTag = new TagPath("FAM:MARC:DATE");
+    static final TagPath marlDateTag = new TagPath("FAM:MARL:DATE");
+    static final TagPath evenDateTag = new TagPath("FAM:EVEN:DATE");
+    static final TagPath indiEvenDateTag = new TagPath("INDI:EVEN:DATE");
+    static final TagPath willDateTag = new TagPath("INDI:WILL:DATE");
     
     public void init(final RecordModel recordModel, Gedcom gedcom, boolean state) {
         this.gedcom = gedcom;
@@ -70,13 +81,13 @@ public class GedcomLinkProvider {
                     gedcomLink = findBirth(record);
                     break;
                 case marriage:
-                    gedcomLink = findMariage(record);
+                    gedcomLink = findMarriage(record, marrDateTag );
                     break;
                 case death:
                     gedcomLink = findDeath(record);
                     break;
                 default:  // misc
-                    gedcomLink = null;
+                    gedcomLink = findMisc(record);
             }
             if (gedcomLink != null && gedcomLink.getCompareResult() == GedcomLink.CompareResult.EQUAL) {
                 gedcomLinkList.put(record, gedcomLink);
@@ -214,7 +225,7 @@ public class GedcomLinkProvider {
         return gedcomLink;
     }
     
-    private GedcomLink findMariage(Record marriageRecord) {
+    private GedcomLink findMarriage(Record marriageRecord, TagPath ... tagPathList) {
         GedcomLink gedcomLink = new GedcomLink(marriageRecord);
 
         PropertyDate recordMarriageDate = marriageRecord.getEventDateProperty();
@@ -230,24 +241,33 @@ public class GedcomLinkProvider {
             }
 
             // date de mariage egale      
-            PropertyDate famMarriageDate = fam.getMarriageDate();
-            if (recordMarriageDate != null && famMarriageDate != null && famMarriageDate.getStart().isValid()) {
-                boolean equal;
-                try {
-                    int recordJulianDay = recordMarriageDate.getStart().getJulianDay();
-                    int gedcomJulianDay = fam.getMarriageDate().getStart().getJulianDay();
-                    equal = recordJulianDay == gedcomJulianDay;
-                } catch (GedcomException ex) {
-                    equal = false;
+            try {
+                int recordJulianDay = recordMarriageDate.getStart().getJulianDay();
+                boolean eventDateFound = false;
+                for (TagPath tagPath : tagPathList) {
+                    for ( Property famEventDate : fam.getProperties(tagPath)) {
+                        if (famEventDate != null ) {
+                            PointInTime eventPit = ((PropertyDate)famEventDate).getStart(); 
+                            if ( eventPit != null && eventPit.isValid()) {
+                                int gedcomJulianDay = eventPit.getJulianDay();
+                                if (recordJulianDay == gedcomJulianDay) {
+                                    eventDateFound = true; 
+                                    break;
+                                }
+                            }
+                        } 
+                    }
+                    if (eventDateFound) {
+                        break;
+                    }
                 }
-
-                if (!equal) {
+                if (!eventDateFound) {
                     continue;
                 }
-            } else {
+            } catch (GedcomException ex) {
                 continue;
             }
-
+            
             if (husband != null) {
 
                 // meme nom de l'epoux
@@ -290,6 +310,82 @@ public class GedcomLinkProvider {
     }
     
     
+    private GedcomLink findMisc(Record miscRecord) {
+        GedcomLink gedcomLink = null;
+
+        PropertyDate recordBirthDate = miscRecord.getEventDateProperty();
+
+        String eventType = miscRecord.getEventType().toString().toLowerCase();
+        if (eventType.equals("cm") || eventType.indexOf("mariage") != -1) {
+            // je cherche l'évènement sur la famille
+            gedcomLink = findMarriage(miscRecord, marbDateTag, marcDateTag, marlDateTag, evenDateTag);
+
+        }
+        if (gedcomLink == null) {
+            // je cherche l'évènement sur l'individu
+            TagPath[]tagPathList = {indiEvenDateTag, willDateTag };
+            try {
+                int recordJulianDay = recordBirthDate.getStart().getJulianDay();
+                Collection<Indi> indiList = gedcom.getIndis();
+                for (Indi indi : indiList) {
+                    
+                    boolean eventDateFound = false;
+                    for (TagPath tagPath : tagPathList) {
+                        for (Property indiEventDate : indi.getProperties(tagPath)) {
+                            if (indiEventDate != null ) {
+                                PointInTime eventPit = ((PropertyDate)indiEventDate).getStart(); 
+                                if ( eventPit != null && eventPit.isValid()) {
+                                    int gedcomJulianDay = eventPit.getJulianDay();
+                                    if (recordJulianDay == gedcomJulianDay) {
+                                        eventDateFound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (eventDateFound) {
+                            break;
+                        }
+                    }
+                    if (!eventDateFound) {
+                        continue;
+                    }
+
+                    // meme sexe de l'individu
+                    if (miscRecord.getIndiSex().getSex() != FieldSex.UNKNOWN
+                            && indi.getSex() != PropertySex.UNKNOWN
+                            && miscRecord.getIndiSex().getSex() != indi.getSex()) {
+                        continue;
+                    }
+
+                    // meme nom de l'individu
+                    if (!miscRecord.getIndi().getLastName().isEmpty()
+                            && !MergeQuery.isSameLastName(miscRecord.getIndiLastName().getValue(), indi.getLastName())) {
+                        continue;
+                    }
+
+                    // meme prenom de l'individu
+                    if (!miscRecord.getIndi().getFirstName().isEmpty()
+                            && !MergeQuery.isSameFirstName(miscRecord.getIndiFirstName().getValue(), indi.getFirstName())) {
+                        continue;
+                    }
+
+                    gedcomLink = new GedcomLink(miscRecord);
+                    gedcomLink.setEntity(indi);
+                    gedcomLink.setProperty(recordBirthDate);
+                    gedcomLink.setCompareResult(GedcomLink.CompareResult.EQUAL);
+                    break;
+
+                }
+            } catch (GedcomException ex) {
+                return gedcomLink;
+            }
+        }
+
+
+        return gedcomLink;
+    }
+
     
     
 }

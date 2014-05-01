@@ -1620,6 +1620,12 @@ public class MergeQuery {
                 String similarName1 = SimilarNameSet.getSimilarLastName().getSimilarName(name1);
                 for( String name2 : names2) {
                     result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarLastName().getSimilarName(name2)));
+                    if (result) {
+                        break;
+                    }
+                }
+                if (result) {
+                    break;
                 }
             }
         } else {
@@ -1638,8 +1644,32 @@ public class MergeQuery {
      * @return
      */
     public static boolean isSameFirstName(String str1, String str2) {
-        return dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str1)).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str2)));
+        //return dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str1)).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str2)));
         //return str1.equals(str2);
+        boolean result = false;
+
+        if( str1 != null && ! str1.isEmpty()) {
+            String[] names1 = str1.split(",");
+            String[] names2 = str2.split(",");
+
+            for( String name1 : names1) {
+                String similarName1 = SimilarNameSet.getSimilarFirstName().getSimilarName(name1);
+                for( String name2 : names2) {
+                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(name2)));
+                    if( result) {
+                        break;
+                    }                        
+                }
+                if (result) {
+                    break;
+                }
+            }
+        } else {
+            // 
+            return true;
+        }
+        return result;
+        
     }
 
     /**
