@@ -236,6 +236,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         individualInformationTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
 
+        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.jLabel1.text"), new Object[] {})); // NOI18N
@@ -785,9 +786,9 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
          */
         Property changeDate = mIndividual.getProperty("CHAN");
         if (changeDate != null) {
-            changeDateTextField.setText(((PropertyChange)changeDate).getDisplayValue());
+            changeDateTextField.setText(((PropertyChange) changeDate).getDisplayValue());
         }
-        
+
         /*
          * +1 <<NOTE_STRUCTURE>>
          */
@@ -860,6 +861,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
             nameEditorPanel.commit();
             sexBeanPanel.commit();
+            individualEventEditorPanel.commit();
 
             return mIndividual;
         } catch (GedcomException ex) {
