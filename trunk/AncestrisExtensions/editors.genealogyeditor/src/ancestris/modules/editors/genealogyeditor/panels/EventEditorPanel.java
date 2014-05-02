@@ -233,8 +233,6 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         eventIDTextField.setEditable(false);
         eventIDTextField.setColumns(8);
-        eventIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventIDTextField.text"), new Object[] {})); // NOI18N
-        eventIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
         eventNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         eventNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventEditorPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
