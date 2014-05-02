@@ -86,7 +86,7 @@
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="eventCauseLabel" pref="73" max="32767" attributes="0"/>
+                                  <Component id="eventCauseLabel" pref="0" max="32767" attributes="0"/>
                                   <Component id="EventTypeLabel" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>

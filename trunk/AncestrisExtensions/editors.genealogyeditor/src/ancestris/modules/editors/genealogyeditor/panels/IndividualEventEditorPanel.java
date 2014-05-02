@@ -114,8 +114,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
     private PropertyDate mDate;
     private boolean mEventCauseModified = false;
     private boolean mIndividualAgeModified = false;
-    private boolean mHusbandAgeModified = false;
-    private boolean mWifeAgeModified = false;
     private boolean mEventNameModified = false;
     private boolean mEventTypeModified = false;
 
@@ -370,7 +368,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             if (mPlace == null) {
-                                mPlace = (PropertyPlace) mRoot.addProperty("PLAC", selectedPlace.format("all"));
+                                mPlace = (PropertyPlace) mEvent.addProperty("PLAC", selectedPlace.format("all"));
                             } else {
                                 mPlace.setValue(selectedPlace.format("all"));
                             }
