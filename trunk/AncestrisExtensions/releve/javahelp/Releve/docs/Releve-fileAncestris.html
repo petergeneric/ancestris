@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="fr-fr"><head><title>Format des Fichiers&nbsp;ANCESTRIS</title>
 
+
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-<link href="nbdocs:/ancestris/app/docs/ancestris.css" rel="stylesheet"></head>
-<body>
-<h2>Format des fichiers de relevé ANCESTRIS (<a href="#Remarque">V3</a>)</h2>
+<link href="nbdocs:/ancestris/app/docs/ancestris.css" rel="stylesheet"></head><body>
+<h2>Format des fichiers de relevé ANCESTRIS (<a href="#Remarque">V4</a>)</h2>
 Les quatre types de releves ont &nbsp;tous le même format : les lignes
 sont contistutées de 82 champs séparés par un point-vigule.<br>Le contenu des&nbsp;champs est encodé au format &nbsp;UTF-8.<br>Chaque ligne est terminée par&nbsp;le separateur "\r\n" (fin de ligne au format Windows)<br><br>Si
 le caractere séparateur point-virgule est&nbsp;présent à l'intérieur
@@ -23,7 +23,8 @@ la1ère et la 8ième colonne.</li><li>enregistrer les données au format CSV ou 
 <table style="text-align: left;" border="1" cellpadding="2" cellspacing="2">
 <tbody>
 <tr>
-<td></td><td><span style="font-weight: bold;">Colonne</span></td>
+<td><br>
+</td><td><span style="font-weight: bold;">Colonne</span></td>
 <th style="text-align: center;">Naissance</th>
 <th style="text-align: center;">Mariage</th>
 <th style="text-align: center;">Décès</th>
@@ -31,46 +32,61 @@ la1ère et la 8ième colonne.</li><li>enregistrer les données au format CSV ou 
 <td style="text-align: center;"><span style="font-weight: bold;">Remarque</span></td>
 </tr>
 <tr align="center">
-<td></td><td style="text-align: left;">"ANCESTRISV2"</td>
+<td><br>
+</td><td style="text-align: left;">"ANCESTRISV4"</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="text-align: left;">version du format (<span style="font-weight: bold;">obligatoire</span>)</td>
 </tr>
 <tr align="center">
-<td></td><td style="text-align: left;">CityName</td>
+<td><br>
+</td><td style="text-align: left;">CityName</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="text-align: left;">nom de la commune&nbsp;</td>
 </tr>
-<tr><td></td><td>CityCode</td><td></td><td></td><td></td><td></td><td>code de la commune</td></tr><tr align="center">
-<td></td><td style="text-align: left;">CountyName</td>
+<tr><td><br>
+</td><td>CityCode</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td>code de la commune</td></tr><tr align="center">
+<td><br>
+</td><td style="text-align: left;">CountyName</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="text-align: left;">nom ou code de département</td>
 </tr>
 <tr align="center">
-<td></td><td style="text-align: left;">StateName</td>
+<td><br>
+</td><td style="text-align: left;">StateName</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="text-align: left;">région ou état</td>
 </tr>
 <tr align="center">
-<td></td><td style="text-align: left;">CountryName</td>
+<td><br>
+</td><td style="text-align: left;">CountryName</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="text-align: left;">pays</td>
 </tr>
-<tr><td></td><td>ParishName</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">nom de
+<tr><td><br>
+</td><td>ParishName</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">nom de
 la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
-<td></td><td style="text-align: left;">EventType</td>
+<td><br>
+</td><td style="text-align: left;">EventType</td>
 <td style="text-align: center;">"N"</td>
 <td style="text-align: center;">"M"</td>
 <td style="text-align: center;">"D"</td>
 <td style="text-align: center;">"V"</td>
 <td style="text-align: left;">type d'évènement&nbsp;(<span style="font-weight: bold;">obligatoire</span>)</td>
 </tr>
-<tr><td></td><td>EventTypeTag</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">tag d'un type&nbsp;d'evenement divers. Ex : &nbsp;PM, TEST, ...<br></td></tr><tr><td></td><td>EventTypeName</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">libellé associé au tag divers . Ex:: Publication &nbsp;de mariage, Testament, ......</td></tr><tr align="center">
-<td></td><td style="text-align: left;">EventDate</td>
+<tr><td><br>
+</td><td>EventTypeTag</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">tag d'un type&nbsp;d'evenement divers. Ex : &nbsp;PM, TEST, ...<br></td></tr><tr><td><br>
+</td><td>EventTypeName</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">libellé associé au tag divers . Ex:: Publication &nbsp;de mariage, Testament, ......</td></tr><tr align="center">
+<td><br>
+</td><td style="text-align: left;">EventDate</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td>
 <td style="text-align: center;" colspan="1">x</td>
@@ -79,8 +95,22 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">date de l'évènement</td>
 </tr>
 
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">SecondDate<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;">ignoré</td>
+      <td style="vertical-align: top; text-align: center;">ignoré</td>
+      <td style="vertical-align: top; text-align: center;">ignoré</td>
+      <td style="vertical-align: top; text-align: center;">x<br>
+      </td>
+      <td style="vertical-align: top;">date d'insinuation ou d'enregistrement de l'évènement<br>
+      </td>
+    </tr>
 <tr align="center">
-<td></td><td style="text-align: left;">Cote</td>
+<td><br>
+</td><td style="text-align: left;">Cote</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td>
 <td style="text-align: center;" colspan="1">x</td>
@@ -89,7 +119,8 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">cote du registre</td>
 </tr>
 <tr align="center">
-<td></td><td style="text-align: left;">Freecomment</td>
+<td><br>
+</td><td style="text-align: left;">Freecomment</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td>
 <td style="text-align: center;" colspan="1">x</td>
@@ -99,17 +130,25 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 </tr>
 
 
-<tr><td></td><td>Notary</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">nom du notaire </td></tr><tr align="center">
-<td></td><td style="text-align: left;"></td>
+<tr><td><br>
+</td><td>Notary</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">nom du notaire </td></tr><tr align="center">
+<td><br>
+</td><td style="text-align: left;"><br>
+</td>
 <td style="text-align: center;" colspan="1" rowspan="1"><br>
 </td>
-<td style="text-align: center;" colspan="1"></td>
-<td style="text-align: center;" colspan="1"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: center;" colspan="1"><br>
+</td>
+<td style="text-align: center;" colspan="1"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: left;"><br>
+</td>
 </tr>
 <tr>
-<td></td><td style="text-align: left;">IndiLastName</td>
+<td><br>
+</td><td style="text-align: left;">IndiLastName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -117,7 +156,8 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">Nom du : <br>si N : nouveau né, si M : époux, si&nbsp; D : décédé, si V :&nbsp;intervenant n°1</td>
 </tr>
 <tr>
-<td></td><td style="text-align: left;">IndiFirstName</td>
+<td><br>
+</td><td style="text-align: left;">IndiFirstName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -125,7 +165,8 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">prénom</td>
 </tr>
 <tr>
-<td></td><td style="text-align: left;">IndiSex</td>
+<td><br>
+</td><td style="text-align: left;">IndiSex</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -135,7 +176,8 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 
 
 <tr>
-<td></td><td style="text-align: left;">IndiAge</td>
+<td><br>
+</td><td style="text-align: left;">IndiAge</td>
 <td style="text-align: center;">ignoré
 </td>
 <td style="text-align: center;">x</td>
@@ -143,9 +185,12 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">age</td>
 </tr>
-<tr><td></td><td style="text-align: left;">IndiBirthDate</td><td style="text-align: center;">x
-</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">date de naissance . Pour une naissance c'est par défaut la date de l'évènement.</td></tr><tr><td></td><td>IndiBirthPlace</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">lieu de naissance ou lieu d'origine</td></tr><tr>
-<td></td><td style="text-align: left;">IndiOccupation</td>
+<tr><td><br>
+</td><td style="text-align: left;">IndiBirthDate</td><td style="text-align: center;">x
+</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">date de naissance . Pour une naissance c'est par défaut la date de l'évènement.</td></tr><tr><td><br>
+</td><td>IndiBirthPlace</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">lieu de naissance ou lieu d'origine</td></tr><tr>
+<td><br>
+</td><td style="text-align: left;">IndiOccupation</td>
 <td style="text-align: center;">ignoré
 </td>
 <td style="text-align: center;">x</td>
@@ -153,8 +198,10 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">profession</td>
 </tr>
-<tr><td></td><td>IndiResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
-<td></td><td style="text-align: left;">IndiComment</td>
+<tr><td><br>
+</td><td>IndiResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
+<td><br>
+</td><td style="text-align: left;">IndiComment</td>
 <td style="text-align: center;"> x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -162,15 +209,23 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">commentaire de l'individu ou de l'intervenant n°1</td>
 </tr>
 <tr>
-<td></td><td style="text-align: left;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<td><br>
+</td><td style="text-align: left;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: left;"><br>
+</td>
 </tr>
 <tr>
-<td></td><td>IndiMarriedLastName</td>
+<td><br>
+</td><td>IndiMarriedLastName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x<br>
 </td>
@@ -179,7 +234,8 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">ex conjoint</td>
 </tr>
 <tr>
-<td></td><td>IndiMarriedFirstName</td>
+<td><br>
+</td><td>IndiMarriedFirstName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x<br>
 </td>
@@ -187,8 +243,11 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>IndiMarriedSex</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">Ancestris renseigne&nbsp;IndiMarriedSex avec le sexe opposé de&nbsp;IndiSex</td></tr><tr><td></td><td>IndiMarriedDead</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">décédé ou non</td></tr><tr>
-<td></td><td>IndiMarriedOccupation</td>
+<tr><td><br>
+</td><td>IndiMarriedSex</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">Ancestris renseigne&nbsp;IndiMarriedSex avec le sexe opposé de&nbsp;IndiSex</td></tr><tr><td><br>
+</td><td>IndiMarriedDead</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">décédé ou non</td></tr><tr>
+<td><br>
+</td><td>IndiMarriedOccupation</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x<br>
 </td>
@@ -196,16 +255,26 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">profession</td>
 </tr>
-<tr><td></td><td>IndiMariedResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr><td></td><td>IndiMarriedComment</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">commentaire de l'ex conjoint</td></tr><tr>
-<td></td><td></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<tr><td><br>
+</td><td>IndiMariedResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr><td><br>
+</td><td>IndiMarriedComment</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">commentaire de l'ex conjoint</td></tr><tr>
+<td><br>
+</td><td><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: left;"><br>
+</td>
 </tr>
 <tr>
-<td></td><td>IndiFatherLastName</td>
+<td><br>
+</td><td>IndiFatherLastName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -213,31 +282,45 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">nom du père</td>
 </tr>
 <tr>
-<td></td><td>IndiFatherFirstName</td>
+<td><br>
+</td><td>IndiFatherFirstName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>IndiFatherAge</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>age</td></tr><tr>
-<td></td><td>IndiFatherDead</td>
+<tr><td><br>
+</td><td>IndiFatherAge</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>age</td></tr><tr>
+<td><br>
+</td><td>IndiFatherDead</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">décédé ou non</td>
 </tr>
-<tr><td></td><td>IndiFatherOccupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr><td></td><td>IndiFatherResidence</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
-<td></td><td>IndiFatherComment</td>
+<tr><td><br>
+</td><td>IndiFatherOccupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr><td><br>
+</td><td>IndiFatherResidence</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
+<td><br>
+</td><td>IndiFatherComment</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">commentaire du père<br></td>
 </tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-align: left;"></td></tr><tr>
-<td></td><td>IndiMotherLastName</td>
+<tr><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td style="text-align: left;"><br>
+</td></tr><tr>
+<td><br>
+</td><td>IndiMotherLastName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -245,23 +328,29 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">nom de la mère</td>
 </tr>
 <tr>
-<td></td><td>IndiMotherFirstName</td>
+<td><br>
+</td><td>IndiMotherFirstName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>IndiMotherAge</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>age</td></tr><tr><td></td><td>IndiMotherDead</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">décédée ou non</td></tr><tr>
-<td></td><td>IndiMotherOccupation</td>
+<tr><td><br>
+</td><td>IndiMotherAge</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>age</td></tr><tr><td><br>
+</td><td>IndiMotherDead</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">décédée ou non</td></tr><tr>
+<td><br>
+</td><td>IndiMotherOccupation</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">profession</td>
 </tr>
-<tr><td></td><td>IndiMotherResidence</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
-<td></td><td>IndiMotherComment</td>
+<tr><td><br>
+</td><td>IndiMotherResidence</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
+<td><br>
+</td><td>IndiMotherComment</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -269,15 +358,23 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">commentaire de la mère<br></td>
 </tr>
 <tr>
-<td></td><td></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<td><br>
+</td><td><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: left;"><br>
+</td>
 </tr>
 <tr>
-<td></td><td>WifeLastName</td>
+<td><br>
+</td><td>WifeLastName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
@@ -285,7 +382,8 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">épouse ( mariage ) ou intervenant n°2 (acte divers)</td>
 </tr>
 <tr>
-<td></td><td>WifeFirstName</td>
+<td><br>
+</td><td>WifeFirstName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
@@ -293,26 +391,33 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">prénom</td>
 </tr>
 <tr>
-<td></td><td>WifeSex</td>
+<td><br>
+</td><td>WifeSex</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">sexe</td>
 </tr>
-<tr><td></td><td>WifeAge</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">age</td></tr>
+<tr><td><br>
+</td><td>WifeAge</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">age</td></tr>
 
 
-<tr><td></td><td>WifeBirthDate</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">date de naissance</td></tr><tr><td></td><td>WifePlace</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">lieu de naissance ou origine</td></tr><tr>
-<td></td><td style="height: 10px;">WifeOccupation</td>
+<tr><td><br>
+</td><td>WifeBirthDate</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">date de naissance</td></tr><tr><td><br>
+</td><td>WifePlace</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">lieu de naissance ou origine</td></tr><tr>
+<td><br>
+</td><td style="height: 10px;">WifeOccupation</td>
 <td style="text-align: center; height: 10px;">ignoré</td>
 <td style="text-align: center; height: 10px;">x</td>
 <td style="text-align: center; height: 10px;">ignoré</td>
 <td style="text-align: center; height: 10px;">x</td>
 <td style="height: 10px; text-align: left;">profession</td>
 </tr>
-<tr><td></td><td>WifeResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
-<td></td><td>WifeComment</td>
+<tr><td><br>
+</td><td>WifeResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
+<td><br>
+</td><td>WifeComment</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
@@ -320,15 +425,23 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">commentaire de l'épouse ou de l'intervenant n°2</td>
 </tr>
 <tr>
-<td></td><td></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<td><br>
+</td><td><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: left;"><br>
+</td>
 </tr>
 <tr>
-<td></td><td>WifeMarriedLastName</td>
+<td><br>
+</td><td>WifeMarriedLastName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
@@ -336,39 +449,56 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">Ex conjoint de la femme&nbsp;ou de l'intervenant n°2</td>
 </tr>
 <tr>
-<td></td><td>WifeMarriedFirstName</td>
+<td><br>
+</td><td>WifeMarriedFirstName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>WifeMarriedSex</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">Ancestris renseigne&nbsp;WifeMarriedSex avec le sexe opposé de&nbsp;WifeSex</td></tr><tr><td></td><td>WifeMarriedDead</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">décédé ou non </td></tr><tr>
-<td></td><td>WifeMarriedOccupation</td>
+<tr><td><br>
+</td><td>WifeMarriedSex</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">Ancestris renseigne&nbsp;WifeMarriedSex avec le sexe opposé de&nbsp;WifeSex</td></tr><tr><td><br>
+</td><td>WifeMarriedDead</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">décédé ou non </td></tr><tr>
+<td><br>
+</td><td>WifeMarriedOccupation</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">profession</td>
 </tr>
-<tr><td></td><td>WifeMarriedResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr><td></td><td>WifeMarriedComment</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">commentaire de l'ex conjoint de la femme ou de l'intervenant n°2</td></tr><tr>
-<td></td><td></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<tr><td><br>
+</td><td>WifeMarriedResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr><td><br>
+</td><td>WifeMarriedComment</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">commentaire de l'ex conjoint de la femme ou de l'intervenant n°2</td></tr><tr>
+<td><br>
+</td><td><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: left;"><br>
+</td>
 </tr>
 <tr>
-<td></td><td>WifeFatherLastName</td>
+<td><br>
+</td><td>WifeFatherLastName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">Père de l'épouse ou de l'intervenant n°2</td>
 </tr>
-<tr><td></td><td>WifeFatherFirstName</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">prénom</td></tr><tr><td></td><td>WifeFatherAge</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>age</td></tr><tr>
-<td></td><td>WifeFatherDead</td>
+<tr><td><br>
+</td><td>WifeFatherFirstName</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">prénom</td></tr><tr><td><br>
+</td><td>WifeFatherAge</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>age</td></tr><tr>
+<td><br>
+</td><td>WifeFatherDead</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
@@ -376,23 +506,34 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">décédé ou non </td>
 </tr>
 <tr>
-<td></td><td>WifeFatherOccupation</td>
+<td><br>
+</td><td>WifeFatherOccupation</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">profession</td>
 </tr>
-<tr><td></td><td>WifefatherResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
-<td></td><td>WifeFatherComment</td>
+<tr><td><br>
+</td><td>WifefatherResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
+<td><br>
+</td><td>WifeFatherComment</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">commentaire du père&nbsp;</td>
 </tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-align: left;"></td></tr><tr>
-<td></td><td>WifeMotherLastName</td>
+<tr><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td style="text-align: left;"><br>
+</td></tr><tr>
+<td><br>
+</td><td>WifeMotherLastName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
@@ -400,23 +541,29 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">Mère de l'épouse ou de l'intervenant n°2</td>
 </tr>
 <tr>
-<td></td><td>WifeMotherFirstName</td>
+<td><br>
+</td><td>WifeMotherFirstName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>WifeMotherAge</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>age</td></tr><tr><td></td><td>WifeMotherDead</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">décédée ou non </td></tr><tr>
-<td></td><td>WifeMotherOccupation</td>
+<tr><td><br>
+</td><td>WifeMotherAge</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>age</td></tr><tr><td><br>
+</td><td>WifeMotherDead</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">décédée ou non </td></tr><tr>
+<td><br>
+</td><td>WifeMotherOccupation</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">profession</td>
 </tr>
-<tr><td></td><td>WifeMotherResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
-<td></td><td>WifeMotherComment</td>
+<tr><td><br>
+</td><td>WifeMotherResidence</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td>domicile</td></tr><tr>
+<td><br>
+</td><td>WifeMotherComment</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
@@ -424,15 +571,23 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">commentaire dee la mère</td>
 </tr>
 <tr>
-<td></td><td></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<td><br>
+</td><td><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: center;"><br>
+</td>
+<td style="text-align: left;"><br>
+</td>
 </tr>
 <tr>
-<td></td><td>Witness1LastName</td>
+<td><br>
+</td><td>Witness1LastName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -440,23 +595,34 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">témoin n°1 ou parrain</td>
 </tr>
 <tr>
-<td></td><td>Witness1FirstName</td>
+<td><br>
+</td><td>Witness1FirstName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>Witness1Occupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr>
-<td></td><td>Witness1Comment</td>
+<tr><td><br>
+</td><td>Witness1Occupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr>
+<td><br>
+</td><td>Witness1Comment</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">commentaire du témoin ou parrain</td>
 </tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr>
-<td></td><td>Witness2LastName</td>
+<tr><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td></tr><tr>
+<td><br>
+</td><td>Witness2LastName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -464,23 +630,34 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">témoin n°2 ou marraine</td>
 </tr>
 <tr>
-<td></td><td>Witness2FirstName</td>
+<td><br>
+</td><td>Witness2FirstName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>Witness2Occupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr>
-<td></td><td>Witness2Comment</td>
+<tr><td><br>
+</td><td>Witness2Occupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr>
+<td><br>
+</td><td>Witness2Comment</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">commentaire du témoin ou marraine</td>
 </tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr>
-<td></td><td>Witness3LastName</td>
+<tr><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td></tr><tr>
+<td><br>
+</td><td>Witness3LastName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -488,23 +665,34 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">témoin n°3</td>
 </tr>
 <tr>
-<td></td><td>Witness3FirstName</td>
+<td><br>
+</td><td>Witness3FirstName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>Witness3Occupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr>
-<td></td><td>Witness3Comment</td>
+<tr><td><br>
+</td><td>Witness3Occupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr>
+<td><br>
+</td><td>Witness3Comment</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">commentaire du témoin</td>
 </tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr>
-<td></td><td>Witness4LastName</td>
+<tr><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td></tr><tr>
+<td><br>
+</td><td>Witness4LastName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
@@ -512,36 +700,52 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">témoin n°4</td>
 </tr>
 <tr>
-<td></td><td>Witness4FirstName</td>
+<td><br>
+</td><td>Witness4FirstName</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">prénom</td>
 </tr>
-<tr><td></td><td>Witness4Occupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr>
-<td></td><td>Witness4Comment</td>
+<tr><td><br>
+</td><td>Witness4Occupation</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">profession</td></tr><tr>
+<td><br>
+</td><td>Witness4Comment</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">commentaire du témoin</td>
 </tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-align: left;"></td></tr><tr>
-<td></td><td>GeneralComment</td>
+<tr><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td><br>
+</td><td style="text-align: left;"><br>
+</td></tr><tr>
+<td><br>
+</td><td>GeneralComment</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: left;">commentaire général</td>
-</tr><tr><td></td><td>RecordNo</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>numero du relevé</td></tr>
+</tr><tr><td><br>
+</td><td>RecordNo</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td>numero du relevé</td></tr>
 </tbody>
 </table>
 <p>
-</p><p><a name="Remarque"></a>Remarque :&nbsp;</p><p>&nbsp;ANCESTRIS V2
-&nbsp;contient 4 champs supplémentaires par rapport au format
+</p><p><a name="Remarque"></a>Liste des changements du format Ancestris :&nbsp;</p><p>&nbsp;ANCESTRIS V2
+contient 4 champs supplémentaires par rapport au format
 ANCESTRISV1 &nbsp;:&nbsp;IndiFatherAge, IndiMotherAge, WifeFatherAge et
-WifeMotherAge.</p><p>&nbsp;ANCESTRIS V3
-&nbsp;contient 8 champs supplémentaires par rapport au format
-ANCESTRISV2 &nbsp;:&nbsp;IndiResidence, IndiMMarriedResidence, indiFatherResidence , indiMotherResidence, &nbsp; WifeResidence,&nbsp;WifeMarriedResidence,&nbsp;WifeFatherResidence ,&nbsp;WifeMotherResidence,</p><p></p>
-</body></html>
+WifeMotherAge.</p><p>&nbsp;ANCESTRIS
+V3 contient 8 champs supplémentaires par rapport au format
+ANCESTRISV2 &nbsp;:&nbsp;IndiResidence, IndiMMarriedResidence,
+indiFatherResidence , indiMotherResidence, &nbsp;
+WifeResidence,&nbsp;WifeMarriedResidence,&nbsp;WifeFatherResidence
+,&nbsp;WifeMotherResidence,</p><p></p>ANCESTRIS V4 contient un champ supplémentaire par rapport au format
+ANCESTRISV3&nbsp; :SecondDate<br>
+Le champ RecordNo est supprimé.&nbsp; </body></html>

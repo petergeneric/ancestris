@@ -200,8 +200,8 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
      * verifie que les champs obligatoires sont renseignés
      * @return retourne un message d'eeur ou une chaine vide s'il n'y a pas d'erreur 
      */
-    public String verifyRecord( int recordIndex ) {
-        return dataModel.verifyRecord(recordIndex);
+    public String verifyRecord( Record record  ) {
+        return dataModel.verifyRecord(record);
     }
 
     ///////////////////////////////////////////////////////////////////////////

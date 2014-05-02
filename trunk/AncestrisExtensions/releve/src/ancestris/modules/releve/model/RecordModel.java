@@ -300,20 +300,20 @@ public class RecordModel {
      * vérifie si les champs obligatoires sont renseignés
      *  - date de l'évènement
      *  - nom ou prénom de l'individu
-     * @param recordIndex
+     * @param record
      * @return
      */
-    public String verifyRecord( int recordIndex ) {
+    public String verifyRecord( Record record ) {
         StringBuilder errorMessage = new StringBuilder();
 
         try {
-            Record record = releveList.get(recordIndex);
-
-            if (record.getEventDateString().isEmpty()) {
-                errorMessage.append("La date de l'évènement est vide").append("\n");
-            }
-            if (record.getIndiLastName().isEmpty() && record.getIndiFirstName().isEmpty()) {
-                errorMessage.append("Le nom et le prénom sont vides").append("\n");
+            if (record != null) {
+                if (record.getEventDateString().isEmpty()) {
+                    errorMessage.append("La date de l'évènement est vide").append("\n");
+                }
+                if (record.getIndiLastName().isEmpty() && record.getIndiFirstName().isEmpty()) {
+                    errorMessage.append("Le nom et le prénom sont vides").append("\n");
+                }
             }
         } catch (IndexOutOfBoundsException e) {
             // rien a faire

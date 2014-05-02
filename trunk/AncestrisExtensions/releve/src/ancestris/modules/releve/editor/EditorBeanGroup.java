@@ -87,7 +87,7 @@ public class EditorBeanGroup {
 
         // j'intialise avec les valeurs par defaut
         EditorBeanField.init();
-        // je met a jour avec les preferences
+        // je charge les preferences
         loadPreferences();
     }
 
@@ -151,18 +151,19 @@ public class EditorBeanGroup {
 
     static public void loadPreferences() {
         for (RecordType recordType : RecordType.values()) {
-            for (Iterator<EditorBeanGroup> groupIter = EditorBeanGroup.getGroups(recordType).iterator(); groupIter.hasNext();) {
-                EditorBeanGroup group = groupIter.next();
-                for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext();) {
-                    EditorBeanField field = fieldIter.next();
+            for (EditorBeanGroup group : EditorBeanGroup.getGroups(recordType)) {
+                for (EditorBeanField field : group.getFields()) {
                     String preferenceKey = "Editor." + group.groupId.name() + "." + field.getFieldType().name() + "." + recordType.name();
                     String defaultValue = field.isUsed() + ";" + field.isVisible();
                     String preferenceValue = NbPreferences.forModule(ReleveTopComponent.class).get(preferenceKey, defaultValue);
                     try {
                         StringTokenizer tokens = new StringTokenizer(preferenceValue, ";");
                         if (tokens.countTokens() == 2) {
+                            // set used
                             // je n'utilise pas la sauvegarde de field.isUsed(), seulement la sauvegarde de field.isVisible()
                             //field.setUsed(Boolean.valueOf(tokens.nextToken()));
+                            tokens.nextToken();
+                            // set visibled 
                             field.setVisible(Boolean.valueOf(tokens.nextToken()));
                         }
 
