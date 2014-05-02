@@ -8,7 +8,6 @@ import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.editor.StandaloneEditor;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
-//import ancestris.modules.copyFam.CopyFamPanel;
 import ancestris.modules.releve.table.ErrorBuffer;
 import ancestris.modules.releve.table.TableModelRecordCheck;
 import ancestris.modules.releve.table.ResultDialog;
@@ -371,41 +370,56 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     }
 
     /**
-     * Cette methode est appelee par ReleveQuickSearch
+     * Cette méthode est appelée par ReleveQuickSearch
      * Elle permet de sélectionner le champ qui est choisi dans l'outil de recherche
      * @param record
      * @param fieldType
      */
     void selectField(Record record, Field.FieldType fieldType) {
         if (record instanceof RecordBirth) {
-            jTabbedPane1.setSelectedComponent(panelBirth);
-            panelBirth.selectRecord(dataManager.getDataModel().getIndex(record));
-            panelBirth.selectField(fieldType);
-        } else  if (record instanceof RecordMarriage) {
-            jTabbedPane1.setSelectedComponent(panelMarriage);
-            panelMarriage.selectRecord(dataManager.getDataModel().getIndex(record));
-            panelMarriage.selectField(fieldType);
-        } else  if (record instanceof RecordDeath) {
-            jTabbedPane1.setSelectedComponent(panelDeath);
-            panelDeath.selectRecord(dataManager.getDataModel().getIndex(record));
-            panelDeath.selectField(fieldType);
-        } else  if (record instanceof RecordMisc) {
-            jTabbedPane1.setSelectedComponent(panelMisc);
-            panelMisc.selectRecord(dataManager.getDataModel().getIndex(record));
-            panelMisc.selectField(fieldType);
+            if (panelBirth.verifyCurrentRecord()) {
+                jTabbedPane1.setSelectedComponent(panelBirth);
+                panelBirth.selectRecord(dataManager.getDataModel().getIndex(record));
+                panelBirth.selectField(fieldType);
+            }
+        } else if (record instanceof RecordMarriage) {
+            if (panelMarriage.verifyCurrentRecord()) {
+                jTabbedPane1.setSelectedComponent(panelMarriage);
+                panelMarriage.selectRecord(dataManager.getDataModel().getIndex(record));
+                panelMarriage.selectField(fieldType);
+            }
+        } else if (record instanceof RecordDeath) {
+            if (panelDeath.verifyCurrentRecord()) {
+                jTabbedPane1.setSelectedComponent(panelDeath);
+                panelDeath.selectRecord(dataManager.getDataModel().getIndex(record));
+                panelDeath.selectField(fieldType);
+            }
+        } else if (record instanceof RecordMisc) {
+            if (panelMisc.verifyCurrentRecord()) {
+                jTabbedPane1.setSelectedComponent(panelMisc);
+                panelMisc.selectRecord(dataManager.getDataModel().getIndex(record));
+                panelMisc.selectField(fieldType);
+            }
         }
     }
 
     /**
-     * Cette methode est appelee par EditorBeanGroup
-     * pour afficher les champs dans l'editeur 
-     * apres avoir modifié la liste des champs visibles
+     * Cette méthode est appelée par EditorBeanGroup
+     * pour afficher les champs dans l'éditeur 
+     * après avoir modifié la liste des champs visibles
      */
     public void udpdateEditorVisibleField() {
-        panelBirth.selectRow(panelBirth.getCurrentRecordIndex());
-        panelMarriage.selectRow(panelMarriage.getCurrentRecordIndex());
-        panelDeath.selectRow(panelDeath.getCurrentRecordIndex());
-        panelMisc.selectRow(panelMisc.getCurrentRecordIndex());
+        // je rafraichis l'affichage des editeurs de la fentre principale
+        panelBirth.selectRecord(panelBirth.getCurrentRecordIndex());
+        panelMarriage.selectRecord(panelMarriage.getCurrentRecordIndex());
+        panelDeath.selectRecord(panelDeath.getCurrentRecordIndex());
+        panelMisc.selectRecord(panelMisc.getCurrentRecordIndex());
+        panelAll.selectRecord(panelAll.getCurrentRecordIndex());
+        
+        // je rafraichis l'affichage des editeurs de la fentre volante
+        if ( standaloneEditor != null) {
+            standaloneEditor.udpdateEditorVisibleField();
+        }        
     }
 
 

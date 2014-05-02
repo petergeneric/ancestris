@@ -96,7 +96,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
      * @param dataManager
      * @param modelType
      */
-    public void setModel(DataManager dataManager, MenuCommandProvider menuCommandeProvider) {
+    public void initModel(DataManager dataManager, MenuCommandProvider menuCommandeProvider) {
+        if (dataManager != null) {
+           dataManager.removePlaceListener(this); 
+        }
         this.dataManager = dataManager;
         this.recordModel = dataManager.getDataModel();
         this.menuCommandeProvider = menuCommandeProvider;
@@ -359,20 +362,20 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
 
     /**
      * affiche un relevé
-     * si le releve est null, nettoie l'affichage
+     * si le relevé est nul, nettoie l'affichage
      * @param record
      */
     public void selectRecord(int recordIndex) {
-
+        currentFocusedBean = null;
         fieldsPanel.setVisible(false);
         fieldsPanel.setFocusTraversalPolicyProvider(true);
         fieldsPanel.setFocusCycleRoot(true);
         fieldsPanel.resetKeyboardActions();
         fieldsPanel.removeAll();
-        int lineNo = 0;
 
         if (recordModel != null) {
-            KeyStroke keyStroke = null;
+            int lineNo = 0;
+            KeyStroke keyStroke;
             Record record = recordModel.getRecord(recordIndex);
             if (record != null) {
                 for (EditorBeanGroup group : EditorBeanGroup.getGroups(record.getType())) {
@@ -381,16 +384,17 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     }
                     // le raccourci sera associé du premier champ du groupe qui va être créé
                     keyStroke = group.getKeystroke();
-                    addRow(lineNo, group.getTitle(), null, keyStroke);
+                    addRow(lineNo, group.getTitle(), keyStroke);
                     lineNo++;
                     for (EditorBeanField editorBeanField : group.getFields()) {
+                        if ( editorBeanField.getFieldType() == FieldType.secondDate ) {
+                            System.out.println( "selectRecord secondDate visible)="+ editorBeanField.isVisible()); 
+                        }
                         if (!editorBeanField.isVisible()) {
                             continue;
                         }
                         String label = editorBeanField.getLabel();
-
-                        Bean bean = null;
-
+                        Bean bean;
                         switch (editorBeanField.getFieldType()) {
                             //                    case title:
                             //                        // label separateur de rubrique
@@ -520,6 +524,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                             case cote:
                             case parish:
                             case generalComment:
+                            default:
                                 bean = new BeanSimpleValue();
                                 break;
 
@@ -555,63 +560,65 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         fieldsPanel.setVisible(true);
     }
 
-     private void addRow(int lineNo, String label, final Bean bean, KeyStroke keyStroke) {
+    private void addRow(int lineNo, String label, final Bean bean, KeyStroke keyStroke) {
 
-        if (bean != null) {
-            GridBagConstraints gridBagConstraints;
+        GridBagConstraints gridBagConstraints;
 
-            // j'ajoute le label dans la colonne 0
-            JLabel jLabel1 = new javax.swing.JLabel();
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = lineNo;
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-            jLabel1.setText(label);
-            fieldsPanel.add(jLabel1, gridBagConstraints);
-            // j'ajoute le bean dans la colonne 1
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = lineNo;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-            gridBagConstraints.weightx = 1.0;
-            bean.setMinimumSize(new Dimension(30,20));
-            fieldsPanel.add(bean, gridBagConstraints);
-            this.addLastFocusListeners(bean);
+        // j'ajoute le label dans la colonne 0
+        JLabel jLabel1 = new javax.swing.JLabel();
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = lineNo;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jLabel1.setText(label);
+        fieldsPanel.add(jLabel1, gridBagConstraints);
+        // j'ajoute le bean dans la colonne 1
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = lineNo;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        bean.setMinimumSize(new Dimension(30, 20));
+        fieldsPanel.add(bean, gridBagConstraints);
+        this.addLastFocusListeners(bean);
 
-            // j'ajoute le raccourci clavier
-            if (keyStroke != null) {
-                getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, bean);
-                getActionMap().put(bean, new AbstractAction() {
+        // j'ajoute le raccourci clavier
+        if (keyStroke != null) {
+            getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, bean);
+            getActionMap().put(bean, new AbstractAction() {
 
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        bean.requestFocusInWindow();
-                    }
-                });
-            }
-           
-        } else {
-            // j'ajoute le label étalé dans les colonnes 0 et 1
-            GridBagConstraints gridBagConstraints;
-            JLabel jLabel1 = new javax.swing.JLabel();
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = lineNo;
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-            gridBagConstraints.gridwidth = 2;
-            gridBagConstraints.weightx= 1;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-            if (keyStroke == null) {
-                jLabel1.setText(label);
-            } else {
-                jLabel1.setText(label + "   ( Alt-" + String.valueOf((char) keyStroke.getKeyCode()) + " )");
-            }
-
-            jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-            fieldsPanel.add(jLabel1, gridBagConstraints);           
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    bean.requestFocusInWindow();
+                }
+            });
         }
+
+    }
+
+    private void addRow(int lineNo, String label, KeyStroke keyStroke) {
+
+        // j'ajoute le label étalé dans les colonnes 0 et 1
+        GridBagConstraints gridBagConstraints;
+        JLabel jLabel1 = new javax.swing.JLabel();
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = lineNo;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        if (keyStroke == null) {
+            jLabel1.setText(label);
+        } else {
+            jLabel1.setText(label + "   ( Alt-" + String.valueOf((char) keyStroke.getKeyCode()) + " )");
+        }
+
+        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        fieldsPanel.add(jLabel1, gridBagConstraints);
+
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -683,9 +690,38 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         commitCurrentFocusedBean();
     }
 
+    public boolean verifyCurrentRecord(int currentRecordIndex) {
+        if (currentFocusedBean != null ) {            
+            commitCurrentFocusedBean();            
+            String errorMessage = dataManager.verifyRecord(currentFocusedBean.getRecord());
+            if (errorMessage.isEmpty()) {
+                return true;
+            } else {
+                // j'affiche le message d'erreur  et je demande s'il faut continuer
+                Toolkit.getDefaultToolkit().beep();
+                errorMessage += NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.verifyRecord.message");
+                int choice = JOptionPane.showConfirmDialog(this,
+                        errorMessage,
+                        NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.verifyRecord.title"),
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+                switch (choice) {
+                    case 0: // YES
+                        return false;
+                    case 1: // NO
+                        return true;
+                    default: // CANCEL
+                        return true;
+                }
+            }
+        } else {            
+            return true;
+        }
+    }
+    
     public void commitCurrentFocusedBean() {
-
-
         Bean bean = currentFocusedBean;
         // j'applique les modifications
         if (bean != null && bean.hasChanged()) {

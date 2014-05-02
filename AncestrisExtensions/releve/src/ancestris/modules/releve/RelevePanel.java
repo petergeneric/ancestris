@@ -7,7 +7,7 @@
 package ancestris.modules.releve;
 
 import ancestris.modules.releve.dnd.RecordTransferHandle;
-import ancestris.modules.releve.table.RelevePanelListener;
+import ancestris.modules.releve.table.ReleveTableListener;
 import ancestris.modules.releve.editor.ReleveEditor;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Field;
@@ -36,7 +36,7 @@ import org.openide.util.NbPreferences;
  *
  * @author Michel
  */
-public class RelevePanel extends javax.swing.JPanel implements RelevePanelListener  {
+public class RelevePanel extends javax.swing.JPanel implements ReleveTableListener  {
     private boolean standaloneMode = false;
     private MenuCommandProvider menuCommandProvider;
     private DataManager dataManager = null;
@@ -47,9 +47,6 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
     static private String dialogTitle = NbBundle.getMessage(RelevePanel.class,"DialogTitle");
     static public enum PanelType { birth, marriage, death, misc, all }
 
-
-    
-    /** Creates new form RelevePanel */
     public RelevePanel() {
         initComponents();
         // J'applique un poids=1 pour que seule la largeur du composant de gauche soit mdofiée quand on change la taille de la fenetre
@@ -76,10 +73,13 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if ( actionEvent.getActionCommand().toUpperCase().equals("C") ) {
+                    // Create
                     jButtonNewActionPerformed(actionEvent);
                 } else if ( actionEvent.getActionCommand().toUpperCase().equals("S") ) {
+                    // Delete
                     jButtonDeleteActionPerformed(actionEvent);
                 } else if ( actionEvent.getActionCommand().toUpperCase().equals("Z") ) {
+                    // undo
                     Record record = dataManager.getDataModel().undo();
                     if (record != null ) {
                         // je selectionne le relevé concerné par undo
@@ -125,7 +125,7 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
         releveTable.setTransferHandler(new RecordTransferHandle(dataManager));
         releveTable.setDragEnabled(true);
         
-        releveEditor.setModel(dataManager, menuComandProvider);
+        releveEditor.initModel(dataManager, menuComandProvider);
         
         RecordModelListener listener = new RecordModelListener() {
 
@@ -226,12 +226,6 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
      */
     public void componentClosed() {
         releveTable.componentClosed();
-        // je sauvegarde la largeur de l'editeur
-//        releveEditor.putEditorWidth(jSplitPane1.getSize().width
-//                - jSplitPane1.getInsets().right
-//                - jSplitPane1.getDividerSize()
-//                - jSplitPane1.getDividerLocation() );
-
         if ( standaloneMode == false) {
             int editorWidth = jSplitPane1.getRightComponent().getWidth();
             putEditorWidth(editorWidth );
@@ -239,46 +233,46 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
     }
 
     /**
-     * selectionne une ligne en fonction de l'index de record du modele
+     * sélectionne une ligne en fonction de l'index de record du modèle
      * @param recordIndex index du relevé
      */
     public void selectRecord(int recordIndex) {
-        if ( recordIndex != -1) {
-            selectRow(releveTable.convertRowIndexToView(recordIndex));
-        } else {
-            selectRow((-1));
-        }
+        currentRecordIndex = recordIndex;
 
+        // je mets à jour la toolbar du panel
+        updateToolBar();
+        // je mets à jour la table 
+        releveTable.selectRecord(currentRecordIndex);
+        // je mets à jour l'editeur
+        releveEditor.selectRecord(currentRecordIndex);
     }
 
     /**
-     * selectionne une ligne en fonction du numéro de ligne de la table
-     * @param rowIndex numero de la ligne dans la table
+     * sélectionne une ligne en fonction du numéro de ligne de la table
+     * @param rowIndex numéro de la ligne dans la table
      */
     public void selectRow(int rowIndex) {
         if (releveTable.getRowCount() > 0 && rowIndex != -1) {
-            // je verifie la coherence du releve en cours d'edition
-            if ( verifyRecord() ) {
-                // je recupere l'index du releve courant dans la table
-                currentRecordIndex = releveTable.convertRowIndexToModel(rowIndex);
-                // je selectionne la ligne dans la table
-                releveTable.selectRecord(currentRecordIndex);
-
-                // j'active le bouton Delete si le releve courant est valide
-                // et j'affiche le numero du relevé.
-                if (rowIndex != -1) {
-                    jButtonDelete.setEnabled(true);
-                    jTextFielRecordNo.setText(String.valueOf(currentRecordIndex+1));
-                } else {
-                    jButtonDelete.setEnabled(false);
-                    jTextFielRecordNo.setText("");
-                }
-            }
+            selectRecord(releveTable.convertRowIndexToModel(rowIndex));
+        } else  {
+            selectRecord(-1);        
+        }                
+    }
+    
+    /**
+     * active le bouton Delete si le releve courant est valide
+     * et affiche le numero du relevé.
+     */
+    private void updateToolBar() {
+        if (currentRecordIndex != -1) {
+            jButtonDelete.setEnabled(true);
+            jTextFielRecordNo.setText(String.valueOf(currentRecordIndex + 1));
         } else {
-            releveEditor.selectRecord(-1);
+            jButtonDelete.setEnabled(false);
+            jTextFielRecordNo.setText("");
         }
     }
-
+            
     public void setStandaloneMode() {
         jButtonFile.setVisible(false);
         jButtonPrevious.setVisible(true);
@@ -460,47 +454,38 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
 }//GEN-LAST:event_jButtonDeleteActionPerformed
 
     private void jButtonPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviousActionPerformed
-        // avant de creer de changer de releve , je verifie la coherence du releve courant
-        if (verifyRecord()) {
-            // je recherche l'index de la ligne precedente
-            if ( releveTable.getRowCount() > 0) {
-                int rowIndex = releveTable.convertRowIndexToView(currentRecordIndex );
+           // je recherche l'index de la ligne precedente
+        if (releveTable.getRowCount() > 0) {
+            int rowIndex = releveTable.convertRowIndexToView(currentRecordIndex);
 
-                if ( rowIndex  > 0)  {
-                    // je selection la ligne precedente
-                    selectRow(rowIndex -1);
-                } else {
-                    // j'affiche la derniere ligne
-                    Toolkit.getDefaultToolkit().beep();
-                    selectRow(releveTable.getRowCount() - 1);
-                }
+            if (rowIndex > 0) {
+                // je selection la ligne precedente
+                selectRow(rowIndex - 1);
             } else {
-                // la table est vide
-                selectRow(-1);
+                // j'affiche la derniere ligne
+                Toolkit.getDefaultToolkit().beep();
+                selectRow(releveTable.getRowCount() - 1);
             }
-           
-
+        } else {
+            // la table est vide
+            selectRow(-1);
         }
     }//GEN-LAST:event_jButtonPreviousActionPerformed
 
     private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
-        // avant de changer de releve , je verifie la coherence du releve courant
-        if (verifyRecord()) {
-            // je recherche l'index de la ligne suivante
-            if ( releveTable.getRowCount() > 0) {
-                int rowIndex = releveTable.convertRowIndexToView(currentRecordIndex);
-                if (rowIndex < releveTable.getRowCount() -1 ) {
-                    selectRow(rowIndex +1);
-                } else {
-                    // j'affiche la premiere ligne
-                    Toolkit.getDefaultToolkit().beep();
-                    selectRow(0);
-                }
+        // je recherche l'index de la ligne suivante
+        if (releveTable.getRowCount() > 0) {
+            int rowIndex = releveTable.convertRowIndexToView(currentRecordIndex);
+            if (rowIndex < releveTable.getRowCount() - 1) {
+                selectRow(rowIndex + 1);
             } else {
-                // la table est vide
-                selectRow(-1);
+                // j'affiche la premiere ligne
+                Toolkit.getDefaultToolkit().beep();
+                selectRow(0);
             }
-
+        } else {
+            // la table est vide
+            selectRow(-1);
         }
 }//GEN-LAST:event_jButtonNextActionPerformed
 
@@ -539,7 +524,7 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
 
     public void createRecord() {
         // avant de creer le nouveau releve , je verifie la coherence du releve courant
-        if (verifyRecord()) {
+        if (verifyCurrentRecord()) {
             if( panelType != RelevePanel.PanelType.all) {
                 // je cree un nouveau releve
                 currentRecordIndex = dataManager.addRecord(dataManager.createRecord(recordType));
@@ -582,19 +567,19 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
             }
 
             
+            // je mets à jour la toolbar
+            updateToolBar();
             // je selectionne le nouveau releve dans la table
-            // et le releve est selectionné automatiquement dans l'editeur par la selection dans la table
             releveTable.selectRecord(currentRecordIndex);
+            // j'affiche le relevé dans l'editeur et je sélectionne le premier champ par defaut
+            releveEditor.selectRecord(currentRecordIndex);
             releveEditor.selectFirstField();
-            // j'active le bouton de suppression de l'enregistrement
-            jButtonDelete.setEnabled(true);
-            jTextFielRecordNo.setText(String.valueOf(currentRecordIndex+1));
         }
     }
 
     public void insertRecord() {
         // avant de creer le nouveau releve , je verifie la coherence du releve courant
-        if (verifyRecord()) {
+        if (verifyCurrentRecord()) {
             // je cree un nouveau releve
             if( panelType != RelevePanel.PanelType.all) {
                 dataManager.insertRecord(recordType, currentRecordIndex);
@@ -634,43 +619,37 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
                         return;
                 }
             }
+            
+            // je mets à jour la toolbar
+            updateToolBar();
+            // je selectionne le nouveau releve dans la table
             releveTable.selectRecord(currentRecordIndex);
+            // j'affiche le relevé dans l'editeur et je sélectionne le premier champ par defaut
+            releveEditor.selectRecord(currentRecordIndex);
             releveEditor.selectFirstField();
-            jButtonDelete.setEnabled(true);
-            jTextFielRecordNo.setText(String.valueOf(currentRecordIndex+1));
         } 
     }
 
     public void swapRecordNext() {
-        // avant de deplacer le releve , je verifie la coherence du releve courant
-        if (verifyRecord()) {
-            // j'echange la position du releve avec le suivant
-            dataManager.swapRecordNext(dataManager.getRecord(currentRecordIndex));
-            releveTable.selectRecord(currentRecordIndex+1);
-        }
+        dataManager.swapRecordNext(dataManager.getRecord(currentRecordIndex));
+        releveTable.selectRecord(currentRecordIndex+1);        
     }
 
     @Override
     public void swapRecordPrevious() {
-        // avant de déplacer le releve , je verifie la coherence du releve courant
-        if (verifyRecord()) {
-            // j'echange la position du releve avec le suivant
-            dataManager.swapRecordPrevious(dataManager.getRecord(currentRecordIndex));
-            releveTable.selectRecord(currentRecordIndex-1);
-        }
+        dataManager.swapRecordPrevious(dataManager.getRecord(currentRecordIndex));
+        releveTable.selectRecord(currentRecordIndex - 1);
     }
     
-    @Override
     public void renumberRecords() {
         // avant de renuméroter les relevés , je vérifie la coherence du releve courant
-        if (verifyRecord()) {
+        if (verifyCurrentRecord()) {
             
             int[] tableIndexList = new int[releveTable.getRowCount()];
             for(int i =0 ; i < tableIndexList.length; i++) {
                 tableIndexList[i] = releveTable.convertRowIndexToView(i);                
             }
             dataManager.renumberRecords(dataManager.getRecord(currentRecordIndex), tableIndexList);
-            //releveTable.selectRecord(currentRecordIndex);
         }
     }
 
@@ -711,32 +690,8 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
     }
 
     @Override
-    public boolean verifyRecord() {
-        releveEditor.commitCurrentFocusedBean();
-        String errorMessage = dataManager.verifyRecord(currentRecordIndex); 
-        if (errorMessage.isEmpty()) {
-            return true;
-        } else {
-            // j'affiche le message d'erreur  et je demande s'il faut continuer
-            Toolkit.getDefaultToolkit().beep();
-            errorMessage += NbBundle.getMessage(ReleveTopComponent.class, "RelevePanel.verifyRecord.message");
-            int choice = JOptionPane.showConfirmDialog(this,
-                errorMessage,
-                NbBundle.getMessage(ReleveTopComponent.class, "RelevePanel.verifyRecord.title"),
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.ERROR_MESSAGE
-            );
-
-            switch (choice) {
-                case 0: // YES
-                    return false;
-                case 1: // NO
-                    return true;
-                default: // CANCEL
-                    return true;
-            }
-        }
-
+    public boolean verifyCurrentRecord() {        
+        return releveEditor.verifyCurrentRecord(currentRecordIndex);
     }
 
     private int getEditorWidth() {
@@ -751,14 +706,22 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
     }
     
     ///////////////////////////////////////////////////////////////////////////
-    // Implement RelevePanelListener methods
+    // Implement ReleveTableListener methods
     ///////////////////////////////////////////////////////////////////////////
 
+    /**
+     * un releve est selectionné dans la table 
+     *  => met à jour la toolbar du panel
+     *  => met à jour l'éditeur
+     * @param recordIndex
+     * @param isNew 
+     */
     @Override
     public void tableRecordSelected(int recordIndex, boolean isNew) {
-        releveEditor.selectRecord(recordIndex);
         // je memorise le numero du releve
         currentRecordIndex = recordIndex;
+        updateToolBar();
+        releveEditor.selectRecord(recordIndex);
     }
 
     
@@ -770,14 +733,8 @@ public class RelevePanel extends javax.swing.JPanel implements RelevePanelListen
      * retourne l'index du releve courant
      * @return
      */
-    @Override
     public int getCurrentRecordIndex() {
         return currentRecordIndex;
     }
-    
-    ///////////////////////////////////////////////////////////////////////////
-    // Implement RelevePanelListener methods
-    ///////////////////////////////////////////////////////////////////////////
-    
     
 }
