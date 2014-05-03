@@ -20,8 +20,8 @@ import org.openide.util.Utilities;
 
 /**
  *
- * @author claudio, daniel
- * Some of this code is borrowed from http://nbmodules.javaforge.com/
+ * @author claudio, daniel Some of this code is borrowed from
+ * http://nbmodules.javaforge.com/
  */
 public class StartupOptions {
 
@@ -29,7 +29,6 @@ public class StartupOptions {
     private String userDirPath = "";
     private String macuserDirPath = "";
     private Map<String, String> hParam = new HashMap<String, String>(10);
-
     private File ancestrisUserConfFile = new File(System.getProperty("netbeans.user") + "/etc/trancestris.conf");
     private Properties ancestrisConfProps;
 
@@ -40,18 +39,22 @@ public class StartupOptions {
         // No user file? tries ancestris system
         File conf;
         if (ancestrisConfProps == null) {
-            conf  = InstalledFileLocator.getDefault().locate("../etc/trancestris.conf", "org.netbeans.core.startup", false);
-            if (conf != null)
+            conf = InstalledFileLocator.getDefault().locate("../etc/trancestris.conf", "org.netbeans.core.startup", false);
+            if (conf != null) {
                 ancestrisConfProps = Util.loadProperties(conf);
+            }
         }
         // No ancestris system? tries netbeans system (for run from netbeans ide)
         if (ancestrisConfProps == null) {
             conf = InstalledFileLocator.getDefault().locate("../etc/netbeans.conf", "org.netbeans.core.startup", false);
-            if (conf != null)
+            if (conf != null) {
                 ancestrisConfProps = Util.loadProperties(conf);
+            }
             prefix = "netbeans_";
         }
-        loadConf(ancestrisConfProps, prefix);
+        if (ancestrisConfProps != null) {
+            loadConf(ancestrisConfProps, prefix);
+        }
     }
 
     public void applyChanges() {
@@ -73,7 +76,9 @@ public class StartupOptions {
     }
 
     /**
-     * Gets startup settings as Property oblect. prefix is not used as user setup file must not have this prefix set.
+     * Gets startup settings as Property oblect. prefix is not used as user
+     * setup file must not have this prefix set.
+     *
      * @return
      */
     private Properties getProperties() {
@@ -92,8 +97,8 @@ public class StartupOptions {
         return props;
     }
 
-    private void loadConf(Properties confProperties,String prefix) {
-        jdkHomePath = confProperties.getProperty(prefix+"jdkhome", "");
+    private void loadConf(Properties confProperties, String prefix) {
+        jdkHomePath = confProperties.getProperty(prefix + "jdkhome", "");
         if (Utilities.isWindows()) {
             jdkHomePath = jdkHomePath.replace('\\', '/');
         }
@@ -101,25 +106,26 @@ public class StartupOptions {
             jdkHomePath = jdkHomePath.substring(1, jdkHomePath.length() - 1);
         }
 
-        userDirPath = confProperties.getProperty(prefix+"default_userdir", "");
+        userDirPath = confProperties.getProperty(prefix + "default_userdir", "");
         if (userDirPath.indexOf('\"') > -1) {
             userDirPath = userDirPath.substring(1, userDirPath.length() - 1);
         }
 
-        macuserDirPath = confProperties.getProperty(prefix+"default_mac_userdir", "");
+        macuserDirPath = confProperties.getProperty(prefix + "default_mac_userdir", "");
         if (macuserDirPath.indexOf('\"') > -1) {
             macuserDirPath = macuserDirPath.substring(1, macuserDirPath.length() - 1);
         }
-        loadJvmParameters(confProperties,prefix);
+        loadJvmParameters(confProperties, prefix);
     }
 
-    private void loadJvmParameters(final Properties confProperties,String prefix) {
-        String val = confProperties.getProperty(prefix+"default_options", "");
+    private void loadJvmParameters(final Properties confProperties, String prefix) {
+        String val = confProperties.getProperty(prefix + "default_options", "");
         if (val.indexOf('\"') > -1) {
             val = val.substring(1, val.length() - 1).trim();
         }
-        if (val.length() == 0)
+        if (val.length() == 0) {
             return;
+        }
         String[] _v = val.split("\\s+");
         for (int j = 0; j < _v.length; j++) {
             String parameter = _v[j];
@@ -134,7 +140,9 @@ public class StartupOptions {
                 hParam.put(parameter.substring(0, 6), parameter.substring(6));
             } else if (parameter.startsWith("-J-D")) {
                 String kv[] = parameter.split("=");
-                hParam.put(kv[0], kv[1]);
+                if (kv.length > 1) {
+                    hParam.put(kv[0], kv[1]);
+                }
             } else {
                 hParam.put(parameter, "");
             }
@@ -151,18 +159,25 @@ public class StartupOptions {
 
     /**
      * Set JVM Parameter value. If value == null, remove parameter
+     *
      * @param parameter
      * @param value
+     * @return true if parameter has been changed
      */
-    public void setJvmParameter(String parameter, String value) {
-        if (value == null){
+    public boolean setJvmParameter(String parameter, String value) {
+        String oldValue = getJvmParameter(parameter);
+        if (value == null) {
             hParam.remove(parameter);
-        } else
-        hParam.put(parameter, value);
+            return oldValue != null;
+        } else {
+            hParam.put(parameter, value);
+            return !value.equals(oldValue);
+        }
     }
 
     /**
      * Get JVM Parameter value
+     *
      * @param parameter
      * @return
      */
@@ -170,31 +185,36 @@ public class StartupOptions {
         return hParam.get(parameter);
     }
 
-    public void setJvmLocale(Locale locale){
-        setJvmParameter("--locale",locale == null?null:locale.toString().replace('_', ':'));
+    public boolean setJvmLocale(Locale locale) {
+        return setJvmParameter("--locale", locale == null ? null : locale.toString().replace('_', ':'));
     }
+
     /**
-     * return Locale from jvm settings, null if no --locale parameter which means defult from system
+     * return Locale from jvm settings, null if no --locale parameter which
+     * means defult from system
+     *
      * @return
      */
-    public Locale getJvmLocale(){
+    public Locale getJvmLocale() {
         return getLocaleFromString(getJvmParameter("--locale"));
     }
 
-    private Locale getLocaleFromString(String str){
-        if (str == null || str.length() == 0)
+    private Locale getLocaleFromString(String str) {
+        if (str == null || str.length() == 0) {
             return null;
-        String locale[] = (str+"::").split(":",3);
+        }
+        String locale[] = (str + "::").split(":", 3);
 
-        return new Locale (locale[0],locale[1],locale[2]);
+        return new Locale(locale[0], locale[1], locale[2]);
     }
 
     public String getJvmParametersAsString() {
         StringBuilder sb = new StringBuilder(120);
         for (String key : hParam.keySet()) {
             // remove old language setting, replaced by --locale
-            if (key.contentEquals("-J-Duser.language"))
+            if (key.contentEquals("-J-Duser.language")) {
                 continue;
+            }
             sb.append(" ").append(key);
             if (key.startsWith("--")) {
                 sb.append(" ").append(hParam.get(key));
@@ -205,7 +225,6 @@ public class StartupOptions {
             }
         }
         // strip leading space character
-        return sb.length()>0? sb.substring(1):"";
+        return sb.length() > 0 ? sb.substring(1) : "";
     }
-
 }
