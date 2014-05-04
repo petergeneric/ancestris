@@ -12,10 +12,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -->
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
-    <tocitem text="Help - FAQ" target="ancestris.modules.help.faq.title">
-        <tocitem text="Overview" target="ancestris.modules.help.faq.about"/>
-        <tocitem expand="true" text="Using Ancestris" target="ancestris.modules.help.faq.using.ancestris">
-            <tocitem text="How to close a genealogy" target="ancestris.modules.help.faq.using.ancestris-1"/>
+    <tocitem text="Aide - Questions Fr&eacute;quentes" target="ancestris.modules.help.faq.title">
+        <tocitem text="G&eacute;n&eacute;ralit&eacute;s" target="ancestris.modules.help.faq.about"/>
+        <tocitem expand="true" text="Utiliser Ancestris" target="ancestris.modules.help.faq.using.ancestris">
+            <tocitem text="Comment fermer une généalogie" target="ancestris.modules.help.faq.using.ancestris-1"/>
         </tocitem>
     </tocitem>
 </toc>
