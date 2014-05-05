@@ -937,15 +937,24 @@ public class Gedcom implements Comparable {
       // try next
       id++;
     }
-    
     // 20050509 not patching IDs with zeros anymore - since we now have alignment
     // in tableview there's not really a need to add leading zeros for readability.
     buf.setLength(0);
     buf.append(id);
-    while(buf.length()<GedcomOptions.getInstance().getEntityIdLength())
+    while(buf.length()<idLength(entity))
         buf.insert(0, '0');
 
     return getEntityPrefix(entity) + buf;
+  }
+  
+  private int idLength(String tag){
+      int length = GedcomOptions.getInstance().getEntityIdLength();
+      Entity first = getFirstEntity(tag);
+      if (first!=null &&
+              first.getId().matches("[a-zA-Z][0-9]*")){
+          length = first.getId().length()-1;
+      }
+      return length;
   }
   
   /**
