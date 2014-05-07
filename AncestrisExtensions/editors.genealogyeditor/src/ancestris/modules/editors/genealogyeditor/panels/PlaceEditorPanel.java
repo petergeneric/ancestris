@@ -627,7 +627,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             if (index > 0) {
                 placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             }
-            placeString += gedcomFieldsOrder[index].getText();
+            if (gedcomFieldsOrder[index] != null) {
+                placeString += gedcomFieldsOrder[index].getText();
+            }
         }
 
         return placeString;
@@ -687,7 +689,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     }
                 }
             }); // end of doUnitOfWork
-            
+
             return mPlace;
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
