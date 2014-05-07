@@ -35,9 +35,9 @@ public abstract class AncestrisEditor {
     };
 
     public static AncestrisEditor findEditor(Property property) {
-        AncestrisEditor editor = NoOpEditor.instance;
+        AncestrisEditor editor = null;
         if (property == null) {
-            return editor;
+            return NoOpEditor.instance;
         }
         for (AncestrisEditor edt : Lookup.getDefault().lookupAll(AncestrisEditor.class)) {
             if (edt.canEdit(property)) {
@@ -47,7 +47,7 @@ public abstract class AncestrisEditor {
                 editor = edt;
             }
         }
-        return editor;
+        return editor == null ? NoOpEditor.instance : editor;
     }
 
     public abstract boolean canEdit(Property property);
@@ -101,6 +101,7 @@ public abstract class AncestrisEditor {
 
         /**
          * default editor is never active
+         *
          * @return always false
          */
         @Override
