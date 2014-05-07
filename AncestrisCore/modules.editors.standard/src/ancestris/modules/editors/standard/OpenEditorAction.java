@@ -11,8 +11,7 @@
  */
 package ancestris.modules.editors.standard;
 
-import genj.gedcom.Fam;
-import genj.gedcom.Indi;
+import ancestris.api.editor.AncestrisEditor;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Entity;
@@ -29,9 +28,9 @@ import org.openide.util.NbBundle.Messages;
 import static ancestris.modules.editors.standard.Bundle.*;
 
 @ActionID(category = "Edit",
-id = "ancestris.modules.editors.standard.OpenEditorAction")
-@ActionRegistration(displayName="#OpenInEditor.title"
-        )
+        id = "ancestris.modules.editors.standard.OpenEditorAction")
+@ActionRegistration(displayName = "#OpenInEditor.title"
+)
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 @Messages("OpenInEditor.title=Edit/Modify")
@@ -62,11 +61,9 @@ public final class OpenEditorAction
         @Override
         public void actionPerformed(ActionEvent e) {
             SelectionDispatcher.muteSelection(true);
-            if (entity instanceof Indi) {
-                EntityEditor.editEntity( (Indi) (entity), false);
-            }
-            if (entity instanceof Fam) {
-                EntityEditor.editEntity((Fam) (entity), false);
+            AncestrisEditor editor = AncestrisEditor.findEditor(entity);
+            if (editor != null) {
+                editor.edit(entity);
             }
             SelectionDispatcher.muteSelection(false);
         }

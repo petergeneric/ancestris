@@ -28,7 +28,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author daniel
  */
-@ServiceProvider(service = AncestrisEditor.class)
+@ServiceProvider(service = AncestrisEditor.class,position = 100)
 public class EntityEditor extends AncestrisEditor {
 
     public static boolean editEntity(Fam fam, boolean isNew) {

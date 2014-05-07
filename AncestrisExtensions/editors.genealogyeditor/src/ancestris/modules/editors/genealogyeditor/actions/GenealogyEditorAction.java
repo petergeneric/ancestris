@@ -17,7 +17,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author dominique
  */
-@ServiceProvider(service = AncestrisEditor.class)
+@ServiceProvider(service = AncestrisEditor.class,position = 200)
 public class GenealogyEditorAction extends AncestrisEditor {
 
     @Override
