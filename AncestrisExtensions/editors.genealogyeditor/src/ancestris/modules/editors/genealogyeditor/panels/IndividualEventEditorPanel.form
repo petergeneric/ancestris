@@ -79,33 +79,34 @@
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Component id="aDateBean" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="eventCauseTextField" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="individualAgeTextField" max="32767" attributes="0"/>
                                   <Component id="eventNameTextField" max="32767" attributes="0"/>
+                                  <Component id="individualAgeTextField" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="EventTypeLabel" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="eventTypeTextField" min="-2" pref="279" max="-2" attributes="0"/>
+                              <Component id="EventTypeLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="eventTypeTextField" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="placeTextField" min="-2" pref="510" max="-2" attributes="0"/>
+                              <Component id="placeTextField" min="-2" pref="408" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="linkToPlaceButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="addPlaceButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="editPlaceButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="eventCauseTextField" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -114,26 +115,20 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="aDateBean" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="eventCauseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="eventCauseTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="privateRecordToggleButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="aDateBean" min="-2" max="-2" attributes="0"/>
+                          <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="eventNameLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="eventNameTextField" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="eventCauseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventCauseTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="eventNameLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventNameTextField" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="2" groupAlignment="3" attributes="0">
                               <Component id="EventTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="eventTypeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>

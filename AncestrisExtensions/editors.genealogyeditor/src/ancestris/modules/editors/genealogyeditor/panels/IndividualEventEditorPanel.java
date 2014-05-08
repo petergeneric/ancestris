@@ -257,23 +257,24 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                         .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(eventCauseTextField)
                     .addGroup(EventDetailPanelLayout.createSequentialGroup()
                         .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(individualAgeTextField)
-                            .addComponent(eventNameTextField))
+                            .addComponent(eventNameTextField)
+                            .addComponent(individualAgeTextField))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(EventTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(EventTypeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(eventTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                        .addComponent(placeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(placeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventCauseTextField))
+                        .addComponent(editPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         EventDetailPanelLayout.setVerticalGroup(
@@ -281,20 +282,17 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             .addGroup(EventDetailPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                        .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dateLabel)
-                            .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(eventCauseLabel)
-                            .addComponent(eventCauseTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(dateLabel)
+                    .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(eventNameLabel)
-                        .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(eventCauseLabel)
+                    .addComponent(eventCauseTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(eventNameLabel)
+                    .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(EventTypeLabel)
                         .addComponent(eventTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -390,6 +388,64 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                                 mPlace = (PropertyPlace) mEvent.addProperty("PLAC", selectedPlace.format("all"));
                             } else {
                                 mPlace.setValue(selectedPlace.format("all"));
+                            }
+
+                            Property map;
+                            Property selectedPlaceMap;
+                            if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
+                                selectedPlaceMap = selectedPlace.getProperty("MAP");
+                                if (selectedPlaceMap != null) {
+                                    map = mPlace.getProperty("MAP");
+                                    if (map == null) {
+                                        map = mPlace.addProperty("MAP", "");
+                                        map.addProperty("LATI", selectedPlaceMap.getProperty("LATI").getValue());
+                                        map.addProperty("LONG", selectedPlaceMap.getProperty("LONG").getValue());
+                                    } else {
+                                        Property latitude = map.getProperty("LATI");
+                                        if (latitude == null) {
+                                            map.addProperty("LATI", selectedPlaceMap.getProperty("LATI").getValue());
+                                        } else {
+                                            latitude.setValue(selectedPlaceMap.getProperty("LATI").getValue());
+                                        }
+                                        Property longitude = map.getProperty("LONG");
+                                        if (longitude == null) {
+                                            map.addProperty("LONG", selectedPlaceMap.getProperty("LONG").getValue());
+                                        } else {
+                                            longitude.setValue(selectedPlaceMap.getProperty("LONG").getValue());
+                                        }
+                                    }
+                                } else {
+                                    map = mPlace.getProperty("MAP");
+                                    if (map != null) {
+                                        mPlace.delProperty(map);
+                                    }
+                                }
+                            } else {
+                                map = mPlace.getProperty("_MAP");
+                                selectedPlaceMap = selectedPlace.getProperty("MAP");
+                                if (selectedPlaceMap != null) {
+                                    if (map == null) {
+                                        map = mPlace.addProperty("_MAP", "");
+                                    } else {
+                                        Property latitude = map.getProperty("_LATI");
+                                        if (latitude == null) {
+                                            map.addProperty("_LATI", selectedPlaceMap.getProperty("_LATI").getValue());
+                                        } else {
+                                            latitude.setValue(selectedPlaceMap.getProperty("_LATI").getValue());
+                                        }
+                                        Property longitude = map.getProperty("_LONG");
+                                        if (longitude == null) {
+                                            map.addProperty("_LONG", selectedPlaceMap.getProperty("_LONG").getValue());
+                                        } else {
+                                            longitude.setValue(selectedPlaceMap.getProperty("_LONG").getValue());
+                                        }
+                                    }
+                                } else {
+                                    map = mPlace.getProperty("_MAP");
+                                    if (map != null) {
+                                        mPlace.delProperty(map);
+                                    }
+                                }
                             }
                         }
                     }); // end of doUnitOfWork
