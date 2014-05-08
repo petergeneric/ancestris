@@ -54,24 +54,17 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String[] getJurisdictions() {
-        String[] jurisdictions = new String[13];
+        String[] jurisdictions = new String[6];
 
         try {
             int index = 0;
 
-            jurisdictions[index++] = postalCode.getPlaceName();
-            jurisdictions[index++] = postalCode.getPostalCode();
-            jurisdictions[index++] = toponym.getAdminName1();
-            jurisdictions[index++] = toponym.getAdminCode1();
-            jurisdictions[index++] = toponym.getAdminName2();
-            jurisdictions[index++] = toponym.getAdminCode2();
-            jurisdictions[index++] = toponym.getAdminName3();
-            jurisdictions[index++] = toponym.getAdminCode3();
-            jurisdictions[index++] = toponym.getAdminName4();
-            jurisdictions[index++] = toponym.getAdminCode4();
-            jurisdictions[index++] = toponym.getAdminName5();
-            jurisdictions[index++] = toponym.getAdminCode5();
-            jurisdictions[index++] = postalCode.getCountryCode();
+            jurisdictions[index++] = postalCode.getPlaceName(); // City
+            jurisdictions[index++] = postalCode.getPostalCode(); // Postal code    
+            jurisdictions[index++] = toponym.getAdminCode4();  // GeoID
+            jurisdictions[index++] = toponym.getAdminName2(); // County
+            jurisdictions[index++] = toponym.getAdminName1(); // State
+            jurisdictions[index++] = toponym.getCountryName();// Country 
         } catch (InsufficientStyleException ex) {
             Exceptions.printStackTrace(ex);
         }
