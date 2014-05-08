@@ -145,7 +145,9 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         eventTypeComboBox = new javax.swing.JComboBox<String>();
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         deleteEventButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         eventsList = new javax.swing.JList();
@@ -241,6 +243,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.jLabel1.text"), new Object[] {})); // NOI18N
         jToolBar1.add(jLabel1);
+        jToolBar1.add(filler2);
 
         eventTypeComboBox.setModel(mEventsModel);
         eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
@@ -250,6 +253,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             }
         });
         jToolBar1.add(eventTypeComboBox);
+        jToolBar1.add(filler3);
 
         deleteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
         deleteEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.deleteEventButton.toolTipText"), new Object[] {})); // NOI18N
@@ -635,6 +639,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel familiesChildTreeTablePanel;
     private javax.swing.JPanel familiesSpousePanel;
     private ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel familiesSpouseTreeTablePanel;
+    private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler3;
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JPanel generalPanel;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean imageBean;
