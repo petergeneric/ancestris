@@ -46,7 +46,7 @@ import org.openide.util.Utilities;
  *
  * @author frederic
  */
-class GeoNodeObject {
+public class GeoNodeObject {
 
     private PropertyPlace place;
     private List<GeoNodeObject> events = new ArrayList<GeoNodeObject>();
