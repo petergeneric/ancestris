@@ -1,8 +1,8 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.api.place.Place;
-import ancestris.modules.editors.genealogyeditor.models.EventsTableModel;
 import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
+import ancestris.modules.geo.GeoNodeObject;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -15,6 +15,7 @@ import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.geonames.Toponym;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
@@ -793,41 +794,49 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         updateOnGoing = true;
 
-        if (place != null) {
-            logger.log(Level.INFO, "startIndex {0}", new Object[]{startIndex});
+        logger.log(Level.INFO, "startIndex {0}", new Object[]{startIndex});
 
-            for (int index = startIndex; index < mPlaceOrder.length; index++) {
-                if (mPlaceOrder[index] != -1) {
-                    if (mPlaceOrder[index] < mPlaceFormat.length) {
-                        String jurisdiction = place.getJurisdiction(mPlaceOrder[index]);
-                        ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(jurisdiction != null ? jurisdiction : "");
-                    }
-                } else {
-                    ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
-                }
-            }
-
-            Property latitude = null;
-            Property longitude = null;
-
-            if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                Property map = place.getProperty("MAP");
-                if (map != null) {
-                    latitude = map.getProperty("LATI");
-                    longitude = map.getProperty("LONG");
+        for (int index = startIndex; index < mPlaceOrder.length; index++) {
+            if (mPlaceOrder[index] != -1) {
+                if (mPlaceOrder[index] < mPlaceFormat.length) {
+                    String jurisdiction = place.getJurisdiction(mPlaceOrder[index]);
+                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(jurisdiction != null ? jurisdiction : "");
                 }
             } else {
-                Property map = place.getProperty("_MAP");
-                if (map != null) {
-                    latitude = map.getProperty("_LATI");
-                    longitude = map.getProperty("_LONG");
-                }
+                ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
             }
+        }
 
-            if (latitude != null && longitude != null) {
-                gedcomLatitudeTextField.setText(latitude.getValue());
-                gedcomLongitudeTextField.setText(longitude.getValue());
-                jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
+        Property latitude = null;
+        Property longitude = null;
+
+        if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            Property map = place.getProperty("MAP");
+            if (map != null) {
+                latitude = map.getProperty("LATI");
+                longitude = map.getProperty("LONG");
+            }
+        } else {
+            Property map = place.getProperty("_MAP");
+            if (map != null) {
+                latitude = map.getProperty("_LATI");
+                longitude = map.getProperty("_LONG");
+            }
+        }
+
+        if (latitude != null && longitude != null) {
+            gedcomLatitudeTextField.setText(latitude.getValue());
+            gedcomLongitudeTextField.setText(longitude.getValue());
+            jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
+        } else {
+            // search locally first
+            GeoNodeObject geoNodeObject = new GeoNodeObject(mPlace, true);
+            Toponym topo = geoNodeObject.Code2Toponym(NbPreferences.forModule(GeoNodeObject.class).get(geoNodeObject.getPlaceAsLongString(place, true, true), null));
+            if (topo != null) {
+                gedcomLatitudeTextField.setText(String.valueOf(topo.getLatitude()));
+                gedcomLongitudeTextField.setText(String.valueOf(topo.getLongitude()));
+                jXMapKit1.setAddressLocation(new GeoPosition(topo.getLatitude(), topo.getLongitude()));
+
             } else {
                 String searchedPlace = gedcomCityTextField.getText() + "," + gedcomCountryTextField.getText();
                 searchPlaceTextField.setText(searchedPlace);
@@ -835,15 +844,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 gedcomLatitudeTextField.setText("");
                 gedcomLongitudeTextField.setText("");
             }
-        } else {
-            logger.log(Level.INFO, "No place found startIndex {0}", new Object[]{startIndex});
-
-            for (int index = startIndex; index < mPlaceOrder.length; index++) {
-                ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
-            }
-            gedcomLatitudeTextField.setText("");
-            gedcomLongitudeTextField.setText("");
         }
+
         updateOnGoing = false;
     }
 
