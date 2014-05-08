@@ -415,6 +415,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             placeEditorPanel.commit();
+            placeTextField.setText(mPlace.getValueStartingWithCity());
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -437,7 +438,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
+
         placeEditorPanel.set(mPlace);
 
         ADialog eventEditorDialog = new ADialog(
@@ -448,6 +449,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             placeEditorPanel.commit();
+            placeTextField.setText(mPlace.getValueStartingWithCity());
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
