@@ -35,11 +35,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         0, // hamlet
         -1, // parish
         1, // town,
-        2, // zip Code
-        -1, // geo ID,
-        3, // county,
-        4, // state
-        5 // country
+        3, // zip Code
+        2, // geo ID,
+        4, // county,
+        5, // state
+        6 // country
     };
     JComponent mGedcomFields[][];
     private GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
@@ -412,6 +412,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         if (!evt.getValueIsAdjusting()) {
             Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
             String[] jurisdictions = place.getJurisdictions();
+
+            updateOnGoing = true;
+
             gedcomCityTextField.setText(jurisdictions[0]); // City
             gedcomZipCodeTextField.setText(jurisdictions[1]); // Postal code    
             gedcomGeoIDTextField.setText(jurisdictions[2]); // GeoID
@@ -421,6 +424,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             gedcomLatitudeTextField.setText(place.getLatitude().toString());
             gedcomLongitudeTextField.setText(place.getLongitude().toString());
             jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
+
+            updateOnGoing = false;
+
         }
     }//GEN-LAST:event_geonamesPlacesListValueChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -795,58 +801,75 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         updateOnGoing = true;
 
         logger.log(Level.INFO, "startIndex {0}", new Object[]{startIndex});
+        if (place != null) {
+            for (int index = startIndex; index < mPlaceOrder.length; index++) {
+                logger.log(Level.INFO, "Index {0}, mPlaceOrder[index] {1}", new Object[]{index, mPlaceOrder[index]});
+                if (mPlaceOrder[index] != -1) {
+                    if (mPlaceOrder[index] < mPlaceFormat.length) {
+                        String jurisdiction = place.getJurisdiction(mPlaceOrder[index]);
+                        ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(jurisdiction != null ? jurisdiction : "");
+                    }
+                } else {
+                    ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
+                }
+            }
 
-        for (int index = startIndex; index < mPlaceOrder.length; index++) {
-            if (mPlaceOrder[index] != -1) {
-                if (mPlaceOrder[index] < mPlaceFormat.length) {
-                    String jurisdiction = place.getJurisdiction(mPlaceOrder[index]);
-                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(jurisdiction != null ? jurisdiction : "");
+            Property latitude = null;
+            Property longitude = null;
+
+            if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                Property map = place.getProperty("MAP");
+                if (map != null) {
+                    latitude = map.getProperty("LATI");
+                    longitude = map.getProperty("LONG");
                 }
             } else {
-                ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
+                Property map = place.getProperty("_MAP");
+                if (map != null) {
+                    latitude = map.getProperty("_LATI");
+                    longitude = map.getProperty("_LONG");
+                }
             }
-        }
 
-        Property latitude = null;
-        Property longitude = null;
-
-        if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-            Property map = place.getProperty("MAP");
-            if (map != null) {
-                latitude = map.getProperty("LATI");
-                longitude = map.getProperty("LONG");
-            }
-        } else {
-            Property map = place.getProperty("_MAP");
-            if (map != null) {
-                latitude = map.getProperty("_LATI");
-                longitude = map.getProperty("_LONG");
-            }
-        }
-
-        if (latitude != null && longitude != null) {
-            gedcomLatitudeTextField.setText(latitude.getValue());
-            gedcomLongitudeTextField.setText(longitude.getValue());
-            jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
-        } else {
-            // search locally first
-            GeoNodeObject geoNodeObject = new GeoNodeObject(mPlace, true);
-            Toponym topo = geoNodeObject.Code2Toponym(NbPreferences.forModule(GeoNodeObject.class).get(geoNodeObject.getPlaceAsLongString(place, true, true), null));
-            if (topo != null) {
-                gedcomLatitudeTextField.setText(String.valueOf(topo.getLatitude()));
-                gedcomLongitudeTextField.setText(String.valueOf(topo.getLongitude()));
-                jXMapKit1.setAddressLocation(new GeoPosition(topo.getLatitude(), topo.getLongitude()));
-
+            if (latitude != null && longitude != null) {
+                gedcomLatitudeTextField.setText(latitude.getValue());
+                gedcomLongitudeTextField.setText(longitude.getValue());
+                jXMapKit1.setAddressLocation(new GeoPosition(new Double(latitude.getValue()), new Double(longitude.getValue())));
             } else {
-                String searchedPlace = gedcomCityTextField.getText() + "," + gedcomCountryTextField.getText();
-                searchPlaceTextField.setText(searchedPlace);
-                placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
-                gedcomLatitudeTextField.setText("");
-                gedcomLongitudeTextField.setText("");
-            }
-        }
+                // search locally first
+                GeoNodeObject geoNodeObject = new GeoNodeObject(place, true);
+                String placeAsLongString = geoNodeObject.getPlaceAsLongString(place, true, true);
+                Toponym topo = null;
+                if (placeAsLongString.length() > 6) {
+                    topo = geoNodeObject.Code2Toponym(NbPreferences.forModule(GeoNodeObject.class).get(placeAsLongString, null));
+                }
+                if (topo != null) {
+                    gedcomLatitudeTextField.setText(String.valueOf(topo.getLatitude()));
+                    gedcomLongitudeTextField.setText(String.valueOf(topo.getLongitude()));
+                    jXMapKit1.setAddressLocation(new GeoPosition(topo.getLatitude(), topo.getLongitude()));
 
-        updateOnGoing = false;
+                } else {
+                    if (placeAsLongString.length() > 6) {
+                        searchPlaceTextField.setText(placeAsLongString);
+                    } else {
+                        searchPlaceTextField.setText("");
+                    }
+                    placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
+                    gedcomLatitudeTextField.setText("");
+                    gedcomLongitudeTextField.setText("");
+                }
+            }
+        } else {
+            logger.log(Level.INFO, "No place found startIndex {0}", new Object[]{startIndex});
+
+            for (int index = startIndex; index < mPlaceOrder.length; index++) {
+                ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
+            }
+            gedcomLatitudeTextField.setText("");
+            gedcomLongitudeTextField.setText("");
+
+            updateOnGoing = false;
+        }
     }
 
     public String getPlaceString() {
@@ -932,5 +955,71 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
             return null;
         }
+    }
+
+    public String getPlaceAsLongString(PropertyPlace place, boolean compress, boolean complete) {
+        if (place == null) {
+            return "";
+        }
+
+        String format = "";
+        // parish 1
+
+        if (complete) {
+            if (compress) {
+                // town,  2
+                format += (mPlaceOrder[2] != -1 ? String.valueOf(mPlaceOrder[2]) : "") + ",";
+                // hamlet 0
+                format += (mPlaceOrder[0] != -1 ? String.valueOf(mPlaceOrder[0]) : "") + ",";
+                // geo ID,  4
+                format += (mPlaceOrder[4] != -1 ? String.valueOf(mPlaceOrder[4]) : "") + ",";
+                // zip Code 3
+                format += (mPlaceOrder[3] != -1 ? String.valueOf(mPlaceOrder[3]) : "") + ",";
+                // county,  5
+                format += (mPlaceOrder[5] != -1 ? String.valueOf(mPlaceOrder[5]) : "") + ",";
+                // state    6
+                format += (mPlaceOrder[6] != -1 ? String.valueOf(mPlaceOrder[6]) : "") + ",";
+                // country 7
+                format += mPlaceOrder[7] != -1 ? String.valueOf(mPlaceOrder[7]) : "";
+            } else {
+                // town,  2
+                format += (mPlaceOrder[2] != -1 ? String.valueOf(mPlaceOrder[2]) : "") + ", ";
+                // hamlet 0
+                format += (mPlaceOrder[0] != -1 ? String.valueOf(mPlaceOrder[0]) : "") + ", ";
+                // geo ID,  4
+                format += (mPlaceOrder[4] != -1 ? String.valueOf(mPlaceOrder[4]) : "") + ", ";
+                // zip Code 3
+                format += (mPlaceOrder[3] != -1 ? String.valueOf(mPlaceOrder[3]) : "") + ", ";
+                // county,  5
+                format += (mPlaceOrder[5] != -1 ? String.valueOf(mPlaceOrder[5]) : "") + ", ";
+                // state    6
+                format += (mPlaceOrder[6] != -1 ? String.valueOf(mPlaceOrder[6]) : "") + ", ";
+                // country 7
+                format += mPlaceOrder[7] != -1 ? String.valueOf(mPlaceOrder[7]) : "";
+            }
+        } else if (compress) {
+            // town,  2
+            format += (mPlaceOrder[2] != -1 ? String.valueOf(mPlaceOrder[2]) : "") + ",";
+            // geo ID,  4
+            format += (mPlaceOrder[4] != -1 ? String.valueOf(mPlaceOrder[4]) : "") + ",";
+            // county,  5
+            format += (mPlaceOrder[5] != -1 ? String.valueOf(mPlaceOrder[5]) : "") + ",";
+            // state    6
+            format += (mPlaceOrder[6] != -1 ? String.valueOf(mPlaceOrder[6]) : "") + ",";
+            // country 7
+            format += mPlaceOrder[7] != -1 ? String.valueOf(mPlaceOrder[7]) : "";
+        } else {
+            // town,  2
+            format += (mPlaceOrder[2] != -1 ? String.valueOf(mPlaceOrder[2]) : "") + ", ";
+            // geo ID,  4
+            format += (mPlaceOrder[4] != -1 ? String.valueOf(mPlaceOrder[4]) : "") + ", ";
+            // county,  5
+            format += (mPlaceOrder[5] != -1 ? String.valueOf(mPlaceOrder[5]) : "") + ", ";
+            // state    6
+            format += (mPlaceOrder[6] != -1 ? String.valueOf(mPlaceOrder[6]) : "") + ", ";
+            // country 7
+            format += mPlaceOrder[7] != -1 ? String.valueOf(mPlaceOrder[7]) : "";
+        }
+        return place.format(format);
     }
 }
