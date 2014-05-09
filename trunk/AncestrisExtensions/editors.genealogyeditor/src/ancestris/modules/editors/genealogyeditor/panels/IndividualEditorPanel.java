@@ -111,7 +111,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             add("RESI");
             add("SSN");
             add("TITL");
-            add("FACT");
+//            add("FACT"); not defined in gedcom xml definition files
         }
     };
     private DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
