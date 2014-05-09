@@ -6,6 +6,7 @@ import ancestris.modules.geo.GeoNodeObject;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -380,6 +381,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     List<String> jurisdictions = Arrays.asList(mPlace.getAllJurisdictions(mPlaceOrder[index], true));
                     if (jurisdictions != null) {
                         AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
+                    } else {
+                        AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], new <String>ArrayList(), false);
                     }
                 } else {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
@@ -525,6 +528,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     List<String> jurisdictions = Arrays.asList(PropertyPlace.getAllJurisdictions(mPlace.getGedcom(), mPlaceOrder[index], true));
                     if (jurisdictions != null) {
                         AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
+                    } else {
+                        AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], new <String>ArrayList(), false);
                     }
                 }
             } else {
@@ -831,6 +836,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 }
             }
 
+            String placeAsLongString = getPlaceAsLongString(place, true, true);
+            if (placeAsLongString.length() > 6) {
+                searchPlaceTextField.setText(placeAsLongString);
+            } else {
+                searchPlaceTextField.setText("");
+            }
+            
             if (latitude != null && longitude != null) {
                 gedcomLatitudeTextField.setText(latitude.getValue());
                 gedcomLongitudeTextField.setText(longitude.getValue());
@@ -838,22 +850,16 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             } else {
                 // search locally first
                 GeoNodeObject geoNodeObject = new GeoNodeObject(place, true);
-                String placeAsLongString = geoNodeObject.getPlaceAsLongString(place, true, true);
                 Toponym topo = null;
                 if (placeAsLongString.length() > 6) {
                     topo = geoNodeObject.Code2Toponym(NbPreferences.forModule(GeoNodeObject.class).get(placeAsLongString, null));
                 }
                 if (topo != null) {
+                    placeEditorTabbedPane.setSelectedComponent(mapPanel);
                     gedcomLatitudeTextField.setText(String.valueOf(topo.getLatitude()));
                     gedcomLongitudeTextField.setText(String.valueOf(topo.getLongitude()));
                     jXMapKit1.setAddressLocation(new GeoPosition(topo.getLatitude(), topo.getLongitude()));
-
                 } else {
-                    if (placeAsLongString.length() > 6) {
-                        searchPlaceTextField.setText(placeAsLongString);
-                    } else {
-                        searchPlaceTextField.setText("");
-                    }
                     placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
                     gedcomLatitudeTextField.setText("");
                     gedcomLongitudeTextField.setText("");
