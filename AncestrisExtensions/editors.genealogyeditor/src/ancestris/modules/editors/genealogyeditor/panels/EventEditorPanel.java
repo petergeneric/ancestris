@@ -142,7 +142,7 @@ public class EventEditorPanel extends javax.swing.JPanel {
             add("RESI");
             add("SSN");
             add("TITL");
-            add("FACT");
+//            add("FACT"); not defined in gedcom xml definition files
         }
     };
     private int mEventType = INDIVIDUAL_EVENT_TYPE;

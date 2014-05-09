@@ -97,7 +97,7 @@ public class EventsTablePanel extends javax.swing.JPanel {
             add("RESI");
             add("SSN");
             add("TITL");
-            add("FACT");
+//            add("FACT"); not defined in gedcom xml definition files
         }
     };
     final private ArrayList<String> mFamilyEventsTags = new ArrayList<String>() {

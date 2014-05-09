@@ -56,7 +56,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         PropertyTag2Name.getTagName("RESI"),
         PropertyTag2Name.getTagName("SSN"),
         PropertyTag2Name.getTagName("TITL"),
-        PropertyTag2Name.getTagName("FACT"),
+//        PropertyTag2Name.getTagName("FACT"), not defined in gedcom xml definition file
         /*
          * FAMILY_EVENT
          */

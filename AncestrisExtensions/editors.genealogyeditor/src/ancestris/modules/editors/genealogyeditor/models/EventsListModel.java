@@ -31,7 +31,7 @@ public class EventsListModel extends AbstractListModel<String> {
             add("RESI");
             add("SSN");
             add("TITL");
-            add("FACT");
+//            add("FACT"); not defined in gedcom xml definition files
         }
     };
     List<Property> eventsList = new ArrayList<Property>();

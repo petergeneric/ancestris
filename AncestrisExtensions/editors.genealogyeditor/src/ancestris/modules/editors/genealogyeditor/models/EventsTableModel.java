@@ -33,7 +33,7 @@ public class EventsTableModel extends AbstractTableModel {
             add("RESI");
             add("SSN");
             add("TITL");
-            add("FACT");
+//            add("FACT"); not defined in gedcom xml definition file
         }
     };
     List<Property> eventsList = new ArrayList<Property>();
