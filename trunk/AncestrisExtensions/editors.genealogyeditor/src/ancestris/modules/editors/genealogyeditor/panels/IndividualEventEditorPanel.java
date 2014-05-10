@@ -170,6 +170,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         placeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         placeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.placeLabel.text")); // NOI18N
 
+        placeTextField.setEditable(false);
         placeTextField.setText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.placeTextField.text")); // NOI18N
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
@@ -450,7 +451,9 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                             }
                         }
                     }); // end of doUnitOfWork
-                    placeTextField.setText(mPlace.getValueStartingWithCity());
+                    
+                    placeTextField.setText(mPlace.format("all"));
+                    
                     addPlaceButton.setVisible(false);
                     editPlaceButton.setVisible(true);
                 } catch (GedcomException ex) {
@@ -474,7 +477,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             placeEditorPanel.commit();
-            placeTextField.setText(mPlace.getValueStartingWithCity());
+            placeTextField.setText(mPlace.format("all"));
             addPlaceButton.setVisible(false);
             editPlaceButton.setVisible(true);
         } else {
@@ -510,7 +513,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             placeEditorPanel.commit();
-            placeTextField.setText(mPlace.getValueStartingWithCity());
+            placeTextField.setText(mPlace.format("all"));
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -775,7 +778,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
          */
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         if (mPlace != null) {
-            placeTextField.setText(mPlace.getValueStartingWithCity());
+            placeTextField.setText(mPlace.format("all"));
             addPlaceButton.setVisible(false);
             editPlaceButton.setVisible(true);
         } else {
