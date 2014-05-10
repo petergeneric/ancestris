@@ -412,6 +412,9 @@
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.searchPlaceTextField.text_1" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchPlaceButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="searchPlaceButton">
               <Properties>
