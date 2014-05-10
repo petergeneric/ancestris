@@ -59,8 +59,8 @@ public class GeonamesPlace implements Place {
         try {
             int index = 0;
 
-            jurisdictions[index++] = postalCode.getPlaceName(); // City
-            jurisdictions[index++] = postalCode.getPostalCode(); // Postal code    
+            jurisdictions[index++] = toponym.getName(); // City
+            jurisdictions[index++] = postalCode != null ? postalCode.getPostalCode() : ""; // Postal code    
             jurisdictions[index++] = toponym.getAdminCode4();  // GeoID
             jurisdictions[index++] = toponym.getAdminName2(); // County
             jurisdictions[index++] = toponym.getAdminName1(); // State
@@ -84,18 +84,24 @@ public class GeonamesPlace implements Place {
 
     @Override
     public Double getLongitude() {
-        return postalCode.getLongitude();
+        return toponym.getLongitude();
     }
 
     @Override
     public Double getLatitude() {
-        return postalCode.getLatitude();
+        return toponym.getLatitude();
     }
 
     @Override
     public String toString() {
-        return postalCode.getPlaceName() + "," + postalCode.getAdminName1() + ","
-                + postalCode.getAdminName2() + "," + postalCode.getAdminName3() + ","
-                + postalCode.getPostalCode() + "," + postalCode.getCountryCode();
+        try {
+            return toponym.getName()
+                    + postalCode != null ? postalCode.getPostalCode() : ""
+                    + toponym.getAdminCode4() + toponym.getAdminName2()
+                    + toponym.getAdminName1()
+                    + toponym.getCountryName();// Country 
+        } catch (InsufficientStyleException ex) {
+            return "";
+        }
     }
 }

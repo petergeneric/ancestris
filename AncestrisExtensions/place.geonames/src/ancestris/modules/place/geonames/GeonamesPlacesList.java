@@ -5,6 +5,7 @@ import ancestris.api.place.Place;
 import ancestris.api.place.SearchPlace;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.geonames.*;
@@ -37,12 +38,13 @@ public class GeonamesPlacesList implements SearchPlace {
                     ToponymSearchResult toponymSearchResult;
 
                     try {
-                        logger.log(Level.INFO, "Start searching ...");
+                        logger.log(Level.INFO, "Start searching {0} ...", searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
                         WebService.setUserName(GeonamesOptions.getInstance().getUserName());
 
                         ToponymSearchCriteria toponymSearchCriteria = new ToponymSearchCriteria();
                         toponymSearchCriteria.setStyle(Style.FULL);
-                        toponymSearchCriteria.setQ(searchedPlace);
+                        toponymSearchCriteria.setLanguage(Locale.getDefault().toString());
+                        toponymSearchCriteria.setQ(searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
                         toponymSearchResult = WebService.search(toponymSearchCriteria);
 
                         for (Toponym toponym : toponymSearchResult.getToponyms()) {
@@ -58,11 +60,15 @@ public class GeonamesPlacesList implements SearchPlace {
                             List<PostalCode> postalCodeSearchResult;
                             postalCodeSearchResult = WebService.postalCodeSearch(postalCodeSearchCriteria);
 
-                            for (PostalCode postalCode : postalCodeSearchResult) {
-                                logger.log(Level.INFO, "postalCode AdminName1 {0} AdminName2 {1} AdminName3 {2}", new Object[]{postalCode.getAdminName1(), postalCode.getAdminName2(), postalCode.getAdminName3()});
-                                logger.log(Level.INFO, "postalCode AdminCode1 {0} AdminCode2 {1} AdminCode3 {2}", new Object[]{postalCode.getAdminCode1(), postalCode.getAdminCode2(), postalCode.getAdminCode3()});
+                            if (!postalCodeSearchResult.isEmpty()) {
+                                for (PostalCode postalCode : postalCodeSearchResult) {
+                                    logger.log(Level.INFO, "postalCode AdminName1 {0} AdminName2 {1} AdminName3 {2}", new Object[]{postalCode.getAdminName1(), postalCode.getAdminName2(), postalCode.getAdminName3()});
+                                    logger.log(Level.INFO, "postalCode AdminCode1 {0} AdminCode2 {1} AdminCode3 {2}", new Object[]{postalCode.getAdminCode1(), postalCode.getAdminCode2(), postalCode.getAdminCode3()});
 
-                                mPlacesList.add(new GeonamesPlace(toponym, postalCode));
+                                    mPlacesList.add(new GeonamesPlace(toponym, postalCode));
+                                }
+                            } else {
+                                mPlacesList.add(new GeonamesPlace(toponym, null));
                             }
                             logger.log(Level.INFO, "... search finished");
                         }
