@@ -842,7 +842,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 }
             }
 
-            String placeAsLongString = getPlaceAsLongString(place, true, true);
+            String placeAsLongString = getPlaceAsLongString(place, false, false);
             if (placeAsLongString.length() > 6) {
                 searchPlaceTextField.setText(placeAsLongString);
             } else {
@@ -977,7 +977,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
 
         String format = "";
-        // parish 1
 
         if (complete) {
             if (compress) {
