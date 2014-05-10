@@ -282,6 +282,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         searchPlacePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         searchPlaceTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.searchPlaceTextField.text_1"), new Object[] {})); // NOI18N
+        searchPlaceTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchPlaceButtonActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(searchPlaceButton, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.searchPlaceButton.text_1"), new Object[] {})); // NOI18N
         searchPlaceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -432,6 +437,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         }
     }//GEN-LAST:event_geonamesPlacesListValueChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane MapScrollPane;
     private javax.swing.Box.Filler filler1;
