@@ -121,6 +121,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
      */
     public IndividualEditorPanel() {
         initComponents();
+        eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
     }
 
     /**
@@ -169,8 +170,11 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         changeDateLabel = new javax.swing.JLabel();
         changeDateTextField = new javax.swing.JTextField();
 
-        setMinimumSize(new java.awt.Dimension(758, 380));
+        setMinimumSize(new java.awt.Dimension(1042, 462));
         setName(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.name"), new Object[] {})); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1042, 462));
+
+        generalPanel.setMinimumSize(new java.awt.Dimension(1018, 200));
 
         individualIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -197,6 +201,9 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         );
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
+        privateRecordToggleButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        privateRecordToggleButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        privateRecordToggleButton.setPreferredSize(new java.awt.Dimension(26, 26));
         privateRecordToggleButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
         privateRecordToggleButton.setRolloverSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
         privateRecordToggleButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
@@ -216,9 +223,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(privateRecordToggleButton))
-                    .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -227,16 +233,20 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(sexBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(privateRecordToggleButton)
+                        .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(individualIDLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(nameEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(imageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         individualInformationTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        individualInformationTabbedPane.setMinimumSize(new java.awt.Dimension(1018, 219));
+        individualInformationTabbedPane.setPreferredSize(new java.awt.Dimension(1018, 219));
+
+        jSplitPane1.setDividerSize(1);
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -407,6 +417,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         individualInformationTabbedPane.addTab("Gallery", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
 
+        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         changeDateLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.changeDateLabel.text")); // NOI18N
 
         changeDateTextField.setEditable(false);
@@ -420,16 +431,15 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(individualInformationTabbedPane)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(858, 858, 858))))
+                        .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(594, 594, 594))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(12, 12, 12))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -564,13 +574,13 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             Property event = mEventsListModel.getValueAt(index);
 
             DialogManager createYesNo = DialogManager.createYesNo(
-                NbBundle.getMessage(
-                    EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
-                    PropertyTag2Name.getTagName(event.getTag())),
-                NbBundle.getMessage(
-                    EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
-                    PropertyTag2Name.getTagName(event.getTag()),
-                    mIndividual));
+                    NbBundle.getMessage(
+                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
+                            PropertyTag2Name.getTagName(event.getTag())),
+                    NbBundle.getMessage(
+                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
+                            PropertyTag2Name.getTagName(event.getTag()),
+                            mIndividual));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -733,10 +743,27 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 individualEvents.add(property);
             }
         }
+
+        // Set default Events
+        if (individualEvents.isEmpty() == true) {
+            try {
+                mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mEvent = mIndividual.addProperty("BIRT", "");
+                    }
+                }); // end of doUnitOfWork
+                individualEvents.add(mEvent);
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
         mEventsListModel.addAll(individualEvents);
-        eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
-        eventsList.setSelectedIndex(0);
         seteventTypeComboBox(individualEvents);
+
+        eventsList.setSelectedIndex(0);
 
         /*
          * +1 <<LDS_INDIVIDUAL_ORDINANCE>>
