@@ -71,6 +71,11 @@ public class PlacesListPanel extends javax.swing.JPanel {
         searchPlaceLabel.setText(org.openide.util.NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.searchPlaceLabel.text")); // NOI18N
 
         filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.filterGedcomPlaceTextField.text")); // NOI18N
+        filterGedcomPlaceTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterGedcomPlaceButtonActionPerformed(evt);
+            }
+        });
         filterGedcomPlaceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 filterGedcomPlaceTextFieldKeyTyped(evt);
