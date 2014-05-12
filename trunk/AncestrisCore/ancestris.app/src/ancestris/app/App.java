@@ -1,41 +1,27 @@
-/**
- * GenJ - GenealogyJ
- *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
- *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+/*
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2014 Ancestris
+ * 
+ * Author: Daniel Andre (daniel@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 package ancestris.app;
 
 import ancestris.api.core.Version;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.util.swing.DialogManager;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.logging.FileHandler;
@@ -45,7 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -62,8 +47,6 @@ public class App {
     /*package*/ static File LOGFILE;
     private static Startup startup;
     public static ControlCenter center;
-
-    private static boolean x11ErrorHandlerFixInstalled = false;
 
     /**
      * GenJ Main Method
@@ -88,17 +71,6 @@ public class App {
                 }
             }
         }
-
-        // FIXME: this is not necessary anymore for jdk > 1.6.23. We will remove this code after testing 
-        if (false && !x11ErrorHandlerFixInstalled && !EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
-            x11ErrorHandlerFixInstalled = true;
-            EventQueue.invokeLater(new Runnable() {
-
-                public void run() {
-                    initX11ErrorHandlerFix();
-                }
-            });
-        }
     }
     /* TODO: sauvegarde des fichiers ouverts fait dans le hook du code exit
      * car dans le cas de la fermeture de l'application par le bouton fermer de la fenetre
@@ -109,11 +81,12 @@ public class App {
      * en fait oui mais en utilisant l'api dataobject de NB et la possibilite de sauvegarder
      * tous les dataobject ouvert en quittant l'applicatuin
      */
+
     public static boolean closing() {
         LOG.info("Shutdown");
         saveModesIfRestartRequired();
         return true;
-        }
+    }
 
     public static void close() {
         // persist options
@@ -126,64 +99,6 @@ public class App {
 
         LOG.info("/Shutdown");
 
-    }
-
-    /**
-     * Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=171432
-     * http://bugs.sun.com/view_bug.do?bug_id=6678385
-     * TODO: voir http://www.netbeans.org/issues/show_bug.cgi?id=115606
-     */
-    @SuppressWarnings("unchecked")
-    private static void initX11ErrorHandlerFix() {
-        assert EventQueue.isDispatchThread();
-
-        try {
-            // get XlibWrapper.SetToolkitErrorHandler() and XSetErrorHandler() methods
-            Class<?> xlibwrapperClass = Class.forName("sun.awt.X11.XlibWrapper");
-            final Method setToolkitErrorHandlerMethod = xlibwrapperClass.getDeclaredMethod("SetToolkitErrorHandler", (Class[])null);
-            final Method setErrorHandlerMethod = xlibwrapperClass.getDeclaredMethod("XSetErrorHandler", new Class<?>[]{Long.TYPE});
-            setToolkitErrorHandlerMethod.setAccessible(true);
-            setErrorHandlerMethod.setAccessible(true);
-
-            // get XToolkit.saved_error_handler field
-            Class<?> xtoolkitClass = Class.forName("sun.awt.X11.XToolkit");
-            final Field savedErrorHandlerField = xtoolkitClass.getDeclaredField("saved_error_handler");
-            savedErrorHandlerField.setAccessible(true);
-
-            // determine the current error handler and the value of XLibWrapper.ToolkitErrorHandler
-            // (XlibWrapper.SetToolkitErrorHandler() sets the X11 error handler to
-            // XLibWrapper.ToolkitErrorHandler and returns the old error handler)
-            final Object defaultErrorHandler = setToolkitErrorHandlerMethod.invoke(null, (Object[])null);
-            final Object toolkitErrorHandler = setToolkitErrorHandlerMethod.invoke(null, (Object[])null);
-            setErrorHandlerMethod.invoke(null, new Object[]{defaultErrorHandler});
-
-            // create timer that watches XToolkit.saved_error_handler whether its value is equal
-            // to XLibWrapper.ToolkitErrorHandler, which indicates the start of the trouble
-            Timer timer = new Timer(200, new ActionListener() {
-
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        Object savedErrorHandler = savedErrorHandlerField.get(null);
-                        if (toolkitErrorHandler.equals(savedErrorHandler)) {
-                            // Last saved error handler in XToolkit.WITH_XERROR_HANDLER
-                            // is XLibWrapper.ToolkitErrorHandler, which will cause
-                            // the StackOverflowError when the next X11 error occurs.
-                            // Workaround: restore the default error handler.
-                            // Also update XToolkit.saved_error_handler so that
-                            // this is done only once.
-                            setErrorHandlerMethod.invoke(null, new Object[]{defaultErrorHandler});
-                            savedErrorHandlerField.setLong(null, ((Long) defaultErrorHandler).longValue());
-                        }
-                    } catch (Exception ex) {
-                        // ignore
-                    }
-
-                }
-            });
-            timer.start();
-        } catch (Exception ex) {
-            // ignore
-        }
     }
 
     /**
@@ -209,7 +124,6 @@ public class App {
                     throw new IOException("Can't initialize home directoy " + home);
                 }
 
-
                 // prepare some basic logging for now
                 Formatter formatter = new LogFormatter();
                 setLogLevel("INFO");
@@ -226,7 +140,7 @@ public class App {
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
-                
+
                 // Log is up
                 LOG.info("\n\n==================8<================================================================");
                 LOG.info("Startup");
@@ -235,7 +149,7 @@ public class App {
                 if (System.getProperty("ancestris.debug.level") != null) {
                     setLogLevel(System.getProperty("ancestris.debug.level"));
                 } else {
-                    setLogLevel((Registry.get(App.class).get("logLevel","")));
+                    setLogLevel((Registry.get(App.class).get("logLevel", "")));
                 }
 
                 // Startup Information
@@ -252,11 +166,8 @@ public class App {
 
                 // check VM version
 //TODO: demander une version >1.6 dans NB
-
-
                 // setup control center
                 center = new ControlCenter();
-
 
                 // done
                 LOG.info("/Startup");
@@ -283,7 +194,7 @@ public class App {
         try {
             // allow command line override of debug level - set non-genj level a tad higher
             level = Level.parse(logLevel);
-        } catch (Throwable t) {
+        } catch (IllegalArgumentException t) {
         }
         LOG.setLevel(level);
         Logger.getLogger("ancestris").setLevel(level);
@@ -293,6 +204,7 @@ public class App {
             root.setLevel(level);
         }
     }
+
     /**
      * Our own log format
      */
@@ -373,6 +285,7 @@ public class App {
             }
         }
     }
+
     /**
      * Exiting the application automatically saves modes stored in memory
      * In case of restart after Wizard/Input or Options/Input, modes that were imported by the user are unfortunatelly overwritten
@@ -439,21 +352,24 @@ public class App {
         }
     }
 
-  @ServiceProvider(service=Version.class)
-  public static class AppPlugin extends AncestrisPlugin implements Version{
+    @ServiceProvider(service = Version.class)
+    public static class AppPlugin extends AncestrisPlugin implements Version {
 
+        @Override
         public String getBuildString() {
             return getPluginVersion();
         }
 
+        @Override
         public String getVersionString() {
             return getPluginVersion();
         }
 
+        @Override
         public String getDescription() {
             return getPluginShortDescription();
         }
-  }
+    }
 
 } //App
 
