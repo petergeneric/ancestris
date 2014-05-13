@@ -226,6 +226,7 @@ public class TestUtility extends TestCase {
 
     public void testDefaultDirectory() {
 
+        // default home
         FileSystemView fsv = FileSystemView.getFileSystemView();
         File f = fsv.getDefaultDirectory();
         System.out.println("testDefaultDirectory="+f);
