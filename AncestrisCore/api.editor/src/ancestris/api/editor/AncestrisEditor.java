@@ -11,12 +11,23 @@
  */
 package ancestris.api.editor;
 
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Entity;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
+import static ancestris.api.editor.Bundle.*;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -109,4 +120,48 @@ public abstract class AncestrisEditor {
             return false;
         }
     }
+@ActionID(category = "Edit",
+        id = "ancestris.api.editor.OpenEditorAction")
+@ActionRegistration(displayName = "#OpenInEditor.title"
+)
+@ActionReferences({
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+@Messages("OpenInEditor.title=Edit/Modify")
+public final static class OpenEditorAction
+        extends AbstractAction
+        implements ContextAwareAction {
+    
+    static ImageIcon editorIcon = new ImageIcon(AncestrisEditor.class.getResource("editor.png")); // NOI18N
+
+    public @Override
+    void actionPerformed(ActionEvent e) {
+        assert false;
+    }
+
+    public @Override
+    Action createContextAwareInstance(Lookup context) {
+        return new OpenEditor(context.lookup(Entity.class));
+    }
+
+    private static final class OpenEditor extends AbstractAncestrisAction {
+
+        Entity entity;
+
+        public OpenEditor(Entity context) {
+            this.entity = context;
+            setText(OpenInEditor_title());  // NOI18N
+            setImage(editorIcon);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            SelectionDispatcher.muteSelection(true);
+            AncestrisEditor editor = AncestrisEditor.findEditor(entity);
+            if (editor != null) {
+                editor.edit(entity);
+            }
+            SelectionDispatcher.muteSelection(false);
+        }
+    }
+}
 }
