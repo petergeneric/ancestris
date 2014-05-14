@@ -383,6 +383,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 if (mPlaceOrder[index] != -1) {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
                     ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
+                    mGedcomFields[index][1].setVisible(true);
                     List<String> jurisdictions = Arrays.asList(mPlace.getAllJurisdictions(mPlaceOrder[index], true));
                     if (jurisdictions != null) {
                         AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
