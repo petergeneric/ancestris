@@ -99,13 +99,12 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         wifeBirthDateLabel = new javax.swing.JLabel();
         wifeBirthDateTextField = new javax.swing.JTextField();
         wifeDeathDateLabel = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
         wifeDeathDateTextField = new javax.swing.JTextField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         childrensPanel = new javax.swing.JPanel();
         childrensListPanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel();
         eventsPanel = new javax.swing.JPanel();
-        eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsTablePanel(EventsTablePanel.FAMILY_EVENT_TYPE_LIST);
+        eventsListPanel = new ancestris.modules.editors.genealogyeditor.panels.EventsTablePanel(ancestris.modules.editors.genealogyeditor.panels.EventsTablePanel.FAMILY_EVENT_TYPE_LIST);
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
         notesPanel = new javax.swing.JPanel();
@@ -308,8 +307,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         wifeBirthDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeBirthDateTextField.text"), new Object[] {})); // NOI18N
 
         wifeDeathDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeDeathDateLabel.text"), new Object[] {})); // NOI18N
-
-        jTextField6.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.jTextField6.text"), new Object[] {})); // NOI18N
 
         wifeDeathDateTextField.setEditable(false);
         wifeDeathDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeDeathDateTextField.text"), new Object[] {})); // NOI18N
@@ -733,7 +730,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField husbandNameTextField;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JButton linkToHusbandButton;
     private javax.swing.JButton linkToWifeButton;
     private javax.swing.JPanel motherPanel;
