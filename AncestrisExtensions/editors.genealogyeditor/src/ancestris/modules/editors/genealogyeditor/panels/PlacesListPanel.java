@@ -165,7 +165,7 @@ public class PlacesListPanel extends javax.swing.JPanel {
         RowFilter<TableModel, Integer> rf;
         //If current expression doesn't parse, don't update.
         try {
-            rf = RowFilter.regexFilter(filter, searchPlaceComboBox.getSelectedIndex());
+            rf = RowFilter.regexFilter("(?i)" + filter, searchPlaceComboBox.getSelectedIndex());
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
