@@ -148,10 +148,7 @@ class MergeModelBirth extends MergeModel {
      * @param record
      */
     protected MergeModelBirth(MergeRecord record, Gedcom gedcom) throws Exception {
-        super(record, gedcom);
-        this.currentIndi = null;
-        addRowIndi();
-        addRowParents(null);
+        this(record, gedcom, null, (Fam) null);        
     }
 
     /**
@@ -164,6 +161,7 @@ class MergeModelBirth extends MergeModel {
     protected MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi indi, Fam fam) throws Exception {
         super(record, gedcom);
         this.currentIndi = indi;
+        addRowSource();        
         addRowIndi();
         addRowParents(fam);
     }
@@ -178,8 +176,8 @@ class MergeModelBirth extends MergeModel {
     protected MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
         super(record, gedcom);
         this.currentIndi = null;
-        
-        // j'affiche l'individu 
+
+        addRowSource();        
         addRowIndi();
 
         // j'affiche la famille de l'enfant
@@ -189,26 +187,10 @@ class MergeModelBirth extends MergeModel {
         // j'affiche les parents
         addRowFather(father);
         addRowMother(mother);
-
-//        // je coche IndiFamille si au moins un attribut des parents est coché
-//        if (isChecked(RowType.IndiFatherLastName) || isChecked(RowType.IndiFatherFirstName)
-//                || isChecked(RowType.IndiFatherBirthDate) || isChecked(RowType.IndiFatherDeathDate)
-//                || isChecked(RowType.IndiFatherOccupation)
-//                || isChecked(RowType.IndiMotherLastName) || isChecked(RowType.IndiMotherFirstName)
-//                || isChecked(RowType.IndiMotherBirthDate) || isChecked(RowType.IndiMotherDeathDate)
-//                || isChecked(RowType.IndiMotherOccupation) ) {
-//            check(RowType.IndiParentFamily, true);
-//        }
     }
 
     private void addRowIndi() throws Exception {
-       if (currentIndi != null) {
-            // j'affiche la source de la naissance
-            addRowSource(RowType.EventSource, record.getEventSource(), currentIndi.getProperty("BIRT") );
-
-            // j'affiche un separateur
-            addRowSeparator();
-
+       if (currentIndi != null) {            
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), currentIndi.getLastName(), currentIndi);
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), currentIndi.getFirstName());
@@ -221,13 +203,6 @@ class MergeModelBirth extends MergeModel {
 
         } else {
             // selectedIndi est nul
-
-            // j'affiche la source de la naissance
-            addRowSource(RowType.EventSource, record.getEventSource(), null);
-
-            // j'affiche un separateur
-            addRowSeparator();
-
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), "");
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), "");
@@ -252,15 +227,6 @@ class MergeModelBirth extends MergeModel {
             addRowFather(null);
             addRowMother(null);
         }
-//        // je coche IndiFamille si au moins un attribut des parents est coché
-//        if (isChecked(RowType.IndiFatherLastName) || isChecked(RowType.IndiFatherFirstName)
-//                || isChecked(RowType.IndiFatherBirthDate) || isChecked(RowType.IndiFatherDeathDate)
-//                || isChecked(RowType.IndiFatherOccupation)
-//                || isChecked(RowType.IndiMotherLastName) || isChecked(RowType.IndiMotherFirstName)
-//                || isChecked(RowType.IndiMotherBirthDate) || isChecked(RowType.IndiMotherDeathDate)
-//                || isChecked(RowType.IndiMotherOccupation)) {
-//            check(RowType.IndiParentFamily, true);
-//        }
     }
 
     private void addRowFather( Indi father ) throws Exception {
@@ -304,6 +270,19 @@ class MergeModelBirth extends MergeModel {
     protected Entity getSelectedEntity() {
         return currentIndi;
     }
+    
+    /**
+     * retourne la propriété concernée par l'acte
+     * @return propriété concernée par l'acte
+     */
+    @Override
+    protected Property getSelectedProperty() {
+        if (currentIndi != null) {
+            return currentIndi.getProperty("BIRT");
+        } else {
+            return null;
+        }
+    }        
 
     /**
      * copie les données du relevé dans l'entité

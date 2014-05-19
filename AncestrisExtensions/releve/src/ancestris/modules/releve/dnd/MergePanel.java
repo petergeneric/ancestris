@@ -78,7 +78,8 @@ public class MergePanel extends javax.swing.JPanel  {
             }
         };
         mergeTable1.addMouseListener(mouseAdapter);
-
+        
+        
 
 
     }

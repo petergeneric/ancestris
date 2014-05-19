@@ -55,10 +55,6 @@ public class MergeModelMarriageTest extends TestCase {
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         }
         
-       
-
-
-
         return record;        
     }
 
@@ -68,9 +64,12 @@ public class MergeModelMarriageTest extends TestCase {
     public void testAddMarriage() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
-            String sourceTitle = "";
-            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), sourceTitle, createMarriageRecord("M1"));
-
+            String fileName = "releve paris.txt";
+            String sourceTitle = "BMS Paris";
+            MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
+            
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), fileName, createMarriageRecord("M1"));
+            
             List<MergeModel> models;
             Fam indiParentFamily;
             Indi indiFather;
@@ -84,8 +83,8 @@ public class MergeModelMarriageTest extends TestCase {
             models.get(0).copyRecordToEntity();
 
             Fam fam = (Fam) gedcom.getEntity("F00004");
-            assertEquals("Lien mariage vers source","@S00004@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
-            assertEquals("Source mariage","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
+            assertEquals("Lien mariage vers source","@S1@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
+            assertEquals("Source mariage","S1", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
             assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
             assertEquals("Note mariage",1302, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
@@ -156,8 +155,8 @@ public class MergeModelMarriageTest extends TestCase {
     public void testUpdateMariageAndFatherBirthDate() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
-            String sourceTitle = "";
-            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), sourceTitle, createMarriageRecord("M1"));
+            String fileName = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), fileName, createMarriageRecord("M1"));
             List<MergeModel> models;
             // je change la date de naissance du pere pour permettre la modification
             ((Indi)gedcom.getEntity("I1")).getBirthDate().setValue("BEF 1971");
@@ -167,8 +166,8 @@ public class MergeModelMarriageTest extends TestCase {
             models.get(0).copyRecordToEntity();
 
             Fam fam = (Fam) gedcom.getEntity("F00004");
-            assertEquals("Lien mariage vers source","@S00004@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
-            assertEquals("Source mariage","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
+            assertEquals("Lien mariage vers source","", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
+            //assertEquals("Source mariage","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
             assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
             assertEquals("Note mariage",
@@ -261,8 +260,8 @@ public class MergeModelMarriageTest extends TestCase {
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-            String sourceTitle = "";
-            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(),sourceTitle, record);
+            String fileName = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(),fileName, record);
             List<MergeModel> models;
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
 
@@ -321,8 +320,10 @@ public class MergeModelMarriageTest extends TestCase {
             // je change la date de deces du pere et de la mere
             mariageRecord.setIndiFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "true", "");
             mariageRecord.setIndiMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "true", "");
-            String sourceTitle = "";
-            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), sourceTitle, mariageRecord);
+            String fileName = "Etat civil Paris.txt";
+            String sourceTitle = "Etat civil Paris";
+            MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlaceVilleMariage(), fileName, mariageRecord);
             List<MergeModel> models;
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
@@ -330,8 +331,8 @@ public class MergeModelMarriageTest extends TestCase {
             models.get(0).copyRecordToEntity();
 
             Fam fam = (Fam) gedcom.getEntity("F00004");
-            assertEquals("Lien mariage vers source","@S00004@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
-            assertEquals("Source mariage","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
+            assertEquals("Lien mariage vers source","@S2@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
+            assertEquals("Source mariage","S2", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
 
             assertEquals("Mari mere date deces","BET 1970 AND 1999", mergeRecord.getIndi().getMotherDeathDate().getValue());
 

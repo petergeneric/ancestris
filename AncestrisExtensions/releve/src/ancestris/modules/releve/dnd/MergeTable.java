@@ -21,6 +21,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /**
@@ -32,10 +33,13 @@ import org.openide.util.NbPreferences;
  */
 public class MergeTable extends JTable {
     private EntityActionManager entityActionManager = null;
-    static private Color yellowColor = new Color(240, 240, 10);
-    static private Color blueColor = new Color(200, 255, 255);
-    static private Color greyColor = new Color(240, 240, 240);
-    static private String entityCursorToolTip = "<html>Simple clic: centrer dans l'arbre.<br>Double clic: racine de l'arbre</html>";
+    private static final Color yellowColor = new Color(240, 240, 10);
+    private static final Color blueColor = new Color(200, 255, 255);
+    private static final Color greyColor = new Color(240, 240, 240);
+    private static final String entityCursorToolTip = "<html>Simple clic: centrer dans l'arbre.<br>Double clic: racine de l'arbre</html>";
+    private static final String NEW_FAMILY = NbBundle.getMessage(MergeModel.class, "MergeTable.label.newFamily");
+    private static final String NEW_INDI = NbBundle.getMessage(MergeModel.class, "MergeTable.label.newIndi");
+    private static final String NEW_SOURCE = NbBundle.getMessage(MergeModel.class, "MergeTable.label.selectSource");
 
     public  MergeTable() {
         setPreferredSize(null);
@@ -60,18 +64,28 @@ public class MergeTable extends JTable {
                 int column = target.columnAtPoint(e.getPoint());
 
                 if (column == 4) {
-                    Entity entity = (Entity) ((MergeModel) getModel()).getValueAt(row, column);
-                    if (entityActionManager != null && entity != null) {
-                        if (e.getClickCount() == 2) {
-                            entityActionManager.setRoot(entity);
-                        } else {
-                            entityActionManager.show(entity);
+                    Object objectValue =  ((MergeModel) getModel()).getValueAt(row, column);
+                    if( objectValue instanceof Indi || objectValue instanceof Fam )  {
+                     
+                        Entity entity = (Entity) objectValue;
+                        if (entityActionManager != null) {
+                            if (e.getClickCount() == 2) {
+                                entityActionManager.setRoot(entity);
+                            } else {
+                                entityActionManager.show(entity);
+                            }
                         }
+                    } else if( ((MergeModel) getModel()).getRow(row).rowType == MergeModel.RowType.EventSource) {
+                        entityActionManager.selectSource();                        
                     }
                 }
             }        
         });
 
+        /**
+         * change le curseur si la souris passe au dessus d'une cellule 
+         * contenant une entité cliquable
+         */
         addMouseMotionListener(new MouseAdapter() {
 
             @Override
@@ -82,12 +96,10 @@ public class MergeTable extends JTable {
                 int row = target.rowAtPoint(e.getPoint());
                 int column = target.columnAtPoint(e.getPoint());
                 Object value = ((MergeModel) getModel()).getValueAt(row, column);
-                if (entityActionManager != null && value != null) {
-                    if (value instanceof Indi || value instanceof Fam) {
-                        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                    } else {
-                        setCursor(Cursor.getDefaultCursor());
-                    }
+                if (entityActionManager != null && column == 4  &&
+                   ( value != null  || ((MergeModel) getModel()).getRow(row).rowType == MergeModel.RowType.EventSource)  ) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    
                 } else {
                     setCursor(Cursor.getDefaultCursor());
                 }
@@ -275,14 +287,14 @@ public class MergeTable extends JTable {
                     if (mergeRow.compareResult != CompareResult.NOT_APPLICABLE) {
                         switch ( mergeRow.rowType) {
                             case EventSource :
-                                setText("Nouvelle source");
+                                setText(NEW_SOURCE);
                                 break;
                             case MarriageFamily :
                             case IndiParentFamily:
                             case IndiMarriedFamily :
                             case WifeParentFamily:
                             case WifeMarriedFamily:
-                                setText("Nouvelle famille");
+                                setText(NEW_FAMILY);
                                 break;
                             case IndiLastName :
                             case IndiFatherLastName :
@@ -290,14 +302,20 @@ public class MergeTable extends JTable {
                             case WifeLastName :
                             case WifeFatherLastName :
                             case WifeMotherLastName :
-                                setText("Nouvel individu");
+                                setText(NEW_INDI);
                                 break;
                             default:
                                 setText("");
                         }
                     } else {
-                        // la comparaison est applicable , je n'affiche rien dans la colonne 4
-                        setText("");
+                        switch ( mergeRow.rowType) {
+                            case EventSource :
+                                setText(NEW_SOURCE);
+                                break;                           
+                            default:
+                                // la comparaison n' est pas applicable , je n'affiche rien dans la colonne 4
+                                setText("");
+                        }
                     }
                 } else {
                     setText("");
@@ -339,7 +357,9 @@ public class MergeTable extends JTable {
                         }
                         break;
                     case 4:
-                        if (entityActionManager != null && value != null && (value instanceof Fam || value instanceof Indi)) {
+                        if (entityActionManager != null 
+                             && ( (value != null && (value instanceof Fam || value instanceof Indi))
+                                || mergeRow.rowType == MergeModel.RowType.EventSource )) {
                             // j'affiche en bleu pour signaler une action possible avec la souris
                             setForeground(Color.blue);
                         } else {

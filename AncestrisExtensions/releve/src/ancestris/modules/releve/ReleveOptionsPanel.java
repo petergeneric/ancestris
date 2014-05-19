@@ -40,6 +40,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         Collection< ? extends ReleveTopComponent> tcList = AncestrisPlugin.lookupAll(ReleveTopComponent.class);
 
         if ( tcList.size() > 0 ) {
+            // je recupere le premier  ReleveTopComponent           
             ReleveTopComponent currentTc = tcList.iterator().next();
             mergeOptionPanel.initData(null, currentTc.getCurrentFile());
         }

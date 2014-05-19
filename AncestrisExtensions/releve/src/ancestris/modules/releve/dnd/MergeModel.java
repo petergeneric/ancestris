@@ -17,7 +17,6 @@ import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -30,40 +29,17 @@ import org.openide.util.NbBundle;
  */
 public abstract class MergeModel extends AbstractTableModel implements java.lang.Comparable<MergeModel> {
 
-    protected class MergeRow {
-
-        RowType rowType;
-        String label;
-        Object recordValue;
-        Object entityValue;
-        boolean merge;
-        boolean merge_initial;
-        CompareResult compareResult;
-        Entity entityObject = null;
-
-        @Override
-        public String toString() {
-            return rowType.name() + " " + recordValue + " " + entityValue;
-        }
-    }
-
-    protected enum CompareResult {
-
-        EQUAL,
-        COMPATIBLE,
-        CONFLIT,
-        NOT_APPLICABLE
-    }
     protected MergeRecord record;
     protected Gedcom gedcom;
     // type de participant 
     protected MergeParticipantType participantType;
     protected MergeParticipant participant;
     protected boolean showFrenchCalendarDate = true;
-    private EnumMap<RowType, MergeRow> dataMap = new EnumMap<RowType, MergeRow>(RowType.class);
-    private List<MergeRow> dataList = new ArrayList<MergeRow>();
     private int nbMatch = 0;
     private int nbMatchMax = 0;
+    
+ 
+    MergeRowList mergeRowList = new MergeRowList();
 
     static protected List<MergeModel> createMergeModel(MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity) throws Exception {
         return createMergeModel(mergeRecord, gedcom, selectedEntity, false);
@@ -150,9 +126,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param entityValue
      */
     void addRow(RowType rowType, String recordValue, String entityValue, Entity entity) {
-        MergeRow mergeRow = new MergeRow();
-        dataMap.put(rowType, mergeRow);
-        dataList.add(mergeRow);
+        MergeRow mergeRow = new MergeRow(rowType);
+        mergeRowList.put(mergeRow);
         mergeRow.rowType = rowType;
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.recordValue = recordValue;
@@ -238,9 +213,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param entityValue
      */
     void addRow(RowType rowType, PropertyDate recordValue, PropertyDate entityValue) {
-        MergeRow mergeRow = new MergeRow();
-        dataMap.put(rowType, mergeRow);
-        dataList.add(mergeRow);
+        MergeRow mergeRow = new MergeRow(rowType);
+        mergeRowList.put(mergeRow);
         mergeRow.rowType = rowType;
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.entityValue = entityValue;
@@ -324,121 +298,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         nbMatchMax++;
         mergeRow.merge_initial = mergeRow.merge;
     }
-
-    /**
-     * ajoute une ligne dans le modele pour comparer la source du releve
-     * @param rowType
-     * @param label
-     * @param recordValues
-     * @param entityValues
-     */
-    void addRowSource(RowType rowType, String recordSourceTitle, Property entityEventProperty) {
-        MergeRow mergeRow = new MergeRow();
-        dataMap.put(rowType, mergeRow);
-        dataList.add(mergeRow);
-        mergeRow.rowType = rowType;
-        mergeRow.label = getRowTypeLabel(rowType);
-        mergeRow.recordValue = recordSourceTitle;
-
-        //MergeQuery.getSourceTitle(entitySourceProperty);
-        //Property entitySourceProperty = MergeQuery.getEntitySourceProperty(record, );
-
-//        if ( recordSourceTitle.isEmpty()) {
-//            if (record.getType() == RecordType.Misc) {
-//                if (!record.getNotary().isEmpty()) {
-//                    recordSourceTitle = String.format("Notaire %s", record.getNotary());
-//                } else {
-//                    recordSourceTitle = "";
-//                }
-//            } else {
-//                String cityName = record.getEventPlaceCityName();
-//
-//                if (record.getEventDate().getStart().getYear() <= 1792) {
-//                    recordSourceTitle = String.format("BMS %s", cityName);
-//                } else {
-//                    recordSourceTitle = String.format("Etat civil %s", cityName);
-//                }
-//            }
-//        }
-
-        Source entityEventSource = null;
-        String entityEventPage = null;
-
-        if (entityEventProperty != null) {
-            Property[] sourceProperties = entityEventProperty.getProperties("SOUR", false);
-            for (int i = 0; i < sourceProperties.length; i++) {
-                // remarque : verification de classe PropertySource avant de faire le cast en PropertySource pour eliminer
-                // les cas anormaux , par exemple une source "multiline"
-                if (sourceProperties[i] instanceof PropertySource) {
-                    Source source = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
-                    if (recordSourceTitle.compareTo(source.getTitle()) == 0) {
-                        entityEventSource = source;
-                        // je verifie si elle contient le meme numero de page ou la meme cote
-                        for (Property pageProperty : sourceProperties[i].getProperties("PAGE")) {
-                            if (( !record.getEventCote().isEmpty() && pageProperty.getValue().contains(record.getEventCote()) )
-                                || ( !record.getEventPage().isEmpty() && pageProperty.getValue().contains(record.getEventPage())) ) {
-                                entityEventPage = pageProperty.getValue();
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (entityEventSource != null && entityEventPage != null) {
-                    break;
-                }
-            }
-            
-        } 
-//
-//            // je verifie si la source existe deja dans le gedcom
-//            String cityName = record.getEventPlaceCityName();
-//            String cityCode = record.getEventPlaceCityCode();
-//            String countyName = record.getEventPlaceCountyName();
-//            //String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
-//            String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);
-//            Pattern pattern = Pattern.compile(stringPatter);
-//            Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
-//            for (Entity gedComSource : sources) {
-//                if (pattern.matcher(((Source) gedComSource).getTitle()).matches()) {
-//                    source = (Source) gedComSource;
-//                }
-//            }
-
-      
-        if (isRowParentApplicable(rowType)) {
-            if (entityEventSource != null) {
-                mergeRow.entityValue = entityEventSource;
-                mergeRow.entityObject = entityEventSource;
-                mergeRow.merge = false;
-                mergeRow.compareResult = CompareResult.EQUAL;
-            } else {
-                 // je cherche une source dans le gedcom
-                Source newSource = null;
-                if ( ! recordSourceTitle.isEmpty()) {
-                    Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
-                    for (Entity gedComSource : sources) {
-                        if (((Source) gedComSource).getTitle().contains(recordSourceTitle)) {
-                            newSource = (Source) gedComSource;
-                        }
-                    }
-                }
-
-                mergeRow.entityValue = entityEventSource;
-                mergeRow.entityObject = newSource;
-                mergeRow.merge = !recordSourceTitle.isEmpty();
-                mergeRow.compareResult = mergeRow.merge ? CompareResult.COMPATIBLE : CompareResult.EQUAL;
-            }
-        } else {
-            // ligne parent NOT_APPLICABLE
-            mergeRow.merge = false;
-            mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
-        }
-        mergeRow.merge_initial = mergeRow.merge;
-
-        addRow(RowType.EventPage, record.makeEventPage(), entityEventPage);
-    }
-
-    /**
+    
+     /**
      * ajoute une ligne dans le modele pour comparer le type d'evenement
      * @param rowType
      * @param label
@@ -446,9 +307,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param entityValues
      */
     void addRow(RowType rowType, String recordEventType, Property eventProperty) {
-        MergeRow mergeRow = new MergeRow();
-        dataMap.put(rowType, mergeRow);
-        dataList.add(mergeRow);
+        MergeRow mergeRow = new MergeRow(rowType);
+        mergeRowList.put(mergeRow);
         mergeRow.rowType = rowType;
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.recordValue = recordEventType;
@@ -485,9 +345,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param entityValues
      */
     void addRow(RowType rowType, MergeRecord record, Fam family) {
-        MergeRow mergeRow = new MergeRow();
-        dataMap.put(rowType, mergeRow);
-        dataList.add(mergeRow);
+        MergeRow mergeRow = new MergeRow(rowType);
+        mergeRowList.put(mergeRow);
         mergeRow.rowType = rowType;
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.recordValue = null;
@@ -533,9 +392,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param entityValues
      */
     void addRowSeparator() {
-        MergeRow mergeRow = new MergeRow();
-        dataMap.put(RowType.Separator, mergeRow);
-        dataList.add(mergeRow);
+        MergeRow mergeRow = new MergeRow(RowType.Separator);
+        mergeRowList.put(mergeRow);
         mergeRow.rowType = RowType.Separator;
         mergeRow.label = "";
         mergeRow.entityValue = null;
@@ -544,6 +402,132 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
         mergeRow.merge_initial = mergeRow.merge;
     }
+    
+    protected final void addRowSource() {
+        addRowSource(null) ;
+    }
+         
+    
+    protected final void addRowSource(Source requiredSource) {
+        Property entityEventProperty;
+        if (participantType == MergeParticipantType.participant1) {
+            entityEventProperty = getSelectedProperty();
+        } else {
+            return;
+        }
+        
+        // je cree la ligne
+        MergeRow mergeRow = new MergeRow(MergeModel.RowType.EventSource);
+        mergeRowList.put(mergeRow);
+        mergeRow.label = getRowTypeLabel(mergeRow.rowType);
+        mergeRow.recordValue = record.getEventSourceTitle();
+       
+        
+        String recordSourceTitle;
+        if( requiredSource != null) {
+            recordSourceTitle =requiredSource.getTitle();
+        } else {
+            recordSourceTitle =record.getEventSourceTitle();
+        }
+               
+        // je cherche la source et la page dans la propriété de l'entité
+        Source entityEventSource = null;
+        String entityEventPage = null;
+        if (entityEventProperty != null) {
+            Property[] sourceProperties = entityEventProperty.getProperties("SOUR", false);
+            for (Property sourcePropertie : sourceProperties) {
+                // remarque : verification de classe PropertySource avant de faire le cast en PropertySource pour eliminer
+                // les cas anormaux , par exemple une source "multiline"
+                if (sourcePropertie instanceof PropertySource) {
+                    Source source = (Source) ((PropertySource) sourcePropertie).getTargetEntity();
+                    if (recordSourceTitle.compareTo(source.getTitle()) == 0) {
+                        entityEventSource = source;
+                        // je verifie si elle contient le meme numero de page ou la meme cote
+                        for (Property pageProperty : sourcePropertie.getProperties("PAGE")) {
+                            if (( !record.getEventCote().isEmpty() && pageProperty.getValue().contains(record.getEventCote()) )
+                                    || ( !record.getEventPage().isEmpty() && pageProperty.getValue().contains(record.getEventPage())) ) {
+                                entityEventPage = pageProperty.getValue();
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (entityEventSource != null && entityEventPage != null) {
+                    break;
+                }
+            }
+            
+        } 
+        
+        if (isRowParentApplicable(mergeRow.rowType)) {
+            if (entityEventSource != null) {
+                // la source existe dans l'entité
+                mergeRow.entityValue = entityEventSource;
+                mergeRow.entityObject = entityEventSource;
+                mergeRow.merge = false;
+                mergeRow.compareResult = CompareResult.EQUAL;
+            } else {
+                // la source n'existe pas dans l'entité                                
+                
+                // je cherche la source dans le gedcom
+                Entity gedcomSource = null;
+                Entity[] sources = gedcom.getEntities("SOUR", "SOUR:TITL");
+                for (Entity source : sources) {
+                    if (((Source) source).getTitle().equals(recordSourceTitle)) {
+                        gedcomSource = source;
+                        break;
+                    }
+                }
+                
+                if ( gedcomSource!= null) {
+                    // la source indiquée dans le releve existe dans le gedcom
+                    // je propose de l'ajouter
+                    mergeRow.entityValue = gedcomSource;
+                    mergeRow.entityObject = gedcomSource;
+                    mergeRow.merge = true;
+                    mergeRow.compareResult = CompareResult.COMPATIBLE;
+                 } else {
+                    // la source indiquée dans le releve n'existe pas dans le gedcom
+                    
+                    // je cherche une csource contenant le nom de la ville
+//                    for (Entity source : sources) {
+//                        if (((Source) source).getTitle().contains(record.getEventPlaceCityName())) {
+//                            gedcomSource = source;
+//                            break;
+//                        }
+//                    }
+//                    if (gedcomSource != null) {
+//                        mergeRow.entityValue = gedcomSource;
+//                        mergeRow.entityObject = gedcomSource;
+//                        mergeRow.merge = true;
+//                        mergeRow.compareResult = CompareResult.COMPATIBLE;
+//                    } else {
+//                        mergeRow.entityValue = null;
+//                        mergeRow.entityObject = null;
+//                        mergeRow.merge = false;
+//                        mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
+//                    }
+                    
+                    mergeRow.entityValue = null;
+                    mergeRow.entityObject = null;
+                    mergeRow.merge = false;
+                    mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
+
+                }
+            }
+        } else {
+            // ligne parent NOT_APPLICABLE
+            mergeRow.merge = false;
+            mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
+        }
+        mergeRow.merge_initial = mergeRow.merge;
+
+        addRow(RowType.EventPage, record.makeEventPage(), entityEventPage);
+        
+        addRowSeparator();
+    }
+
+
 
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs
@@ -566,7 +550,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @return
      */
     protected MergeRow getRow(RowType rowType) {
-        return dataMap.get(rowType);
+        return mergeRowList.get(rowType);
     }
 
     /**
@@ -575,7 +559,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @return
      */
     MergeRow getRow(int row) {
-        return dataList.get(row);
+        return mergeRowList.get(row);
     }
 
     /**
@@ -584,7 +568,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @return
      */
     protected CompareResult getCompareResult(int row) {
-        return dataList.get(row).compareResult;
+        return mergeRowList.get(row).compareResult;
     }
 
     /**
@@ -634,7 +618,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     public abstract String getSummary(Entity selectedEntity);
 
     protected abstract Entity getSelectedEntity();
-
+    protected abstract Property getSelectedProperty();
+    
     /**
      * crée une association entre associatedProperty et l'entité sélectionné dans 
      * le modele
@@ -674,7 +659,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
     @Override
     public int getRowCount() {
-        return dataList.size();
+        return mergeRowList.size();
     }
 
     @Override
@@ -691,15 +676,15 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     public Object getValueAt(int row, int col) {
         switch (col) {
             case 0:
-                return dataList.get(row).label;
+                return mergeRowList.get(row).label;
             case 1:
-                return dataList.get(row).recordValue;
+                return mergeRowList.get(row).recordValue;
             case 2:
-                return dataList.get(row).merge;
+                return mergeRowList.get(row).merge;
             case 3:
-                return dataList.get(row).entityValue;
+                return mergeRowList.get(row).entityValue;
             case 4:
-                return dataList.get(row).entityObject;
+                return mergeRowList.get(row).entityObject;
             default:
                 return null;
         }
@@ -719,13 +704,13 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     public void setValueAt(Object value, int row, int col) {
         switch (col) {
             case 1:
-                dataList.get(row).recordValue = value;
+                mergeRowList.get(row).recordValue = value;
                 break;
             case 2:
                 check(row, (Boolean) value);
                 break;
             case 3:
-                dataList.get(row).recordValue = value;
+                mergeRowList.get(row).recordValue = value;
                 break;
             default:
                 break;
@@ -734,36 +719,27 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
 
     /**
-     * coche ou décoche une ligne en fonction de son numero d'ordre
+     * coche ou décoche une ligne en fonction de son numéro d'ordre
      * @param rowNum
      * @param state
      */
     void check(int rowNum, boolean state) {
-        check(dataList.get(rowNum).rowType, state);
-    }
-
-    /**
-     * coche ou décoche une ligne en fonction de son type
-     *  - met à jour l'état des lignes filles
-     *  - met à jour l'état des lignes parents
-     * @param rowType 
-     * @param state
-     */
-    void check(RowType rowType, boolean state) {
-        dataMap.get(rowType).merge = state;
-        fireTableCellUpdated(dataList.indexOf(dataMap.get(rowType)), 2);
-        fireTableCellUpdated(dataList.indexOf(dataMap.get(rowType)), 3);
+        MergeRow mergeRow = mergeRowList.get(rowNum);
+        
+        mergeRow.merge = state;
+        fireTableCellUpdated(rowNum, 2);
+        fireTableCellUpdated(rowNum, 3);
 
         // je mets a jour les lignes filles
-        for (int i = 0; i < dataList.size(); i++) {
-            MergeRow mergeRow = dataList.get(i);
-            MergeRow parentRow = getParentRow(mergeRow.rowType);
-            if (parentRow != null && parentRow.rowType == rowType) {
+        for (int i = 0; i < mergeRowList.size(); i++) {
+            MergeRow mergeRowChild = mergeRowList.get(i);
+            MergeRow parentRow = getParentRow(mergeRowChild.rowType);
+            if (parentRow != null && parentRow.rowType == mergeRow.rowType) {
                 if (state == true) {
                     // je restaure l'etat initial de la ligne fille
-                    mergeRow.merge = mergeRow.merge_initial;
+                    mergeRowChild.merge = mergeRowChild.merge_initial;
                 } else {
-                    mergeRow.merge = false;
+                    mergeRowChild.merge = false;
                 }
                 fireTableCellUpdated(i, 2);
                 fireTableCellUpdated(i, 3);
@@ -772,11 +748,12 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
         // je mets a jour la ligne parent
         // seulement si elle était décochée et que la fille vient d'etre cochee
-        MergeRow parentRow = getParentRow(rowType);
+        MergeRow parentRow = getParentRow(mergeRow.rowType);
         if (state == true && parentRow != null) {
             parentRow.merge = true;
-            fireTableCellUpdated(dataList.indexOf(parentRow), 2);
-            fireTableCellUpdated(dataList.indexOf(parentRow), 3);
+            int parentIndex = mergeRowList.indexOf(parentRow.rowType);
+            fireTableCellUpdated(parentIndex, 2);
+            fireTableCellUpdated(parentIndex, 3);
         }
     }
 
@@ -786,11 +763,11 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @return
      */
     boolean isChecked(RowType rowType) {
-        MergeRow mergeRow = dataMap.get(rowType);
+        MergeRow mergeRow = mergeRowList.get(rowType);
         if (mergeRow == null) {
             return false;
         } else {
-            return dataMap.get(rowType).merge;
+            return mergeRowList.get(rowType).merge;
         }
     }
 
@@ -825,12 +802,12 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             boolean found = false;
             // je copie les sources de l'entité
             Property[] sourceProperties = eventProperty.getProperties("SOUR", false);
-            for (int i = 0; i < sourceProperties.length; i++) {
-                Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
+            for (Property sourcePropertie : sourceProperties) {
+                Source eventSource = (Source) ((PropertySource) sourcePropertie).getTargetEntity();
                 if (source.compareTo(eventSource) == 0) {
                     found = true;
-                    // je memorise le lien vers la source pour ajouter la page  
-                    sourcexref = (PropertyXRef) sourceProperties[i];
+                    // je memorise le lien vers la source pour ajouter la page
+                    sourcexref = (PropertyXRef) sourcePropertie;
                     break;
                 }
             }
@@ -846,7 +823,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         } else {
             // je cree une nouvelle source et je la relie à l'entité
             Source newSource = (Source) eventProperty.getGedcom().createEntity(Gedcom.SOUR);
-            newSource.addProperty("TITL", record.getEventSource());
+            newSource.addProperty("TITL", record.getEventSourceTitle());
             try {
                 // je relie la source du releve à l'entité
                 sourcexref = (PropertyXRef) eventProperty.addProperty("SOUR", "@" + newSource.getId() + "@");
@@ -1239,6 +1216,18 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         if ( record.getType() == RecordType.Misc && rowType == RowType.MarriageFamily ) {
             // j'affiche le type d'évènement présent dans le relevé
             label += record.getEventType();
+        } else if ( rowType == RowType.IndiMarriedFamily || rowType == RowType.WifeMarriedFamily) {
+            // j'affiche le type d'évènement présent dans le relevé
+            if( record.getType()== RecordType.Marriage 
+                || (record.getType() == RecordType.Misc && 
+                    (record.getEventTypeTag() == MergeRecord.EventTypeTag.MARB 
+                    || record.getEventTypeTag() == MergeRecord.EventTypeTag.MARC 
+                    || record.getEventTypeTag() == MergeRecord.EventTypeTag.MARL ))
+                ){
+                label += NbBundle.getMessage(MergeModel.class, "MergeModel." + rowType.toString() + "Ex");
+            } else {
+                label += NbBundle.getMessage(MergeModel.class, "MergeModel." + rowType.toString());
+            }
         } else {
             // j'affiche le libellé par défaut
             label += NbBundle.getMessage(MergeModel.class, "MergeModel." + rowType.toString());
@@ -1388,5 +1377,88 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         WifeMotherBirthDate,
         WifeMotherDeathDate,
         WifeMotherOccupation,
+    }
+
+    protected class MergeRow {
+
+        RowType rowType;
+        String label;
+        Object recordValue;
+        Object entityValue;
+        boolean merge;
+        boolean merge_initial;
+        CompareResult compareResult;
+        Entity entityObject = null;
+
+        MergeRow(RowType rowType) {
+            this.rowType = rowType;
+        }
+        
+        @Override
+        public String toString() {
+            return rowType.name() + " " + recordValue + " " + entityValue;
+        }
+    }
+
+    protected enum CompareResult {
+        EQUAL,
+        COMPATIBLE,
+        CONFLIT,
+        NOT_APPLICABLE
+    }
+    
+    /**
+     * liste a deux entrées ( index et RowType)
+     */
+    private class MergeRowList {
+        private final EnumMap<RowType, Integer> dataMap = new EnumMap<RowType, Integer>(RowType.class);
+        private final List<MergeRow> dataList = new ArrayList<MergeRow>();
+        
+        void put( MergeRow mergeRow)  {
+            if ( mergeRow.rowType == RowType.Separator) {
+                // le seprateur n'est pas inexe dans dataMap
+                // il peut y avoir plusieurs sperateurs
+                dataList.add(mergeRow);
+            } else {
+                Integer index = dataMap.get(mergeRow.rowType);
+                if (index == null) {
+                    dataList.add(mergeRow);
+                    dataMap.put(mergeRow.rowType, new Integer(dataList.size() - 1));
+                } else {
+                    dataList.set(index, mergeRow);
+                }
+            }
+            
+        }
+        MergeRow get(int index) {
+            return dataList.get(index);
+        }
+        MergeRow get(RowType rowType) {
+            Integer index = dataMap.get(rowType);
+            if( index != null) {
+                return dataList.get(index);
+            } else {
+                return null;
+            }
+        }
+
+        private int size() {
+            return dataList.size();
+        }
+        
+        /**
+         * retourne l'index 
+         * @param rowType
+         * @return the index of the first occurrence of the specified element in this list, or -1 if this list does not contain the element
+         */
+         private int indexOf(RowType rowType) {
+            Integer index = dataMap.get(rowType);
+             if( index != null) {
+                return index;
+            } else {
+                return -1;
+            }
+        }
+        
     }
 }

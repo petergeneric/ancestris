@@ -256,11 +256,7 @@ class MergeModelDeath extends MergeModel {
      * @param record
      */
     protected MergeModelDeath(MergeRecord record, Gedcom gedcom) throws Exception {
-        super(record, gedcom);
-        this.currentIndi = null;
-        addRowIndi();
-        addRowMarried(null);
-        addRowParents(null);
+        this(record, gedcom, null , null, null);
     }
 
     /**
@@ -271,11 +267,7 @@ class MergeModelDeath extends MergeModel {
      * @param record
      */
     protected MergeModelDeath(MergeRecord record, Gedcom gedcom, Indi indi, Fam parentfam) throws Exception {
-        super(record, gedcom);
-        this.currentIndi = indi;
-        addRowIndi();
-        addRowMarried(null);
-        addRowParents(parentfam);
+        this(record, gedcom, indi , null, parentfam);
     }
 
     /**
@@ -291,6 +283,7 @@ class MergeModelDeath extends MergeModel {
     protected MergeModelDeath(MergeRecord record, Gedcom gedcom, Indi indi, Fam marriedFamily, Fam parentFamily) throws Exception {
         super(record, gedcom);
         this.currentIndi = indi;
+        addRowSource();                
         addRowIndi();
         addRowMarried(marriedFamily);
         addRowParents(parentFamily);
@@ -308,7 +301,7 @@ class MergeModelDeath extends MergeModel {
         super(record, gedcom);
         this.currentIndi = null;
         
-        // j'affiche l'individu 
+        addRowSource();                
         addRowIndi();
         // j'affiche l'ex conjoint
         addRowMarried(null);
@@ -323,16 +316,10 @@ class MergeModelDeath extends MergeModel {
         addRowMother(mother);
 
     }
-
+    
     private void addRowIndi() throws Exception {
 
        if (currentIndi != null) {
-            // j'affiche la source de la naissance
-            addRowSource(RowType.EventSource, record.getEventSource(), currentIndi.getProperty("DEAT"));
-            
-            // j'affiche un separateur
-            addRowSeparator();
-
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), currentIndi.getLastName(), currentIndi);
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), currentIndi.getFirstName());
@@ -346,13 +333,6 @@ class MergeModelDeath extends MergeModel {
 
         } else {
             // selectedIndi est nul
-
-            // j'affiche la source de la naissance
-            addRowSource(RowType.EventSource, record.getEventSource(), null);
-            
-            // j'affiche un separateur
-            addRowSeparator();
-
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), "");
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), "");
@@ -463,6 +443,19 @@ class MergeModelDeath extends MergeModel {
     }
 
     /**
+     * retourne la propriété concernée par l'acte
+     * @return propriété concernée par l'acte
+     */
+    @Override
+    protected Property getSelectedProperty() {
+        if (currentIndi != null) {
+            return currentIndi.getProperty("DEATH");
+        } else {
+            return null;
+        }
+    }
+    
+    /**
      * copie les données du relevé dans l'entité
      */
     @Override
@@ -521,7 +514,7 @@ class MergeModelDeath extends MergeModel {
 
             // je copie la date de deces du releve dans l'individu
             if (isChecked(RowType.IndiDeathDate)) {
-                // j'ajoute (ou remplace) la date de la naissance
+                // j'ajoute (ou remplace) la date de la décès
                 PropertyDate propertyDate = currentIndi.getDeathDate(true);
                 propertyDate.setValue(record.getIndi().getDeathDate().getValue());
             }

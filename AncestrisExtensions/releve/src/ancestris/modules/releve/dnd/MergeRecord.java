@@ -46,29 +46,32 @@ public class MergeRecord {
         participant2
     };
 
-    private FieldPlace recordsInfoPlace = new FieldPlace();
-    private String sourceTitle;
-    private Record record;
-    private MergeParticipant partipant1;
-    private MergeParticipant partipant2;
+    private FieldPlace recordInfoPlace = new FieldPlace();
+    private final String fileName;
+    private String eventSourceTitle;    
+    private final Record record;
+    private final MergeParticipant partipant1;
+    private final MergeParticipant partipant2;
 
     /**
      * type du releve 
      */
-    private RecordType type;
+    private final RecordType type;
     private EventTypeTag eventTypeTag;
 
      /**
      * constructeur
      * @param record
      */
-    protected MergeRecord( FieldPlace recordsInfoPlace, String sourceTitle, Record record)  {
-        this.recordsInfoPlace = recordsInfoPlace;
-        if (sourceTitle != null) {
-            this.sourceTitle = sourceTitle;
+    protected MergeRecord( FieldPlace recordsInfoPlace, String fileName, Record record)  {
+        this.recordInfoPlace = recordsInfoPlace;
+        if (fileName != null) {
+            this.fileName = fileName;
         } else {
-            this.sourceTitle = "";
+            this.fileName = "";
         }
+        calculateSourceTitle();
+
         this.record = record;
         if (record instanceof RecordBirth) {
             type = RecordType.Birth;
@@ -173,11 +176,11 @@ public class MergeRecord {
 
     String getEventTypeWithDate() {
         String eventTypeWithDate = record.getEventType().toString();
-        if (!recordsInfoPlace.getValue().isEmpty()) {
+        if (!recordInfoPlace.getValue().isEmpty()) {
             if (!eventTypeWithDate.isEmpty()) {
                 eventTypeWithDate += ", ";
             }
-            eventTypeWithDate += recordsInfoPlace.getValue().toString();
+            eventTypeWithDate += recordInfoPlace.getValue().toString();
         }
         if (!eventTypeWithDate.isEmpty()) {
             eventTypeWithDate += " (" + getEventDate().getDisplayValue() + ")";
@@ -186,8 +189,12 @@ public class MergeRecord {
         return eventTypeWithDate;
     }
     
-    String getEventSource() {
-        return sourceTitle;
+    String getFileName() {        
+        return fileName;
+    }
+
+    String getEventSourceTitle() {        
+        return eventSourceTitle;
     }
 
     String getEventCote() {
@@ -237,7 +244,7 @@ public class MergeRecord {
     }
 
     String getEventPlace() {
-        return recordsInfoPlace.toString();
+        return recordInfoPlace.toString();
     }
 
     boolean isInsinuation() {
@@ -245,13 +252,13 @@ public class MergeRecord {
     }
 
     String getEventPlaceCityName() {
-        return recordsInfoPlace.getCityName();
+        return recordInfoPlace.getCityName();
     }
     String getEventPlaceCityCode() {
-        return recordsInfoPlace.getCityCode();
+        return recordInfoPlace.getCityCode();
     }
     String getEventPlaceCountyName() {
-        return recordsInfoPlace.getCountyName();
+        return recordInfoPlace.getCountyName();
     }
 
     String getEventType() {
@@ -1265,7 +1272,7 @@ public class MergeRecord {
      * @param marriedMarriageDate     date de mariage avec l'ex conjoint (null si pas d'ex conjoint
      * @return
      */
-    private PropertyDate calculateBirthDate(PropertyDate recordBirthDate, Delta age, PropertyDate marriedMarriageDate) throws Exception {
+    private PropertyDate calculateBirthDate(MergeParticipantType participantType,PropertyDate recordBirthDate, Delta age, PropertyDate marriedMarriageDate) throws Exception {
         PropertyDate resultDate = new PropertyDate();
         resultDate.setValue(recordBirthDate.getValue());
         if (type == RecordType.Birth) {
@@ -1397,12 +1404,23 @@ public class MergeRecord {
                     if (marriedMarriageDate != null && marriedMarriageDate.isComparable()) {
                         // la naissance est minMarriageYearOld avant le mariage avec l'ex conjoint
                         ///birthDate.setValue(String.format("BEF %d", marriedMarriageDate.getStart().getYear()-MergeQuery.minMarriageYearOld));
-                        resultDate.setValue(PropertyDate.BEFORE, getYear(marriedMarriageDate.getStart(),-MergeQuery.minMarriageYearOld), null, "date naissance= avant date de mariage avec ex conjoint -"+ MergeQuery.minMarriageYearOld);
+                        resultDate.setValue(PropertyDate.BEFORE, getYear(marriedMarriageDate.getStart(),-MergeQuery.minMarriageYearOld), null, "date naissance= avant ladate de mariage avec ex conjoint -"+ MergeQuery.minMarriageYearOld);
                     } else {
                         // il n'y a pas d'ex conjoint
-                        // la naissance est avant l'evenement qui concerne l'individu
-                        ///birthDate.setValue(String.format("BEF %d", record.getEventDateProperty().getStart().getYear()));
-                        resultDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "date naissance= avant date du releve");
+                        
+                        if ( (eventTypeTag == EventTypeTag.WILL && participantType == MergeParticipantType.participant1)
+                                || eventTypeTag == EventTypeTag.MARB
+                                || eventTypeTag == EventTypeTag.MARC
+                                || eventTypeTag == EventTypeTag.MARL
+                            ) {
+                            // pour un certificat de mariage, les deux participants doivent être majeurs
+                            // pour un testament le partipant doit être majeur 
+                            resultDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart(),-MergeQuery.minMajorityYearOld), null, "date naissance= avant la date du releve - " + MergeQuery.minMajorityYearOld + "(personne majeure)");
+
+                        } else {
+                            // la naissance est avant l'evenement qui concerne l'individu                            
+                            resultDate.setValue(PropertyDate.BEFORE, getYear(getEventDate().getStart()), null, "date naissance= avant la date du releve");
+                        }
                     }
                 }
             }
@@ -1655,6 +1673,79 @@ public class MergeRecord {
         }
         return marriageDate;
     }
+    
+    protected final void calculateSourceTitle() {
+//         if ( eventSourceTitle.isEmpty()) {
+//            if (record.getType() == RecordType.Misc) {
+//                if (!record.getNotary().isEmpty()) {
+//                    eventSourceTitle = String.format("Notaire %getSelectedEntitys", record.getNotary());
+//                } else {
+//                    eventSourceTitle = "";
+//                }
+//            } else {
+//                String cityName = record.getEventPlaceCityName();
+//
+//                if (record.getEventDate().getStart().getYear() <= 1792) {
+//                    eventSourceTitle = String.format("BMS %s", cityName);
+//                } else {
+//                    eventSourceTitle = String.format("Etat civil %s", cityName);
+//                }
+//            }
+//        }
+        
+//        if ( eventSourceTitle.isEmpty()) {
+//            eventSourceTitle = recordsInfoPlace.getCityName();
+//        }
+        
+        // je cherche la source dans le gedcom
+//        Entity[] sources = gedcom.getEntities("SOUR", "SOUR:TITL");
+//        for (Entity source : sources) {
+//            if (((Source) source).getTitle().equals(recordSourceTitle)) {
+//                mergeRow.entityValue = source;
+//                mergeRow.entityObject = source;                
+//                break;
+//            }
+//        }
+
+//         // retourne la source d'un evenement 
+//         if (eventProperty != null) {
+//            Property[] sourceProperties = eventProperty.getProperties("SOUR", false);
+//            for (int i = 0; i < sourceProperties.length; i++) {
+//                // remarque : verification de classe PropertySource avant de faire le cast en PropertySource pour eliminer
+//                // les cas anormaux , par exemple une source "multiline"
+//                if ( sourceProperties[i] instanceof PropertySource) {
+//                    Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
+//                    if (record.getEventSourceTitle().compareTo(eventSource.getTitle()) == 0) {
+//                        sourceProperty = sourceProperties[i];
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+        
+        //
+//            // je verifie si la source existe deja dans le gedcom
+//            String cityName = record.getEventPlaceCityName();
+//            String cityCode = record.getEventPlaceCityCode();
+//            String countyName = record.getEventPlaceCountyName();
+//            //String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
+//            String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);
+//            Pattern pattern = Pattern.compile(stringPatter);
+//            Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
+//            for (Entity gedComSource : sources) {
+//                if (pattern.matcher(((Source) gedComSource).getTitle()).matches()) {
+//                    source = (Source) gedComSource;
+//                }
+//            }
+
+        if (fileName != null) {
+            eventSourceTitle = MergeOptionPanel.SourceModel.getModel().getSource(fileName);
+        } else {
+            eventSourceTitle = "";
+        }
+               
+    }
+
 
     /**
      *
@@ -1699,7 +1790,7 @@ public class MergeRecord {
 
         PropertyDate getBirthDate() throws Exception {
             if (BirthDate == null) {
-                BirthDate = calculateBirthDate(
+                BirthDate = calculateBirthDate(participantType,
                         participant.getBirthDate() != null ? participant.getBirthDate().getPropertyDate() : new PropertyDate(),
                         participant.getAge() != null ? participant.getAge().getDelta() : new Delta(0, 0, 0),
                         getMarriedMarriageDate());
@@ -1732,7 +1823,7 @@ public class MergeRecord {
                             if (participant.getFatherResidence() != null && !participant.getFatherResidence().isEmpty()) {
                                 return participant.getFatherResidence().toString();
                             } else {
-                                return recordsInfoPlace.toString();
+                                return recordInfoPlace.toString();
                             }
                         } else {
                             return "";
@@ -1754,7 +1845,7 @@ public class MergeRecord {
                 if (participant.getResidence() != null && !participant.getResidence().isEmpty()) {
                     return participant.getResidence().toString();
                 } else {
-                    return recordsInfoPlace.toString();
+                    return recordInfoPlace.toString();
                 }
         }
         

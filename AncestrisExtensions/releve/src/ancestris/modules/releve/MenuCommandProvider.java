@@ -16,4 +16,5 @@ public interface MenuCommandProvider {
     public void showOptionPanel();
     public void showToFront();
     public void setBrowserVisible(boolean visible);
+    public void setGedcomLinkSelected(boolean selected);
 }
