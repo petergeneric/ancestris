@@ -3,6 +3,7 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipant;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import ancestris.modules.releve.model.FieldSex;
+import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -27,6 +28,7 @@ public class MergeQuery {
 
     protected static int minMarriageYearOld = 18; // age minimum pour etre marié
     protected static int minParentYearOld = 18;   // age minimum pour etre parent
+    protected static int minMajorityYearOld = 18;   // age minimum de majorité
     protected static int indiMaxYearOld = 100;    // age maximum d'un individu
     protected static int aboutYear = 5;           // marge d'incertitude ( date ABOUT ou ESTMATED ou CALCULATED)
     protected static int maxParentYearOld = 60;    // age maximum d'un parent
@@ -736,7 +738,7 @@ public class MergeQuery {
      *
      * @param record   relevé de naissance
      * @param gedcom   
-     * @param families familles des individus a exlure de la réponse
+     * @param families familles des individus a exclure de la réponse
      * @param fathers  (OUT) liste des hommes qui pourraient être le père
      * @param mothers  (OUT) liste des femmes qui pourraient être la mère
      */
@@ -2270,10 +2272,10 @@ public class MergeQuery {
      * @param eventDate
      * @return evenement ou null
      */
-    static protected PropertyEvent findPropertyEvent(Indi indi, String eventType, PropertyDate eventDate) {
+    static protected PropertyEvent findPropertyEvent(Entity entity, String eventType, PropertyDate eventDate) {
         PropertyEvent foundEvent = null;
         //Property foundDate = null;
-        for (Property iterationEvent : indi.getProperties("EVEN")) {
+        for (Property iterationEvent : entity.getProperties("EVEN")) {
             if (iterationEvent.getPropertyValue("TYPE").equals(eventType)) {
                 PropertyDate iterationDate =  (PropertyDate) iterationEvent.getProperty("DATE",false);
                 if (iterationDate != null) {
@@ -2293,109 +2295,5 @@ public class MergeQuery {
         
         return foundEvent;
     }
-
-    /**
-     * retourne la source d'un releve
-     *   "(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName
-     * @param entityProperty
-     * @param gedcom
-     * @return
-     */
-//    static protected Source findRecordSource(MergeRecord record, Gedcom gedcom) {
-//        Source source = null;
-//
-//        /*
-//        // je verifie si la source existe deja dans le gescom
-//        String cityName = record.getEventPlaceCityName();
-//        String cityCode = record.getEventPlaceCityCode();
-//        String countyName = record.getEventPlaceCountyName();
-//        //String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
-//        String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);
-//        Pattern pattern = Pattern.compile(stringPatter);
-//        Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
-//        for (Entity gedComSource : sources) {
-//            if (pattern.matcher(((Source)gedComSource).getTitle()).matches()) {
-//                source = (Source)gedComSource;
-//            }
-//        }
-//         */
-//
-//        String sourceTitle = record.getEventSource();
-//        Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
-//        for (Entity gedComSource : sources) {
-//
-//            if (((Source)gedComSource).getTitle().startsWith(sourceTitle)) {
-//                source = (Source)gedComSource;
-//            }
-//        }
-//
-//        return source;
-//    }
-
-    /**
-     * retourne la source d'un evenement 
-     * @param entityProperty
-     * @param gedcom
-     * @return
-     */
-//    static protected Property getEntitySourceProperty(MergeRecord record, Property eventProperty) {
-//        Property sourceProperty = null;
-//
-//        if (eventProperty != null) {
-//            Property[] sourceProperties = eventProperty.getProperties("SOUR", false);
-//            for (int i = 0; i < sourceProperties.length; i++) {
-//                // remarque : verification de classe PropertySource avant de faire le cast en PropertySource pour eliminer
-//                // les cas anormaux , par exemple une source "multiline"
-//                if ( sourceProperties[i] instanceof PropertySource) {
-//                    Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
-//                    if (record.getEventSource().compareTo(eventSource.getTitle()) == 0) {
-//                        sourceProperty = sourceProperties[i];
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//
-//        return sourceProperty;
-//    }
-
-     /**
-     * retourne la source d'un evenement
-     * @param entityProperty
-     * @param gedcom
-     * @return
-     */
-//    static protected String getSourceTitle(Property sourceProperty) {
-//        String sourceTitle = "";
-//
-//        if (sourceProperty != null) {
-//             Source eventSource = (Source) ((PropertySource) sourceProperty).getTargetEntity();
-//             sourceTitle = eventSource.getTitle();
-//        }
-//
-//        return sourceTitle;
-//    }
-
-
-    /**
-     * retourne la page de la source d'un releve
-     * @param entityProperty
-     * @param gedcom
-     * @return page de la source , ou chaine vide si la source ou sa page n'existent pas
-     */
-//    static protected String getSourcePage( MergeRecord record, Property sourceProperty) {
-//        String sourcePage = "";
-//
-//        if (sourceProperty != null) {
-//            for (Property pageProperty : sourceProperty.getProperties("PAGE")) {
-//                if (record.getEventPage().equals(pageProperty.getValue())) {
-//                    sourcePage = pageProperty.getValue();
-//                    break;
-//                }
-//            }
-//        }
-//
-//        return sourcePage;
-//    }
-
+    
 }

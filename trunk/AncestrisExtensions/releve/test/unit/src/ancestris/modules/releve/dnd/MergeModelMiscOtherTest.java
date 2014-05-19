@@ -20,7 +20,7 @@ public class MergeModelMiscOtherTest extends TestCase {
 
      static public FieldPlace getRecordsInfoPlace() {
         FieldPlace recordsInfoPlace = new FieldPlace();
-        recordsInfoPlace.setValue("ville_marc,code_marc,departement_marc,region_marc,pays_marc");
+        recordsInfoPlace.setValue("ville_misc,code_misc,departement_misc,region_misc,pays_misc");
         return recordsInfoPlace;
     }
 
@@ -35,7 +35,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             record.setFreeComment("photo");
             record.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordoccupation", "accordResidence", "accordcomment");
 
-            // je place l'epouse ne premier et l'epoux en second
+            // intervenant 2
             record.setWife("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "", "fatherOccupation2", "fatherResidence2", "fatherComment2");
             record.setWifeMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifecomment2", "true");
         } else {
@@ -63,26 +63,26 @@ public class MergeModelMiscOtherTest extends TestCase {
 
 
             RecordMisc miscRecord = createMiscOtherRecord("Accord1");
-            String sourceTitle = "";
-            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, miscRecord);
+            String fileName = "ville_misc.txt";
+            MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S2").getPropertyDisplayValue("TITL"));
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), fileName, miscRecord);
 
             Fam participant2Family;
             Indi participant2Wife;
             Indi participant2Husband;
 
-            List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-            assertEquals("Nombre model",3,models.size());
-
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, mergeRecord, false);
-
-            //TestUtility.waitForDialogClose(dialog);
-
+            //List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
+            //assertEquals("Nombre model",3,models.size());           
             //models.get(0).copyRecordToEntity();
+            
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, mergeRecord, false);
+            //TestUtility.waitForDialogClose(dialog);
             dialog.copyRecordToEntity();
 
+            
             Indi participant1 = (Indi) gedcom.getEntity("I00007");
-            assertEquals("Lien event vers source","@S00004@", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
-            assertEquals("Source event","S00004", gedcom.getEntity(participant1.getValue(new TagPath("INDI:EVEN:SOUR"),"").replaceAll("@", "")).getId());
+            assertEquals("Lien event vers source","@S2@", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
+            assertEquals("Source event","S2", gedcom.getEntity(participant1.getValue(new TagPath("INDI:EVEN:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Source event",miscRecord.getCote().getValue() + ", " +miscRecord.getFreeComment().getValue(), participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
             assertEquals("Date event",miscRecord.getEventDateProperty().getValue(), participant1.getValue(new TagPath("INDI:EVEN:DATE"),""));
             assertEquals("Lieu event",getRecordsInfoPlace().getValue(), participant1.getValue(new TagPath("INDI:EVEN:PLAC"),""));
@@ -107,6 +107,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             assertEquals("participant2 mari Date naissance","1 JAN 1970", participant2Husband.getBirthDate().getValue());
             // la date de deces n'est pas ajoutee
             assertEquals("participant2 marie deces",null, participant2Husband.getDeathDate());
+            assertEquals("participant2 : nb profession",2, participant2.getProperties(new TagPath("INDI:OCCU")).length);
             occupation = participant2Husband.getProperties(new TagPath("INDI:OCCU"))[0];
             assertEquals("participant2 mari Profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant2 mari Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
@@ -145,8 +146,8 @@ public class MergeModelMiscOtherTest extends TestCase {
 
 
             RecordMisc miscRecord = createMiscOtherRecord("Accord2");
-            String sourceTitle = "";
-            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, miscRecord);
+            String fileName = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), fileName, miscRecord);
 
             List<MergeModel> models;
             Fam indiParentFamily;
@@ -166,9 +167,8 @@ public class MergeModelMiscOtherTest extends TestCase {
             dialog.copyRecordToEntity();
 
             Indi participant1 = (Indi) gedcom.getEntity("I00007");
-            assertEquals("Lien event vers source","@S00004@", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
-            assertEquals("Source event","S00004", gedcom.getEntity(participant1.getValue(new TagPath("INDI:EVEN:SOUR"),"").replaceAll("@", "")).getId());
-            assertEquals("Source event",miscRecord.getCote().getValue() + ", " +miscRecord.getFreeComment().getValue(), participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
+            assertEquals("Lien event vers source","", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
+            assertEquals("Source event","", participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
             assertEquals("Date event",miscRecord.getEventDateProperty().getValue(), participant1.getValue(new TagPath("INDI:EVEN:DATE"),""));
             assertEquals("Lieu event",getRecordsInfoPlace().getValue(), participant1.getValue(new TagPath("INDI:EVEN:PLAC"),""));
 
@@ -186,13 +186,13 @@ public class MergeModelMiscOtherTest extends TestCase {
             assertEquals("participant1 association vers participant2","@Wife2@", link.getValue() );
 
             //assertEquals("IndiBirthDate","BMS Paris", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
-            //assertEquals("Indi : Note Profession","Profession indiquée dans l'acte CM entre Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_marc, notaire_marc) ",
+            //assertEquals("Indi : Note Profession","Profession indiquée dans l'acte CM entre Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_misc, notaire_misc) ",
             //        occupation.getValue(new TagPath("OCCU:NOTE"),""));
 
 
             Indi participant2 = (Indi) gedcom.getEntity("Wife2");
             //assertEquals("Wife : Note Profession",
-            //        "Profession indiquée dans l'acte CM entre Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_marc, notaire_marc) ",
+            //        "Profession indiquée dans l'acte CM entre Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_misc, notaire_misc) ",
             //        occupation.getValue(new TagPath("OCCU:NOTE"),""));
 
             participant2Family = participant2.getFamiliesWhereSpouse()[0];

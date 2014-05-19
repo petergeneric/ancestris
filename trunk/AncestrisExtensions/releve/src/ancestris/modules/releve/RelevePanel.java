@@ -19,16 +19,25 @@ import ancestris.modules.releve.table.TableModelRecordBirth;
 import ancestris.modules.releve.table.TableModelRecordDeath;
 import ancestris.modules.releve.table.TableModelRecordMarriage;
 import ancestris.modules.releve.table.TableModelRecordMisc;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import javax.swing.AbstractAction;
 import javax.swing.DropMode;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -44,12 +53,22 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
     private DataManager.RecordType recordType = null;
     private int currentRecordIndex = -1;
 
-    static private String dialogTitle = NbBundle.getMessage(RelevePanel.class,"DialogTitle");
+    private static final String dialogTitle = NbBundle.getMessage(RelevePanel.class,"DialogTitle");
+
     static public enum PanelType { birth, marriage, death, misc, all }
+    
+    private final JPopupMenu popup = new JPopupMenu();
+    private final JMenuItem menuItemInsert      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.insert"));
+    private final JMenuItem menuItemDelete      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.delete"));
+    private final JMenuItem menuItemSwapNext    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapnext"));
+    private final JMenuItem menuItemSwapPrevious= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapprevious"));
+    private final JMenuItem menuItemReorder     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.reorder"));
+    private final JCheckBoxMenuItem menuItemGedcomLink  = new JCheckBoxMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.gedcomLink"));    
+
 
     public RelevePanel() {
         initComponents();
-        // J'applique un poids=1 pour que seule la largeur du composant de gauche soit mdofiée quand on change la taille de la fenetre
+        // J'applique un poids=1 pour que seule la largeur du composant de gauche soit modifiée quand on change la taille de la fenetre
         jSplitPane1.setResizeWeight(1);
 
         // je force la largeur du jButtonFile pour contenir le texte en entier et
@@ -89,7 +108,82 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
             }
 
         });
+        
+        //je cree le popupmenu
+        
+        ActionListener popupMouseHandler = new ActionListener() {
+            /**
+             * traite les évènements du popumenu
+             *
+             * @param e
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (menuItemInsert.equals(e.getSource())) {
+                    insertRecord();
+                } else if (menuItemDelete.equals(e.getSource())) {
+                    removeRecord();
+                } else if (menuItemSwapNext.equals(e.getSource())) {
+                    swapRecordNext();
+                } else if (menuItemSwapPrevious.equals(e.getSource())) {
+                    swapRecordPrevious();
+                } else if (menuItemReorder.equals(e.getSource())) {
+                    renumberRecords();
+                } else if (menuItemGedcomLink.equals(e.getSource())) {
+                    showGedcomLink(menuItemGedcomLink.isSelected());
+                }
+            }
+        };
+        
+        // insert,  delete
+        menuItemInsert.addActionListener(popupMouseHandler);
+        menuItemInsert.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewRecord.png")));
+        popup.add(menuItemInsert);
+        menuItemDelete.addActionListener(popupMouseHandler);
+        menuItemDelete.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/DeleteRecord.png")));
+        popup.add(menuItemDelete);
+
+        // swap, reorder, gedcomlink
+        menuItemSwapPrevious.addActionListener(popupMouseHandler);
+        menuItemSwapPrevious.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowup16.png")));
+        popup.add(menuItemSwapPrevious);
+        menuItemSwapNext.addActionListener(popupMouseHandler);
+        menuItemSwapNext.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowdown16.png")));
+        popup.add(menuItemSwapNext);
+        menuItemReorder.addActionListener(popupMouseHandler);
+        menuItemReorder.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/reorder16.png")));
+        popup.add(menuItemReorder);
+        
+        menuItemGedcomLink.addActionListener(popupMouseHandler);
+        menuItemGedcomLink.setSelected(false);
+        // menuItemGedcomLink.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/gedcomLink.png")));
+        popup.add(menuItemGedcomLink);
+
+
+        // active le listener de la souris pour l'affichage du popupmenu quand
+        // on clique avec le bouton droit de la souris
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        };
+        this.addMouseListener(mouseAdapter);
+        releveTable.addMouseListener(mouseAdapter);
+        jScrollPaneTable.addMouseListener(mouseAdapter);
+        tablePanel.addMouseListener(mouseAdapter);
+        //jSplitPane1.addMouseListener(mouseAdapter);
+        
+        
     }
+    
+    public void setGedcomLinkSelected(boolean selected) {
+        menuItemGedcomLink.setSelected(selected);
+    }
+    
+    
 
     public void setModel(final DataManager dataManager, final PanelType panelType,
             MenuCommandProvider menuComandProvider) {
@@ -190,23 +284,27 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         // je recupere le toolTipText du bouton
         String toolTipText = org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText");
 
-        // je complete le toolTipText du bouton "créer" en fonction du modele
+        // je complete le toolTipText du bouton "créer" en fonction du type de panel
         switch (panelType) {
             case birth:
                 jButtonNew.setToolTipText(toolTipText+ " (ALT-N)");
                 recordType = DataManager.RecordType.birth;
+                popup.remove(menuItemReorder);
                 break;
             case marriage:
                 jButtonNew.setToolTipText(toolTipText+ " (ALT-M)");
                 recordType = DataManager.RecordType.marriage;
+                popup.remove(menuItemReorder);
                 break;
             case death:
                 jButtonNew.setToolTipText(toolTipText+ " (ALT-D)");
                 recordType = DataManager.RecordType.death;
+                popup.remove(menuItemReorder);
                 break;
             case misc:
                 jButtonNew.setToolTipText(toolTipText+ " (ALT-V)");
                 recordType = DataManager.RecordType.misc;
+                popup.remove(menuItemReorder);
                 break;
              default:
                 jButtonNew.setToolTipText(toolTipText+ " (ALT-T)");
@@ -283,22 +381,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         // je masque la table
         tablePanel.setVisible(false);
     }
-
-
-    /**
-     * active le listener de la souris pour l'affichage du popupmenu quand
-     * on clique avec le bouton droit de la souris
-     * @param mouseListener
-     */
-    @Override
-    public void addMouseListener(MouseListener mouseListener) {
-        releveTable.addMouseListener(mouseListener);
-        jScrollPaneTable.addMouseListener(mouseListener);
-        jSplitPane1.addMouseListener(mouseListener);
-        tablePanel.addMouseListener(mouseListener);
-    }
-
-
+ 
 
     
     /** This method is called from within the constructor to
@@ -642,16 +725,31 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
     }
     
     public void renumberRecords() {
-        // avant de renuméroter les relevés , je vérifie la coherence du releve courant
-        if (verifyCurrentRecord()) {
-            
-            int[] tableIndexList = new int[releveTable.getRowCount()];
-            for(int i =0 ; i < tableIndexList.length; i++) {
-                tableIndexList[i] = releveTable.convertRowIndexToView(i);                
+        if (panelType == PanelType.all) {
+            // avant de renuméroter les relevés , je vérifie la coherence du releve courant
+            if (verifyCurrentRecord()) {
+
+                int[] tableIndexList = new int[releveTable.getRowCount()];
+                for (int i = 0; i < tableIndexList.length; i++) {
+                    tableIndexList[i] = releveTable.convertRowIndexToView(i);
+                }
+                dataManager.renumberRecords(dataManager.getRecord(currentRecordIndex), tableIndexList);
             }
-            dataManager.renumberRecords(dataManager.getRecord(currentRecordIndex), tableIndexList);
         }
     }
+    
+    public void showGedcomLink(boolean state) {
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        try {
+            dataManager.showGedcomLink(state);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        setCursor(Cursor.getDefaultCursor());
+        // je notify lea autres panels
+        menuCommandProvider.setGedcomLinkSelected(state);
+    }
+
 
     public void removeRecord() {
 

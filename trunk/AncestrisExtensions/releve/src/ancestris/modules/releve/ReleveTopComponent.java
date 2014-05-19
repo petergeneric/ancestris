@@ -81,18 +81,13 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     private final JMenuItem menuItemImport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
     private final JMenuItem menuItemImportClipboard = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.title"));
     private final JMenuItem menuItemExport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
-    private final JMenuItem menuItemDelete   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.delete"));
 
-    private final JMenuItem menuItemInsert      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.insert"));
-    private final JMenuItem menuItemSwapNext    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapnext"));
-    private final JMenuItem menuItemSwapPrevious= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.swapprevious"));
-    private final JMenuItem menuItemReorder     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.reorder"));
-    private final JCheckBoxMenuItem menuItemGedcomLink  = new JCheckBoxMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.gedcomLink"));
-    
-    private final JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));
     private final JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
+    private final JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));    
     private final JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
     private final JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
+    
+    
     
     private StandaloneEditor standaloneEditor;
     private File currentFile = null;
@@ -111,7 +106,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemNewFile.addActionListener(popupMouseHandler);
         menuItemNewFile.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewFile.png")));
         popup.add(menuItemNewFile);
-
         menuItemLoadFile.addActionListener(popupMouseHandler);
         menuItemLoadFile.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/OpenFile.png")));
         popup.add(menuItemLoadFile);
@@ -126,43 +120,17 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemImport.addActionListener(popupMouseHandler);
         menuItemImport.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png")));
         popup.add(menuItemImport);
-        menuItemImportClipboard.addActionListener(popupMouseHandler);
-        menuItemImportClipboard.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png")));
-        //popup.add(menuItemImportClipboard);
         menuItemExport.addActionListener(popupMouseHandler);
         menuItemExport.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ExportFile16.png")));
         popup.add(menuItemExport);
-
-        // create, insert,  delete
+        menuItemImportClipboard.addActionListener(popupMouseHandler);
+        menuItemImportClipboard.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png")));
+        //popup.add(menuItemImportClipboard);
+        
+        // statistics, demo, help
         popup.addSeparator();
-        menuItemInsert.addActionListener(popupMouseHandler);
-        menuItemInsert.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewRecord.png")));
-        popup.add(menuItemInsert);
-        menuItemDelete.addActionListener(popupMouseHandler);
-        menuItemDelete.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/DeleteRecord.png")));
-        popup.add(menuItemDelete);
-
-        // swap, statistics, demo records, help
-        popup.addSeparator();
-        menuItemSwapPrevious.addActionListener(popupMouseHandler);
-        menuItemSwapPrevious.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowup16.png")));
-        popup.add(menuItemSwapPrevious);
-        menuItemSwapNext.addActionListener(popupMouseHandler);
-        menuItemSwapNext.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/arrowdown16.png")));
-        popup.add(menuItemSwapNext);
-        menuItemReorder.addActionListener(popupMouseHandler);
-        menuItemReorder.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/reorder16.png")));
-        popup.add(menuItemReorder);
-        menuItemGedcomLink.addActionListener(popupMouseHandler);
-        menuItemGedcomLink.setSelected(false);
-       // menuItemGedcomLink.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/gedcomLink.png")));
-        popup.add(menuItemGedcomLink);
-
-        menuItemCheck.addActionListener(popupMouseHandler);
-        menuItemCheck.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/check16.png")));
-        popup.add(menuItemCheck);
         menuItemStatistics.addActionListener(popupMouseHandler);
-        menuItemStatistics.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
+        menuItemStatistics.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/statistics.png")));
         popup.add(menuItemStatistics);
         menuItemDemoFile.addActionListener(popupMouseHandler);
         menuItemDemoFile.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/OpenFile.png")));
@@ -171,24 +139,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemHelp.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
         popup.add(menuItemHelp);
 
-        // je branche le clic du bouton droit de la souris sur l'afffichage
-        // du popupmenu
-        MouseAdapter mouseAdapter = new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popup.show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
-        };
-        // j'ajoute le listener du popmenu sur tous les panneaux
-        panelBirth.addMouseListener(mouseAdapter);
-        panelMarriage.addMouseListener(mouseAdapter);
-        panelDeath.addMouseListener(mouseAdapter);
-        panelMisc.addMouseListener(mouseAdapter);
-        panelAll.addMouseListener(mouseAdapter);
-        jTabbedPane1.addMouseListener(mouseAdapter);
-    }
+        menuItemCheck.addActionListener(popupMouseHandler);
+        menuItemCheck.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/check16.png")));
+        popup.add(menuItemCheck);
+
+   }
      
     @Override
     public int getPersistenceType() {
@@ -289,11 +244,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             } 
         }       
 
-        //LookupTreeView lo = new LookupTreeView();
-        //lo.init();
-        
         ImageViewActionProvider = new ImageViewActionProvider();
-        
         
         // j'active le DnD pour les Treeview
         ViewWrapperManager.addTreeViewListener();  
@@ -465,22 +416,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 importClipboard();
             } else if (menuItemExport.equals(e.getSource())) {
                 exportFile();
-            } else if (menuItemInsert.equals(e.getSource())) {
-                insertRecord();
-            } else if (menuItemDelete.equals(e.getSource())) {
-                deleteRecord();
-            } else if (menuItemSwapNext.equals(e.getSource())) {
-                swapRecordNext();
-            } else if (menuItemSwapPrevious.equals(e.getSource())) {
-                swapRecordPrevious();
-             } else if (menuItemReorder.equals(e.getSource())) {
-                renumberRecords();
-             } else if (menuItemGedcomLink.equals(e.getSource())) {
-                showGedcomLink(menuItemGedcomLink.isSelected());
-             } else if (menuItemCheck.equals(e.getSource())) {
-                showCheck();
             } else if (menuItemStatistics.equals(e.getSource())) {
                 showStatistics();
+            } else if (menuItemCheck.equals(e.getSource())) {
+                showCheck();
             } else if (menuItemDemoFile.equals(e.getSource())) {
                 loadFileDemo();
             } else if (menuItemHelp.equals(e.getSource())) {
@@ -489,100 +428,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }
     }
 
-    public void insertRecord() {
-        switch (jTabbedPane1.getSelectedIndex()) {
-            case 0:
-                panelBirth.insertRecord();
-                break;
-            case 1:
-                panelMarriage.insertRecord();
-                break;
-            case 2:
-                panelDeath.insertRecord();
-                break;
-            case 3:
-                panelMisc.insertRecord();
-                break;
-            default:
-                panelAll.insertRecord();
-                break;
-        }
-    }
-
-    public void deleteRecord() {
-        switch (jTabbedPane1.getSelectedIndex()) {
-            case 0:
-                panelBirth.removeRecord();
-                break;
-            case 1:
-                panelMarriage.removeRecord();
-                break;
-            case 2:
-                panelDeath.removeRecord();
-                break;
-            case 3:
-                panelMisc.removeRecord();
-                break;
-            default:
-                panelAll.removeRecord();
-                break;
-        }
-    }
-
-    public void swapRecordNext() {
-         switch (jTabbedPane1.getSelectedIndex()) {
-            case 0:
-                panelBirth.swapRecordNext();
-                break;
-            case 1:
-                panelMarriage.swapRecordNext();
-                break;
-            case 2:
-                panelDeath.swapRecordNext();
-                break;
-            case 3:
-                panelMisc.swapRecordNext();
-                break;
-            default:
-                panelAll.swapRecordNext();
-        }
-    }
-
-    public void swapRecordPrevious() {
-         switch (jTabbedPane1.getSelectedIndex()) {
-            case 0:
-                panelBirth.swapRecordPrevious();
-                break;
-            case 1:
-                panelMarriage.swapRecordPrevious();
-                break;
-            case 2:
-                panelDeath.swapRecordPrevious();
-                break;
-            case 3:
-                panelMisc.swapRecordPrevious();
-                break;
-            default:
-                panelAll.swapRecordPrevious();
-        }
-    }
-
-    public void renumberRecords() {
-        if ( jTabbedPane1.getSelectedComponent().equals(panelAll)) {
-            panelAll.renumberRecords();            
-        } else {
-            
-        }
-    }
-
-    public void showGedcomLink(boolean state) {
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        try {
-            dataManager.showGedcomLink(state);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        setCursor(Cursor.getDefaultCursor());
+    public void showStatistics() {
+        ReleveStatistic.showStatistics(dataManager);
     }
 
     public void showCheck() {
@@ -590,9 +437,13 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         TableModelRecordCheck modelCheck = new TableModelRecordCheck(dataManager.getDataModel());
         ResultDialog.show(null, this, modelCheck, errorBuffer, currentFile);
     }
-
-    public void showStatistics() {
-        ReleveStatistic.showStatistics(dataManager);
+    
+    public void setGedcomLinkSelected(boolean selected) {
+        panelBirth.setGedcomLinkSelected(selected);
+        panelMarriage.setGedcomLinkSelected(selected);
+        panelDeath.setGedcomLinkSelected(selected);
+        panelMisc.setGedcomLinkSelected(selected);
+        panelAll.setGedcomLinkSelected(selected);
     }
 
     /**

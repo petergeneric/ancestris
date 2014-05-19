@@ -251,6 +251,7 @@ class MergeModelMiscWill extends MergeModel {
     protected MergeModelMiscWill(MergeRecord record, Gedcom gedcom, Indi indi, Fam marriedFamily, Fam parentFamily) throws Exception {
         super(record, gedcom);
         this.currentIndi = indi;
+        addRowSource();
         addRowIndi();
         addRowMarried(marriedFamily);
         addRowParents(parentFamily);
@@ -268,8 +269,9 @@ class MergeModelMiscWill extends MergeModel {
         super(record, gedcom);
         this.currentIndi = null;
         
-        // j'affiche l'individu 
+        addRowSource();
         addRowIndi();
+        
         // j'affiche l'ex conjoint
         addRowMarried(null);
 
@@ -282,16 +284,12 @@ class MergeModelMiscWill extends MergeModel {
         addRowFather(father);
         addRowMother(mother);
     }
-
+    
     private void addRowIndi() throws Exception {
 
        if (currentIndi != null) {
            // je recherche la source d'un testament deja existant
            Property willProperty = currentIndi.getProperty("WILL");
-            // j'affiche la source de du testament
-            addRowSource(RowType.EventSource, record.getEventSource(), willProperty);
-            addRowSeparator();
-
             // j'affiche la date, le lieu et les commentaires du testament
             addRow(RowType.EventDate, record.getEventDate(),   willProperty != null ? (PropertyDate)willProperty.getProperty("DATE") : null);
             addRow(RowType.EventPlace, record.getEventPlace(),  willProperty != null ? willProperty.getPropertyValue("PLAC") : "");
@@ -309,10 +307,6 @@ class MergeModelMiscWill extends MergeModel {
 
         } else {
             // selectedIndi est nul
-
-            // j'affiche la source de la naissance
-            addRowSource(RowType.EventSource, record.getEventSource(), null );
-            addRowSeparator();
 
             // j'affiche la date, le lieu et les commentaires du testament
             addRow(RowType.EventDate, record.getEventDate(), null);
@@ -421,6 +415,20 @@ class MergeModelMiscWill extends MergeModel {
     protected Entity getSelectedEntity() {
         return currentIndi;
     }
+    
+    /**
+     * retourne la propriété concernée par l'acte
+     * @return propriété concernée par l'acte
+     */
+    @Override
+    protected Property getSelectedProperty() {
+        if (currentIndi != null) {
+            return currentIndi.getProperty("WILL");
+        } else {
+            return null;
+        }
+    }
+    
 
     /**
      * copie les données du relevé dans l'entité
@@ -467,11 +475,16 @@ class MergeModelMiscWill extends MergeModel {
             }
         }
 
+        // je copie la date de décès 
+        if (isChecked(RowType.IndiDeathDate)) {
+            copyDeathDate(currentIndi, getRow(RowType.IndiDeathDate), "", record);
+        }
+        
         // je copie la profession de l'individu
         if (isChecked(RowType.IndiOccupation)) {
             copyOccupation(currentIndi, record.getIndi().getOccupation(), record.getIndi().getResidence(), true, record);
         }
-        
+                
         // je cree la propriete de testament si elle n'existait pas
         if (isChecked(RowType.EventDate) || isChecked(RowType.EventPlace) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
 

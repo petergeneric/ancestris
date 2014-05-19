@@ -13,7 +13,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -186,6 +185,7 @@ public class MergeModelMiscMarc extends MergeModel {
     MergeModelMiscMarc(MergeRecord record, Gedcom gedcom) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(null);
         addRowHusbandFamily(null);
@@ -197,6 +197,7 @@ public class MergeModelMiscMarc extends MergeModel {
     MergeModelMiscMarc(MergeRecord record, Gedcom gedcom, Fam selectedFamily) throws Exception {
         super(record, gedcom);
         this.currentFamily = selectedFamily;
+        addRowSource();
         addRowFamily();
         if ( selectedFamily != null ) {
             addRowHusband(selectedFamily.getHusband());
@@ -224,6 +225,7 @@ public class MergeModelMiscMarc extends MergeModel {
     MergeModelMiscMarc(MergeRecord record, Gedcom gedcom, Indi husband, Indi wife) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(husband);
         if ( husband!= null ) {
@@ -244,6 +246,7 @@ public class MergeModelMiscMarc extends MergeModel {
     MergeModelMiscMarc(MergeRecord record, Gedcom gedcom, Indi husband, Fam wifeParentFamily) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(husband);
         if ( husband!= null ) {
@@ -259,6 +262,7 @@ public class MergeModelMiscMarc extends MergeModel {
     MergeModelMiscMarc(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Indi wife) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(null);
         addRowHusbandFamily(husbandParentFamily);
@@ -275,6 +279,7 @@ public class MergeModelMiscMarc extends MergeModel {
     MergeModelMiscMarc(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Fam wifeParentFamily) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(null);
         addRowHusbandFamily(husbandParentFamily);
@@ -282,17 +287,11 @@ public class MergeModelMiscMarc extends MergeModel {
         addRowWife(null);
         addRowWifeFamily(wifeParentFamily);
     }
-
+    
     private void addRowFamily() {
         if (currentFamily != null) {
             // je recupere le contrat de mariage existant
             Property marcProperty = currentFamily.getProperty(record.getTag());
-
-            // j'affiche la source du mariage
-            addRowSource(RowType.EventSource, record.getEventSource(), marcProperty);
-            
-            // j'affiche un separateur
-            addRowSeparator();
 
             // j'affiche l'identifiant de la famille
             addRow(RowType.MarriageFamily, record, currentFamily);
@@ -310,12 +309,6 @@ public class MergeModelMiscMarc extends MergeModel {
         } else {
             // selectedFamily est nul
             
-            // j'affiche la source 
-            addRowSource(RowType.EventSource, record.getEventSource(), null);
-
-            // j'affiche un separateur
-            addRowSeparator();
-
             // j'affiche l'identifiant de la famille
             addRow(RowType.MarriageFamily, record, null);
             // j'affiche la date du mariage
@@ -938,6 +931,20 @@ public class MergeModelMiscMarc extends MergeModel {
     protected Entity getSelectedEntity() {
         return currentFamily;
     }
+    
+    /**
+     * retourne la propriété concernée par l'acte
+     * @return propriété concernée par l'acte
+     */
+    @Override
+    protected Property getSelectedProperty() {
+        if (currentFamily != null) {
+           return currentFamily.getProperty(record.getTag()); 
+        } else {
+            return null;
+        }
+    }
+    
 
     /**
      * retourne les noms des epoux pour constituer le titre de la fenetre principale
@@ -947,7 +954,7 @@ public class MergeModelMiscMarc extends MergeModel {
     protected String getTitle() {
         String husband = record.getIndi().getFirstName() + " "+ record.getIndi().getLastName();
         String wife = record.getWife().getFirstName() + " "+ record.getWife().getLastName()+ " " + record.getEventDate().getDisplayValue();
-        return MessageFormat.format("%s de %s x %s", record.getEventType(), husband, wife);
+        return MessageFormat.format("{0}: {1} x {2}", record.getEventType(), husband, wife);
     }
 
     /**

@@ -1,24 +1,24 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="fr-fr"><head><title>Format des Fichiers&nbsp;ANCESTRIS</title>
+<html lang="fr-fr"><head><title>Format des Fichiers ANCESTRIS</title>
 
 
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 <link href="nbdocs:/ancestris/app/docs/ancestris.css" rel="stylesheet"></head><body>
 <h2>Format des fichiers de relevé ANCESTRIS (<a href="#Remarque">V4</a>)</h2>
-Les quatre types de releves ont &nbsp;tous le même format : les lignes
-sont contistutées de 82 champs séparés par un point-vigule.<br>Le contenu des&nbsp;champs est encodé au format &nbsp;UTF-8.<br>Chaque ligne est terminée par&nbsp;le separateur "\r\n" (fin de ligne au format Windows)<br><br>Si
-le caractere séparateur point-virgule est&nbsp;présent à l'intérieur
+Les quatre types de releves ont  tous le même format : les lignes
+sont contistutées de 82 champs séparés par un point-vigule.<br>Le contenu des champs est encodé au format  UTF-8.<br>Chaque ligne est terminée par le separateur "\r\n" (fin de ligne au format Windows)<br><br>Si
+le caractere séparateur point-virgule est présent à l'intérieur
 d'un champ , le champ est mis entre guillements lors de l'écriture dans
 le fichier. De même, si le caractère guillemet est présent à
-l'intérieur d'un champ, un deuxième&nbsp;guillement est ajouté après
+l'intérieur d'un champ, un deuxième guillement est ajouté après
 celui-ci (cf RFC 4180).<br><br>Certains
-champs&nbsp;sont ignorés lors de la lecture du fichier par Ancestris en
+champs sont ignorés lors de la lecture du fichier par Ancestris en
 fonction du type d'evenement, voir le tableau ci-dessous. <br><br>
-Astuce : &nbsp;Il est possible de créer un fichier au format ANCESTRIS
-avec un tableur&nbsp;pour, par exemple, réutiliser des données déjà
-saisie avec un tableur<br><ol><li>créer un tableau de 90 colonnes avec le tableur,</li><li>mettre&nbsp;ANCESTRISV2 dans la première colonne de toutes les lignes.</li><li>renseigner
-&nbsp;les autres colonnes en respectant la défintion
-ci-dessous.&nbsp;Il est possible de laisser des cellules vides excepté
+Astuce :  Il est possible de créer un fichier au format ANCESTRIS
+avec un tableur pour, par exemple, réutiliser des données déjà
+saisie avec un tableur<br><ol><li>créer un tableau de 90 colonnes avec le tableur,</li><li>mettre ANCESTRISV2 dans la première colonne de toutes les lignes.</li><li>renseigner
+ les autres colonnes en respectant la défintion
+ci-dessous. Il est possible de laisser des cellules vides excepté
 la1ère et la 8ième colonne.</li><li>enregistrer les données au format CSV ou TXT ( avec point virgule comme séparateur de cellule)</li></ol><br>
 <table style="text-align: left;" border="1" cellpadding="2" cellspacing="2">
 <tbody>
@@ -43,7 +43,7 @@ la1ère et la 8ième colonne.</li><li>enregistrer les données au format CSV ou 
 </td><td style="text-align: left;">CityName</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
 </td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
-<td style="text-align: left;">nom de la commune&nbsp;</td>
+<td style="text-align: left;">nom de la commune </td>
 </tr>
 <tr><td><br>
 </td><td>CityCode</td><td><br>
@@ -80,11 +80,11 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: center;">"M"</td>
 <td style="text-align: center;">"D"</td>
 <td style="text-align: center;">"V"</td>
-<td style="text-align: left;">type d'évènement&nbsp;(<span style="font-weight: bold;">obligatoire</span>)</td>
+<td style="text-align: left;">type d'évènement (<span style="font-weight: bold;">obligatoire</span>)</td>
 </tr>
 <tr><td><br>
-</td><td>EventTypeTag</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">tag d'un type&nbsp;d'evenement divers. Ex : &nbsp;PM, TEST, ...<br></td></tr><tr><td><br>
-</td><td>EventTypeName</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">libellé associé au tag divers . Ex:: Publication &nbsp;de mariage, Testament, ......</td></tr><tr align="center">
+</td><td>EventTypeTag</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">tag d'un type d'evenement divers. Ex :  PM, TEST, ...<br></td></tr><tr><td><br>
+</td><td>EventTypeName</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">libellé associé au tag divers . Ex:: Publication  de mariage, Testament, ......</td></tr><tr align="center">
 <td><br>
 </td><td style="text-align: left;">EventDate</td>
 <td style="text-align: center;" colspan="1" rowspan="1">x<br>
@@ -153,7 +153,7 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: left;">Nom du : <br>si N : nouveau né, si M : époux, si&nbsp; D : décédé, si V :&nbsp;intervenant n°1</td>
+<td style="text-align: left;">Nom du : <br>si N : nouveau né, si M : époux, si  D : décédé, si V : intervenant n°1</td>
 </tr>
 <tr>
 <td><br>
@@ -244,7 +244,7 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">prénom</td>
 </tr>
 <tr><td><br>
-</td><td>IndiMarriedSex</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">Ancestris renseigne&nbsp;IndiMarriedSex avec le sexe opposé de&nbsp;IndiSex</td></tr><tr><td><br>
+</td><td>IndiMarriedSex</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">Ancestris renseigne IndiMarriedSex avec le sexe opposé de IndiSex</td></tr><tr><td><br>
 </td><td>IndiMarriedDead</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: center;">x</td><td style="text-align: left;">décédé ou non</td></tr><tr>
 <td><br>
 </td><td>IndiMarriedOccupation</td>
@@ -446,7 +446,7 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: left;">Ex conjoint de la femme&nbsp;ou de l'intervenant n°2</td>
+<td style="text-align: left;">Ex conjoint de la femme ou de l'intervenant n°2</td>
 </tr>
 <tr>
 <td><br>
@@ -458,7 +458,7 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: left;">prénom</td>
 </tr>
 <tr><td><br>
-</td><td>WifeMarriedSex</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">Ancestris renseigne&nbsp;WifeMarriedSex avec le sexe opposé de&nbsp;WifeSex</td></tr><tr><td><br>
+</td><td>WifeMarriedSex</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">Ancestris renseigne WifeMarriedSex avec le sexe opposé de WifeSex</td></tr><tr><td><br>
 </td><td>WifeMarriedDead</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: center;">ignoré</td><td style="text-align: center;">x</td><td style="text-align: left;">décédé ou non </td></tr><tr>
 <td><br>
 </td><td>WifeMarriedOccupation</td>
@@ -522,7 +522,7 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: left;">commentaire du père&nbsp;</td>
+<td style="text-align: left;">commentaire du père </td>
 </tr>
 <tr><td><br>
 </td><td><br>
@@ -738,14 +738,14 @@ la paroisse s'il y en a plusieurs dans la commune</td></tr><tr>
 </tbody>
 </table>
 <p>
-</p><p><a name="Remarque"></a>Liste des changements du format Ancestris :&nbsp;</p><p>&nbsp;ANCESTRIS V2
+</p><p><a name="Remarque"></a>Liste des changements du format Ancestris : </p><p> ANCESTRIS V2
 contient 4 champs supplémentaires par rapport au format
-ANCESTRISV1 &nbsp;:&nbsp;IndiFatherAge, IndiMotherAge, WifeFatherAge et
-WifeMotherAge.</p><p>&nbsp;ANCESTRIS
+ANCESTRISV1  : IndiFatherAge, IndiMotherAge, WifeFatherAge et
+WifeMotherAge.</p><p> ANCESTRIS
 V3 contient 8 champs supplémentaires par rapport au format
-ANCESTRISV2 &nbsp;:&nbsp;IndiResidence, IndiMMarriedResidence,
-indiFatherResidence , indiMotherResidence, &nbsp;
-WifeResidence,&nbsp;WifeMarriedResidence,&nbsp;WifeFatherResidence
-,&nbsp;WifeMotherResidence,</p><p></p>ANCESTRIS V4 contient un champ supplémentaire par rapport au format
-ANCESTRISV3&nbsp; :SecondDate<br>
-Le champ RecordNo est supprimé.&nbsp; </body></html>
+ANCESTRISV2  : IndiResidence, IndiMMarriedResidence,
+indiFatherResidence , indiMotherResidence,  
+WifeResidence, WifeMarriedResidence, WifeFatherResidence
+, WifeMotherResidence,</p><p></p>ANCESTRIS V4 contient un champ supplémentaire par rapport au format
+ANCESTRISV3  :SecondDate<br>
+Le champ RecordNo est supprimé.  </body></html>

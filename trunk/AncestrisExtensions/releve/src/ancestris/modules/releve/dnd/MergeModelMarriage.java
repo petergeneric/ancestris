@@ -197,6 +197,7 @@ public class MergeModelMarriage extends MergeModel {
         super(record, gedcom);
         this.currentFamily = null;
 
+        addRowSource();
         addRowFamily();
         addRowHusband(null);
         //TODO ajouter l'ex conjoint de l'epoux
@@ -210,7 +211,8 @@ public class MergeModelMarriage extends MergeModel {
     MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam selectedFamily) throws Exception {
         super(record, gedcom);
         this.currentFamily = selectedFamily;
-
+        
+        addRowSource();
         addRowFamily();
         if ( selectedFamily != null ) {
             addRowHusband(selectedFamily.getHusband());
@@ -238,6 +240,7 @@ public class MergeModelMarriage extends MergeModel {
     MergeModelMarriage(MergeRecord record, Gedcom gedcom, Indi husband, Indi wife) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(husband);
         if ( husband!= null ) {
@@ -258,6 +261,7 @@ public class MergeModelMarriage extends MergeModel {
     MergeModelMarriage(MergeRecord record, Gedcom gedcom, Indi husband, Fam wifeParentFamily) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(husband);
         if ( husband!= null ) {
@@ -273,6 +277,7 @@ public class MergeModelMarriage extends MergeModel {
     MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Indi wife) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(null);
         addRowHusbandFamily(husbandParentFamily);
@@ -289,6 +294,7 @@ public class MergeModelMarriage extends MergeModel {
     MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Fam wifeParentFamily) throws Exception {
         super(record, gedcom);
         this.currentFamily = null;
+        addRowSource();
         addRowFamily();
         addRowHusband(null);
         addRowHusbandFamily(husbandParentFamily);
@@ -301,12 +307,6 @@ public class MergeModelMarriage extends MergeModel {
         if (currentFamily != null) {
             // je recupere le mariage existant
             Property marriageProperty = currentFamily.getProperty("MARR");
-
-            // j'affiche la source du mariage
-            addRowSource(RowType.EventSource, record.getEventSource(), marriageProperty);
-            
-            // j'affiche un separateur
-            addRowSeparator();
 
             // j'affiche l'identifiant de la famille
             addRow(RowType.MarriageFamily, record, currentFamily);
@@ -321,12 +321,6 @@ public class MergeModelMarriage extends MergeModel {
         } else {
             // selectedFamily est nul
             
-            // j'affiche la source 
-            addRowSource(RowType.EventSource, record.getEventSource(), null);
-
-            // j'affiche un separateur
-            addRowSeparator();
-
             // j'affiche l'identifiant de la famille
             addRow(RowType.MarriageFamily, record, null);
             // j'affiche la date du mariage
@@ -843,6 +837,20 @@ public class MergeModelMarriage extends MergeModel {
     protected Entity getSelectedEntity() {
         return currentFamily;
     }
+    
+    /**
+     * retourne la propriété concernée par l'acte
+     * @return propriété concernée par l'acte
+     */
+    @Override
+    protected Property getSelectedProperty() {
+        if (currentFamily != null) {
+            return currentFamily.getProperty("MARR");
+        } else {
+            return null;
+        }
+    }
+    
 
     /**
      * retourne les noms des epoux pour constituer le titre de la fenetre principale

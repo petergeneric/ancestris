@@ -85,11 +85,10 @@ public class TestUtility extends TestCase {
         child2.setName("TwoFirstName", "FATHERLASTNAME");
         child2.setSex(PropertySex.FEMALE);
         birth = child2.addProperty("BIRT", "");
-        birth.addProperty("DATE","03 MAR 2003");
+        birth.addProperty("DATE","BEF 2004");
         birth.addProperty("PLAC","Brest");
-        Property sourcexref = birth.addProperty("SOUR","@S2@");
-        //((PropertyXRef)sourcexref).link();
-
+        //Property sourcexref = birth.addProperty("SOUR","@S2@");
+        
 
         Indi child3 = (Indi) gedcom.createEntity(Gedcom.INDI, "child3");
         child3.setName("ThreeFirstName", "FATHERLASTNAME");

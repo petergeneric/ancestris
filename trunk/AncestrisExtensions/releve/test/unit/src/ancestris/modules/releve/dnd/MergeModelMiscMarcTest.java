@@ -74,10 +74,11 @@ public class MergeModelMiscMarcTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             
+            String fileName = "ville_marc.txt";
+            MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S1").getPropertyDisplayValue("TITL"));
 
             RecordMisc miscRecord = createMiscMarcRecord("NEW");
-            String sourceTitle = "";
-            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, miscRecord);
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), fileName, miscRecord);
 
             List<MergeModel> models;
             Fam indiParentFamily;
@@ -96,8 +97,8 @@ public class MergeModelMiscMarcTest extends TestCase {
             models.get(0).copyRecordToEntity();
 
             Fam fam = (Fam) gedcom.getEntity("F00004");
-            assertEquals("Lien marc vers source","@S00004@", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
-            assertEquals("Source marc","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARC:SOUR"),"").replaceAll("@", "")).getId());
+            assertEquals("Lien marc vers source","@S1@", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
+            assertEquals("Source marc","S1", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARC:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Source marc",miscRecord.getCote().getValue() + ", " +miscRecord.getFreeComment().getValue(), fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
             assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));
             assertEquals("Lieu marc",getRecordsInfoPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
@@ -180,8 +181,8 @@ public class MergeModelMiscMarcTest extends TestCase {
 
 
             RecordMisc miscRecord = createMiscMarcRecord("CM1");
-            String sourceTitle = "";
-            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, miscRecord);
+            String fileName = "";
+            MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), fileName, miscRecord);
 
             List<MergeModel> models;
             Fam indiParentFamily;
@@ -200,9 +201,8 @@ public class MergeModelMiscMarcTest extends TestCase {
             models.get(0).copyRecordToEntity();
 
             Fam fam = (Fam) gedcom.getEntity("F00004");
-            assertEquals("Lien marc vers source","@S00004@", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
-            assertEquals("Source marc","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARC:SOUR"),"").replaceAll("@", "")).getId());
-            assertEquals("Source marc",miscRecord.getCote().getValue() + ", " + miscRecord.getFreeComment().getValue(), fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
+            assertEquals("Lien marc vers source","", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
+            assertEquals("Source marc","", fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
             assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));
             assertEquals("Lieu marc",getRecordsInfoPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
             //assertEquals("Note marc",miscRecord.getGeneralComment().getValue(), fam.getValue(new TagPath("FAM:MARC:NOTE"),""));

@@ -344,6 +344,7 @@ class MergeModelMiscOther extends MergeModel {
      */
     protected MergeModelMiscOther(MergeRecord record, MergeParticipantType participantType, Gedcom gedcom, Indi indi, Fam marriedFamily, Fam parentFamily) throws Exception {
         super(record, participantType, gedcom);
+        addRowSource();
         if( marriedFamily != null && participant.getSex()== PropertySex.FEMALE) {
             // l'epouse est affichée en premier
             addRowEvent(indi);
@@ -356,9 +357,8 @@ class MergeModelMiscOther extends MergeModel {
             addRowMarried(marriedFamily);
             addRowParents(parentFamily);
         }
-
     }
-
+    
     /**
      * ajoute l'evenement s'il s'agit du participant 1
      * @param currentIndi
@@ -371,11 +371,6 @@ class MergeModelMiscOther extends MergeModel {
                // participant 1
                // je recherche la source de l'évènement deja existant
                Property eventProperty = MergeQuery.findPropertyEvent(currentIndi,record.getEventType(),record.getEventDate());
-               // j'affiche la source de l'évènement
-               addRowSource(RowType.EventSource, record.getEventSource(), eventProperty);
-
-               addRowSeparator();
-
                // j'affiche la date, le lieu et les commentaires de l'évènement
                addRow(RowType.EventType, record.getEventType(), eventProperty);
                addRow(RowType.EventDate, record.getEventDate(), eventProperty != null ? (PropertyDate) eventProperty.getProperty("DATE") : null);
@@ -391,10 +386,6 @@ class MergeModelMiscOther extends MergeModel {
             // selectedIndi est nul
 
             if (participantType == MergeParticipantType.participant1) {
-               // j'affiche la source de la naissance
-               addRowSource(RowType.EventSource, record.getEventSource(), null);
-               addRowSeparator();
-
                // j'affiche la date, le lieu et les commentaires de l'évènement
                addRow(RowType.EventDate, record.getEventDate(), null);
                addRow(RowType.EventPlace, record.getEventPlace(), "");
@@ -519,8 +510,36 @@ class MergeModelMiscOther extends MergeModel {
      */
     @Override
     protected Entity getSelectedEntity() {
-        return getRow(RowType.IndiLastName).entityObject;
+        if (participantType == MergeParticipantType.participant1) {
+            MergeRow mergeRow = getRow(RowType.IndiLastName);
+            if ( mergeRow != null ) {
+                return mergeRow.entityObject;
+            } else {
+                return null;
+            }
+        } else {
+            MergeRow mergeRow = getRow(RowType.IndiLastName);
+            if ( mergeRow != null ) {
+                return mergeRow.entityObject;
+            } else {
+                return null;
+            }
+        }
+        
     }
+    
+    /**
+     * retourne la propriété concernée par l'acte
+     * @return propriété concernée par l'acte
+     */
+    @Override
+    protected Property getSelectedProperty() {
+        if (participantType == MergeParticipantType.participant1 && getSelectedEntity()!= null) {
+            return MergeQuery.findPropertyEvent(getSelectedEntity(),record.getEventType(),record.getEventDate());
+        } else {
+            return null;
+        }
+    }        
 
     /**
      * copie les données du relevé dans l'entité

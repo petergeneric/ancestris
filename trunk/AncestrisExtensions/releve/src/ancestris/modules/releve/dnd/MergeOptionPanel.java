@@ -6,10 +6,12 @@
 
 package ancestris.modules.releve.dnd;
 
+import genj.gedcom.Source;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -110,7 +112,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 2);
         jPanelSource.add(jLabelAssociateLabel, gridBagConstraints);
 
         jTableSource.setModel(new javax.swing.table.DefaultTableModel(
@@ -183,14 +185,24 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
 
     private void jButtonAddSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddSourceActionPerformed
-        // j'affiche la fenetre de selection d'une source
-        String newSourceTitle = RecordSourceConfigDialog.show(parent, currentFile.getName(), "");
-        // j'enregistre la source
-        if( newSourceTitle != null && !newSourceTitle.isEmpty()) {
-            SourceModel.getModel().add(currentFile.getName(), newSourceTitle);
-            // je selectionne la dernière ligne du modele
-            int index = jTableSource.convertRowIndexToView(SourceModel.getModel().getRowCount() - 1);
-            jTableSource.getSelectionModel().setSelectionInterval(index, index);
+        
+        if( currentFile != null && !currentFile.getName().isEmpty()) {
+
+            // j'affiche la fenetre de selection d'une source
+            Source newSource = RecordSourceConfigDialog.show(parent, currentFile.getName(), "");
+            // j'enregistre la source
+            if( newSource != null) {
+                SourceModel.getModel().add(currentFile.getName(), newSource.getTitle());
+                // je selectionne la dernière ligne du modele
+                int index = jTableSource.convertRowIndexToView(SourceModel.getModel().getRowCount() - 1);
+                jTableSource.getSelectionModel().setSelectionInterval(index, index);
+            }
+        } else {
+            // j'affiche le message d'erreur
+            String message = NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.message.FirstSaveFile");
+            String title = jLabelAssociateLabel.getText();
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
         }
 }//GEN-LAST:event_jButtonAddSourceActionPerformed
 
@@ -208,10 +220,10 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             String fileName = (String) SourceModel.getModel().getValueAt(index, 0);
             String sourceName = (String) SourceModel.getModel().getValueAt(index, 1);
             // j'affiche la fenetre de selection d'une source
-            String newSourceTitle = RecordSourceConfigDialog.show(parent, fileName, sourceName);
+            Source newSource = RecordSourceConfigDialog.show(parent, fileName, sourceName);
             // j'enregistre la source
-            if (newSourceTitle != null && !newSourceTitle.isEmpty()) {
-                SourceModel.getModel().modify(index, newSourceTitle);
+            if (newSource != null) {
+                SourceModel.getModel().modify(index, newSource.getTitle());
             }
         } else {
             Toolkit.getDefaultToolkit().beep();
@@ -262,8 +274,13 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
         final Class columnClass[] = {String.class, String.class};
 
-        private ArrayList<SourceModelElement> sourceList = new ArrayList<SourceModelElement>();
+        // données du modèle 
+        private final ArrayList<SourceModelElement> sourceList = new ArrayList<SourceModelElement>();
 
+        /** 
+         * model factory
+         * @return 
+         */
         static public SourceModel getModel() {
 
             if (sourceModel == null) {
@@ -282,9 +299,9 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             String stringData = NbPreferences.forModule(SourceModel.class).get(
                     SOURCE_PREFERENCE, "");
             String[] arrayData = stringData.split(";");
-            for (int i = 0; i < arrayData.length; i++) {
-                if (!arrayData[i].isEmpty()) {
-                    String[]  item= arrayData[i].split("=");
+            for (String arrayData1 : arrayData) {
+                if (!arrayData1.isEmpty()) {
+                    String[] item = arrayData1.split("=");
                     if( item.length == 2) {
                         sourceList.add(new SourceModelElement(item[0], item[1]));
                     }
@@ -292,9 +309,33 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             }
         }
 
+        /**
+         * enregistre les paires fileName=sourceName
+         */
+        public void savePreferences() {
+            StringBuilder values = new StringBuilder();
+
+            for (SourceModelElement element : sourceList) {
+                values.append(element.fileName)
+                        .append("=")
+                        .append(element.sourceName)
+                        .append(";");
+            }
+            NbPreferences.forModule(SourceModel.class).put(
+                    SOURCE_PREFERENCE, values.toString());
+        }
+
+        
         public void add(String fileName, String sourceName) {
-            sourceList.add(new SourceModelElement(fileName, sourceName));
-            fireTableDataChanged();
+            int index = index(fileName);
+            if (index!= -1) {
+                sourceList.get(index).sourceName = sourceName;
+                fireTableRowsUpdated(index, index);
+            } else {
+                sourceList.add(new SourceModelElement(fileName, sourceName));
+                index = sourceList.size()-1;
+                fireTableRowsInserted(index, index);
+            }            
         }
 
         public void remove(int index) {
@@ -307,38 +348,30 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             fireTableRowsUpdated(index, index);
         }
 
-        public boolean exist(String fileName) {
-            for(SourceModelElement element : sourceList) {
-                if(element.fileName.equalsIgnoreCase(fileName)) {
-                    return true;
+        public int index(String fileName) {
+            for(int i=0; i < sourceList.size(); i++) {
+                if( sourceList.get(i).fileName.equalsIgnoreCase(fileName)) {
+                    return i;
                 }
             }
-            return false;
+            return -1;
+        }
+
+        public boolean exist(String fileName) {
+            if( index(fileName)== -1) {
+                return false;
+            } else {
+                return true;
+            }
         }
 
         public String getSource(String fileName) {
-            for(SourceModelElement element : sourceList) {
-                if(element.fileName.equalsIgnoreCase(fileName)) {
-                    return element.sourceName;
-                }
-            }
-            return null;
-        }
-
-        /**
-         * enregistre les repertoire
-         */
-        private void savePreferences() {
-            StringBuilder values = new StringBuilder();
-
-            for (SourceModelElement element : sourceList) {
-                values.append(element.fileName)
-                        .append("=")
-                        .append(element.sourceName)
-                        .append(";");
-            }
-            NbPreferences.forModule(SourceModel.class).put(
-                    SOURCE_PREFERENCE, values.toString());
+            int index = index(fileName);
+            if( index != -1) {
+                return sourceList.get(index).sourceName;
+            } else {
+                return "";
+            }            
         }
 
         @Override
@@ -358,7 +391,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
         @Override
         public int getColumnCount() {
-            return 2;
+            return columnClass.length;
         }
 
         @Override

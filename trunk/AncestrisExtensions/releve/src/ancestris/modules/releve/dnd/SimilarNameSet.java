@@ -16,8 +16,8 @@ public class SimilarNameSet {
     static private SimilarNameSet similarLastNameSet = null;
     static private SimilarNameSet similarFirstNameSet = null;
 
-    private HashMap<String,String> similarNames = new HashMap<String,String>();
-    private String similarPreference;;
+    private final HashMap<String,String> similarNames = new HashMap<String,String>();
+    private final String similarPreference;
     
 
     /**

@@ -387,9 +387,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     addRow(lineNo, group.getTitle(), keyStroke);
                     lineNo++;
                     for (EditorBeanField editorBeanField : group.getFields()) {
-                        if ( editorBeanField.getFieldType() == FieldType.secondDate ) {
-                            System.out.println( "selectRecord secondDate visible)="+ editorBeanField.isVisible()); 
-                        }
                         if (!editorBeanField.isVisible()) {
                             continue;
                         }

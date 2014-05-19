@@ -1,7 +1,5 @@
 package ancestris.modules.releve.dnd;
 
-import ancestris.modules.releve.model.FieldPlace;
-import ancestris.modules.releve.model.Record;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -36,7 +34,7 @@ public class TransferableRecord  implements Transferable {
     }
 
     /**
-     * retourne les types de données tranférable
+     * retourne les types de données transférable
      */
     @Override
     public DataFlavor[] getTransferDataFlavors() {

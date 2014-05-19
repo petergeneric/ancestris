@@ -12,6 +12,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.Source;
 import genj.gedcom.UnitOfWork;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -34,6 +35,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     private Gedcom gedcom=null;
     private MergeRecord mergeRecord = null;
     private boolean showAllParents = false;
+    List<MergeModel> mergeModelList;
 
     /**
     * factory de la fenetre
@@ -138,7 +140,6 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
      * @param record
      */
     protected void initData(Component sourceComponent, MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity ) throws Exception {
-        List<MergeModel> models;
         this.dndSourceComponent = ViewWrapperManager.createViewWrapper(sourceComponent);
         this.mergeRecord = mergeRecord;
         this.gedcom = gedcom;
@@ -164,11 +165,11 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
         setIconImage(icon.getImage());
 
         // je recupere les modeles contenant les entites compatibles avec le relevé
-        models = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showAllParents);
+        mergeModelList = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showAllParents);
         // j'affiche les modeles et selectionne le premier modele de la liste
         // (j'affiche le panel1 en dernier pour que le partipant 1 soit selectionné dans l'arbre)
-        mergePanel2.initData( models, selectedEntity, this, MergeParticipantType.participant2);
-        mergePanel1.initData( models, selectedEntity, this, MergeParticipantType.participant1);
+        mergePanel2.initData( mergeModelList, selectedEntity, this, MergeParticipantType.participant2);
+        mergePanel1.initData( mergeModelList, selectedEntity, this, MergeParticipantType.participant1);
         if (mergePanel2.getCurrentModel() == null ) {
             // si le deuxième panneau est vide , j'affiche le premier panneau dans toute la fenetre.
             jSplitPane0.setDividerLocation(getHeight());
@@ -233,6 +234,33 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     }
     
     /**
+     * sélectionne une source pour remplacer celle qui est proposée dans les propositions
+     */
+    @Override
+    public void selectSource() {
+        final MergeModel currentModel1 = mergePanel1.getCurrentModel();
+        Object entityObject = currentModel1.getRow(MergeModel.RowType.EventSource).entityObject;
+        String sourceTitle = currentModel1.record.getEventSourceTitle();
+        if (entityObject instanceof Source ) {
+            sourceTitle = ((Source) entityObject).getTitle();
+        }
+        Source source = RecordSourceConfigDialog.show(this, currentModel1.record.getFileName(), sourceTitle, gedcom);
+        if (source != null ) {
+            mergeRecord.calculateSourceTitle();
+            
+            // je copie la source dans tous les modeles car la source est commune à tous les modeles
+            for( MergeModel mergeModel : mergeModelList) {                
+                mergeModel.addRowSource(source);
+                mergeModel.fireTableDataChanged();
+            }
+            // j'enregistre la paire fileName,source dans les preferences        
+            MergeOptionPanel.SourceModel.getModel().add(currentModel1.record.getFileName(), source.getTitle());
+            MergeOptionPanel.SourceModel.getModel().savePreferences();
+        }
+        
+    }
+    
+    /**
      * pour lancer le test avec junit
      * @throws Exception
      */
@@ -250,7 +278,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                         Property associatedProperty2 = currentModel2.copyRecordToEntity();
                         currentModel2.copyAssociation(associatedProperty1, associatedProperty2);
                     }
-                } catch (Throwable throwable) {
+                } catch (Exception throwable) {
                     // je constitue la commande pour annuler les modifications
                     long afterChange = currentModel1.getGedcom().getLastChange()!=null ? currentModel1.getGedcom().getLastChange().getTime() : 0;
                     if ( afterChange > beforeChange ) {
@@ -328,7 +356,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
 
     /**
      * copie les données du relevé dans l'entité sélectionnée
-     * puis affiche l'entité dans l'arbre dynamic (si la cible du dnd est l'arbre)
+     * puis affiche l'entité dans l'arbre dynamique (si la cible du dnd est l'arbre)
      * puis ferme la fenêtre 
      * @param evt
      */

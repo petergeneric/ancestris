@@ -17,7 +17,7 @@ import javax.swing.TransferHandler;
  * @author Michel
  */
 public class RecordTransferHandle extends TransferHandler {
-    private DataManager dataManager;
+    private final DataManager dataManager;
 
     public RecordTransferHandle(DataManager dataManager) {
         this.dataManager = dataManager;
@@ -39,13 +39,13 @@ public class RecordTransferHandle extends TransferHandler {
             // je complete le lieu dans le releve
             FieldPlace recordsInfoPlace = new FieldPlace();
             recordsInfoPlace.setValue(model.getPlace());
-            String sourceTitle;
+            String fileName;
             if (dataManager.getCurrentFile() != null ) {
-                sourceTitle = MergeOptionPanel.SourceModel.getModel().getSource(dataManager.getCurrentFile().getName());
+                fileName = dataManager.getCurrentFile().getName();
             } else {
-                sourceTitle = "";
+                fileName = "";
             }
-            MergeRecord mergeRecord = new MergeRecord(recordsInfoPlace, sourceTitle, clonedRecord);
+            MergeRecord mergeRecord = new MergeRecord(recordsInfoPlace, fileName, clonedRecord);
             return new TransferableRecord(mergeRecord, component);
         } else {
             return null;

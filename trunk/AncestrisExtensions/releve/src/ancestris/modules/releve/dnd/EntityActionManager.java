@@ -9,4 +9,5 @@ import genj.gedcom.Entity;
 public interface EntityActionManager {
     void setRoot(Entity entity);
     void show(Entity entity);
+    void selectSource();
 }
