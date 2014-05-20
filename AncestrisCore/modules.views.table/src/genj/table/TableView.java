@@ -21,7 +21,7 @@
 package genj.table;
 
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.TableFilterWidget;
+import ancestris.swing.atable.ATableFilterWidget;
 import ancestris.view.ExplorerHelper;
 import genj.common.AbstractPropertyTableModel;
 import genj.common.PropertyTableModel;
@@ -166,14 +166,14 @@ public class TableView extends View {
 
     /** current type we're showing */
     private Mode currentMode;
-    private Sticky sticky = new Sticky();
+    private final Sticky sticky = new Sticky();
 
     // TableView Preferences
     public static boolean getFollowEntity() {
         return REGISTRY.get("entity.follow", false);
     }
     // filter
-    private TableFilterWidget filter = new TableFilterWidget();
+    private final ATableFilterWidget filter;
 
     public static void setFollowEntity(boolean followEntity) {
         REGISTRY.put("entity.follow", followEntity);
@@ -183,6 +183,7 @@ public class TableView extends View {
      * Constructor
      */
     public TableView() {
+        this.filter = new ATableFilterWidget();
 
         // get modes
         for (Mode mode : modes.values()) {

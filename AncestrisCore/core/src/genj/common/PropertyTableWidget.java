@@ -19,19 +19,16 @@
  */
 package genj.common;
 
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.TableFilterWidget;
+import ancestris.swing.atable.ATable;
+import ancestris.swing.atable.ATableFilterWidget;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertyName;
 import genj.io.BasicTransferable;
 import genj.util.WordBuffer;
 import genj.util.swing.HeadlessLabel;
-import genj.util.swing.LinkWidget;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -40,25 +37,15 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JViewport;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionListener;
@@ -69,7 +56,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 /**
  * A widget that shows entities in rows and columns
@@ -126,17 +112,18 @@ public class PropertyTableWidget extends JPanel {
         return table;
     }
 
-    public void setFilterWidget(TableFilterWidget filter) {
+    public void setFilterWidget(ATableFilterWidget filter) {
         table.setFilterWidget(filter);
     }
 
     /**
      * Column selection
-     * @set one of
-     * ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-     * ListSelectionModel.SINGLE_SELECTION
-     * ListSelectionModel.SINGLE_INTERVAL_SELECTION
-     * -1
+     *
+     * @param set one of
+     *            ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+     *            ListSelectionModel.SINGLE_SELECTION
+     *            ListSelectionModel.SINGLE_INTERVAL_SELECTION
+     *            -1
      */
     public void setColSelection(int set) {
         table.setColSelection(set);
@@ -144,10 +131,11 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * Column selection
-     * @set one of
-     * ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-     * ListSelectionModel.SINGLE_SELECTION
-     * ListSelectionModel.SINGLE_INTERVAL_SELECTION
+     *
+     * @param set one of
+     *            ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+     *            ListSelectionModel.SINGLE_SELECTION
+     *            ListSelectionModel.SINGLE_INTERVAL_SELECTION
      */
     public void setRowSelection(int set) {
         table.setRowSelection(set);
@@ -293,7 +281,6 @@ public class PropertyTableWidget extends JPanel {
 
         // e.g. 4, 40, 60, 70, 48, 0, -1, 1, 1 
         // for a table with 4 columns and two sort directives
-
         TableColumnModel columns = table.getColumnModel();
 
         WordBuffer result = new WordBuffer(",");
@@ -302,7 +289,6 @@ public class PropertyTableWidget extends JPanel {
         for (int c = 0; c < columns.getColumnCount(); c++) {
             result.append(columns.getColumn(c).getWidth());
         }
-
 
         return result.toString();
     }
@@ -333,12 +319,10 @@ public class PropertyTableWidget extends JPanel {
     /**
      * Table Content
      */
-    private class Table extends JTable {
+    private class Table extends ATable {
 
         private PropertyTableModel propertyModel;
-        private int defaultRowHeight;
-        private TableRowSorter<Model> sorter;
-        private TableFilterWidget filterText;
+        private final int defaultRowHeight;
 
         /**
          * Constructor
@@ -350,7 +334,6 @@ public class PropertyTableWidget extends JPanel {
             r.setFont(getFont());
             defaultRowHeight = r.getPreferredSize().height;
             setDefaultRenderer(Object.class, r);
-            getTableHeader().setReorderingAllowed(false);
 
             getColumnModel().getSelectionModel().addListSelectionListener(this);
             // 20091208 JTable already implements and add itself as listener
@@ -360,47 +343,33 @@ public class PropertyTableWidget extends JPanel {
             setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
             setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
 
-            // patch selecting
-            addMouseListener(new MouseAdapter() {
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    // make sure something is selected but don't screw current multi-selection
-                    int row = rowAtPoint(e.getPoint());
-                    int col = columnAtPoint(e.getPoint());
-                    if (row < 0 || col < 0) {
-                        clearSelection();
-                    } else {
-                        if (!isCellSelected(row, col)) {
-                            getSelectionModel().setSelectionInterval(row, row);
-                            getColumnModel().getSelectionModel().setSelectionInterval(col, col);
-                        }
-                    }
-                    // FIXME: action is handled here and selection is handled in changeSelection
-                    Object cell = getValueAt(row, col);
-                    if (cell != null && cell instanceof Property) {
-//XXX:                        SelectionDispatcher.fireAction(e,new Context((Property)cell));
-                        SelectionDispatcher.fireSelection(e, new Context((Property) cell));
-                    }
-                }
-            });
-
-            panelShortcuts.addComponentListener(new ComponentAdapter() {
-
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    createShortcuts();
-                }
-            });
+//            // patch selecting
+//            addMouseListener(new MouseAdapter() {
+//
+//                @Override
+//                public void mousePressed(MouseEvent e) {
+//                    // make sure something is selected but don't screw current multi-selection
+//                    int row = rowAtPoint(e.getPoint());
+//                    int col = columnAtPoint(e.getPoint());
+//                    if (row < 0 || col < 0) {
+//                        clearSelection();
+//                    } else {
+//                        if (!isCellSelected(row, col)) {
+//                            getSelectionModel().setSelectionInterval(row, row);
+//                            getColumnModel().getSelectionModel().setSelectionInterval(col, col);
+//                        }
+//                    }
+//                    // FIXME: action is handled here and selection is handled in changeSelection
+//                    Object cell = getValueAt(row, col);
+//                    if (cell != null && cell instanceof Property) {
+////XXX:                        SelectionDispatcher.fireAction(e,new Context((Property)cell));
+//                        SelectionDispatcher.fireSelection(e, new Context((Property) cell));
+//                    }
+//                }
+//            });
+            setShortCut(panelShortcuts);
 
             // done
-        }
-
-        private void setFilterWidget(TableFilterWidget filter) {
-            filterText = filter;
-            if (filterText != null) {
-                filterText.setSorter(sorter);
-            }
         }
 
         @Override
@@ -429,116 +398,6 @@ public class PropertyTableWidget extends JPanel {
             if (set >= 0) {
                 getColumnModel().getSelectionModel().setSelectionMode(set);
             }
-        }
-
-        /** create a shortcut */
-        AbstractAncestrisAction createShortcut(String txt, final int y) {
-            return new AbstractAncestrisAction(txt.toUpperCase()) {
-
-                @Override
-                public void actionPerformed(ActionEvent event) {
-                    int x = 0;
-                    try {
-                        x = ((JViewport) table.getParent()).getViewPosition().x;
-                    } catch (Throwable t) {
-                    };
-                    table.scrollRectToVisible(new Rectangle(x, y, 1, getParent().getHeight()));
-                }
-            };
-        }
-
-        /** generate */
-        void createShortcuts(int col, int dir, JComponent container) {
-
-            if (propertyModel == null || container.getHeight() == 0) {
-                return;
-            }
-
-            TableModel model = getModel();
-            Collator collator = propertyModel.getGedcom().getCollator();
-
-            // loop over rows and create actions
-            List<AbstractAncestrisAction> actions = new ArrayList<AbstractAncestrisAction>(26);
-
-            String cursor = "";
-            for (int r = 0; r < model.getRowCount(); r++) {
-                Property prop = (Property) model.getValueAt(dir > 0 ? r : model.getRowCount() - r - 1, col);
-                if (prop instanceof PropertyDate) {
-                    break;
-                }
-                if (prop == null) {
-                    continue;
-                }
-
-                String value = prop instanceof PropertyName ? ((PropertyName) prop).getLastName().trim() : prop.getDisplayValue().trim();
-                if (value.length() == 0) {
-                    continue;
-                }
-                value = value.substring(0, 1).toLowerCase();
-
-                if (collator.compare(cursor, value) >= 0) {
-                    continue;
-                }
-                cursor = value;
-
-                // action
-                AbstractAncestrisAction action = createShortcut(value, table.getCellRect(dir > 0 ? r : model.getRowCount() - r - 1, col, true).y);
-                actions.add(action);
-
-                // key binding
-                InputMap imap = container.getInputMap(WHEN_IN_FOCUSED_WINDOW);
-                ActionMap amap = container.getActionMap();
-                imap.put(KeyStroke.getKeyStroke(value.charAt(0)), action);
-                amap.put(action, action);
-            }
-
-            // generate buttons
-            if (actions.isEmpty()) {
-                return;
-            }
-
-            LinkWidget sample = new LinkWidget("Sample", null);
-            int h = sample.getPreferredSize().height;
-            int n = Math.min(actions.size(), (container.getHeight() - h) / h);
-            for (int i = 0; i < n; i++) {
-                LinkWidget link = new LinkWidget(actions.get(i * actions.size() / n));
-                link.setAlignmentX(0.5F);
-                container.add(link);
-            }
-
-            if (n < actions.size()) {
-                LinkWidget link = new LinkWidget(actions.get(actions.size() - 1));
-                link.setAlignmentX(0.5F);
-                container.add(link);
-            }
-
-            // done
-        }
-
-        /**
-         * Create shortcuts
-         */
-        void createShortcuts() {
-
-            // remove old shortcuts
-            panelShortcuts.removeAll();
-            panelShortcuts.getInputMap(WHEN_IN_FOCUSED_WINDOW).clear();
-            panelShortcuts.getActionMap().clear();
-            panelShortcuts.revalidate();
-            panelShortcuts.repaint();
-
-            // anything we can offer? need ascending sorted column and at least 10 rows
-//            if (!sortableModel.isSorting()) {
-//                return;
-//            }
-
-//            SortableTableModel.Directive directive = sortableModel.getDirectives().get(0);
-//      if (directive.getDirection()<=0)
-//        return;
-
-//            createShortcuts(directive.getColumn(), directive.getDirection(), panelShortcuts);
-
-            // done
         }
 
         int getRow(Property prop) {
@@ -590,7 +449,7 @@ public class PropertyTableWidget extends JPanel {
         /**
          * setting a property model
          */
-        void setPropertyTableModel(PropertyTableModel propertyModel) {
+        final void setPropertyTableModel(PropertyTableModel propertyModel) {
             // remember
             this.propertyModel = propertyModel;
             // pass through 
@@ -600,24 +459,6 @@ public class PropertyTableWidget extends JPanel {
 
             Model tableModel = new Model(propertyModel);
             setModel(tableModel);
-            sorter = new TableRowSorter<Model>(tableModel);
-            setRowSorter(sorter);
-
-            // listen to changes for generating shortcuts
-            tableModel.addTableModelListener(new TableModelListener() {
-
-                @Override
-                public void tableChanged(TableModelEvent e) {
-                    if (e.getLastRow() == Integer.MAX_VALUE) {
-                        createShortcuts();
-                    }
-                }
-            });
-
-            if (filterText != null) {
-                filterText.setSorter(sorter);
-            }
-
             // done
         }
 
@@ -920,8 +761,8 @@ public class PropertyTableWidget extends JPanel {
              * Create a Transferable to use as the source for a data transfer.
              *
              * @param c The component holding the data to be transfered.
-             * This argument is provided to enable sharing of TransferHandlers by
-             * multiple components.
+             *          This argument is provided to enable sharing of TransferHandlers by
+             *          multiple components.
              *
              * @return The representation of the data to be transfered.
              *

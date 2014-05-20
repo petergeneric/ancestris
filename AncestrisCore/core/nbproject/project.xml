@@ -180,6 +180,7 @@
                 <package>ancestris.gedcom</package>
                 <package>ancestris.gedcom.privacy</package>
                 <package>ancestris.renderer</package>
+                <package>ancestris.swing.atable</package>
                 <package>ancestris.util</package>
                 <package>ancestris.util.swing</package>
                 <package>ancestris.view</package>
