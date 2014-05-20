@@ -9,9 +9,9 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.util.swing;
+package ancestris.swing.atable;
 
-import static ancestris.util.swing.Bundle.*;
+import static ancestris.swing.atable.Bundle.*;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
 import java.awt.Color;
@@ -40,9 +40,10 @@ import org.openide.util.actions.Presenter;
 @NbBundle.Messages({
     "allfilter=All",
     "exactmatch=Exact Match",
+    "# {0} - number of occurences",
     "occurrences.label={0} occurrences"
 })
-public final class TableFilterWidget implements Presenter.Toolbar {
+public final class ATableFilterWidget implements Presenter.Toolbar {
 
     private FilterCombo filter;
     private List<String> headers = new ArrayList<String>();
