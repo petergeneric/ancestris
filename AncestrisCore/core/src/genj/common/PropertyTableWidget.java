@@ -47,6 +47,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.SortOrder;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -290,11 +293,23 @@ public class PropertyTableWidget extends JPanel {
             result.append(columns.getColumn(c).getWidth());
         }
 
+        List<? extends RowSorter.SortKey> sortKeys = null;
+        if (table.getRowSorter() != null) {
+            sortKeys = table.getRowSorter().getSortKeys();
+        }
+        if (sortKeys != null && !sortKeys.isEmpty()) {
+            for (RowSorter.SortKey sortKey : sortKeys) {
+                result.append(sortKey.getColumn());
+                result.append(sortKey.getSortOrder().name());
+            }
+        }
         return result.toString();
     }
 
     /**
      * Set column layout
+     *
+     * @param layout
      */
     public void setColumnLayout(String layout) {
 
@@ -311,7 +326,23 @@ public class PropertyTableWidget extends JPanel {
                 col.setPreferredWidth(w);
             }
 
-        } catch (Throwable t) {
+            List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>(3);
+            while (tokens.hasMoreTokens()) {
+                try{
+                int c = Integer.parseInt(tokens.nextToken());
+                SortOrder d = SortOrder.valueOf(tokens.nextToken());
+                if (c < columns.getColumnCount()) {
+                    sortKeys.add(new SortKey(c, d));
+                }
+                } catch (NumberFormatException e){
+                    // ignored
+                }
+            }
+            if (table.getRowSorter() != null) {
+                table.getRowSorter().setSortKeys(sortKeys);
+            }
+
+        } catch (NumberFormatException t) {
             // ignore
         }
     }
