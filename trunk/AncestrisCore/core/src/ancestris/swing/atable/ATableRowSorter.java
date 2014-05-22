@@ -70,7 +70,7 @@ public class ATableRowSorter<M extends TableModel> extends TableRowSorter<M> {
                 sortKey = new SortKey(column, SortOrder.ASCENDING);
             } else {
                 // Key is present
-                sortKey = toggle(keys.get(sortIndex));
+                sortKey = toggle(keys.get(sortIndex),keys.size()>1);
             }
             if (clear) {
                 keys = new ArrayList<SortKey>(3);
@@ -95,10 +95,10 @@ public class ATableRowSorter<M extends TableModel> extends TableRowSorter<M> {
         }
     }
 
-    private SortKey toggle(SortKey key) {
+    private SortKey toggle(SortKey key,boolean canBeUnsorted) {
         if (key.getSortOrder() == SortOrder.ASCENDING) {
             return new SortKey(key.getColumn(), SortOrder.DESCENDING);
-        } else if (key.getSortOrder() == SortOrder.DESCENDING) {
+        } else if (key.getSortOrder() == SortOrder.DESCENDING && canBeUnsorted) {
             return null;
         }
         return new SortKey(key.getColumn(), SortOrder.ASCENDING);
