@@ -311,6 +311,7 @@ public class PropertyTableWidget extends JPanel {
      *
      * @param layout
      */
+    @SuppressWarnings("BroadCatchBlock")
     public void setColumnLayout(String layout) {
 
         TableColumnModel columns = table.getColumnModel();
@@ -329,14 +330,19 @@ public class PropertyTableWidget extends JPanel {
             List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>(3);
             while (tokens.hasMoreTokens()) {
                 try{
-                int c = Integer.parseInt(tokens.nextToken());
-                SortOrder d = SortOrder.valueOf(tokens.nextToken());
-                if (c < columns.getColumnCount()) {
-                    sortKeys.add(new SortKey(c, d));
-                }
-                } catch (NumberFormatException e){
+                    int c = Integer.parseInt(tokens.nextToken());
+                    SortOrder d = SortOrder.valueOf(tokens.nextToken());
+                    if (c < columns.getColumnCount()) {
+                        sortKeys.add(new SortKey(c, d));
+                    }
+                } 
+                catch (IllegalArgumentException e){
                     // ignored
                 }
+            }
+            if (sortKeys.isEmpty()){
+                // SortKeys can't be empty: set to 1st col ascending
+                sortKeys.add(new SortKey(0, SortOrder.ASCENDING));
             }
             if (table.getRowSorter() != null) {
                 table.getRowSorter().setSortKeys(sortKeys);
