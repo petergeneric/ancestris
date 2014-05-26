@@ -728,6 +728,7 @@ public class TreeView extends View implements Filter {
         // switch root
         if (root == null || root instanceof Indi || root instanceof Fam) {
             model.setRoot(root);
+            show(root,true);
         }
 
         // load bookmarks
