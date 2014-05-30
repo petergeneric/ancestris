@@ -19,6 +19,7 @@
  */
 package genj.common;
 
+import ancestris.awt.FilteredMouseAdapter;
 import ancestris.swing.atable.ATable;
 import ancestris.swing.atable.ATableFilterWidget;
 import ancestris.view.SelectionDispatcher;
@@ -37,11 +38,11 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -66,7 +67,6 @@ import javax.swing.table.TableModel;
 public class PropertyTableWidget extends JPanel {
 
     private final static Logger LOG = Logger.getLogger("genj.common");
-    private JPanel panelShortcuts;
     private Table table;
     private boolean ignoreSelection = false;
     private int visibleRowCount = -1;
@@ -84,11 +84,6 @@ public class PropertyTableWidget extends JPanel {
      */
     public PropertyTableWidget(PropertyTableModel propertyModel) {
 
-        // create panel for shortcuts
-        panelShortcuts = new JPanel();
-        panelShortcuts.setMinimumSize(new Dimension());
-        panelShortcuts.setLayout(new BoxLayout(panelShortcuts, BoxLayout.Y_AXIS));
-
         // create table comp
         table = new Table();
         setModel(propertyModel);
@@ -98,9 +93,11 @@ public class PropertyTableWidget extends JPanel {
         // setup layout
         setLayout(new BorderLayout());
         add(BorderLayout.CENTER, new JScrollPane(table));
-        add(BorderLayout.EAST, panelShortcuts);
-
         // done
+    }
+
+    public void setShortcut(JPanel s) {
+        table.setShortCut(s);
     }
 
     /**
@@ -329,18 +326,17 @@ public class PropertyTableWidget extends JPanel {
 
             List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>(3);
             while (tokens.hasMoreTokens()) {
-                try{
+                try {
                     int c = Integer.parseInt(tokens.nextToken());
                     SortOrder d = SortOrder.valueOf(tokens.nextToken());
                     if (c < columns.getColumnCount()) {
                         sortKeys.add(new SortKey(c, d));
                     }
-                } 
-                catch (IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     // ignored
                 }
             }
-            if (sortKeys.isEmpty()){
+            if (sortKeys.isEmpty()) {
                 // SortKeys can't be empty: set to 1st col ascending
                 sortKeys.add(new SortKey(0, SortOrder.ASCENDING));
             }
@@ -380,31 +376,31 @@ public class PropertyTableWidget extends JPanel {
             setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
             setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
 
-//            // patch selecting
-//            addMouseListener(new MouseAdapter() {
-//
-//                @Override
-//                public void mousePressed(MouseEvent e) {
-//                    // make sure something is selected but don't screw current multi-selection
-//                    int row = rowAtPoint(e.getPoint());
-//                    int col = columnAtPoint(e.getPoint());
-//                    if (row < 0 || col < 0) {
-//                        clearSelection();
-//                    } else {
-//                        if (!isCellSelected(row, col)) {
-//                            getSelectionModel().setSelectionInterval(row, row);
-//                            getColumnModel().getSelectionModel().setSelectionInterval(col, col);
-//                        }
-//                    }
-//                    // FIXME: action is handled here and selection is handled in changeSelection
-//                    Object cell = getValueAt(row, col);
-//                    if (cell != null && cell instanceof Property) {
-////XXX:                        SelectionDispatcher.fireAction(e,new Context((Property)cell));
-//                        SelectionDispatcher.fireSelection(e, new Context((Property) cell));
-//                    }
-//                }
-//            });
-            setShortCut(panelShortcuts);
+            //XXX: rework double click handler
+            // patch selecting
+            addMouseListener(new FilteredMouseAdapter() {
+
+                @Override
+                public void mouseClickedFiltered(MouseEvent e) {
+                    // make sure something is selected but don't screw current multi-selection
+                    int row = rowAtPoint(e.getPoint());
+                    int col = columnAtPoint(e.getPoint());
+                    if (row < 0 || col < 0) {
+                        clearSelection();
+                    } else {
+                        if (!isCellSelected(row, col)) {
+                            getSelectionModel().setSelectionInterval(row, row);
+                            getColumnModel().getSelectionModel().setSelectionInterval(col, col);
+                        }
+                    }
+                    // FIXME: action is handled here and selection is handled in changeSelection
+                    Object cell = getValueAt(row, col);
+                    if (cell != null && cell instanceof Property) {
+                        SelectionDispatcher.fireSelection(e, new Context((Property) cell));
+                    }
+                }
+            });
+//            setShortCut(panelShortcuts);
 
             // done
         }

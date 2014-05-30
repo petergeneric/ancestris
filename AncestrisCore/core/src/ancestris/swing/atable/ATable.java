@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import javax.swing.JPanel;
@@ -146,7 +147,7 @@ public class ATable extends JTable {
         if (cachedCollator == null) {
             cachedCollator = Collator.getInstance(getLocale());
 
-      // 20050505 when comparing gedcom values we really don't want it to be
+            // 20050505 when comparing gedcom values we really don't want it to be
             // done case sensitive. It surfaces in many places (namely for example
             // in prefix matching in PropertyTableWidget) so I'm restricting comparison
             // criterias to PRIMARY from now on
@@ -210,21 +211,27 @@ public class ATable extends JTable {
             return;
         }
 
+        //XXX: clean code
         LinkWidget sample = new LinkWidget("Sample", null);
-        int h = sample.getPreferredSize().height;
-        int n = Math.min(actions.size(), (container.getHeight() - h) / h);
+        int h = sample.getPreferredSize().width;
+        int n = Math.min(actions.size(), (container.getMaximumSize().width - h) / h);
+//        int n = Math.min(actions.size(), 27);
         for (int i = 0; i < n; i++) {
-            LinkWidget link = new LinkWidget(actions.get(i * actions.size() / n));
-            link.setAlignmentX(0.5F);
+//            LinkWidget link = new LinkWidget(actions.get(i * actions.size() / n));
+//            link.setAlignmentX(0.5F);
+            JButton link = new JButton(actions.get(i * actions.size() / n));
+//            link.setPreferredSize(new Dimension(20,20));
+//            link.setMinimumSize(new Dimension(16,16));
+//            link.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
+            link.setBorderPainted(false);
             container.add(link);
         }
 
-        if (n < actions.size()) {
-            LinkWidget link = new LinkWidget(actions.get(actions.size() - 1));
-            link.setAlignmentX(0.5F);
-            container.add(link);
-        }
-
+//        if (n < actions.size()) {
+//            LinkWidget link = new LinkWidget(actions.get(actions.size() - 1));
+//            link.setAlignmentX(0.5F);
+//            container.add(link);
+//        }
         // done
     }
 

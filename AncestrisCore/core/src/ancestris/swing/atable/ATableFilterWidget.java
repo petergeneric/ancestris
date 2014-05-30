@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultRowSorter;
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
@@ -97,25 +98,30 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
 
         private final Icon POPUP = GraphicsHelper.getIcon(Color.BLACK, 0, 0, 8, 0, 4, 4);
         private int index;
-        private Popup pick = new Popup();
+        private final Popup pick = new Popup();
         private final JTextField filterText;
         private final JCheckBox exactMatch;
         private DefaultRowSorter sorter;
-        private JLabel number;
+        private final JLabel number;
 
         /**
          * Constructor
          */
         FilterCombo() {
-            setLayout(new java.awt.GridBagLayout());
-            filterText = new JTextField(10) {
-
+            setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+            filterText = new JTextField() {
                 @Override
-                public Dimension getMaximumSize() {
+                public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
+
+                @Override
+                public Dimension getPreferredSize() {
+                    Dimension size = super.getPreferredSize();
+                    size.width = 220;
+                    return size;
+                }
             };
-            filterText.setMinimumSize(new Dimension(30, 5));
             filterText.getDocument().addDocumentListener(
                     new DocumentListener() {
 
@@ -143,14 +149,27 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
                     invokeFilter();
                 }
             });
-            number = new JLabel();
+            number = new JLabel() {
+
+                @Override
+                public Dimension getMinimumSize() {
+                    return getPreferredSize();
+                }
+
+                @Override
+                public Dimension getPreferredSize() {
+                    Dimension size = super.getPreferredSize();
+                    size.width = 120;
+                    return size;
+                }
+            };
             number.setHorizontalAlignment(SwingConstants.RIGHT);
-            number.setPreferredSize(new Dimension(120, 12));
             add(number);
             add(filterText);
             setIndex(0);
             add(pick);
             add(exactMatch);
+            invokeFilter();
         }
 
         private void setIndex(int index) {
