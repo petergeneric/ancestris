@@ -45,8 +45,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 
 /**
  * Component for showing entities of a gedcom file in a tabular way
@@ -61,6 +64,7 @@ public class TableView extends View {
     /* package */ PropertyTableWidget propertyTable;
     /** the modes we're offering */
     private Map<String, Mode> modes = new HashMap<String, Mode>();
+    private final JPanel panelShortcuts;
 
     {
 //        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{"INDI", "INDI:NAME", "INDI:SEX", "INDI:BIRT:DATE", "INDI:BIRT:PLAC", "INDI:OCCU", "INDI:FAMS", "INDI:FAMC"}));
@@ -184,6 +188,17 @@ public class TableView extends View {
      */
     public TableView() {
         this.filter = new ATableFilterWidget();
+        // create panel for shortcuts
+        panelShortcuts = new JPanel(){
+            @Override
+            public Dimension getMaximumSize() {
+                Dimension size = getPreferredSize();
+                size.width = Short.MAX_VALUE;
+                return size;
+            }
+
+        };
+        panelShortcuts.setLayout(new BoxLayout(panelShortcuts, BoxLayout.LINE_AXIS));
 
         // get modes
         for (Mode mode : modes.values()) {
@@ -207,6 +222,7 @@ public class TableView extends View {
         }
 
         propertyTable.setFilterWidget(filter);
+        propertyTable.setShortcut(panelShortcuts);
 
         // shortcuts KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK)
         //XXX: shortcut should be placed in @Action... Annotations (layer)
@@ -363,6 +379,10 @@ public class TableView extends View {
             }
         }
 
+        toolbar.add(filter);
+        // right align 
+        toolbar.addGlue();
+        toolbar.add(panelShortcuts);
         // gap
         toolbar.addSeparator();
 
@@ -370,8 +390,6 @@ public class TableView extends View {
         toolbar.add(new JToggleButton(sticky));
 
         toolbar.add(new Settings());
-        toolbar.add(filter);
-
     }
 
     /**
