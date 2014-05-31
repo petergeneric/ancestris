@@ -42,11 +42,11 @@
                   </Group>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="gedcomCountryLabel" alignment="1" pref="72" max="32767" attributes="0"/>
-                  <Component id="gedcomGeoIdLabel" alignment="1" pref="72" max="32767" attributes="0"/>
-                  <Component id="gedcomZipCodeLabel" alignment="1" pref="72" max="32767" attributes="0"/>
-                  <Component id="gedcomParishLabel" alignment="1" pref="72" max="32767" attributes="0"/>
-                  <Component id="gedcomLongitudeLabel" alignment="0" pref="72" max="32767" attributes="0"/>
+                  <Component id="gedcomCountryLabel" alignment="1" max="32767" attributes="0"/>
+                  <Component id="gedcomGeoIdLabel" alignment="1" max="32767" attributes="0"/>
+                  <Component id="gedcomZipCodeLabel" alignment="1" max="32767" attributes="0"/>
+                  <Component id="gedcomParishLabel" alignment="1" max="32767" attributes="0"/>
+                  <Component id="gedcomLongitudeLabel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
@@ -226,27 +226,12 @@
     </Component>
     <Container class="javax.swing.JToolBar" name="jToolBar1">
       <Properties>
+        <Property name="floatable" type="boolean" value="false"/>
         <Property name="rollover" type="boolean" value="true"/>
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="linkToPlaceButton">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/link_add.png"/>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="GedcomPlaceEditorPanel.linkToPlaceButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="linkToPlaceButtonActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.Box$Filler" name="filler1">
           <Properties>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
