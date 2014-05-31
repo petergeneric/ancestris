@@ -1,7 +1,10 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.api.place.Place;
+import ancestris.modules.geo.GeoNodeObject;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -11,7 +14,9 @@ import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.geonames.Toponym;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -88,7 +93,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         gedcomCountryTextField = new javax.swing.JTextField();
         gedcomParishTextField = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
-        linkToPlaceButton = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         parametersButton = new javax.swing.JButton();
 
@@ -142,19 +146,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
         gedcomParishTextField.setColumns(16);
 
+        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
-
-        linkToPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlaceEditorPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
-        linkToPlaceButton.setFocusable(false);
-        linkToPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linkToPlaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        linkToPlaceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linkToPlaceButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(linkToPlaceButton);
         jToolBar1.add(filler1);
 
         parametersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/parameters.png"))); // NOI18N
@@ -195,11 +188,11 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                         .addComponent(gedcomHamletTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
                         .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gedcomCountryLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                    .addComponent(gedcomGeoIdLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                    .addComponent(gedcomZipCodeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                    .addComponent(gedcomParishLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                    .addComponent(gedcomLongitudeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
+                    .addComponent(gedcomCountryLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomGeoIdLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomZipCodeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomParishLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gedcomLongitudeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(gedcomCountryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
@@ -249,37 +242,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void linkToPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
-        PlacesListPanel placesListPanel = new PlacesListPanel(mRoot.getGedcom());
-        DialogManager.ADialog placesListPanelDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.title.link"),
-                placesListPanel);
-        placesListPanelDialog.setDialogId(PlacesListPanel.class.getName());
-
-        if (placesListPanelDialog.show() == DialogDescriptor.OK_OPTION) {
-            final PropertyPlace selectedPlace = placesListPanel.getSelectedPlace();
-            if (selectedPlace != null) {
-                try {
-                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            if (mPlace == null) {
-                                mPlace = (PropertyPlace) mRoot.addProperty("PLAC", selectedPlace.format("all"));
-                            } else {
-                                mPlace.setValue(selectedPlace.format("all"));
-                            }
-                        }
-                    }); // end of doUnitOfWork
-
-                    set(mRoot, mPlace);
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-    }//GEN-LAST:event_linkToPlaceButtonActionPerformed
 
     private void parametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parametersButtonActionPerformed
         PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
@@ -342,7 +304,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel gedcomZipCodeLabel;
     private javax.swing.JTextField gedcomZipCodeTextField;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JButton linkToPlaceButton;
     private javax.swing.JButton parametersButton;
     // End of variables declaration//GEN-END:variables
 
@@ -400,6 +361,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                     List<String> jurisdictions = Arrays.asList(PropertyPlace.getAllJurisdictions(mRoot.getGedcom(), mPlaceOrder[index], true));
                     if (jurisdictions != null) {
                         AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
+                    } else {
+                        AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], new <String>ArrayList(), false);
                     }
                 }
             } else {
@@ -408,10 +371,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 mGedcomFields[index][1].setVisible(false);
             }
         }
-        
-        if (mPlace != null) {
-            updatePlace(mPlace, 0);
-        }
+
+        updatePlace(mPlace, 0);
 
         gedcomHamletTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -711,10 +672,22 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             if (latitude != null && longitude != null) {
                 gedcomLatitudeTextField.setText(latitude.getValue());
                 gedcomLongitudeTextField.setText(longitude.getValue());
-
             } else {
-                gedcomLatitudeTextField.setText("");
-                gedcomLongitudeTextField.setText("");
+                // search locally first
+                GeoNodeObject geoNodeObject = new GeoNodeObject(place, true);
+                Toponym topo = null;
+                String placeAsLongString = getPlaceAsLongString(place, false, false);
+                if (placeAsLongString.length() > 6) {
+                    topo = geoNodeObject.Code2Toponym(NbPreferences.forModule(GeoNodeObject.class).get(placeAsLongString, null));
+                }
+                if (topo != null) {
+                    mPlaceModified = true;
+                    gedcomLatitudeTextField.setText(String.valueOf(topo.getLatitude()));
+                    gedcomLongitudeTextField.setText(String.valueOf(topo.getLongitude()));
+                } else {
+                    gedcomLatitudeTextField.setText("");
+                    gedcomLongitudeTextField.setText("");
+                }
             }
         } else {
             logger.log(Level.INFO, "No place found startIndex {0}", new Object[]{startIndex});
@@ -726,6 +699,27 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             gedcomLongitudeTextField.setText("");
         }
         updateOnGoing = false;
+    }
+
+    public void setPlace(Place place) {
+        updateOnGoing = true;
+        
+        String[] jurisdictions = place.getJurisdictions();
+
+        gedcomCityTextField.setText(jurisdictions[0]); // City
+        gedcomZipCodeTextField.setText(jurisdictions[1]); // Postal code    
+        gedcomGeoIDTextField.setText(jurisdictions[2]); // GeoID
+        gedcomCountyTextField.setText(jurisdictions[3]); // County
+        gedcomStateTextField.setText(jurisdictions[4]); // State
+        gedcomCountryTextField.setText(jurisdictions[5]); // Country
+        gedcomLatitudeTextField.setText(place.getLatitude().toString());
+        gedcomLongitudeTextField.setText(place.getLongitude().toString());
+        
+        updateOnGoing = false;
+    }
+
+    public GeoPosition getPlaceGeoPosition() {
+        return new GeoPosition(Double.parseDouble(gedcomLatitudeTextField.getText()), Double.parseDouble(gedcomLongitudeTextField.getText()));
     }
 
     public String getPlaceString() {
@@ -749,6 +743,71 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         }
 
         return placeString;
+    }
+
+    public String getPlaceAsLongString(PropertyPlace place, boolean compress, boolean complete) {
+        if (place == null) {
+            return "";
+        }
+
+        String format = "";
+
+        if (complete) {
+            if (compress) {
+                // town,  2
+                format += (mPlaceOrder[2] != -1 ? String.valueOf(mPlaceOrder[2]) : "") + ",";
+                // hamlet 0
+                format += (mPlaceOrder[0] != -1 ? String.valueOf(mPlaceOrder[0]) : "") + ",";
+                // geo ID,  4
+                format += (mPlaceOrder[4] != -1 ? String.valueOf(mPlaceOrder[4]) : "") + ",";
+                // zip Code 3
+                format += (mPlaceOrder[3] != -1 ? String.valueOf(mPlaceOrder[3]) : "") + ",";
+                // county,  5
+                format += (mPlaceOrder[5] != -1 ? String.valueOf(mPlaceOrder[5]) : "") + ",";
+                // state    6
+                format += (mPlaceOrder[6] != -1 ? String.valueOf(mPlaceOrder[6]) : "") + ",";
+                // country 7
+                format += mPlaceOrder[7] != -1 ? String.valueOf(mPlaceOrder[7]) : "";
+            } else {
+                // town,  2
+                format += (mPlaceOrder[2] != -1 ? String.valueOf(mPlaceOrder[2]) : "") + ", ";
+                // hamlet 0
+                format += (mPlaceOrder[0] != -1 ? String.valueOf(mPlaceOrder[0]) : "") + ", ";
+                // geo ID,  4
+                format += (mPlaceOrder[4] != -1 ? String.valueOf(mPlaceOrder[4]) : "") + ", ";
+                // zip Code 3
+                format += (mPlaceOrder[3] != -1 ? String.valueOf(mPlaceOrder[3]) : "") + ", ";
+                // county,  5
+                format += (mPlaceOrder[5] != -1 ? String.valueOf(mPlaceOrder[5]) : "") + ", ";
+                // state    6
+                format += (mPlaceOrder[6] != -1 ? String.valueOf(mPlaceOrder[6]) : "") + ", ";
+                // country 7
+                format += mPlaceOrder[7] != -1 ? String.valueOf(mPlaceOrder[7]) : "";
+            }
+        } else if (compress) {
+            // town,  2
+            format += (mPlaceOrder[2] != -1 ? String.valueOf(mPlaceOrder[2]) : "") + ",";
+            // geo ID,  4
+            format += (mPlaceOrder[4] != -1 ? String.valueOf(mPlaceOrder[4]) : "") + ",";
+            // county,  5
+            format += (mPlaceOrder[5] != -1 ? String.valueOf(mPlaceOrder[5]) : "") + ",";
+            // state    6
+            format += (mPlaceOrder[6] != -1 ? String.valueOf(mPlaceOrder[6]) : "") + ",";
+            // country 7
+            format += mPlaceOrder[7] != -1 ? String.valueOf(mPlaceOrder[7]) : "";
+        } else {
+            // town,  2
+            format += (mPlaceOrder[2] != -1 ? String.valueOf(mPlaceOrder[2]) : "") + ", ";
+            // geo ID,  4
+            format += (mPlaceOrder[4] != -1 ? String.valueOf(mPlaceOrder[4]) : "") + ", ";
+            // county,  5
+            format += (mPlaceOrder[5] != -1 ? String.valueOf(mPlaceOrder[5]) : "") + ", ";
+            // state    6
+            format += (mPlaceOrder[6] != -1 ? String.valueOf(mPlaceOrder[6]) : "") + ", ";
+            // country 7
+            format += mPlaceOrder[7] != -1 ? String.valueOf(mPlaceOrder[7]) : "";
+        }
+        return place.format(format);
     }
 
     public PropertyPlace commit() {

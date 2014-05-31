@@ -455,7 +455,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
         int undoNb = gedcom.getUndoNb();
         PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        placeEditorPanel.set(mPlace);
+        placeEditorPanel.set(mEvent, mPlace, mAddress);
 
         ADialog eventEditorDialog = new ADialog(
                 NbBundle.getMessage(
@@ -479,19 +479,8 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
         PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
         int undoNb = gedcom.getUndoNb();
-        try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    mPlace = (PropertyPlace) mEvent.addProperty("PLAC", "");
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        placeEditorPanel.set(mPlace);
+        placeEditorPanel.set(mEvent, mPlace, mAddress);
 
         ADialog eventEditorDialog = new ADialog(
                 NbBundle.getMessage(
@@ -776,14 +765,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         }
 
         mAddress = mEvent.getProperty("ADDR", false);
-//        addressPanel.set(mEvent, mAddress);
-
-        /*        if (mPlace == null && mAddress != null) {
-         jCheckBox1.setSelected(true);
-         CardLayout cl = (CardLayout) (jPanel2.getLayout());
-         cl.show(jPanel2, "address");
-         }
-         */
+        
         Property[] sourcesList = mEvent.getProperties("SOUR");
         sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
 
