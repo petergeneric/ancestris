@@ -6,7 +6,6 @@ import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.*;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javax.swing.JComponent;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.*;
@@ -197,7 +196,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private void geonamesPlacesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListValueChanged
         if (!evt.getValueIsAdjusting()) {
             Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
-            String[] jurisdictions = place.getJurisdictions();
             gedcomPlaceEditorPanel.setPlace(place);
             jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
         }
@@ -231,17 +229,18 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @param place the place to set
      */
     public void set(Property root, PropertyPlace place, Property address) {
-        Preferences modulePreferences = NbPreferences.forModule(PlaceEditorPanel.class);
-        Preferences node;
 
         this.mPlace = place;
         this.mAddress = address;
         gedcomPlaceEditorPanel.set(root, place);
         addressEditorPanel.set(root, mAddress);
         if (mPlace == null && mAddress != null) {
+            editorsTabbedPane.setSelectedIndex(1);
         }
-        
-        jXMapKit1.setAddressLocation(gedcomPlaceEditorPanel.getPlaceGeoPosition());
+
+        if (mPlace != null) {
+            jXMapKit1.setAddressLocation(gedcomPlaceEditorPanel.getPlaceGeoPosition());
+        }
     }
 
     public void commit() {

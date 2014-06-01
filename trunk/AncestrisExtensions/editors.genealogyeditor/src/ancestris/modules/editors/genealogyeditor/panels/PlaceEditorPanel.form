@@ -65,7 +65,7 @@
                   <Group type="102" attributes="0">
                       <Component id="gedcomPlaceEditorPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="placeEditorTabbedPane" pref="302" max="32767" attributes="0"/>
+                      <Component id="placeEditorTabbedPane" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
