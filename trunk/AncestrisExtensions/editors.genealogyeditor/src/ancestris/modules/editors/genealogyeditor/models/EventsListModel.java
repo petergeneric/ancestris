@@ -2,10 +2,10 @@ package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractListModel;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -35,11 +35,6 @@ public class EventsListModel extends AbstractListModel<String> {
         }
     };
     List<Property> eventsList = new ArrayList<Property>();
-    String[] columnsName = {
-        NbBundle.getMessage(EventsListModel.class, "EventsTableModel.column.ID.eventType"),
-        NbBundle.getMessage(EventsListModel.class, "EventsTableModel.column.ID.place"),
-        NbBundle.getMessage(EventsListModel.class, "EventsTableModel.column.ID.date")
-    };
 
     public EventsListModel() {
     }
@@ -53,13 +48,15 @@ public class EventsListModel extends AbstractListModel<String> {
     public String getElementAt(int row) {
         if (row < eventsList.size()) {
             final Property propertyEvent = eventsList.get(row);
+            final PropertyDate propertyDate = (PropertyDate) propertyEvent.getProperty("DATE");
+            final String date = propertyDate != null ? propertyDate.getDisplayValue() : null;
             if (propertyEvent.getTag().equals("EVEN") || propertyEvent.getTag().equals("FACT")) {
                 Property eventType = propertyEvent.getProperty("TYPE");
-                return eventType != null ? eventType.getValue() : "";
+                return eventType != null ? eventType.getValue() : "- " + date != null ? " - " + date : "";
             } else if (mIndividualAttributesTags.contains(propertyEvent.getTag())) {
-                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue();
+                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue() + date != null ? " - " + date : "";
             } else {
-                return PropertyTag2Name.getTagName(propertyEvent.getTag());
+                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + date != null ? " - " + date : "";
             }
         }
         return "";
