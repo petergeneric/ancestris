@@ -754,8 +754,9 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
          *
          */
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-        if (mPlace != null) {
-            placeTextField.setText(mPlace.format("all"));
+        mAddress = mEvent.getProperty("ADDR", false);
+        if (mPlace != null || mAddress != null) {
+            placeTextField.setText(mPlace!=null?mPlace.getDisplayValue():mAddress.getDisplayValue());
             addPlaceButton.setVisible(false);
             editPlaceButton.setVisible(true);
         } else {
@@ -763,8 +764,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             addPlaceButton.setVisible(true);
             editPlaceButton.setVisible(false);
         }
-
-        mAddress = mEvent.getProperty("ADDR", false);
         
         Property[] sourcesList = mEvent.getProperties("SOUR");
         sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
