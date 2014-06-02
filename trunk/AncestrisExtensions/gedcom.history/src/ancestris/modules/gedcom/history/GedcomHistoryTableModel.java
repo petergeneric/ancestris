@@ -17,6 +17,8 @@
  */
 package ancestris.modules.gedcom.history;
 
+import ancestris.modules.gedcom.utilities.EntityTag2Name;
+import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.Gedcom;
 import genj.gedcom.TagPath;
 import java.text.DateFormat;
@@ -85,7 +87,7 @@ class GedcomHistoryTableModel extends AbstractTableModel {
                     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     return dateFormat.format(entityHistory.getDate().getTime());
                 case ENTITY_TAG:
-                    return NbBundle.getMessage(this.getClass(), "HistoryTableModel.entityName." + entityHistory.getEntityTag());
+                    return EntityTag2Name.getTagName(entityHistory.getEntityTag());
                 case ENTITY_ID:
                     return entityHistory.getEntityId();
                 case ACTION:
@@ -101,7 +103,7 @@ class GedcomHistoryTableModel extends AbstractTableModel {
                         if (pathElt.startsWith("_")) {
                             propertyPath += (i == 1?"":propertySeparator) + pathElt;
                         } else {
-                            propertyPath += (i == 1?"":propertySeparator) + NbBundle.getMessage(this.getClass(), "HistoryTableModel.propertyName." + pathElt);
+                            propertyPath += (i == 1?"":propertySeparator) + PropertyTag2Name.getTagName(pathElt);
                         }
                     }
                     return propertyPath;
