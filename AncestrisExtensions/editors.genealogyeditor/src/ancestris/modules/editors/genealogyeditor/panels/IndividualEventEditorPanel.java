@@ -632,6 +632,8 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             Property eventCause = mEvent.getProperty("CAUS", false);
             if (eventCause != null) {
                 eventCauseTextField.setText(eventCause.getValue());
+            } else {
+                eventCauseTextField.setText("");
             }
             eventCauseTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -679,6 +681,8 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             Property eventCause = mEvent.getProperty("CAUS", false);
             if (eventCause != null) {
                 eventCauseTextField.setText(eventCause.getValue());
+            } else {
+                eventCauseTextField.setText("");
             }
             eventCauseTextField.getDocument().addDocumentListener(new DocumentListener() {
 
