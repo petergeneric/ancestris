@@ -52,11 +52,11 @@ public class EventsListModel extends AbstractListModel<String> {
             final String date = propertyDate != null ? propertyDate.getDisplayValue() : null;
             if (propertyEvent.getTag().equals("EVEN") || propertyEvent.getTag().equals("FACT")) {
                 Property eventType = propertyEvent.getProperty("TYPE");
-                return eventType != null ? eventType.getValue() : "- " + date != null ? " - " + date : "";
+                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + (eventType != null ? " " + eventType.getValue() : "") + (date != null ? " - " + date : "");
             } else if (mIndividualAttributesTags.contains(propertyEvent.getTag())) {
-                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue() + date != null ? " - " + date : "";
+                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue() + (date != null ? " - " + date : "");
             } else {
-                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + date != null ? " - " + date : "";
+                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + (date != null ? " - " + date : "");
             }
         }
         return "";
