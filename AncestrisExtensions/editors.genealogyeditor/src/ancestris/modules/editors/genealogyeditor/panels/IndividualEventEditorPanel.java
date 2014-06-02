@@ -80,6 +80,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         @Override
         public void stateChanged(ChangeEvent e) {
+            mEventModified = true;
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
             if (age != null) {
                 individualAgeTextField.setText(age.getValue());
@@ -112,6 +113,8 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
     private Property mAddress;
     private PropertyPlace mPlace;
     private PropertyDate mDate;
+    private boolean updateOnGoing = false;
+    private boolean mEventModified = false;
     private boolean mEventCauseModified = false;
     private boolean mIndividualAgeModified = false;
     private boolean mEventNameModified = false;
@@ -186,6 +189,32 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         eventTypeTextField.setColumns(16);
         eventTypeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.eventTypeTextField.toolTipText")); // NOI18N
+        eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mEventNameModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mEventNameModified = true;
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mEventNameModified = true;
+                }
+            }
+        });
 
         dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.dateLabel.text"), new Object[] {})); // NOI18N
@@ -220,6 +249,34 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         editPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editPlaceButtonActionPerformed(evt);
+            }
+        });
+
+        eventCauseTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+
+                    mEventModified = true;
+                    mEventCauseModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mEventCauseModified = true;
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mEventCauseModified = true;
+                }
             }
         });
 
@@ -439,9 +496,9 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                             }
                         }
                     }); // end of doUnitOfWork
-                    
+
                     placeTextField.setText(mPlace.format("all"));
-                    
+
                     addPlaceButton.setVisible(false);
                     editPlaceButton.setVisible(true);
                 } catch (GedcomException ex) {
@@ -532,6 +589,13 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         this.mRoot = root;
         this.mEvent = event;
 
+        mEventModified = false;
+        mEventCauseModified = false;
+        mIndividualAgeModified = false;
+        mEventNameModified = false;
+        mEventTypeModified = false;
+        updateOnGoing = true;
+
         if (!mEvent.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
             privateRecordToggleButton.setVisible(false);
         }
@@ -547,42 +611,8 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             } else {
                 eventNameTextField.setText("");
             }
-            eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mEventNameModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mEventNameModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mEventNameModified = true;
-                }
-            });
 
             eventCauseTextField.setText(mEvent.getValue());
-            eventCauseTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-            });
         } else if (mIndividualAttributesTags.contains(event.getTag())) {
             eventNameLabel.setVisible(true);
             eventNameTextField.setVisible(true);
@@ -593,17 +623,27 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
                 @Override
                 public void changedUpdate(DocumentEvent e) {
-                    mEventNameModified = true;
+                    if (!updateOnGoing) {
+                        mEventModified = true;
+                        mEventNameModified = true;
+                    }
                 }
 
                 @Override
                 public void removeUpdate(DocumentEvent e) {
-                    mEventNameModified = true;
+                    if (!updateOnGoing) {
+                        mEventModified = true;
+                        mEventNameModified = true;
+                    }
                 }
 
                 @Override
                 public void insertUpdate(DocumentEvent e) {
-                    mEventNameModified = true;
+                    if (!updateOnGoing) {
+
+                        mEventModified = true;
+                        mEventNameModified = true;
+                    }
                 }
             });
 
@@ -611,23 +651,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             if (eventType != null) {
                 eventTypeTextField.setText(eventType.getValue());
             }
-            eventTypeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-            });
 
             Property eventCause = mEvent.getProperty("CAUS", false);
             if (eventCause != null) {
@@ -635,23 +658,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             } else {
                 eventCauseTextField.setText("");
             }
-            eventCauseTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-            });
         } else {
             // Event Name
             eventNameLabel.setVisible(false);
@@ -660,23 +666,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             if (eventType != null) {
                 eventTypeTextField.setText(eventType.getValue());
             }
-            eventTypeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mEventTypeModified = true;
-                }
-            });
 
             Property eventCause = mEvent.getProperty("CAUS", false);
             if (eventCause != null) {
@@ -684,23 +673,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             } else {
                 eventCauseTextField.setText("");
             }
-            eventCauseTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mEventCauseModified = true;
-                }
-            });
         }
 
         /*
@@ -742,16 +714,19 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
          *
          * @Override
          * public void changedUpdate(DocumentEvent e) {
+         * mEventModified = true;
          * mIndividualAgeModified = true;
          * }
          *
          * @Override
          * public void removeUpdate(DocumentEvent e) {
+         * mEventModified = true;
          * mIndividualAgeModified = true;
          * }
          *
          * @Override
          * public void insertUpdate(DocumentEvent e) {
+         * mEventModified = true;
          * mIndividualAgeModified = true;
          * }
          * });
@@ -760,7 +735,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         mAddress = mEvent.getProperty("ADDR", false);
         if (mPlace != null || mAddress != null) {
-            placeTextField.setText(mPlace!=null?mPlace.getDisplayValue():mAddress.getDisplayValue());
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
             addPlaceButton.setVisible(false);
             editPlaceButton.setVisible(true);
         } else {
@@ -768,110 +743,114 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             addPlaceButton.setVisible(true);
             editPlaceButton.setVisible(false);
         }
-        
+
         Property[] sourcesList = mEvent.getProperties("SOUR");
         sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
 
         noteCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
 
         multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
+
+        updateOnGoing = false;
+
     }
 
     public Property commit() {
         if (mRoot == null) {
             return null;
         }
+        if (mEventModified == true) {
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-        try {
-            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
-                        if (mEventNameModified) {
-                            Property eventType = mEvent.getProperty("TYPE", false);
-                            if (eventType != null) {
-                                eventType.setValue(eventNameTextField.getText());
-                            } else {
-                                mEvent.addProperty("TYPE", eventNameTextField.getText());
-                            }
-                        }
-                        if (mEventCauseModified) {
-                            mEvent.setValue(eventCauseTextField.getText());
-                        }
-                    } else if (mIndividualAttributesTags.contains(mEvent.getTag())) {
-                        if (mEventNameModified) {
-                            mEvent.setValue(eventNameTextField.getText());
-                        }
-                        if (mEventTypeModified) {
-                            Property eventType = mEvent.getProperty("TYPE", false);
-                            if (eventType != null) {
-                                eventType.setValue(eventTypeTextField.getText());
-                            } else {
-                                mEvent.addProperty("TYPE", eventTypeTextField.getText());
-                            }
-                        }
-                        if (mEventCauseModified) {
-                            String causeText = eventCauseTextField.getText();
-                            Property eventCause = mEvent.getProperty("CAUS", false);
-                            if (causeText.length() > 0) {
-                                if (eventCause == null) {
-                                    mEvent.addProperty("CAUS", causeText);
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
+                            if (mEventNameModified) {
+                                Property eventType = mEvent.getProperty("TYPE", false);
+                                if (eventType != null) {
+                                    eventType.setValue(eventNameTextField.getText());
                                 } else {
-                                    eventCause.setValue(causeText);
+                                    mEvent.addProperty("TYPE", eventNameTextField.getText());
                                 }
-                            } else if (eventCause != null) {
-                                mRoot.delProperty(eventCause);
                             }
-                        }
-                    } else {
-                        if (mEventTypeModified) {
-                            Property eventType = mEvent.getProperty("TYPE", false);
-                            if (eventType != null) {
-                                eventType.setValue(eventTypeTextField.getText());
-                            } else {
-                                mEvent.addProperty("TYPE", eventTypeTextField.getText());
+                            if (mEventCauseModified) {
+                                mEvent.setValue(eventCauseTextField.getText());
                             }
-                        }
-                        if (mEventCauseModified) {
-                            String causeText = eventCauseTextField.getText();
-                            Property eventCause = mEvent.getProperty("CAUS", false);
-                            if (causeText.length() > 0) {
-                                if (eventCause == null) {
-                                    mEvent.addProperty("CAUS", causeText);
+                        } else if (mIndividualAttributesTags.contains(mEvent.getTag())) {
+                            if (mEventNameModified) {
+                                mEvent.setValue(eventNameTextField.getText());
+                            }
+                            if (mEventTypeModified) {
+                                Property eventType = mEvent.getProperty("TYPE", false);
+                                if (eventType != null) {
+                                    eventType.setValue(eventTypeTextField.getText());
                                 } else {
-                                    eventCause.setValue(causeText);
+                                    mEvent.addProperty("TYPE", eventTypeTextField.getText());
                                 }
-                            } else if (eventCause != null) {
-                                mRoot.delProperty(eventCause);
                             }
-                        }
-                    }
-                    aDateBean.commit();
-
-                    Property restrictionNotice = mEvent.getProperty("RESN", true);
-                    if (privateRecordToggleButton.isSelected()) {
-                        if (restrictionNotice == null) {
-                            mEvent.addProperty("RESN", "confidential");
-                        }
-                    } else {
-                        if (restrictionNotice != null) {
-                            mEvent.delProperty(restrictionNotice);
-                        }
-                    }
-
-                    if (mIndividualAgeModified) {
-                        PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
-                        if (age != null) {
-                            age.setValue(individualAgeTextField.getText() + " y");
+                            if (mEventCauseModified) {
+                                String causeText = eventCauseTextField.getText();
+                                Property eventCause = mEvent.getProperty("CAUS", false);
+                                if (causeText.length() > 0) {
+                                    if (eventCause == null) {
+                                        mEvent.addProperty("CAUS", causeText);
+                                    } else {
+                                        eventCause.setValue(causeText);
+                                    }
+                                } else if (eventCause != null) {
+                                    mRoot.delProperty(eventCause);
+                                }
+                            }
                         } else {
-                            mEvent.addProperty("AGE", individualAgeTextField.getText() + " y");
+                            if (mEventTypeModified) {
+                                Property eventType = mEvent.getProperty("TYPE", false);
+                                if (eventType != null) {
+                                    eventType.setValue(eventTypeTextField.getText());
+                                } else {
+                                    mEvent.addProperty("TYPE", eventTypeTextField.getText());
+                                }
+                            }
+                            if (mEventCauseModified) {
+                                String causeText = eventCauseTextField.getText();
+                                Property eventCause = mEvent.getProperty("CAUS", false);
+                                if (causeText.length() > 0) {
+                                    if (eventCause == null) {
+                                        mEvent.addProperty("CAUS", causeText);
+                                    } else {
+                                        eventCause.setValue(causeText);
+                                    }
+                                } else if (eventCause != null) {
+                                    mRoot.delProperty(eventCause);
+                                }
+                            }
+                        }
+                        aDateBean.commit();
+
+                        Property restrictionNotice = mEvent.getProperty("RESN", true);
+                        if (privateRecordToggleButton.isSelected()) {
+                            if (restrictionNotice == null) {
+                                mEvent.addProperty("RESN", "confidential");
+                            }
+                        } else {
+                            if (restrictionNotice != null) {
+                                mEvent.delProperty(restrictionNotice);
+                            }
+                        }
+
+                        if (mIndividualAgeModified) {
+                            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
+                            if (age != null) {
+                                age.setValue(individualAgeTextField.getText() + " y");
+                            } else {
+                                mEvent.addProperty("AGE", individualAgeTextField.getText() + " y");
+                            }
                         }
                     }
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
 //        gedcomPlacePanel.commit();
 //        addressPanel.commit();
