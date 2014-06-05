@@ -82,7 +82,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Nombre model",2,models.size());
             models.get(0).copyRecordToEntity();
 
-            Fam fam = (Fam) gedcom.getEntity("F00004");
+            Fam fam = (Fam) gedcom.getEntity("F4");
             assertEquals("Lien mariage vers source","@S1@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
             assertEquals("Source mariage","S1", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
@@ -165,7 +165,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Nombre model",2,models.size());
             models.get(0).copyRecordToEntity();
 
-            Fam fam = (Fam) gedcom.getEntity("F00004");
+            Fam fam = (Fam) gedcom.getEntity("F4");
             assertEquals("Lien mariage vers source","", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
             //assertEquals("Source mariage","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
@@ -330,7 +330,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Nombre model",2,models.size());
             models.get(0).copyRecordToEntity();
 
-            Fam fam = (Fam) gedcom.getEntity("F00004");
+            Fam fam = (Fam) gedcom.getEntity("F4");
             assertEquals("Lien mariage vers source","@S2@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
             assertEquals("Source mariage","S2", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
 

@@ -63,7 +63,7 @@ public class MergeModelMiscWillTest extends TestCase {
             dialog.copyRecordToEntity();
 
             
-            Indi participant1 = (Indi) gedcom.getEntity("I00007");
+            Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","@S2@", participant1.getValue(new TagPath("INDI:WILL:SOUR"),""));
             assertEquals("Source event","S2", gedcom.getEntity(participant1.getValue(new TagPath("INDI:WILL:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Source event",willRecord.getCote().getValue() + ", " +willRecord.getFreeComment().getValue(), participant1.getValue(new TagPath("INDI:WILL:SOUR:PAGE"),""));

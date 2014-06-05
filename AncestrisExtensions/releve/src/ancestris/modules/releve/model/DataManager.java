@@ -186,9 +186,18 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         getCompletionProvider().removeAll();
         dataModel.removeAll();
         gedcomLinkProvider.removeAll();
+        
         // je restaure les donnees de completion du gedcom
         completionProvider.addGedcomCompletion(completionGedcom);
         setPlace("");
+        
+        // raz des données de la session
+        defaultCote = "";
+        defaultEventDate = "";
+        defaultEventCalendar = null;
+        defaultFreeComment = "";
+        defaultNotary = "";
+        
         resetDirty();
     }
 
@@ -291,24 +300,8 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // accesseurs numero de page
+    // accesseurs aux données par defaut de la session
     ///////////////////////////////////////////////////////////////////////////
-
-//    public String getDefaultCote() {
-//        return defaultCote;
-//    }
-//
-//    public String getDefaultEventDateComment() {
-//        return defaultEventDate;
-//    }
-//
-//    public String getDefaultFreeComment() {
-//        return defaultFreeComment;
-//    }
-//
-//    public String getDefaultNotary() {
-//        return defaultNotary;
-//    }
 
     public void setDefaultEventDate(String text, Calendar calendar) {
         defaultEventDate = text;
