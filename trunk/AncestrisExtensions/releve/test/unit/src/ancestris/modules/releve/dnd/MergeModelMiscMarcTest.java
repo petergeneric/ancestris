@@ -96,7 +96,7 @@ public class MergeModelMiscMarcTest extends TestCase {
 
             models.get(0).copyRecordToEntity();
 
-            Fam fam = (Fam) gedcom.getEntity("F00004");
+            Fam fam = (Fam) gedcom.getEntity("F4");
             assertEquals("Lien marc vers source","@S1@", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
             assertEquals("Source marc","S1", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARC:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Source marc",miscRecord.getCote().getValue() + ", " +miscRecord.getFreeComment().getValue(), fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
@@ -200,7 +200,7 @@ public class MergeModelMiscMarcTest extends TestCase {
 
             models.get(0).copyRecordToEntity();
 
-            Fam fam = (Fam) gedcom.getEntity("F00004");
+            Fam fam = (Fam) gedcom.getEntity("F4");
             assertEquals("Lien marc vers source","", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
             assertEquals("Source marc","", fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
             assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));

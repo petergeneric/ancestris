@@ -80,7 +80,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             dialog.copyRecordToEntity();
 
             
-            Indi participant1 = (Indi) gedcom.getEntity("I00007");
+            Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","@S2@", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
             assertEquals("Source event","S2", gedcom.getEntity(participant1.getValue(new TagPath("INDI:EVEN:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Source event",miscRecord.getCote().getValue() + ", " +miscRecord.getFreeComment().getValue(), participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
@@ -112,7 +112,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             assertEquals("participant2 mari Profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant2 mari Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("participant2 mari lieu Profession",mergeRecord.getWife().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
-            assertEquals("participant2 lien vers participant1","@I00007@", participant2.getValue(new TagPath("INDI:ASSO"),""));
+            assertEquals("participant2 lien vers participant1","@I7@", participant2.getValue(new TagPath("INDI:ASSO"),""));
             assertEquals("participant2 lien vers participant1","INDI", participant2.getValue(new TagPath("INDI:ASSO:TYPE"),""));
             assertEquals("participant2 lien vers participant1","Présent@INDI:EVEN", participant2.getValue(new TagPath("INDI:ASSO:RELA"),""));
 
@@ -166,7 +166,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             //models.get(0).copyRecordToEntity();
             dialog.copyRecordToEntity();
 
-            Indi participant1 = (Indi) gedcom.getEntity("I00007");
+            Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
             assertEquals("Source event","", participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
             assertEquals("Date event",miscRecord.getEventDateProperty().getValue(), participant1.getValue(new TagPath("INDI:EVEN:DATE"),""));
@@ -199,8 +199,8 @@ public class MergeModelMiscOtherTest extends TestCase {
 
             participant2Husband = participant2Family.getHusband();
             assertEquals("participant2 mari nom",mergeRecord.getWife().getMarriedLastName(), participant2Husband.getLastName());
-            assertEquals("articipant2 mari prenom",mergeRecord.getWife().getMarriedFirstName(),  participant2Husband.getFirstName());
-            assertEquals("articipant2 mari profession",mergeRecord.getWife().getMarriedOccupation(),  participant2Husband.getProperty("OCCU").getValue());
+            assertEquals("participant2 mari prenom",mergeRecord.getWife().getMarriedFirstName(),  participant2Husband.getFirstName());
+            assertEquals("participant2 mari profession",mergeRecord.getWife().getMarriedOccupation(),  participant2Husband.getProperty("OCCU").getValue());
             // la date de deces a ete ajoutée
             assertEquals("participant2 femme deces","BEF 1999", participant2Husband.getDeathDate().getValue());
 
@@ -214,7 +214,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             assertEquals("participant2 femme Profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant2 femme Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("participant2 femme lieu Profession",mergeRecord.getWife().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
-            assertEquals("participant2 lien vers participant1","@I00007@", participant2.getValue(new TagPath("INDI:ASSO"),""));
+            assertEquals("participant2 lien vers participant1","@I7@", participant2.getValue(new TagPath("INDI:ASSO"),""));
             assertEquals("participant2 lien vers participant1","INDI", participant2.getValue(new TagPath("INDI:ASSO:TYPE"),""));
             assertEquals("participant2 lien vers participant1","Présent@INDI:EVEN", participant2.getValue(new TagPath("INDI:ASSO:RELA"),""));
 

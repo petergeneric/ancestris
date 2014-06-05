@@ -7,7 +7,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertySex;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.text.MessageFormat;
@@ -374,70 +373,72 @@ class MergeModelBirth extends MergeModel {
                 copyMarriageDate(family, getRow(RowType.IndiParentMarriageDate), record );
             }
 
-            // je copie le nom et le prenom du pere
-            Indi father = family.getHusband();
-            if (father == null) {
-                // je cree le pere
-                father = (Indi) gedcom.createEntity(Gedcom.INDI);
-                father.setName(record.getIndi().getFatherFirstName(), record.getIndi().getFatherLastName());
-                father.setSex(PropertySex.MALE);
-                family.setHusband(father);
-            } else {
-                if (isChecked(RowType.IndiFatherFirstName)) {
-                    father.setName(record.getIndi().getFatherFirstName(), father.getLastName());
-                }
-                if (isChecked(RowType.IndiFatherLastName)) {
-                    father.setName(father.getFirstName(), record.getIndi().getFatherLastName());
-                }
-            }
+            copyIndiFather(record.getIndi(), family.getHusband(), family);
+//            // je copie le nom et le prenom du pere
+//            Indi father = family.getHusband();
+//            if (father == null) {
+//                // je cree le pere
+//                father = (Indi) gedcom.createEntity(Gedcom.INDI);
+//                father.setName(record.getIndi().getFatherFirstName(), record.getIndi().getFatherLastName());
+//                father.setSex(PropertySex.MALE);
+//                family.setHusband(father);
+//            } else {
+//                if (isChecked(RowType.IndiFatherFirstName)) {
+//                    father.setName(record.getIndi().getFatherFirstName(), father.getLastName());
+//                }
+//                if (isChecked(RowType.IndiFatherLastName)) {
+//                    father.setName(father.getFirstName(), record.getIndi().getFatherLastName());
+//                }
+//            }
+//
+//            // je copie la date de naissance du pere
+//            if (isChecked(RowType.IndiFatherBirthDate)) {
+//                copyBirthDate(father, getRow(RowType.IndiFatherBirthDate), "", record);
+//            }
+//
+//            // je copie la date de décès du pere
+//            if (isChecked(RowType.IndiFatherDeathDate)) {
+//                copyDeathDate(father, getRow(RowType.IndiFatherDeathDate), "", record);
+//            }
+//
+//            // je copie la profession du pere
+//            if (isChecked(RowType.IndiFatherOccupation)) {
+//                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), true, record);
+//            }            
 
-            // je copie la date de naissance du pere
-            if (isChecked(RowType.IndiFatherBirthDate)) {
-                copyBirthDate(father, getRow(RowType.IndiFatherBirthDate), "", record);
-            }
-
-            // je copie la date de décès du pere
-            if (isChecked(RowType.IndiFatherDeathDate)) {
-                copyDeathDate(father, getRow(RowType.IndiFatherDeathDate), "", record);
-            }
-
-            // je copie la profession du pere
-            if (isChecked(RowType.IndiFatherOccupation)) {
-                copyOccupation(father, record.getIndi().getFatherOccupation(), record.getIndi().getFatherResidence(), true, record);
-            }            
-
+            copyIndiMother(record.getIndi(), family.getWife(), family);
             // je copie le nom et le prenom de la mere
-            Indi mother = family.getWife();
-            if (mother == null) {
-                // je cree la mere
-                mother = (Indi) gedcom.createEntity(Gedcom.INDI);
-                mother.setName(record.getIndi().getMotherFirstName(), record.getIndi().getMotherLastName());
-                mother.setSex(PropertySex.FEMALE);
-                family.setWife(mother);
-            } else {
-                if (isChecked(RowType.IndiMotherFirstName)) {
-                    mother.setName(record.getIndi().getMotherFirstName(), mother.getLastName());
-                }
-                if (isChecked(RowType.IndiMotherLastName)) {
-                    mother.setName(mother.getFirstName(), record.getIndi().getMotherLastName());
-                }
-            }
-
-            // je copie la date de naissance de la mere
-            if (isChecked(RowType.IndiMotherBirthDate)) {
-                copyBirthDate(mother, getRow(RowType.IndiMotherBirthDate), "", record);
-            }
-
-            // je copie la date de décès de la mere
-            if (isChecked(RowType.IndiMotherDeathDate)) {
-                copyDeathDate(mother, getRow(RowType.IndiMotherDeathDate), "", record);
-            }
-
-            // je met à jour la profession de la mere
-            if (isChecked(RowType.IndiMotherOccupation)) {
-                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), true, record);
-            }
-            
+//            Indi mother = family.getWife();
+//            if (mother == null) {
+//                // je cree la mere
+//                mother = (Indi) gedcom.createEntity(Gedcom.INDI);
+//                mother.setName(record.getIndi().getMotherFirstName(), record.getIndi().getMotherLastName());
+//                mother.setSex(PropertySex.FEMALE);
+//                family.setWife(mother);
+//            } else {
+//                if (isChecked(RowType.IndiMotherFirstName)) {
+//                    mother.setName(record.getIndi().getMotherFirstName(), mother.getLastName());
+//                }
+//                if (isChecked(RowType.IndiMotherLastName)) {
+//                    mother.setName(mother.getFirstName(), record.getIndi().getMotherLastName());
+//                }
+//            }
+//
+//            // je copie la date de naissance de la mere
+//            if (isChecked(RowType.IndiMotherBirthDate)) {
+//                copyBirthDate(mother, getRow(RowType.IndiMotherBirthDate), "", record);
+//            }
+//
+//            // je copie la date de décès de la mere
+//            if (isChecked(RowType.IndiMotherDeathDate)) {
+//                copyDeathDate(mother, getRow(RowType.IndiMotherDeathDate), "", record);
+//            }
+//
+//            // je met à jour la profession de la mere
+//            if (isChecked(RowType.IndiMotherOccupation)) {
+//                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), true, record);
+//            }
+//            
         }
         return currentIndi;
     }
