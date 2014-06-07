@@ -57,6 +57,8 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
         multiMediaObjectTitleLabel = new javax.swing.JLabel();
         multiMediaObjectTitleTextField = new javax.swing.JTextField();
+        changeDateLabel = new javax.swing.JLabel();
+        changeDateTextField = new javax.swing.JTextField();
 
         multiMediaObjectIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultiMediaObjectEditorPanel.multiMediaObjectIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -111,7 +113,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(filesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
         );
 
         multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -147,6 +149,12 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         multiMediaObjectTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         multiMediaObjectTitleLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.multiMediaObjectTitleLabel.text")); // NOI18N
 
+        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.changeDateLabel.text")); // NOI18N
+
+        changeDateTextField.setEditable(false);
+        changeDateTextField.setBorder(null);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -162,7 +170,11 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                         .addGap(10, 10, 10)
                         .addComponent(multiMediaObjectIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(multiMediaObjectIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(multiMediaObjectIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(changeDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -176,6 +188,10 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                     .addComponent(multiMediaObjectTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(multiMediaObjectTabbedPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(changeDateLabel)
+                    .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -262,6 +278,8 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_multimediaFilesTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFileButton;
+    private javax.swing.JLabel changeDateLabel;
+    private javax.swing.JTextField changeDateTextField;
     private javax.swing.JButton editFileButton;
     private javax.swing.JToolBar filesToolBar;
     private javax.swing.JPanel jPanel1;
@@ -312,6 +330,11 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
          * +1 <<NOTE_STRUCTURE>>
          */
         noteCitationsListPanel.set(mMultiMediaObject, Arrays.asList(mMultiMediaObject.getProperties("NOTE")));
+
+        Property changeDate = mMultiMediaObject.getProperty("CHAN");
+        if (changeDate != null) {
+            changeDateTextField.setText(((PropertyChange) changeDate).getDisplayValue());
+        }
     }
 
     public Property commit() {
