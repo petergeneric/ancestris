@@ -95,7 +95,17 @@ public class ImageBean extends javax.swing.JPanel {
                     Exceptions.printStackTrace(ex);
                 }
             }
+        } else {
+            imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
+            try {
+                loadImage = ImageIO.read(imageInputStream);
+                resizedImage = resizeImage(loadImage, this.getPreferredSize().width, this.getPreferredSize().height);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
+        
+        repaint ();
     }
 
     public BufferedImage resizeImage(BufferedImage img, int newW, int newH) {
