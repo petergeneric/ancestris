@@ -113,6 +113,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         husbandBirthDateTextField = new javax.swing.JTextField();
         husbandDeathDateLabel = new javax.swing.JLabel();
         husbandDeathDateTextField = new javax.swing.JTextField();
+        husbandImageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
         motherPanel = new javax.swing.JPanel();
         motherToolBar = new javax.swing.JToolBar();
         addWifeButton = new javax.swing.JButton();
@@ -125,6 +126,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         wifeBirthDateTextField = new javax.swing.JTextField();
         wifeDeathDateLabel = new javax.swing.JLabel();
         wifeDeathDateTextField = new javax.swing.JTextField();
+        wifeImageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
         familyTabbedPane = new javax.swing.JTabbedPane();
         childrensPanel = new javax.swing.JPanel();
         childrensListPanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel();
@@ -165,17 +167,17 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(623, Short.MAX_VALUE)
                 .addComponent(familyIDLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(familyIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(privateRecordToggleButton)
-                .addContainerGap())
+                .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                 .addComponent(familyIDLabel)
                 .addComponent(familyIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(privateRecordToggleButton))
@@ -236,16 +238,30 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
         husbandNameTextField.setEditable(false);
         husbandNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandNameTextField.text"), new Object[] {})); // NOI18N
+        husbandNameTextField.setBorder(null);
 
         husbandBirthDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandBirthDateLabel.text"), new Object[] {})); // NOI18N
 
         husbandBirthDateTextField.setEditable(false);
         husbandBirthDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandBirthDateTextField.text"), new Object[] {})); // NOI18N
+        husbandBirthDateTextField.setBorder(null);
 
         husbandDeathDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandDeathDateLabel.text"), new Object[] {})); // NOI18N
 
         husbandDeathDateTextField.setEditable(false);
         husbandDeathDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandDeathDateTextField.text"), new Object[] {})); // NOI18N
+        husbandDeathDateTextField.setBorder(null);
+
+        javax.swing.GroupLayout husbandImageBeanLayout = new javax.swing.GroupLayout(husbandImageBean);
+        husbandImageBean.setLayout(husbandImageBeanLayout);
+        husbandImageBeanLayout.setHorizontalGroup(
+            husbandImageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        husbandImageBeanLayout.setVerticalGroup(
+            husbandImageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout fatherPanelLayout = new javax.swing.GroupLayout(fatherPanel);
         fatherPanel.setLayout(fatherPanelLayout);
@@ -253,37 +269,46 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fatherPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(husbandBirthDateLabel)
-                    .addComponent(HusbandNameLabel)
-                    .addComponent(husbandDeathDateLabel))
+                .addComponent(husbandImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(husbandNameTextField)
-                    .addComponent(husbandBirthDateTextField)
-                    .addComponent(husbandDeathDateTextField))
-                .addContainerGap())
-            .addComponent(fatherToolBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(fatherPanelLayout.createSequentialGroup()
+                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(husbandBirthDateLabel)
+                            .addComponent(HusbandNameLabel)
+                            .addComponent(husbandDeathDateLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(husbandNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                            .addComponent(husbandBirthDateTextField)
+                            .addComponent(husbandDeathDateTextField))
+                        .addContainerGap())
+                    .addComponent(fatherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         fatherPanelLayout.setVerticalGroup(
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fatherPanelLayout.createSequentialGroup()
-                .addComponent(fatherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(HusbandNameLabel)
-                    .addComponent(husbandNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(husbandBirthDateLabel)
-                    .addComponent(husbandBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(husbandDeathDateLabel)
-                    .addComponent(husbandDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(fatherPanelLayout.createSequentialGroup()
+                        .addComponent(fatherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(HusbandNameLabel)
+                            .addComponent(husbandNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(husbandBirthDateLabel)
+                            .addComponent(husbandBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(husbandDeathDateLabel)
+                            .addComponent(husbandDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(husbandImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12))
         );
 
         motherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.motherPanel.border.title"), new Object[] {}))); // NOI18N
+        motherPanel.setPreferredSize(new java.awt.Dimension(410, 135));
 
         motherToolBar.setFloatable(false);
         motherToolBar.setRollover(true);
@@ -337,16 +362,32 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
         wifeNameTextField.setEditable(false);
         wifeNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeNameTextField.text"), new Object[] {})); // NOI18N
+        wifeNameTextField.setBorder(null);
 
         wifeBirthDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeBirthDateLabel.text"), new Object[] {})); // NOI18N
 
         wifeBirthDateTextField.setEditable(false);
         wifeBirthDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeBirthDateTextField.text"), new Object[] {})); // NOI18N
+        wifeBirthDateTextField.setBorder(null);
 
         wifeDeathDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeDeathDateLabel.text"), new Object[] {})); // NOI18N
 
         wifeDeathDateTextField.setEditable(false);
         wifeDeathDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeDeathDateTextField.text"), new Object[] {})); // NOI18N
+        wifeDeathDateTextField.setBorder(null);
+
+        wifeImageBean.setPreferredSize(new java.awt.Dimension(77, 112));
+
+        javax.swing.GroupLayout wifeImageBeanLayout = new javax.swing.GroupLayout(wifeImageBean);
+        wifeImageBean.setLayout(wifeImageBeanLayout);
+        wifeImageBeanLayout.setHorizontalGroup(
+            wifeImageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        wifeImageBeanLayout.setVerticalGroup(
+            wifeImageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout motherPanelLayout = new javax.swing.GroupLayout(motherPanel);
         motherPanel.setLayout(motherPanelLayout);
@@ -354,34 +395,42 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(motherPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(wifeBirthDateLabel)
-                    .addComponent(wifeLabel)
-                    .addComponent(wifeDeathDateLabel))
+                .addComponent(wifeImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(wifeNameTextField)
-                    .addComponent(wifeBirthDateTextField)
-                    .addComponent(wifeDeathDateTextField))
-                .addContainerGap())
-            .addComponent(motherToolBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(motherPanelLayout.createSequentialGroup()
+                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(wifeBirthDateLabel)
+                            .addComponent(wifeLabel)
+                            .addComponent(wifeDeathDateLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(wifeNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                            .addComponent(wifeBirthDateTextField)
+                            .addComponent(wifeDeathDateTextField))
+                        .addContainerGap())
+                    .addComponent(motherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         motherPanelLayout.setVerticalGroup(
             motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(motherPanelLayout.createSequentialGroup()
-                .addComponent(motherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(wifeLabel)
-                    .addComponent(wifeNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(wifeBirthDateLabel)
-                    .addComponent(wifeBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(wifeDeathDateLabel)
-                    .addComponent(wifeDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(wifeImageBean, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(motherPanelLayout.createSequentialGroup()
+                        .addComponent(motherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(wifeLabel)
+                            .addComponent(wifeNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(wifeBirthDateLabel)
+                            .addComponent(wifeBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(wifeDeathDateLabel)
+                            .addComponent(wifeDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
 
         familyTabbedPane.setPreferredSize(new java.awt.Dimension(0, 0));
@@ -390,11 +439,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         childrensPanel.setLayout(childrensPanelLayout);
         childrensPanelLayout.setHorizontalGroup(
             childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrensListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 946, Short.MAX_VALUE)
+            .addComponent(childrensListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
         );
         childrensPanelLayout.setVerticalGroup(
             childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrensListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+            .addComponent(childrensListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
 
         familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.childrensPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrensPanel); // NOI18N
@@ -460,11 +509,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         eventsPanel.setLayout(eventsPanelLayout);
         eventsPanelLayout.setHorizontalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 946, Short.MAX_VALUE)
+            .addComponent(eventsSplitPane)
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+            .addComponent(eventsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
 
         familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
@@ -475,11 +524,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 946, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
 
         familyTabbedPane.addTab("Sources", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
@@ -488,11 +537,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 946, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
 
         familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -501,11 +550,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 946, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
 
         familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
@@ -528,11 +577,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                        .addComponent(changeDateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                         .addGap(606, 606, 606)))
                 .addContainerGap())
         );
@@ -542,16 +591,16 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fatherPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(motherPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(familyTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(familyTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(changeDateLabel)
                     .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -585,6 +634,40 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 husbandNameTextField.setText(mHusband.getName());
                 husbandBirthDateTextField.setText(mHusband.getBirthAsString());
                 husbandDeathDateTextField.setText(mHusband.getDeathAsString());
+                for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
+                    String objetFormat = null;
+                    if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        } else {
+                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        }
+                    } else {
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        } else {
+                            Property propertyFormat = multiMediaObject.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        }
+                    }
+
+                    // bmp | gif | jpeg
+                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                        husbandImageBean.setImage(multiMediaObject);
+                        break;
+                    }
+                }
                 addHusbandButton.setVisible(false);
                 linkToHusbandButton.setVisible(false);
                 removeHusbandButton.setVisible(true);
@@ -627,6 +710,40 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 wifeNameTextField.setText(mWife.getName());
                 wifeBirthDateTextField.setText(mWife.getBirthAsString());
                 wifeDeathDateTextField.setText(mWife.getDeathAsString());
+                for (Property multiMediaObject : mWife.getProperties("OBJE")) {
+                    String objetFormat = null;
+                    if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        } else {
+                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        }
+                    } else {
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        } else {
+                            Property propertyFormat = multiMediaObject.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        }
+                    }
+
+                    // bmp | gif | jpeg
+                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                        wifeImageBean.setImage(multiMediaObject);
+                        break;
+                    }
+                }
                 addWifeButton.setVisible(false);
                 linkToWifeButton.setVisible(false);
                 removeWifeButton.setVisible(true);
@@ -668,6 +785,40 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 husbandNameTextField.setText(mHusband.getName());
                 husbandBirthDateTextField.setText(mHusband.getBirthAsString());
                 husbandDeathDateTextField.setText(mHusband.getDeathAsString());
+                for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
+                    String objetFormat = null;
+                    if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        } else {
+                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        }
+                    } else {
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        } else {
+                            Property propertyFormat = multiMediaObject.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        }
+                    }
+
+                    // bmp | gif | jpeg
+                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                        husbandImageBean.setImage(multiMediaObject);
+                        break;
+                    }
+                }
                 addHusbandButton.setVisible(false);
                 linkToHusbandButton.setVisible(false);
                 removeHusbandButton.setVisible(true);
@@ -708,6 +859,41 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 wifeNameTextField.setText(mWife.getName());
                 wifeBirthDateTextField.setText(mWife.getBirthAsString());
                 wifeDeathDateTextField.setText(mWife.getDeathAsString());
+
+                for (Property multiMediaObject : mWife.getProperties("OBJE")) {
+                    String objetFormat = null;
+                    if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        } else {
+                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        }
+                    } else {
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        } else {
+                            Property propertyFormat = multiMediaObject.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
+                        }
+                    }
+
+                    // bmp | gif | jpeg
+                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                        wifeImageBean.setImage(multiMediaObject);
+                        break;
+                    }
+                }
                 addWifeButton.setVisible(false);
                 linkToWifeButton.setVisible(false);
                 removeWifeButton.setVisible(true);
@@ -732,6 +918,43 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             individualEditorPanel.commit();
+            husbandNameTextField.setText(mHusband.getName());
+            husbandBirthDateTextField.setText(mHusband.getBirthAsString());
+            husbandDeathDateTextField.setText(mHusband.getDeathAsString());
+            for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
+                String objetFormat = null;
+                if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                } else {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                }
+
+                // bmp | gif | jpeg
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    husbandImageBean.setImage(multiMediaObject);
+                    break;
+                }
+            }
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -753,6 +976,44 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             individualEditorPanel.commit();
+            wifeNameTextField.setText(mWife.getName());
+            wifeBirthDateTextField.setText(mWife.getBirthAsString());
+            wifeDeathDateTextField.setText(mWife.getDeathAsString());
+
+            for (Property multiMediaObject : mWife.getProperties("OBJE")) {
+                String objetFormat = null;
+                if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                } else {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                }
+
+                // bmp | gif | jpeg
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    wifeImageBean.setImage(multiMediaObject);
+                    break;
+                }
+            }
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -778,6 +1039,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
+                husbandNameTextField.setText("");
+                husbandBirthDateTextField.setText("");
+                husbandDeathDateTextField.setText("");
+                husbandImageBean.setImage(null);
+
                 addHusbandButton.setVisible(true);
                 linkToHusbandButton.setVisible(true);
                 removeHusbandButton.setVisible(false);
@@ -794,7 +1060,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                         FamilyEditorPanel.class, "FamilyEditorPanel.deleteWifeConfirmation.title"),
                 NbBundle.getMessage(
                         FamilyEditorPanel.class, "FamilyEditorPanel.deleteWifeConfirmation.text",
-                        mFamily.getHusband(),
+                        mFamily.getWife(),
                         mFamily));
         if (createYesNo.show() == DialogManager.YES_OPTION) {
             try {
@@ -805,6 +1071,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                         mFamily.setWife(null);
                     }
                 }); // end of doUnitOfWork
+
+                wifeNameTextField.setText("");
+                wifeBirthDateTextField.setText("");
+                wifeDeathDateTextField.setText("");
+                wifeImageBean.setImage(null);
 
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
@@ -916,6 +1187,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField husbandBirthDateTextField;
     private javax.swing.JLabel husbandDeathDateLabel;
     private javax.swing.JTextField husbandDeathDateTextField;
+    private ancestris.modules.editors.genealogyeditor.beans.ImageBean husbandImageBean;
     private javax.swing.JTextField husbandNameTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -937,6 +1209,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField wifeBirthDateTextField;
     private javax.swing.JLabel wifeDeathDateLabel;
     private javax.swing.JTextField wifeDeathDateTextField;
+    private ancestris.modules.editors.genealogyeditor.beans.ImageBean wifeImageBean;
     private javax.swing.JLabel wifeLabel;
     private javax.swing.JTextField wifeNameTextField;
     // End of variables declaration//GEN-END:variables
@@ -985,6 +1258,41 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             husbandNameTextField.setText(mHusband.getName());
             husbandBirthDateTextField.setText(mHusband.getBirthAsString());
             husbandDeathDateTextField.setText(mHusband.getDeathAsString());
+
+            for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
+                String objetFormat = null;
+                if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                } else {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                }
+
+                // bmp | gif | jpeg
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    husbandImageBean.setImage(multiMediaObject);
+                    break;
+                }
+            }
             addHusbandButton.setVisible(false);
             linkToHusbandButton.setVisible(false);
             removeHusbandButton.setVisible(true);
@@ -1004,6 +1312,41 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             wifeNameTextField.setText(mWife.getName());
             wifeBirthDateTextField.setText(mWife.getBirthAsString());
             wifeDeathDateTextField.setText(mWife.getDeathAsString());
+
+            for (Property multiMediaObject : mWife.getProperties("OBJE")) {
+                String objetFormat = null;
+                if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                } else {
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    } else {
+                        Property propertyFormat = multiMediaObject.getProperty("FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
+                        }
+                    }
+                }
+
+                // bmp | gif | jpeg
+                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    wifeImageBean.setImage(multiMediaObject);
+                    break;
+                }
+            }
             addWifeButton.setVisible(false);
             linkToWifeButton.setVisible(false);
             removeWifeButton.setVisible(true);
