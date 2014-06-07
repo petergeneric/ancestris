@@ -27,7 +27,6 @@
                       <Component id="motherPanel" pref="405" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="changeDateLabel" pref="0" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="changeDateTextField" min="-2" pref="165" max="-2" attributes="0"/>
@@ -624,6 +623,9 @@
           <SubComponents>
             <Container class="javax.swing.JSplitPane" name="eventsSplitPane">
               <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="null"/>
+                </Property>
                 <Property name="dividerSize" type="int" value="1"/>
               </Properties>
 
