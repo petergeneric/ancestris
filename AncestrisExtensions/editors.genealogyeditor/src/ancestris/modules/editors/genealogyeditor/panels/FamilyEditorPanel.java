@@ -153,6 +153,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         changeDateLabel = new javax.swing.JLabel();
         changeDateTextField = new javax.swing.JTextField();
 
+        setMinimumSize(new java.awt.Dimension(1011, 439));
+
         familyIDTextField.setEditable(false);
         familyIDTextField.setColumns(8);
         familyIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.familyIDTextField.text"), new Object[] {})); // NOI18N
