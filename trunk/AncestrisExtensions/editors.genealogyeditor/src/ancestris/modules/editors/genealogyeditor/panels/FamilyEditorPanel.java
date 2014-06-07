@@ -1097,6 +1097,14 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             mEventsModel.addElement(PropertyTag2Name.getTagName(tag));
         }
         for (Property event : eventsList) {
+
+            /*
+             * Filter by gedcom version
+             */
+            if (event.getTag().equals("RESI") && !mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
+            }
+
             /*
              * Filter by events already present
              */
