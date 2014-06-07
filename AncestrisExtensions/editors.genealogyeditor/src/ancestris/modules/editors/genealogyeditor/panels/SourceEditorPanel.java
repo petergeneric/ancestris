@@ -85,6 +85,8 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
         abbreviationLabel = new javax.swing.JLabel();
         abbreviationTextField = new javax.swing.JTextField();
+        changeDateLabel = new javax.swing.JLabel();
+        changeDateTextField = new javax.swing.JTextField();
 
         sourceIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -225,6 +227,12 @@ public class SourceEditorPanel extends javax.swing.JPanel {
 
         abbreviationLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.abbreviationLabel.text")); // NOI18N
 
+        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.changeDateLabel.text")); // NOI18N
+
+        changeDateTextField.setEditable(false);
+        changeDateTextField.setBorder(null);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -250,7 +258,11 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                             .addComponent(agencyTextField, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(sourceTitleTextField, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(authorTextField)
-                            .addComponent(abbreviationTextField))))
+                            .addComponent(abbreviationTextField)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(changeDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -278,6 +290,10 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                     .addComponent(agencyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sourceInformationTabbedPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(changeDateLabel)
+                    .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -289,6 +305,8 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField agencyTextField;
     private javax.swing.JLabel authorLabel;
     private javax.swing.JTextField authorTextField;
+    private javax.swing.JLabel changeDateLabel;
+    private javax.swing.JTextField changeDateTextField;
     private ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel eventTypePanel;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private javax.swing.JPanel multimediaObjectPanel;
@@ -413,6 +431,10 @@ public class SourceEditorPanel extends javax.swing.JPanel {
          * Handle by gedcom doUnitOfWork
          * not displayed
          */
+        Property changeDate = mSource.getProperty("CHAN");
+        if (changeDate != null) {
+            changeDateTextField.setText(((PropertyChange) changeDate).getDisplayValue());
+        }
 
         /*
          * +1 <<NOTE_STRUCTURE>>

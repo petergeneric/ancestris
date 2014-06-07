@@ -45,6 +45,8 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         noteReferencesPanel = new javax.swing.JPanel();
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
         inlineNoteCheckBox = new javax.swing.JCheckBox();
+        changeDateLabel = new javax.swing.JLabel();
+        changeDateTextField = new javax.swing.JTextField();
 
         noteIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -97,6 +99,12 @@ public class NoteEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.changeDateLabel.text")); // NOI18N
+
+        changeDateTextField.setEditable(false);
+        changeDateTextField.setBorder(null);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -110,7 +118,11 @@ public class NoteEditorPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(noteIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(changeDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -123,6 +135,10 @@ public class NoteEditorPanel extends javax.swing.JPanel {
                     .addComponent(inlineNoteCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(noteInformationTabbedPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(changeDateLabel)
+                    .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -139,6 +155,8 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_inlineNoteCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel changeDateLabel;
+    private javax.swing.JTextField changeDateTextField;
     private javax.swing.JCheckBox inlineNoteCheckBox;
     private javax.swing.JLabel noteIDLabel;
     private javax.swing.JTextField noteIDTextField;
@@ -159,8 +177,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
      * +1 REFN <USER_REFERENCE_NUMBER>
      * +2 TYPE <USER_REFERENCE_TYPE>
      * +1 RIN <AUTOMATED_RECORD_ID>
-     * +1 <<SOURCE_CITATION>>
-     * +1 <<CHANGE_DATE>>
+     * +1 <<SOURCE_CITATION>> +1 <<CHANGE_DATE>>
      */
     public void set(Gedcom gedcom, Property parent, Property note) {
         mGedcom = gedcom;
@@ -188,6 +205,11 @@ public class NoteEditorPanel extends javax.swing.JPanel {
             }
 
             noteTextTextArea.setText(mNote.getValue() != null ? mNote.getValue() : "");
+
+            Property changeDate = mNote.getProperty("CHAN");
+            if (changeDate != null) {
+                changeDateTextField.setText(((PropertyChange) changeDate).getDisplayValue());
+            }
         }
 
         noteTextTextArea.getDocument().addDocumentListener(new DocumentListener() {
