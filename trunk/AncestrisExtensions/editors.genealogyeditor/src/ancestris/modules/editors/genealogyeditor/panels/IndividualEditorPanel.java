@@ -420,6 +420,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         changeDateTextField.setEditable(false);
         changeDateTextField.setText(org.openide.util.NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.changeDateTextField.text")); // NOI18N
+        changeDateTextField.setBorder(null);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
