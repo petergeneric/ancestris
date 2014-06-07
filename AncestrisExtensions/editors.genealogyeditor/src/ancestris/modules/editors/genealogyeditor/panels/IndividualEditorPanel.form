@@ -31,7 +31,6 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="changeDateLabel" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="changeDateTextField" min="-2" pref="167" max="-2" attributes="0"/>
@@ -219,7 +218,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="eventsSplitPane" max="32767" attributes="0"/>
+                      <Component id="eventsSplitPane" pref="192" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -228,6 +227,9 @@
           <SubComponents>
             <Container class="javax.swing.JSplitPane" name="eventsSplitPane">
               <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="null"/>
+                </Property>
                 <Property name="dividerSize" type="int" value="1"/>
               </Properties>
 
@@ -367,9 +369,7 @@
                 <Component class="ancestris.modules.editors.genealogyeditor.panels.IndividualEventEditorPanel" name="individualEventEditorPanel">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-                        <EmptyBorder/>
-                      </Border>
+                      <Border info="null"/>
                     </Property>
                   </Properties>
                   <Constraints>
