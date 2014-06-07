@@ -718,10 +718,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         updateOnGoing = false;
     }
 
-    public GeoPosition getPlaceGeoPosition() {
-        return new GeoPosition(Double.parseDouble(gedcomLatitudeTextField.getText()), Double.parseDouble(gedcomLongitudeTextField.getText()));
-    }
-
     public String getPlaceString() {
 
         String placeString = "";
