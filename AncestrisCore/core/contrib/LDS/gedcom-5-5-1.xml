@@ -214,6 +214,10 @@
   <EVEN super="FAM:ENGA" cardinality="0:M">
    <TYPE default="1" super="INDI:EVEN:TYPE"/>
   </EVEN>
+  <RESI cardinality="0:M" type="PropertySimpleReadOnly" img="Residency" super="FAM:ENGA">
+   <PLAC default="0"/>
+   <ADDR default="1"/>
+  </RESI>
   <SLGS hide="1" img="Marriage" super="INDI:BAPL"/>
   <OBJE super="INDI:OBJE"/>
   <NOTE super="INDI:NOTE"/>
