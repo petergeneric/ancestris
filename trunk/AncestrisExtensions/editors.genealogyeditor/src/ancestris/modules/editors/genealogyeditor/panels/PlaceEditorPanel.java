@@ -232,14 +232,40 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         this.mPlace = place;
         this.mAddress = address;
-        gedcomPlaceEditorPanel.set(root, place);
+        gedcomPlaceEditorPanel.set(root, mPlace);
         addressEditorPanel.set(root, mAddress);
-        if (mPlace == null && mAddress != null) {
-            editorsTabbedPane.setSelectedIndex(1);
-        }
-
         if (mPlace != null) {
-            jXMapKit1.setAddressLocation(gedcomPlaceEditorPanel.getPlaceGeoPosition());
+            Property latitude = null;
+            Property longitude = null;
+
+            editorsTabbedPane.setSelectedComponent(placeEditorTabPanel);
+
+            if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                Property map = place.getProperty("MAP");
+                if (map != null) {
+                    latitude = map.getProperty("LATI");
+                    longitude = map.getProperty("LONG");
+                }
+            } else {
+                Property map = place.getProperty("_MAP");
+                if (map != null) {
+                    latitude = map.getProperty("_LATI");
+                    longitude = map.getProperty("_LONG");
+                }
+            }
+
+            if (latitude != null && longitude != null) {
+                jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
+            } else {
+                placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
+
+            }
+        } else if (mAddress != null) {
+            editorsTabbedPane.setSelectedComponent(addressEditorPanel);
+            placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
+        } else {
+            editorsTabbedPane.setSelectedComponent(placeEditorTabPanel);
+            placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
         }
     }
 
