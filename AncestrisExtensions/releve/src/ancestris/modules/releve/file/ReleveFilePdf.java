@@ -483,7 +483,7 @@ public class ReleveFilePdf {
                                 record.getEventDateString(),
                                 record.getEventType().getName(),
                                 participantNames,
-                                record.getSecondDateString(),
+                                record.getEventSecondDateString(),
                                 record.getCote().toString(),
                                 record.getFreeComment().toString()
                                 );

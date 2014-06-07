@@ -857,8 +857,8 @@ public class ReleveFileEgmt {
                          record.getWitness2Occupation().toString() );
 
                     String insinuation = "";
-                    if( record.getSecondDateProperty().isValid()) {
-                        insinuation = "insinué le "+ record.getSecondDateString();
+                    if( record.getEventSecondDateProperty().isValid()) {
+                        insinuation = "insinué le "+ record.getEventSecondDateString();
                     }
 
                     line.appendCsv(

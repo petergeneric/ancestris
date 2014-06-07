@@ -509,10 +509,10 @@ public class MergeModelMarriage extends MergeModel {
      */
     @Override
     protected Property copyRecordToEntity() throws Exception {
+        
+        Property resultProperty;
 
-        //PropertyDate eventDate = (PropertyDate) getRow(RowType.EventDate).recordValue;
-
-        Indi husband = (Indi) getRow(RowType.IndiLastName).entityObject;
+        Indi husband = (Indi) getEntityObject(RowType.IndiLastName);
         if (husband == null) {
             // je cree l'individu
             husband = (Indi) gedcom.createEntity(Gedcom.INDI);
@@ -548,7 +548,7 @@ public class MergeModelMarriage extends MergeModel {
         // je copie les données des parents de l'epoux
         if (isChecked(RowType.IndiParentFamily)) {
             // je copie la famille des parents
-            Fam parentfamily = (Fam) getRow(RowType.IndiParentFamily).entityObject;
+            Fam parentfamily = (Fam) getEntityObject(RowType.IndiParentFamily);
             if (parentfamily == null) {
                 // je cree la famille
                 parentfamily = (Fam) gedcom.createEntity(Gedcom.FAM);
@@ -564,7 +564,7 @@ public class MergeModelMarriage extends MergeModel {
                 copyMarriageDate(parentfamily, getRow(RowType.IndiParentMarriageDate), record );
             }
             
-            copyIndiFather(record.getIndi(), (Indi) getRow(RowType.IndiFatherLastName).entityObject, parentfamily);
+            copyIndiFather(record.getIndi(), (Indi) getEntityObject(RowType.IndiFatherLastName), parentfamily);
 //            if ( isCheckedOneOf(RowType.IndiFatherFirstName, RowType.IndiFatherLastName, RowType.IndiFatherBirthDate, RowType.IndiFatherDeathDate, RowType.IndiFatherOccupation )) {
 //                // je copie le nom et le prenom du pere de l'epoux
 //                Indi father = (Indi) getRow(RowType.IndiFatherLastName).entityObject;
@@ -599,7 +599,7 @@ public class MergeModelMarriage extends MergeModel {
 //                }
 //            }
 
-            copyIndiMother(record.getIndi(), (Indi) getRow(RowType.IndiMotherLastName).entityObject, parentfamily);
+            copyIndiMother(record.getIndi(), (Indi) getEntityObject(RowType.IndiMotherLastName), parentfamily);
 //            if ( isCheckedOneOf(RowType.IndiMotherFirstName, RowType.IndiMotherLastName, RowType.IndiMotherBirthDate, RowType.IndiMotherDeathDate, RowType.IndiMotherOccupation )) {
 //
 //                // je copie le nom et le prenom de la mere de l'epoux
@@ -641,7 +641,7 @@ public class MergeModelMarriage extends MergeModel {
         ///////////////////////////////////////////////////////////
         // wife
         ///////////////////////////////////////////////////////////
-        Indi wife = (Indi) getRow(RowType.WifeLastName).entityObject;
+        Indi wife = (Indi) getEntityObject(RowType.WifeLastName);
         if (wife == null) {
             // je cree l'indivis
             wife = (Indi) gedcom.createEntity(Gedcom.INDI);
@@ -677,7 +677,7 @@ public class MergeModelMarriage extends MergeModel {
         // je copie les données des parents de l'epouse
         if (isChecked(RowType.WifeParentFamily)) {
             // je copie la famille des parents
-            Fam parentfamily = (Fam) getRow(RowType.WifeParentFamily).entityObject;
+            Fam parentfamily = (Fam) getEntityObject(RowType.WifeParentFamily);
             if (parentfamily == null) {
                 // je cree la famille
                 parentfamily = (Fam) gedcom.createEntity(Gedcom.FAM);
@@ -693,7 +693,7 @@ public class MergeModelMarriage extends MergeModel {
                 copyMarriageDate(parentfamily, getRow(RowType.WifeParentMarriageDate), record );
             }
 
-            copyWifeFather(record.getWife(), (Indi) getRow(RowType.WifeFatherLastName).entityObject, parentfamily);
+            copyWifeFather(record.getWife(), (Indi) getEntityObject(RowType.WifeFatherLastName), parentfamily);
 //            if ( isCheckedOneOf(RowType.WifeFatherFirstName, RowType.WifeFatherLastName, RowType.WifeFatherBirthDate, RowType.WifeFatherDeathDate, RowType.WifeFatherOccupation )) {
 //                // je copie le nom et le prenom du pere de l'epouse
 //                Indi father = (Indi) getRow(RowType.WifeFatherLastName).entityObject;
@@ -729,7 +729,7 @@ public class MergeModelMarriage extends MergeModel {
 //            }
 
             // je copie les linformations de la mere de l'épouse
-            copyWifeMother(record.getWife(), (Indi) getRow(RowType.WifeMotherLastName).entityObject, parentfamily);
+            copyWifeMother(record.getWife(), (Indi) getEntityObject(RowType.WifeMotherLastName), parentfamily);
 //            if ( isCheckedOneOf(RowType.WifeMotherFirstName, RowType.WifeMotherLastName, RowType.WifeMotherBirthDate, RowType.WifeMotherDeathDate, RowType.WifeMotherOccupation )) {
 //                // je copie le nom et le prenom de la mere de l'epouse
 //                Indi mother = (Indi) getRow(RowType.WifeMotherLastName).entityObject;
@@ -787,16 +787,20 @@ public class MergeModelMarriage extends MergeModel {
                 currentFamily.setWife(wife);
             }
         }
+        
+        resultProperty = currentFamily;
 
         // je crée la propriété MARR
         Property marriageProperty = currentFamily.getProperty("MARR");
         if (marriageProperty == null) {
             marriageProperty = currentFamily.addProperty("MARR", "");
         }
+        
+        resultProperty = marriageProperty;
 
         // je copie la source du releve de mariage 
         if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
-            copySource((Source) getRow(RowType.EventSource).entityObject, marriageProperty, isChecked(RowType.EventPage), record);
+            copySource((Source) getEntityObject(RowType.EventSource), marriageProperty, isChecked(RowType.EventPage), record);
         }
 
         // je copie la date de mariage
@@ -836,10 +840,43 @@ public class MergeModelMarriage extends MergeModel {
             }
         }
 
-        return currentFamily;
+        return resultProperty;
 
     }
 
+    /**
+     * retourne l'individu proposé dans le modele
+     * @return 
+     */
+    @Override
+    protected Entity getProposedEntity() {
+        if (currentFamily != null)  {
+            return currentFamily;
+        } else {
+            Entity husband =  getEntityObject(RowType.IndiLastName);
+            if (husband != null) {
+                return husband;
+            } else {
+                Entity wife = getEntityObject(RowType.WifeLastName);
+                if (wife != null) {
+                    return wife;
+                } else {
+                    Entity husbandParentFamily = getEntityObject(RowType.IndiParentFamily);
+                     if (husbandParentFamily != null) {
+                        return husbandParentFamily;
+                    } else {
+                        Entity wifeParentFamily = getEntityObject(RowType.WifeParentFamily);
+                        if (wifeParentFamily != null) {
+                           return wifeParentFamily;
+                       } else {
+                           return null;
+                       }
+                    }
+                }
+            }
+
+        }
+    }
     
     /**
      * retourne la famille selectionnée
@@ -892,50 +929,50 @@ public class MergeModelMarriage extends MergeModel {
             String wifeParents;
 
             // j'affiche l'epoux
-            if (getRow(RowType.IndiLastName).entityObject == null ) {
+            if (getEntityObject(RowType.IndiLastName) == null ) {
                 husband = "Nouvel époux";
             } else {
-                husband = getRow(RowType.IndiLastName).entityObject.toString(true);
+                husband = getEntityObject(RowType.IndiLastName).toString(true);
             }
-            if (getRow(RowType.WifeLastName).entityObject == null ) {
+            if (getEntityObject(RowType.WifeLastName) == null ) {
                 wife = "Nouvelle épouse";
             } else {
-                wife = getRow(RowType.WifeLastName).entityObject.toString(true);
+                wife = getEntityObject(RowType.WifeLastName).toString(true);
             }
             // j'afficje les parents
-            if (getRow(RowType.IndiParentFamily).entityObject == null ) {
-                if ( getRow(RowType.IndiFatherLastName).entityObject == null ) {
+            if (getEntityObject(RowType.IndiParentFamily) == null ) {
+                if ( getEntityObject(RowType.IndiFatherLastName) == null ) {
                     indiParents = "Nouveau père";
                 } else {
-                    indiParents = ((Indi)getRow(RowType.IndiFatherLastName).entityObject).getDisplayValue();
+                    indiParents = ((Indi)getEntityObject(RowType.IndiFatherLastName)).getDisplayValue();
                 }
                 indiParents += " x ";
-                if ( getRow(RowType.IndiFatherLastName).entityObject == null ) {
+                if ( getEntityObject(RowType.IndiFatherLastName) == null ) {
                     indiParents += "Nouvelle mère";
                 } else {
-                    indiParents += ((Indi)getRow(RowType.IndiMotherLastName).entityObject).getDisplayValue();
+                    indiParents += ((Indi)getEntityObject(RowType.IndiMotherLastName)).getDisplayValue();
                 }
             }  else {
                 // j'affiche la famille des parents de l'epoux
-                indiParents = ((Fam)getRow(RowType.IndiParentFamily).entityObject).toString(false);
+                indiParents = ((Fam)getEntityObject(RowType.IndiParentFamily)).toString(false);
             }
 
             
-            if (getRow(RowType.WifeParentFamily).entityObject == null ) {
-                if ( getRow(RowType.WifeFatherLastName).entityObject == null ) {
+            if (getEntityObject(RowType.WifeParentFamily) == null ) {
+                if ( getEntityObject(RowType.WifeFatherLastName) == null ) {
                     wifeParents = "Nouveau père";
                 } else {
-                    wifeParents = ((Indi)getRow(RowType.WifeFatherLastName).entityObject).getDisplayValue();
+                    wifeParents = ((Indi)getEntityObject(RowType.WifeFatherLastName)).getDisplayValue();
                 }
                 wifeParents += " x ";
-                if ( getRow(RowType.WifeFatherLastName).entityObject == null ) {
+                if ( getEntityObject(RowType.WifeFatherLastName) == null ) {
                     wifeParents += "Nouvelle mère";
                 } else {
-                    wifeParents += ((Indi)getRow(RowType.WifeMotherLastName).entityObject).getDisplayValue();
+                    wifeParents += ((Indi)getEntityObject(RowType.WifeMotherLastName)).getDisplayValue();
                 }
             }  else {
                 // j'affiche la famille des parents de l'epoux
-                wifeParents = ((Fam)getRow(RowType.WifeParentFamily).entityObject).toString(false);
+                wifeParents = ((Fam)getEntityObject(RowType.WifeParentFamily)).toString(false);
             }
 
             //summary = MessageFormat.format(summaryFormat, spouses, indiParents, wifeParents);

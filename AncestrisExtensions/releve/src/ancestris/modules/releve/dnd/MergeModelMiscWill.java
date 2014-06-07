@@ -407,6 +407,30 @@ class MergeModelMiscWill extends MergeModel {
         }
     }
 
+     /**
+     * retourne l'individu proposé dans le modele
+     * @return 
+     */
+    @Override
+    protected Entity getProposedEntity() {
+        if (currentIndi != null)  {
+            return currentIndi;
+        } else {
+            Entity parentFamily = getEntityObject(MergeModel.RowType.IndiParentFamily);
+            if (parentFamily != null) {
+                return parentFamily;
+            } else {
+                Entity marriedFamily = getEntityObject(RowType.IndiMarriedFamily);
+                if (marriedFamily != null) {
+                    return marriedFamily;
+                } else {
+                    return null;
+                }
+            }
+
+        }
+    }
+    
     /**
      * retoune l'individu selectionné
      * @return individu selectionné ou null si c'est un nouvel individu
@@ -435,6 +459,9 @@ class MergeModelMiscWill extends MergeModel {
      */
     @Override
     protected Property copyRecordToEntity() throws Exception {
+        
+        Property resultProperty;
+        
         if (currentIndi == null) {
             currentIndi = (Indi) gedcom.createEntity(Gedcom.INDI);
             currentIndi.setName(record.getIndi().getFirstName(), record.getIndi().getLastName());
@@ -455,6 +482,9 @@ class MergeModelMiscWill extends MergeModel {
                 currentIndi.setSex(record.getIndi().getSex());
             }
         }
+        
+        // par defaut je retourne l'individu 
+        resultProperty = currentIndi;
 
         // je cree la propriete de naissance si elle n'existait pas
         if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.IndiBirthPlace) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
@@ -494,6 +524,7 @@ class MergeModelMiscWill extends MergeModel {
                 if (willProperty == null) {
                     willProperty = currentIndi.addProperty("WILL", "");
                 }
+                resultProperty = willProperty;
 
                 // je copie la date du testament du releve dans l'individu
                 if (isChecked(RowType.EventDate)) {
@@ -512,7 +543,7 @@ class MergeModelMiscWill extends MergeModel {
 
                 // je copie la source du testament
                 if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
-                    copySource((Source) getRow(RowType.EventSource).entityObject, willProperty, isChecked(RowType.EventPage), record);
+                    copySource((Source) getEntityObject(RowType.EventSource), willProperty, isChecked(RowType.EventPage), record);
                 }
 
                 // je copie le commentaire du testament
@@ -594,6 +625,8 @@ class MergeModelMiscWill extends MergeModel {
                         insinuationProperty = currentIndi.addProperty("EVEN", "", currentIndi.getPropertyPosition(willProperty));
                     }
                 }
+                
+                resultProperty = insinuationProperty;
 
                 // je copie la date de l'insinuation
                 if (isChecked(RowType.EventDate)) {
@@ -607,7 +640,7 @@ class MergeModelMiscWill extends MergeModel {
 
                 // je copie la source du releve de l'insinuation
                 if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
-                    copySource((Source) getRow(RowType.EventSource).entityObject, insinuationProperty, isChecked(RowType.EventPage), record);
+                    copySource((Source) getEntityObject(RowType.EventSource), insinuationProperty, isChecked(RowType.EventPage), record);
                 }
 
                 // je copie le lieu de l'insinuation
@@ -703,7 +736,7 @@ class MergeModelMiscWill extends MergeModel {
         // je copie les données des parents
         if (isChecked(RowType.IndiParentFamily)) {
             // je copie la famille des parents
-            Fam family = (Fam) getRow(RowType.IndiParentFamily).entityObject;
+            Fam family = (Fam) getEntityObject(RowType.IndiParentFamily);
             if (family == null) {
                 // je cree la famille
                 family = (Fam) gedcom.createEntity(Gedcom.FAM);
@@ -785,7 +818,7 @@ class MergeModelMiscWill extends MergeModel {
 //                copyOccupation(mother, record.getIndi().getMotherOccupation(), record.getIndi().getMotherResidence(), true, record);
 //            }            
         }
-        return currentIndi;
+        return resultProperty;
     }
 
     /**
@@ -809,20 +842,20 @@ class MergeModelMiscWill extends MergeModel {
         String summary;
         if ( currentIndi == null ) {
                 summary = "Nouvel individu" + " - ";
-                if (getRow(MergeModel.RowType.IndiParentFamily).entityObject != null) {
-                    summary += getRow(MergeModel.RowType.IndiParentFamily).entityObject.toString(false);
+                if (getEntityObject(MergeModel.RowType.IndiParentFamily) != null) {
+                    summary += getEntityObject(MergeModel.RowType.IndiParentFamily).toString(false);
                 } else {
-                    if (getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null
-                            || getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null) {
+                    if (getEntityObject(MergeModel.RowType.IndiFatherLastName) != null
+                            || getEntityObject(MergeModel.RowType.IndiMotherLastName) != null) {
                         summary += "Nouveau couple:" + " ";
-                        if (getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null) {
-                            summary += getRow(MergeModel.RowType.IndiFatherLastName).entityObject.toString(true);
+                        if (getEntityObject(MergeModel.RowType.IndiFatherLastName) != null) {
+                            summary += getEntityObject(MergeModel.RowType.IndiFatherLastName).toString(true);
                         } else {
                             summary += "Nouveau père";
                         }
                         summary += " , ";
-                        if (getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null) {
-                            summary += getRow(MergeModel.RowType.IndiMotherLastName).entityObject.toString(true);
+                        if (getEntityObject(MergeModel.RowType.IndiMotherLastName) != null) {
+                            summary += getEntityObject(MergeModel.RowType.IndiMotherLastName).toString(true);
                         } else {
                             summary += "Nouvelle mère";
                         }
@@ -840,20 +873,20 @@ class MergeModelMiscWill extends MergeModel {
             } else {
                 summary = "Modifier " + currentIndi.toString(true) + ", ";
 
-                if (getRow(MergeModel.RowType.IndiParentFamily).entityObject != null) {
-                    summary += getRow(MergeModel.RowType.IndiParentFamily).entityObject.toString(false);
+                if (getEntityObject(MergeModel.RowType.IndiParentFamily) != null) {
+                    summary += getEntityObject(MergeModel.RowType.IndiParentFamily).toString(false);
                 } else {
-                    if (getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null
-                            || getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null) {
+                    if (getEntityObject(MergeModel.RowType.IndiFatherLastName) != null
+                            || getEntityObject(MergeModel.RowType.IndiMotherLastName) != null) {
                         summary += "Nouveau couple:" + " ";
-                        if (getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null) {
-                            summary += getRow(MergeModel.RowType.IndiFatherLastName).entityObject.toString(true);
+                        if (getEntityObject(MergeModel.RowType.IndiFatherLastName) != null) {
+                            summary += getEntityObject(MergeModel.RowType.IndiFatherLastName).toString(true);
                         } else {
                             summary += "Nouveau père";
                         }
                         summary += ", ";
-                        if (getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null) {
-                            summary += getRow(MergeModel.RowType.IndiMotherLastName).entityObject.toString(true);
+                        if (getEntityObject(MergeModel.RowType.IndiMotherLastName) != null) {
+                            summary += getEntityObject(MergeModel.RowType.IndiMotherLastName).toString(true);
                         } else {
                             summary += "Nouvelle mère";
                         }

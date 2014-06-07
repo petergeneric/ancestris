@@ -208,7 +208,7 @@ public class MergeRecord {
     PropertyDate getEventDate() {
         return record.getEventDateProperty();
     }
-
+    
     String getEventDateDDMMYYYY(boolean showFrenchCalendarDate) {
         String result = record.getEventDateString();
         if (showFrenchCalendarDate) {
@@ -225,14 +225,14 @@ public class MergeRecord {
     }
 
    PropertyDate getInsinuationDate() {
-        return record.getSecondDateProperty();
+        return record.getEventSecondDateProperty();
     }
 
     String getInsinuationDateDDMMYYYY(boolean showFrenchCalendarDate) {
-        String result = record.getSecondDateString();
+        String result = record.getEventSecondDateString();
         if (showFrenchCalendarDate) {
             try {
-                String frenchCalendarDate = record.getSecondDateProperty().getStart().getPointInTime(PointInTime.FRENCHR).toString();
+                String frenchCalendarDate = record.getEventSecondDateProperty().getStart().getPointInTime(PointInTime.FRENCHR).toString();
                 if (!frenchCalendarDate.isEmpty()) {
                     result += " (" + frenchCalendarDate + ")";
                 }
@@ -248,7 +248,7 @@ public class MergeRecord {
     }
 
     boolean isInsinuation() {
-        return record.getSecondDateProperty() != null  && record.getSecondDateProperty().isComparable();
+        return record.getEventSecondDateProperty() != null  && record.getEventSecondDateProperty().isComparable();
     }
 
     String getEventPlaceCityName() {

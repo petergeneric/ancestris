@@ -218,9 +218,9 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
      * @param setRoot positionne l'entité comme racine de l'arbre si la source de Dnd est un arbre
      */
     @Override
-    public void setRoot(Entity entity) {
+    public void setRoot(Property property) {
         // je declare l'entité comme racine de l'arbre
-        dndSourceComponent.setRoot(entity);
+        dndSourceComponent.setRoot(property);
     }
     
     /**
@@ -229,8 +229,8 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
      * @param setRoot positionne l'entité comme racine de l'arbre
      */
     @Override
-    public void show(Entity entity) {
-        dndSourceComponent.show(entity);
+    public boolean show(Property property) {
+        return dndSourceComponent.show(property);
     }
     
     /**
@@ -239,7 +239,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     @Override
     public void selectSource() {
         final MergeModel currentModel1 = mergePanel1.getCurrentModel();
-        Object entityObject = currentModel1.getRow(MergeModel.RowType.EventSource).entityObject;
+        Object entityObject = currentModel1.getEntityObject(MergeModel.RowType.EventSource);
         String sourceTitle = currentModel1.record.getEventSourceTitle();
         if (entityObject instanceof Source ) {
             sourceTitle = ((Source) entityObject).getTitle();
@@ -278,6 +278,12 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                         Property associatedProperty2 = currentModel2.copyRecordToEntity();
                         currentModel2.copyAssociation(associatedProperty1, associatedProperty2);
                     }
+                    // j'affiche l'entité principale dans l'arbre dynamic
+                    boolean showResult = show( associatedProperty1); 
+                    if (! showResult) {
+                        setRoot(associatedProperty1);
+                    }
+                    
                 } catch (Exception throwable) {
                     // je constitue la commande pour annuler les modifications
                     long afterChange = currentModel1.getGedcom().getLastChange()!=null ? currentModel1.getGedcom().getLastChange().getTime() : 0;
@@ -365,29 +371,29 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
             // je copie les données du releve dans gedcom
             copyRecordToEntity();
 
-            // j'affiche l'entité dans l'arbre dynamic
-            final MergeModel currentModel = mergePanel1.getCurrentModel();
-            if (currentModel.getSelectedEntity() != null) {
-                if (currentModel.getSelectedEntity() instanceof Indi) {
-                    Indi selectedIndi = (Indi) currentModel.getSelectedEntity();
-                    if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
-                        // je centre sur la famille des parents
-                        setRoot(selectedIndi.getFamilyWhereBiologicalChild());
-                        if (mergeRecord.getType() == MergeRecord.RecordType.Birth
-                                || mergeRecord.getType() == MergeRecord.RecordType.Death) {
-                            // j'affiche l'individu
-                            show(selectedIndi);
-                        }
-
-                    } else {
-                        // je centre l'arbre sur l'entité
-                        setRoot(currentModel.getSelectedEntity());
-                    }
-                } else {
-                    // je centre l'arbre sur l'entité
-                    setRoot(currentModel.getSelectedEntity());
-                }    
-            }
+//            // j'affiche l'entité dans l'arbre dynamique
+//            final MergeModel currentModel = mergePanel1.getCurrentModel();
+//            if (currentModel.getSelectedEntity() != null) {
+//                if (currentModel.getSelectedEntity() instanceof Indi) {
+//                    Indi selectedIndi = (Indi) currentModel.getSelectedEntity();
+//                    if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
+//                        // je centre sur la famille des parents
+//                        setRoot(selectedIndi.getFamilyWhereBiologicalChild());
+//                        if (mergeRecord.getType() == MergeRecord.RecordType.Birth
+//                                || mergeRecord.getType() == MergeRecord.RecordType.Death) {
+//                            // j'affiche l'individu
+//                            show(selectedIndi);
+//                        }
+//
+//                    } else {
+//                        // je centre l'arbre sur l'entité
+//                        setRoot(currentModel.getSelectedEntity());
+//                    }
+//                } else {
+//                    // je centre l'arbre sur l'entité
+//                    setRoot(currentModel.getSelectedEntity());
+//                }    
+//            }
             componentClosed();
             setVisible(false);
             dispose();

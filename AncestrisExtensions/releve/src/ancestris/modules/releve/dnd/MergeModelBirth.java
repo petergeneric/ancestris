@@ -262,14 +262,28 @@ class MergeModelBirth extends MergeModel {
     }
 
     /**
-     * retoune l'individu selectionné
+     * retourne l'individu selectionné 
      * @return individu selectionné ou null si c'est un nouvel individu
      */
     @Override
     protected Entity getSelectedEntity() {
         return currentIndi;
     }
-    
+
+    /**
+     * retourne l'individu proposé dans le modele
+     * @return 
+     */
+    @Override
+    protected Entity getProposedEntity() {
+        if (currentIndi != null)  {
+            return currentIndi;
+        } else {
+            Entity family = getEntityObject(MergeModel.RowType.IndiParentFamily);
+            return family; 
+        }
+    }
+
     /**
      * retourne la propriété concernée par l'acte
      * @return propriété concernée par l'acte
@@ -288,6 +302,8 @@ class MergeModelBirth extends MergeModel {
      */
     @Override
     protected Property copyRecordToEntity() throws Exception {
+        Property resultProperty;
+        
         if (currentIndi == null) {
             currentIndi = (Indi) gedcom.createEntity(Gedcom.INDI);
             currentIndi.setName(record.getIndi().getFirstName(), record.getIndi().getLastName());
@@ -308,6 +324,8 @@ class MergeModelBirth extends MergeModel {
                 currentIndi.setSex(record.getIndi().getSex());
             }
         }
+        
+        resultProperty = currentIndi;
 
         // je cree la propriete de naissance si elle n'existait pas
         Property birthProperty = currentIndi.getProperty("BIRT");
@@ -316,6 +334,8 @@ class MergeModelBirth extends MergeModel {
                 birthProperty = currentIndi.addProperty("BIRT", "");
             }
         }
+        
+        resultProperty = birthProperty;
 
         // je copie la date de naissance du releve dans l'individu
         if (isChecked(RowType.IndiBirthDate)) {
@@ -326,7 +346,7 @@ class MergeModelBirth extends MergeModel {
 
         // je copie la source de la naissance du releve dans l'individu
         if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
-            copySource((Source) getRow(RowType.EventSource).entityObject, birthProperty, isChecked(RowType.EventPage), record);
+            copySource((Source) getEntityObject(RowType.EventSource), birthProperty, isChecked(RowType.EventPage), record);
         }
         
         // je copie le lieu de la naissance .
@@ -357,7 +377,7 @@ class MergeModelBirth extends MergeModel {
         // je copie les données des parents
         if (isChecked(RowType.IndiParentFamily)) {
             // je copie la famille des parents
-            Fam family = (Fam) getRow(RowType.IndiParentFamily).entityObject;
+            Fam family = (Fam) getEntityObject(RowType.IndiParentFamily);
             if (family == null) {
                 // je cree la famille
                 family = (Fam) gedcom.createEntity(Gedcom.FAM);
@@ -440,7 +460,7 @@ class MergeModelBirth extends MergeModel {
 //            }
 //            
         }
-        return currentIndi;
+        return resultProperty;
     }
 
     /**
@@ -464,20 +484,20 @@ class MergeModelBirth extends MergeModel {
         String summary;
         if ( currentIndi == null ) {
                 summary = "Nouvel enfant" + " - ";
-                if (getRow(MergeModel.RowType.IndiParentFamily).entityObject != null) {
-                    summary += getRow(MergeModel.RowType.IndiParentFamily).entityObject.toString(false);
+                if (getEntityObject(MergeModel.RowType.IndiParentFamily) != null) {
+                    summary += getEntityObject(MergeModel.RowType.IndiParentFamily).toString(false);
                 } else {
-                    if (getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null
-                            || getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null) {
+                    if (getEntityObject(MergeModel.RowType.IndiFatherLastName) != null
+                            || getEntityObject(MergeModel.RowType.IndiMotherLastName) != null) {
                         summary += "Nouveau couple:" + " ";
-                        if (getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null) {
-                            summary += getRow(MergeModel.RowType.IndiFatherLastName).entityObject.toString(true);
+                        if (getEntityObject(MergeModel.RowType.IndiFatherLastName) != null) {
+                            summary += getEntityObject(MergeModel.RowType.IndiFatherLastName).toString(true);
                         } else {
                             summary += "Nouveau père";
                         }
                         summary += " , ";
-                        if (getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null) {
-                            summary += getRow(MergeModel.RowType.IndiMotherLastName).entityObject.toString(true);
+                        if (getEntityObject(MergeModel.RowType.IndiMotherLastName) != null) {
+                            summary += getEntityObject(MergeModel.RowType.IndiMotherLastName).toString(true);
                         } else {
                             summary += "Nouvelle mère";
                         }
@@ -497,17 +517,17 @@ class MergeModelBirth extends MergeModel {
                 // l'enfant est déjà descendant la famille dans le gedcom
                 summary = "Modifier "+ currentIndi.toString(true);
             } else {
-                if ( getRow(RowType.IndiParentFamily).entityObject == null ) {
+                if ( getEntityObject(RowType.IndiParentFamily) == null ) {
                     // l'enfant n'a pas de famille dans le gedcom
                     summary = "Modifier "+ currentIndi.toString(true) + " - nouvelle famille" ;
                 } else {
                     // l'enfant a une famille dans le gedcom
-                    if( currentIndi.isDescendantOf((Fam)getRow(RowType.IndiParentFamily).entityObject)) {
+                    if( currentIndi.isDescendantOf((Fam)getEntityObject(RowType.IndiParentFamily))) {
                         // l'enfant est déjà descendant la famille dans le gedcom
                         summary = "Modifier "+ currentIndi.toString(true);
                     } else {
                         // l'enfant n'est pas encore descendant de la famille dans le gedcom
-                        summary = "Modifier "+ currentIndi.toString(true) + " - ajout filiation avec " + (Fam)getRow(RowType.IndiParentFamily).entityObject;
+                        summary = "Modifier "+ currentIndi.toString(true) + " - ajout filiation avec " + (Fam)getEntityObject(RowType.IndiParentFamily);
                     }
                 }
             }
