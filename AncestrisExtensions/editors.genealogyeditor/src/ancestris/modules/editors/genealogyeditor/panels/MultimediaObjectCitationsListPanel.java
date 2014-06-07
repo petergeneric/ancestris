@@ -176,10 +176,10 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "MultimediaObjectCitationsListPanel.deleteObjectConfirmation.title",
+                    MultimediaObjectCitationsListPanel.class, "MultimediaObjectCitationsListPanel.deleteObjectConfirmation.title",
                     objectName),
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "MultimediaObjectCitationsListPanel.deleteObjectConfirmation.text",
+                    MultimediaObjectCitationsListPanel.class, "MultimediaObjectCitationsListPanel.deleteObjectConfirmation.text",
                     objectName,
                     mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
