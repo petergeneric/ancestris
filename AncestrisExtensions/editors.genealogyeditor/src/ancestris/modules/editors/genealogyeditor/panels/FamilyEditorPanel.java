@@ -129,9 +129,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         childrensPanel = new javax.swing.JPanel();
         childrensListPanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel();
         eventsPanel = new javax.swing.JPanel();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        familyEventEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.FamilyEventEditorPanel();
-        jPanel2 = new javax.swing.JPanel();
+        eventsSplitPane = new javax.swing.JSplitPane();
+        eventsListPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
@@ -140,6 +139,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         deleteEventButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         eventsList = new javax.swing.JList();
+        familyEventEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.FamilyEventEditorPanel();
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
         notesPanel = new javax.swing.JPanel();
@@ -399,7 +399,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
         familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.childrensPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrensPanel); // NOI18N
 
-        jSplitPane1.setRightComponent(familyEventEditorPanel);
+        eventsSplitPane.setDividerSize(1);
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -434,36 +434,37 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(eventsList);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout eventsListPanelLayout = new javax.swing.GroupLayout(eventsListPanel);
+        eventsListPanel.setLayout(eventsListPanelLayout);
+        eventsListPanelLayout.setHorizontalGroup(
+            eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventsListPanelLayout.createSequentialGroup()
+                .addGroup(eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(0, 0, 0))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        eventsListPanelLayout.setVerticalGroup(
+            eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsListPanelLayout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1)
                 .addGap(0, 0, 0))
         );
 
-        jSplitPane1.setLeftComponent(jPanel2);
+        eventsSplitPane.setLeftComponent(eventsListPanel);
+        eventsSplitPane.setRightComponent(familyEventEditorPanel);
 
         javax.swing.GroupLayout eventsPanelLayout = new javax.swing.GroupLayout(eventsPanel);
         eventsPanel.setLayout(eventsPanelLayout);
         eventsPanelLayout.setHorizontalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 946, Short.MAX_VALUE)
+            .addComponent(eventsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 946, Short.MAX_VALUE)
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+            .addComponent(eventsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
         );
 
         familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
@@ -899,7 +900,9 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JButton editWifeButton;
     private javax.swing.JComboBox<String> eventTypeComboBox;
     private javax.swing.JList eventsList;
+    private javax.swing.JPanel eventsListPanel;
     private javax.swing.JPanel eventsPanel;
+    private javax.swing.JSplitPane eventsSplitPane;
     private ancestris.modules.editors.genealogyeditor.panels.FamilyEventEditorPanel familyEventEditorPanel;
     private javax.swing.JLabel familyIDLabel;
     private javax.swing.JTextField familyIDTextField;
@@ -916,9 +919,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField husbandNameTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton linkToHusbandButton;
     private javax.swing.JButton linkToWifeButton;
