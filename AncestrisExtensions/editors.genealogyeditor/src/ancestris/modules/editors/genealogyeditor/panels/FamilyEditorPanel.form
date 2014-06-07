@@ -143,20 +143,24 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="husbandBirthDateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="HusbandNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="husbandDeathDateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="husbandDeathDateLabel" max="32767" attributes="0"/>
+                              <Component id="husbandBirthDateLabel" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="husbandNameTextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="husbandBirthDateTextField" alignment="0" max="32767" attributes="0"/>
                               <Component id="husbandDeathDateTextField" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Component id="fatherToolBar" alignment="0" max="32767" attributes="0"/>
+                      <Component id="fatherToolBar" alignment="0" pref="295" max="32767" attributes="0"/>
+                      <Component id="husbandNameTextField" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -168,19 +172,18 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="fatherToolBar" min="-2" pref="25" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="HusbandNameLabel" min="-2" max="-2" attributes="0"/>
-                              <Component id="husbandNameTextField" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="husbandNameTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="husbandBirthDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="husbandBirthDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="husbandDeathDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="husbandDeathDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="husbandImageBean" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
@@ -259,16 +262,13 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JLabel" name="HusbandNameLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.HusbandNameLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="husbandNameTextField">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="18" style="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandNameTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -279,6 +279,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="husbandBirthDateLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandBirthDateLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -297,6 +298,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="husbandDeathDateLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandDeathDateLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -336,6 +338,16 @@
             </DimensionLayout>
           </Layout>
         </Container>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=":" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel3">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=":" noResource="true"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="motherPanel">
@@ -361,20 +373,24 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="wifeBirthDateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="wifeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="wifeDeathDateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="wifeDeathDateLabel" alignment="0" max="32767" attributes="0"/>
+                              <Component id="wifeBirthDateLabel" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="wifeNameTextField" alignment="0" max="32767" attributes="0"/>
-                              <Component id="wifeBirthDateTextField" alignment="0" max="32767" attributes="0"/>
-                              <Component id="wifeDeathDateTextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="wifeDeathDateTextField" max="32767" attributes="0"/>
+                              <Component id="wifeBirthDateTextField" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Component id="motherToolBar" alignment="0" max="32767" attributes="0"/>
+                      <Component id="motherToolBar" alignment="0" pref="294" max="32767" attributes="0"/>
+                      <Component id="wifeNameTextField" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -388,19 +404,18 @@
                       <Group type="102" attributes="0">
                           <Component id="motherToolBar" min="-2" pref="25" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="wifeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="wifeNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="wifeNameTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="wifeBirthDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="wifeBirthDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="wifeDeathDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="wifeDeathDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -475,16 +490,13 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JLabel" name="wifeLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="wifeNameTextField">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="18" style="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeNameTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -495,6 +507,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="wifeBirthDateLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeBirthDateLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -513,6 +526,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="wifeDeathDateLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeDeathDateLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
@@ -552,6 +566,16 @@
             </DimensionLayout>
           </Layout>
         </Container>
+        <Component class="javax.swing.JLabel" name="jLabel4">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=":" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel5">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=":" noResource="true"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JTabbedPane" name="familyTabbedPane">

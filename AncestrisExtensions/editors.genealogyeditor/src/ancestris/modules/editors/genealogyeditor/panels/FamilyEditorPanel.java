@@ -107,26 +107,28 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         linkToHusbandButton = new javax.swing.JButton();
         removeHusbandButton = new javax.swing.JButton();
         editHusbandButton = new javax.swing.JButton();
-        HusbandNameLabel = new javax.swing.JLabel();
         husbandNameTextField = new javax.swing.JTextField();
         husbandBirthDateLabel = new javax.swing.JLabel();
         husbandBirthDateTextField = new javax.swing.JTextField();
         husbandDeathDateLabel = new javax.swing.JLabel();
         husbandDeathDateTextField = new javax.swing.JTextField();
         husbandImageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         motherPanel = new javax.swing.JPanel();
         motherToolBar = new javax.swing.JToolBar();
         addWifeButton = new javax.swing.JButton();
         linkToWifeButton = new javax.swing.JButton();
         removeWifeButton = new javax.swing.JButton();
         editWifeButton = new javax.swing.JButton();
-        wifeLabel = new javax.swing.JLabel();
         wifeNameTextField = new javax.swing.JTextField();
         wifeBirthDateLabel = new javax.swing.JLabel();
         wifeBirthDateTextField = new javax.swing.JTextField();
         wifeDeathDateLabel = new javax.swing.JLabel();
         wifeDeathDateTextField = new javax.swing.JTextField();
         wifeImageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         familyTabbedPane = new javax.swing.JTabbedPane();
         childrensPanel = new javax.swing.JPanel();
         childrensListPanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel();
@@ -235,18 +237,20 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         });
         fatherToolBar.add(editHusbandButton);
 
-        HusbandNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.HusbandNameLabel.text"), new Object[] {})); // NOI18N
-
         husbandNameTextField.setEditable(false);
+        husbandNameTextField.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        husbandNameTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         husbandNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandNameTextField.text"), new Object[] {})); // NOI18N
         husbandNameTextField.setBorder(null);
 
+        husbandBirthDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         husbandBirthDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandBirthDateLabel.text"), new Object[] {})); // NOI18N
 
         husbandBirthDateTextField.setEditable(false);
         husbandBirthDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandBirthDateTextField.text"), new Object[] {})); // NOI18N
         husbandBirthDateTextField.setBorder(null);
 
+        husbandDeathDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         husbandDeathDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandDeathDateLabel.text"), new Object[] {})); // NOI18N
 
         husbandDeathDateTextField.setEditable(false);
@@ -267,6 +271,10 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        jLabel2.setText(":"); // NOI18N
+
+        jLabel3.setText(":"); // NOI18N
+
         javax.swing.GroupLayout fatherPanelLayout = new javax.swing.GroupLayout(fatherPanel);
         fatherPanel.setLayout(fatherPanelLayout);
         fatherPanelLayout.setHorizontalGroup(
@@ -277,17 +285,20 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(fatherPanelLayout.createSequentialGroup()
-                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(husbandBirthDateLabel)
-                            .addComponent(HusbandNameLabel)
-                            .addComponent(husbandDeathDateLabel))
+                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(husbandDeathDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(husbandBirthDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(husbandNameTextField)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(husbandBirthDateTextField)
                             .addComponent(husbandDeathDateTextField))
                         .addContainerGap())
-                    .addComponent(fatherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(fatherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                    .addComponent(husbandNameTextField)))
         );
         fatherPanelLayout.setVerticalGroup(
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -296,17 +307,17 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     .addGroup(fatherPanelLayout.createSequentialGroup()
                         .addComponent(fatherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(HusbandNameLabel)
-                            .addComponent(husbandNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(husbandNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(husbandBirthDateLabel)
-                            .addComponent(husbandBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(husbandBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(husbandDeathDateLabel)
-                            .addComponent(husbandDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(husbandDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)))
                     .addComponent(husbandImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12))
         );
@@ -362,18 +373,20 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         });
         motherToolBar.add(editWifeButton);
 
-        wifeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeLabel.text"), new Object[] {})); // NOI18N
-
         wifeNameTextField.setEditable(false);
+        wifeNameTextField.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        wifeNameTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         wifeNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeNameTextField.text"), new Object[] {})); // NOI18N
         wifeNameTextField.setBorder(null);
 
+        wifeBirthDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         wifeBirthDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeBirthDateLabel.text"), new Object[] {})); // NOI18N
 
         wifeBirthDateTextField.setEditable(false);
         wifeBirthDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeBirthDateTextField.text"), new Object[] {})); // NOI18N
         wifeBirthDateTextField.setBorder(null);
 
+        wifeDeathDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         wifeDeathDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeDeathDateLabel.text"), new Object[] {})); // NOI18N
 
         wifeDeathDateTextField.setEditable(false);
@@ -394,6 +407,10 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        jLabel4.setText(":"); // NOI18N
+
+        jLabel5.setText(":"); // NOI18N
+
         javax.swing.GroupLayout motherPanelLayout = new javax.swing.GroupLayout(motherPanel);
         motherPanel.setLayout(motherPanelLayout);
         motherPanelLayout.setHorizontalGroup(
@@ -404,17 +421,20 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(motherPanelLayout.createSequentialGroup()
-                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(wifeBirthDateLabel)
-                            .addComponent(wifeLabel)
-                            .addComponent(wifeDeathDateLabel))
+                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(wifeDeathDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(wifeBirthDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(wifeNameTextField)
-                            .addComponent(wifeBirthDateTextField)
-                            .addComponent(wifeDeathDateTextField))
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(wifeDeathDateTextField)
+                            .addComponent(wifeBirthDateTextField))
                         .addContainerGap())
-                    .addComponent(motherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(motherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                    .addComponent(wifeNameTextField)))
         );
         motherPanelLayout.setVerticalGroup(
             motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -425,17 +445,17 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     .addGroup(motherPanelLayout.createSequentialGroup()
                         .addComponent(motherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(wifeLabel)
-                            .addComponent(wifeNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(wifeNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(wifeBirthDateLabel)
-                            .addComponent(wifeBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(wifeBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(wifeDeathDateLabel)
-                            .addComponent(wifeDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(wifeDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))))
                 .addContainerGap())
         );
 
@@ -1166,7 +1186,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteEventButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel HusbandNameLabel;
     private javax.swing.JButton addHusbandButton;
     private javax.swing.JButton addWifeButton;
     private javax.swing.JLabel changeDateLabel;
@@ -1197,6 +1216,10 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean husbandImageBean;
     private javax.swing.JTextField husbandNameTextField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
@@ -1217,7 +1240,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel wifeDeathDateLabel;
     private javax.swing.JTextField wifeDeathDateTextField;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean wifeImageBean;
-    private javax.swing.JLabel wifeLabel;
     private javax.swing.JTextField wifeNameTextField;
     // End of variables declaration//GEN-END:variables
 
