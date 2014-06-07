@@ -142,8 +142,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         privateRecordToggleButton = new javax.swing.JToggleButton();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
         eventsPanel = new javax.swing.JPanel();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
+        eventsSplitPane = new javax.swing.JSplitPane();
+        eventsListPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
@@ -246,7 +246,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         individualInformationTabbedPane.setMinimumSize(new java.awt.Dimension(1018, 219));
         individualInformationTabbedPane.setPreferredSize(new java.awt.Dimension(1018, 219));
 
-        jSplitPane1.setDividerSize(1);
+        eventsSplitPane.setDividerSize(1);
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -281,42 +281,40 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(eventsList);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout eventsListPanelLayout = new javax.swing.GroupLayout(eventsListPanel);
+        eventsListPanel.setLayout(eventsListPanelLayout);
+        eventsListPanelLayout.setHorizontalGroup(
+            eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventsListPanelLayout.createSequentialGroup()
+                .addGroup(eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addGap(0, 0, 0))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        eventsListPanelLayout.setVerticalGroup(
+            eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsListPanelLayout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1)
                 .addGap(0, 0, 0))
         );
 
-        jSplitPane1.setLeftComponent(jPanel1);
+        eventsSplitPane.setLeftComponent(eventsListPanel);
 
         individualEventEditorPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jSplitPane1.setRightComponent(individualEventEditorPanel);
+        eventsSplitPane.setRightComponent(individualEventEditorPanel);
 
         javax.swing.GroupLayout eventsPanelLayout = new javax.swing.GroupLayout(eventsPanel);
         eventsPanel.setLayout(eventsPanelLayout);
         eventsPanelLayout.setHorizontalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(eventsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSplitPane1))
+            .addComponent(eventsSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1013, Short.MAX_VALUE)
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsPanelLayout.createSequentialGroup()
-                .addComponent(jSplitPane1)
+                .addComponent(eventsSplitPane)
                 .addGap(0, 0, 0))
         );
 
@@ -575,10 +573,10 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
+                            IndividualEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
                             PropertyTag2Name.getTagName(event.getTag())),
                     NbBundle.getMessage(
-                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
+                            IndividualEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
                             PropertyTag2Name.getTagName(event.getTag()),
                             mIndividual));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -644,7 +642,9 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JComboBox<String> eventTypeComboBox;
     private javax.swing.JList eventsList;
+    private javax.swing.JPanel eventsListPanel;
     private javax.swing.JPanel eventsPanel;
+    private javax.swing.JSplitPane eventsSplitPane;
     private javax.swing.JPanel familiesChildPanel;
     private ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel familiesChildTreeTablePanel;
     private javax.swing.JPanel familiesSpousePanel;
@@ -659,9 +659,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField individualIDTextField;
     private javax.swing.JTabbedPane individualInformationTabbedPane;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel nameEditorPanel;

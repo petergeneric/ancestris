@@ -228,10 +228,10 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "FamiliesListPanel.deleteFamilyConfirmation.title",
+                    FamiliesTablePanel.class, "FamiliesListPanel.deleteFamilyConfirmation.title",
                     family),
                     NbBundle.getMessage(
-                    EventEditorPanel.class, "FamiliesListPanel.deleteFamilyConfirmation.text",
+                    FamiliesTablePanel.class, "FamiliesListPanel.deleteFamilyConfirmation.text",
                     family,
                     mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {

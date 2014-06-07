@@ -373,10 +373,10 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
                     DialogManager createYesNo = DialogManager.createYesNo(
                             NbBundle.getMessage(
-                            EventEditorPanel.class, "FamiliesTreeTablePanel.deleteFamilyConfirmation.title",
+                            FamiliesTreeTablePanel.class, "FamiliesTreeTablePanel.deleteFamilyConfirmation.title",
                             family),
                             NbBundle.getMessage(
-                            EventEditorPanel.class, "FamiliesTreeTablePanel.deleteFamilyConfirmation.text",
+                            FamiliesTreeTablePanel.class, "FamiliesTreeTablePanel.deleteFamilyConfirmation.text",
                             family,
                             mRoot));
                     if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -403,10 +403,10 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
                                 DialogManager createYesNo = DialogManager.createYesNo(
                                         NbBundle.getMessage(
-                                        EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.title",
+                                        FamiliesTreeTablePanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.title",
                                         indi),
                                         NbBundle.getMessage(
-                                        EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.text",
+                                        FamiliesTreeTablePanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.text",
                                         indi,
                                         family));
                                 if (createYesNo.show() == DialogManager.YES_OPTION) {

@@ -190,10 +190,10 @@ public class ChildrenListPanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            EventEditorPanel.class, "ChildrenListPanel.deleteChildConfirmation.title",
+                            ChildrenListPanel.class, "ChildrenListPanel.deleteChildConfirmation.title",
                             individualRef.getTargetEntity()),
                     NbBundle.getMessage(
-                            EventEditorPanel.class, "ChildrenListPanel.deleteChildConfirmation.text",
+                            ChildrenListPanel.class, "ChildrenListPanel.deleteChildConfirmation.text",
                             individualRef.getTargetEntity(),
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {

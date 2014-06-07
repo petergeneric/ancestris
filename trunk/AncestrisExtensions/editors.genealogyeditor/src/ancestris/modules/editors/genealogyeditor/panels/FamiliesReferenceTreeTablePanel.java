@@ -373,10 +373,10 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
                         DialogManager createYesNo = DialogManager.createYesNo(
                                 NbBundle.getMessage(
-                                EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteFamilyConfirmation.title",
+                                FamiliesReferenceTreeTablePanel.class, "FamiliesReferenceTreeTablePanel.deleteFamilyConfirmation.title",
                                 family),
                                 NbBundle.getMessage(
-                                EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteFamilyConfirmation.text",
+                                FamiliesReferenceTreeTablePanel.class, "FamiliesReferenceTreeTablePanel.deleteFamilyConfirmation.text",
                                 family,
                                 mRoot));
                         if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -403,10 +403,10 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
                                     DialogManager createYesNo = DialogManager.createYesNo(
                                             NbBundle.getMessage(
-                                            EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.title",
+                                            FamiliesReferenceTreeTablePanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.title",
                                             entity),
                                             NbBundle.getMessage(
-                                            EventEditorPanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.text",
+                                            FamiliesReferenceTreeTablePanel.class, "FamiliesReferenceTreeTablePanel.deleteChildConfirmation.text",
                                             entity,
                                             family));
                                     if (createYesNo.show() == DialogManager.YES_OPTION) {
