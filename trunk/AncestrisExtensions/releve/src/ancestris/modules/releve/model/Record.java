@@ -398,11 +398,11 @@ public abstract class Record implements Cloneable{
         return eventDate.getValue();
     }
 
-    public PropertyDate getSecondDateProperty() {
+    public PropertyDate getEventSecondDateProperty() {
         return secondDate.getPropertyDate();
     }
 
-    public String getSecondDateString() {
+    public String getEventSecondDateString() {
         return secondDate.getValue();
     }
 

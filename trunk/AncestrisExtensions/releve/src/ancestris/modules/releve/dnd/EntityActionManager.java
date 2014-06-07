@@ -1,13 +1,13 @@
 package ancestris.modules.releve.dnd;
 
-import genj.gedcom.Entity;
+import genj.gedcom.Property;
 
 /**
  *
  * @author Michel
  */
 public interface EntityActionManager {
-    void setRoot(Entity entity);
-    void show(Entity entity);
+    void setRoot(Property entity);
+    boolean show(Property entity);
     void selectSource();
 }

@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -46,6 +47,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
     private RecordModel recordModel = null;
     private MenuCommandProvider menuCommandeProvider = null;
     private Bean currentFocusedBean = null;
+    private ArrayList<KeyStroke> recordKeyStrokeList = new ArrayList<KeyStroke>();
 
     public ReleveEditor() {
         initComponents();
@@ -371,6 +373,11 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         fieldsPanel.setFocusTraversalPolicyProvider(true);
         fieldsPanel.setFocusCycleRoot(true);
         fieldsPanel.resetKeyboardActions();
+        for (KeyStroke keyStroke : recordKeyStrokeList) {
+           getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).remove(keyStroke);
+           getActionMap().remove(keyStroke.toString());
+        }
+        recordKeyStrokeList.clear();
         fieldsPanel.removeAll();
 
         if (recordModel != null) {
@@ -582,8 +589,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
 
         // j'ajoute le raccourci clavier
         if (keyStroke != null) {
-            getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, bean);
-            getActionMap().put(bean, new AbstractAction() {
+            getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, keyStroke.toString());
+            recordKeyStrokeList.add(keyStroke);
+            getActionMap().put(keyStroke.toString(), new AbstractAction() {
 
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {

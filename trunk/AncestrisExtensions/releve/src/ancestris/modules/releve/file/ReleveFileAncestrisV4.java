@@ -583,7 +583,7 @@ public class ReleveFileAncestrisV4 {
                         line.appendCsvFn(""); //eventTypeTag
                         line.appendCsvFn(""); //eventTypeName
                         line.appendCsvFn(record.getEventDateString());
-                        line.appendCsvFn(record.getSecondDateString());
+                        line.appendCsvFn(record.getEventSecondDateString());
                         line.appendCsvFn(record.getCote().toString());
                         line.appendCsvFn(record.getFreeComment().toString());
                         line.appendCsvFn(""); // notary
@@ -687,7 +687,7 @@ public class ReleveFileAncestrisV4 {
                         line.appendCsvFn(""); //eventTypeTag
                         line.appendCsvFn(""); //eventTypeName
                         line.appendCsvFn(record.getEventDateString());
-                        line.appendCsvFn(record.getSecondDateString());
+                        line.appendCsvFn(record.getEventSecondDateString());
                         line.appendCsvFn(record.getCote().toString());
                         line.appendCsvFn(record.getFreeComment().toString());
                         line.appendCsvFn(""); // notary
@@ -792,7 +792,7 @@ public class ReleveFileAncestrisV4 {
                         line.appendCsvFn(""); //eventTypeTag
                         line.appendCsvFn(""); //eventTypeName
                         line.appendCsvFn(record.getEventDateString());
-                        line.appendCsvFn(record.getSecondDateString());
+                        line.appendCsvFn(record.getEventSecondDateString());
                         line.appendCsvFn(record.getCote().toString());
                         line.appendCsvFn(record.getFreeComment().toString());
                         line.appendCsvFn(""); // notary
@@ -896,7 +896,7 @@ public class ReleveFileAncestrisV4 {
                         line.appendCsvFn(record.getEventType().getName());
                         line.appendCsvFn("");
                         line.appendCsvFn(record.getEventDateString());
-                        line.appendCsvFn(record.getSecondDateString());
+                        line.appendCsvFn(record.getEventSecondDateString());
                         line.appendCsvFn(record.getCote().toString());
                         line.appendCsvFn(record.getFreeComment().toString());
                         line.appendCsvFn(record.getNotary().toString());

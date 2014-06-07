@@ -313,7 +313,7 @@ public class GedcomLinkProvider {
     private GedcomLink findMisc(Record miscRecord) {
         GedcomLink gedcomLink = null;
 
-        PropertyDate recordBirthDate = miscRecord.getEventDateProperty();
+        PropertyDate recordEventDate = miscRecord.getEventDateProperty();
 
         String eventType = miscRecord.getEventType().toString().toLowerCase();
         if (eventType.equals("cm") || eventType.indexOf("mariage") != -1) {
@@ -325,7 +325,16 @@ public class GedcomLinkProvider {
             // je cherche l'évènement sur l'individu
             TagPath[]tagPathList = {indiEvenDateTag, willDateTag };
             try {
-                int recordJulianDay = recordBirthDate.getStart().getJulianDay();
+                // je recupere la date d'insinuation 
+                PropertyDate recordSecondEventDate = miscRecord.getEventSecondDateProperty();
+                int recordJulianDay ;
+                if ( recordSecondEventDate != null && recordSecondEventDate.isComparable()) {
+                    // j'utilise la date d'insinuation si elle est renseignée
+                    recordJulianDay = recordSecondEventDate.getStart().getJulianDay();
+                } else {
+                    // si la date d'insinuation n'est pas renseignée, j'utilise la date de l'évènement
+                    recordJulianDay = recordEventDate.getStart().getJulianDay();
+                }
                 Collection<Indi> indiList = gedcom.getIndis();
                 for (Indi indi : indiList) {
                     
@@ -372,7 +381,7 @@ public class GedcomLinkProvider {
 
                     gedcomLink = new GedcomLink(miscRecord);
                     gedcomLink.setEntity(indi);
-                    gedcomLink.setProperty(recordBirthDate);
+                    gedcomLink.setProperty(recordEventDate);
                     gedcomLink.setCompareResult(GedcomLink.CompareResult.EQUAL);
                     break;
 

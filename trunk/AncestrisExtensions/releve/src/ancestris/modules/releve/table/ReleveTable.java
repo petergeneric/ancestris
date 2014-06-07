@@ -6,6 +6,7 @@ import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.model.GedcomLink;
 import ancestris.modules.releve.model.Record;
 import genj.gedcom.Entity;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.util.swing.HeadlessLabel;
 import java.awt.Color;
@@ -130,13 +131,13 @@ public class ReleveTable extends JTable {
                 if (column == 0) {
                     GedcomLink gedcomLink = (GedcomLink) getModel().getValueAt(convertRowIndexToModel(row), -1);
                     if (gedcomLink != null) {
-                        Entity entity = gedcomLink.getEntity();
+                        Property property = gedcomLink.getProperty();
 
-                        if (entity != null) {
+                        if (property != null) {
                             if (e.getClickCount() == 2) {
-                                ViewWrapperManager.setRootAllTreeview(entity);
+                                ViewWrapperManager.setRootAllTreeview(property);
                             } else {
-                                ViewWrapperManager.showEntityAllTreeview(entity);
+                                ViewWrapperManager.showEntityAllTreeview(property);
                             }
                         }
                     }

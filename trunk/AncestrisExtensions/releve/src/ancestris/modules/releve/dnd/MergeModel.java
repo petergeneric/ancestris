@@ -1,5 +1,6 @@
 package ancestris.modules.releve.dnd;
 
+import static ancestris.modules.releve.dnd.MergeQuery.isCompatible;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipant;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import ancestris.modules.releve.dnd.MergeRecord.RecordType;
@@ -10,6 +11,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
@@ -133,7 +135,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.recordValue = recordValue;
         mergeRow.entityValue = entityValue;
-        mergeRow.entityObject = entity;
+        mergeRow.setEntityObject(entity);
         if (isRowParentApplicable(rowType)) {
             if (recordValue.isEmpty()) {
                 mergeRow.merge = false;
@@ -314,7 +316,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.recordValue = recordEventType;
         mergeRow.entityValue = eventProperty;
-        mergeRow.entityObject = null;
+        mergeRow.setEntityObject(null);
 
         if (isRowParentApplicable(rowType)) {
 
@@ -352,7 +354,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.label = getRowTypeLabel(rowType);
         mergeRow.recordValue = null;
         mergeRow.entityValue = family;
-        mergeRow.entityObject = family;
+        mergeRow.setEntityObject(family);
 
         if (isRowParentApplicable(rowType)) {
 
@@ -404,6 +406,109 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.merge_initial = mergeRow.merge;
     }
     
+     protected final void addRowEvent(Entity entity , String eventTag) {
+        PropertyDate recordInsinuationDate= record.getInsinuationDate();
+        
+         // je cherche l'evenement dans l'entité
+         Property entityEvent = null;
+         PropertyDate entityEventDate = null;
+         PropertyPlace entityEventPlace = null;
+         PropertyNote entityEventComment = null;
+         if (entity != null) {
+             for (Property iterationEvent : entity.getProperties(eventTag)) {
+                 // je recherche les dates meme si elles ne sont pas valides
+                 for (Property iterationProperty : iterationEvent.getProperties("DATE", false)) {
+                     PropertyDate iterationDate = (PropertyDate) iterationProperty;
+                     if (isCompatible(recordInsinuationDate, iterationDate)) {
+                         entityEvent = iterationEvent;
+                         entityEventDate = iterationDate;
+                         entityEventPlace = (PropertyPlace) iterationEvent.getProperty("PLAC", false);
+                         entityEventComment = (PropertyNote) iterationEvent.getProperty("NOTE", false);
+                         break;
+                     }
+                 }
+                 if (entityEvent != null) {
+                     break;
+                 }
+             }
+         }
+        
+        if (recordInsinuationDate.isComparable()) {
+            String recordEventInsinuationType = "Insinuation" + " " + record.getEventType();
+        
+             // je cherche un evenement d'insinuation avec le meme type et une date compatible
+             Property entityInsinuation = null;
+             PropertyDate entityInsinuationDate = null;
+             PropertyPlace entityInsinuationPlace = null;
+             PropertyNote entityInsinuationComment = null;
+             if (recordInsinuationDate.isComparable() && entity != null) {
+                 for (Property iterationEvent : entity.getProperties("EVENT")) {
+
+                     String entityEventType = iterationEvent.getPropertyValue("TYPE").trim();
+                     if (!recordEventInsinuationType.equalsIgnoreCase(entityEventType)) {
+                         continue;
+                     }
+
+                     // je recherche les dates meme si elles ne sont pas valides
+                     for (Property iterationProperty : iterationEvent.getProperties("DATE", false)) {
+                         PropertyDate iterationDate = (PropertyDate) iterationProperty;
+                         if (isCompatible(recordInsinuationDate, iterationDate)) {
+                             entityInsinuation = iterationEvent;
+                             entityInsinuationDate = iterationDate;
+                             entityInsinuationPlace = (PropertyPlace) iterationEvent.getProperty("PLAC", false);
+                             entityInsinuationComment = (PropertyNote) iterationEvent.getProperty("NOTE", false);
+                             break;
+                         }
+                     }
+                     if (entityInsinuation != null) {
+                         break;
+                     }
+                 }
+             }
+
+             // j'affiche l'insinuation 
+             if (entityInsinuation != null) {
+                 addRow(RowType.EventInsinuationType, recordEventInsinuationType, entityInsinuation);
+                 addRow(RowType.EventInsinuationDate, record.getInsinuationDate(), entityInsinuationDate);
+                 addRow(RowType.EventInsinuationPlace, record.getEventPlace(), entityInsinuationPlace);
+                 addRow(RowType.EventInsinuationComment, record.getEventComment(showFrenchCalendarDate), entityInsinuationComment);
+             } else {
+                 addRow(RowType.EventInsinuationType, record.getEventType(), (Property) null);
+                 addRow(RowType.EventInsinuationDate, record.getInsinuationDate(), null);
+                 addRow(RowType.EventInsinuationPlace, record.getEventPlace(), (Property) null);
+                 addRow(RowType.EventInsinuationComment, record.getEventComment(showFrenchCalendarDate), "");
+             }
+
+             // j'affiche l'évènement insinué
+             if (entityEvent != null) {
+                 addRow(RowType.EventType, record.getEventTypeTag().toString(), entityEvent);
+                 addRow(RowType.EventDate, record.getEventDate(), entityEventDate);
+                 addRow(RowType.EventPlace, "", entityEventPlace);
+                 addRow(RowType.EventComment, record.makeInsinuationReferenceComment(showFrenchCalendarDate), entityEventComment);
+             } else {
+                 addRow(RowType.EventType, record.getEventTypeTag().toString(), (Property) null);
+                 addRow(RowType.EventDate, record.getEventDate(), null);
+                 addRow(RowType.EventPlace, "", (Property) null);
+                 addRow(RowType.EventComment, record.makeInsinuationReferenceComment(showFrenchCalendarDate), "");
+             }
+         } else {            
+            // j'affiche l'evenement
+             if (entityEvent != null) {
+                 addRow(RowType.EventType, record.getEventTypeTag().toString(), entityEvent);
+                 addRow(RowType.EventDate, record.getEventDate(), entityEventDate);
+                 addRow(RowType.EventPlace, record.getEventPlace(), entityEventPlace);
+                 addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), entityEventComment);
+             } else {
+                 addRow(RowType.EventType, record.getEventTypeTag().toString(), (Property) null);
+                 addRow(RowType.EventDate, record.getEventDate(), null);
+                 addRow(RowType.EventPlace, record.getEventPlace(), (Property) null);
+                 addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), "");
+             }            
+        }        
+    }
+        
+     
+     
     protected final void addRowSource() {
         addRowSource(null) ;
     }
@@ -464,7 +569,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             if (entityEventSource != null) {
                 // la source existe dans l'entité
                 mergeRow.entityValue = entityEventSource;
-                mergeRow.entityObject = entityEventSource;
+                mergeRow.setEntityObject(entityEventSource);
                 mergeRow.merge = false;
                 mergeRow.compareResult = CompareResult.EQUAL;
             } else {
@@ -484,7 +589,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     // la source indiquée dans le releve existe dans le gedcom
                     // je propose de l'ajouter
                     mergeRow.entityValue = gedcomSource;
-                    mergeRow.entityObject = gedcomSource;
+                    mergeRow.setEntityObject(gedcomSource);
                     mergeRow.merge = true;
                     mergeRow.compareResult = CompareResult.COMPATIBLE;
                  } else {
@@ -510,7 +615,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 //                    }
                     
                     mergeRow.entityValue = null;
-                    mergeRow.entityObject = null;
+                    mergeRow.setEntityObject(null);
                     mergeRow.merge = false;
                     mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
 
@@ -554,6 +659,21 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         return mergeRowList.get(rowType);
     }
 
+    /**
+     * retourne une ligne en fonction du type
+     * @param rowType
+     * @return
+     */
+    protected Entity getEntityObject(RowType rowType) {
+        MergeRow mergeRow = getRow(rowType);
+            if (mergeRow != null) {
+            return mergeRow.getEntityObject();
+        } else {
+            return null;
+        }
+    }
+
+    
     /**
      * retourne une ligne en fonction numero 
      * @param row
@@ -619,6 +739,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     public abstract String getSummary(Entity selectedEntity);
 
     protected abstract Entity getSelectedEntity();
+    protected abstract Entity getProposedEntity();
     protected abstract Property getSelectedProperty();
     
     /**
@@ -685,7 +806,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             case 3:
                 return mergeRowList.get(row).entityValue;
             case 4:
-                return mergeRowList.get(row).entityObject;
+                return mergeRowList.get(row).getEntityObject();
             default:
                 return null;
         }
@@ -867,7 +988,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     
     protected void copyIndiMarried(MergeParticipant participant, Indi currentIndi) throws Exception {
         if (isChecked(RowType.IndiMarriedFamily)) {
-            Indi exSpouse = (Indi) getRow(RowType.IndiMarriedLastName).entityObject;
+            Indi exSpouse = (Indi) getRow(RowType.IndiMarriedLastName).getEntityObject();
             if (exSpouse == null) {
                 // je cree l'individu
                 exSpouse = (Indi) gedcom.createEntity(Gedcom.INDI);
@@ -901,7 +1022,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             }
 
             // je copie la famille avec l'ex conjoint
-            Fam family = (Fam) getRow(RowType.IndiMarriedFamily).entityObject;
+            Fam family = (Fam) getRow(RowType.IndiMarriedFamily).getEntityObject();
             if (family == null) {
                 // je cree la famille
                 family = (Fam) gedcom.createEntity(Gedcom.FAM);
@@ -1010,6 +1131,163 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         }
         propertyPlace.setValue(place);
     }
+    
+        /**
+     * ajoute un evenement 
+     * @param source
+     * @param eventProperty
+     * @param record
+     * @throws Exception
+     */
+    protected Property copyEvent(Entity  currentEntity) throws Exception {
+        Property resultProperty; 
+        if( ! record.isInsinuation() ) {
+            // je crée la propriété de l'évènement
+            Property eventProperty = (Property) getRow(RowType.EventType).entityValue;
+            if (eventProperty == null || !eventProperty.isContained(currentEntity)) {
+                eventProperty = currentEntity.addProperty(record.getTag(), "");
+            }
+            
+            resultProperty = eventProperty;
+
+            // je copie la date de l'évènement
+            if (isChecked(RowType.EventDate)) {
+                PropertyDate propertyDate = (PropertyDate) getRow(RowType.EventDate).entityValue;
+                if (propertyDate == null || !propertyDate.isContained(eventProperty)) {
+                    propertyDate = (PropertyDate) eventProperty.addProperty("DATE", "");
+                }
+                propertyDate.setValue(record.getEventDate().getValue());
+            }
+
+            // je copie la source du releve de l'évènement
+            if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
+                copySource((Source) getEntityObject(RowType.EventSource), eventProperty, isChecked(RowType.EventPage), record);
+            }
+
+            // je copie le lieu de l'évènement
+            if (isChecked(RowType.EventPlace)) {
+                Property propertyPlace = (Property) getRow(RowType.EventPlace).entityValue;
+                if (propertyPlace == null || !propertyPlace.isContained(eventProperty)) {
+                    // je cree le lieu.
+                    propertyPlace = eventProperty.addProperty("PLAC", "");
+                }
+                propertyPlace.setValue(record.getEventPlace());
+            }
+
+            // je copie le commentaire de l'évènement
+            if (isChecked(RowType.EventComment)) {
+                Property propertyComment = (Property) getRow(RowType.EventComment).entityValue;
+                if (propertyComment == null) {
+                    // je cree une note .
+                    propertyComment = eventProperty.addProperty("NOTE", "");
+                }
+
+                // j'ajoute le commentaire du contrat de mariage au debut de la note existante.
+                String value = propertyComment.getValue();
+                String comment = record.getEventComment(showFrenchCalendarDate);
+                if (!comment.isEmpty()) {
+                    if (!value.isEmpty()) {
+                        comment += "\n";
+                    }
+                    comment += value;
+                    propertyComment.setValue(comment);
+                }
+            }
+        } else {
+            // c'est une insinuation
+            
+            // je crée la propriété EVEN de l'insinuation
+            Property insinuationProperty = (Property) getRow(RowType.EventInsinuationType).entityValue;
+
+            if (insinuationProperty == null ) {
+                insinuationProperty = currentEntity.addProperty("EVEN", "", getPropertyBestPosition(currentEntity, record.getInsinuationDate()));
+            }             
+            resultProperty = insinuationProperty;
+
+            // je copie la date de l'insinuation
+            if (isChecked(RowType.EventInsinuationDate)) {
+                PropertyDate propertyDate = (PropertyDate) getRow(RowType.EventInsinuationDate).entityValue;
+                if (propertyDate == null) {
+                    propertyDate = (PropertyDate) insinuationProperty.addProperty("DATE", "");
+                }
+                propertyDate.setValue(record.getInsinuationDate().getValue());
+            }
+
+            // je copie la source du releve de l'insinuation
+            if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage)) {
+                copySource((Source) getEntityObject(RowType.EventSource), insinuationProperty, isChecked(RowType.EventPage), record);
+            }
+
+            // je copie le lieu de l'insinuation
+            if (isChecked(RowType.EventInsinuationPlace)) {
+                Property propertyPlace = (Property) getRow(RowType.EventInsinuationPlace).entityValue;
+                if (propertyPlace == null) {
+                    // je cree le lieu .
+                    propertyPlace = insinuationProperty.addProperty("PLAC", "");
+                }
+                propertyPlace.setValue(record.getEventPlace());
+            }
+
+            // je copie le commentaire de l'insinuation
+            if (isChecked(RowType.EventInsinuationComment)) {
+                Property propertyComment = (Property) getRow(RowType.EventInsinuationComment).entityValue;
+                if (propertyComment == null) {
+                    // je cree une note .
+                    propertyComment = insinuationProperty.addProperty("NOTE", "");
+                }
+
+                // j'ajoute le commentaire de l'insinuation au debut de la note existante.
+                String oldComment = propertyComment.getValue();
+                String newComment = record.getEventComment(showFrenchCalendarDate);
+                if (!newComment.isEmpty()) {
+                    if (!oldComment.isEmpty()) {
+                        newComment += "\n";
+                        newComment += oldComment;
+                    }
+                    propertyComment.setValue(newComment);
+                }
+            }
+
+            // je crée la propriété de l'évènement insinué
+            Property eventProperty = (Property) getRow(RowType.EventType).entityValue;
+            if (eventProperty == null) {
+                eventProperty = currentEntity.addProperty(record.getTag(), "");
+            }
+
+            // je copie la date de de l'évènement insinué
+            if (isChecked(RowType.EventDate)) {
+                PropertyDate propertyDate = (PropertyDate) getRow(RowType.EventDate).entityValue;
+                if (propertyDate == null) {
+                    propertyDate = (PropertyDate) eventProperty.addProperty("DATE", "");
+                }
+                propertyDate.setValue(record.getEventDate().getValue());
+            }
+
+            // je copie le commentaire du contrat de mariage.
+            if (isChecked(RowType.EventComment)) {
+                Property propertyComment = (Property) getRow(RowType.EventComment).entityValue;
+                if (propertyComment == null) {
+                    // je cree une note .
+                    propertyComment = eventProperty.addProperty("NOTE", "");
+                }
+
+                // j'ajoute le commentaire du contrat de mariage au debut de la note existante.
+                String oldComment = propertyComment.getValue();
+                String newComment = record.makeInsinuationReferenceComment(showFrenchCalendarDate);
+                if (!newComment.isEmpty()) {
+                    if (!oldComment.isEmpty()) {
+                        newComment += "\n";
+                        newComment += oldComment;
+                    }
+                    propertyComment.setValue(newComment);
+                }
+            }            
+        }    
+        
+        return resultProperty;
+    
+    }
+
 
     /**
      * ajoute une source a une propriete
@@ -1536,6 +1814,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         EventDate,
         EventPlace,
         EventComment,
+        EventInsinuationType,
+        EventInsinuationDate,
+        EventInsinuationPlace,
+        EventInsinuationComment,        
         MarriageFamily,
         MarriageDate,
         //  indi ///////////////////////////////////////////////////////////////////
@@ -1611,7 +1893,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         boolean merge;
         boolean merge_initial;
         CompareResult compareResult;
-        Entity entityObject = null;
+        private Entity entityObject = null;
 
         MergeRow(RowType rowType) {
             this.rowType = rowType;
@@ -1620,6 +1902,20 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         @Override
         public String toString() {
             return rowType.name() + " " + recordValue + " " + entityValue;
+        }
+
+        /**
+         * @return the entityObject
+         */
+        public Entity getEntityObject() {
+            return entityObject;
+        }
+
+        /**
+         * @param entityObject the entityObject to set
+         */
+        public void setEntityObject(Entity entityObject) {
+            this.entityObject = entityObject;
         }
     }
 
