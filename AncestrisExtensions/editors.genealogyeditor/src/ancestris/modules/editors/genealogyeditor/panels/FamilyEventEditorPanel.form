@@ -77,47 +77,47 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="placeLabel" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
+                          <Component id="eventNameLabel" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
+                          <Component id="eventCauseLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="dateLabel" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
+                          <Component id="husbandAgeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="placeLabel" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
-                                  <Component id="eventNameLabel" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
-                                  <Component id="eventCauseLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="dateLabel" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="aDateBean" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="aDateBean" max="32767" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="eventCauseTextField" alignment="0" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="eventNameTextField" min="-2" pref="192" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="EventTypeLabel" min="-2" pref="119" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="eventTypeTextField" min="-2" pref="192" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="placeTextField" max="32767" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="addPlaceButton" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="editPlaceButton" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="linkToPlaceButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
+                              <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="husbandAgeLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventCauseTextField" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="placeTextField" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="husbandAgeTextField" min="-2" pref="94" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="wifeAgeLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="addPlaceButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="wifeAgeTextField" min="-2" pref="104" max="-2" attributes="0"/>
+                              <Component id="editPlaceButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="linkToPlaceButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="husbandAgeTextField" min="-2" pref="94" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="wifeAgeLabel" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="eventNameTextField" min="-2" pref="192" max="-2" attributes="0"/>
+                                      <EmptySpace pref="22" max="32767" attributes="0"/>
+                                      <Component id="EventTypeLabel" min="-2" pref="119" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="eventTypeTextField" min="-2" pref="192" max="-2" attributes="0"/>
+                                  <Component id="wifeAgeTextField" min="-2" pref="104" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
