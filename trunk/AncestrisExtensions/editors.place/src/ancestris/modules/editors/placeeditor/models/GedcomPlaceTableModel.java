@@ -13,10 +13,18 @@ import javax.swing.table.AbstractTableModel;
 public class GedcomPlaceTableModel extends AbstractTableModel {
 
     Map<String, Set<PropertyPlace>> gedcomPlacesMap = new HashMap<String, Set<PropertyPlace>>();
-    String[] placeFormat;
+    String[] columsTitle;
 
     public GedcomPlaceTableModel(String[] placeFormat) {
-        this.placeFormat = placeFormat;
+        columsTitle = new String[placeFormat.length + 2];
+        
+        int index = 0;
+        for (; index < placeFormat.length; index++) {
+            columsTitle[index] = placeFormat[index];
+        }
+        
+        columsTitle[index] = "Latitude";
+        columsTitle[index + 1] = "Longitude";
     }
 
     @Override
@@ -26,7 +34,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return placeFormat.length;
+        return columsTitle.length;
     }
 
     @Override
@@ -42,7 +50,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
     @Override
     public String getColumnName(int col) {
-        return placeFormat[col].toString();
+        return columsTitle[col];
     }
 
     public void update(Map<String, Set<PropertyPlace>> gedcomPlacesMap) {
@@ -50,7 +58,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
         fireTableDataChanged();
     }
-    
+
     public Set<PropertyPlace> getValueAt(int row) {
         Object[] toArray = gedcomPlacesMap.keySet().toArray();
         String key = (String) toArray[row];

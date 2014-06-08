@@ -1,8 +1,7 @@
 package ancestris.modules.editors.placeeditor.panels;
 
-import ancestris.api.place.Place;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
-import ancestris.modules.editors.placeeditor.models.GeonamePostalCodeListModel;
+import ancestris.modules.editors.placeeditor.models.GeonamePlacesListModel;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.Gedcom;
@@ -37,7 +36,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
     Map<String, Set<PropertyPlace>> gedcomCompletePlacesMap = new HashMap<String, Set<PropertyPlace>>();
     Map<String, Set<PropertyPlace>> gedcomUncompletePlacesMap = new HashMap<String, Set<PropertyPlace>>();
     GedcomPlaceTableModel gedcomCurrentPlaceTableModel;
-    GeonamePostalCodeListModel geonamePostalCodeListModel = new GeonamePostalCodeListModel();
+    GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
     TableRowSorter<TableModel> completePlaceTableSorter;
     TableRowSorter<TableModel> uncompletePlaceTableSorter;
     String[] placeFormat;
@@ -125,10 +124,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
     private void searchPlace() {
         String city = jTextField2.getText();
         if (city.length() > 0) {
-            List<Place> findPlaces = new GeonamesPlacesList().findPlace(new PropertyPlace(city));
-            if (findPlaces != null) {
-                geonamePostalCodeListModel.update(findPlaces);
-            }
+            new GeonamesPlacesList().searchPlace(city, geonamePlacesListModel);
         }
     }
 
@@ -567,7 +563,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
 
         geonameSearchResultPanel.setLayout(new javax.swing.BoxLayout(geonameSearchResultPanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        geonameSearchResultList.setModel(geonamePostalCodeListModel);
+        geonameSearchResultList.setModel(geonamePlacesListModel);
         geonameSearchResultScrollPane.setViewportView(geonameSearchResultList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
