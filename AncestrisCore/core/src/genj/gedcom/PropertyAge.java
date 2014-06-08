@@ -102,6 +102,27 @@ public class PropertyAge extends Property {
     return age.getValue();
   }
 
+    @Override
+    public String getDisplayValue() {
+
+    if (ageAsString != null){
+        String result = resources.getString("prop.age."+ageAsString);
+        if (result!=null)
+            return result;
+        else
+            return ageAsString;
+//        return ageAsString;
+    }
+
+    // since we're expected to return a Gedcom compliant value
+    // here we're not localizing the return value (e.g. 1y 2m 3d)       
+    if (younger_exactly_older>0)
+      return ">"+age.toString();
+    if (younger_exactly_older<0)
+      return "<"+age.toString();
+    return age.toString();
+    }
+
   /**
    * Accessor Value
    */
