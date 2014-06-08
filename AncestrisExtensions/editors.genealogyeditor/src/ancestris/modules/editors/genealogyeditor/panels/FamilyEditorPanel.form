@@ -150,7 +150,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="husbandDeathDateLabel" max="32767" attributes="0"/>
-                              <Component id="husbandBirthDateLabel" min="-2" pref="81" max="-2" attributes="0"/>
+                              <Component id="husbandBirthDateLabel" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
