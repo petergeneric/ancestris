@@ -132,8 +132,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         familyTabbedPane = new javax.swing.JTabbedPane();
-        childrensPanel = new javax.swing.JPanel();
-        childrensListPanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel();
+        childrenPanel = new javax.swing.JPanel();
+        childrenTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenTablePanel();
         eventsPanel = new javax.swing.JPanel();
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
@@ -473,18 +473,18 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
 
         familyTabbedPane.setPreferredSize(new java.awt.Dimension(0, 0));
 
-        javax.swing.GroupLayout childrensPanelLayout = new javax.swing.GroupLayout(childrensPanel);
-        childrensPanel.setLayout(childrensPanelLayout);
-        childrensPanelLayout.setHorizontalGroup(
-            childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrensListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)
+        javax.swing.GroupLayout childrenPanelLayout = new javax.swing.GroupLayout(childrenPanel);
+        childrenPanel.setLayout(childrenPanelLayout);
+        childrenPanelLayout.setHorizontalGroup(
+            childrenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(childrenTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)
         );
-        childrensPanelLayout.setVerticalGroup(
-            childrensPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrensListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+        childrenPanelLayout.setVerticalGroup(
+            childrenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(childrenTablePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
         );
 
-        familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.childrensPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrensPanel); // NOI18N
+        familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.childrenPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrenPanel); // NOI18N
 
         eventsSplitPane.setBorder(null);
         eventsSplitPane.setDividerSize(1);
@@ -1202,8 +1202,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JButton addWifeButton;
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JTextField changeDateTextField;
-    private ancestris.modules.editors.genealogyeditor.panels.ChildrenListPanel childrensListPanel;
-    private javax.swing.JPanel childrensPanel;
+    private javax.swing.JPanel childrenPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.ChildrenTablePanel childrenTablePanel;
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JButton editHusbandButton;
     private javax.swing.JButton editWifeButton;
@@ -1404,7 +1404,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         /*
          * +1 CHIL @<XREF:INDI>@
          */
-        childrensListPanel.set(mFamily, mFamily.getProperties(PropertyChild.class));
+        childrenTablePanel.set(mFamily, mFamily.getProperties(PropertyChild.class));
 
         /*
          * +1 NCHI <COUNT_OF_CHILDREN>
