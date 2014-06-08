@@ -264,7 +264,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             String[] jurisdictions = ((PropertyPlace) propertyPlaceArray[0]).getJurisdictions();
             if (jurisdictions.length > 1) {
                 if (jurisdictions[1].isEmpty() == false) {
-                    searchPlaceTextField.setText(propertyPlaceArray[0].toString());
+                    searchPlaceTextField.setText(((PropertyPlace) propertyPlaceArray[0]).format("all").replaceAll(",|, ", " "));
                     searchPlaceButton.setEnabled(false);
                     geonamePlacesListModel.clear();
                     geonamesPlacesList.searchPlace(propertyPlaceArray[0].toString(), geonamePlacesListModel);
