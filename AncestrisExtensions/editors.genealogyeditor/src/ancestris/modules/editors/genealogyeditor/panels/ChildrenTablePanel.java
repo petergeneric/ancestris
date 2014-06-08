@@ -13,7 +13,7 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class ChildrenListPanel extends javax.swing.JPanel {
+public class ChildrenTablePanel extends javax.swing.JPanel {
 
     private IndividualReferencesTableModel mIndividualReferencesTableModel = new IndividualReferencesTableModel();
     private Fam mRoot;
@@ -23,9 +23,9 @@ public class ChildrenListPanel extends javax.swing.JPanel {
     /**
      * Creates new form IndividualsListPanel
      */
-    public ChildrenListPanel() {
+    public ChildrenTablePanel() {
         initComponents();
-        childrenTable.setID(ChildrenListPanel.class.getName());
+        childrenTable.setID(ChildrenTablePanel.class.getName());
     }
 
     /**
@@ -49,7 +49,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         childrenToolBar.setRollover(true);
 
         addChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.addChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        addChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.addChildrenButton.toolTipText"), new Object[] {})); // NOI18N
         addChildrenButton.setFocusable(false);
         addChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -61,7 +61,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         childrenToolBar.add(addChildrenButton);
 
         editChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.editChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        editChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.editChildrenButton.toolTipText"), new Object[] {})); // NOI18N
         editChildrenButton.setFocusable(false);
         editChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -73,7 +73,7 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         childrenToolBar.add(editChildrenButton);
 
         deleteChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.deleteChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.deleteChildrenButton.toolTipText"), new Object[] {})); // NOI18N
         deleteChildrenButton.setFocusable(false);
         deleteChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -85,8 +85,8 @@ public class ChildrenListPanel extends javax.swing.JPanel {
         childrenToolBar.add(deleteChildrenButton);
 
         linkToChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToChildrenButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.linkToChildrenButton.text"), new Object[] {})); // NOI18N
-        linkToChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenListPanel.linkToChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToChildrenButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.linkToChildrenButton.text"), new Object[] {})); // NOI18N
+        linkToChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.linkToChildrenButton.toolTipText"), new Object[] {})); // NOI18N
         linkToChildrenButton.setFocusable(false);
         linkToChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         linkToChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -190,10 +190,10 @@ public class ChildrenListPanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            ChildrenListPanel.class, "ChildrenListPanel.deleteChildConfirmation.title",
+                            ChildrenTablePanel.class, "ChildrenListPanel.deleteChildConfirmation.title",
                             individualRef.getTargetEntity()),
                     NbBundle.getMessage(
-                            ChildrenListPanel.class, "ChildrenListPanel.deleteChildConfirmation.text",
+                            ChildrenTablePanel.class, "ChildrenListPanel.deleteChildConfirmation.text",
                             individualRef.getTargetEntity(),
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
