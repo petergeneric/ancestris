@@ -71,7 +71,7 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
             mEventModified = true;
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
             if (age != null) {
-//                individualAgeTextField.setText(age.getValue());
+//                individualAgeTextField.setText(age.getDisplayValue());
             }
         }
     }
@@ -646,7 +646,7 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
 
         PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
         if (husbandAge != null) {
-            husbandAgeTextField.setText(husbandAge.getValue());
+            husbandAgeTextField.setText(husbandAge.getDisplayValue());
         }
         /*
          * Remove modification of age property
@@ -674,7 +674,7 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
 
         PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
         if (wifeAge != null) {
-            wifeAgeTextField.setText(wifeAge.getValue());
+            wifeAgeTextField.setText(wifeAge.getDisplayValue());
         }
         /*
          * Remove modification of age property
