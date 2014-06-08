@@ -133,7 +133,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         familyTabbedPane = new javax.swing.JTabbedPane();
         childrenPanel = new javax.swing.JPanel();
-        childrenTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenTablePanel();
+        childrenTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenTreeTablePanel();
         eventsPanel = new javax.swing.JPanel();
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
@@ -477,11 +477,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         childrenPanel.setLayout(childrenPanelLayout);
         childrenPanelLayout.setHorizontalGroup(
             childrenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrenTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)
+            .addComponent(childrenTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)
         );
         childrenPanelLayout.setVerticalGroup(
             childrenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrenTablePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+            .addComponent(childrenTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
         );
 
         familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.childrenPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrenPanel); // NOI18N
@@ -1203,7 +1203,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JTextField changeDateTextField;
     private javax.swing.JPanel childrenPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.ChildrenTablePanel childrenTablePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.ChildrenTreeTablePanel childrenTreeTablePanel;
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JButton editHusbandButton;
     private javax.swing.JButton editWifeButton;
@@ -1404,7 +1404,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         /*
          * +1 CHIL @<XREF:INDI>@
          */
-        childrenTablePanel.set(mFamily, mFamily.getProperties(PropertyChild.class));
+        childrenTreeTablePanel.set(mFamily, mFamily.getProperties(PropertyChild.class));
 
         /*
          * +1 NCHI <COUNT_OF_CHILDREN>
