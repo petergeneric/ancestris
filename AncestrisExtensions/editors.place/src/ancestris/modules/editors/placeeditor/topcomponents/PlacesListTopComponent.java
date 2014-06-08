@@ -1,12 +1,11 @@
 package ancestris.modules.editors.placeeditor.topcomponents;
 
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
-import ancestris.modules.editors.placeeditor.panels.PlacesEditorPanel;
+import ancestris.modules.editors.placeeditor.panels.PlaceEditorPanel;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
-import genj.gedcom.UnitOfWork;
 import java.awt.Dialog;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -19,7 +18,6 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
@@ -29,8 +27,8 @@ import org.openide.windows.TopComponent;
  * Top component which displays something.
  */
 @TopComponent.Description(preferredID = "PlacesTableTopComponent",
-iconBase="ancestris/modules/editors/placeeditor/actions/Place.png", 
-persistenceType = TopComponent.PERSISTENCE_NEVER)
+        iconBase = "ancestris/modules/editors/placeeditor/actions/Place.png",
+        persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "ancestris.modules.editors.placeeditor.topcomponents.PlacesTableTopComponent")
 @ActionReference(path = "Menu/Window" /*
@@ -44,17 +42,28 @@ persistenceType = TopComponent.PERSISTENCE_NEVER)
 public final class PlacesListTopComponent extends TopComponent {
 
     private Map<String, Set<PropertyPlace>> placesMap = new HashMap<String, Set<PropertyPlace>>();
-    private GedcomPlaceTableModel placeTableModel;
+    private GedcomPlaceTableModel gedcomPlaceTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
-    String[] placeFormat = null;
     private Gedcom gedcom = null;
+    private String mapTAG;
+    private String latitudeTAG;
+    private String longitudeTAG;
     int currentRowIndex = -1;
 
     public PlacesListTopComponent(final Gedcom gedcom) {
         this.gedcom = gedcom;
-        placeFormat = PropertyPlace.getFormat(gedcom);
 
-        placeTableModel = new GedcomPlaceTableModel(placeFormat);
+        if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
+            mapTAG = "MAP";
+            latitudeTAG = "LATI";
+            longitudeTAG = "LONG";
+        } else {
+            mapTAG = "_MAP";
+            latitudeTAG = "_LATI";
+            longitudeTAG = "_LONG";
+        }
+
+        gedcomPlaceTableModel = new GedcomPlaceTableModel(PropertyPlace.getFormat(gedcom));
 
         initComponents();
         placeTable.addMouseListener(new MouseAdapter() {
@@ -64,31 +73,18 @@ public final class PlacesListTopComponent extends TopComponent {
                 if (e.getClickCount() == 2) {
                     int rowIndex = placeTable.convertRowIndexToModel(placeTable.getSelectedRow());
                     final Set<PropertyPlace> propertyPlaces = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
-                    PlacesEditorPanel placesEditorPanel = new PlacesEditorPanel(PropertyPlace.getFormat(gedcom), propertyPlaces);
+                    PlaceEditorPanel placesEditorPanel = new PlaceEditorPanel();
                     DialogDescriptor placesEditorPanelDescriptor = new DialogDescriptor(
                             placesEditorPanel,
-                            NbBundle.getMessage(PlacesEditorPanel.class, "PlacesEditorPanel.title"),
+                            NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
                             true,
                             null);
+                    placesEditorPanel.set(gedcom, propertyPlaces);
                     Dialog dialog = DialogDisplayer.getDefault().createDialog(placesEditorPanelDescriptor);
                     dialog.setVisible(true);
                     dialog.toFront();
                     if (placesEditorPanelDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
-                        try {
-                            final String placeString = placesEditorPanel.getPlaceString();
-                            gedcom.doUnitOfWork(new UnitOfWork() {
-
-                                @Override
-                                public void perform(Gedcom gedcom) throws GedcomException {
-                                    for (PropertyPlace propertyPlace : propertyPlaces) {
-                                        propertyPlace.setValue(placeString);
-                                    }
-                                }
-                            }); // end of doUnitOfWork
-                        } catch (GedcomException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-
+                        placesEditorPanel.commit();
                         updateGedcomPlaceTable();
                     }
                 }
@@ -110,7 +106,19 @@ public final class PlacesListTopComponent extends TopComponent {
         placesMap.clear();
 
         for (PropertyPlace propertyPlace : gedcomPlacesList) {
-            String gedcomPlace = propertyPlace.getDisplayValue();
+            Property latitude = null;
+            Property longitude = null;
+            Property map = propertyPlace.getProperty(mapTAG);
+            if (map != null) {
+                latitude = map.getProperty(latitudeTAG);
+                longitude = map.getProperty(longitudeTAG);
+            }
+
+            String gedcomPlace = propertyPlace.getDisplayValue()
+                    + PropertyPlace.JURISDICTION_SEPARATOR
+                    + (latitude != null ? latitude.getValue() : "")
+                    + PropertyPlace.JURISDICTION_SEPARATOR
+                    + (longitude != null ? longitude.getValue() : "");
 
             Set<PropertyPlace> propertySet = placesMap.get(gedcomPlace);
             if (propertySet == null) {
@@ -120,7 +128,7 @@ public final class PlacesListTopComponent extends TopComponent {
             propertySet.add((PropertyPlace) propertyPlace);
         }
 
-        placeTableModel.update(placesMap);
+        gedcomPlaceTableModel.update(placesMap);
 
     }
 
@@ -153,7 +161,7 @@ public final class PlacesListTopComponent extends TopComponent {
         searchPlaceComboBox = new javax.swing.JComboBox();
 
         placeTable.setAutoCreateRowSorter(true);
-        placeTable.setModel(placeTableModel);
+        placeTable.setModel(gedcomPlaceTableModel);
         placeTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         placeTable.setShowHorizontalLines(false);
         placeTable.setShowVerticalLines(false);
@@ -182,7 +190,7 @@ public final class PlacesListTopComponent extends TopComponent {
             }
         });
 
-        searchPlaceComboBox.setModel(new DefaultComboBoxModel(placeFormat));
+        searchPlaceComboBox.setModel(new DefaultComboBoxModel(PropertyPlace.getFormat(gedcom)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
