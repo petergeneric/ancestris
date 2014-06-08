@@ -158,7 +158,7 @@ class MergeModelBirth extends MergeModel {
      * @param record
      */
     protected MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi indi, Fam fam) throws Exception {
-        super(record, gedcom);
+        super(record, indi, gedcom);
         this.currentIndi = indi;
         addRowSource();        
         addRowIndi();
@@ -173,14 +173,14 @@ class MergeModelBirth extends MergeModel {
      * @param record
      */
     protected MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
-        super(record, gedcom);
+        super(record, null, gedcom);
         this.currentIndi = null;
 
         addRowSource();        
         addRowIndi();
 
         // j'affiche la famille de l'enfant
-        addRow(RowType.IndiParentFamily, record, null);
+        addRow(RowType.IndiParentFamily, null);
         addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), null);
 
         // j'affiche les parents
@@ -215,10 +215,9 @@ class MergeModelBirth extends MergeModel {
     }
 
     private void addRowParents( Fam fam) throws Exception {
-        addRow(RowType.IndiParentFamily, record, fam);
+        addRow(RowType.IndiParentFamily, fam);
         if (fam != null) {
             addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), fam.getMarriageDate());
-
             addRowFather(fam.getHusband());
             addRowMother(fam.getWife());
         } else {
@@ -285,19 +284,6 @@ class MergeModelBirth extends MergeModel {
     }
 
     /**
-     * retourne la propriété concernée par l'acte
-     * @return propriété concernée par l'acte
-     */
-    @Override
-    protected Property getSelectedProperty() {
-        if (currentIndi != null) {
-            return currentIndi.getProperty("BIRT");
-        } else {
-            return null;
-        }
-    }        
-
-    /**
      * copie les données du relevé dans l'entité
      */
     @Override
@@ -325,8 +311,6 @@ class MergeModelBirth extends MergeModel {
             }
         }
         
-        resultProperty = currentIndi;
-
         // je cree la propriete de naissance si elle n'existait pas
         Property birthProperty = currentIndi.getProperty("BIRT");
         if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
