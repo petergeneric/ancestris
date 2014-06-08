@@ -63,94 +63,94 @@ public abstract class Record implements Cloneable{
             Participant object = (Participant) super.clone();
 
             if (firstName != null) {
-                firstName = firstName.clone();
+                object.firstName = firstName.clone();
             }
             if (lastName != null) {
-                lastName = lastName.clone();
+                object.lastName = lastName.clone();
             }
             if (sex != null) {
-                sex = sex.clone();
+                object.sex = sex.clone();
             }
             if (age != null) {
-                age = age.clone();
+                object.age = age.clone();
             }
             if (birthDate != null) {
-                birthDate = birthDate.clone();
+                object.birthDate = birthDate.clone();
             }
             if (birthPlace != null) {
-                birthPlace = birthPlace.clone();
+                object.birthPlace = birthPlace.clone();
             }
             if (occupation != null) {
-                occupation = occupation.clone();
+                object.occupation = occupation.clone();
             }
             if (residence != null) {
-                residence = residence.clone();
+                object.residence = residence.clone();
             }
             if (comment != null) {
-                comment = comment.clone();
+                object.comment = comment.clone();
             }
             
             if (marriedFirstName != null) {
-                marriedFirstName = marriedFirstName.clone();
+                object.marriedFirstName = marriedFirstName.clone();
             }
             if (marriedLastName != null) {
-                marriedLastName = marriedLastName.clone();
+                object.marriedLastName = marriedLastName.clone();
             }
             if (marriedDead != null) {
-                marriedDead = marriedDead.clone();
+                object.marriedDead = marriedDead.clone();
             }
             if (marriedOccupation != null) {
-                marriedOccupation = marriedOccupation.clone();
+                object.marriedOccupation = marriedOccupation.clone();
             }
             if (marriedResidence != null) {
-                marriedResidence = marriedResidence.clone();
+                object.marriedResidence = marriedResidence.clone();
             }
             if (marriedComment != null) {
-                marriedComment = marriedComment.clone();
+                object.marriedComment = marriedComment.clone();
             }
 
             if (fatherFirstName != null) {
-                fatherFirstName = fatherFirstName.clone();
+                object.fatherFirstName = fatherFirstName.clone();
             }
             if (fatherLastName != null) {
-                fatherLastName = fatherLastName.clone();
+                object.fatherLastName = fatherLastName.clone();
             }
             if (fatherAge != null) {
-                fatherAge = fatherAge.clone();
+                object.fatherAge = fatherAge.clone();
             }
             if (fatherDead != null) {
-                fatherDead = fatherDead.clone();
+                object.fatherDead = fatherDead.clone();
             }
             if (fatherOccupation != null) {
-                fatherOccupation = fatherOccupation.clone();
+                object.fatherOccupation = fatherOccupation.clone();
             }
             if (fatherResidence != null) {
-                fatherResidence = fatherResidence.clone();
+                object.fatherResidence = fatherResidence.clone();
             }
             if (fatherComment != null) {
-                fatherComment = fatherComment.clone();
+                object.fatherComment = fatherComment.clone();
             }
 
             if (motherFirstName != null) {
-                motherFirstName = motherFirstName.clone();
+                object.motherFirstName = motherFirstName.clone();
             }
             if (motherLastName != null) {
-                motherLastName = motherLastName.clone();
+                object.motherLastName = motherLastName.clone();
             }
             if (motherAge != null) {
-                motherAge = motherAge.clone();
+                object.motherAge = motherAge.clone();
             }
             if (motherDead != null) {
                 motherDead = motherDead.clone();
             }
             if (motherOccupation != null) {
-                motherOccupation = motherOccupation.clone();
+                object.motherOccupation = motherOccupation.clone();
             }
             if (motherResidence != null) {
-                motherResidence = motherResidence.clone();
+                object.motherResidence = motherResidence.clone();
             }
             if (motherComment != null) {
-                motherComment = motherComment.clone();
+                object.motherComment = motherComment.clone();
             }
             
             // je renvoie le clone
@@ -339,46 +339,46 @@ public abstract class Record implements Cloneable{
         try {
             object = (Record) super.clone();
 
-            if (eventDate != null) {
-                object.eventDate = eventDate.clone();
-            }
-            if (secondDate != null) {
-                object.secondDate = secondDate.clone();
-            }
-            if (cote != null) {
-                object.cote = cote.clone();
-            }
-            if (parish != null) {
-                object.parish = parish.clone();
-            }
-            if (freeComment != null) {
-                object.freeComment = freeComment.clone();
-            }
-            if (generalComment != null) {
-                object.generalComment = generalComment.clone();
-            }
+        if (eventDate != null) {
+            object.eventDate = eventDate.clone();
+        }
+        if (secondDate != null) {
+            object.secondDate = secondDate.clone();
+        }
+        if (cote != null) {
+            object.cote = cote.clone();
+        }
+        if (parish != null) {
+            object.parish = parish.clone();
+        }
+        if (freeComment != null) {
+            object.freeComment = freeComment.clone();
+        }
+        if (generalComment != null) {
+            object.generalComment = generalComment.clone();
+        }
 
-            if (indi != null) {
-                object.indi = indi.clone();
-            }
+        if (indi != null) {
+            object.indi = indi.clone();
+        }
 
-            if (wife != null) {
-                object.wife = wife.clone();
-            }
+        if (wife != null) {
+            object.wife = wife.clone();
+        }
 
-            if (witness1 != null) {
-                object.witness1 = witness1.clone();
-            }
-            if (witness2 != null) {
-                object.witness2 = witness2.clone();
-            }
-            if (witness3 != null) {
-                object.witness3 = witness3.clone();
-            }
-            if (witness4 != null) {
-                object.witness4 = witness4.clone();
-            }
-            
+        if (witness1 != null) {
+            object.witness1 = witness1.clone();
+        }
+        if (witness2 != null) {
+            object.witness2 = witness2.clone();
+        }
+        if (witness3 != null) {
+            object.witness3 = witness3.clone();
+        }
+        if (witness4 != null) {
+            object.witness4 = witness4.clone();
+        }
+
         } catch (CloneNotSupportedException cnse) {
             cnse.printStackTrace(System.err);
         }

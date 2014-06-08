@@ -4,9 +4,12 @@ import ancestris.modules.releve.dnd.MergeModel.CompareResult;
 import ancestris.modules.releve.dnd.MergeModel.RowType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyEvent;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.Source;
 import genj.util.WordBuffer;
 import java.awt.Color;
@@ -245,6 +248,9 @@ public class MergeTable extends JTable {
                         //setToolTipText(((PropertyDate)value).getPhrase());
                         setToolTipText(wrapToolTip(date.getPhrase(), 80));
                     }
+                } else if (value instanceof PropertyPlace) {
+                    PropertyPlace pace = (PropertyPlace)value;
+                    setText(pace.getDisplayValue());
                 } else if (value instanceof Source) {
                     if ( column == 4 ) {
                         setText(((Source)value).getId());
@@ -260,10 +266,25 @@ public class MergeTable extends JTable {
                         setText(((Entity)value).getDisplayValue());
                     }
                 } else if (value instanceof PropertyEvent) {
-                    setText(((PropertyEvent)value).getPropertyValue("TYPE"));                    
+                    PropertyEvent propertyEvent = (PropertyEvent) value;
+                    String type = propertyEvent.getPropertyValue("TYPE");
+                    if( ! type.isEmpty()) {
+                        setText(type);   
+                    } else {
+                        setText(Gedcom.getName(propertyEvent.getTag()));
+                    }
                 } else {
+                    String comment ;
+                    if (value instanceof Property) {
+                        comment = ((Property) value).getValue();
+                    } else {
+                        comment = value.toString();
+                    }
+                    setText(comment.replace('\n', ' '));
+                    
                     // j'affiche un tooltip pour les commentaires et les professions
                     if ( (mergeRow.rowType == RowType.EventComment
+                          ||  mergeRow.rowType == RowType.EventInsinuationComment
                           ||  mergeRow.rowType == RowType.IndiOccupation
                           ||  mergeRow.rowType == RowType.IndiMarriedOccupation
                           ||  mergeRow.rowType == RowType.IndiFatherOccupation
@@ -272,14 +293,10 @@ public class MergeTable extends JTable {
                           ||  mergeRow.rowType == RowType.WifeMarriedOccupation
                           ||  mergeRow.rowType == RowType.WifeFatherOccupation
                           ||  mergeRow.rowType == RowType.WifeMotherOccupation )
-                          && (column == 1 || column==3) && !value.toString().isEmpty()) {
-                        //String tooltipText = "<html>";
-                        //tooltipText += value.toString().replace("\n", "<br>");
-                        //tooltipText += "</html>";
-
-                        setToolTipText(wrapToolTip(value.toString(), 80));
-                    }
-                    setText(value.toString().replace('\n', ' '));
+                          && (column == 1 || column==3) && !value.toString().isEmpty()) 
+                    {
+                        setToolTipText(wrapToolTip(comment, 80));
+                    }                    
                 }
             } else {
                 // la valeur est nulle

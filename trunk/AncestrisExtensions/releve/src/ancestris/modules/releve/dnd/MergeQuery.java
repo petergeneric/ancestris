@@ -16,7 +16,6 @@ import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -750,9 +749,7 @@ public class MergeQuery {
         }
 
         Collection<Indi> entities = gedcom.getIndis();
-        for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-
+        for (Indi indi : entities) {
             if (families!= null) {
                 boolean found = false;
                 for(Fam fam : families) {
@@ -760,7 +757,7 @@ public class MergeQuery {
                     Indi wife = fam.getWife();
 
                     if( ( husband!=null && indi.compareTo(husband)== 0)
-                          || ( wife!=null && indi.compareTo(wife)==0)  ) {
+                            || ( wife!=null && indi.compareTo(wife)==0)  ) {
                         found = true;
                         break;
                     }
@@ -814,20 +811,20 @@ public class MergeQuery {
                         lastChildBirthDate = children[children.length-1].getBirthDate();
                     }
                     if ( !isRecordBeforeThanDate(recordBirthDate, marriageDate,0, 0)
-                         && !isRecordBeforeThanDate(recordBirthDate, firtChildBirthDate,0, 0)
-                         && !isRecordAfterThanDate(recordBirthDate, lastChildBirthDate,0, 0)
-
-                         ) {
+                            && !isRecordBeforeThanDate(recordBirthDate, firtChildBirthDate,0, 0)
+                            && !isRecordAfterThanDate(recordBirthDate, lastChildBirthDate,0, 0)
+                            
+                            ) {
                         Indi wife = fam.getWife();
                         if ( wife != null) {
                             if ( !record.getIndi().getMotherLastName().isEmpty()
                                     &&!isSameLastName(record.getIndi().getMotherLastName(), wife.getLastName())
                                     && !record.getIndi().getMotherFirstName().isEmpty()
                                     && !isSameFirstName(record.getIndi().getMotherFirstName(), wife.getFirstName() )
-                                 ) {
-                                    incompatible = true;
-                                    break;
-
+                                    ) {
+                                incompatible = true;
+                                break;
+                                
                             }
                         }
                     }
@@ -878,13 +875,13 @@ public class MergeQuery {
                         lastChildBirthDate = children[children.length-1].getBirthDate();
                     }
                     if ( !isRecordBeforeThanDate(recordBirthDate, marriageDate,0, 0)
-                         && !isRecordBeforeThanDate(recordBirthDate, firtChildBirthDate,0, 0)
-                         && !isRecordAfterThanDate(recordBirthDate, lastChildBirthDate,0, 0)
-                         && !record.getIndi().getFatherLastName().isEmpty()
-                         && !isSameLastName(record.getIndi().getFatherLastName(), fam.getHusband().getLastName())
-                         && !record.getIndi().getFatherFirstName().isEmpty()
-                         && !isSameFirstName(record.getIndi().getFatherFirstName(), fam.getHusband().getFirstName())
-                         ) {
+                            && !isRecordBeforeThanDate(recordBirthDate, firtChildBirthDate,0, 0)
+                            && !isRecordAfterThanDate(recordBirthDate, lastChildBirthDate,0, 0)
+                            && !record.getIndi().getFatherLastName().isEmpty()
+                            && !isSameLastName(record.getIndi().getFatherLastName(), fam.getHusband().getLastName())
+                            && !record.getIndi().getFatherFirstName().isEmpty()
+                            && !isSameFirstName(record.getIndi().getFatherFirstName(), fam.getHusband().getFirstName())
+                            ) {
                         incompatible = true;
                         break;
                     }
@@ -916,9 +913,7 @@ public class MergeQuery {
         PropertyDate marriageDate = marriageRecord.getEventDate();
 
         Collection<Indi> entities = gedcom.getIndis();
-        for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-
+        for (Indi indi : entities) {
             if (excludedFamilies != null) {
                 boolean found = false;
                 for (Fam fam : excludedFamilies) {
@@ -926,7 +921,7 @@ public class MergeQuery {
                     Indi wife = fam.getWife();
                     // je compare les ID s'il n'est pas null
                     if( ( husband!=null && indi.compareTo(husband)== 0)
-                          || ( wife!=null && indi.compareTo(wife)==0)  ) {
+                            || ( wife!=null && indi.compareTo(wife)==0)  ) {
                         found = true;
                         break;
                     }
@@ -954,7 +949,7 @@ public class MergeQuery {
                 if (!isCompatible(marriageRecord.getIndi().getBirthDate(), husband.getBirthDate(), 1)) {
                     continue;
                 }
-
+                
                 // si la date de naissance de l'individu n'est pas precisée , l'epoux doit avoir au moins minMarriageYearOld 
                 if ( ! marriageRecord.getIndi().getBirthDate().isValid() ) {
                     if (!isRecordAfterThanDate(marriageDate, husband.getBirthDate(), 0, minMarriageYearOld)) {
@@ -1017,8 +1012,10 @@ public class MergeQuery {
                     }
 
                     // la mere ne doit pas etre decede avant la date de naissance de l'epoux
-                    if (!isRecordBeforeThanDate(marriageRecord.getIndi().getBirthDate(), indiFather.getDeathDate(), 0, 0)) {
-                        continue;
+                    if ( indiFather != null) {
+                        if (!isRecordBeforeThanDate(marriageRecord.getIndi().getBirthDate(), indiFather.getDeathDate(), 0, 0)) {
+                            continue;
+                        }
                     }
                 }
 
@@ -1098,8 +1095,8 @@ public class MergeQuery {
                             && !isSameFirstName(marriageRecord.getWife().getFatherFirstName(), wifeFather.getFirstName())) {
                         continue;
                     }
-
-                     // le pere doit etre ne au moins minParentYearOld+minMarriageYearOld avant le mariage
+                    
+                    // le pere doit etre ne au moins minParentYearOld+minMarriageYearOld avant le mariage
                     if (!isRecordAfterThanDate(marriageDate, wifeFather.getBirthDate(), 0, minParentYearOld+minMarriageYearOld)) {
                         continue;
                     }
@@ -1128,8 +1125,8 @@ public class MergeQuery {
                             && !isSameFirstName(marriageRecord.getWife().getMotherFirstName(), wifeMother.getFirstName())) {
                         continue;
                     }
-
-                   // la mere doit etre ne au moins minParentYearOld+minMarriageYearOld avant le mariage
+                    
+                    // la mere doit etre ne au moins minParentYearOld+minMarriageYearOld avant le mariage
                     if (!isRecordAfterThanDate(marriageDate, wifeMother.getBirthDate(), 0, minParentYearOld+minMarriageYearOld)) {
                         continue;
                     }
@@ -1166,7 +1163,6 @@ public class MergeQuery {
 
                 wifes.add(wife);
             }
-
         }
 
     }
@@ -1565,13 +1561,9 @@ public class MergeQuery {
 
             // l'intersection des deux intervalles ne doit pas être vide.
             if ( recordEnd >= entityStart - marge   ) {
-               if  ( entityEnd >= recordStart - marge) {
-                    result = true;
-                } else {
-                   result = false;
-                }
+                result = entityEnd >= recordStart - marge;
             } else {
-                   result = false;
+                result = false;
 
             }
         } catch (GedcomException ex) {
@@ -1596,11 +1588,7 @@ public class MergeQuery {
         int jdRef = refTime.getJulianDay();
         int jdStart = start.getJulianDay();
         int jdEnd   = end.getJulianDay();
-        if ( jdStart <= jdRef && jdRef <= jdEnd) {
-            return true;
-        } else {
-            return false;
-        }
+        return jdStart <= jdRef && jdRef <= jdEnd;
     }
 
 
@@ -1731,7 +1719,7 @@ public class MergeQuery {
                 minEnd = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
 
                 pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
-                maxStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
+                //maxStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
                 pit.set(recordDate.getEnd().getPointInTime(PointInTime.GREGORIAN));
                 maxEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
             } else if (recordDate.getFormat() == PropertyDate.FROM || recordDate.getFormat() == PropertyDate.AFTER) {
@@ -1740,14 +1728,14 @@ public class MergeQuery {
                 minEnd = Integer.MAX_VALUE;
 
                 pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
-                maxStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
+                //maxStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
                 maxEnd = Integer.MAX_VALUE;
             } else if (recordDate.getFormat() == PropertyDate.TO || recordDate.getFormat() == PropertyDate.BEFORE) {
                 minStart = Integer.MIN_VALUE;
                 pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 minEnd = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
 
-                maxStart = Integer.MIN_VALUE;
+                //maxStart = Integer.MIN_VALUE;
                 pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 maxEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
             } else  {
@@ -1758,7 +1746,7 @@ public class MergeQuery {
                 minEnd = pit.add(0, 0, -indiMaxYearOld+aboutYear).getJulianDay();
 
                 pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
-                maxStart = pit.add(0, -minMonthShift, -minYearShift-aboutYear).getJulianDay();
+                //maxStart = pit.add(0, -minMonthShift, -minYearShift-aboutYear).getJulianDay();
                 pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 maxEnd = pit.add(0, -minMonthShift, -minYearShift +aboutYear).getJulianDay();
             } 
@@ -1794,11 +1782,7 @@ public class MergeQuery {
             if ( birthStart > maxEnd) {
                 result = false;
             } else {
-                if ( minStart > birthEnd) {
-                    result = false;
-                } else {
-                    result = true;                    
-                }
+                result = minStart <= birthEnd;
             }
         } catch (GedcomException ex) {
             result = false;
@@ -2063,8 +2047,8 @@ public class MergeQuery {
                 
                 int start;
                 int end;
-                boolean aboutStart = false;
-                boolean aboutEnd = false;
+                boolean aboutStart;
+                boolean aboutEnd;
                 // start = max (start1, start2)
                 if( start1 > start2) {
                     start = start1;
@@ -2201,7 +2185,7 @@ public class MergeQuery {
 
             }
         }
-        String result = "";
+        String result;
         if (foundOccupation != null) {
             result = foundOccupation.getValue();
             Property place = foundOccupation.getProperty("PLAC");

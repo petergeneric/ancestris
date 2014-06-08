@@ -24,45 +24,25 @@ public class MergeModelMiscOtherTest extends TestCase {
         return recordsInfoPlace;
     }
 
-    public static RecordMisc createMiscOtherRecord(String id) {
-        RecordMisc record = new RecordMisc();
-        if (id.equals("Accord1")) {
-            record.setEventDate("01/03/1999");
-            record.setEventType("Accord ");
-            record.setNotary("notaire_other");
-            record.setCote("cote");
-            record.setGeneralComment("generalcomment");
-            record.setFreeComment("photo");
-            record.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordoccupation", "accordResidence", "accordcomment");
-
-            // intervenant 2
-            record.setWife("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "", "fatherOccupation2", "fatherResidence2", "fatherComment2");
-            record.setWifeMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifecomment2", "true");
-        } else {
-            record.setEventDate("01/03/1999");
-            record.setEventType("Accord ");
-            record.setNotary("notaire_other");
-            record.setCote("cote");
-            record.setGeneralComment("generalcomment");
-            record.setFreeComment("photo");
-            record.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordoccupation", "accordResidence", "accordcomment");
-
-            // je place l'epouse ne premier et l'epoux en second
-            record.setWife("Motherfirstname", "MOTHERLASTNAME", "F", "", "", "", "wifeoccupation2", "wifeResidence2", "wifecomment2");
-            record.setWifeMarried("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation2", "fatherResidence2", "fatherComment", "true");
-        }
-        return record;
-    }
-
     /**
      *
     */
-    public void testAddOther() {
+    public void atestAddOther() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
 
+            RecordMisc miscRecord = new RecordMisc();
+            miscRecord.setEventDate("01/03/1999");
+            miscRecord.setEventType("Accord ");
+            miscRecord.setNotary("notaire_other");
+            miscRecord.setCote("cote");
+            miscRecord.setGeneralComment("generalcomment");
+            miscRecord.setFreeComment("photo");
+            miscRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordoccupation", "accordResidence", "accordcomment");
+            // intervenant 2
+            miscRecord.setWife("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "", "fatherOccupation2", "fatherResidence2", "fatherComment2");
+            miscRecord.setWifeMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifecomment2", "true");
 
-            RecordMisc miscRecord = createMiscOtherRecord("Accord1");
             String fileName = "ville_misc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S2").getPropertyDisplayValue("TITL"));
             MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), fileName, miscRecord);
@@ -88,8 +68,9 @@ public class MergeModelMiscOtherTest extends TestCase {
             assertEquals("Lieu event",getRecordsInfoPlace().getValue(), participant1.getValue(new TagPath("INDI:EVEN:PLAC"),""));
             
             assertEquals("participant1 : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), participant1.getBirthDate().getValue());
-            assertNotSame("participant1 : lieu naissance",mergeRecord.getIndi().getBirthPlace(), participant1.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-
+            assertEquals("participant1 : lieu naissance",mergeRecord.getIndi().getBirthPlace(), participant1.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            assertEquals("participant1 : Date décès","FROM 1999", participant1.getDeathDate().getValue());
+            
             assertEquals("participant1 : Profession",1, participant1.getProperties(new TagPath("INDI:OCCU")).length);
             Property occupation = participant1.getProperties(new TagPath("INDI:OCCU"))[0];
             assertEquals("participant1 : Profession",mergeRecord.getIndi().getOccupation(), occupation.getValue(new TagPath("OCCU"),""));
@@ -102,16 +83,15 @@ public class MergeModelMiscOtherTest extends TestCase {
             participant2Family = participant2.getFamiliesWhereSpouse()[0];
 
             participant2Husband = participant2Family.getHusband();
-            assertEquals("participant2 mari nom",mergeRecord.getWife().getLastName(), participant2Husband.getLastName());
-            assertEquals("participant2 mari prenom",mergeRecord.getWife().getFirstName(),  participant2Husband.getFirstName());
-            assertEquals("participant2 mari Date naissance","1 JAN 1970", participant2Husband.getBirthDate().getValue());
-            // la date de deces n'est pas ajoutee
-            assertEquals("participant2 marie deces",null, participant2Husband.getDeathDate());
+            assertEquals("participant2 nom",mergeRecord.getWife().getLastName(), participant2Husband.getLastName());
+            assertEquals("participant2 prenom",mergeRecord.getWife().getFirstName(),  participant2Husband.getFirstName());
+            assertEquals("participant2 Date naissance","1 JAN 1970", participant2Husband.getBirthDate().getValue());
+            assertEquals("participant2 Date deces","FROM 1999", participant2Husband.getDeathDate().getValue());
             assertEquals("participant2 : nb profession",2, participant2.getProperties(new TagPath("INDI:OCCU")).length);
             occupation = participant2Husband.getProperties(new TagPath("INDI:OCCU"))[0];
-            assertEquals("participant2 mari Profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
-            assertEquals("participant2 mari Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
-            assertEquals("participant2 mari lieu Profession",mergeRecord.getWife().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
+            assertEquals("participant2 profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
+            assertEquals("participant2 date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
+            assertEquals("participant2 lieu Profession",mergeRecord.getWife().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
             assertEquals("participant2 lien vers participant1","@I7@", participant2.getValue(new TagPath("INDI:ASSO"),""));
             assertEquals("participant2 lien vers participant1","INDI", participant2.getValue(new TagPath("INDI:ASSO:TYPE"),""));
             assertEquals("participant2 lien vers participant1","Présent@INDI:EVEN", participant2.getValue(new TagPath("INDI:ASSO:RELA"),""));
@@ -145,7 +125,18 @@ public class MergeModelMiscOtherTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
 
 
-            RecordMisc miscRecord = createMiscOtherRecord("Accord2");
+            RecordMisc miscRecord = new RecordMisc();
+            miscRecord.setEventDate("01/03/1999");
+            miscRecord.setEventType("Accord ");
+            miscRecord.setNotary("notaire_other");
+            miscRecord.setCote("cote");
+            miscRecord.setGeneralComment("generalcomment");
+            miscRecord.setFreeComment("photo");
+            miscRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordoccupation", "accordResidence", "accordcomment");
+            // je place l'epouse en premier et l'epoux en second
+            miscRecord.setWife("Motherfirstname", "MOTHERLASTNAME", "F", "", "", "", "wifeoccupation2", "wifeResidence2", "wifecomment2");
+            miscRecord.setWifeMarried("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation2", "fatherResidence2", "fatherComment", "true");
+            
             String fileName = "";
             MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), fileName, miscRecord);
 
@@ -200,16 +191,16 @@ public class MergeModelMiscOtherTest extends TestCase {
             participant2Husband = participant2Family.getHusband();
             assertEquals("participant2 mari nom",mergeRecord.getWife().getMarriedLastName(), participant2Husband.getLastName());
             assertEquals("participant2 mari prenom",mergeRecord.getWife().getMarriedFirstName(),  participant2Husband.getFirstName());
+            assertEquals("participant2 mari nombre profession",2,  participant2Husband.getProperties("OCCU").length);
             assertEquals("participant2 mari profession",mergeRecord.getWife().getMarriedOccupation(),  participant2Husband.getProperty("OCCU").getValue());
-            // la date de deces a ete ajoutée
-            assertEquals("participant2 femme deces","BEF 1999", participant2Husband.getDeathDate().getValue());
+            assertEquals("participant2 mari naissance","1 JAN 1970", participant2Husband.getBirthDate().getValue());
+            assertEquals("participant2 mari deces","BEF 1999", participant2Husband.getDeathDate().getValue());
 
             participant2Wife = participant2Family.getWife();
             assertEquals("participant2 femme nom",mergeRecord.getWife().getLastName(), participant2Wife.getLastName());
             assertEquals("participant2 femme prenom",mergeRecord.getWife().getFirstName(),  participant2Wife.getFirstName());
             assertEquals("participant2 femme Date naissance",mergeRecord.getWife().getBirthDate().getValue(), participant2Wife.getBirthDate().getValue());
-            // la date de deces n'est pas ajoutee
-            assertEquals("participant2 marie deces",null, participant2Wife.getDeathDate());
+            assertEquals("participant2 marie deces","FROM 1999", participant2Wife.getDeathDate().getValue());
             occupation = participant2Wife.getProperties(new TagPath("INDI:OCCU"))[0];
             assertEquals("participant2 femme Profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant2 femme Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
