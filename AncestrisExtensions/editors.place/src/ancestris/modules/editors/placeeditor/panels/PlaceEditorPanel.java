@@ -260,7 +260,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
         }
 
-        if (latitude != null && longitude != null) {
+        if (latitude != null && !latitude.getValue().isEmpty() && longitude != null && !longitude.getValue().isEmpty()) {
             jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
         } else {
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
