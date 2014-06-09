@@ -162,8 +162,6 @@ public final class PlacesListTopComponent extends TopComponent {
 
         placeTable.setAutoCreateRowSorter(true);
         placeTable.setModel(gedcomPlaceTableModel);
-        placeTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        placeTable.setShowHorizontalLines(false);
         placeTable.setShowVerticalLines(false);
         placesScrollPane.setViewportView(placeTable);
 
