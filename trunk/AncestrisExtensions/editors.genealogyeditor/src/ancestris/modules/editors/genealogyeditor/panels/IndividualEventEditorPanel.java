@@ -4,6 +4,7 @@ import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
+import genj.gedcom.time.Delta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.event.ChangeEvent;
@@ -224,6 +225,32 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         individualAgeTextField.setEditable(false);
         individualAgeTextField.setColumns(4);
+        individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mIndividualAgeModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mIndividualAgeModified = true;
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mIndividualAgeModified = true;
+                }
+            }
+        });
 
         linkToPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
         linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
@@ -700,33 +727,15 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
         if (age != null) {
             individualAgeTextField.setText(age.getDisplayValue());
+        } else {
+            if (!mEvent.getTag().equals("BIRT") && mDate.isValid()) {
+                Delta deltaAge = ((Indi) mRoot).getAge(mDate.getStart());
+                individualAgeTextField.setText(deltaAge!=null?deltaAge.getValue():"");
+            } else {
+                individualAgeTextField.setText("");
+            }
         }
-        /*
-         * Remove modification of age property
-         * Need to be better handle
-         *
-         * individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
-         *
-         * @Override
-         * public void changedUpdate(DocumentEvent e) {
-         * mEventModified = true;
-         * mIndividualAgeModified = true;
-         * }
-         *
-         * @Override
-         * public void removeUpdate(DocumentEvent e) {
-         * mEventModified = true;
-         * mIndividualAgeModified = true;
-         * }
-         *
-         * @Override
-         * public void insertUpdate(DocumentEvent e) {
-         * mEventModified = true;
-         * mIndividualAgeModified = true;
-         * }
-         * });
-         *
-         */
+
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         mAddress = mEvent.getProperty("ADDR", false);
         if (mPlace != null || mAddress != null) {
