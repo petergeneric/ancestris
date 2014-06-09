@@ -102,8 +102,8 @@
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="husbandAgeTextField" max="32767" attributes="0"/>
-                                  <Component id="eventNameTextField" pref="192" max="32767" attributes="0"/>
+                                  <Component id="husbandAgeTextField" linkSize="1" min="-2" pref="192" max="-2" attributes="0"/>
+                                  <Component id="eventNameTextField" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -112,8 +112,8 @@
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="eventTypeTextField" pref="192" max="32767" attributes="0"/>
-                                  <Component id="wifeAgeTextField" max="32767" attributes="0"/>
+                                  <Component id="eventTypeTextField" max="32767" attributes="0"/>
+                                  <Component id="wifeAgeTextField" linkSize="1" min="-2" pref="192" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -309,6 +309,9 @@
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="columns" type="int" value="4"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;        public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mEventModified = true;&#xa;                    mHusbandAgeModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;        public void removeUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mEventModified = true;&#xa;                    mHusbandAgeModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;        public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mEventModified = true;&#xa;                    mHusbandAgeModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="wifeAgeLabel">
               <Properties>
@@ -323,6 +326,9 @@
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="columns" type="int" value="4"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mEventModified = true;&#xa;                    mWifeAgeModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mEventModified = true;&#xa;                    mWifeAgeModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mEventModified = true;&#xa;                    mWifeAgeModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

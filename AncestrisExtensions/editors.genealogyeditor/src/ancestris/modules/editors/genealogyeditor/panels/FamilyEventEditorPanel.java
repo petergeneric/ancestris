@@ -1,10 +1,9 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
-import java.util.ArrayList;
+import genj.gedcom.time.Delta;
 import java.util.Arrays;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -256,12 +255,64 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
 
         husbandAgeTextField.setEditable(false);
         husbandAgeTextField.setColumns(4);
+        husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mHusbandAgeModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mHusbandAgeModified = true;
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mHusbandAgeModified = true;
+                }
+            }
+        });
 
         wifeAgeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         wifeAgeLabel.setText(org.openide.util.NbBundle.getMessage(FamilyEventEditorPanel.class, "FamilyEventEditorPanel.wifeAgeLabel.text")); // NOI18N
 
         wifeAgeTextField.setEditable(false);
         wifeAgeTextField.setColumns(4);
+        wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mWifeAgeModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mWifeAgeModified = true;
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mWifeAgeModified = true;
+                }
+            }
+        });
 
         javax.swing.GroupLayout EventDetailPanelLayout = new javax.swing.GroupLayout(EventDetailPanel);
         EventDetailPanel.setLayout(EventDetailPanelLayout);
@@ -292,18 +343,21 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
                         .addComponent(linkToPlaceButton))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EventDetailPanelLayout.createSequentialGroup()
                         .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(husbandAgeTextField)
-                            .addComponent(eventNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
+                            .addComponent(husbandAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(eventNameTextField))
                         .addGap(22, 22, 22)
                         .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(EventTypeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(wifeAgeLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(eventTypeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                            .addComponent(wifeAgeTextField))))
+                            .addComponent(eventTypeTextField)
+                            .addComponent(wifeAgeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
+
+        EventDetailPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {husbandAgeTextField, wifeAgeTextField});
+
         EventDetailPanelLayout.setVerticalGroup(
             EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EventDetailPanelLayout.createSequentialGroup()
@@ -646,58 +700,26 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
         PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
         if (husbandAge != null) {
             husbandAgeTextField.setText(husbandAge.getDisplayValue());
+        } else {
+            if (mDate.isValid()) {
+                Delta age = ((Fam) mRoot).getHusband().getAge(mDate.getStart());
+                husbandAgeTextField.setText(age != null ? age.getValue() : "");
+            } else {
+                husbandAgeTextField.setText("");
+            }
         }
-        /*
-         * Remove modification of age property
-         * Need to be better handle
-         *
-         * husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
-         *
-         * @Override
-         * public void changedUpdate(DocumentEvent e) {
-         * mHusbandAgeModified = true;
-         * }
-         *
-         * @Override
-         * public void removeUpdate(DocumentEvent e) {
-         * mHusbandAgeModified = true;
-         * }
-         *
-         * @Override
-         * public void insertUpdate(DocumentEvent e) {
-         * mHusbandAgeModified = true;
-         * }
-         * });
-         *
-         */
 
         PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
         if (wifeAge != null) {
             wifeAgeTextField.setText(wifeAge.getDisplayValue());
+        } else {
+            if (mDate.isValid()) {
+                Delta age = ((Fam) mRoot).getWife().getAge(mDate.getStart());
+                wifeAgeTextField.setText(age != null ? age.getValue() : "");
+            } else {
+                wifeAgeTextField.setText("");
+            }
         }
-        /*
-         * Remove modification of age property
-         * Need to be better handle
-         *
-         * wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
-         *
-         * @Override
-         * public void changedUpdate(DocumentEvent e) {
-         * mWifeAgeModified = true;
-         * }
-         *
-         * @Override
-         * public void removeUpdate(DocumentEvent e) {
-         * mWifeAgeModified = true;
-         * }
-         *
-         * @Override
-         * public void insertUpdate(DocumentEvent e) {
-         * mWifeAgeModified = true;
-         * }
-         * });
-         *
-         */
 
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         mAddress = mEvent.getProperty("ADDR", false);
