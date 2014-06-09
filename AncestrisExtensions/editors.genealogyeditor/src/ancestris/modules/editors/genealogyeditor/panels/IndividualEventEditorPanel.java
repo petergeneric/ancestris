@@ -77,17 +77,6 @@ import org.openide.util.NbBundle;
  */
 public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
-    private class DateBeanListener implements ChangeListener {
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            mEventModified = true;
-            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
-            if (age != null) {
-                individualAgeTextField.setText(age.getDisplayValue());
-            }
-        }
-    }
     private final ArrayList<String> mIndividualAttributesTags = new ArrayList<String>() {
         {
             /*
@@ -223,7 +212,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         eventNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         eventNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
 
-        individualAgeTextField.setEditable(false);
         individualAgeTextField.setColumns(4);
         individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -722,7 +710,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             }
         }
         aDateBean.setContext(mDate);
-        aDateBean.addChangeListener(new DateBeanListener());
 
         PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
         if (age != null) {
