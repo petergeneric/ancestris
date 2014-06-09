@@ -289,6 +289,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                 }
             }
         });
+        eventCauseTextField.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.eventCauseTextField.toolTipText")); // NOI18N
 
         addPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
         addPlaceButton.addActionListener(new java.awt.event.ActionListener() {
