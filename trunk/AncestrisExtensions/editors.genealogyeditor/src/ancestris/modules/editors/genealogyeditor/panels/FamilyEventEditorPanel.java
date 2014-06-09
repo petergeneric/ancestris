@@ -63,17 +63,6 @@ import org.openide.util.NbBundle;
  */
 public class FamilyEventEditorPanel extends javax.swing.JPanel {
 
-    private class DateBeanListener implements ChangeListener {
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            mEventModified = true;
-            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE");
-            if (age != null) {
-//                individualAgeTextField.setText(age.getDisplayValue());
-            }
-        }
-    }
     private Property mEvent = null;
     private Property mRoot;
     private Property mAddress;
@@ -253,7 +242,6 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
         husbandAgeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         husbandAgeLabel.setText(org.openide.util.NbBundle.getMessage(FamilyEventEditorPanel.class, "FamilyEventEditorPanel.husbandAgeLabel.text")); // NOI18N
 
-        husbandAgeTextField.setEditable(false);
         husbandAgeTextField.setColumns(4);
         husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -285,7 +273,6 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
         wifeAgeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         wifeAgeLabel.setText(org.openide.util.NbBundle.getMessage(FamilyEventEditorPanel.class, "FamilyEventEditorPanel.wifeAgeLabel.text")); // NOI18N
 
-        wifeAgeTextField.setEditable(false);
         wifeAgeTextField.setColumns(4);
         wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -695,7 +682,6 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
             }
         }
         aDateBean.setContext(mDate);
-        aDateBean.addChangeListener(new DateBeanListener());
 
         PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
         if (husbandAge != null) {
