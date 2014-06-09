@@ -211,6 +211,9 @@
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;                @Override&#xa;        public void changedUpdate(DocumentEvent e) {&#xa;                    if (!updateOnGoing) {&#xa;                        mEventModified = true;&#xa;                        mEventNameModified = true;&#xa;                    }&#xa;                }&#xa;&#xa;                @Override&#xa;        public void removeUpdate(DocumentEvent e) {&#xa;                    if (!updateOnGoing) {&#xa;                        mEventModified = true;&#xa;                        mEventNameModified = true;&#xa;                    }&#xa;                }&#xa;&#xa;                @Override&#xa;        public void insertUpdate(DocumentEvent e) {&#xa;                    if (!updateOnGoing) {&#xa;&#xa;                        mEventModified = true;&#xa;                        mEventNameModified = true;&#xa;                    }&#xa;                }&#xa;            });"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="eventCauseLabel">
               <Properties>
