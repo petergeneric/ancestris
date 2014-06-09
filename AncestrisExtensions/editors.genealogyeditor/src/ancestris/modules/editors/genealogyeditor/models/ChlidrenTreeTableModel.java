@@ -22,8 +22,6 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
         "",
         "",
         NbBundle.getMessage(FamiliesTreeTableModel.class, "ChlidrenTreeTableModel.familySpouse.column.date.title")};
-    private String mFemale = NbBundle.getMessage(FamiliesTreeTableModel.class, "ChlidrenTreeTableModel.daughter.title");
-    private String mMale = NbBundle.getMessage(FamiliesTreeTableModel.class, "ChlidrenTreeTableModel.sun.title");
 
     public ChlidrenTreeTableModel() {
         super(new DefaultMutableTreeNode());
@@ -52,9 +50,11 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
                 switch (index) {
                     case 0:
                         if (child.getSex() == PropertySex.MALE) {
-                            return mMale + " (" + child.getId() + ")";
+                            return NbBundle.getMessage(FamiliesTreeTableModel.class, "ChlidrenTreeTableModel.sun.title")
+                                    + " (" + child.getId() + ")";
                         } else if (child.getSex() == PropertySex.FEMALE) {
-                            return mFemale + " (" + child.getId() + ")";
+                            return NbBundle.getMessage(FamiliesTreeTableModel.class, "ChlidrenTreeTableModel.daughter.title")
+                                    + " (" + child.getId() + ")";
                         } else {
                             return child.getId();
                         }
@@ -98,9 +98,11 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
                 switch (index) {
                     case 0:
                         if (child.getSex() == PropertySex.MALE) {
-                            return mMale + " (" + child.getId() + ")";
+                            return NbBundle.getMessage(FamiliesTreeTableModel.class, "ChlidrenTreeTableModel.grandson.title")
+                                    + " (" + child.getId() + ")";
                         } else if (child.getSex() == PropertySex.FEMALE) {
-                            return mFemale + " (" + child.getId() + ")";
+                            return NbBundle.getMessage(FamiliesTreeTableModel.class, "ChlidrenTreeTableModel.granddaughter.title")
+                                    + " (" + child.getId() + ")";
                         } else {
                             return child.getId();
                         }
@@ -177,7 +179,7 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
                     familyNode.add(new DefaultMutableTreeNode(childRef));
                 }
             }
-            
+
             ((DefaultMutableTreeNode) getRoot()).add(childNode);
         }
         modelSupport.fireNewRoot();
