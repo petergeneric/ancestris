@@ -609,30 +609,32 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         if (!updateOnGoing) {
             Gedcom gedcom = mIndividual.getGedcom();
             mEvent = null;
-            final String eventType = eventTypeComboBox.getSelectedItem().toString();
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+            if (eventTypeComboBox.getSelectedIndex() > 0) {
+                final String eventType = eventTypeComboBox.getSelectedItem().toString();
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mEvent = mIndividual.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
-                    }
-                }); // end of doUnitOfWork
-
-                if (mEvent != null) {
-                    ArrayList<Property> eventsProperties = new ArrayList<Property>();
-                    for (Property property : mIndividual.getProperties()) {
-                        if (mIndividualEventsTags.contains(property.getTag())) {
-                            eventsProperties.add(property);
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mEvent = mIndividual.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
                         }
-                    }
-                    seteventTypeComboBox(eventsProperties);
-                    mEventsListModel.add(mEvent);
-                    individualEventEditorPanel.set(mIndividual, mEvent);
+                    }); // end of doUnitOfWork
 
+                    if (mEvent != null) {
+                        ArrayList<Property> eventsProperties = new ArrayList<Property>();
+                        for (Property property : mIndividual.getProperties()) {
+                            if (mIndividualEventsTags.contains(property.getTag())) {
+                                eventsProperties.add(property);
+                            }
+                        }
+                        seteventTypeComboBox(eventsProperties);
+                        mEventsListModel.add(mEvent);
+                        individualEventEditorPanel.set(mIndividual, mEvent);
+
+                    }
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
             }
         }
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
@@ -907,6 +909,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private void seteventTypeComboBox(List<Property> eventsList) {
         updateOnGoing = true;
         mEventsModel.removeAllElements();
+        mEventsModel.addElement(NbBundle.getMessage(
+                IndividualEditorPanel.class, "IndividualEditorPanel.eventTypeComboBox.firstElement.title"));
 
         for (String tag : mIndividualEventsTags) {
             mEventsModel.addElement(PropertyTag2Name.getTagName(tag));
