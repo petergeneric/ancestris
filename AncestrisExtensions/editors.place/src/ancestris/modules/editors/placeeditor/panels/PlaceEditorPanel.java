@@ -196,6 +196,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
                 @Override
                 public void taskFinished(Task task) {
+                    logger.info("Search terminated");
                     searchPlaceButton.setEnabled(true);
                 }
             });
@@ -274,6 +275,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
                         @Override
                         public void taskFinished(Task task) {
+                            logger.info("Search terminated");
                             searchPlaceButton.setEnabled(true);
                         }
                     });
@@ -302,34 +304,38 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 latitudeTAG = "_LATI";
                 longitudeTAG = "_LONG";
             }
-            mGedcom.doUnitOfWork(new UnitOfWork() {
+            if (gedcomPlaceEditorPanel.isModified()) {
+                mGedcom.doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    for (PropertyPlace propertyPlace : mPropertyPlaces) {
-                        propertyPlace.setValue(placeString);
-                        Property map = propertyPlace.getProperty(mapTAG);
-                        if (map == null) {
-                            map = propertyPlace.addProperty(mapTAG, "");
-                            map.addProperty(latitudeTAG, gedcomPlaceEditorPanel.getLatitude());
-                            map.addProperty(longitudeTAG, gedcomPlaceEditorPanel.getLongitude());
-                        } else {
-                            Property latitude = map.getProperty("LATI");
-                            if (latitude == null) {
-                                map.addProperty(latitudeTAG, gedcomPlaceEditorPanel.getLatitude());
-                            } else {
-                                latitude.setValue(gedcomPlaceEditorPanel.getLatitude());
-                            }
-                            Property longitude = map.getProperty("LONG");
-                            if (longitude == null) {
-                                map.addProperty(longitudeTAG, gedcomPlaceEditorPanel.getLongitude());
-                            } else {
-                                longitude.setValue(gedcomPlaceEditorPanel.getLongitude());
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        for (PropertyPlace propertyPlace : mPropertyPlaces) {
+                            propertyPlace.setValue(placeString);
+                            Property map = propertyPlace.getProperty(mapTAG);
+                            if (!gedcomPlaceEditorPanel.getLatitude().isEmpty() && !gedcomPlaceEditorPanel.getLongitude().isEmpty()) {
+                                if (map == null) {
+                                    map = propertyPlace.addProperty(mapTAG, "");
+                                    map.addProperty(latitudeTAG, gedcomPlaceEditorPanel.getLatitude());
+                                    map.addProperty(longitudeTAG, gedcomPlaceEditorPanel.getLongitude());
+                                } else {
+                                    Property latitude = map.getProperty("LATI");
+                                    if (latitude == null) {
+                                        map.addProperty(latitudeTAG, gedcomPlaceEditorPanel.getLatitude());
+                                    } else {
+                                        latitude.setValue(gedcomPlaceEditorPanel.getLatitude());
+                                    }
+                                    Property longitude = map.getProperty("LONG");
+                                    if (longitude == null) {
+                                        map.addProperty(longitudeTAG, gedcomPlaceEditorPanel.getLongitude());
+                                    } else {
+                                        longitude.setValue(gedcomPlaceEditorPanel.getLongitude());
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }); // end of doUnitOfWork
+                }); // end of doUnitOfWork
+            }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }

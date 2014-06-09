@@ -6,7 +6,7 @@ import javax.swing.JComponent;
  *
  * @author dominique
  */
-public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
+public class PlaceFormatOptionsPanel extends javax.swing.JPanel {
 
     private String[] mPlaceFormat;
     private int mPlaceOrder[];
@@ -14,7 +14,7 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
     /**
      * Creates new form PlaceFormatEditorOptionsPanel
      */
-    public PlaceFormatEditorOptionsPanel(String placeFormat[], int placeOrder[]) {
+    public PlaceFormatOptionsPanel(String placeFormat[], int placeOrder[]) {
         mPlaceOrder = placeOrder;
         mPlaceFormat = new String [Math.min(8, placeFormat.length) + 1];
         
@@ -70,28 +70,28 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         countryComboBox = new javax.swing.JComboBox<String>();
 
         hamletLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(hamletLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.hamletLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(hamletLabel, org.openide.util.NbBundle.getMessage(PlaceFormatOptionsPanel.class, "placeeditor.hamletLabel.text")); // NOI18N
 
         parishLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(parishLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.parishLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(parishLabel, org.openide.util.NbBundle.getMessage(PlaceFormatOptionsPanel.class, "placeeditor.parishLabel.text")); // NOI18N
 
         cityLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(cityLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.cityLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cityLabel, org.openide.util.NbBundle.getMessage(PlaceFormatOptionsPanel.class, "placeeditor.cityLabel.text")); // NOI18N
 
         zipCodeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(zipCodeLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.zipCodeLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(zipCodeLabel, org.openide.util.NbBundle.getMessage(PlaceFormatOptionsPanel.class, "placeeditor.zipCodeLabel.text")); // NOI18N
 
         geoIDLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(geoIDLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.geoIDLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(geoIDLabel, org.openide.util.NbBundle.getMessage(PlaceFormatOptionsPanel.class, "placeeditor.geoIDLabel.text")); // NOI18N
 
         countyLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(countyLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.countyLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(countyLabel, org.openide.util.NbBundle.getMessage(PlaceFormatOptionsPanel.class, "placeeditor.countyLabel.text")); // NOI18N
 
         stateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(stateLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.stateLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(stateLabel, org.openide.util.NbBundle.getMessage(PlaceFormatOptionsPanel.class, "placeeditor.stateLabel.text")); // NOI18N
 
         countryLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(countryLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.countryLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(countryLabel, org.openide.util.NbBundle.getMessage(PlaceFormatOptionsPanel.class, "placeeditor.countryLabel.text")); // NOI18N
 
         hamletComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
 
@@ -116,7 +116,7 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(hamletLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(hamletLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                     .addComponent(cityLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(countyLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(stateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
