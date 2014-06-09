@@ -7,8 +7,6 @@ import genj.gedcom.*;
 import genj.gedcom.time.Delta;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
@@ -205,6 +203,33 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.dateLabel.text"), new Object[] {})); // NOI18N
 
         eventNameTextField.setEditable(false);
+        eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mEventNameModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mEventModified = true;
+                    mEventNameModified = true;
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+
+                    mEventModified = true;
+                    mEventNameModified = true;
+                }
+            }
+        });
 
         eventCauseLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         eventCauseLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.eventCauseLabel.text")); // NOI18N
@@ -630,33 +655,6 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             eventNameLabel.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
             eventNameTextField.setText(mEvent.getValue());
             eventNameTextField.setEditable(true);
-            eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    if (!updateOnGoing) {
-                        mEventModified = true;
-                        mEventNameModified = true;
-                    }
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    if (!updateOnGoing) {
-                        mEventModified = true;
-                        mEventNameModified = true;
-                    }
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    if (!updateOnGoing) {
-
-                        mEventModified = true;
-                        mEventNameModified = true;
-                    }
-                }
-            });
 
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
@@ -712,16 +710,23 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         }
         aDateBean.setContext(mDate);
 
-        PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
-        if (age != null) {
-            individualAgeTextField.setText(age.getDisplayValue());
-        } else {
-            if (!mEvent.getTag().equals("BIRT") && mDate.isValid()) {
-                Delta deltaAge = ((Indi) mRoot).getAge(mDate.getStart());
-                individualAgeTextField.setText(deltaAge!=null?deltaAge.getValue():"");
+        if (!mEvent.getTag().equals("BIRT")) {
+            IndividualAgeLabel.setVisible(true);
+            individualAgeTextField.setVisible(true);
+            PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
+            if (age != null) {
+                individualAgeTextField.setText(age.getDisplayValue());
             } else {
-                individualAgeTextField.setText("");
+                if (!mEvent.getTag().equals("BIRT") && mDate.isValid()) {
+                    Delta deltaAge = ((Indi) mRoot).getAge(mDate.getStart());
+                    individualAgeTextField.setText(deltaAge != null ? deltaAge.toString() : "");
+                } else {
+                    individualAgeTextField.setText("");
+                }
             }
+        } else {
+            IndividualAgeLabel.setVisible(false);
+            individualAgeTextField.setVisible(false);
         }
 
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);

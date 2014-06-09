@@ -695,7 +695,7 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
         } else {
             if (mDate.isValid()) {
                 Delta age = ((Fam) mRoot).getHusband().getAge(mDate.getStart());
-                husbandAgeTextField.setText(age != null ? age.getValue() : "");
+                husbandAgeTextField.setText(age != null ? age.toString() : "");
             } else {
                 husbandAgeTextField.setText("");
             }
@@ -707,7 +707,7 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
         } else {
             if (mDate.isValid()) {
                 Delta age = ((Fam) mRoot).getWife().getAge(mDate.getStart());
-                wifeAgeTextField.setText(age != null ? age.getValue() : "");
+                wifeAgeTextField.setText(age != null ? age.toString() : "");
             } else {
                 wifeAgeTextField.setText("");
             }
