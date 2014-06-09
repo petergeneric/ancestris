@@ -6,7 +6,9 @@ import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
@@ -53,7 +55,8 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     case 0: {
                         Property file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
-                            return FileSystemView.getFileSystemView().getSystemIcon(((PropertyFile) file).getFile());
+                            Icon icon = new JFileChooser().getIcon(((PropertyFile) file).getFile());
+                            return icon;
                         }
                         return "";
                     }
@@ -79,7 +82,8 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     case 0: {
                         Property file = multimediaObject.getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
-                            return FileSystemView.getFileSystemView().getSystemIcon(((PropertyFile) file).getFile());
+                            Icon icon = new JFileChooser().getIcon(((PropertyFile) file).getFile());
+                            return icon;
                         }
                         return "";
                     }

@@ -3,8 +3,9 @@ package ancestris.modules.editors.genealogyeditor.models;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.filechooser.FileSystemView;
+import javax.swing.JFileChooser;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
 
@@ -46,7 +47,8 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
             if (multimediaFile != null && multimediaFile.exists()) {
                 switch (column) {
                     case 0: {
-                        return FileSystemView.getFileSystemView().getSystemIcon(multimediaFile);
+                        Icon icon = new JFileChooser().getIcon(multimediaFile);
+                        return icon;
                     }
 
                     case 1: {
