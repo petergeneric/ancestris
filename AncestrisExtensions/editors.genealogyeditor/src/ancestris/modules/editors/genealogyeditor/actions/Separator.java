@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
@@ -36,6 +37,7 @@ public final class Separator extends AbstractAction implements Presenter.Toolbar
     public Component getToolbarPresenter() {
         JSeparator separator = new JSeparator();
         separator.setOrientation(JSeparator.VERTICAL);
+        separator.setMaximumSize(new Dimension(3,32));
         return separator;
     }
 }
