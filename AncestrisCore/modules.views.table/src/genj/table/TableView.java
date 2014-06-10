@@ -45,11 +45,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Component for showing entities of a gedcom file in a tabular way
@@ -189,16 +188,8 @@ public class TableView extends View {
     public TableView() {
         this.filter = new ATableFilterWidget();
         // create panel for shortcuts
-        panelShortcuts = new JPanel(){
-            @Override
-            public Dimension getMaximumSize() {
-                Dimension size = getPreferredSize();
-                size.width = Short.MAX_VALUE;
-                return size;
-            }
-
-        };
-        panelShortcuts.setLayout(new BoxLayout(panelShortcuts, BoxLayout.LINE_AXIS));
+        panelShortcuts = new JPanel();
+        panelShortcuts.setLayout(new MigLayout("flowx, insets 0, gap 0, right"));
 
         // get modes
         for (Mode mode : modes.values()) {
@@ -380,9 +371,7 @@ public class TableView extends View {
         }
 
         toolbar.add(filter);
-        // right align 
-        toolbar.addGlue();
-        toolbar.add(panelShortcuts);
+        toolbar.add(panelShortcuts,"growx, pushx");
         // gap
         toolbar.addSeparator();
 
@@ -390,6 +379,7 @@ public class TableView extends View {
         toolbar.add(new JToggleButton(sticky));
 
         toolbar.add(new Settings());
+        toolbar.setFloatable(false);
     }
 
     /**

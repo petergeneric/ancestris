@@ -15,7 +15,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyName;
-import genj.util.swing.LinkWidget;
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
@@ -25,7 +25,10 @@ import java.awt.event.MouseEvent;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import javax.swing.Action;
 import javax.swing.ActionMap;
+import javax.swing.Icon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -211,27 +214,17 @@ public class ATable extends JTable {
             return;
         }
 
-        //XXX: clean code
-        LinkWidget sample = new LinkWidget("Sample", null);
-        int h = sample.getPreferredSize().width;
-        int n = Math.min(actions.size(), (container.getMaximumSize().width - h) / h);
-//        int n = Math.min(actions.size(), 27);
+        int w = 23; //XXX: hard coded value (must guess it from button effective size
+        int n = Math.min(actions.size(), (container.getSize().width) / w - 1);
         for (int i = 0; i < n; i++) {
-//            LinkWidget link = new LinkWidget(actions.get(i * actions.size() / n));
-//            link.setAlignmentX(0.5F);
-            JButton link = new JButton(actions.get(i * actions.size() / n));
-//            link.setPreferredSize(new Dimension(20,20));
-//            link.setMinimumSize(new Dimension(16,16));
-//            link.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
-            link.setBorderPainted(false);
+            LinkWidget link = new LinkWidget(actions.get(i * actions.size() / n));
             container.add(link);
         }
 
-//        if (n < actions.size()) {
-//            LinkWidget link = new LinkWidget(actions.get(actions.size() - 1));
-//            link.setAlignmentX(0.5F);
-//            container.add(link);
-//        }
+        if (n < actions.size()) {
+            LinkWidget link = new LinkWidget(actions.get(actions.size() - 1));
+            container.add(link);
+        }
         // done
     }
 
@@ -266,4 +259,36 @@ public class ATable extends JTable {
         return sorter;
     }
 
+    private static class LinkWidget extends JButton {
+
+
+        /**
+         * Creates a button with initial text and an icon.
+         *
+         * @param text the text of the button
+         * @param icon the Icon image to display on the button
+         */
+        public LinkWidget(String text, Icon icon) {
+            super(text, icon);
+            init();
+        }
+
+        public LinkWidget(String text) {
+            this(text, null);
+        }
+
+        public LinkWidget(Action a) {
+            super(a);
+            init();
+        }
+        
+        private void init(){
+            setBorderPainted(false);
+            setMinimumSize(new Dimension(20, 20));
+            setPreferredSize(new Dimension(20, 20));
+            setMaximumSize(new Dimension(20, 20));
+            setAlignmentX(RIGHT_ALIGNMENT);
+    }
+
+    }
 }
