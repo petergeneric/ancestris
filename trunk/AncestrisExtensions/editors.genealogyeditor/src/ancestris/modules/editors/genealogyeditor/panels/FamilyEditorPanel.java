@@ -137,13 +137,13 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         eventsPanel = new javax.swing.JPanel();
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
-        jToolBar1 = new javax.swing.JToolBar();
+        eventsListToolBar = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         eventTypeComboBox = new javax.swing.JComboBox<String>();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         deleteEventButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        eventsListScrollPane = new javax.swing.JScrollPane();
         eventsList = new javax.swing.JList();
         familyEventEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.FamilyEventEditorPanel();
         sourcesPanel = new javax.swing.JPanel();
@@ -489,12 +489,12 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         eventsSplitPane.setBorder(null);
         eventsSplitPane.setDividerSize(1);
 
-        jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
+        eventsListToolBar.setFloatable(false);
+        eventsListToolBar.setRollover(true);
 
         jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.jLabel1.text"), new Object[] {})); // NOI18N
-        jToolBar1.add(jLabel1);
-        jToolBar1.add(filler2);
+        eventsListToolBar.add(jLabel1);
+        eventsListToolBar.add(filler2);
 
         eventTypeComboBox.setModel(mEventsModel);
         eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
@@ -503,8 +503,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 eventTypeComboBoxActionPerformed(evt);
             }
         });
-        jToolBar1.add(eventTypeComboBox);
-        jToolBar1.add(filler3);
+        eventsListToolBar.add(eventTypeComboBox);
+        eventsListToolBar.add(filler3);
 
         deleteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
         deleteEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.deleteEventButton.toolTipText"), new Object[] {})); // NOI18N
@@ -516,11 +516,11 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 deleteEventButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(deleteEventButton);
+        eventsListToolBar.add(deleteEventButton);
 
         eventsList.setModel(mEventsListModel);
         eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(eventsList);
+        eventsListScrollPane.setViewportView(eventsList);
 
         javax.swing.GroupLayout eventsListPanelLayout = new javax.swing.GroupLayout(eventsListPanel);
         eventsListPanel.setLayout(eventsListPanelLayout);
@@ -528,16 +528,16 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventsListPanelLayout.createSequentialGroup()
                 .addGroup(eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(eventsListToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eventsListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(0, 0, 0))
         );
         eventsListPanelLayout.setVerticalGroup(
             eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsListPanelLayout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(eventsListToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addComponent(eventsListScrollPane)
                 .addGap(0, 0, 0))
         );
 
@@ -1212,6 +1212,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> eventTypeComboBox;
     private javax.swing.JList eventsList;
     private javax.swing.JPanel eventsListPanel;
+    private javax.swing.JScrollPane eventsListScrollPane;
+    private javax.swing.JToolBar eventsListToolBar;
     private javax.swing.JPanel eventsPanel;
     private javax.swing.JSplitPane eventsSplitPane;
     private ancestris.modules.editors.genealogyeditor.panels.FamilyEventEditorPanel familyEventEditorPanel;
@@ -1237,8 +1239,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton linkToHusbandButton;
     private javax.swing.JButton linkToWifeButton;
     private javax.swing.JPanel motherPanel;
@@ -1470,7 +1470,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     }
                 }
             }); // end of doUnitOfWork
-
+            
+            familyEventEditorPanel.commit();
             return mFamily;
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);

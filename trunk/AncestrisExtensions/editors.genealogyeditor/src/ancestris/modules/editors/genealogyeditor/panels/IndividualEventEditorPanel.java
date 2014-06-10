@@ -848,6 +848,13 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
+            
+            updateOnGoing = false;
+            mEventModified = false;
+            mEventCauseModified = false;
+            mIndividualAgeModified = false;
+            mEventNameModified = false;
+            mEventTypeModified = false;
         }
 //        gedcomPlacePanel.commit();
 //        addressPanel.commit();

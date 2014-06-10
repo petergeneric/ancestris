@@ -817,6 +817,14 @@ public class FamilyEventEditorPanel extends javax.swing.JPanel {
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
+            
+            updateOnGoing = false;
+            mEventModified = false;
+            mEventCauseModified = false;
+            mHusbandAgeModified = false;
+            mWifeAgeModified = false;
+            mEventNameModified = false;
+            mEventTypeModified = false;
         }
 //        gedcomPlacePanel.commit();
 //        addressPanel.commit();

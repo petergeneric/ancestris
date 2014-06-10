@@ -704,8 +704,8 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jToolBar1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="eventsListToolBar" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="eventsListScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           </Group>
@@ -714,16 +714,16 @@
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="jToolBar1" min="-2" pref="25" max="-2" attributes="0"/>
+                              <Component id="eventsListToolBar" min="-2" pref="25" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="jScrollPane1" max="32767" attributes="0"/>
+                              <Component id="eventsListScrollPane" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Container class="javax.swing.JToolBar" name="jToolBar1">
+                    <Container class="javax.swing.JToolBar" name="eventsListToolBar">
                       <Properties>
                         <Property name="floatable" type="boolean" value="false"/>
                         <Property name="rollover" type="boolean" value="true"/>
@@ -804,7 +804,7 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+                    <Container class="javax.swing.JScrollPane" name="eventsListScrollPane">
                       <AuxValues>
                         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
                       </AuxValues>
