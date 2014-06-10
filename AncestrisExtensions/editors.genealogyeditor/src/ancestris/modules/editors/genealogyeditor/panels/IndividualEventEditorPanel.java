@@ -756,7 +756,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         if (mRoot == null) {
             return null;
         }
-        if (mEventModified == true) {
+        if (mEventModified == true || aDateBean.hasChanged()) {
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
