@@ -24,8 +24,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.Map;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.Icon;
@@ -214,7 +215,7 @@ public class ATable extends JTable {
             return;
         }
 
-        int w = 23; //XXX: hard coded value (must guess it from button effective size
+        int w = LinkWidget.sampleDimension().width;
         int n = Math.min(actions.size(), (container.getSize().width) / w - 1);
         for (int i = 0; i < n; i++) {
             LinkWidget link = new LinkWidget(actions.get(i * actions.size() / n));
@@ -261,6 +262,7 @@ public class ATable extends JTable {
 
     private static class LinkWidget extends JButton {
 
+        private static Map<String, Dimension> sd = new HashMap<String, Dimension>(3);
 
         /**
          * Creates a button with initial text and an icon.
@@ -281,14 +283,24 @@ public class ATable extends JTable {
             super(a);
             init();
         }
-        
-        private void init(){
+
+        private void init() {
             setBorderPainted(false);
-            setMinimumSize(new Dimension(20, 20));
-            setPreferredSize(new Dimension(20, 20));
-            setMaximumSize(new Dimension(20, 20));
             setAlignmentX(RIGHT_ALIGNMENT);
-    }
+        }
+
+        public static Dimension sampleDimension() {
+            return sampleDimension("W");
+        }
+
+        public static Dimension sampleDimension(String label) {
+            if (!sd.containsKey(label)) {
+                JButton sample = new JButton(label);
+                sample.setBorderPainted(false);
+                sd.put(label, sample.getPreferredSize());
+            }
+            return sd.get(label);
+        }
 
     }
 }
