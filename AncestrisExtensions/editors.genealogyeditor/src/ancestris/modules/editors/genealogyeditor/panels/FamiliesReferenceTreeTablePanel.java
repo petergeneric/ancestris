@@ -91,28 +91,6 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
             familiesTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
             logger.log(Level.FINE, "FamiliesReferenceTreeTablePanel: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
         }
-        HighlightPredicate MyHighlightPredicate = new HighlightPredicate() {
-
-            @Override
-            public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
-                int rowIndex = adapter.row;
-                TreePath path = familiesTreeTable.getPathForRow(rowIndex);
-                Object lastPathComponent = path.getLastPathComponent();
-                if (lastPathComponent instanceof DefaultMutableTreeNode) {
-                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-                    if (node.getUserObject() instanceof PropertyXRef) {
-                        Entity entity = ((PropertyXRef) node.getUserObject()).getTargetEntity();
-                        return entity.equals(mRoot);
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            }
-        };
-        ColorHighlighter hl = new ColorHighlighter(MyHighlightPredicate, familiesTreeTable.getBackground(), Color.blue);
-        familiesTreeTable.addHighlighter(hl);
     }
 
     /**
@@ -242,9 +220,9 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
                 ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).clear();
                 if (mFamilyEditingType == EDIT_FAMC) {
-                    ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilyChild.class));
+                    ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot, mRoot.getProperties(PropertyFamilyChild.class));
                 } else if (mFamilyEditingType == EDIT_FAMS) {
-                    ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilySpouse.class));
+                    ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot, mRoot.getProperties(PropertyFamilySpouse.class));
                 }
                 familiesTreeTable.expandAll();
             } else {
@@ -288,9 +266,9 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
                     ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).clear();
                     if (mFamilyEditingType == EDIT_FAMC) {
-                        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilyChild.class));
+                        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot, mRoot.getProperties(PropertyFamilyChild.class));
                     } else if (mFamilyEditingType == EDIT_FAMS) {
-                        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilySpouse.class));
+                        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot, mRoot.getProperties(PropertyFamilySpouse.class));
                     }
                     familiesTreeTable.expandAll();
                 } catch (GedcomException ex) {
@@ -500,7 +478,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
     public void setFamiliesList(Property root, List<? extends PropertyXRef> familiesList) {
         this.mRoot = root;
-        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(familiesList);
+        ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(root, familiesList);
         familiesTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
         familiesTreeTable.expandAll();
     }
