@@ -34,7 +34,7 @@ import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.view.ToolBar;
+import ancestris.swing.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;

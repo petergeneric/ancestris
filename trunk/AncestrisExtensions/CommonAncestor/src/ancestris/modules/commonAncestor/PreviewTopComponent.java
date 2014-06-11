@@ -5,7 +5,7 @@ import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
 import ancestris.modules.commonAncestor.graphics.ScreenOutput;
 import genj.gedcom.Context;
 import genj.gedcom.Indi;
-import genj.view.ToolBar;
+import ancestris.swing.ToolBar;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;

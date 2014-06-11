@@ -14,7 +14,7 @@ import genj.util.Registry;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.SliderWidget;
-import genj.view.ToolBar;
+import ancestris.swing.ToolBar;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import java.awt.Desktop;

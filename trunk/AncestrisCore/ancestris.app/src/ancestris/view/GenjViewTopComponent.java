@@ -14,7 +14,7 @@ package ancestris.view;
 import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.view.ToolBar;
+import ancestris.swing.ToolBar;
 import genj.view.View;
 import genj.view.ViewFactory;
 import java.awt.Image;
