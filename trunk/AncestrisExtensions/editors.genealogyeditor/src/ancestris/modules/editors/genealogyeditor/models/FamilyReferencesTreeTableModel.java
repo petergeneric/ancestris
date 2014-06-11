@@ -88,7 +88,7 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
                         case 3:
                             return family.getMarriageDate() != null
                                     ? NbBundle.getMessage(FamilyReferencesTreeTableModel.class,
-                                    "FamilyReferencesTreeTableModel.family.wedding") + " " + family.getMarriageDate().getDisplayValue()
+                                            "FamilyReferencesTreeTableModel.family.wedding") + " " + family.getMarriageDate().getDisplayValue()
                                     : "";
 
                         default:
@@ -115,8 +115,8 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
                         case 3:
                             return child.getBirthDate() != null
                                     ? NbBundle.getMessage(
-                                    FamilyReferencesTreeTableModel.class,
-                                    "FamilyReferencesTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
+                                            FamilyReferencesTreeTableModel.class,
+                                            "FamilyReferencesTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
                                     : "";
 
                         default:
@@ -170,14 +170,16 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
         modelSupport.fireNewRoot();
     }
 
-    public void addAll(List<? extends PropertyXRef> familiesList) {
+    public void addAll(Property root, List<? extends PropertyXRef> familiesList) {
         for (PropertyXRef familyRef : familiesList) {
             DefaultMutableTreeNode familyNode = new DefaultMutableTreeNode(familyRef);
             Entity entity = familyRef.getTargetEntity();
             if (entity instanceof Fam) {
                 Fam family = (Fam) entity;
                 for (PropertyChild childRef : family.getProperties(PropertyChild.class)) {
-                    familyNode.add(new DefaultMutableTreeNode(childRef));
+                    if (!childRef.getTargetEntity().equals(root)) {
+                        familyNode.add(new DefaultMutableTreeNode(childRef));
+                    }
                 }
                 ((DefaultMutableTreeNode) getRoot()).add(familyNode);
             }
