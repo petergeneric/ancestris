@@ -63,7 +63,7 @@ import genj.util.swing.ViewPortAdapter;
 import genj.util.swing.ViewPortOverview;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
-import genj.view.ToolBar;
+import ancestris.swing.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.Color;

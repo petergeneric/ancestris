@@ -1,23 +1,15 @@
-/**
- * GenJ - GenealogyJ
- *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
- *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+/*
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2014 Ancestris
+ * 
+ * Author: Daniel Andre (daniel@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package genj.view;
+package ancestris.swing;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -38,7 +30,7 @@ import org.openide.util.actions.Presenter;
 
 /**
  * JToolbar with MigLayout.
- * DAN 20140610: this is the only combination which allowed
+ * <br/>DAN 20140610: this is the only combination which allowed
  * a dynamic fill of a JPanel component based on its actual size.
  * This is used in ATable class for shortcuts display.
  * Most of the source here come from JToolBar source adapted

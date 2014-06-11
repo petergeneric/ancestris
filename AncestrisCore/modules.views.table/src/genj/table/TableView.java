@@ -21,6 +21,7 @@
 package genj.table;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.swing.ToolBar;
 import ancestris.swing.atable.ATableFilterWidget;
 import ancestris.view.ExplorerHelper;
 import genj.common.AbstractPropertyTableModel;
@@ -34,7 +35,6 @@ import genj.gedcom.TagPath;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.view.SettingsAction;
-import genj.view.ToolBar;
 import genj.view.View;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

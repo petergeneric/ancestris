@@ -32,7 +32,7 @@ import genj.gedcom.Gedcom;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.ImageIcon;
-import genj.view.ToolBar;
+import ancestris.swing.ToolBar;
 import genj.view.View;
 import java.awt.BorderLayout;
 import java.awt.Desktop;

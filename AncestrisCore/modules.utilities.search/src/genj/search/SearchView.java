@@ -34,7 +34,7 @@ import genj.util.swing.ChoiceWidget;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
-import genj.view.ToolBar;
+import ancestris.swing.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;

@@ -19,6 +19,7 @@
  */
 package genj.view;
 
+import ancestris.swing.ToolBar;
 import ancestris.view.ExplorerHelper;
 import genj.gedcom.Context;
 import java.awt.BorderLayout;

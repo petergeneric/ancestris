@@ -40,7 +40,7 @@ import genj.util.swing.UnitGraphics;
 import genj.util.swing.ViewPortAdapter;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
-import genj.view.ToolBar;
+import ancestris.swing.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
