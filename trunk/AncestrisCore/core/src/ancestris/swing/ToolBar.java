@@ -151,7 +151,7 @@ public class ToolBar extends JToolBar {
     }
     
     public void addGlue() {
-        add(Box.createGlue());
+        add(Box.createGlue(),"growx, pushx");
     }
     
     @Override

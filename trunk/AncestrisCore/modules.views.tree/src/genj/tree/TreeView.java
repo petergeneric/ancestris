@@ -68,7 +68,6 @@ import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -87,14 +86,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JToolTip;
 import javax.swing.JViewport;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
@@ -104,7 +106,6 @@ import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * TreeView
@@ -112,6 +113,8 @@ import org.openide.util.lookup.ServiceProvider;
 // FIXME: used to find proper TreeView component for RootAction
 //@ServiceProvider(service=TreeView.class)
 public class TreeView extends View implements Filter {
+
+    static private Logger LOG = Logger.getLogger("ancestris.tree");
 
     protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");
     protected final static Registry REGISTRY = Registry.get(TreeView.class);
@@ -151,6 +154,7 @@ public class TreeView extends View implements Filter {
     private Lookup.Result<SelectionActionEvent> result;
 
     private TemplateToolTip tt = new TemplateToolTip();
+    private JLabel rootTitle;
 
     /**
      * Constructor
@@ -217,15 +221,14 @@ public class TreeView extends View implements Filter {
 //        scrollToCurrent();
 //      }
 //    });
-
         // done
     }
 
     public Gedcom getGedcom() {
-        if (context != null && context.getGedcom()!= null){
+        if (context != null && context.getGedcom() != null) {
             return context.getGedcom();
         }
-        return model.getRoot() == null ? null: model.getRoot().getGedcom();
+        return model.getRoot() == null ? null : model.getRoot().getGedcom();
     }
 
     @Override
@@ -479,7 +482,7 @@ public class TreeView extends View implements Filter {
         }
         // install action listener
         if (result == null) {
-            result = addLookupListener(context);
+            result = addLookupListener(newContext);
         }
         if (context.getGedcom() != null && !newContext.getGedcom().equals(context.getGedcom())) {
             return;
@@ -514,7 +517,7 @@ public class TreeView extends View implements Filter {
      * Set current entity
      */
     /* package */ public boolean show(Entity entity) {
-        return show(entity,false);
+        return show(entity, false);
     }
 
     /* package */ private boolean show(Entity entity, boolean forceCenter) {
@@ -531,7 +534,7 @@ public class TreeView extends View implements Filter {
         }
 
         // scroll
-        scrollTo(node.pos,forceCenter);
+        scrollTo(node.pos, forceCenter);
 
         // make sure it's reflected
         content.repaint();
@@ -626,9 +629,6 @@ public class TreeView extends View implements Filter {
         // gap
         toolbar.addSeparator();
 
-        // sticky
-        toolbar.add(new JToggleButton(sticky));
-
         // vertical/horizontal
         toolbar.add(bh.create(new ActionOrientation(), Images.imgVert, model.isVertical()));
 
@@ -664,13 +664,26 @@ public class TreeView extends View implements Filter {
         // settings
         toolbar.add(new ScreenshotAction(content));
         toolbar.add(new Print());
-        // Le addglue ne fonctionne pas acause du slider dont la taille n'est pas prise en compte correctement
-//    toolbar.addGlue();
+
+        rootTitle = new JLabel();
+        rootTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        toolbar.add(rootTitle, "growx, pushx, center");
+        setRootTitle("toto");
+
         toolbar.addSeparator();
-        toolbar.add(new Settings());
         toolbar.add(new ActionBluePrint());
+        // sticky
+        toolbar.add(new JToggleButton(sticky));
+
+        toolbar.add(new Settings());
+        toolbar.setFloatable(false);
 
         // done
+    }
+
+    private void setRootTitle(String title) {
+        rootTitle.setText("<html><font size=+1>" + title + "</font></html");
+
     }
 
     /**
@@ -728,7 +741,9 @@ public class TreeView extends View implements Filter {
         // switch root
         if (root == null || root instanceof Indi || root instanceof Fam) {
             model.setRoot(root);
-            show(root,true);
+            show(root, true);
+            String title = root == null ? "" : root.toString();
+            setRootTitle(title);
         }
 
         // load bookmarks
@@ -927,7 +942,7 @@ public class TreeView extends View implements Filter {
             super.removeNotify();
             ToolTipManager.sharedInstance().unregisterComponent(this);
         }
-        
+
         @Override
         public JToolTip createToolTip() {
             tt.setComponent(this);
@@ -939,30 +954,34 @@ public class TreeView extends View implements Filter {
          * the get ttlocation must return null if no entity can be found. if not tt show a blank component
          */
         private Entity oldTTEntity = null;
+
         @Override
         public String getToolTipText(MouseEvent event) {
-            if (!showPopup()){
+            if (!showPopup()) {
                 oldTTEntity = null;
                 return null;
             }
             Entity entity = getEntityForEvent(event);
-            if (entity != oldTTEntity){
+            if (entity != oldTTEntity) {
                 ttPosition = null;
                 oldTTEntity = entity;
             }
             tt.setEntity(oldTTEntity);
-            if (oldTTEntity == null)
+            if (oldTTEntity == null) {
                 return null;
-            else
+            } else {
                 return oldTTEntity.getId();
+            }
         }
-        
+
         /**
          * Helper to find entity for a MouseEvent position in Content coordinate
+         *
          * @param event
+         *
          * @return Entity
          */
-        private Entity getEntityForEvent(MouseEvent event){
+        private Entity getEntityForEvent(MouseEvent event) {
             // check node
             Entity entity = null;
             Point p = view2model(event.getPoint());
@@ -970,18 +989,20 @@ public class TreeView extends View implements Filter {
             // nothing?
             if (content != null && content instanceof Entity) {
                 entity = (Entity) content;
-            }            
+            }
             return entity;
         }
 
         private Point ttPosition = null;
+
         @Override
         public Point getToolTipLocation(MouseEvent event) {
-            if (!showPopup() || oldTTEntity == null)
+            if (!showPopup() || oldTTEntity == null) {
                 return null;
-            
-            if (ttPosition == null){
-                ttPosition = new Point(event.getX()-5, event.getY()+2);
+            }
+
+            if (ttPosition == null) {
+                ttPosition = new Point(event.getX() - 5, event.getY() + 2);
             }
             return ttPosition;
         }
@@ -1121,7 +1142,7 @@ public class TreeView extends View implements Filter {
             // done
         }
 
-       /**
+        /**
          * @see java.awt.event.MouseAdapter#mouseClicked(MouseEvent)
          */
         public void mouseClicked(MouseEvent e) {
@@ -1319,7 +1340,7 @@ public class TreeView extends View implements Filter {
 
             // let the user choose an individual
             SelectEntityWidget select = new SelectEntityWidget(context.getGedcom(), Gedcom.INDI, null);
-            Object rc = DialogManager.create(getText(), new JComponent[] {select})
+            Object rc = DialogManager.create(getText(), new JComponent[]{select})
                     .setOptionType(DialogManager.OK_CANCEL_OPTION)
                     .setDialogId("select.root")
                     .show();
@@ -1346,7 +1367,7 @@ public class TreeView extends View implements Filter {
         @Override
         public void actionPerformed(ActionEvent event) {
 
-            show(getRoot(),true);
+            show(getRoot(), true);
 
             // done
         }
@@ -1497,14 +1518,14 @@ public class TreeView extends View implements Filter {
         public ActionBluePrint() {
             super();
             setImage(IMAGE);
-                /*
-                 * Reset and set image and text to be sure that propertyCHanged event is
-                 * fired. just after init, image and text are changed and if no change is done
-                 * on them, the display can be out of sync. PropertertyChangeListeners can only be
-                 * called after object construction so in our case we must update ui after all 
-                 * initialisations occured
-                 */
-                SwingUtilities.invokeLater(new Runnable() {
+            /*
+             * Reset and set image and text to be sure that propertyCHanged event is
+             * fired. just after init, image and text are changed and if no change is done
+             * on them, the display can be out of sync. PropertertyChangeListeners can only be
+             * called after object construction so in our case we must update ui after all 
+             * initialisations occured
+             */
+            SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
@@ -1520,7 +1541,7 @@ public class TreeView extends View implements Filter {
 
         @Override
         protected void contextChanged() {
-            if (!contextProperties.isEmpty()){
+            if (!contextProperties.isEmpty()) {
                 Property prop = contextProperties.get(0);
                 if (prop.getEntity() instanceof Indi || prop.getEntity() instanceof Fam) {
                     entity = prop.getEntity();
@@ -1528,9 +1549,10 @@ public class TreeView extends View implements Filter {
                     entity = prop.getGedcom().getFirstEntity(Gedcom.INDI);
                 }
             }
-            if (entity == null)
+            if (entity == null) {
                 entity = new Indi();
-                
+            }
+
             setImageText(IMAGE.getOverLayed(entity.getImage(false)),
                     NbBundle.getMessage(ChooseBlueprintAction.class, "blueprint.select.for", Gedcom.getName(entity.getTag())));
             super.contextChanged();
@@ -1538,7 +1560,7 @@ public class TreeView extends View implements Filter {
 
         @Override
         protected void actionPerformedImpl(final ActionEvent event) {
-            if (entity!=null){
+            if (entity != null) {
 
                 new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
 
