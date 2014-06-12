@@ -29,6 +29,7 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
     private String[] familyColumnsName = familyChildColumnsName;
     private String mFemale = "";
     private String mMale = "";
+    private Property mRoot = null;
 
     public FamilyReferencesTreeTableModel() {
         this(FAMILY_CHILD);
@@ -98,12 +99,16 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
                     Indi child = (Indi) entity;
                     switch (index) {
                         case 0:
-                            if (child.getSex() == PropertySex.MALE) {
-                                return mMale + " (" + child.getId() + ")";
-                            } else if (child.getSex() == PropertySex.FEMALE) {
-                                return mFemale + " (" + child.getId() + ")";
-                            } else {
+                            if (child == mRoot) {
                                 return child.getId();
+                            } else {
+                                if (child.getSex() == PropertySex.MALE) {
+                                    return mMale + " (" + child.getId() + ")";
+                                } else if (child.getSex() == PropertySex.FEMALE) {
+                                    return mFemale + " (" + child.getId() + ")";
+                                } else {
+                                    return child.getId();
+                                }
                             }
 
                         case 1:
@@ -157,6 +162,10 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
         return 0;
     }
 
+    public void setRoot(Property root) {
+        mRoot = root;
+    }
+
     public void add(PropertyXRef familyRef) {
         DefaultMutableTreeNode familyNode = new DefaultMutableTreeNode(familyRef);
         Entity entity = familyRef.getTargetEntity();
@@ -170,16 +179,14 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
         modelSupport.fireNewRoot();
     }
 
-    public void addAll(Property root, List<? extends PropertyXRef> familiesList) {
+    public void addAll(List<? extends PropertyXRef> familiesList) {
         for (PropertyXRef familyRef : familiesList) {
             DefaultMutableTreeNode familyNode = new DefaultMutableTreeNode(familyRef);
             Entity entity = familyRef.getTargetEntity();
             if (entity instanceof Fam) {
                 Fam family = (Fam) entity;
                 for (PropertyChild childRef : family.getProperties(PropertyChild.class)) {
-                    if (!childRef.getTargetEntity().equals(root)) {
-                        familyNode.add(new DefaultMutableTreeNode(childRef));
-                    }
+                    familyNode.add(new DefaultMutableTreeNode(childRef));
                 }
                 ((DefaultMutableTreeNode) getRoot()).add(familyNode);
             }
