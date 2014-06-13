@@ -4,6 +4,8 @@ import ancestris.modules.editors.genealogyeditor.models.FamilyReferencesTreeTabl
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import genj.util.Registry;
+import java.awt.Color;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,6 +17,9 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import org.jdesktop.swingx.decorator.ColorHighlighter;
+import org.jdesktop.swingx.decorator.ComponentAdapter;
+import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -86,6 +91,28 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
             familiesTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
             logger.log(Level.FINE, "FamiliesReferenceTreeTablePanel: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
         }
+        HighlightPredicate MyHighlightPredicate = new HighlightPredicate() {
+
+            @Override
+            public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+                int rowIndex = adapter.row;
+                TreePath path = familiesTreeTable.getPathForRow(rowIndex);
+                Object lastPathComponent = path.getLastPathComponent();
+                if (lastPathComponent instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+                    if (node.getUserObject() instanceof PropertyXRef) {
+                        Entity entity = ((PropertyXRef) node.getUserObject()).getTargetEntity();
+                        return entity.equals(mRoot);
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        };
+        ColorHighlighter hl = new ColorHighlighter(MyHighlightPredicate, familiesTreeTable.getBackground(), Color.blue);
+        familiesTreeTable.addHighlighter(hl);
     }
 
     /**
