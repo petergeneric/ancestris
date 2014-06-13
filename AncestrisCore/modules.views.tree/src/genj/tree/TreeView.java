@@ -682,7 +682,7 @@ public class TreeView extends View implements Filter {
     }
 
     private void setRootTitle(String title) {
-        rootTitle.setText("<html><font size=+1>" + title + "</font></html");
+        rootTitle.setText("<html><font size=2><b>" + title + "</b></font></html");
 
     }
 
