@@ -668,7 +668,7 @@ public class TreeView extends View implements Filter {
         rootTitle = new JLabel();
         rootTitle.setHorizontalAlignment(SwingConstants.CENTER);
         toolbar.add(rootTitle, "growx, pushx, center");
-        setRootTitle("toto");
+        setRootTitle("");
 
         toolbar.addSeparator();
         toolbar.add(new ActionBluePrint());
@@ -682,7 +682,7 @@ public class TreeView extends View implements Filter {
     }
 
     private void setRootTitle(String title) {
-        rootTitle.setText("<html><font size=2><b>" + title + "</b></font></html");
+        rootTitle.setText("<html><b>" + title + "</b></html");
 
     }
 
@@ -742,7 +742,7 @@ public class TreeView extends View implements Filter {
         if (root == null || root instanceof Indi || root instanceof Fam) {
             model.setRoot(root);
             show(root, true);
-            String title = root == null ? "" : root.toString();
+            String title = root == null ? "" : root.toString(false);
             setRootTitle(title);
         }
 
