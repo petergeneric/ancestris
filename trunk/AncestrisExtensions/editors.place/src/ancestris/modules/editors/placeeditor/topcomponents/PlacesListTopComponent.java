@@ -66,7 +66,6 @@ public final class PlacesListTopComponent extends TopComponent {
         gedcomPlaceTableModel = new GedcomPlaceTableModel(PropertyPlace.getFormat(gedcom));
 
         initComponents();
-        placeTable.setID(PlacesListTopComponent.class.getName());
         placeTable.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -94,6 +93,7 @@ public final class PlacesListTopComponent extends TopComponent {
 
         placeTableSorter = new TableRowSorter<TableModel>(placeTable.getModel());
         placeTable.setRowSorter(placeTableSorter);
+        placeTable.setID(PlacesListTopComponent.class.getName());
 
         setName(Bundle.CTL_PlacesTableTopComponent());
         setToolTipText(Bundle.HINT_PlacesTableTopComponent());

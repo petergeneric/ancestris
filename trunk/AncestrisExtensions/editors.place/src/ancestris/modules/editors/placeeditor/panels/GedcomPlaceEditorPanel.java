@@ -25,6 +25,15 @@ import org.openide.util.NbPreferences;
  */
 public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
+    public final static int HAMLET = 0;
+    public final static int PARISH = 1;
+    public final static int CITY = 2;
+    public final static int ZIP_CODE = 3;
+    public final static int GEO_ID = 4;
+    public final static int COUNTY = 5;
+    public final static int STATE = 6;
+    public final static int COUNTRY = 7;
+
     private final static Logger logger = Logger.getLogger(GedcomPlaceEditorPanel.class.getName(), null);
     private Property mRoot;
     private PropertyPlace mPlace;
@@ -34,10 +43,10 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         -1, // parish
         1, // city,
         2, // zip Code
-        -1, // geo ID,
-        3, // county,
-        4, // state
-        5 // country
+        3, // geo ID,
+        4, // county,
+        5, // state
+        6 // country
     };
     JComponent mGedcomFields[][];
     boolean mPlaceModified = false;
@@ -663,6 +672,35 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         gedcomLongitudeTextField.setText(place.getLongitude().toString());
     }
 
+    void completePlace(Place place) {
+        String[] jurisdictions = place.getJurisdictions();
+
+        if (gedcomCityTextField.getText().isEmpty() && !jurisdictions[0].isEmpty()) {
+            gedcomCityTextField.setText(jurisdictions[0]); // City
+        }
+        if (gedcomZipCodeTextField.getText().isEmpty() && !jurisdictions[1].isEmpty()) {
+            gedcomZipCodeTextField.setText(jurisdictions[1]); // Postal code    
+        }
+        if (gedcomGeoIDTextField.getText().isEmpty() && !jurisdictions[2].isEmpty()) {
+            gedcomGeoIDTextField.setText(jurisdictions[2]); // GeoID
+        }
+        if (gedcomCountyTextField.getText().isEmpty() && !jurisdictions[3].isEmpty()) {
+            gedcomCountyTextField.setText(jurisdictions[3]); // County
+        }
+        if (gedcomStateTextField.getText().isEmpty() && !jurisdictions[4].isEmpty()) {
+            gedcomStateTextField.setText(jurisdictions[4]); // State
+        }
+        if (gedcomCountryTextField.getText().isEmpty() && !jurisdictions[5].isEmpty()) {
+            gedcomCountryTextField.setText(jurisdictions[5]); // Country
+        }
+        if (gedcomLatitudeTextField.getText().isEmpty()) {
+            gedcomLatitudeTextField.setText(place.getLatitude().toString());
+        }
+        if (gedcomLongitudeTextField.getText().isEmpty()) {
+            gedcomLongitudeTextField.setText(place.getLongitude().toString());
+        }
+    }
+
     private void updatePlace(PropertyPlace place, int startIndex) {
 
         updateOnGoing = true;
@@ -709,7 +747,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         updateOnGoing = false;
     }
 
-    public String getPlaceString() {
+    public String getPlaceString(int startingFrom) {
 
         String placeString = "";
 
@@ -720,7 +758,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             }
         }
 
-        for (int index = 0; index < mPlaceFormat.length; index++) {
+        for (int index = startingFrom; index < mPlaceFormat.length; index++) {
             if (index > 0) {
                 placeString += PropertyPlace.JURISDICTION_SEPARATOR;
             }
@@ -732,10 +770,10 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         return placeString;
     }
 
-    public boolean isModified () {
+    public boolean isModified() {
         return mPlaceModified;
     }
-    
+
     public String getLatitude() {
         return gedcomLatitudeTextField.getText();
     }
