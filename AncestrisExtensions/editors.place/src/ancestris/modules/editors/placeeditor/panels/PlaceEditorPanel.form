@@ -38,6 +38,7 @@
               <Component id="gedcomPlaceEditorPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="placeEditorTabbedPane" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -81,7 +82,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="MapScrollPane" alignment="0" pref="282" max="32767" attributes="0"/>
+                  <Component id="MapScrollPane" alignment="0" pref="270" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -132,7 +133,7 @@
                           <Component id="searchPlaceButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="geonamesScrollPane" pref="239" max="32767" attributes="0"/>
+                      <Component id="geonamesScrollPane" pref="227" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -200,10 +201,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="placeReferenceScrollPane" pref="270" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="placeReferenceScrollPane" alignment="0" pref="270" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

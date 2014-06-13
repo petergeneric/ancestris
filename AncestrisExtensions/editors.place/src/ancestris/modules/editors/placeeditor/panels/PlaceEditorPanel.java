@@ -74,7 +74,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
 
         placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlaceEditorPanel.mapPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/resources/map.png")), mapPanel); // NOI18N
@@ -121,7 +121,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     .addComponent(searchPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchPlaceButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(geonamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+                .addComponent(geonamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE))
         );
 
         placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlaceEditorPanel.searchPlacePanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/resources/Place.png")), searchPlacePanel); // NOI18N
@@ -147,9 +147,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         );
         PlaceReferencesPanelLayout.setVerticalGroup(
             PlaceReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PlaceReferencesPanelLayout.createSequentialGroup()
-                .addComponent(placeReferenceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(placeReferenceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
 
         placeEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlacesEditorPanel.PlaceReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/resources/association.png")), PlaceReferencesPanel); // NOI18N
@@ -171,7 +169,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(gedcomPlaceEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         placeEditorTabbedPane.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.searchPlacePanel.TabConstraints.tabTitle")); // NOI18N
