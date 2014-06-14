@@ -20,13 +20,14 @@ public class GeonamePlacesListModel extends AbstractListModel<String> implements
      */
     @Override
     public String getElementAt(int index) {
-        String jurisdictions = "";
-
-        for (String jurisdiction : placesList.get(index).getJurisdictions()) {
-            jurisdictions += jurisdiction != null ? jurisdiction + ", " : "";
+        String sJurisdictions = "";
+        String[] aJurisdictions = placesList.get(index).getJurisdictions();
+        for (int index1 = 0; index1 < aJurisdictions.length; index1++) {
+            sJurisdictions += index1 == 0 ? (aJurisdictions[index1] != null ? aJurisdictions[index1] : "") : ", " + (aJurisdictions[index1] != null ? aJurisdictions[index1] : "");
         }
-
-        return jurisdictions;
+        sJurisdictions += ", " + placesList.get(index).getLatitude().toString();
+        sJurisdictions += ", " + placesList.get(index).getLongitude().toString();
+        return sJurisdictions;
     }
 
     @Override
