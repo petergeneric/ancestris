@@ -215,14 +215,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private void replacePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replacePlaceButtonActionPerformed
         Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
-        gedcomPlaceEditorPanel.setPlace(place, false);
+        gedcomPlaceEditorPanel.modify(place, false);
         jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
         // TODO add your handling code here:
     }//GEN-LAST:event_replacePlaceButtonActionPerformed
 
     private void completePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completePlaceButtonActionPerformed
         Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
-        gedcomPlaceEditorPanel.setPlace(place, true);
+        gedcomPlaceEditorPanel.modify(place, true);
         jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
         // TODO add your handling code here:
     }//GEN-LAST:event_completePlaceButtonActionPerformed
