@@ -25,7 +25,7 @@ import org.openide.util.NbPreferences;
  */
 public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
-    public final static int ALL = 0;
+    public final static int BEGINNING = 0;
     public final static int HAMLET = 0;
     public final static int PARISH = 1;
     public final static int CITY = 2;
@@ -660,10 +660,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         updatePlace(mPlace, 0);
     }
 
-    public void setPlace(Place place, boolean completePlace) {
+    public void modify(Place place, boolean completePlace) {
         String[] jurisdictions = place.getJurisdictions();
-
-        updateOnGoing = true;
 
         if (!completePlace || gedcomCityTextField.getText().isEmpty()) {
             gedcomCityTextField.setText(jurisdictions[0] != null ? jurisdictions[0] : ""); // City
@@ -689,10 +687,9 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         if (!completePlace || gedcomLongitudeTextField.getText().isEmpty()) {
             gedcomLongitudeTextField.setText(place.getLongitude().toString());
         }
-        updateOnGoing = false;
     }
 
-     private void updatePlace(PropertyPlace place, int startIndex) {
+    private void updatePlace(PropertyPlace place, int startIndex) {
 
         updateOnGoing = true;
 
@@ -750,7 +747,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         }
 
         for (int index = 0; index < mPlaceFormat.length; index++) {
-            placeString += index > 0 ? (gedcomFieldsOrder[index] != null ? gedcomFieldsOrder[index].getText() + "," : ",") : (gedcomFieldsOrder[index] != null ? gedcomFieldsOrder[index].getText() : "");
+            placeString += index > 0 ? (gedcomFieldsOrder[index] != null ? PropertyPlace.JURISDICTION_SEPARATOR + gedcomFieldsOrder[index].getText() : PropertyPlace.JURISDICTION_SEPARATOR) : (gedcomFieldsOrder[index] != null ? gedcomFieldsOrder[index].getText() : "");
         }
 
         return placeString;

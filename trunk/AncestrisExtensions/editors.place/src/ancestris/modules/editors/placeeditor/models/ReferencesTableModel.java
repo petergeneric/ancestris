@@ -42,7 +42,7 @@ public class ReferencesTableModel extends AbstractTableModel {
             if (column == 0) {
                 return PropertyTag2Name.getTagName(parent.getTag());
             } else {
-                return entity.toString(false);
+                return "(" + entity.getId() + ")" + entity.toString(false);
             }
         } else {
             return "";
