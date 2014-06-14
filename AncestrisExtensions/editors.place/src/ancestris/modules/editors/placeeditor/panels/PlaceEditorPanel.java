@@ -5,6 +5,7 @@ import ancestris.api.place.Place;
 import ancestris.modules.editors.placeeditor.models.GeonamePlacesListModel;
 import ancestris.modules.editors.placeeditor.models.ReferencesTableModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.*;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -210,6 +211,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             int rowIndex = placeReferencesTable.convertRowIndexToModel(placeReferencesTable.getSelectedRow());
             if (rowIndex != -1) {
                 Entity entity = referencesTableModel.getValueAt(rowIndex);
+                SelectionDispatcher.fireSelection(evt, new Context(entity));
                 AncestrisEditor editor = AncestrisEditor.findEditor(entity);
                 if (editor != null) {
                     editor.edit(entity);
@@ -220,13 +222,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private void replacePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replacePlaceButtonActionPerformed
         Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
-        gedcomPlaceEditorPanel.setPlace(place, false);
+        gedcomPlaceEditorPanel.modify(place, false);
         jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
     }//GEN-LAST:event_replacePlaceButtonActionPerformed
 
     private void completePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completePlaceButtonActionPerformed
         Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
-        gedcomPlaceEditorPanel.setPlace(place, true);
+        gedcomPlaceEditorPanel.modify(place, true);
         jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
     }//GEN-LAST:event_completePlaceButtonActionPerformed
 
@@ -305,7 +307,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     public void commit() {
         try {
-            final String placeString = gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.ALL);
+            final String placeString = gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.BEGINNING);
             final String mapTAG;
             final String latitudeTAG;
             final String longitudeTAG;
