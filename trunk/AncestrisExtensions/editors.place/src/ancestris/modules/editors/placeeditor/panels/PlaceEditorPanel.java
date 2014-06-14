@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.netbeans.api.progress.ProgressUtils;
 import org.openide.util.*;
 
 /**
@@ -59,8 +60,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         PlaceReferencesPanel = new javax.swing.JPanel();
         placeReferenceScrollPane = new javax.swing.JScrollPane();
         placeReferencesTable = new javax.swing.JTable();
-        replaceButton = new javax.swing.JButton();
-        completeButton = new javax.swing.JButton();
+        replacePlaceButton = new javax.swing.JButton();
+        completePlaceButton = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(537, 414));
 
@@ -76,7 +77,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
         );
 
         placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlaceEditorPanel.mapPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/resources/map.png")), mapPanel); // NOI18N
@@ -118,7 +119,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     .addComponent(searchPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchPlaceButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(geonamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
+                .addComponent(geonamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
         );
 
         placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlaceEditorPanel.searchPlacePanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/resources/Place.png")), searchPlacePanel); // NOI18N
@@ -144,22 +145,22 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         );
         PlaceReferencesPanelLayout.setVerticalGroup(
             PlaceReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(placeReferenceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+            .addComponent(placeReferenceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
         );
 
         placeEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlacesEditorPanel.PlaceReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/resources/association.png")), PlaceReferencesPanel); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(replaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.replaceButton.text")); // NOI18N
-        replaceButton.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(replacePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.replacePlaceButton.text")); // NOI18N
+        replacePlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                replaceButtonActionPerformed(evt);
+                replacePlaceButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(completeButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.completeButton.text")); // NOI18N
-        completeButton.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(completePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.completePlaceButton.text")); // NOI18N
+        completePlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                completeButtonActionPerformed(evt);
+                completePlaceButtonActionPerformed(evt);
             }
         });
 
@@ -174,9 +175,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(completeButton)
+                        .addComponent(replacePlaceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(replaceButton)))
+                        .addComponent(completePlaceButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -185,11 +186,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(gedcomPlaceEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(replaceButton)
-                    .addComponent(completeButton)))
+                    .addComponent(replacePlaceButton)
+                    .addComponent(completePlaceButton))
+                .addContainerGap())
         );
 
         placeEditorTabbedPane.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.searchPlacePanel.TabConstraints.tabTitle")); // NOI18N
@@ -199,17 +201,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         String searchedPlace = searchPlaceTextField.getText();
 
         if (searchedPlace.isEmpty() == false) {
-            searchPlaceButton.setEnabled(false);
-            geonamePlacesListModel.clear();
-            geonamesPlacesList.searchPlace(searchedPlace, geonamePlacesListModel);
-            geonamesPlacesList.getTask().addTaskListener(new TaskListener() {
-
-                @Override
-                public void taskFinished(Task task) {
-                    logger.info("Search terminated");
-                    searchPlaceButton.setEnabled(true);
-                }
-            });
+            searchPlace();
         }
     }//GEN-LAST:event_searchPlaceButtonActionPerformed
 
@@ -226,22 +218,22 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_placeReferencesTableMouseClicked
 
-    private void replaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceButtonActionPerformed
+    private void replacePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replacePlaceButtonActionPerformed
         Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
-        gedcomPlaceEditorPanel.setPlace(place);
+        gedcomPlaceEditorPanel.setPlace(place, false);
         jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
-    }//GEN-LAST:event_replaceButtonActionPerformed
+    }//GEN-LAST:event_replacePlaceButtonActionPerformed
 
-    private void completeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completeButtonActionPerformed
+    private void completePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completePlaceButtonActionPerformed
         Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
-        gedcomPlaceEditorPanel.completePlace(place);
+        gedcomPlaceEditorPanel.setPlace(place, true);
         jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
-    }//GEN-LAST:event_completeButtonActionPerformed
+    }//GEN-LAST:event_completePlaceButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane MapScrollPane;
     private javax.swing.JPanel PlaceReferencesPanel;
-    private javax.swing.JButton completeButton;
+    private javax.swing.JButton completePlaceButton;
     private ancestris.modules.editors.placeeditor.panels.GedcomPlaceEditorPanel gedcomPlaceEditorPanel;
     private javax.swing.JList<String> geonamesPlacesListResult;
     private javax.swing.JScrollPane geonamesScrollPane;
@@ -250,7 +242,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane placeEditorTabbedPane;
     private javax.swing.JScrollPane placeReferenceScrollPane;
     private javax.swing.JTable placeReferencesTable;
-    private javax.swing.JButton replaceButton;
+    private javax.swing.JButton replacePlaceButton;
     private javax.swing.JButton searchPlaceButton;
     private javax.swing.JPanel searchPlacePanel;
     private javax.swing.JTextField searchPlaceTextField;
@@ -288,23 +280,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
         } else {
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
-            String[] jurisdictions = ((PropertyPlace) propertyPlaceArray[0]).getJurisdictions();
-            if (jurisdictions.length > 1) {
-                if (jurisdictions[1].isEmpty() == false) {
-                    searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.CITY).replaceAll(",|, ", " "));
-                    searchPlaceButton.setEnabled(false);
-                    geonamePlacesListModel.clear();
-                    geonamesPlacesList.searchPlace(gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.CITY).replaceAll(",|, ", " "), geonamePlacesListModel);
-                    geonamesPlacesList.getTask().addTaskListener(new TaskListener() {
-
-                        @Override
-                        public void taskFinished(Task task) {
-                            logger.info("Search terminated");
-                            searchPlaceButton.setEnabled(true);
-                        }
-                    });
-                }
-            }
+            searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.CITY).replaceAll(",", " ").replaceAll("\\s+", " "));
+//            searchPlace();
         }
 
         for (PropertyPlace propertyPlace : propertyPlaces) {
@@ -312,9 +289,23 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
     }
 
+    private void searchPlace() {
+        searchPlaceButton.setEnabled(false);
+        geonamePlacesListModel.clear();
+        geonamesPlacesList.searchPlace(searchPlaceTextField.getText(), geonamePlacesListModel);
+        geonamesPlacesList.getTask().addTaskListener(new TaskListener() {
+
+            @Override
+            public void taskFinished(Task task) {
+                logger.info("Search terminated");
+                searchPlaceButton.setEnabled(true);
+            }
+        });
+    }
+
     public void commit() {
         try {
-            final String placeString = gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.HAMLET);
+            final String placeString = gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.ALL);
             final String mapTAG;
             final String latitudeTAG;
             final String longitudeTAG;
