@@ -128,11 +128,17 @@
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomLongitudeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="gedcomCountyTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomCountyTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[5], gedcomCountyTextField.getText());&#xa;                    if (sameChoices.length &gt; 0) {&#xa;                        updatePlace(sameChoices[0], 6);&#xa;                    } else {&#xa;                        updatePlace(null, 6);&#xa;                    }&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[5], gedcomCountyTextField.getText());&#xa;                    if (sameChoices.length &gt; 0) {&#xa;                        updatePlace(sameChoices[0], 6);&#xa;                    } else {&#xa;                        updatePlace(null, 6);&#xa;                    }&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="gedcomCityLabel">
       <Properties>
@@ -164,11 +170,17 @@
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomHamletTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[0], gedcomHamletTextField.getText());&#xa;                    if (sameChoices.length &gt; 0) {&#xa;                        updatePlace(sameChoices[0], 1);&#xa;                    } else {&#xa;                        updatePlace(null, 1);&#xa;                    }&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[0], gedcomHamletTextField.getText());&#xa;                    if (sameChoices.length &gt; 0) {&#xa;                        updatePlace(sameChoices[0], 1);&#xa;                    } else {&#xa;                        updatePlace(null, 1);&#xa;                    }&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="gedcomGeoIDTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomGeoIDTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="gedcomCountyLabel">
       <Properties>
@@ -186,16 +198,25 @@
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomZipCodeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="gedcomLatitudeTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomLatitudeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="gedcomCityTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomCityTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[2], gedcomCityTextField.getText());&#xa;                    if (sameChoices.length &gt; 0) {&#xa;                        updatePlace(sameChoices[0], 3);&#xa;                    } else {&#xa;                        updatePlace(null, 3);&#xa;                    }&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[2], gedcomCityTextField.getText());&#xa;                    if (sameChoices.length &gt; 0) {&#xa;                        updatePlace(sameChoices[0], 3);&#xa;                    } else {&#xa;                        updatePlace(null, 3);&#xa;                    }&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="gedcomZipCodeLabel">
       <Properties>
@@ -213,16 +234,25 @@
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomStateTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[6], gedcomStateTextField.getText());&#xa;                    if (sameChoices.length &gt; 0) {&#xa;                        updatePlace(sameChoices[0], 7);&#xa;                    } else {&#xa;                        updatePlace(null, 7);&#xa;                    }&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[6], gedcomStateTextField.getText());&#xa;                    if (sameChoices.length &gt; 0) {&#xa;                        updatePlace(sameChoices[0], 7);&#xa;                    } else {&#xa;                        updatePlace(null, 7);&#xa;                    }&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="gedcomCountryTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomCountryTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="gedcomParishTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomParishTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JToolBar" name="jToolBar1">
       <Properties>
