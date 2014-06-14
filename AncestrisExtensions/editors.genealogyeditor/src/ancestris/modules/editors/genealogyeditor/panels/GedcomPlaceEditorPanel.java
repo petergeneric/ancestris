@@ -642,10 +642,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
     }
 
-    public void setPlace(Place place, boolean completePlace) {
+    public void modify(Place place, boolean completePlace) {
         String[] jurisdictions = place.getJurisdictions();
-
-        updateOnGoing = true;
 
         if (!completePlace || gedcomCityTextField.getText().isEmpty()) {
             gedcomCityTextField.setText(jurisdictions[0] != null ? jurisdictions[0] : ""); // City
@@ -671,8 +669,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         if (!completePlace || gedcomLongitudeTextField.getText().isEmpty()) {
             gedcomLongitudeTextField.setText(place.getLongitude().toString());
         }
-        
-        updateOnGoing = false;
     }
 
     private void updatePlace(PropertyPlace place, int startIndex) {
