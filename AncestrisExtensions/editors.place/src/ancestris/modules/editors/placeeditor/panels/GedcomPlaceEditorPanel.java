@@ -660,49 +660,39 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         updatePlace(mPlace, 0);
     }
 
-    public void setPlace(Place place) {
+    public void setPlace(Place place, boolean completePlace) {
         String[] jurisdictions = place.getJurisdictions();
 
-        gedcomCityTextField.setText(jurisdictions[0] != null ? jurisdictions[0] : ""); // City
-        gedcomZipCodeTextField.setText(jurisdictions[1] != null ? jurisdictions[1] : ""); // Postal code    
-        gedcomGeoIDTextField.setText(jurisdictions[2] != null ? jurisdictions[2] : ""); // GeoID
-        gedcomCountyTextField.setText(jurisdictions[3] != null ? jurisdictions[3] : ""); // County
-        gedcomStateTextField.setText(jurisdictions[4] != null ? jurisdictions[4] : ""); // State
-        gedcomCountryTextField.setText(jurisdictions[5] != null ? jurisdictions[5] : ""); // Country
-        gedcomLatitudeTextField.setText(place.getLatitude().toString());
-        gedcomLongitudeTextField.setText(place.getLongitude().toString());
-    }
+        updateOnGoing = true;
 
-    void completePlace(Place place) {
-        String[] jurisdictions = place.getJurisdictions();
-
-        if (gedcomCityTextField.getText().isEmpty() && !(jurisdictions[0] == null)) {
-            gedcomCityTextField.setText(jurisdictions[0]); // City
+        if (!completePlace || gedcomCityTextField.getText().isEmpty()) {
+            gedcomCityTextField.setText(jurisdictions[0] != null ? jurisdictions[0] : ""); // City
         }
-        if (gedcomZipCodeTextField.getText().isEmpty() && !(jurisdictions[1] == null)) {
-            gedcomZipCodeTextField.setText(jurisdictions[1]); // Postal code    
+        if (!completePlace || gedcomZipCodeTextField.getText().isEmpty()) {
+            gedcomZipCodeTextField.setText(jurisdictions[1] != null ? jurisdictions[1] : ""); // Postal code    
         }
-        if (gedcomGeoIDTextField.getText().isEmpty() && !(jurisdictions[2] == null)) {
-            gedcomGeoIDTextField.setText(jurisdictions[2]); // GeoID
+        if (!completePlace || gedcomGeoIDTextField.getText().isEmpty()) {
+            gedcomGeoIDTextField.setText(jurisdictions[2] != null ? jurisdictions[2] : ""); // GeoID
         }
-        if (gedcomCountyTextField.getText().isEmpty() && !(jurisdictions[3] == null)) {
-            gedcomCountyTextField.setText(jurisdictions[3]); // County
+        if (!completePlace || gedcomCountyTextField.getText().isEmpty()) {
+            gedcomCountyTextField.setText(jurisdictions[3] != null ? jurisdictions[3] : ""); // County
         }
-        if (gedcomStateTextField.getText().isEmpty() && !(jurisdictions[4] == null)) {
-            gedcomStateTextField.setText(jurisdictions[4]); // State
+        if (!completePlace || gedcomStateTextField.getText().isEmpty()) {
+            gedcomStateTextField.setText(jurisdictions[4] != null ? jurisdictions[4] : ""); // State
         }
-        if (gedcomCountryTextField.getText().isEmpty() && !(jurisdictions[5] == null)) {
-            gedcomCountryTextField.setText(jurisdictions[5]); // Country
+        if (!completePlace || gedcomCountryTextField.getText().isEmpty()) {
+            gedcomCountryTextField.setText(jurisdictions[5] != null ? jurisdictions[5] : ""); // Country
         }
-        if (gedcomLatitudeTextField.getText().isEmpty()) {
+        if (!completePlace || gedcomLatitudeTextField.getText().isEmpty()) {
             gedcomLatitudeTextField.setText(place.getLatitude().toString());
         }
-        if (gedcomLongitudeTextField.getText().isEmpty()) {
+        if (!completePlace || gedcomLongitudeTextField.getText().isEmpty()) {
             gedcomLongitudeTextField.setText(place.getLongitude().toString());
         }
+        updateOnGoing = false;
     }
 
-    private void updatePlace(PropertyPlace place, int startIndex) {
+     private void updatePlace(PropertyPlace place, int startIndex) {
 
         updateOnGoing = true;
 
