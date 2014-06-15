@@ -24,14 +24,14 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jLabel5" max="32767" attributes="0"/>
-                          <Component id="ReferencedEventTypeLabel" max="32767" attributes="0"/>
+                          <Component id="referencedEventTypeLabel" max="32767" attributes="0"/>
                           <Component id="eventRoleLabel" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="dataQualityComboBox" max="32767" attributes="0"/>
                           <Component id="eventRoleComboBox" max="32767" attributes="0"/>
-                          <Component id="ReferencedEventTypeComboBox" max="32767" attributes="0"/>
+                          <Component id="referencedEventTypeTextField" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -56,11 +56,11 @@
               <Component id="SourceReferencePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="ReferencedEventTypeLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="referencedEventTypeLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Group type="103" alignment="2" groupAlignment="3" attributes="0">
                       <Component id="pageTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="pageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ReferencedEventTypeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="referencedEventTypeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -194,27 +194,13 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="ReferencedEventTypeLabel">
+    <Component class="javax.swing.JLabel" name="referencedEventTypeLabel">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceCitationEditorPanel.ReferencedEventTypeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceCitationEditorPanel.referencedEventTypeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="ReferencedEventTypeComboBox">
-      <Properties>
-        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceCitationEditorPanel.ReferencedEventTypeComboBox.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ReferencedEventTypeComboBoxActionPerformed"/>
-      </Events>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;String&gt;(mEventsType)"/>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="eventRoleLabel">
       <Properties>
@@ -226,6 +212,7 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="eventRoleComboBox">
       <Properties>
+        <Property name="editable" type="boolean" value="true"/>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="new EventsRoleComboBoxModel()" type="code"/>
         </Property>
@@ -432,6 +419,8 @@
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceCitationEditorPanel.pageTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="referencedEventTypeTextField">
     </Component>
   </SubComponents>
 </Form>

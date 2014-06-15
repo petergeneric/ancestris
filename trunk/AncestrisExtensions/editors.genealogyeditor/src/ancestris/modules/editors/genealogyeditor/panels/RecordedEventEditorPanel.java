@@ -93,12 +93,12 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         gedcomPlacePanel = new ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel();
-        eventTypeComboBox = new javax.swing.JComboBox<String>(mEvents);
-        recordedEventLabel = new javax.swing.JLabel();
+        recordedEventsLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
         aDateBean = new ancestris.modules.beans.ADateBean();
+        recordedEventsTextField = new javax.swing.JTextField();
 
-        recordedEventLabel.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.recordedEventLabel.text")); // NOI18N
+        recordedEventsLabel.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.recordedEventsLabel.text")); // NOI18N
 
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RecordedEventEditorPanel.dateLabel.text"), new Object[] {})); // NOI18N
 
@@ -109,29 +109,24 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(gedcomPlacePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())
+                    .addComponent(gedcomPlacePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(recordedEventLabel)
+                            .addComponent(recordedEventsLabel)
                             .addComponent(dateLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
-                                .addContainerGap())))))
+                            .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+                            .addComponent(recordedEventsTextField))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(recordedEventLabel))
+                    .addComponent(recordedEventsLabel)
+                    .addComponent(recordedEventsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -144,9 +139,9 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ADateBean aDateBean;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JComboBox<String> eventTypeComboBox;
     private ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel gedcomPlacePanel;
-    private javax.swing.JLabel recordedEventLabel;
+    private javax.swing.JLabel recordedEventsLabel;
+    private javax.swing.JTextField recordedEventsTextField;
     // End of variables declaration//GEN-END:variables
 
     Property commit() {
@@ -155,7 +150,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    String eventType = eventTypeComboBox.getSelectedItem().toString();
+                    String eventType = recordedEventsTextField.getText();
                     mEvent.setValue(PropertyTag2Name.getPropertyTag(eventType));
                     try {
                         aDateBean.commit();
