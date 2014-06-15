@@ -105,8 +105,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         linkToSourceButton = new javax.swing.JButton();
         addSourceButton = new javax.swing.JButton();
         SourceReferencedTitleTextField = new javax.swing.JTextField();
-        ReferencedEventTypeLabel = new javax.swing.JLabel();
-        ReferencedEventTypeComboBox = new javax.swing.JComboBox<String>(mEventsType);
+        referencedEventTypeLabel = new javax.swing.JLabel();
         eventRoleLabel = new javax.swing.JLabel();
         eventRoleComboBox = new javax.swing.JComboBox<String>();
         sourceCitationTabbedPane = new javax.swing.JTabbedPane();
@@ -123,6 +122,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         recordingDate = new ancestris.modules.beans.ADateBean();
         pageLabel = new javax.swing.JLabel();
         pageTextField = new javax.swing.JTextField();
+        referencedEventTypeTextField = new javax.swing.JTextField();
 
         editSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
@@ -212,19 +212,13 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        ReferencedEventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        ReferencedEventTypeLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.ReferencedEventTypeLabel.text")); // NOI18N
-
-        ReferencedEventTypeComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.ReferencedEventTypeComboBox.toolTipText")); // NOI18N
-        ReferencedEventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ReferencedEventTypeComboBoxActionPerformed(evt);
-            }
-        });
+        referencedEventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        referencedEventTypeLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.referencedEventTypeLabel.text")); // NOI18N
 
         eventRoleLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         eventRoleLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.eventRoleLabel.text")); // NOI18N
 
+        eventRoleComboBox.setEditable(true);
         eventRoleComboBox.setModel(new EventsRoleComboBoxModel());
         eventRoleComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.eventRoleComboBox.toolTipText")); // NOI18N
         eventRoleComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -352,14 +346,14 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     .addComponent(SourceReferencePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                            .addComponent(ReferencedEventTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(referencedEventTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(eventRoleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dataQualityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(eventRoleComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ReferencedEventTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(referencedEventTypeTextField))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(recordingDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
@@ -377,11 +371,11 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 .addComponent(SourceReferencePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(ReferencedEventTypeLabel)
+                    .addComponent(referencedEventTypeLabel)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(pageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(pageLabel)
-                        .addComponent(ReferencedEventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(referencedEventTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -530,10 +524,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_linkToSourceButtonActionPerformed
 
-    private void ReferencedEventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReferencedEventTypeComboBoxActionPerformed
-        mEventTypeModified = true;
-    }//GEN-LAST:event_ReferencedEventTypeComboBoxActionPerformed
-
     private void eventRoleComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventRoleComboBoxActionPerformed
         mEventRoleModified = true;
     }//GEN-LAST:event_eventRoleComboBoxActionPerformed
@@ -542,8 +532,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         mDataQualityModified = true;
     }//GEN-LAST:event_dataQualityComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> ReferencedEventTypeComboBox;
-    private javax.swing.JLabel ReferencedEventTypeLabel;
     private javax.swing.JPanel SourceDataPanel;
     private javax.swing.JPanel SourceReferencePanel;
     private javax.swing.JTextField SourceReferencedTitleTextField;
@@ -563,6 +551,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField pageTextField;
     private ancestris.modules.beans.ADateBean recordingDate;
     private javax.swing.JLabel recordingDateLabel;
+    private javax.swing.JLabel referencedEventTypeLabel;
+    private javax.swing.JTextField referencedEventTypeTextField;
     private javax.swing.JTabbedPane sourceCitationTabbedPane;
     private javax.swing.JScrollPane sourceDataScrollPane;
     private javax.swing.JTextArea sourceDataTextArea;
@@ -613,9 +603,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
             Property eventType = sourceCitation.getProperty("EVEN");
             if (eventType != null) {
-                ReferencedEventTypeComboBox.setSelectedItem(PropertyTag2Name.getTagName(eventType.getValue()));
+                referencedEventTypeTextField.setText(eventType.getValue());
             } else {
-                ReferencedEventTypeComboBox.setSelectedIndex(0);
+                referencedEventTypeTextField.setText("");
             }
             mEventTypeModified = false;
 
@@ -674,8 +664,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             pageLabel.setVisible(false);
             pageTextField.setVisible(false);
 
-            ReferencedEventTypeLabel.setVisible(false);
-            ReferencedEventTypeComboBox.setVisible(false);
+            referencedEventTypeLabel.setVisible(false);
+            referencedEventTypeTextField.setVisible(false);
 
             eventRoleLabel.setVisible(false);
             eventRoleComboBox.setVisible(false);
@@ -695,7 +685,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         Property dataQuality = sourceCitation.getProperty("QUAY");
         if (dataQuality != null) {
-            dataQualityComboBox.setSelectedItem(dataQuality.getValue() + 1);
+            dataQualityComboBox.setSelectedIndex(Integer.parseInt(dataQuality.getValue()) + 1);
         } else {
             dataQualityComboBox.setSelectedIndex(0);
         }
@@ -731,9 +721,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                             mEventTypeModified = false;
                             Property eventType = mSourceCitation.getProperty("EVEN");
                             if (eventType == null) {
-                                mSourceCitation.addProperty("EVEN", PropertyTag2Name.getPropertyTag(ReferencedEventTypeComboBox.getSelectedItem().toString()));
+                                mSourceCitation.addProperty("EVEN", referencedEventTypeTextField.getText());
                             } else {
-                                mSourceCitation.setValue(ReferencedEventTypeComboBox.getSelectedItem().toString());
+                                mSourceCitation.setValue(referencedEventTypeTextField.getText());
                             }
                         }
 
@@ -795,12 +785,12 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     if (mDataQualityModified) {
                         mDataQualityModified = false;
                         if (dataQualityComboBox.getSelectedIndex() > 0) {
-                        Property dataQuality = mSourceCitation.getProperty("QUAY");
-                        if (dataQuality == null) {
-                            mSourceCitation.addProperty("QUAY", Integer.toString(dataQualityComboBox.getSelectedIndex() - 1));
-                        } else {
-                            dataQuality.setValue(Integer.toString(dataQualityComboBox.getSelectedIndex() - 1));
-                        }
+                            Property dataQuality = mSourceCitation.getProperty("QUAY");
+                            if (dataQuality == null) {
+                                mSourceCitation.addProperty("QUAY", Integer.toString(dataQualityComboBox.getSelectedIndex() - 1));
+                            } else {
+                                dataQuality.setValue(Integer.toString(dataQualityComboBox.getSelectedIndex() - 1));
+                            }
                         }
                     }
                 }
@@ -809,5 +799,19 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
         return mSourceCitation;
+    }
+
+    private int confidenceLevelToIndex(String confidenceLevel) {
+        if (confidenceLevel.equals(ui)) {
+            return 1;
+        } else if (confidenceLevel.equals(ui)) {
+            return 1;
+        } else if (confidenceLevel.equals(ui)) {
+            return 1;
+        } else if (confidenceLevel.equals(ui)) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

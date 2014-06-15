@@ -19,28 +19,20 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="gedcomPlacePanel" pref="0" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="gedcomPlacePanel" pref="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="recordedEventLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="recordedEventsLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="eventTypeComboBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="aDateBean" pref="534" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="aDateBean" pref="526" max="32767" attributes="0"/>
+                          <Component id="recordedEventsTextField" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -49,8 +41,8 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="eventTypeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="recordedEventLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="recordedEventsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="recordedEventsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -67,16 +59,10 @@
   <SubComponents>
     <Component class="ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel" name="gedcomPlacePanel">
     </Component>
-    <Component class="javax.swing.JComboBox" name="eventTypeComboBox">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;String&gt;(mEvents)"/>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-      </AuxValues>
-    </Component>
-    <Component class="javax.swing.JLabel" name="recordedEventLabel">
+    <Component class="javax.swing.JLabel" name="recordedEventsLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="RecordedEventEditorPanel.recordedEventLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="RecordedEventEditorPanel.recordedEventsLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -88,6 +74,8 @@
       </Properties>
     </Component>
     <Component class="ancestris.modules.beans.ADateBean" name="aDateBean">
+    </Component>
+    <Component class="javax.swing.JTextField" name="recordedEventsTextField">
     </Component>
   </SubComponents>
 </Form>
