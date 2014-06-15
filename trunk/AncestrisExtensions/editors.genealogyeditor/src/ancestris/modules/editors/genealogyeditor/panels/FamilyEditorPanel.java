@@ -1499,9 +1499,9 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
             }
 
             /*
-             * Filter by events already present
+             * Filter by events already present and unique
              */
-            if (!event.getTag().equals("EVEN") && !event.getTag().equals("GRAD")) {
+            if (!event.getTag().equals("EVEN")) {
                 mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
             }
         }

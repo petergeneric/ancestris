@@ -905,7 +905,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             return null;
         }
     }
-
+            
     private void seteventTypeComboBox(List<Property> eventsList) {
         updateOnGoing = true;
         mEventsModel.removeAllElements();
@@ -917,9 +917,21 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         }
         for (Property event : eventsList) {
             /*
-             * Filter by events already present
+             * Filter by events already present and unique
              */
-            if (!event.getTag().equals("EVEN") && !event.getTag().equals("GRAD")) {
+            if (!event.getTag().equals("CENS")
+                    && !event.getTag().equals("EMIG")
+                    && !event.getTag().equals("EVEN")
+                    && !event.getTag().equals("GRAD")
+                    && !event.getTag().equals("IMMI")
+                    && !event.getTag().equals("NATI")
+                    && !event.getTag().equals("NATU")
+                    && !event.getTag().equals("OCCU")
+                    && !event.getTag().equals("PROB")
+                    && !event.getTag().equals("PROP")
+                    && !event.getTag().equals("RELI")
+                    && !event.getTag().equals("RESI")
+                    && !event.getTag().equals("TITL")) {
                 mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
             }
         }
