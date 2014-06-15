@@ -695,7 +695,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         Property dataQuality = sourceCitation.getProperty("QUAY");
         if (dataQuality != null) {
-            dataQualityComboBox.setSelectedItem(dataQuality.getValue());
+            dataQualityComboBox.setSelectedItem(dataQuality.getValue() + 1);
         } else {
             dataQualityComboBox.setSelectedIndex(0);
         }
@@ -794,11 +794,13 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
                     if (mDataQualityModified) {
                         mDataQualityModified = false;
+                        if (dataQualityComboBox.getSelectedIndex() > 0) {
                         Property dataQuality = mSourceCitation.getProperty("QUAY");
                         if (dataQuality == null) {
-                            mSourceCitation.addProperty("QUAY", Integer.toString(dataQualityComboBox.getSelectedIndex()));
+                            mSourceCitation.addProperty("QUAY", Integer.toString(dataQualityComboBox.getSelectedIndex() - 1));
                         } else {
-                            dataQuality.setValue(dataQualityComboBox.getSelectedItem().toString());
+                            dataQuality.setValue(Integer.toString(dataQualityComboBox.getSelectedIndex() - 1));
+                        }
                         }
                     }
                 }
