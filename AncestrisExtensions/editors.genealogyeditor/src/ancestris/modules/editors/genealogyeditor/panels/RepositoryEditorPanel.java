@@ -56,7 +56,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         referencesPanel = new javax.swing.JPanel();
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
         changeDateLabel = new javax.swing.JLabel();
-        changeDateTextField = new javax.swing.JTextField();
+        changeDateLabeldate = new javax.swing.JLabel();
 
         repositoryIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -115,9 +115,6 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         changeDateLabel.setText(org.openide.util.NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.changeDateLabel.text")); // NOI18N
 
-        changeDateTextField.setEditable(false);
-        changeDateTextField.setBorder(null);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -138,7 +135,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(changeDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -157,7 +154,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(changeDateLabel)
-                    .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(changeDateLabeldate))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -165,7 +162,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.AddressEditorPanel addressEditorPanel;
     private javax.swing.JPanel addressPanel;
     private javax.swing.JLabel changeDateLabel;
-    private javax.swing.JTextField changeDateTextField;
+    private javax.swing.JLabel changeDateLabeldate;
     private javax.swing.JTabbedPane jTabbedPane1;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
     private javax.swing.JPanel notesPanel;
@@ -226,7 +223,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
 
         Property changeDate = mRepository.getProperty("CHAN");
         if (changeDate != null) {
-            changeDateTextField.setText(((PropertyChange) changeDate).getDisplayValue());
+            changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
         }
     }
 

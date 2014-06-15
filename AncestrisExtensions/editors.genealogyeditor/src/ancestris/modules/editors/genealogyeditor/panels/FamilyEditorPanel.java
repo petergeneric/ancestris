@@ -153,7 +153,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         galleryPanel = new javax.swing.JPanel();
         multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
         changeDateLabel = new javax.swing.JLabel();
-        changeDateTextField = new javax.swing.JTextField();
+        changeDateLabeldate = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(1011, 439));
 
@@ -601,10 +601,6 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         changeDateLabel.setText(org.openide.util.NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.changeDateLabel.text")); // NOI18N
 
-        changeDateTextField.setEditable(false);
-        changeDateTextField.setText(org.openide.util.NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.changeDateTextField.text")); // NOI18N
-        changeDateTextField.setBorder(null);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -621,7 +617,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(changeDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -638,7 +634,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(changeDateLabel)
-                    .addComponent(changeDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(changeDateLabeldate))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -1203,7 +1199,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.JButton addHusbandButton;
     private javax.swing.JButton addWifeButton;
     private javax.swing.JLabel changeDateLabel;
-    private javax.swing.JTextField changeDateTextField;
+    private javax.swing.JLabel changeDateLabeldate;
     private javax.swing.JPanel childrenPanel;
     private ancestris.modules.editors.genealogyeditor.panels.ChildrenTreeTablePanel childrenTreeTablePanel;
     private javax.swing.JButton deleteEventButton;
@@ -1433,7 +1429,7 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
          */
         Property changeDate = mFamily.getProperty("CHAN");
         if (changeDate != null) {
-            changeDateTextField.setText(((PropertyChange) changeDate).getDisplayValue());
+            changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
         }
 
         /*

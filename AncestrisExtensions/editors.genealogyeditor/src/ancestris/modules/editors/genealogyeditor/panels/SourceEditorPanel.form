@@ -46,7 +46,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="changeDateLabel" pref="0" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="changeDateTextField" min="-2" pref="165" max="-2" attributes="0"/>
+                      <Component id="changeDateLabeldate" min="-2" pref="171" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -86,7 +86,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="changeDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="changeDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="changeDateLabeldate" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -443,13 +443,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="changeDateTextField">
-      <Properties>
-        <Property name="editable" type="boolean" value="false"/>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="null"/>
-        </Property>
-      </Properties>
+    <Component class="javax.swing.JLabel" name="changeDateLabeldate">
     </Component>
   </SubComponents>
 </Form>
