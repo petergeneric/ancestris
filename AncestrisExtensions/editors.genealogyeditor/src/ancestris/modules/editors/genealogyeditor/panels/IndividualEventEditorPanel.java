@@ -533,7 +533,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                         }
                     }); // end of doUnitOfWork
 
-                    placeTextField.setText(mPlace.format("all"));
+                    placeTextField.setText(mPlace.getDisplayValue());
 
                     addPlaceButton.setVisible(false);
                     editPlaceButton.setVisible(true);
@@ -558,9 +558,9 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             placeEditorPanel.commit();
-            placeTextField.setText(mPlace.format("all"));
-            addPlaceButton.setVisible(false);
-            editPlaceButton.setVisible(true);
+            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+            mAddress = mEvent.getProperty("ADDR", false);
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -583,7 +583,11 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             placeEditorPanel.commit();
-            placeTextField.setText(mPlace.format("all"));
+            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+            mAddress = mEvent.getProperty("ADDR", false);
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
+            addPlaceButton.setVisible(false);
+            editPlaceButton.setVisible(true);
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -848,7 +852,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            
+
             updateOnGoing = false;
             mEventModified = false;
             mEventCauseModified = false;
