@@ -159,8 +159,8 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="husbandBirthDateTextField" alignment="0" pref="258" max="32767" attributes="0"/>
-                              <Component id="husbandDeathDateTextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="husbandBirthDateLabelDate" max="32767" attributes="0"/>
+                              <Component id="husbandDeathDateLabelDate" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -180,14 +180,14 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="husbandBirthDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="husbandBirthDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="husbandBirthDateLabelDate" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="husbandDeathDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="husbandDeathDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="husbandDeathDateLabelDate" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="fatherToolBar" min="-2" pref="25" max="-2" attributes="0"/>
@@ -304,33 +304,11 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="husbandBirthDateTextField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandBirthDateTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="null"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="husbandDeathDateLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandDeathDateLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="husbandDeathDateTextField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.husbandDeathDateTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="null"/>
             </Property>
           </Properties>
         </Component>
@@ -366,6 +344,10 @@
           <Properties>
             <Property name="text" type="java.lang.String" value=":" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="husbandBirthDateLabelDate">
+        </Component>
+        <Component class="javax.swing.JLabel" name="husbandDeathDateLabelDate">
         </Component>
       </SubComponents>
     </Container>
@@ -406,8 +388,8 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="wifeDeathDateTextField" max="32767" attributes="0"/>
-                                      <Component id="wifeBirthDateTextField" max="32767" attributes="0"/>
+                                      <Component id="wifeBirthDateLabelDate" max="32767" attributes="0"/>
+                                      <Component id="wifeDeathDateLabelDate" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Component id="wifeNameTextField" alignment="0" max="32767" attributes="0"/>
@@ -428,14 +410,14 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="wifeBirthDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="wifeBirthDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="wifeBirthDateLabelDate" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="wifeDeathDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="wifeDeathDateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="wifeDeathDateLabelDate" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="motherToolBar" min="-2" pref="25" max="-2" attributes="0"/>
@@ -550,33 +532,11 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="wifeBirthDateTextField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeBirthDateTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="null"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="wifeDeathDateLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeDeathDateLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="wifeDeathDateTextField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEditorPanel.wifeDeathDateTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-            </Property>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="null"/>
             </Property>
           </Properties>
         </Component>
@@ -612,6 +572,10 @@
           <Properties>
             <Property name="text" type="java.lang.String" value=":" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="wifeBirthDateLabelDate">
+        </Component>
+        <Component class="javax.swing.JLabel" name="wifeDeathDateLabelDate">
         </Component>
       </SubComponents>
     </Container>
