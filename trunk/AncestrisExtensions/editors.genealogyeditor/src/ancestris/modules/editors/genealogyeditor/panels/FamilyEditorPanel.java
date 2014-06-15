@@ -110,12 +110,12 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         editHusbandButton = new javax.swing.JButton();
         husbandNameTextField = new javax.swing.JTextField();
         husbandBirthDateLabel = new javax.swing.JLabel();
-        husbandBirthDateTextField = new javax.swing.JTextField();
         husbandDeathDateLabel = new javax.swing.JLabel();
-        husbandDeathDateTextField = new javax.swing.JTextField();
         husbandImageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        husbandBirthDateLabelDate = new javax.swing.JLabel();
+        husbandDeathDateLabelDate = new javax.swing.JLabel();
         motherPanel = new javax.swing.JPanel();
         motherToolBar = new javax.swing.JToolBar();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
@@ -125,12 +125,12 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         editWifeButton = new javax.swing.JButton();
         wifeNameTextField = new javax.swing.JTextField();
         wifeBirthDateLabel = new javax.swing.JLabel();
-        wifeBirthDateTextField = new javax.swing.JTextField();
         wifeDeathDateLabel = new javax.swing.JLabel();
-        wifeDeathDateTextField = new javax.swing.JTextField();
         wifeImageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        wifeBirthDateLabelDate = new javax.swing.JLabel();
+        wifeDeathDateLabelDate = new javax.swing.JLabel();
         familyTabbedPane = new javax.swing.JTabbedPane();
         childrenPanel = new javax.swing.JPanel();
         childrenTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenTreeTablePanel();
@@ -253,16 +253,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         husbandBirthDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         husbandBirthDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandBirthDateLabel.text"), new Object[] {})); // NOI18N
 
-        husbandBirthDateTextField.setEditable(false);
-        husbandBirthDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandBirthDateTextField.text"), new Object[] {})); // NOI18N
-        husbandBirthDateTextField.setBorder(null);
-
         husbandDeathDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         husbandDeathDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandDeathDateLabel.text"), new Object[] {})); // NOI18N
-
-        husbandDeathDateTextField.setEditable(false);
-        husbandDeathDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.husbandDeathDateTextField.text"), new Object[] {})); // NOI18N
-        husbandDeathDateTextField.setBorder(null);
 
         husbandImageBean.setMinimumSize(new java.awt.Dimension(77, 112));
         husbandImageBean.setPreferredSize(new java.awt.Dimension(77, 112));
@@ -301,8 +293,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(husbandBirthDateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                            .addComponent(husbandDeathDateTextField))
+                            .addComponent(husbandBirthDateLabelDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(husbandDeathDateLabelDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addComponent(husbandNameTextField)
                     .addComponent(fatherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)))
@@ -317,13 +309,13 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(husbandBirthDateLabel)
-                            .addComponent(husbandBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(husbandBirthDateLabelDate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(husbandDeathDateLabel)
-                            .addComponent(husbandDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(husbandDeathDateLabelDate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(fatherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -392,16 +384,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         wifeBirthDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         wifeBirthDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeBirthDateLabel.text"), new Object[] {})); // NOI18N
 
-        wifeBirthDateTextField.setEditable(false);
-        wifeBirthDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeBirthDateTextField.text"), new Object[] {})); // NOI18N
-        wifeBirthDateTextField.setBorder(null);
-
         wifeDeathDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         wifeDeathDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeDeathDateLabel.text"), new Object[] {})); // NOI18N
-
-        wifeDeathDateTextField.setEditable(false);
-        wifeDeathDateTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEditorPanel.wifeDeathDateTextField.text"), new Object[] {})); // NOI18N
-        wifeDeathDateTextField.setBorder(null);
 
         wifeImageBean.setMinimumSize(new java.awt.Dimension(77, 112));
         wifeImageBean.setPreferredSize(new java.awt.Dimension(77, 112));
@@ -443,8 +427,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(wifeDeathDateTextField)
-                                    .addComponent(wifeBirthDateTextField)))
+                                    .addComponent(wifeBirthDateLabelDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(wifeDeathDateLabelDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addComponent(wifeNameTextField))
                         .addContainerGap())))
         );
@@ -458,13 +442,13 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(wifeBirthDateLabel)
-                            .addComponent(wifeBirthDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(wifeBirthDateLabelDate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(wifeDeathDateLabel)
-                            .addComponent(wifeDeathDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(jLabel5)
+                            .addComponent(wifeDeathDateLabelDate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(motherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(wifeImageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
@@ -667,8 +651,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 husbandNameTextField.setText(mHusband.getName());
-                husbandBirthDateTextField.setText(mHusband.getBirthAsString());
-                husbandDeathDateTextField.setText(mHusband.getDeathAsString());
+                husbandBirthDateLabelDate.setText(mHusband.getBirthAsString());
+                husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -743,8 +727,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 wifeNameTextField.setText(mWife.getName());
-                wifeBirthDateTextField.setText(mWife.getBirthAsString());
-                wifeDeathDateTextField.setText(mWife.getDeathAsString());
+                wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
+                wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
                 for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -818,8 +802,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 husbandNameTextField.setText(mHusband.getName());
-                husbandBirthDateTextField.setText(mHusband.getBirthAsString());
-                husbandDeathDateTextField.setText(mHusband.getDeathAsString());
+                husbandBirthDateLabelDate.setText(mHusband.getBirthAsString());
+                husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -892,8 +876,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 wifeNameTextField.setText(mWife.getName());
-                wifeBirthDateTextField.setText(mWife.getBirthAsString());
-                wifeDeathDateTextField.setText(mWife.getDeathAsString());
+                wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
+                wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
 
                 for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
@@ -954,8 +938,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             individualEditorPanel.commit();
             husbandNameTextField.setText(mHusband.getName());
-            husbandBirthDateTextField.setText(mHusband.getBirthAsString());
-            husbandDeathDateTextField.setText(mHusband.getDeathAsString());
+            husbandBirthDateLabelDate.setText(mHusband.getBirthAsString());
+            husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
             for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                 String objetFormat = null;
                 if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -1012,8 +996,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             individualEditorPanel.commit();
             wifeNameTextField.setText(mWife.getName());
-            wifeBirthDateTextField.setText(mWife.getBirthAsString());
-            wifeDeathDateTextField.setText(mWife.getDeathAsString());
+            wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
+            wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
 
             for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                 String objetFormat = null;
@@ -1075,8 +1059,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 }); // end of doUnitOfWork
 
                 husbandNameTextField.setText("");
-                husbandBirthDateTextField.setText("");
-                husbandDeathDateTextField.setText("");
+                husbandBirthDateLabelDate.setText("");
+                husbandDeathDateLabelDate.setText("");
                 husbandImageBean.setImage(null);
 
                 addHusbandButton.setVisible(true);
@@ -1108,8 +1092,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
                 }); // end of doUnitOfWork
 
                 wifeNameTextField.setText("");
-                wifeBirthDateTextField.setText("");
-                wifeDeathDateTextField.setText("");
+                wifeBirthDateLabelDate.setText("");
+                wifeDeathDateLabelDate.setText("");
                 wifeImageBean.setImage(null);
 
                 addWifeButton.setVisible(true);
@@ -1224,9 +1208,9 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private javax.swing.Box.Filler filler4;
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JLabel husbandBirthDateLabel;
-    private javax.swing.JTextField husbandBirthDateTextField;
+    private javax.swing.JLabel husbandBirthDateLabelDate;
     private javax.swing.JLabel husbandDeathDateLabel;
-    private javax.swing.JTextField husbandDeathDateTextField;
+    private javax.swing.JLabel husbandDeathDateLabelDate;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean husbandImageBean;
     private javax.swing.JTextField husbandNameTextField;
     private javax.swing.JLabel jLabel1;
@@ -1248,9 +1232,9 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
     private javax.swing.JPanel sourcesPanel;
     private javax.swing.JLabel wifeBirthDateLabel;
-    private javax.swing.JTextField wifeBirthDateTextField;
+    private javax.swing.JLabel wifeBirthDateLabelDate;
     private javax.swing.JLabel wifeDeathDateLabel;
-    private javax.swing.JTextField wifeDeathDateTextField;
+    private javax.swing.JLabel wifeDeathDateLabelDate;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean wifeImageBean;
     private javax.swing.JTextField wifeNameTextField;
     // End of variables declaration//GEN-END:variables
@@ -1297,8 +1281,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         mHusband = mFamily.getHusband();
         if (mHusband != null) {
             husbandNameTextField.setText(mHusband.getName());
-            husbandBirthDateTextField.setText(mHusband.getBirthAsString());
-            husbandDeathDateTextField.setText(mHusband.getDeathAsString());
+            husbandBirthDateLabelDate.setText(mHusband.getBirthAsString());
+            husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
 
             for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                 String objetFormat = null;
@@ -1351,8 +1335,8 @@ public class FamilyEditorPanel extends javax.swing.JPanel {
         mWife = mFamily.getWife();
         if (mWife != null) {
             wifeNameTextField.setText(mWife.getName());
-            wifeBirthDateTextField.setText(mWife.getBirthAsString());
-            wifeDeathDateTextField.setText(mWife.getDeathAsString());
+            wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
+            wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
 
             for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                 String objetFormat = null;
