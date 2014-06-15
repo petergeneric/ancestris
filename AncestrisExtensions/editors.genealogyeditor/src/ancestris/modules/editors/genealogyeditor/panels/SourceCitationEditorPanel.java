@@ -611,10 +611,28 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
             Property eventRole = sourceCitation.getProperty("ROLE");
             if (eventRole != null) {
-                eventRoleComboBox.setSelectedItem(PropertyTag2Name.getTagName(eventRole.getValue()));
+                /*
+                 * Gedcom Predefined Roles are CHIL | HUSB | WIFE | MOTH | FATH | SPOU 
+                 */
+                if (eventRole.getValue().equals("CHIL")) {
+                    eventRoleComboBox.setSelectedIndex(0);
+                } else if (eventRole.getValue().equals("HUSB")) {
+                    eventRoleComboBox.setSelectedIndex(1);
+                } else if (eventRole.getValue().equals("WIFE")) {
+                    eventRoleComboBox.setSelectedIndex(2);
+                } else if (eventRole.getValue().equals("MOTH")) {
+                    eventRoleComboBox.setSelectedIndex(3);
+                } else if (eventRole.getValue().equals("FATH")) {
+                    eventRoleComboBox.setSelectedIndex(4);
+                } else if (eventRole.getValue().equals("SPOU")) {
+                    eventRoleComboBox.setSelectedIndex(5);
+                } else {
+                    eventRoleComboBox.setSelectedItem(eventRole.getValue());
+                }
             } else {
-                eventRoleComboBox.setSelectedIndex(0);
+                eventRoleComboBox.setSelectedIndex(6);
             }
+
             mEventRoleModified = false;
 
             final Property sourceData = sourceCitation.getProperty("DATA");
@@ -731,9 +749,37 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                             mEventRoleModified = false;
                             Property eventRole = mSourceCitation.getProperty("ROLE");
                             if (eventRole == null) {
-                                mSourceCitation.addProperty("ROLE", PropertyTag2Name.getPropertyTag(eventRoleComboBox.getSelectedItem().toString()));
+                                if (eventRoleComboBox.getSelectedIndex() == 0) {
+                                    mSourceCitation.addProperty("ROLE", "CHIL");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 1) {
+                                    mSourceCitation.addProperty("ROLE", "HUSB");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 2) {
+                                    mSourceCitation.addProperty("ROLE", "WIFE");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 3) {
+                                    mSourceCitation.addProperty("ROLE", "MOTH");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 4) {
+                                    mSourceCitation.addProperty("ROLE", "FATH");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 5) {
+                                    mSourceCitation.addProperty("ROLE", "SPOU");
+                                } else {
+                                    eventRole.addProperty("ROLE", eventRoleComboBox.getSelectedItem().toString());
+                                }
                             } else {
-                                eventRole.setValue(PropertyTag2Name.getPropertyTag(eventRoleComboBox.getSelectedItem().toString()));
+                                if (eventRoleComboBox.getSelectedIndex() == 0) {
+                                    mSourceCitation.setValue("CHIL");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 1) {
+                                    mSourceCitation.setValue("HUSB");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 2) {
+                                    mSourceCitation.setValue("WIFE");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 3) {
+                                    mSourceCitation.setValue("MOTH");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 4) {
+                                    mSourceCitation.setValue("FATH");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 5) {
+                                    mSourceCitation.setValue("SPOU");
+                                } else {
+                                    eventRole.setValue(eventRoleComboBox.getSelectedItem().toString());
+                                }
                             }
                         }
 
@@ -799,19 +845,5 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             Exceptions.printStackTrace(ex);
         }
         return mSourceCitation;
-    }
-
-    private int confidenceLevelToIndex(String confidenceLevel) {
-        if (confidenceLevel.equals(ui)) {
-            return 1;
-        } else if (confidenceLevel.equals(ui)) {
-            return 1;
-        } else if (confidenceLevel.equals(ui)) {
-            return 1;
-        } else if (confidenceLevel.equals(ui)) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 }
