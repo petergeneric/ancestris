@@ -39,6 +39,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -116,6 +118,16 @@ public class PropertyTableWidget extends JPanel {
         table.setFilterWidget(filter);
     }
 
+    /**
+     * delegates tsvExport to ATable.
+     * @param file
+     * @throws IOException 
+     */
+    public void tsvExport(File file) throws IOException {
+        table.tsvExport(file);
+    }
+
+    
     /**
      * Column selection
      *
