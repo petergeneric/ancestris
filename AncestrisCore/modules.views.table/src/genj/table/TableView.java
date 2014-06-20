@@ -23,6 +23,8 @@ package genj.table;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.swing.ToolBar;
 import ancestris.swing.atable.ATableFilterWidget;
+import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.ExplorerHelper;
 import genj.common.AbstractPropertyTableModel;
 import genj.common.PropertyTableModel;
@@ -39,6 +41,8 @@ import genj.view.View;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +53,10 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import net.miginfocom.swing.MigLayout;
+import org.openide.util.NbBundle;
+import static genj.table.Bundle.*;
+import java.awt.Component;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Component for showing entities of a gedcom file in a tabular way
@@ -58,103 +66,103 @@ public class TableView extends View {
     private final static Logger LOG = Logger.getLogger("genj.table");
     private final static Registry REGISTRY = Registry.get(TableView.class);
     /** a static set of resources */
-    private Resources resources = Resources.get(this);
+    private final Resources resources = Resources.get(this);
     /** the table we're using */
     /* package */ PropertyTableWidget propertyTable;
     /** the modes we're offering */
-    private Map<String, Mode> modes = new HashMap<String, Mode>();
+    private final Map<String, Mode> modes = new HashMap<String, Mode>();
     private final JPanel panelShortcuts;
 
     {
 //        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{"INDI", "INDI:NAME", "INDI:SEX", "INDI:BIRT:DATE", "INDI:BIRT:PLAC", "INDI:OCCU", "INDI:FAMS", "INDI:FAMC"}));
         modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{
-                    "INDI",
-                    "INDI:SEX",
-                    "INDI:NAME",
-                    "INDI:BIRT:DATE",
-                    "INDI:BIRT:PLAC",
-                    "INDI:DEAT:DATE",
-                    "INDI:DEAT:PLAC",
-                    "INDI:FAMS",
-                    "INDI:FAMC",
-                    "INDI:RESI:ADDR",
-                    "INDI:RESI:ADDR:CTRY",
-                    "INDI:DEAT:AGE",
-                    "INDI:ASSO",
-                    "INDI:ASSO:RELA",
-                    "INDI:CHAN",
-                    "INDI:NAME:GIVN",
-                    "INDI:NAME:SURN"
-                }));
+            "INDI",
+            "INDI:SEX",
+            "INDI:NAME",
+            "INDI:BIRT:DATE",
+            "INDI:BIRT:PLAC",
+            "INDI:DEAT:DATE",
+            "INDI:DEAT:PLAC",
+            "INDI:FAMS",
+            "INDI:FAMC",
+            "INDI:RESI:ADDR",
+            "INDI:RESI:ADDR:CTRY",
+            "INDI:DEAT:AGE",
+            "INDI:ASSO",
+            "INDI:ASSO:RELA",
+            "INDI:CHAN",
+            "INDI:NAME:GIVN",
+            "INDI:NAME:SURN"
+        }));
 //        modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{"FAM", "FAM:MARR:DATE", "FAM:MARR:PLAC", "FAM:HUSB", "FAM:WIFE", "FAM:CHIL"}));
         modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{
-                    "FAM",
-                    "FAM:MARR:DATE",
-                    "FAM:MARR:PLAC",
-                    "FAM:HUSB",
-                    "FAM:WIFE",
-                    "FAM:MARR:HUSB:AGE",
-                    "FAM:MARR:WIFE:AGE",
-                    "FAM:DIV:DATE",
-                    "FAM:NOTE",
-                    "FAM:MARC:DATE",
-                    "FAM:MARC:AGNC",
-                    "FAM:MARC:PLAC",
-                    "FAM:CHAN"
-                }));
+            "FAM",
+            "FAM:MARR:DATE",
+            "FAM:MARR:PLAC",
+            "FAM:HUSB",
+            "FAM:WIFE",
+            "FAM:MARR:HUSB:AGE",
+            "FAM:MARR:WIFE:AGE",
+            "FAM:DIV:DATE",
+            "FAM:NOTE",
+            "FAM:MARC:DATE",
+            "FAM:MARC:AGNC",
+            "FAM:MARC:PLAC",
+            "FAM:CHAN"
+        }));
 
 //        modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{"OBJE", "OBJE:FILE:TITL"}));
         modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{
-                    "OBJE",
-                    "OBJE:FILE:TITL"
-                }));
+            "OBJE",
+            "OBJE:FILE:TITL"
+        }));
 
 //        modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{"NOTE", "NOTE:NOTE"}));
         modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{
-                    "NOTE",
-                    "NOTE:NOTE",
-                    "NOTE:CHAN"
-                }));
+            "NOTE",
+            "NOTE:NOTE",
+            "NOTE:CHAN"
+        }));
 
 //        modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{"SOUR", "SOUR:TITL", "SOUR:TEXT"}));
         modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{
-                    "SOUR",
-                    "SOUR:TITL",
-                    "SOUR:DATA:EVEN:DATE",
-                    "SOUR:REPO",
-                    "SOUR:REPO:CALN",
-                    "SOUR:REPO:CALN:MEDI",
-                    "SOUR:CHAN"
-                }));
+            "SOUR",
+            "SOUR:TITL",
+            "SOUR:DATA:EVEN:DATE",
+            "SOUR:REPO",
+            "SOUR:REPO:CALN",
+            "SOUR:REPO:CALN:MEDI",
+            "SOUR:CHAN"
+        }));
 
 //        modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{"SUBM", "SUBM:NAME"}));
         modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{
-                    "SUBM",
-                    "SUBM:NAME",
-                    "SUBM:ADDR",
-                    "SUBM:ADDR:CITY",
-                    "SUBM:ADDR:POST",
-                    "SUBM:ADDR:CTRY",
-                    "SUBM:PHON",
-                    "SUBM:CHAN"
-                }));
+            "SUBM",
+            "SUBM:NAME",
+            "SUBM:ADDR",
+            "SUBM:ADDR:CITY",
+            "SUBM:ADDR:POST",
+            "SUBM:ADDR:CTRY",
+            "SUBM:PHON",
+            "SUBM:CHAN"
+        }));
 
 //        modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{"REPO", "REPO:NAME", "REPO:NOTE"}));
         modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{
-                    "REPO",
-                    "REPO:NAME",
-                    "REPO:ADDR",
-                    "REPO:ADDR:CITY",
-                    "REPO:ADDR:POST",
-                    "REPO:ADDR:CTRY",
-                    "REPO:PHON",
-                    "REPO:NOTE",
-                    "REPO:CHAN"
-                }));
+            "REPO",
+            "REPO:NAME",
+            "REPO:ADDR",
+            "REPO:ADDR:CITY",
+            "REPO:ADDR:POST",
+            "REPO:ADDR:CTRY",
+            "REPO:PHON",
+            "REPO:NOTE",
+            "REPO:CHAN"
+        }));
     }
     ;
 
-    private Map<String, String> defaultLayouts = new HashMap<String, String>();
+    private final Map<String, String> defaultLayouts = new HashMap<String, String>();
 
     {
         defaultLayouts.put(Gedcom.INDI, "17,52,24,310,96,163,94,156,356,397,224,113,99,388,218,167,254,172,2,1");
@@ -219,7 +227,6 @@ public class TableView extends View {
         //XXX: shortcut should be placed in @Action... Annotations (layer)
 //        new NextMode(true).install(this, "ctrl pressed LEFT");
 //        new NextMode(false).install(this, "ctrl pressed RIGHT");
-
         // done
     }
 
@@ -371,14 +378,15 @@ public class TableView extends View {
         }
 
         toolbar.add(filter);
-        toolbar.add(panelShortcuts,"growx, pushx");
+        toolbar.add(panelShortcuts, "growx, pushx");
         // gap
         toolbar.addSeparator();
 
         // sticky
+        toolbar.add(new Download());
         toolbar.add(new JToggleButton(sticky));
-
         toolbar.add(new Settings());
+
         toolbar.setFloatable(false);
     }
 
@@ -411,7 +419,7 @@ public class TableView extends View {
      */
     private class NextMode extends AbstractAncestrisAction {
 
-        private int dir;
+        private final int dir;
 
         private NextMode(boolean left) {
             if (left) {
@@ -421,6 +429,7 @@ public class TableView extends View {
             }
         }
 
+        @Override
         public void actionPerformed(ActionEvent event) {
             int next = -1;
             for (int i = 0, j = Gedcom.ENTITIES.length; i < j; i++) {
@@ -459,12 +468,57 @@ public class TableView extends View {
     } //Sticky
 
     /**
+     * Action - toggle sticky mode
+     */
+    @NbBundle.Messages({
+        "tableview.action.export=Export",
+        "tableview.action.export.tip=Export this table view as TAB separated text file",
+        "# {0} - file path",
+        "tableview.export.error=Error while saving to\n{0}",
+        "tableview.export.dialog.title=Choose export destination file"
+    })
+    private class Download extends AbstractAncestrisAction {
+
+        /** constructor */
+        protected Download() {
+            super.setImage(ancestris.core.resources.Images.imgDownload);
+            super.setTip(resources.getString("tableview.action.export.tip"));
+            super.setSelected(false);
+        }
+
+        /** run */
+        @NbBundle.Messages({
+            "filter_txt_file=Text Files (*.txt, *.csv)"
+        })
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            // .. choose file
+            File file  = new FileChooserBuilder(TableView.class)
+                    .setTitle(tableview_export_dialog_title())
+                    .setApproveText(tableview_action_export())
+                    .setFileHiding(true)
+                    .setParent((Component)(event.getSource()))
+                    .setFileFilter(new FileNameExtensionFilter(filter_txt_file(),"txt","csv"))
+                    .setDefaultExtension("txt")
+                    .showSaveDialog(true);
+            if (file == null) {
+                return;
+            }
+            try {
+                propertyTable.tsvExport(file);
+            } catch (IOException e) {
+                DialogManager.createError("table", tableview_export_error(file.getAbsolutePath())).show();
+            }
+        }
+    } //Download
+
+    /**
      * A PropertyTableModelWrapper
      */
     private static class Model extends AbstractPropertyTableModel {
 
         /** mode */
-        private Mode mode;
+        private final Mode mode;
         /** our cached rows */
         private List<Entity> rows;
 
@@ -601,7 +655,7 @@ public class TableView extends View {
 
         /** attributes */
         private String tag;
-        private String[] defaults;
+        private final String[] defaults;
         private TagPath[] paths;
         private String layout;
         private int colFilter;

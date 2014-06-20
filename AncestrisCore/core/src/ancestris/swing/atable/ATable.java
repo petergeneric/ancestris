@@ -22,6 +22,9 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,6 +126,30 @@ public class ATable extends JTable {
             filterText.setSorter(sorter);
         }
     }
+
+    public void tsvExport(File file) throws IOException{
+        TableModel model = getModel();
+        FileWriter writer = new FileWriter(file);
+
+        for(int i = 0; i < model.getColumnCount(); i++){
+            writer.write(model.getColumnName(i) + "\t");
+        }
+
+        writer.write("\n");
+
+        for(int r=0; r< sorter.getViewRowCount(); r++) {
+            for(int col=0; col < model.getColumnCount(); col++) {
+                Property cell = (Property) model.getValueAt(convertRowIndexToModel(r), col);
+                if (cell != null){
+                    writer.write(cell.getDisplayValue()+"\t");
+                } else {
+                    writer.write("\t");
+                }
+            }
+            writer.write("\n");
+        }
+        writer.close();
+    }    
 
     /** create a shortcut */
     AbstractAncestrisAction createShortcut(String txt, final int y) {

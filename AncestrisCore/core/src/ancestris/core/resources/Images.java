@@ -45,6 +45,7 @@ final public class Images {
     public static ImageIcon imgNew = new ImageIcon(Images.class,"images/New");
     public static ImageIcon imgSave = new ImageIcon(Images.class,"images/Save");
     public static ImageIcon imgQuestion = new ImageIcon(Images.class,"images/Question");
+    public static ImageIcon imgDownload = new ImageIcon(Images.class,"images/Download");
 
   /**
    * Static class only
