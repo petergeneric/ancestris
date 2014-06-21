@@ -33,7 +33,7 @@
                               <Component id="sourceTitleLabel" alignment="0" max="32767" attributes="0"/>
                               <Component id="agencyLabel" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="abbreviationLabel" min="-2" pref="76" max="-2" attributes="0"/>
+                          <Component id="abbreviationLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -97,7 +97,7 @@
     <Component class="javax.swing.JLabel" name="sourceIDLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.sourceIDLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.sourceIDLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
@@ -106,42 +106,42 @@
         <Property name="editable" type="boolean" value="false"/>
         <Property name="columns" type="int" value="8"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.sourceIDTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.sourceIDTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="authorLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.authorLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.authorLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="authorTextField">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.authorTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.authorTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="sourceTitleLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.sourceTitleLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.sourceTitleLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="sourceTitleTextField">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.sourceTitleTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.sourceTitleTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="agencyLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.agencyLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.agencyLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -159,7 +159,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Registered Events">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.registeredEventsPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.registeredEventsPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -187,7 +187,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Source Text">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.sourceTextPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.sourceTextPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -240,7 +240,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Publication facts">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.publicationFactsPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.publicationFactsPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -296,7 +296,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Repositories">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.repositoriesPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.repositoriesPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/repository.png"/>
@@ -330,7 +330,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Notes">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.notesPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.notesPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Note.png"/>
@@ -364,7 +364,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="References">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.referencesPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.referencesPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/association.png"/>
@@ -398,7 +398,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Gallery">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.multimediaObjectPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.multimediaObjectPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Media.png"/>
@@ -429,7 +429,7 @@
     <Component class="javax.swing.JLabel" name="abbreviationLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.abbreviationLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.abbreviationLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -439,7 +439,7 @@
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="SourceEditorPanel.changeDateLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.changeDateLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

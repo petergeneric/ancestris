@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.models.RepositoryCitationsTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -133,21 +134,21 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+            RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
             repositoryEditorPanel.set(mRepository);
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.create.title"),
+                    NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.create.title"),
                     repositoryEditorPanel);
-            editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+            editorDialog.setDialogId(RepositoryEditor.class.getName());
 
             if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                final Repository repository = repositoryEditorPanel.commit();
+                repositoryEditorPanel.commit();
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        mRepositoryCitation = (PropertyRepository) mRoot.addProperty("REPO", '@' + repository.getId() + '@');
+                        mRepositoryCitation = (PropertyRepository) mRoot.addProperty("REPO", '@' + mRepository.getId() + '@');
                         mRepositoryCitation.link();
                     }
                 }); // end of doUnitOfWork
@@ -168,16 +169,20 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
         int undoNb = gedcom.getUndoNb();
         if (selectedRow != -1) {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
-            RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+            RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
             repositoryEditorPanel.set((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", mRepositoryCitationsTableModel.getValueAt(rowIndex)),
+                    NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.edit.title", mRepositoryCitationsTableModel.getValueAt(rowIndex)),
                     repositoryEditorPanel);
-            editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+            editorDialog.setDialogId(RepositoryEditor.class.getName());
 
             if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                repositoryEditorPanel.commit();
+                try {
+                    repositoryEditorPanel.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -223,17 +228,21 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
             int undoNb = gedcom.getUndoNb();
             if (selectedRow != -1) {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
-                RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+                RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
                 repositoryEditorPanel.set((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
 
                 DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title",
+                        NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.edit.title",
                                 mRepositoryCitationsTableModel.getValueAt(rowIndex)),
                         repositoryEditorPanel);
-                editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+                editorDialog.setDialogId(RepositoryEditor.class.getName());
 
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    repositoryEditorPanel.commit();
+                    try {
+                        repositoryEditorPanel.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
@@ -286,6 +295,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
 
     public void set(Property root, List<PropertyRepository> repositoriesList) {
         this.mRoot = root;
-        mRepositoryCitationsTableModel.update(repositoriesList);
+        mRepositoryCitationsTableModel.clear();
+        mRepositoryCitationsTableModel.addAll(repositoriesList);
     }
 }

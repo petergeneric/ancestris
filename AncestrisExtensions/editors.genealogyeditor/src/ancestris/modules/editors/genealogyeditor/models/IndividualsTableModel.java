@@ -76,9 +76,8 @@ public class IndividualsTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void update(List<Indi> individualsList) {
+    public void clear(List<Indi> individualsList) {
         this.individualsList.clear();
-        addAll(individualsList);
     }
 
     public Indi getValueAt(int row) {

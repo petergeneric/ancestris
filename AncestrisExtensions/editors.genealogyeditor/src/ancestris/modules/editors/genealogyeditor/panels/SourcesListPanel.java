@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
 import ancestris.modules.editors.genealogyeditor.models.SourcesTableModel;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
@@ -28,7 +29,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
         this.mGedcom = gedcom;
         initComponents();
         sourcesTable.setID(SourcesListPanel.class.getName());
-        mSourcesTableModel.update((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
+        mSourcesTableModel.addAll((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
     }
 
     /**
@@ -121,16 +122,17 @@ public class SourcesListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
+            SourceEditor sourceEditorPanel = new SourceEditor();
             sourceEditorPanel.set(mSource);
 
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.create.title"),
+                    NbBundle.getMessage(SourceEditor.class, "SourceEditorPanel.create.title"),
                     sourceEditorPanel);
-            sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+            sourceEditorDialog.setDialogId(SourceEditor.class.getName());
 
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mSourcesTableModel.add(sourceEditorPanel.commit());
+                sourceEditorPanel.commit();
+                mSourcesTableModel.add(mSource);
             } else {
                 while (mGedcom.getUndoNb() > undoNb && mGedcom.canUndo()) {
                     mGedcom.undoUnitOfWork(false);
@@ -146,15 +148,21 @@ public class SourcesListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
             int undoNb = mGedcom.getUndoNb();
-            SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-            sourceEditorPanel.set(mSourcesTableModel.getValueAt(rowIndex));
+            Source source = mSourcesTableModel.getValueAt(rowIndex);
+            SourceEditor sourceEditorPanel = new SourceEditor();
+            sourceEditorPanel.set(source);
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
+                    NbBundle.getMessage(SourceEditor.class, "SourceEditorPanel.edit.title"),
                     sourceEditorPanel);
-            sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+            sourceEditorDialog.setDialogId(SourceEditor.class.getName());
 
             if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mSourcesTableModel.add(sourceEditorPanel.commit());
+                try {
+                    sourceEditorPanel.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                mSourcesTableModel.add(source);
             } else {
                 while (mGedcom.getUndoNb() > undoNb && mGedcom.canUndo()) {
                     mGedcom.undoUnitOfWork(false);
@@ -188,15 +196,21 @@ public class SourcesListPanel extends javax.swing.JPanel {
             int undoNb = mGedcom.getUndoNb();
             if (selectedRow != -1) {
                 int rowIndex = sourcesTable.convertRowIndexToModel(selectedRow);
-                SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-                sourceEditorPanel.set(mSourcesTableModel.getValueAt(rowIndex));
+                SourceEditor sourceEditorPanel = new SourceEditor();
+                Source source = mSourcesTableModel.getValueAt(rowIndex);
+                sourceEditorPanel.set(source);
                 ADialog sourceEditorDialog = new ADialog(
-                        NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.edit.title"),
+                        NbBundle.getMessage(SourceEditor.class, "SourceEditorPanel.edit.title"),
                         sourceEditorPanel);
-                sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+                sourceEditorDialog.setDialogId(SourceEditor.class.getName());
 
                 if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    mSourcesTableModel.add(sourceEditorPanel.commit());
+                    try {
+                        sourceEditorPanel.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    mSourcesTableModel.add(source);
                 } else {
                     while (mGedcom.getUndoNb() > undoNb && mGedcom.canUndo()) {
                         mGedcom.undoUnitOfWork(false);

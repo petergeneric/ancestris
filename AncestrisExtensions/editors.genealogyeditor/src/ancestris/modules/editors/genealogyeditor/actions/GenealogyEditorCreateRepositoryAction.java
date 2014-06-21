@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
-import ancestris.modules.editors.genealogyeditor.panels.RepositoryEditorPanel;
+import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.awt.event.ActionEvent;
@@ -48,13 +48,13 @@ public final class GenealogyEditorCreateRepositoryAction implements ActionListen
                         mRepository = (Repository) gedcom.createEntity(Gedcom.REPO);
                     }
                 }); // end of doUnitOfWork
-                RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+                RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
                 repositoryEditorPanel.set(mRepository);
 
                 DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.create.title"),
+                        NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditor.create.title"),
                         repositoryEditorPanel);
-                editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+                editorDialog.setDialogId(RepositoryEditor.class.getName());
 
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     repositoryEditorPanel.commit();

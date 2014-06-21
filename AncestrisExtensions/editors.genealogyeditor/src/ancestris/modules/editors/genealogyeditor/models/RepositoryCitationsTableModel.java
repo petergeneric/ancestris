@@ -71,9 +71,8 @@ public class RepositoryCitationsTableModel extends AbstractTableModel {
         return repositoryCitation;
     }
     
-    public void update(List<PropertyRepository> mRepositoriesList) {
+    public void clear() {
         this.mRepositoriesList.clear();
-        addAll(mRepositoriesList);
     }
 
     public PropertyRepository getValueAt(int row) {

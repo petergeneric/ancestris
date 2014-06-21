@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectCitationsTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -139,13 +140,13 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+            MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
             multiMediaObjectEditorPanel.set(mMultiMediaObject);
 
             DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.add.title"),
+                    NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.add.title"),
                     multiMediaObjectEditorPanel);
-            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class.getName());
 
             if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 multiMediaObjectEditorPanel.commit();
@@ -208,7 +209,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
             Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
-            MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+            MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
             multiMediaObjectEditorPanel.set(multiMediaObject);
 
             String multiMediaObjectTitle;
@@ -220,12 +221,16 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
 
             DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
+                    NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
                     multiMediaObjectEditorPanel);
-            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+            multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class.getName());
 
             if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                multiMediaObjectEditorPanel.commit();
+                try {
+                    multiMediaObjectEditorPanel.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -243,7 +248,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
                 Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
 
-                MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
                 multiMediaObjectEditorPanel.set(multiMediaObject);
 
                 String multiMediaObjectTitle;
@@ -255,12 +260,16 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 }
 
                 DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
+                        NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
                         multiMediaObjectEditorPanel);
-                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class.getName());
 
                 if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    multiMediaObjectEditorPanel.commit();
+                    try {
+                        multiMediaObjectEditorPanel.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);

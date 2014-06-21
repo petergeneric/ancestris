@@ -178,9 +178,6 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
         modelSupport.fireNewRoot();
     }
 
-    public void update(List<Fam> familiesList) {
-    }
-
     @Override
     public boolean isLeaf(Object node) {
         return getChildCount(node) == 0;

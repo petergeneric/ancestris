@@ -122,7 +122,8 @@ public class EventsTableModel extends AbstractTableModel {
         return event;
     }
 
-    public void update() {
+    public void clear() {
+        eventsList.clear();
         fireTableDataChanged();
     }
 }

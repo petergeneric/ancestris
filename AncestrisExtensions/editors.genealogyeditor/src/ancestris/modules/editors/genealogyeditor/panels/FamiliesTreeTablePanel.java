@@ -1,5 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
+import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTreeTableModel;
 import ancestris.modules.editors.genealogyeditor.models.FamilyReferencesTreeTableModel;
 import ancestris.util.swing.DialogManager;
@@ -251,16 +253,21 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+            FamilyEditor familyEditorPanel = new FamilyEditor();
             familyEditorPanel.set(mCreateFamily);
 
             DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
+                    NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.create.title"),
                     familyEditorPanel);
-            familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+            familyEditorDialog.setDialogId(FamilyEditor.class.getName());
 
             if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(familyEditorPanel.commit());
+               try {
+                    familyEditorPanel.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(mCreateFamily);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -319,16 +326,20 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                 Entity entity = (Entity) dataNode.getUserObject();
                 if (entity instanceof Fam) {
                     Fam family = (Fam) entity;
-                    FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+                    FamilyEditor familyEditorPanel = new FamilyEditor();
                     familyEditorPanel.set(family);
 
                     DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                            NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", family),
+                            NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.edit.title", family),
                             familyEditorPanel);
-                    familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+                    familyEditorDialog.setDialogId(FamilyEditor.class.getName());
 
                     if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                        familyEditorPanel.commit();
+                        try {
+                            familyEditorPanel.commit();
+                        } catch (GedcomException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
                     } else {
                         while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                             gedcom.undoUnitOfWork(false);
@@ -337,16 +348,20 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                 } else if (entity instanceof Indi) {
                     Indi child = (Indi) entity;
                     if (!child.equals(mRoot)) {
-                        IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                        IndividualEditor individualEditorPanel = new IndividualEditor();
                         individualEditorPanel.set(child);
 
                         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", child),
+                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", child),
                                 individualEditorPanel);
-                        individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                        individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                            individualEditorPanel.commit();
+                            try {
+                                individualEditorPanel.commit();
+                            } catch (GedcomException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
                         } else {
                             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                                 gedcom.undoUnitOfWork(false);
@@ -445,16 +460,20 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                     Entity entity = (Entity) dataNode.getUserObject();
                     if (entity instanceof Fam) {
                         Fam family = (Fam) entity;
-                        FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+                        FamilyEditor familyEditorPanel = new FamilyEditor();
                         familyEditorPanel.set(family);
 
                         DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", family),
+                                NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.edit.title", family),
                                 familyEditorPanel);
-                        familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+                        familyEditorDialog.setDialogId(FamilyEditor.class.getName());
 
                         if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                            familyEditorPanel.commit();
+                            try {
+                                familyEditorPanel.commit();
+                            } catch (GedcomException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
                         } else {
                             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                                 gedcom.undoUnitOfWork(false);
@@ -463,16 +482,20 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                     } else if (entity instanceof Indi) {
                         Indi child = (Indi) entity;
                         if (!child.equals(mRoot)) {
-                            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                            IndividualEditor individualEditorPanel = new IndividualEditor();
                             individualEditorPanel.set(child);
 
                             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", child),
+                                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", child),
                                     individualEditorPanel);
-                            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                            individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                                individualEditorPanel.commit();
+                                try {
+                                    individualEditorPanel.commit();
+                                } catch (GedcomException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
                             } else {
                                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                                     gedcom.undoUnitOfWork(false);

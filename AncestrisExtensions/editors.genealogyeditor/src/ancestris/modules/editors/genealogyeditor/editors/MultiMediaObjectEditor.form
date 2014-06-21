@@ -65,7 +65,7 @@
     <Component class="javax.swing.JLabel" name="multiMediaObjectIDLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.multiMediaObjectIDLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.multiMediaObjectIDLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
@@ -74,7 +74,7 @@
         <Property name="editable" type="boolean" value="false"/>
         <Property name="columns" type="int" value="8"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.multiMediaObjectIDTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.multiMediaObjectIDTextField.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
         </Property>
       </Properties>
     </Component>
@@ -87,7 +87,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Files">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.jPanel1.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.jPanel1.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -125,7 +125,7 @@
                       <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.addFileButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.addFileButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                     <Property name="focusable" type="boolean" value="false"/>
                     <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -141,7 +141,7 @@
                       <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/edit.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.editFileButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.editFileButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                     </Property>
                     <Property name="focusable" type="boolean" value="false"/>
                     <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -179,7 +179,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Note">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.notesPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.notesPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Note.png"/>
@@ -213,7 +213,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="References">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.multiMediaObjectReferencesPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/association.png"/>
@@ -245,7 +245,7 @@
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.multiMediaObjectTitleLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.multiMediaObjectTitleLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -255,7 +255,7 @@
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="MultiMediaObjectEditorPanel.changeDateLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="MultiMediaObjectEditor.changeDateLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

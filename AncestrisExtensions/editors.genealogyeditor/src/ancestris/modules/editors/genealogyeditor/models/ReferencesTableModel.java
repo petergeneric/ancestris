@@ -64,9 +64,8 @@ public class ReferencesTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void update(List<Entity> entitiesList) {
+    public void clear() {
         this.entitiesList.clear();
-        addAll(entitiesList);
     }
 
     public Entity getValueAt(int row) {

@@ -65,7 +65,8 @@ public class MultimediaObjectListPanel extends javax.swing.JPanel {
 
     public void set(Property root, List<Media> MultimediaObjectsList) {
         this.mRoot = root;
-        mMultiMediaObjectsTableModel.update(MultimediaObjectsList);
+        mMultiMediaObjectsTableModel.clear();
+        mMultiMediaObjectsTableModel.addAll(MultimediaObjectsList);
     }
 
     public Media getSelectedMultiMediaObject() {

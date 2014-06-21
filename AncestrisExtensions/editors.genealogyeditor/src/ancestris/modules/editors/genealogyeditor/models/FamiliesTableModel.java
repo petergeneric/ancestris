@@ -113,9 +113,9 @@ public class FamiliesTableModel extends AbstractTableModel {
         return fam;
     }
 
-    public void update(List<Fam> familiesList) {
-        this.familiesList.clear();
-        addAll(familiesList);
+    public void clear() {
+        familiesList.clear();
+        fireTableDataChanged();
     }
 
     public Fam getValueAt(int row) {

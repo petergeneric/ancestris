@@ -1,6 +1,9 @@
-package ancestris.modules.editors.genealogyeditor.panels;
+package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.api.editor.Editor;
 import genj.gedcom.*;
+import genj.view.ViewContext;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,14 +39,15 @@ import org.openide.util.Exceptions;
  *
  * @author dominique
  */
-public class SourceEditorPanel extends javax.swing.JPanel {
+public class SourceEditor extends Editor {
 
     private Source mSource;
+    private Context context;
 
     /**
      * Creates new form SourceEditorPanel
      */
-    public SourceEditorPanel() {
+    public SourceEditor() {
         initComponents();
     }
 
@@ -88,21 +92,21 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
 
-        sourceIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceIDLabel.text"), new Object[] {})); // NOI18N
+        sourceIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.sourceIDLabel.text"), new Object[] {})); // NOI18N
 
         sourceIDTextField.setEditable(false);
         sourceIDTextField.setColumns(8);
-        sourceIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceIDTextField.text"), new Object[] {})); // NOI18N
+        sourceIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.sourceIDTextField.text"), new Object[] {})); // NOI18N
 
-        authorLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.authorLabel.text"), new Object[] {})); // NOI18N
+        authorLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.authorLabel.text"), new Object[] {})); // NOI18N
 
-        authorTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.authorTextField.text"), new Object[] {})); // NOI18N
+        authorTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.authorTextField.text"), new Object[] {})); // NOI18N
 
-        sourceTitleLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceTitleLabel.text"), new Object[] {})); // NOI18N
+        sourceTitleLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.sourceTitleLabel.text"), new Object[] {})); // NOI18N
 
-        sourceTitleTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.sourceTitleTextField.text"), new Object[] {})); // NOI18N
+        sourceTitleTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.sourceTitleTextField.text"), new Object[] {})); // NOI18N
 
-        agencyLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.agencyLabel.text")); // NOI18N
+        agencyLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.agencyLabel.text")); // NOI18N
 
         sourceInformationTabbedPane.setRequestFocusEnabled(false);
 
@@ -117,7 +121,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
             .addComponent(eventTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
         );
 
-        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.registeredEventsPanel.TabConstraints.tabTitle"), new Object[] {}), registeredEventsPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.registeredEventsPanel.TabConstraints.tabTitle"), new Object[] {}), registeredEventsPanel); // NOI18N
 
         sourceTextTextArea.setColumns(20);
         sourceTextTextArea.setRows(5);
@@ -140,7 +144,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                 .addComponent(sourceTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
         );
 
-        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.sourceTextPanel.TabConstraints.tabTitle"), sourceTextPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.sourceTextPanel.TabConstraints.tabTitle"), sourceTextPanel); // NOI18N
 
         publicationFactsToolBar.setRollover(true);
 
@@ -163,7 +167,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                 .addComponent(publicationFactsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
         );
 
-        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.publicationFactsPanel.TabConstraints.tabTitle"), publicationFactsPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.publicationFactsPanel.TabConstraints.tabTitle"), publicationFactsPanel); // NOI18N
 
         repositoriesPanel.setRequestFocusEnabled(false);
 
@@ -178,7 +182,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
             .addComponent(repositoryCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
         );
 
-        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.repositoriesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/repository.png")), repositoriesPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.repositoriesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/repository.png")), repositoriesPanel); // NOI18N
 
         notesPanel.setRequestFocusEnabled(false);
 
@@ -193,7 +197,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
             .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
         );
 
-        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
         referencesPanel.setRequestFocusEnabled(false);
 
@@ -210,7 +214,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
             .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
         );
 
-        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
 
         javax.swing.GroupLayout multimediaObjectPanelLayout = new javax.swing.GroupLayout(multimediaObjectPanel);
         multimediaObjectPanel.setLayout(multimediaObjectPanelLayout);
@@ -223,12 +227,12 @@ public class SourceEditorPanel extends javax.swing.JPanel {
             .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
         );
 
-        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.multimediaObjectPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multimediaObjectPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.multimediaObjectPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multimediaObjectPanel); // NOI18N
 
-        abbreviationLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.abbreviationLabel.text")); // NOI18N
+        abbreviationLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.abbreviationLabel.text")); // NOI18N
 
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.changeDateLabel.text")); // NOI18N
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.changeDateLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -249,7 +253,7 @@ public class SourceEditorPanel extends javax.swing.JPanel {
                                 .addComponent(authorLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
                                 .addComponent(sourceTitleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(agencyLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(abbreviationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(abbreviationLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(agencyTextField, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -328,11 +332,34 @@ public class SourceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField sourceTitleTextField;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * @return the source
-     */
-    public Source getSource() {
-        return mSource;
+    @Override
+    public ViewContext getContext() {
+        return new ViewContext(context);
+    }
+
+    @Override
+    public Component getEditorComponent() {
+        return this;
+    }
+
+    @Override
+    protected String getTitleImpl() {
+        if (context == null || context.getEntity() == null) {
+            return "";
+        }
+        return (new ViewContext(context.getEntity())).getText();
+    }
+
+    @Override
+    protected void setContextImpl(Context context) {
+        this.context = context;
+
+        Entity entity = context.getEntity();
+        if (entity == null || !(entity instanceof Source)) {
+            return;
+        }
+
+        set((Source) entity);
     }
 
     /**
@@ -454,48 +481,43 @@ public class SourceEditorPanel extends javax.swing.JPanel {
         referencesListPanel.set(mSource, entitiesList);
     }
 
-    public Source commit() {
-        try {
-            mSource.getGedcom().doUnitOfWork(new UnitOfWork() {
+    @Override
+    public void commit() throws GedcomException {
+        mSource.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    Property sourceTitle = mSource.getProperty("TITL");
-                    if (sourceTitle == null) {
-                        mSource.addProperty("TITL", sourceTitleTextField.getText());
-                    } else {
-                        sourceTitle.setValue(sourceTitleTextField.getText());
-                    }
-                    Property publicationFacts = mSource.getProperty("PUBL");
-                    if (publicationFacts == null) {
-                        mSource.addProperty("PUBL", sourceTextTextArea.getText());
-                    } else {
-                        publicationFacts.setValue(sourceTextTextArea.getText());
-                    }
-                    Property sourceText = mSource.getProperty("TEXT");
-                    if (sourceTitle == null) {
-                        mSource.addProperty("TEXT", sourceTextTextArea.getText());
-                    } else {
-                        sourceText.setValue(sourceTextTextArea.getText());
-                    }
-                    Property abbreviation = mSource.getProperty("ABBR");
-                    if (abbreviation == null) {
-                        mSource.addProperty("ABBR", abbreviationTextField.getText());
-                    } else {
-                        abbreviation.setValue(abbreviationTextField.getText());
-                    }
-                    Property sourceAuthor = mSource.getProperty("AUTH");
-                    if (sourceAuthor == null) {
-                        mSource.addProperty("AUTH", authorTextField.getText());
-                    } else {
-                        sourceAuthor.setValue(authorTextField.getText());
-                    }
+            @Override
+            public void perform(Gedcom gedcom) throws GedcomException {
+                Property sourceTitle = mSource.getProperty("TITL");
+                if (sourceTitle == null) {
+                    mSource.addProperty("TITL", sourceTitleTextField.getText());
+                } else {
+                    sourceTitle.setValue(sourceTitleTextField.getText());
                 }
-            }); // end of doUnitOfWork
-            return mSource;
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-            return null;
-        }
+                Property publicationFacts = mSource.getProperty("PUBL");
+                if (publicationFacts == null) {
+                    mSource.addProperty("PUBL", sourceTextTextArea.getText());
+                } else {
+                    publicationFacts.setValue(sourceTextTextArea.getText());
+                }
+                Property sourceText = mSource.getProperty("TEXT");
+                if (sourceTitle == null) {
+                    mSource.addProperty("TEXT", sourceTextTextArea.getText());
+                } else {
+                    sourceText.setValue(sourceTextTextArea.getText());
+                }
+                Property abbreviation = mSource.getProperty("ABBR");
+                if (abbreviation == null) {
+                    mSource.addProperty("ABBR", abbreviationTextField.getText());
+                } else {
+                    abbreviation.setValue(abbreviationTextField.getText());
+                }
+                Property sourceAuthor = mSource.getProperty("AUTH");
+                if (sourceAuthor == null) {
+                    mSource.addProperty("AUTH", authorTextField.getText());
+                } else {
+                    sourceAuthor.setValue(authorTextField.getText());
+                }
+            }
+        }); // end of doUnitOfWork
     }
 }

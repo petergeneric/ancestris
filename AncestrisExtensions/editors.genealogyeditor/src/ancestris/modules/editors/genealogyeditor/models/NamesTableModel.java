@@ -55,9 +55,8 @@ public class NamesTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void update(List<PropertyName> namesList) {
+    public void clear() {
         this.namesList.clear();
-        addAll(namesList);
     }
 
     public PropertyName getValueAt(int row) {

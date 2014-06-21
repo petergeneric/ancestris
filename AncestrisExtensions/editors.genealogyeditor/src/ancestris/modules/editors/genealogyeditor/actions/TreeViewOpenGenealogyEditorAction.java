@@ -2,19 +2,21 @@ package ancestris.modules.editors.genealogyeditor.actions;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import static ancestris.modules.editors.genealogyeditor.actions.Bundle.*;
-import ancestris.modules.editors.genealogyeditor.panels.FamilyEditorPanel;
-import ancestris.modules.editors.genealogyeditor.panels.IndividualEditorPanel;
+import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
+import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.DialogDescriptor;
 import org.openide.util.ContextAwareAction;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -61,30 +63,38 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                 int undoNb = gedcom.getUndoNb();
 
                 if (entity instanceof Indi) {
-                    IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                    IndividualEditor individualEditorPanel = new IndividualEditor();
                     individualEditorPanel.set((Indi) entity);
 
                     editorDialog = new DialogManager.ADialog(
-                            NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", entity),
+                            NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", entity),
                             individualEditorPanel);
-                    editorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                    editorDialog.setDialogId(IndividualEditor.class.getName());
                     if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                        individualEditorPanel.commit();
+                        try {
+                            individualEditorPanel.commit();
+                        } catch (GedcomException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
                     } else {
                         while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                             gedcom.undoUnitOfWork(false);
                         }
                     }
                 } else if (entity instanceof Fam) {
-                    FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+                    FamilyEditor familyEditorPanel = new FamilyEditor();
                     familyEditorPanel.set((Fam) entity);
 
                     editorDialog = new DialogManager.ADialog(
-                            NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", entity),
+                            NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.edit.title", entity),
                             familyEditorPanel);
-                    editorDialog.setDialogId(FamilyEditorPanel.class.getName());
+                    editorDialog.setDialogId(FamilyEditor.class.getName());
                     if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                        familyEditorPanel.commit();
+                        try {
+                            familyEditorPanel.commit();
+                        } catch (GedcomException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
                     } else {
                         while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                             gedcom.undoUnitOfWork(false);

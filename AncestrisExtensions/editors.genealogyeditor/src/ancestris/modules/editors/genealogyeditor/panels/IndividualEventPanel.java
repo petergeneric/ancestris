@@ -73,7 +73,7 @@ import org.openide.util.NbBundle;
  * +1 <<INDIVIDUAL_EVENT_DETAIL>>
  * ]
  */
-public class IndividualEventEditorPanel extends javax.swing.JPanel {
+public class IndividualEventPanel extends javax.swing.JPanel {
 
     private final ArrayList<String> mIndividualAttributesTags = new ArrayList<String>() {
         {
@@ -111,7 +111,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
     /**
      * Creates new form EventEditorPanel
      */
-    public IndividualEventEditorPanel() {
+    public IndividualEventPanel() {
         initComponents();
         aDateBean.setPreferHorizontal(true);
     }
@@ -154,10 +154,10 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         eventInformationTabbedPane.setPreferredSize(new java.awt.Dimension(641, 192));
 
         placeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        placeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.placeLabel.text")); // NOI18N
+        placeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.placeLabel.text")); // NOI18N
 
         placeTextField.setEditable(false);
-        placeTextField.setText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.placeTextField.text")); // NOI18N
+        placeTextField.setText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.placeTextField.text")); // NOI18N
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
         privateRecordToggleButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
@@ -165,13 +165,13 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         privateRecordToggleButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
 
         IndividualAgeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        IndividualAgeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.IndividualAgeLabel.text")); // NOI18N
+        IndividualAgeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.IndividualAgeLabel.text")); // NOI18N
 
         EventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        EventTypeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.EventTypeLabel.text")); // NOI18N
+        EventTypeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.EventTypeLabel.text")); // NOI18N
 
         eventTypeTextField.setColumns(16);
-        eventTypeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.eventTypeTextField.toolTipText")); // NOI18N
+        eventTypeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.eventTypeTextField.toolTipText")); // NOI18N
         eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -200,7 +200,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         });
 
         dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.dateLabel.text"), new Object[] {})); // NOI18N
+        dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.dateLabel.text"), new Object[] {})); // NOI18N
 
         eventNameTextField.setEditable(false);
         eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -232,10 +232,10 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         });
 
         eventCauseLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        eventCauseLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.eventCauseLabel.text")); // NOI18N
+        eventCauseLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.eventCauseLabel.text")); // NOI18N
 
         eventNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        eventNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
+        eventNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
 
         individualAgeTextField.setColumns(4);
         individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -266,7 +266,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         });
 
         linkToPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
         linkToPlaceButton.setFocusable(false);
         linkToPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         linkToPlaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -277,7 +277,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
         });
 
         editPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.editPlaceButton.toolTipText"), new Object[] {})); // NOI18N
+        editPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.editPlaceButton.toolTipText"), new Object[] {})); // NOI18N
         editPlaceButton.setFocusable(false);
         editPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editPlaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -314,7 +314,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                 }
             }
         });
-        eventCauseTextField.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.eventCauseTextField.toolTipText")); // NOI18N
+        eventCauseTextField.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.eventCauseTextField.toolTipText")); // NOI18N
 
         addPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
         addPlaceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -393,7 +393,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        eventInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEventEditorPanel.class, "IndividualEventEditorPanel.EventDetailPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png")), EventDetailPanel); // NOI18N
+        eventInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png")), EventDetailPanel); // NOI18N
 
         sourceCitationsListPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -408,7 +408,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
         );
 
-        eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
+        eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
 
         multimediaObjectCitationsListPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -423,7 +423,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
         );
 
-        eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
+        eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
 
         noteCitationsListPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -438,7 +438,7 @@ public class IndividualEventEditorPanel extends javax.swing.JPanel {
             .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
         );
 
-        eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+        eventInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

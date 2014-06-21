@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
-import ancestris.modules.editors.genealogyeditor.panels.IndividualEditorPanel;
+import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.awt.event.ActionEvent;
@@ -17,9 +17,9 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
 @ActionID(category = "Edit",
-id = "ancestris.modules.editors.genealogyeditor.actions.GenealogyEditorCreateIndividualAction")
+        id = "ancestris.modules.editors.genealogyeditor.actions.GenealogyEditorCreateIndividualAction")
 @ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/indi_add.png",
-displayName = "#CTL_GenealogyEditorCreateIndividualAction")
+        displayName = "#CTL_GenealogyEditorCreateIndividualAction")
 @ActionReferences({
     @ActionReference(path = "Toolbars/GenealogyEditor", position = 200)
 })
@@ -50,17 +50,21 @@ public final class GenealogyEditorCreateIndividualAction implements ActionListen
                     }
                 }); // end of doUnitOfWork
 
-                IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                IndividualEditor individualEditorPanel = new IndividualEditor();
 
                 individualEditorPanel.set((Indi) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.title"),
+                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.title"),
                         individualEditorPanel);
 
-                editorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                editorDialog.setDialogId(IndividualEditor.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    individualEditorPanel.commit();
+                    try {
+                        individualEditorPanel.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);

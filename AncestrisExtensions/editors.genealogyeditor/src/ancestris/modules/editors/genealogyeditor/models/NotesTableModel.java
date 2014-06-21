@@ -60,9 +60,8 @@ public class NotesTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void update(List<Note> notesList) {
+    public void clear() {
         this.notesList.clear();
-        this.notesList.addAll(notesList);
     }
 
     public Note getValueAt(int row) {

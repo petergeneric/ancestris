@@ -96,9 +96,8 @@ public class SourcesTableModel extends AbstractTableModel {
     }
 
 
-    public void update(Collection<Source> sourcesList) {
+    public void clear() {
         this.mSourcesList.clear();
-        addAll(sourcesList);
     }
 
     public Source getValueAt(int row) {

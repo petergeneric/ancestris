@@ -62,9 +62,8 @@ public class MultiMediaObjectsTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void update(List<Media> multimediaObjectsList) {
+    public void clear() {
         multimediaObjectsRefList.clear();
-        addAll(multimediaObjectsList);
     }
 
     public Media getValueAt(int row) {

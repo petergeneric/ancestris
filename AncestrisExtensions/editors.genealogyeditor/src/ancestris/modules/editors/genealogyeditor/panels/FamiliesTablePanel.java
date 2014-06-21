@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
 import ancestris.modules.editors.genealogyeditor.renderer.TextPaneTableCellRenderer;
 import ancestris.util.swing.DialogManager;
@@ -171,16 +172,21 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+            FamilyEditor familyEditorPanel = new FamilyEditor();
             familyEditorPanel.set(mCreateFamily);
 
             DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
+                    NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.create.title"),
                     familyEditorPanel);
-            familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+            familyEditorDialog.setDialogId(FamilyEditor.class.getName());
 
             if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mFamiliesTableModel.add(familyEditorPanel.commit());
+                familyEditorPanel.commit();
+                try {
+                    familyEditorPanel.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -197,19 +203,23 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
         int undoNb = gedcom.getUndoNb();
         if (rowIndex != -1) {
             Fam family = mFamiliesTableModel.getValueAt(rowIndex);
-            FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+            FamilyEditor familyEditorPanel = new FamilyEditor();
             familyEditorPanel.set(family);
 
             DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(
-                    FamilyEditorPanel.class,
-                    "FamilyEditorPanel.edit.title",
-                    family),
+                            FamilyEditor.class,
+                            "FamilyEditorPanel.edit.title",
+                            family),
                     familyEditorPanel);
-            familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+            familyEditorDialog.setDialogId(FamilyEditor.class.getName());
 
             if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                familyEditorPanel.commit();
+                try {
+                    familyEditorPanel.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -228,12 +238,12 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                    FamiliesTablePanel.class, "FamiliesListPanel.deleteFamilyConfirmation.title",
-                    family),
+                            FamiliesTablePanel.class, "FamiliesListPanel.deleteFamilyConfirmation.title",
+                            family),
                     NbBundle.getMessage(
-                    FamiliesTablePanel.class, "FamiliesListPanel.deleteFamilyConfirmation.text",
-                    family,
-                    mRoot));
+                            FamiliesTablePanel.class, "FamiliesListPanel.deleteFamilyConfirmation.text",
+                            family,
+                            mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -292,18 +302,22 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
             int undoNb = gedcom.getUndoNb();
             if (rowIndex != -1) {
                 Fam family = mFamiliesTableModel.getValueAt(rowIndex);
-                FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+                FamilyEditor familyEditorPanel = new FamilyEditor();
                 familyEditorPanel.set(family);
 
                 DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", family),
+                        NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.edit.title", family),
                         familyEditorPanel);
-                familyEditorDialog.setDialogId(FamilyEditorPanel.class.getName());
+                familyEditorDialog.setDialogId(FamilyEditor.class.getName());
 
                 if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    familyEditorPanel.commit();
+                    try {
+                        familyEditorPanel.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
                 }
@@ -322,7 +336,8 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
 
     public void set(Property root, List<Fam> familiesList) {
         this.mRoot = root;
-        mFamiliesTableModel.update(familiesList);
+        mFamiliesTableModel.clear();
+        mFamiliesTableModel.addAll(familiesList);
     }
 
     public Fam getSelectedFamily() {
