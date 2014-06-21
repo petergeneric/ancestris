@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.IndividualReferencesTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -142,13 +143,13 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+            IndividualEditor individualEditorPanel = new IndividualEditor();
             individualEditorPanel.set(mIndividual);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.title"),
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.title"),
                     individualEditorPanel);
-            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+            individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 individualEditorPanel.commit();
@@ -167,16 +168,20 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
         int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
         if (rowIndex != -1) {
             PropertyXRef individualRef = mIndividualReferencesTableModel.getValueAt(rowIndex);
-            IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+            IndividualEditor individualEditorPanel = new IndividualEditor();
             individualEditorPanel.set((Indi) individualRef.getTargetEntity());
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", individualRef.getTargetEntity()),
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", individualRef.getTargetEntity()),
                     individualEditorPanel);
-            individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+            individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                individualEditorPanel.commit();
+                try {
+                    individualEditorPanel.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }//GEN-LAST:event_editChildrenButtonActionPerformed
@@ -248,16 +253,20 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
             int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
             if (rowIndex != -1) {
                 PropertyXRef individualRef = mIndividualReferencesTableModel.getValueAt(rowIndex);
-                IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+                IndividualEditor individualEditorPanel = new IndividualEditor();
                 individualEditorPanel.set((Indi) individualRef.getTargetEntity());
 
                 DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", (Indi) individualRef.getTargetEntity()),
+                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", (Indi) individualRef.getTargetEntity()),
                         individualEditorPanel);
-                individualEditorDialog.setDialogId(IndividualEditorPanel.class.getName());
+                individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                 if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    individualEditorPanel.commit();
+                    try {
+                        individualEditorPanel.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
             }
         }
@@ -274,6 +283,7 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
 
     public void set(Fam root, List<? extends PropertyXRef> individualsList) {
         this.mRoot = root;
+        mIndividualReferencesTableModel.clear();
         mIndividualReferencesTableModel.addAll(individualsList);
     }
 

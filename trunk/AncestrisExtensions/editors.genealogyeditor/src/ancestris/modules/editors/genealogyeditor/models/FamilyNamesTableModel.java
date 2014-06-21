@@ -71,8 +71,7 @@ public class FamilyNamesTableModel extends AbstractTableModel {
         return familyNamesList.get(row);
     }
 
-    public void update(List<PropertyEvent> familyNamesList) {
+    public void clear(List<PropertyEvent> familyNamesList) {
         this.familyNamesList.clear();
-        this.familyNamesList.addAll(familyNamesList);
     }
 }

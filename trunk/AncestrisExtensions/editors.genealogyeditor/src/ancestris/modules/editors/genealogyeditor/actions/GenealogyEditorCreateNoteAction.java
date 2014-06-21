@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
-import ancestris.modules.editors.genealogyeditor.panels.NoteEditorPanel;
+import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.awt.event.ActionEvent;
@@ -48,12 +48,12 @@ public final class GenealogyEditorCreateNoteAction implements ActionListener {
                         mNote = (Note) gedcom.createEntity(Gedcom.NOTE);
                     }
                 }); // end of doUnitOfWork
-                NoteEditorPanel noteEditorPanel = new NoteEditorPanel();
-                noteEditorPanel.set(gedcom, null, mNote);
+                NoteEditor noteEditorPanel = new NoteEditor();
+                noteEditorPanel.set(mNote);
                 DialogManager.ADialog noteEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.create.title"),
+                        NbBundle.getMessage(NoteEditor.class, "NoteEditor.create.title"),
                         noteEditorPanel);
-                noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
+                noteEditorDialog.setDialogId(NoteEditor.class.getName());
                 if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     noteEditorPanel.commit();
                 } else {

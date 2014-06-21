@@ -354,7 +354,6 @@ public class EventsTablePanel extends javax.swing.JPanel {
 
                 if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     eventEditorPanel.commit();
-                    mEventsTableModel.update();
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
@@ -377,6 +376,7 @@ public class EventsTablePanel extends javax.swing.JPanel {
     public void set(Property root, List<Property> eventsList) {
         this.mRoot = root;
         seteventTypeComboBox(eventsList);
+        mEventsTableModel.clear();
         mEventsTableModel.addAll(eventsList);
     }
 

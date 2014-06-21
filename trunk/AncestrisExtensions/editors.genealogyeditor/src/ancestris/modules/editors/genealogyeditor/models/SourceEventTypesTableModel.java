@@ -100,8 +100,7 @@ public class SourceEventTypesTableModel extends AbstractTableModel {
         return event;
     }
 
-    public void update(List<Property> eventTypesList) {
+    public void clear() {
         this.mEventTypesList.clear();
-        addAll(eventTypesList);
     }
 }

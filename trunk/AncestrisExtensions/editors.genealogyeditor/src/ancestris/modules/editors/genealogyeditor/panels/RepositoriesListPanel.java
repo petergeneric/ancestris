@@ -1,10 +1,9 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.models.RepositoriesTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
@@ -119,25 +118,25 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+            RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
             repositoryEditorPanel.set(mRepository);
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.create.title"),
+                    NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.create.title"),
                     repositoryEditorPanel);
-            editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+            editorDialog.setDialogId(RepositoryEditor.class.getName());
 
             if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                final Repository repository = repositoryEditorPanel.commit();
+                repositoryEditorPanel.commit();
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        Property addProperty = mRoot.addProperty("REPO", '@' + repository.getId() + '@');
+                        Property addProperty = mRoot.addProperty("REPO", '@' + mRepository.getId() + '@');
                         ((PropertyRepository) addProperty).link();
                     }
                 }); // end of doUnitOfWork
-                mRepositoriesTableModel.add(repository);
+                mRepositoriesTableModel.add(mRepository);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -154,16 +153,20 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         int undoNb = gedcom.getUndoNb();
         if (selectedRow != -1) {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
-            RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+            RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
             repositoryEditorPanel.set(mRepositoriesTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", mRepositoriesTableModel.getValueAt(rowIndex)),
+                    NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.edit.title", mRepositoriesTableModel.getValueAt(rowIndex)),
                     repositoryEditorPanel);
-            editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+            editorDialog.setDialogId(RepositoryEditor.class.getName());
 
             if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                repositoryEditorPanel.commit();
+                try {
+                    repositoryEditorPanel.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -209,16 +212,20 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
             int undoNb = gedcom.getUndoNb();
             if (selectedRow != -1) {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
-                RepositoryEditorPanel repositoryEditorPanel = new RepositoryEditorPanel();
+                RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
                 repositoryEditorPanel.set(mRepositoriesTableModel.getValueAt(rowIndex));
 
                 DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.edit.title", mRepositoriesTableModel.getValueAt(rowIndex)),
+                        NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.edit.title", mRepositoriesTableModel.getValueAt(rowIndex)),
                         repositoryEditorPanel);
-                editorDialog.setDialogId(RepositoryEditorPanel.class.getName());
+                editorDialog.setDialogId(RepositoryEditor.class.getName());
 
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    repositoryEditorPanel.commit();
+                    try {
+                        repositoryEditorPanel.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
@@ -238,7 +245,8 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
 
     public void set(Property root, List<Repository> repositoriesList) {
         this.mRoot = root;
-        mRepositoriesTableModel.update(repositoriesList);
+        mRepositoriesTableModel.clear();
+        mRepositoriesTableModel.addAll(repositoriesList);
     }
 
     public void setToolBarVisible(boolean b) {

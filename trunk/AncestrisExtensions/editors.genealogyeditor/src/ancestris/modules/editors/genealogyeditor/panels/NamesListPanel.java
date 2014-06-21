@@ -167,6 +167,7 @@ public class NamesListPanel extends javax.swing.JPanel {
 
     public void set(Indi root, List<PropertyName> namesList) {
         this.root = root;
-        mNamesTableModel.update(namesList);
+        mNamesTableModel.clear();
+        mNamesTableModel.addAll(namesList);
     }
 }

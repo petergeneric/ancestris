@@ -91,4 +91,9 @@ public class IndividualReferencesTableModel extends AbstractTableModel {
     public PropertyXRef getValueAt(int row) {
         return individualsList.get(row);
     }
+    
+    public void clear() {
+        individualsList.clear();
+        fireTableDataChanged();
+    }
 }

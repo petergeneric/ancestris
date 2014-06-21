@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
-import ancestris.modules.editors.genealogyeditor.panels.MultiMediaObjectEditorPanel;
+import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -55,13 +55,13 @@ public final class GenealogyEditorCreateMultiMediaAction implements ActionListen
                     }
                 }); // end of doUnitOfWork
 
-                MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
                 multiMediaObjectEditorPanel.set((Media) mMedia);
 
                 DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.create.title"),
+                        NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.create.title"),
                         multiMediaObjectEditorPanel);
-                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class.getName());
+                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class.getName());
 
                 if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     multiMediaObjectEditorPanel.commit();

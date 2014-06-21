@@ -81,6 +81,7 @@ public class ReferencesListPanel extends javax.swing.JPanel {
 
     public void set(Entity rootEntity, List<Entity> referencesList) {
         this.mRoot = rootEntity;
-        mReferencesTableModel.update(referencesList);
+        mReferencesTableModel.clear();
+        mReferencesTableModel.addAll(referencesList);
     }
 }

@@ -1,15 +1,17 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
 import ancestris.api.editor.AncestrisEditor;
-import ancestris.modules.editors.genealogyeditor.panels.FamilyEditorPanel;
-import ancestris.modules.editors.genealogyeditor.panels.IndividualEditorPanel;
+import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
+import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import javax.swing.Action;
 import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -17,7 +19,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author dominique
  */
-@ServiceProvider(service = AncestrisEditor.class,position = 200)
+@ServiceProvider(service = AncestrisEditor.class, position = 200)
 public class GenealogyEditorAction extends AncestrisEditor {
 
     @Override
@@ -73,22 +75,26 @@ public class GenealogyEditorAction extends AncestrisEditor {
 
     public static boolean editEntity(Fam fam, boolean isNew) {
         DialogManager.ADialog editorDialog;
-        FamilyEditorPanel familyEditorPanel = new FamilyEditorPanel();
+        FamilyEditor familyEditorPanel = new FamilyEditor();
         Gedcom gedcom = fam.getGedcom();
         int undoNb = gedcom.getUndoNb();
         familyEditorPanel.set(fam);
         if (isNew) {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.create.title"),
+                    NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.create.title"),
                     familyEditorPanel);
         } else {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "FamilyEditorPanel.edit.title", fam),
+                    NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.edit.title", fam),
                     familyEditorPanel);
         }
-        editorDialog.setDialogId(FamilyEditorPanel.class.getName());
+        editorDialog.setDialogId(FamilyEditor.class.getName());
         if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-            familyEditorPanel.commit();
+            try {
+                familyEditorPanel.commit();
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -101,20 +107,24 @@ public class GenealogyEditorAction extends AncestrisEditor {
         DialogManager.ADialog editorDialog;
         Gedcom gedcom = indi.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        IndividualEditorPanel individualEditorPanel = new IndividualEditorPanel();
+        IndividualEditor individualEditorPanel = new IndividualEditor();
         individualEditorPanel.set(indi);
         if (isNew) {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.create.title"),
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.title"),
                     individualEditorPanel);
         } else {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", indi),
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", indi),
                     individualEditorPanel);
         }
-        editorDialog.setDialogId(IndividualEditorPanel.class.getName());
+        editorDialog.setDialogId(IndividualEditor.class.getName());
         if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-            individualEditorPanel.commit();
+            try {
+                individualEditorPanel.commit();
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);

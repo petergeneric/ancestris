@@ -1,9 +1,14 @@
-package ancestris.modules.editors.genealogyeditor.panels;
+package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.api.editor.Editor;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
+import ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel;
+import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import genj.view.ViewContext;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +50,7 @@ import org.openide.util.NbBundle;
  * +1 <<SOURCE_CITATION>>
  * +1 <<MULTIMEDIA_LINK>>
  */
-public final class IndividualEditorPanel extends javax.swing.JPanel {
+public final class IndividualEditor extends Editor {
 
     private class EventsListSelectionHandler implements ListSelectionListener {
 
@@ -61,6 +66,8 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         }
 
     }
+
+    private Context context;
     private Indi mIndividual;
     private Property mEvent = null;
     private Property mMultiMediaObject;
@@ -119,7 +126,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     /**
      * Creates new form IndividualEditorPanel
      */
-    public IndividualEditorPanel() {
+    public IndividualEditor() {
         initComponents();
         eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
     }
@@ -152,7 +159,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         deleteEventButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         eventsList = new javax.swing.JList();
-        individualEventEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.IndividualEventEditorPanel();
+        individualEventEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.IndividualEventPanel();
         familiesChildPanel = new javax.swing.JPanel();
         familiesChildTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel(FamiliesReferenceTreeTablePanel.EDIT_FAMC);
         familiesSpousePanel = new javax.swing.JPanel();
@@ -176,12 +183,12 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
         generalPanel.setMinimumSize(new java.awt.Dimension(1018, 200));
 
-        individualIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDLabel.text"), new Object[] {})); // NOI18N
+        individualIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.individualIDLabel.text"), new Object[] {})); // NOI18N
 
         individualIDTextField.setEditable(false);
         individualIDTextField.setColumns(8);
-        individualIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDTextField.text"), new Object[] {})); // NOI18N
-        individualIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.individualIDTextField.toolTipText"), new Object[] {})); // NOI18N
+        individualIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.individualIDTextField.text"), new Object[] {})); // NOI18N
+        individualIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.individualIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
         imageBean.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -253,12 +260,12 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.jLabel1.text"), new Object[] {})); // NOI18N
+        jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.jLabel1.text"), new Object[] {})); // NOI18N
         jToolBar1.add(jLabel1);
         jToolBar1.add(filler2);
 
         eventTypeComboBox.setModel(mEventsModel);
-        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
+        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
         eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eventTypeComboBoxActionPerformed(evt);
@@ -268,7 +275,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         jToolBar1.add(filler3);
 
         deleteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.deleteEventButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.deleteEventButton.toolTipText"), new Object[] {})); // NOI18N
         deleteEventButton.setFocusable(false);
         deleteEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -318,7 +325,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addGap(0, 0, 0))
         );
 
-        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
+        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
 
         javax.swing.GroupLayout familiesChildPanelLayout = new javax.swing.GroupLayout(familiesChildPanel);
         familiesChildPanel.setLayout(familiesChildPanelLayout);
@@ -333,7 +340,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addComponent(familiesChildTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.familiesChildPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/family.png")), familiesChildPanel); // NOI18N
+        individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.familiesChildPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/family.png")), familiesChildPanel); // NOI18N
 
         javax.swing.GroupLayout familiesSpousePanelLayout = new javax.swing.GroupLayout(familiesSpousePanel);
         familiesSpousePanel.setLayout(familiesSpousePanelLayout);
@@ -348,7 +355,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.familiesSpousePanel.TabConstraints.tabTitle"), new Object[] {}), familiesSpousePanel); // NOI18N
+        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.familiesSpousePanel.TabConstraints.tabTitle"), new Object[] {}), familiesSpousePanel); // NOI18N
 
         javax.swing.GroupLayout sourcesPanelLayout = new javax.swing.GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
@@ -361,7 +368,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
+        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
 
         javax.swing.GroupLayout namesPanelLayout = new javax.swing.GroupLayout(namesPanel);
         namesPanel.setLayout(namesPanelLayout);
@@ -374,7 +381,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             .addComponent(namesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.namesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Name.png")), namesPanel); // NOI18N
+        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.namesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Name.png")), namesPanel); // NOI18N
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
@@ -387,7 +394,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
         javax.swing.GroupLayout referencesPanelLayout = new javax.swing.GroupLayout(referencesPanel);
         referencesPanel.setLayout(referencesPanelLayout);
@@ -400,7 +407,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             .addComponent(associationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
+        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
 
         javax.swing.GroupLayout galleryPanelLayout = new javax.swing.GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
@@ -416,7 +423,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         individualInformationTabbedPane.addTab("Gallery", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
 
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.changeDateLabel.text")); // NOI18N
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.changeDateLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -468,13 +475,13 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
-                MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
                 multiMediaObjectEditorPanel.set(mMultiMediaObject);
 
                 DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title"),
+                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title"),
                         multiMediaObjectEditorPanel);
-                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class
+                multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class
                         .getName());
 
                 if (multiMediaObjectEditorDialog.show()
@@ -525,7 +532,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
                 // bmp | gif | jpeg
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
 
-                    MultiMediaObjectEditorPanel multiMediaObjectEditorPanel = new MultiMediaObjectEditorPanel();
+                    MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
                     multiMediaObjectEditorPanel.set(mMultiMediaObject);
                     String multiMediaObjectTitle;
                     if (mMultiMediaObject instanceof PropertyMedia) {
@@ -536,14 +543,17 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
                     }
                     DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                            NbBundle.getMessage(IndividualEditorPanel.class, "IndividualEditorPanel.edit.title", multiMediaObjectTitle),
+                            NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", multiMediaObjectTitle),
                             multiMediaObjectEditorPanel);
-                    multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditorPanel.class
+                    multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class
                             .getName());
 
-                    if (multiMediaObjectEditorDialog.show()
-                            == DialogDescriptor.OK_OPTION) {
-                        multiMediaObjectEditorPanel.commit();
+                    if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                        try {
+                            multiMediaObjectEditorPanel.commit();
+                        } catch (GedcomException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
                         if (mMultiMediaObject instanceof Media) {
                             mIndividual.addMedia((Media) mMultiMediaObject);
                         }
@@ -570,10 +580,10 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            IndividualEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
+                            IndividualEditor.class, "EventsListPanel.deleteEventConfirmation.title",
                             PropertyTag2Name.getTagName(event.getTag())),
                     NbBundle.getMessage(
-                            IndividualEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
+                            IndividualEditor.class, "EventsListPanel.deleteEventConfirmation.text",
                             PropertyTag2Name.getTagName(event.getTag()),
                             mIndividual));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -653,7 +663,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JPanel generalPanel;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean imageBean;
-    private ancestris.modules.editors.genealogyeditor.panels.IndividualEventEditorPanel individualEventEditorPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.IndividualEventPanel individualEventEditorPanel;
     private javax.swing.JLabel individualIDLabel;
     private javax.swing.JTextField individualIDTextField;
     private javax.swing.JTabbedPane individualInformationTabbedPane;
@@ -673,17 +683,45 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * @return the individual
-     */
-    public Indi getIndividual() {
-        return mIndividual;
+    @Override
+    public ViewContext getContext() {
+        return new ViewContext(context);
+    }
+
+    @Override
+    public Component getEditorComponent() {
+        return this;
+    }
+
+    @Override
+    protected String getTitleImpl() {
+        if (context == null || context.getEntity() == null) {
+            return "";
+        }
+        return (new ViewContext(context.getEntity())).getText();
+    }
+
+    @Override
+    protected void setContextImpl(Context context) {
+        this.context = context;
+
+        Entity entity = context.getEntity();
+        if (entity == null) {
+            return;
+        }
+
+        if (!(entity instanceof Indi)) {
+            return;
+        }
+
+        set((Indi) entity);
     }
 
     /**
      * @param individual the individual to set
      */
     public void set(Indi individual) {
+
         this.mIndividual = individual;
         String gedcomVersion = mIndividual.getGedcom().getGrammar().getVersion();
         if (!gedcomVersion.equals("5.5.1")) {
@@ -757,6 +795,7 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
             }
         }
 
+        mEventsListModel.clear();
         mEventsListModel.addAll(individualEvents);
         seteventTypeComboBox(individualEvents);
 
@@ -871,41 +910,66 @@ public final class IndividualEditorPanel extends javax.swing.JPanel {
         multimediaObjectCitationsListPanel.set(individual, Arrays.asList(individual.getProperties("OBJE")));
     }
 
-    public Indi commit() {
-        try {
-            mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
+    /**
+     * Show editor in a dialog window
+     *
+     * @return true if commit succesfull, false if not or cancel button has been
+     * clicked
+     */
+    @Override
+    public boolean showPanel() {
+        DialogManager.ADialog editorDialog;
+        Gedcom gedcom = mIndividual.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        editorDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(this.getClass(), this.getClass() + ".edit.title"),
+                this);
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    Property restrictionNotice = mIndividual.getProperty("RESN", true);
-                    if (privateRecordToggleButton.isSelected()) {
-                        if (restrictionNotice == null) {
-                            mIndividual.addProperty("RESN", "confidential");
-                        }
-                    } else {
-                        if (restrictionNotice != null) {
-                            mIndividual.delProperty(restrictionNotice);
-                        }
-                    }
-                }
-            }); // end of doUnitOfWork
-
-            nameEditorPanel.commit();
-            sexBeanPanel.commit();
-            individualEventEditorPanel.commit();
-
-            return mIndividual;
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-            return null;
+        editorDialog.setDialogId(FamilyEditor.class.getName());
+        if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+            try {
+                commit();
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return true;
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+            return false;
         }
     }
-            
+
+    @Override
+    public void commit() throws GedcomException {
+        mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+            @Override
+            public void perform(Gedcom gedcom) throws GedcomException {
+                Property restrictionNotice = mIndividual.getProperty("RESN", true);
+                if (privateRecordToggleButton.isSelected()) {
+                    if (restrictionNotice == null) {
+                        mIndividual.addProperty("RESN", "confidential");
+                    }
+                } else {
+                    if (restrictionNotice != null) {
+                        mIndividual.delProperty(restrictionNotice);
+                    }
+                }
+            }
+        }); // end of doUnitOfWork
+
+        nameEditorPanel.commit();
+        sexBeanPanel.commit();
+        individualEventEditorPanel.commit();
+    }
+
     private void seteventTypeComboBox(List<Property> eventsList) {
         updateOnGoing = true;
         mEventsModel.removeAllElements();
         mEventsModel.addElement(NbBundle.getMessage(
-                IndividualEditorPanel.class, "IndividualEditorPanel.eventTypeComboBox.firstElement.title"));
+                IndividualEditor.class, "IndividualEditorPanel.eventTypeComboBox.firstElement.title"));
 
         for (String tag : mIndividualEventsTags) {
             mEventsModel.addElement(PropertyTag2Name.getTagName(tag));

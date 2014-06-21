@@ -70,9 +70,8 @@ public class RepositoriesTableModel extends AbstractTableModel {
         return note;
     }
     
-    public void update(List<Repository> mRepositoriesList) {
+    public void clear() {
         this.mRepositoriesList.clear();
-        addAll(mRepositoriesList);
     }
 
     public Repository getValueAt(int row) {

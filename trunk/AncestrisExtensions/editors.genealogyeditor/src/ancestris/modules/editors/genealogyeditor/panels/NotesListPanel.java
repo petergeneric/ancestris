@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
 import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
 import ancestris.modules.editors.genealogyeditor.renderer.TextPaneTableCellRenderer;
 import ancestris.util.swing.DialogManager;
@@ -184,7 +185,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
             if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                noteEditorPanel.commit();
+                    noteEditorPanel.commit();
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -264,7 +265,7 @@ public class NotesListPanel extends javax.swing.JPanel {
                 noteEditorDialog.setDialogId(NoteEditorPanel.class.getName());
 
                 if (noteEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    noteEditorPanel.commit();
+                        noteEditorPanel.commit();
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
@@ -285,7 +286,8 @@ public class NotesListPanel extends javax.swing.JPanel {
 
     public void set(Property root, List<Note> notesList) {
         this.mRoot = root;
-        mNotesTableModel.update(notesList);
+        mNotesTableModel.clear ();
+        mNotesTableModel.addAll(notesList);
     }
 
     public void setToolBarVisible(boolean visible) {

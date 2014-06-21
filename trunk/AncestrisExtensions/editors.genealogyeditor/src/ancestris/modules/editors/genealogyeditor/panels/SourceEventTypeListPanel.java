@@ -118,7 +118,7 @@ public class SourceEventTypeListPanel extends javax.swing.JPanel {
             recordedEventPanel.set(mRegisteredEvent);
 
             DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "RecordedEventEditorPanel.create.title"),
+                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.create.title"),
                     recordedEventPanel);
             recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
 
@@ -146,7 +146,7 @@ public class SourceEventTypeListPanel extends javax.swing.JPanel {
             recordedEventPanel.set(mSourceEventTypesTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
+                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
                     recordedEventPanel);
             recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
 
@@ -172,7 +172,7 @@ public class SourceEventTypeListPanel extends javax.swing.JPanel {
             recordedEventPanel.set(mSourceEventTypesTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(FamilyEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
+                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
                     recordedEventPanel);
             recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
 

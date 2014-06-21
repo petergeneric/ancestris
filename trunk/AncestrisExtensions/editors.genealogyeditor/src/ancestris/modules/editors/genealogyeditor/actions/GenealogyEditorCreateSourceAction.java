@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
-import ancestris.modules.editors.genealogyeditor.panels.SourceEditorPanel;
+import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.awt.event.ActionEvent;
@@ -49,16 +49,16 @@ public final class GenealogyEditorCreateSourceAction implements ActionListener {
                     }
                 }); // end of doUnitOfWork
 
-                SourceEditorPanel sourceEditorPanel = new SourceEditorPanel();
-                sourceEditorPanel.set(mSource);
+                SourceEditor sourceEditor = new SourceEditor();
+                sourceEditor.set(mSource);
 
                 DialogManager.ADialog sourceEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(SourceEditorPanel.class, "SourceEditorPanel.create.title"),
-                        sourceEditorPanel);
-                sourceEditorDialog.setDialogId(SourceEditorPanel.class.getName());
+                        NbBundle.getMessage(SourceEditor.class, "SourceEditor.create.title"),
+                        sourceEditor);
+                sourceEditorDialog.setDialogId(SourceEditor.class.getName());
 
                 if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    sourceEditorPanel.commit();
+                    sourceEditor.commit();
                 } else {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);

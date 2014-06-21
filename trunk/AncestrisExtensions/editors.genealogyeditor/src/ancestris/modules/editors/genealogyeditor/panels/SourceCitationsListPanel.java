@@ -153,7 +153,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
             SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
             sourceCitationEditorPanel.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
             ADialog sourceCitationEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
+                    NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
                     sourceCitationEditorPanel);
             sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
@@ -204,7 +204,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 int undoNb = gedcom.getUndoNb();
                 SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
                 sourceCitationEditorPanel.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
-                ADialog sourceEditorDialog = new ADialog(NbBundle.getMessage(SourceEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
+                ADialog sourceEditorDialog = new ADialog(NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
                         sourceCitationEditorPanel);
                 sourceEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 

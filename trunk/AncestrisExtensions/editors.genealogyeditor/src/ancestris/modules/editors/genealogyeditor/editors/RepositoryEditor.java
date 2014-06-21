@@ -1,6 +1,9 @@
-package ancestris.modules.editors.genealogyeditor.panels;
+package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.api.editor.Editor;
 import genj.gedcom.*;
+import genj.view.ViewContext;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,15 +26,16 @@ import org.openide.util.Exceptions;
  * +1 RIN <AUTOMATED_RECORD_ID>
  * +1 <<CHANGE_DATE>>
  */
-public class RepositoryEditorPanel extends javax.swing.JPanel {
+public class RepositoryEditor extends Editor {
 
+    private Context context;
     private Repository mRepository;
     private boolean mRepositoryNameModified = false;
 
     /**
      * Creates new form RepositoryEditorPanel
      */
-    public RepositoryEditorPanel() {
+    public RepositoryEditor() {
         initComponents();
     }
 
@@ -58,16 +62,16 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
 
-        repositoryIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDLabel.text"), new Object[] {})); // NOI18N
+        repositoryIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("RepositoryEditor.repositoryIDLabel.text"), new Object[] {})); // NOI18N
 
         repositoryIDTextField.setEditable(false);
         repositoryIDTextField.setColumns(8);
-        repositoryIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDTextField.text"), new Object[] {})); // NOI18N
-        repositoryIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryIDTextField.toolTipText"), new Object[] {})); // NOI18N
+        repositoryIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("RepositoryEditor.repositoryIDTextField.text"), new Object[] {})); // NOI18N
+        repositoryIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("RepositoryEditor.repositoryIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
-        repositoryNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryNameLabel.text"), new Object[] {})); // NOI18N
+        repositoryNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("RepositoryEditor.repositoryNameLabel.text"), new Object[] {})); // NOI18N
 
-        repositoryNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryEditorPanel.repositoryNameTextField.text"), new Object[] {})); // NOI18N
+        repositoryNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("RepositoryEditor.repositoryNameTextField.text"), new Object[] {})); // NOI18N
 
         javax.swing.GroupLayout addressPanelLayout = new javax.swing.GroupLayout(addressPanel);
         addressPanel.setLayout(addressPanelLayout);
@@ -80,7 +84,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
             .addComponent(addressEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.addressPanel.TabConstraints.tabTitle"), addressPanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditor.addressPanel.TabConstraints.tabTitle"), addressPanel); // NOI18N
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
@@ -113,7 +117,7 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         jTabbedPane1.addTab("References", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
 
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(RepositoryEditorPanel.class, "RepositoryEditorPanel.changeDateLabel.text")); // NOI18N
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditor.changeDateLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -174,11 +178,34 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField repositoryNameTextField;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * @return the repository
-     */
-    public Repository getRepository() {
-        return mRepository;
+    @Override
+    public ViewContext getContext() {
+        return new ViewContext(context);
+    }
+
+    @Override
+    public Component getEditorComponent() {
+        return this;
+    }
+
+    @Override
+    protected String getTitleImpl() {
+        if (context == null || context.getEntity() == null) {
+            return "";
+        }
+        return (new ViewContext(context.getEntity())).getText();
+    }
+
+    @Override
+    protected void setContextImpl(Context context) {
+        this.context = context;
+
+        Entity entity = context.getEntity();
+        if (entity == null || !(entity instanceof Repository)) {
+            return;
+        }
+
+        set((Repository) entity);
     }
 
     /**
@@ -227,29 +254,23 @@ public class RepositoryEditorPanel extends javax.swing.JPanel {
         }
     }
 
-    public Repository commit() {
-        try {
-            if (mRepositoryNameModified) {
-                mRepository.getGedcom().doUnitOfWork(new UnitOfWork() {
+    @Override
+    public void commit() throws GedcomException {
+        if (mRepositoryNameModified) {
+            mRepository.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
 
-                        Property repositoryName = mRepository.getProperty("NAME");
-                        if (repositoryName == null) {
-                            mRepository.addProperty("NAME", repositoryNameTextField.getText());
-                        } else {
-                            repositoryName.setValue(repositoryNameTextField.getText());
-                        }
+                    Property repositoryName = mRepository.getProperty("NAME");
+                    if (repositoryName == null) {
+                        mRepository.addProperty("NAME", repositoryNameTextField.getText());
+                    } else {
+                        repositoryName.setValue(repositoryNameTextField.getText());
                     }
-                }); // end of doUnitOfWork
-            }
-            addressEditorPanel.commit();
-
-            return mRepository;
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-            return null;
+                }
+            }); // end of doUnitOfWork
         }
+        addressEditorPanel.commit();
     }
 }

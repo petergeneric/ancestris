@@ -1,9 +1,12 @@
-package ancestris.modules.editors.genealogyeditor.panels;
+package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.api.editor.Editor;
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.models.MultimediaFilesTableModel;
 import genj.gedcom.*;
 import genj.util.Registry;
+import genj.view.ViewContext;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +22,9 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
+public class MultiMediaObjectEditor extends Editor {
 
+    private Context context;
     private Property mRoot;
     private Property mMultiMediaObject;
     private MultimediaFilesTableModel mMultimediaFilesTableModel = new MultimediaFilesTableModel();
@@ -28,9 +32,9 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
     /**
      * Creates new form MultiMediaObjectEditorPanel
      */
-    public MultiMediaObjectEditorPanel() {
+    public MultiMediaObjectEditor() {
         initComponents();
-        multimediaFilesTable.setID(MultiMediaObjectEditorPanel.class.getName());
+        multimediaFilesTable.setID(MultiMediaObjectEditor.class.getName());
     }
 
     /**
@@ -60,17 +64,17 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
 
-        multiMediaObjectIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultiMediaObjectEditorPanel.multiMediaObjectIDLabel.text"), new Object[] {})); // NOI18N
+        multiMediaObjectIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("MultiMediaObjectEditor.multiMediaObjectIDLabel.text"), new Object[] {})); // NOI18N
 
         multiMediaObjectIDTextField.setEditable(false);
         multiMediaObjectIDTextField.setColumns(8);
-        multiMediaObjectIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultiMediaObjectEditorPanel.multiMediaObjectIDTextField.text"), new Object[] {})); // NOI18N
+        multiMediaObjectIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("MultiMediaObjectEditor.multiMediaObjectIDTextField.text"), new Object[] {})); // NOI18N
 
         filesToolBar.setFloatable(false);
         filesToolBar.setRollover(true);
 
         addFileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addFileButton.setToolTipText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.addFileButton.toolTipText")); // NOI18N
+        addFileButton.setToolTipText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.addFileButton.toolTipText")); // NOI18N
         addFileButton.setFocusable(false);
         addFileButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addFileButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -82,7 +86,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         filesToolBar.add(addFileButton);
 
         editFileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editFileButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultiMediaObjectEditorPanel.editFileButton.toolTipText"), new Object[] {})); // NOI18N
+        editFileButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("MultiMediaObjectEditor.editFileButton.toolTipText"), new Object[] {})); // NOI18N
         editFileButton.setFocusable(false);
         editFileButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editFileButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -116,7 +120,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
         );
 
-        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
@@ -131,7 +135,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
                 .addGap(0, 0, 0))
         );
 
-        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
         javax.swing.GroupLayout multiMediaObjectReferencesPanelLayout = new javax.swing.GroupLayout(multiMediaObjectReferencesPanel);
         multiMediaObjectReferencesPanel.setLayout(multiMediaObjectReferencesPanelLayout);
@@ -144,13 +148,13 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
         );
 
-        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), multiMediaObjectReferencesPanel); // NOI18N
+        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), multiMediaObjectReferencesPanel); // NOI18N
 
         multiMediaObjectTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        multiMediaObjectTitleLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.multiMediaObjectTitleLabel.text")); // NOI18N
+        multiMediaObjectTitleLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectTitleLabel.text")); // NOI18N
 
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditorPanel.class, "MultiMediaObjectEditorPanel.changeDateLabel.text")); // NOI18N
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.changeDateLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -196,7 +200,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
     private void addFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileButtonActionPerformed
         FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(ImageBean.class, "ImageBean.fileType"), "jpg", "jpeg", "png", "gif");
         final JFileChooser fileChooser = new JFileChooser();
-        Registry registry = Registry.get(MultiMediaObjectEditorPanel.class);
+        Registry registry = Registry.get(MultiMediaObjectEditor.class);
 
         System.out.println(registry.get("rootPath", new java.io.File(".")));
         fileChooser.setFileFilter(imageFileFilter);
@@ -293,6 +297,40 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     // End of variables declaration//GEN-END:variables
 
+    @Override
+    public ViewContext getContext() {
+        return new ViewContext(context);
+    }
+
+    @Override
+    public Component getEditorComponent() {
+        return this;
+    }
+
+    @Override
+    protected String getTitleImpl() {
+        if (context == null || context.getEntity() == null) {
+            return "";
+        }
+        return (new ViewContext(context.getEntity())).getText();
+    }
+
+    @Override
+    protected void setContextImpl(Context context) {
+        this.context = context;
+
+        Entity entity = context.getEntity();
+        if (entity == null) {
+            return;
+        }
+
+        if (!(entity instanceof Note)) {
+            return;
+        }
+
+        set((Note) entity);
+    }
+
     public void set(Property multiMediaObject) {
         if (multiMediaObject instanceof PropertyMedia) {
             mMultiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
@@ -314,7 +352,7 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
             multiMediaObjectTitleTextField.setText(propertyTitle != null ? propertyTitle.getValue() : "");
             multiMediaObjectIDTextField.setVisible(false);
             multiMediaObjectIDLabel.setVisible(false);
-            multiMediaObjectTabbedPane.removeTabAt(multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "MultiMediaObjectEditorPanel.multiMediaObjectReferencesPanel.TabConstraints.tabTitle")));
+            multiMediaObjectTabbedPane.removeTabAt(multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.multiMediaObjectReferencesPanel.TabConstraints.tabTitle")));
         }
 
         for (Property multimediaFile : mMultiMediaObject.getProperties("FILE", true)) {
@@ -334,27 +372,23 @@ public class MultiMediaObjectEditorPanel extends javax.swing.JPanel {
         }
     }
 
-    public Property commit() {
-        try {
-            mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+    @Override
+    public void commit() throws GedcomException {
+        mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    if (mMultiMediaObject instanceof Media) {
-                        ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText());
+            @Override
+            public void perform(Gedcom gedcom) throws GedcomException {
+                if (mMultiMediaObject instanceof Media) {
+                    ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText());
+                } else {
+                    Property propertyTitle = mMultiMediaObject.getProperty("TITL");
+                    if (propertyTitle == null) {
+                        mMultiMediaObject.addProperty("TITL", multiMediaObjectTitleTextField.getText());
                     } else {
-                        Property propertyTitle = mMultiMediaObject.getProperty("TITL");
-                        if (propertyTitle == null) {
-                            mMultiMediaObject.addProperty("TITL", multiMediaObjectTitleTextField.getText());
-                        } else {
-                            propertyTitle.setValue(multiMediaObjectTitleTextField.getText());
-                        }
+                        propertyTitle.setValue(multiMediaObjectTitleTextField.getText());
                     }
                 }
-            }); // end of doUnitOfWork
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return mMultiMediaObject;
+            }
+        }); // end of doUnitOfWork
     }
 }
