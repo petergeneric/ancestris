@@ -88,16 +88,16 @@ public final class GenealogyEditorEditAction implements ActionListener {
             } else if (entity instanceof Note) {
                 Gedcom gedcom = entity.getGedcom();
                 int undoNb = gedcom.getUndoNb();
-                NoteEditor noteEditorPanel = new NoteEditor();
-                noteEditorPanel.set((Note) entity);
+                NoteEditor noteEditor = new NoteEditor();
+                noteEditor.set((Note) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(NoteEditor.class, "NoteEditorPanel.edit.title", entity),
-                        noteEditorPanel);
+                        NbBundle.getMessage(NoteEditor.class, "NoteEditor.edit.title", entity),
+                        noteEditor);
                 editorDialog.setDialogId(NoteEditor.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
-                        noteEditorPanel.commit();
+                        noteEditor.commit();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
