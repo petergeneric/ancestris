@@ -105,7 +105,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         deleteSourceButton = new javax.swing.JButton();
         linkToSourceButton = new javax.swing.JButton();
         addSourceButton = new javax.swing.JButton();
-        SourceReferencedTitleTextField = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        sourceReferencedTitleTextArea = new javax.swing.JTextArea();
+        sourceReferencedTitleLabel = new javax.swing.JLabel();
         referencedEventTypeLabel = new javax.swing.JLabel();
         eventRoleLabel = new javax.swing.JLabel();
         eventRoleComboBox = new javax.swing.JComboBox<String>();
@@ -129,6 +131,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
         editSourceButton.setFocusable(false);
         editSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editSourceButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        editSourceButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        editSourceButton.setPreferredSize(new java.awt.Dimension(26, 26));
         editSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         editSourceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,6 +145,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         deleteSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.deleteSourceButton.toolTipText"), new Object[] {})); // NOI18N
         deleteSourceButton.setFocusable(false);
         deleteSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteSourceButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        deleteSourceButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        deleteSourceButton.setPreferredSize(new java.awt.Dimension(26, 26));
         deleteSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         deleteSourceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,6 +159,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         linkToSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.linkToSourceButton.toolTipText"), new Object[] {})); // NOI18N
         linkToSourceButton.setFocusable(false);
         linkToSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToSourceButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        linkToSourceButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        linkToSourceButton.setPreferredSize(new java.awt.Dimension(26, 26));
         linkToSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         linkToSourceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,6 +173,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         addSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.addSourceButton.toolTipText"), new Object[] {})); // NOI18N
         addSourceButton.setFocusable(false);
         addSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addSourceButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        addSourceButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        addSourceButton.setPreferredSize(new java.awt.Dimension(26, 26));
         addSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         addSourceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -169,48 +183,47 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        SourceReferencedTitleTextField.getDocument().addDocumentListener(new DocumentListener() {
+        sourceReferencedTitleTextArea.setColumns(20);
+        sourceReferencedTitleTextArea.setLineWrap(true);
+        sourceReferencedTitleTextArea.setRows(2);
+        sourceReferencedTitleTextArea.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(sourceReferencedTitleTextArea);
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mSourceReferencedTitleModified = true;
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mSourceReferencedTitleModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mSourceReferencedTitleModified = true;
-            }
-        });
-        SourceReferencedTitleTextField.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceReferencedTitleTextField.toolTipText")); // NOI18N
+        sourceReferencedTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        sourceReferencedTitleLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.sourceReferencedTitleLabel.text")); // NOI18N
 
         javax.swing.GroupLayout SourceReferencePanelLayout = new javax.swing.GroupLayout(SourceReferencePanel);
         SourceReferencePanel.setLayout(SourceReferencePanelLayout);
         SourceReferencePanelLayout.setHorizontalGroup(
             SourceReferencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SourceReferencePanelLayout.createSequentialGroup()
-                .addComponent(linkToSourceButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editSourceButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addSourceButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deleteSourceButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SourceReferencedTitleTextField))
+                .addGroup(SourceReferencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(SourceReferencePanelLayout.createSequentialGroup()
+                        .addComponent(sourceReferencedTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(linkToSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         SourceReferencePanelLayout.setVerticalGroup(
             SourceReferencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SourceReferencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                .addComponent(linkToSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(deleteSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(SourceReferencedTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(editSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(SourceReferencePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(SourceReferencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(SourceReferencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(linkToSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(deleteSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(editSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sourceReferencedTitleLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         referencedEventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -426,7 +439,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                         ((PropertySource) mSourceCitation).link();
                     }
                 }); // end of doUnitOfWork
-                SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
+                sourceReferencedTitleTextArea.setText(mReferencedSource.getTitle());
                 addSourceButton.setVisible(false);
                 deleteSourceButton.setVisible(true);
                 editSourceButton.setVisible(true);
@@ -508,7 +521,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     ((PropertySource) mSourceCitation).unlink();
                 }
                 mReferencedSource = sourcesListPanel.getSelectedSource();
-                SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
+                sourceReferencedTitleTextArea.setText(mReferencedSource.getTitle());
                 try {
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -539,7 +552,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SourceDataPanel;
     private javax.swing.JPanel SourceReferencePanel;
-    private javax.swing.JTextField SourceReferencedTitleTextField;
     private javax.swing.JButton addSourceButton;
     private javax.swing.JComboBox<String> dataQualityComboBox;
     private javax.swing.JButton deleteSourceButton;
@@ -547,6 +559,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> eventRoleComboBox;
     private javax.swing.JLabel eventRoleLabel;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton linkToSourceButton;
     private javax.swing.JPanel multiMediaPanel;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
@@ -561,6 +574,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane sourceCitationTabbedPane;
     private javax.swing.JScrollPane sourceDataScrollPane;
     private javax.swing.JTextArea sourceDataTextArea;
+    private javax.swing.JLabel sourceReferencedTitleLabel;
+    private javax.swing.JTextArea sourceReferencedTitleTextArea;
     // End of variables declaration//GEN-END:variables
     // SOURCE_CITATION:=
     // [ pointer to source record (preferred)
@@ -594,7 +609,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             if (mReferencedSource != null) {
                 addSourceButton.setVisible(false);
 
-                SourceReferencedTitleTextField.setText(mReferencedSource.getTitle());
+                sourceReferencedTitleTextArea.setText(mReferencedSource.getTitle());
                 mSourceReferencedTitleModified = false;
             } else {
                 deleteSourceButton.setVisible(false);
@@ -696,7 +711,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             recordingDateLabel.setVisible(false);
             recordingDate.setVisible(false);
 
-            SourceReferencedTitleTextField.setText(sourceCitation.getValue());
+            sourceReferencedTitleTextArea.setText(sourceCitation.getValue());
             mSourceReferencedTitleModified = false;
 
             Property sourceText = sourceCitation.getProperty("TEXT");
@@ -819,7 +834,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     } else {
                         if (mSourceReferencedTitleModified) {
                             mSourceReferencedTitleModified = false;
-                            mSourceCitation.setValue(SourceReferencedTitleTextField.getText());
+                            mSourceCitation.setValue(sourceReferencedTitleTextArea.getText());
                         }
                         if (mSourceTextModified) {
                             mSourceTextModified = false;
