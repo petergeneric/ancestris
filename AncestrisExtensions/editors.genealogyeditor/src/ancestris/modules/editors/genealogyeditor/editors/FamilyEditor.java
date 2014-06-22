@@ -1254,7 +1254,7 @@ public class FamilyEditor extends Editor {
     public Component getEditorComponent() {
         return this;
     }
-    
+
     @Override
     protected String getTitleImpl() {
         if (context == null || context.getEntity() == null) {
@@ -1276,7 +1276,7 @@ public class FamilyEditor extends Editor {
         if (entity == null) {
             return;
         }
-        
+
         if (!(entity instanceof Fam)) {
             return;
         }
@@ -1496,7 +1496,7 @@ public class FamilyEditor extends Editor {
                     }
                 }
             }); // end of doUnitOfWork
-            
+
             familyEventPanel.commit();
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -1504,31 +1504,41 @@ public class FamilyEditor extends Editor {
     }
 
     private void seteventTypeComboBox(List<Property> eventsList) {
-        updateOnGoing = true;
-        mEventsModel.removeAllElements();
-
-        mEventsModel.addElement(NbBundle.getMessage(
-                IndividualEditor.class, "FamilyEditor.eventTypeComboBox.firstElement.title"));
+        ArrayList<String> localizedEventsList = new ArrayList<String>();
 
         for (String tag : mFamilyEventsTags) {
-            mEventsModel.addElement(PropertyTag2Name.getTagName(tag));
+            localizedEventsList.add(PropertyTag2Name.getTagName(tag));
         }
+
         for (Property event : eventsList) {
 
             /*
              * Filter by gedcom version
              */
             if (event.getTag().equals("RESI") && !mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
+                localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
             }
 
             /*
              * Filter by events already present and unique
              */
             if (!event.getTag().equals("EVEN")) {
-                mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
+                localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
             }
         }
+        
+        java.util.Collections.sort(localizedEventsList);
+
+        updateOnGoing = true;
+        mEventsModel.removeAllElements();
+
+        mEventsModel.addElement(NbBundle.getMessage(
+                IndividualEditor.class, "FamilyEditor.eventTypeComboBox.firstElement.title"));
+
+        for (String tag : localizedEventsList) {
+            mEventsModel.addElement(tag);
+        }
+
         updateOnGoing = false;
     }
 }

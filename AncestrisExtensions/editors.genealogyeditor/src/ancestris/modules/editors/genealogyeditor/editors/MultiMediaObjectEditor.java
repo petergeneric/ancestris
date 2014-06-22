@@ -324,11 +324,11 @@ public class MultiMediaObjectEditor extends Editor {
             return;
         }
 
-        if (!(entity instanceof Note)) {
+        if (!(entity instanceof Media)) {
             return;
         }
 
-        set((Note) entity);
+        set((Media) entity);
     }
 
     public void set(Property multiMediaObject) {
