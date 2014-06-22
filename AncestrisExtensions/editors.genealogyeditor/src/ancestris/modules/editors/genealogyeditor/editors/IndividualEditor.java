@@ -151,7 +151,7 @@ public final class IndividualEditor extends Editor {
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        jLabel1 = new javax.swing.JLabel();
+        eventTypeLabel = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         eventTypeComboBox = new javax.swing.JComboBox<String>();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
@@ -259,8 +259,8 @@ public final class IndividualEditor extends Editor {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.jLabel1.text"), new Object[] {})); // NOI18N
-        jToolBar1.add(jLabel1);
+        eventTypeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.eventTypeLabel.text"), new Object[] {})); // NOI18N
+        jToolBar1.add(eventTypeLabel);
         jToolBar1.add(filler2);
 
         eventTypeComboBox.setModel(mEventsModel);
@@ -579,10 +579,10 @@ public final class IndividualEditor extends Editor {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            IndividualEditor.class, "EventsListPanel.deleteEventConfirmation.title",
+                            IndividualEditor.class, "IndividualEditor.eventsList.deleteEventConfirmation.title",
                             PropertyTag2Name.getTagName(event.getTag())),
                     NbBundle.getMessage(
-                            IndividualEditor.class, "EventsListPanel.deleteEventConfirmation.text",
+                            IndividualEditor.class, "IndividualEditor.eventsList.deleteEventConfirmation.text",
                             PropertyTag2Name.getTagName(event.getTag()),
                             mIndividual));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -649,6 +649,7 @@ public final class IndividualEditor extends Editor {
     private javax.swing.JLabel changeDateLabeldate;
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JComboBox<String> eventTypeComboBox;
+    private javax.swing.JLabel eventTypeLabel;
     private javax.swing.JList eventsList;
     private javax.swing.JPanel eventsListPanel;
     private javax.swing.JPanel eventsPanel;
@@ -666,7 +667,6 @@ public final class IndividualEditor extends Editor {
     private javax.swing.JLabel individualIDLabel;
     private javax.swing.JTextField individualIDTextField;
     private javax.swing.JTabbedPane individualInformationTabbedPane;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
