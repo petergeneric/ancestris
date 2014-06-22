@@ -120,7 +120,7 @@ public class EventsTablePanel extends javax.swing.JPanel {
     private boolean updateOnGoing = false;
 
     /**
-     * Creates new form EventsListPanel
+     * Creates new form EventsTablePanel
      */
     public EventsTablePanel() {
         this(INDIVIDUAL_EVENT_TYPE_LIST);
@@ -146,7 +146,7 @@ public class EventsTablePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         eventsToolBar = new javax.swing.JToolBar();
-        jLabel1 = new javax.swing.JLabel();
+        eventTypeLabel = new javax.swing.JLabel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(3, 0), new java.awt.Dimension(3, 0), new java.awt.Dimension(3, 32767));
         eventTypeComboBox = new javax.swing.JComboBox<String>();
         editEventButton = new javax.swing.JButton();
@@ -157,8 +157,8 @@ public class EventsTablePanel extends javax.swing.JPanel {
         eventsToolBar.setFloatable(false);
         eventsToolBar.setRollover(true);
 
-        jLabel1.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsTablePanel.jLabel1.text"), new Object[] {})); // NOI18N
-        eventsToolBar.add(jLabel1);
+        eventTypeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("EventsTablePanel.eventTypeLabel.text"), new Object[] {})); // NOI18N
+        eventsToolBar.add(eventTypeLabel);
         eventsToolBar.add(filler1);
 
         eventTypeComboBox.setModel(mEventsModel);
@@ -230,7 +230,7 @@ public class EventsTablePanel extends javax.swing.JPanel {
 
             ADialog eventEditorDialog = new ADialog(
                     NbBundle.getMessage(
-                            EventEditorPanel.class, "EventEditorPanel.edit.title",
+                            EventEditorPanel.class, "EventsTablePanel.edit.title",
                             new Object[]{PropertyTag2Name.getTagName(event.getTag()), mRoot}),
                     eventEditorPanel);
             eventEditorDialog.setDialogId(EventEditorPanel.class.getName());
@@ -255,10 +255,10 @@ public class EventsTablePanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.title",
+                            EventEditorPanel.class, "EventsTablePanel.deleteEventConfirmation.title",
                             PropertyTag2Name.getTagName(event.getTag())),
                     NbBundle.getMessage(
-                            EventEditorPanel.class, "EventsListPanel.deleteEventConfirmation.text",
+                            EventEditorPanel.class, "EventsTablePanel.deleteEventConfirmation.text",
                             PropertyTag2Name.getTagName(event.getTag()),
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -366,11 +366,11 @@ public class EventsTablePanel extends javax.swing.JPanel {
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JButton editEventButton;
     private javax.swing.JComboBox<String> eventTypeComboBox;
+    private javax.swing.JLabel eventTypeLabel;
     private javax.swing.JScrollPane eventsScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable eventsTable;
     private javax.swing.JToolBar eventsToolBar;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Property> eventsList) {
