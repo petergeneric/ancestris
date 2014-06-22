@@ -3,7 +3,6 @@ package ancestris.modules.editors.genealogyeditor.editors;
 import ancestris.api.editor.Editor;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
 import ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel;
-import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
@@ -966,14 +965,12 @@ public final class IndividualEditor extends Editor {
     }
 
     private void seteventTypeComboBox(List<Property> eventsList) {
-        updateOnGoing = true;
-        mEventsModel.removeAllElements();
-        mEventsModel.addElement(NbBundle.getMessage(
-                IndividualEditor.class, "IndividualEditorPanel.eventTypeComboBox.firstElement.title"));
+        ArrayList<String> localizedEventsList = new ArrayList<String>();
 
         for (String tag : mIndividualEventsTags) {
-            mEventsModel.addElement(PropertyTag2Name.getTagName(tag));
+            localizedEventsList.add(PropertyTag2Name.getTagName(tag));
         }
+
         for (Property event : eventsList) {
             /*
              * Filter by events already present and unique
@@ -991,9 +988,22 @@ public final class IndividualEditor extends Editor {
                     && !event.getTag().equals("RELI")
                     && !event.getTag().equals("RESI")
                     && !event.getTag().equals("TITL")) {
-                mEventsModel.removeElement(PropertyTag2Name.getTagName(event.getTag()));
+                localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
             }
         }
+
+        java.util.Collections.sort(localizedEventsList);
+
+        updateOnGoing = true;
+        
+        mEventsModel.removeAllElements();
+        mEventsModel.addElement(NbBundle.getMessage(
+                IndividualEditor.class, "IndividualEditorPanel.eventTypeComboBox.firstElement.title"));
+
+        for (String tag : localizedEventsList) {
+            mEventsModel.addElement(tag);
+        }
+
         updateOnGoing = false;
     }
 }
