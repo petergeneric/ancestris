@@ -629,7 +629,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             }
 
             eventCauseTextArea.setText(mEvent.getValue());
-        } else if (mIndividualAttributesTags.contains(event.getTag())) {
+        } else if (mIndividualAttributesTags.contains(event.getTag()) && !event.getTag().equals("RESI")) {
             eventNameLabel.setVisible(true);
             eventNameTextField.setVisible(true);
             eventNameLabel.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
