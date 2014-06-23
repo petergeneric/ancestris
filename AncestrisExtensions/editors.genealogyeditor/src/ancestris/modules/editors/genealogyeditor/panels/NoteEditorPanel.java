@@ -144,10 +144,14 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         if (inlineNoteCheckBox.isSelected()) {
             noteIDLabel.setVisible(false);
             noteIDTextField.setVisible(false);
+            changeDateLabel.setVisible(false);
+            changeDateLabeldate.setVisible(false);
             noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesScrollPane.TabConstraints.tabTitle")));
         } else {
             noteIDLabel.setVisible(true);
             noteIDTextField.setVisible(true);
+            changeDateLabel.setVisible(true);
+            changeDateLabeldate.setVisible(true);
             noteInformationTabbedPane.addTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesScrollPane.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel);
         }
     }//GEN-LAST:event_inlineNoteCheckBoxActionPerformed
@@ -198,6 +202,8 @@ public class NoteEditorPanel extends javax.swing.JPanel {
             } else {
                 noteIDTextField.setVisible(false);
                 noteIDLabel.setVisible(false);
+                changeDateLabel.setVisible(false);
+                changeDateLabeldate.setVisible(false);
                 noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesScrollPane.TabConstraints.tabTitle")));
             }
 
