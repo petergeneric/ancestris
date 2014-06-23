@@ -472,7 +472,7 @@ public class TableView extends View {
      */
     @NbBundle.Messages({
         "tableview.action.export=Export",
-        "tableview.action.export.tip=Export this table view as TAB separated text file",
+        "tableview.action.export.tip=<html>Export all information from that Table <br/>View to a text file delimitated by tabs <br/>(tabulations).</html>",
         "# {0} - file path",
         "tableview.export.error=Error while saving to\n{0}",
         "tableview.export.dialog.title=Choose export destination file"
