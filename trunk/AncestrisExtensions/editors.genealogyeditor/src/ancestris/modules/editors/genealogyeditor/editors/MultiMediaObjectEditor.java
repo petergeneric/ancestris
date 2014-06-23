@@ -352,7 +352,7 @@ public class MultiMediaObjectEditor extends Editor {
             multiMediaObjectTitleTextField.setText(propertyTitle != null ? propertyTitle.getValue() : "");
             multiMediaObjectIDTextField.setVisible(false);
             multiMediaObjectIDLabel.setVisible(false);
-            multiMediaObjectTabbedPane.removeTabAt(multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.multiMediaObjectReferencesPanel.TabConstraints.tabTitle")));
+            multiMediaObjectTabbedPane.removeTabAt(multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle")));
         }
 
         for (Property multimediaFile : mMultiMediaObject.getProperties("FILE", true)) {
