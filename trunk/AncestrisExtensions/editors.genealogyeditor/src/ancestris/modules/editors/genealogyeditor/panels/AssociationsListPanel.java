@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.AssociationsTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
@@ -112,7 +111,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
             associationEditorPanel.set(mAssociation);
 
             DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "AssociationEditorPanel.create.title"),
+                    NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
                     associationEditorPanel);
             associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
@@ -138,7 +137,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
             associationEditorPanel.set(mAssociationsTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "AssociationEditorPanel.edit.title"),
+                    NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
                     associationEditorPanel);
             associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
@@ -163,7 +162,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
                 associationEditorPanel.set(mAssociationsTableModel.getValueAt(rowIndex));
 
                 DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditor.class, "AssociationEditorPanel.edit.title"),
+                        NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
                         associationEditorPanel);
                 associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
