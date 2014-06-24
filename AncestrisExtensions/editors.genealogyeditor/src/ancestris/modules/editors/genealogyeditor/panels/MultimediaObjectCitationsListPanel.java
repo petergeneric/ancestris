@@ -140,16 +140,16 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
-            multiMediaObjectEditorPanel.set(mMultiMediaObject);
+            MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
+            multiMediaObjectEditor.set(mMultiMediaObject);
 
             DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.add.title"),
-                    multiMediaObjectEditorPanel);
+                    NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.add.title"),
+                    multiMediaObjectEditor);
             multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class.getName());
 
             if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                multiMediaObjectEditorPanel.commit();
+                multiMediaObjectEditor.commit();
                 multiMediaObjectCitationsTableModel.clear();
                 multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
             } else {
@@ -209,8 +209,8 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
             Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
-            MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
-            multiMediaObjectEditorPanel.set(multiMediaObject);
+            MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
+            multiMediaObjectEditor.set(multiMediaObject);
 
             String multiMediaObjectTitle;
             if (multiMediaObject instanceof PropertyMedia) {
@@ -221,13 +221,13 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             }
 
             DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
-                    multiMediaObjectEditorPanel);
+                    NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.edit.title", multiMediaObjectTitle),
+                    multiMediaObjectEditor);
             multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class.getName());
 
             if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
-                    multiMediaObjectEditorPanel.commit();
+                    multiMediaObjectEditor.commit();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -248,8 +248,8 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
                 Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
 
-                MultiMediaObjectEditor multiMediaObjectEditorPanel = new MultiMediaObjectEditor();
-                multiMediaObjectEditorPanel.set(multiMediaObject);
+                MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
+                multiMediaObjectEditor.set(multiMediaObject);
 
                 String multiMediaObjectTitle;
                 if (multiMediaObject instanceof PropertyMedia) {
@@ -260,13 +260,13 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                 }
 
                 DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.edit.title", multiMediaObjectTitle),
-                        multiMediaObjectEditorPanel);
+                        NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.edit.title", multiMediaObjectTitle),
+                        multiMediaObjectEditor);
                 multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class.getName());
 
                 if (multiMediaObjectEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
-                        multiMediaObjectEditorPanel.commit();
+                        multiMediaObjectEditor.commit();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
