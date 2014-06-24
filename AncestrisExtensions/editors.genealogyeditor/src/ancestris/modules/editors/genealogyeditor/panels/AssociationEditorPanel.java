@@ -71,12 +71,16 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(referenceIndividualLabel, org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.referenceIndividualLabel.text")); // NOI18N
 
+        referenceIndividualTextField.setEditable(false);
         referenceIndividualTextField.setText(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.referenceIndividualTextField.text")); // NOI18N
 
         linkToIndividualButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(linkToIndividualButton, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationEditorPanel.linkToIndividualButton.text"), new Object[] {})); // NOI18N
         linkToIndividualButton.setFocusable(false);
         linkToIndividualButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToIndividualButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        linkToIndividualButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        linkToIndividualButton.setPreferredSize(new java.awt.Dimension(26, 26));
         linkToIndividualButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         linkToIndividualButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,9 +88,27 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        relationLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(relationLabel, org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.relationLabel.text")); // NOI18N
 
         relationTextField.setText(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.relationTextField.text")); // NOI18N
+        relationTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                mRelationModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mRelationModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                mRelationModified = true;
+            }
+        });
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
@@ -129,29 +151,28 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(associationTabbedPane)
+                    .addComponent(associationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(referenceIndividualLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(relationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(linkToIndividualButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(relationTextField)
-                            .addComponent(referenceIndividualTextField))
-                        .addGap(163, 163, 163)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(linkToIndividualButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(referenceIndividualTextField)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(referenceIndividualLabel)
-                        .addComponent(referenceIndividualTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(linkToIndividualButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(referenceIndividualLabel)
+                    .addComponent(linkToIndividualButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(referenceIndividualTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(relationLabel)
@@ -185,6 +206,8 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 referenceIndividualTextField.setText(mIndividual.getName());
+                referenceIndividualTextField.setVisible(true);
+                linkToIndividualButton.setVisible(false);
 
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
@@ -211,30 +234,16 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         Entity targetEntity = association.getTargetEntity();
         if (targetEntity != null) {
             linkToIndividualButton.setVisible(false);
-            referenceIndividualTextField.setText(targetEntity.getDisplayValue());
+            referenceIndividualTextField.setText(((Indi) targetEntity).getName());
+            referenceIndividualTextField.setVisible(true);
+        } else {
+            referenceIndividualTextField.setVisible(false);
         }
 
         Property property = association.getProperty("RELA", false);
         if (property != null) {
             relationTextField.setText(property.getValue());
         }
-        relationTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mRelationModified = true;
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mRelationModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mRelationModified = true;
-            }
-        });
 
         noteCitationsListPanel.set(association, Arrays.asList(association.getProperties("NOTE")));
 
