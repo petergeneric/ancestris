@@ -19,20 +19,21 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="associationTabbedPane" max="32767" attributes="0"/>
+                  <Component id="associationTabbedPane" pref="549" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="referenceIndividualLabel" max="32767" attributes="0"/>
                           <Component id="relationLabel" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="linkToIndividualButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="relationTextField" max="32767" attributes="0"/>
-                          <Component id="referenceIndividualTextField" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="linkToIndividualButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="referenceIndividualTextField" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="163" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -43,12 +44,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="referenceIndividualLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="referenceIndividualTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="linkToIndividualButton" min="-2" pref="25" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="referenceIndividualLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="linkToIndividualButton" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
+                  <Component id="referenceIndividualTextField" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -72,6 +71,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="referenceIndividualTextField">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="AssociationEditorPanel.referenceIndividualTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -87,6 +87,15 @@
         </Property>
         <Property name="focusable" type="boolean" value="false"/>
         <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[26, 26]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[26, 26]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[26, 26]"/>
+        </Property>
         <Property name="verticalTextPosition" type="int" value="3"/>
       </Properties>
       <Events>
@@ -95,6 +104,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="relationLabel">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="AssociationEditorPanel.relationLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -106,6 +116,9 @@
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="AssociationEditorPanel.relationTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="relationTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                mRelationModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mRelationModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                mRelationModified = true;&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="associationTabbedPane">
 
