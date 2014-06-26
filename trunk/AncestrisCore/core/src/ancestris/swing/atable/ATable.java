@@ -139,17 +139,28 @@ public class ATable extends JTable {
 
         for(int r=0; r< sorter.getViewRowCount(); r++) {
             for(int col=0; col < model.getColumnCount(); col++) {
-                Property cell = (Property) model.getValueAt(convertRowIndexToModel(r), col);
-                if (cell != null){
-                    writer.write(cell.getDisplayValue()+"\t");
-                } else {
-                    writer.write("\t");
-                }
+                writer.write(exportCellValue(model.getValueAt(convertRowIndexToModel(r), col), r, col));
+                writer.write("\t");
             }
             writer.write("\n");
         }
         writer.close();
     }    
+
+    /**
+     * convert a cell content to a string for export functionnality.
+     * Default convert object to string using toString.
+     * @param object
+     * @param row
+     * @param col
+     * @return 
+     */
+    public String exportCellValue(Object object, int row, int col) {
+        if (object == null){
+            return "";
+        }
+        return object.toString();
+    }  
 
     /** create a shortcut */
     AbstractAncestrisAction createShortcut(String txt, final int y) {

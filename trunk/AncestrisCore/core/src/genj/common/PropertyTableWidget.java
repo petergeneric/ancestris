@@ -27,6 +27,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
 import genj.io.BasicTransferable;
 import genj.util.WordBuffer;
 import genj.util.swing.HeadlessLabel;
@@ -490,6 +491,31 @@ public class PropertyTableWidget extends JPanel {
         Property getRowRoot(int index) {
             return propertyModel.getRowRoot(convertRowIndexToModel(index));
         }
+
+        /**
+         * Convert a cell object to string to be used by export function.
+         * if object is a Property, then delegates to AbstractPropertyTableModel
+         * @param object
+         * @param row
+         * @param col
+         * @return 
+         */
+        @Override
+        public String exportCellValue(Object object, int row, int col) {
+            if (object == null){
+                return "";
+            }
+            if (object instanceof Property){
+                Property property = (Property) object;
+                if (propertyModel instanceof AbstractPropertyTableModel) {
+                    return ((AbstractPropertyTableModel) propertyModel).getCellValue(property, row, col);
+                } else {
+                    return (AbstractPropertyTableModel.getDefaultCellValue(property, row, col));
+                }
+            } else {
+                return object.toString();
+            }
+        }  
 
         /**
          * setting a property model
