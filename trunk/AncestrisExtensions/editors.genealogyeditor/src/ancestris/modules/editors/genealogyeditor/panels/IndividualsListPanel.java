@@ -114,16 +114,16 @@ public class IndividualsListPanel extends javax.swing.JPanel {
                     mIndividual = (Indi) gedcom.createEntity(Gedcom.INDI);
                 }
             }); // end of doUnitOfWork
-            IndividualEditor individualEditorPanel = new IndividualEditor();
-            individualEditorPanel.set(mIndividual);
+            IndividualEditor individualEditor = new IndividualEditor();
+            individualEditor.set(mIndividual);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.title"),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.create.title"),
+                    individualEditor);
             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                individualEditorPanel.commit();
+                individualEditor.commit();
                 mIndividualsTableModel.add(mIndividual);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -141,17 +141,17 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         int undoNb = gedcom.getUndoNb();
         if (rowIndex != -1) {
             Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
-            IndividualEditor individualEditorPanel = new IndividualEditor();
-            individualEditorPanel.set(individual);
+            IndividualEditor individualEditor = new IndividualEditor();
+            individualEditor.set(individual);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", individual),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", individual),
+                    individualEditor);
             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
-                    individualEditorPanel.commit();
+                    individualEditor.commit();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -173,17 +173,17 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         int undoNb = gedcom.getUndoNb();
         if (rowIndex != -1) {
                 Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
-                IndividualEditor individualEditorPanel = new IndividualEditor();
-                individualEditorPanel.set(individual);
+                IndividualEditor individualEditor = new IndividualEditor();
+                individualEditor.set(individual);
 
                 DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", individual),
-                        individualEditorPanel);
+                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", individual),
+                        individualEditor);
                 individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                 if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
-                        individualEditorPanel.commit();
+                        individualEditor.commit();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
