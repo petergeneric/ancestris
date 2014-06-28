@@ -107,21 +107,21 @@ public class GenealogyEditorAction extends AncestrisEditor {
         DialogManager.ADialog editorDialog;
         Gedcom gedcom = indi.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        IndividualEditor individualEditorPanel = new IndividualEditor();
-        individualEditorPanel.set(indi);
+        IndividualEditor individualEditor = new IndividualEditor();
+        individualEditor.set(indi);
         if (isNew) {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.title"),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.create.title"),
+                    individualEditor);
         } else {
             editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", indi),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", indi),
+                    individualEditor);
         }
         editorDialog.setDialogId(IndividualEditor.class.getName());
         if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
             try {
-                individualEditorPanel.commit();
+                individualEditor.commit();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }

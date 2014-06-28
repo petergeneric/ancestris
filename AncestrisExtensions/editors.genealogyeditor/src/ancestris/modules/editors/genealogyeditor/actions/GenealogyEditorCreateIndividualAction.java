@@ -50,18 +50,18 @@ public final class GenealogyEditorCreateIndividualAction implements ActionListen
                     }
                 }); // end of doUnitOfWork
 
-                IndividualEditor individualEditorPanel = new IndividualEditor();
+                IndividualEditor individualEditor = new IndividualEditor();
 
-                individualEditorPanel.set((Indi) entity);
+                individualEditor.set((Indi) entity);
 
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.title"),
-                        individualEditorPanel);
+                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.create.title"),
+                        individualEditor);
 
                 editorDialog.setDialogId(IndividualEditor.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
-                        individualEditorPanel.commit();
+                        individualEditor.commit();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }

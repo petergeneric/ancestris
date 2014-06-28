@@ -46,16 +46,15 @@ public final class GenealogyEditorEditAction implements ActionListener {
             if (entity instanceof Indi) {
                 Gedcom gedcom = entity.getGedcom();
                 int undoNb = gedcom.getUndoNb();
-                IndividualEditor individualEditorPanel = new IndividualEditor();
-                individualEditorPanel.set((Indi) entity);
-
+                IndividualEditor individualEditor = new IndividualEditor();
+                individualEditor.set((Indi) entity);
                 editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", entity),
-                        individualEditorPanel);
+                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", entity),
+                        individualEditor);
                 editorDialog.setDialogId(IndividualEditor.class.getName());
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
-                        individualEditorPanel.commit();
+                        individualEditor.commit();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
