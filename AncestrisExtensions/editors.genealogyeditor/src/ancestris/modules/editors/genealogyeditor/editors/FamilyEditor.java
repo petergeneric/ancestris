@@ -636,16 +636,16 @@ public class FamilyEditor extends Editor {
                     mHusband.setSex(PropertySex.MALE);
                 }
             }); // end of doUnitOfWork
-            IndividualEditor individualEditorPanel = new IndividualEditor();
-            individualEditorPanel.set(mHusband);
+            IndividualEditor individualEditor = new IndividualEditor();
+            individualEditor.set(mHusband);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.husband.title"),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.create.husband.title"),
+                    individualEditor);
             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                individualEditorPanel.commit();
+                individualEditor.commit();
                 mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
@@ -712,16 +712,16 @@ public class FamilyEditor extends Editor {
                     mWife.setSex(PropertySex.FEMALE);
                 }
             }); // end of doUnitOfWork
-            IndividualEditor individualEditorPanel = new IndividualEditor();
-            individualEditorPanel.set(mWife);
+            IndividualEditor individualEditor = new IndividualEditor();
+            individualEditor.set(mWife);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.wife.title"),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.create.wife.title"),
+                    individualEditor);
             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                individualEditorPanel.commit();
+                individualEditor.commit();
                 mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
@@ -930,17 +930,17 @@ public class FamilyEditor extends Editor {
         Indi individual = mFamily.getHusband();
         Gedcom gedcom = mFamily.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        IndividualEditor individualEditorPanel = new IndividualEditor();
-        individualEditorPanel.set(individual);
+        IndividualEditor individualEditor = new IndividualEditor();
+        individualEditor.set(individual);
 
         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", individual),
-                individualEditorPanel);
+                NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", individual),
+                individualEditor);
         individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             try {
-                individualEditorPanel.commit();
+                individualEditor.commit();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -992,17 +992,17 @@ public class FamilyEditor extends Editor {
         Indi individual = mFamily.getWife();
         Gedcom gedcom = mFamily.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        IndividualEditor individualEditorPanel = new IndividualEditor();
-        individualEditorPanel.set(individual);
+        IndividualEditor individualEditor = new IndividualEditor();
+        individualEditor.set(individual);
 
         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", individual),
-                individualEditorPanel);
+                NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", individual),
+                individualEditor);
         individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             try {
-                individualEditorPanel.commit();
+                individualEditor.commit();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
