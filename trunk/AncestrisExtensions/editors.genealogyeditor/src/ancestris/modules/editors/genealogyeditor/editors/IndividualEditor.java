@@ -123,7 +123,7 @@ public final class IndividualEditor extends Editor {
     private DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
 
     /**
-     * Creates new form IndividualEditorPanel
+     * Creates new form IndividualEditor
      */
     public IndividualEditor() {
         initComponents();
@@ -177,7 +177,7 @@ public final class IndividualEditor extends Editor {
         changeDateLabeldate = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(1042, 462));
-        setName(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEditorPanel.name"), new Object[] {})); // NOI18N
+        setName(""); // NOI18N
         setPreferredSize(new java.awt.Dimension(1042, 462));
 
         generalPanel.setMinimumSize(new java.awt.Dimension(1018, 200));
@@ -478,7 +478,7 @@ public final class IndividualEditor extends Editor {
                 multiMediaObjectEditorPanel.set(mMultiMediaObject);
 
                 DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title"),
+                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title"),
                         multiMediaObjectEditorPanel);
                 multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class
                         .getName());
@@ -542,7 +542,7 @@ public final class IndividualEditor extends Editor {
 
                     }
                     DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                            NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", multiMediaObjectTitle),
+                            NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", multiMediaObjectTitle),
                             multiMediaObjectEditorPanel);
                     multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class
                             .getName());
@@ -921,10 +921,10 @@ public final class IndividualEditor extends Editor {
         Gedcom gedcom = mIndividual.getGedcom();
         int undoNb = gedcom.getUndoNb();
         editorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(this.getClass(), this.getClass() + ".edit.title"),
+                NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title"),
                 this);
 
-        editorDialog.setDialogId(FamilyEditor.class.getName());
+        editorDialog.setDialogId(IndividualEditor.class.getName());
         if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
             try {
                 commit();
@@ -998,7 +998,7 @@ public final class IndividualEditor extends Editor {
         
         mEventsModel.removeAllElements();
         mEventsModel.addElement(NbBundle.getMessage(
-                IndividualEditor.class, "IndividualEditorPanel.eventTypeComboBox.firstElement.title"));
+                IndividualEditor.class, "IndividualEditor.eventTypeComboBox.firstElement.title"));
 
         for (String tag : localizedEventsList) {
             mEventsModel.addElement(tag);
