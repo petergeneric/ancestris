@@ -244,17 +244,17 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                 } else if (property instanceof Indi) {
                     Indi child = (Indi) property;
                     if (!child.equals(mRoot)) {
-                        IndividualEditor individualEditorPanel = new IndividualEditor();
-                        individualEditorPanel.set(child);
+                        IndividualEditor individualEditor = new IndividualEditor();
+                        individualEditor.set(child);
 
                         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", child),
-                                individualEditorPanel);
+                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
+                                individualEditor);
                         individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                             try {
-                                individualEditorPanel.commit();
+                                individualEditor.commit();
                             } catch (GedcomException ex) {
                                 Exceptions.printStackTrace(ex);
                             }
@@ -267,17 +267,17 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                 } else if (property instanceof PropertyChild) {
                     Indi child = ((PropertyChild) property).getChild();
                     if (!child.equals(mRoot)) {
-                        IndividualEditor individualEditorPanel = new IndividualEditor();
-                        individualEditorPanel.set(child);
+                        IndividualEditor individualEditor = new IndividualEditor();
+                        individualEditor.set(child);
 
                         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", child),
-                                individualEditorPanel);
+                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
+                                individualEditor);
                         individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                             try {
-                                individualEditorPanel.commit();
+                                individualEditor.commit();
                             } catch (GedcomException ex) {
                                 Exceptions.printStackTrace(ex);
                             }
@@ -328,17 +328,17 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                     } else if (property instanceof Indi) {
                         Indi child = (Indi) property;
                         if (!child.equals(mRoot)) {
-                            IndividualEditor individualEditorPanel = new IndividualEditor();
-                            individualEditorPanel.set(child);
+                            IndividualEditor individualEditor = new IndividualEditor();
+                            individualEditor.set(child);
 
                             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", child),
-                                    individualEditorPanel);
+                                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
+                                    individualEditor);
                             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                                 try {
-                                    individualEditorPanel.commit();
+                                    individualEditor.commit();
                                 } catch (GedcomException ex) {
                                     Exceptions.printStackTrace(ex);
                                 }
@@ -351,17 +351,17 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                     } else if (property instanceof PropertyChild) {
                         Indi child = ((PropertyChild) property).getChild();
                         if (!child.equals(mRoot)) {
-                            IndividualEditor individualEditorPanel = new IndividualEditor();
-                            individualEditorPanel.set(child);
+                            IndividualEditor individualEditor = new IndividualEditor();
+                            individualEditor.set(child);
 
                             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", child),
-                                    individualEditorPanel);
+                                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
+                                    individualEditor);
                             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                                 try {
-                                    individualEditorPanel.commit();
+                                    individualEditor.commit();
                                 } catch (GedcomException ex) {
                                     Exceptions.printStackTrace(ex);
                                 }
@@ -428,16 +428,16 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            IndividualEditor individualEditorPanel = new IndividualEditor();
-            individualEditorPanel.set(mIndividual);
+            IndividualEditor individualEditor = new IndividualEditor();
+            individualEditor.set(mIndividual);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.title"),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.create.title"),
+                    individualEditor);
             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                individualEditorPanel.commit();
+                individualEditor.commit();
                 mChlidrenTreeTableModel.add(mAddedChild);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {

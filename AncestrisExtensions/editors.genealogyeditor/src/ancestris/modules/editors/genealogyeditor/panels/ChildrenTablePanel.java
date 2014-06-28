@@ -143,16 +143,16 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            IndividualEditor individualEditorPanel = new IndividualEditor();
-            individualEditorPanel.set(mIndividual);
+            IndividualEditor individualEditor = new IndividualEditor();
+            individualEditor.set(mIndividual);
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.create.title"),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.create.title"),
+                    individualEditor);
             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                individualEditorPanel.commit();
+                individualEditor.commit();
                 mIndividualReferencesTableModel.add(mAddedChild);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -168,17 +168,17 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
         int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
         if (rowIndex != -1) {
             PropertyXRef individualRef = mIndividualReferencesTableModel.getValueAt(rowIndex);
-            IndividualEditor individualEditorPanel = new IndividualEditor();
-            individualEditorPanel.set((Indi) individualRef.getTargetEntity());
+            IndividualEditor individualEditor = new IndividualEditor();
+            individualEditor.set((Indi) individualRef.getTargetEntity());
 
             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", individualRef.getTargetEntity()),
-                    individualEditorPanel);
+                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", individualRef.getTargetEntity()),
+                    individualEditor);
             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
-                    individualEditorPanel.commit();
+                    individualEditor.commit();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -253,17 +253,17 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
             int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
             if (rowIndex != -1) {
                 PropertyXRef individualRef = mIndividualReferencesTableModel.getValueAt(rowIndex);
-                IndividualEditor individualEditorPanel = new IndividualEditor();
-                individualEditorPanel.set((Indi) individualRef.getTargetEntity());
+                IndividualEditor individualEditor = new IndividualEditor();
+                individualEditor.set((Indi) individualRef.getTargetEntity());
 
                 DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", (Indi) individualRef.getTargetEntity()),
-                        individualEditorPanel);
+                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", (Indi) individualRef.getTargetEntity()),
+                        individualEditor);
                 individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                 if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
-                        individualEditorPanel.commit();
+                        individualEditor.commit();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }

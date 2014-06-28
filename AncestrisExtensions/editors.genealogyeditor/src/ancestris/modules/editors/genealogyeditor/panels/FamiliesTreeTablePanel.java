@@ -348,17 +348,17 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                 } else if (entity instanceof Indi) {
                     Indi child = (Indi) entity;
                     if (!child.equals(mRoot)) {
-                        IndividualEditor individualEditorPanel = new IndividualEditor();
-                        individualEditorPanel.set(child);
+                        IndividualEditor individualEditor = new IndividualEditor();
+                        individualEditor.set(child);
 
                         DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", child),
-                                individualEditorPanel);
+                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
+                                individualEditor);
                         individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                         if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                             try {
-                                individualEditorPanel.commit();
+                                individualEditor.commit();
                             } catch (GedcomException ex) {
                                 Exceptions.printStackTrace(ex);
                             }
@@ -482,17 +482,17 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                     } else if (entity instanceof Indi) {
                         Indi child = (Indi) entity;
                         if (!child.equals(mRoot)) {
-                            IndividualEditor individualEditorPanel = new IndividualEditor();
-                            individualEditorPanel.set(child);
+                            IndividualEditor individualEditor = new IndividualEditor();
+                            individualEditor.set(child);
 
                             DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditorPanel.edit.title", child),
-                                    individualEditorPanel);
+                                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
+                                    individualEditor);
                             individualEditorDialog.setDialogId(IndividualEditor.class.getName());
 
                             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                                 try {
-                                    individualEditorPanel.commit();
+                                    individualEditor.commit();
                                 } catch (GedcomException ex) {
                                     Exceptions.printStackTrace(ex);
                                 }
