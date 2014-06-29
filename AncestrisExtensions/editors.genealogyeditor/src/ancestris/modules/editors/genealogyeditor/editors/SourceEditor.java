@@ -500,7 +500,7 @@ public class SourceEditor extends Editor {
                     publicationFacts.setValue(sourceTextTextArea.getText());
                 }
                 Property sourceText = mSource.getProperty("TEXT");
-                if (sourceTitle == null) {
+                if (sourceText == null) {
                     mSource.addProperty("TEXT", sourceTextTextArea.getText());
                 } else {
                     sourceText.setValue(sourceTextTextArea.getText());
