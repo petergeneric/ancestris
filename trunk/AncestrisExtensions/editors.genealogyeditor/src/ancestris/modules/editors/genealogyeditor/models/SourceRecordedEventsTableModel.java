@@ -12,16 +12,16 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class SourceEventTypesTableModel extends AbstractTableModel {
+public class SourceRecordedEventsTableModel extends AbstractTableModel {
 
     List<Property> mEventTypesList = new ArrayList<Property>();
     String[] columnsName = {
-        NbBundle.getMessage(SourceEventTypesTableModel.class, "EventsTableModel.column.ID.eventType"),
-        NbBundle.getMessage(SourceEventTypesTableModel.class, "EventsTableModel.column.ID.date"),
-        NbBundle.getMessage(SourceEventTypesTableModel.class, "EventsTableModel.column.ID.place")
+        NbBundle.getMessage(SourceRecordedEventsTableModel.class, "EventsTableModel.column.ID.eventType"),
+        NbBundle.getMessage(SourceRecordedEventsTableModel.class, "EventsTableModel.column.ID.date"),
+        NbBundle.getMessage(SourceRecordedEventsTableModel.class, "EventsTableModel.column.ID.place")
     };
 
-    public SourceEventTypesTableModel() {
+    public SourceRecordedEventsTableModel() {
     }
 
     @Override

@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.models.SourceEventTypesTableModel;
+import ancestris.modules.editors.genealogyeditor.models.SourceRecordedEventsTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -27,7 +27,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private Property mRegisteredEvent;
-    SourceEventTypesTableModel mSourceEventTypesTableModel = new SourceEventTypesTableModel();
+    SourceRecordedEventsTableModel mSourceEventTypesTableModel = new SourceRecordedEventsTableModel();
 
     /**
      * Creates new form SourceRecordedEventsListPanel
