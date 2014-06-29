@@ -23,18 +23,18 @@ import org.openide.util.NbBundle;
  * +2 AGNC <RESPONSIBLE_AGENCY> {0:1}
  * +2 <<NOTE_STRUCTURE>> {0:M}
  */
-public class SourceEventTypeListPanel extends javax.swing.JPanel {
+public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private Property mRegisteredEvent;
     SourceEventTypesTableModel mSourceEventTypesTableModel = new SourceEventTypesTableModel();
 
     /**
-     * Creates new form SourceEventTypeListPanel
+     * Creates new form SourceRecordedEventsListPanel
      */
-    public SourceEventTypeListPanel() {
+    public SourceRecordedEventsListPanel() {
         initComponents();
-        sourceEventsTable.setID(SourceEventTypeListPanel.class.getName());
+        sourceEventsTable.setID(SourceRecordedEventsListPanel.class.getName());
     }
 
     /**
