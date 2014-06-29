@@ -178,7 +178,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel" name="eventTypePanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceRecordedEventsListPanel" name="eventTypePanel">
             </Component>
           </SubComponents>
         </Container>

@@ -70,7 +70,7 @@ public class SourceEditor extends Editor {
         agencyTextField = new javax.swing.JTextField();
         sourceInformationTabbedPane = new javax.swing.JTabbedPane();
         registeredEventsPanel = new javax.swing.JPanel();
-        eventTypePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel();
+        eventTypePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceRecordedEventsListPanel();
         sourceTextPanel = new javax.swing.JPanel();
         sourceTextScrollPane = new javax.swing.JScrollPane();
         sourceTextTextArea = new javax.swing.JTextArea();
@@ -308,7 +308,7 @@ public class SourceEditor extends Editor {
     private javax.swing.JTextField authorTextField;
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JLabel changeDateLabeldate;
-    private ancestris.modules.editors.genealogyeditor.panels.SourceEventTypeListPanel eventTypePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceRecordedEventsListPanel eventTypePanel;
     private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
     private javax.swing.JPanel multimediaObjectPanel;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
