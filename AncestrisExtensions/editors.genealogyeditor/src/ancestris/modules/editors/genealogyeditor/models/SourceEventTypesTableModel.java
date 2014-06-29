@@ -45,7 +45,7 @@ public class SourceEventTypesTableModel extends AbstractTableModel {
             Property eventType = mEventTypesList.get(row);
             if (column == 0) {
                 String result = "";
-                for (String tag : eventType.getValue().split(",")) {
+                for (String tag : eventType.getValue().replaceAll(" ", "").split(",")) {
                     if (result.isEmpty()) {
                         result += PropertyTag2Name.getTagName(tag);
                     } else {
