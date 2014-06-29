@@ -4,6 +4,14 @@ import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -14,69 +22,92 @@ import org.openide.util.NbBundle;
  */
 public class RecordedEventEditorPanel extends javax.swing.JPanel {
 
+    private class CheckableItem {
+
+        private final String str;
+
+        private boolean isSelected;
+
+        public CheckableItem(String str) {
+            this.str = str;
+            isSelected = false;
+        }
+
+        public void setSelected(boolean b) {
+            isSelected = b;
+        }
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        @Override
+        public String toString() {
+            return str;
+        }
+    }
+
+    private class CheckListRenderer extends JCheckBox implements ListCellRenderer<CheckableItem> {
+
+        public CheckListRenderer() {
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends CheckableItem> list, CheckableItem checkableItem,
+                int index, boolean isSelected, boolean hasFocus) {
+            setEnabled(list.isEnabled());
+            setSelected(checkableItem.isSelected());
+            setText(checkableItem.toString());
+            return this;
+        }
+
+    }
     private Property mEvent = null;
     private PropertyPlace mPlace = null;
     private PropertyDate mDate = null;
-    private String[] mEvents = {
-        /*
-         * INDIVIDUAL_EVENT
-         */
-        PropertyTag2Name.getTagName("BIRT"),
-        PropertyTag2Name.getTagName("CHR"),
-        PropertyTag2Name.getTagName("DEAT"),
-        PropertyTag2Name.getTagName("BURI"),
-        PropertyTag2Name.getTagName("CREM"),
-        PropertyTag2Name.getTagName("ADOP"),
-        PropertyTag2Name.getTagName("BAPM"),
-        PropertyTag2Name.getTagName("BARM"),
-        PropertyTag2Name.getTagName("BASM"),
-        PropertyTag2Name.getTagName("BLES"),
-        PropertyTag2Name.getTagName("CHRA"),
-        PropertyTag2Name.getTagName("CONF"),
-        PropertyTag2Name.getTagName("FCOM"),
-        PropertyTag2Name.getTagName("ORDN"),
-        PropertyTag2Name.getTagName("NATU"),
-        PropertyTag2Name.getTagName("EMIG"),
-        PropertyTag2Name.getTagName("IMMI"),
-        PropertyTag2Name.getTagName("CENS"),
-        PropertyTag2Name.getTagName("PROB"),
-        PropertyTag2Name.getTagName("WILL"),
-        PropertyTag2Name.getTagName("GRAD"),
-        PropertyTag2Name.getTagName("RETI"),
-        PropertyTag2Name.getTagName("EVEN"),
-        /*
-         * INDIVIDUAL_ATTRIBUTE
-         */
-        PropertyTag2Name.getTagName("CAST"),
-        PropertyTag2Name.getTagName("DSCR"),
-        PropertyTag2Name.getTagName("EDUC"),
-        PropertyTag2Name.getTagName("IDNO"),
-        PropertyTag2Name.getTagName("NATI"),
-        PropertyTag2Name.getTagName("NCHI"),
-        PropertyTag2Name.getTagName("NMR"),
-        PropertyTag2Name.getTagName("OCCU"),
-        PropertyTag2Name.getTagName("PROP"),
-        PropertyTag2Name.getTagName("RELI"),
-        PropertyTag2Name.getTagName("RESI"),
-        PropertyTag2Name.getTagName("SSN"),
-        PropertyTag2Name.getTagName("TITL"),
-        //        PropertyTag2Name.getTagName("FACT"), not defined in gedcom xml definition file
-        /*
-         * FAMILY_EVENT
-         */
-        PropertyTag2Name.getTagName("ANUL"),
-        PropertyTag2Name.getTagName("CENS"),
-        PropertyTag2Name.getTagName("DIV"),
-        PropertyTag2Name.getTagName("DIVF"),
-        PropertyTag2Name.getTagName("MARR"),
-        PropertyTag2Name.getTagName("ENGA"),
-        PropertyTag2Name.getTagName("MARB"),
-        PropertyTag2Name.getTagName("MARC"),
-        PropertyTag2Name.getTagName("MARL"),
-        PropertyTag2Name.getTagName("MARS"),
-        PropertyTag2Name.getTagName("RESI"),
-        PropertyTag2Name.getTagName("EVEN")
+    private ArrayList<String> mEvents = new ArrayList<String>() {
+        {
+            /*
+             * INDIVIDUAL_EVENT
+             */
+            add(PropertyTag2Name.getTagName("BIRT"));
+            add(PropertyTag2Name.getTagName("CHR"));
+            add(PropertyTag2Name.getTagName("DEAT"));
+            add(PropertyTag2Name.getTagName("BURI"));
+            add(PropertyTag2Name.getTagName("CREM"));
+            add(PropertyTag2Name.getTagName("ADOP"));
+            add(PropertyTag2Name.getTagName("BAPM"));
+            add(PropertyTag2Name.getTagName("BARM"));
+            add(PropertyTag2Name.getTagName("BASM"));
+            add(PropertyTag2Name.getTagName("BLES"));
+            add(PropertyTag2Name.getTagName("CHRA"));
+            add(PropertyTag2Name.getTagName("CONF"));
+            add(PropertyTag2Name.getTagName("FCOM"));
+            add(PropertyTag2Name.getTagName("ORDN"));
+            add(PropertyTag2Name.getTagName("NATU"));
+            add(PropertyTag2Name.getTagName("EMIG"));
+            add(PropertyTag2Name.getTagName("IMMI"));
+            add(PropertyTag2Name.getTagName("CENS"));
+            add(PropertyTag2Name.getTagName("PROB"));
+            add(PropertyTag2Name.getTagName("WILL"));
+            add(PropertyTag2Name.getTagName("GRAD"));
+            add(PropertyTag2Name.getTagName("RETI"));
+            /*
+             * FAMILY_EVENT
+             */
+            add(PropertyTag2Name.getTagName("ANUL"));
+            add(PropertyTag2Name.getTagName("CENS"));
+            add(PropertyTag2Name.getTagName("DIV"));
+            add(PropertyTag2Name.getTagName("DIVF"));
+            add(PropertyTag2Name.getTagName("MARR"));
+            add(PropertyTag2Name.getTagName("ENGA"));
+            add(PropertyTag2Name.getTagName("MARB"));
+            add(PropertyTag2Name.getTagName("MARC"));
+            add(PropertyTag2Name.getTagName("MARL"));
+            add(PropertyTag2Name.getTagName("MARS"));
+        }
     };
+    private DefaultListModel<CheckableItem> mEventsModel = new DefaultListModel<CheckableItem>();
 
     /**
      * Creates new form RecordedEventEditorPanel
@@ -84,6 +115,20 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     public RecordedEventEditorPanel() {
         initComponents();
         aDateBean.setPreferHorizontal(true);
+        java.util.Collections.sort(mEvents);
+        for (String event : mEvents) {
+            mEventsModel.addElement(new CheckableItem(event));
+        }
+
+        recordedEventsList.setVisibleRowCount(-1);
+        recordedEventsList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = recordedEventsList.getSelectedIndex();
+                CheckableItem item = (CheckableItem) recordedEventsList.getModel().getElementAt(index);
+                item.setSelected(!item.isSelected());
+            }
+        });
     }
 
     /**
@@ -98,14 +143,15 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         recordedEventsLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
         aDateBean = new ancestris.modules.beans.ADateBean();
-        recordedEventsTextField = new javax.swing.JTextField();
         placeLabel = new javax.swing.JLabel();
         placeTextField = new javax.swing.JTextField();
         addPlaceButton = new javax.swing.JButton();
         editPlaceButton = new javax.swing.JButton();
         linkToPlaceButton = new javax.swing.JButton();
+        recordedEventsScrollPane = new javax.swing.JScrollPane();
+        recordedEventsList = new javax.swing.JList();
 
-        recordedEventsLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        recordedEventsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         recordedEventsLabel.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.recordedEventsLabel.text")); // NOI18N
 
         dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -155,37 +201,48 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        recordedEventsScrollPane.setMinimumSize(new java.awt.Dimension(526, 104));
+        recordedEventsScrollPane.setPreferredSize(new java.awt.Dimension(526, 104));
+
+        recordedEventsList.setModel(mEventsModel);
+        recordedEventsList.setCellRenderer(new CheckListRenderer());
+        recordedEventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        recordedEventsList.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        recordedEventsScrollPane.setViewportView(recordedEventsList);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(recordedEventsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
-                    .addComponent(recordedEventsTextField)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(recordedEventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(placeTextField)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(placeTextField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(editPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(recordedEventsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(recordedEventsLabel)
-                    .addComponent(recordedEventsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(recordedEventsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(recordedEventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -351,13 +408,20 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel placeLabel;
     private javax.swing.JTextField placeTextField;
     private javax.swing.JLabel recordedEventsLabel;
-    private javax.swing.JTextField recordedEventsTextField;
+    private javax.swing.JList recordedEventsList;
+    private javax.swing.JScrollPane recordedEventsScrollPane;
     // End of variables declaration//GEN-END:variables
 
     void set(Property event) {
         this.mEvent = event;
 
-        recordedEventsTextField.setText(mEvent.getValue());
+        for (String eventTag : mEvent.getValue().replaceAll(" ", "").split(",")) {
+            for (int index = 0; index < mEventsModel.size(); index++) {
+                if (mEventsModel.get(index).toString().equals(PropertyTag2Name.getTagName(eventTag))) {
+                    mEventsModel.get(index).setSelected(true);
+                }
+            }
+        }
         mDate = (PropertyDate) mEvent.getProperty("DATE", false);
         if (mDate == null) {
             try {
@@ -398,9 +462,13 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    String eventType = recordedEventsTextField.getText();
-//                    mEvent.setValue(PropertyTag2Name.getPropertyTag(eventType));
-                    mEvent.setValue(eventType);
+                    String tmp = "";
+                    for (int index = 0; index < mEventsModel.size(); index++) {
+                        if (mEventsModel.get(index).isSelected) {
+                            tmp += (tmp.isEmpty() ? "" : ", ") + PropertyTag2Name.getPropertyTag(mEventsModel.get(index).toString());
+                        }
+                    }
+                    mEvent.setValue(tmp);
                     try {
                         aDateBean.commit();
                     } catch (GedcomException ex) {
@@ -414,5 +482,4 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
             return null;
         }
     }
-
 }
