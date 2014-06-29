@@ -425,7 +425,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             sourceEditor.set(mReferencedSource);
 
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditor.class, "SourceEditorPanel.create.title"),
+                    NbBundle.getMessage(SourceEditor.class, "SourceEditor.create.title"),
                     sourceEditor);
             sourceEditorDialog.setDialogId(SourceEditor.class.getName());
 
@@ -461,7 +461,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             SourceEditor sourceEditor = new SourceEditor();
             sourceEditor.set(mReferencedSource);
             ADialog sourceEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceEditor.class, "SourceEditorPanel.edit.title"),
+                    NbBundle.getMessage(SourceEditor.class, "SourceEditor.edit.title"),
                     sourceEditor);
             sourceEditorDialog.setDialogId(SourceEditor.class.getName());
 
