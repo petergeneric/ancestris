@@ -30,7 +30,7 @@ public class MultiMediaObjectEditor extends Editor {
     private MultimediaFilesTableModel mMultimediaFilesTableModel = new MultimediaFilesTableModel();
 
     /**
-     * Creates new form MultiMediaObjectEditorPanel
+     * Creates new form MultiMediaObjectEditor
      */
     public MultiMediaObjectEditor() {
         initComponents();
