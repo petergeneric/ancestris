@@ -59,7 +59,7 @@ public final class GenealogyEditorCreateMultiMediaAction implements ActionListen
                 multiMediaObjectEditorPanel.set((Media) mMedia);
 
                 DialogManager.ADialog multiMediaObjectEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditorPanel.create.title"),
+                        NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.create.title"),
                         multiMediaObjectEditorPanel);
                 multiMediaObjectEditorDialog.setDialogId(MultiMediaObjectEditor.class.getName());
 
