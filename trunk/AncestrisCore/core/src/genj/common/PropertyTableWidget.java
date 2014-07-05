@@ -265,6 +265,11 @@ public class PropertyTableWidget extends JPanel {
                     scrollto.x = visible.x;
                 }
                 table.scrollRectToVisible(scrollto);
+                //XXX: DAN-20140705) temporary fix: if current selection is an indi the selecting
+                // a fam in tree vue don't always select the correct family. 
+                // In fact the  family is selected but not shown.
+                // apllying the scrollto twice seems to fix but I don't see why. 
+                table.scrollRectToVisible(scrollto);
             }
 
         } finally {
