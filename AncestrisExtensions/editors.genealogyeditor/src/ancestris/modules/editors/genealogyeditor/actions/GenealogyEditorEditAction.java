@@ -1,11 +1,12 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
-import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
-import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
+import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
 import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
+import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
+import ancestris.modules.editors.genealogyeditor.editors.SubmitterEditor;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.awt.event.ActionEvent;
@@ -150,17 +151,39 @@ public final class GenealogyEditorEditAction implements ActionListener {
             } else if (entity instanceof Repository) {
                 Gedcom gedcom = entity.getGedcom();
                 int undoNb = gedcom.getUndoNb();
-                RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
-                repositoryEditorPanel.set((Repository) entity);
+                RepositoryEditor repositoryEditor = new RepositoryEditor();
+                repositoryEditor.set((Repository) entity);
 
                 editorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditor.edit.title", entity),
-                        repositoryEditorPanel);
+                        repositoryEditor);
                 editorDialog.setDialogId(RepositoryEditor.class.getName());
 
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
-                        repositoryEditorPanel.commit();
+                        repositoryEditor.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
+            } else if (entity instanceof Submitter) {
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
+                SubmitterEditor submitterEditor = new SubmitterEditor();
+                submitterEditor.set((Submitter) entity);
+
+                editorDialog = new DialogManager.ADialog(
+                        NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.edit.title", entity),
+                        submitterEditor);
+                editorDialog.setDialogId(SubmitterEditor.class.getName());
+
+                if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    try {
+                        submitterEditor.commit();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
@@ -170,6 +193,7 @@ public final class GenealogyEditorEditAction implements ActionListener {
                     }
                 }
             }
+
         }
     }
 }
