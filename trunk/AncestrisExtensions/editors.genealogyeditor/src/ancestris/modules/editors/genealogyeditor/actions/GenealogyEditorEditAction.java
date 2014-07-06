@@ -44,9 +44,10 @@ public final class GenealogyEditorEditAction implements ActionListener {
         DialogManager.ADialog editorDialog;
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Entity entity = context.getEntity();
+            Gedcom gedcom = entity.getGedcom();
+            int undoNb = gedcom.getUndoNb();
+
             if (entity instanceof Indi) {
-                Gedcom gedcom = entity.getGedcom();
-                int undoNb = gedcom.getUndoNb();
                 IndividualEditor individualEditor = new IndividualEditor();
                 individualEditor.set((Indi) entity);
                 editorDialog = new DialogManager.ADialog(
@@ -65,8 +66,6 @@ public final class GenealogyEditorEditAction implements ActionListener {
                     }
                 }
             } else if (entity instanceof Fam) {
-                Gedcom gedcom = entity.getGedcom();
-                int undoNb = gedcom.getUndoNb();
                 FamilyEditor familyEditorPanel = new FamilyEditor();
                 familyEditorPanel.set((Fam) entity);
 
@@ -86,8 +85,6 @@ public final class GenealogyEditorEditAction implements ActionListener {
                     }
                 }
             } else if (entity instanceof Note) {
-                Gedcom gedcom = entity.getGedcom();
-                int undoNb = gedcom.getUndoNb();
                 NoteEditor noteEditor = new NoteEditor();
                 noteEditor.set((Note) entity);
 
@@ -107,8 +104,6 @@ public final class GenealogyEditorEditAction implements ActionListener {
                     }
                 }
             } else if (entity instanceof Media) {
-                Gedcom gedcom = entity.getGedcom();
-                int undoNb = gedcom.getUndoNb();
                 MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
                 multiMediaObjectEditor.set((Media) entity);
 
@@ -128,8 +123,6 @@ public final class GenealogyEditorEditAction implements ActionListener {
                     }
                 }
             } else if (entity instanceof Source) {
-                Gedcom gedcom = entity.getGedcom();
-                int undoNb = gedcom.getUndoNb();
                 SourceEditor sourceEditor = new SourceEditor();
                 sourceEditor.set((Source) entity);
 
@@ -149,8 +142,6 @@ public final class GenealogyEditorEditAction implements ActionListener {
                     }
                 }
             } else if (entity instanceof Repository) {
-                Gedcom gedcom = entity.getGedcom();
-                int undoNb = gedcom.getUndoNb();
                 RepositoryEditor repositoryEditor = new RepositoryEditor();
                 repositoryEditor.set((Repository) entity);
 
@@ -171,8 +162,6 @@ public final class GenealogyEditorEditAction implements ActionListener {
                     }
                 }
             } else if (entity instanceof Submitter) {
-                Gedcom gedcom = entity.getGedcom();
-                int undoNb = gedcom.getUndoNb();
                 SubmitterEditor submitterEditor = new SubmitterEditor();
                 submitterEditor.set((Submitter) entity);
 
@@ -193,7 +182,6 @@ public final class GenealogyEditorEditAction implements ActionListener {
                     }
                 }
             }
-
         }
     }
 }
