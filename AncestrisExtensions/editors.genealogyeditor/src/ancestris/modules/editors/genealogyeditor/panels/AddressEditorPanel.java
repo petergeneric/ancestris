@@ -87,17 +87,317 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
         phoneLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.phoneLabel.text")); // NOI18N
 
+        phoneTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mPhoneModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mPhoneModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mPhoneModified = true;
+                }
+            }
+        });
+
+        addrLine2TextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mAddrLine2Modified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mAddrLine2Modified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mAddrLine2Modified = true;
+                }
+            }
+        });
+
         cityLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.cityLabel.text")); // NOI18N
+
+        addrLine3TextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mAddrLine3Modified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mAddrLine3Modified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mAddrLine3Modified = true;
+                }
+            }
+        });
+
+        cityTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mCityModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mCityModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mCityModified = true;
+                }
+            }
+        });
+
+        countryTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mCountryModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mCountryModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mCountryModified = true;
+                }
+            }
+        });
 
         countryLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.countryLabel.text")); // NOI18N
 
+        eMailAddrTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    meMailAddrModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                meMailAddrModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    meMailAddrModified = true;
+                }
+            }
+        });
+
         eMailAddrLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.eMailAddrLabel.text")); // NOI18N
+
+        httpAddrTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mHttpAddrModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mHttpAddrModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mHttpAddrModified = true;
+                }
+            }
+        });
+
+        postalCodeTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mPostalCodeModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mPostalCodeModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mPostalCodeModified = true;
+                }
+            }
+        });
 
         httpAddrLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.httpAddrLabel.text")); // NOI18N
 
+        addrLine1TextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mAddrLine1Modified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mAddrLine1Modified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mAddrLine1Modified = true;
+                }
+            }
+        });
+
         postalCodeLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.postalCodeLabel.text")); // NOI18N
 
+        faxTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mFaxModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mFaxModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mFaxModified = true;
+                }
+            }
+        });
+
+        stateTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mStateModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mStateModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mStateModified = true;
+                }
+            }
+        });
+
         faxLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.faxLabel.text")); // NOI18N
+
+        AddrLineTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mAddrLineModified = true;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mAddressModified = true;
+                mAddrLineModified = true;
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (!updateOnGoing) {
+                    mAddressModified = true;
+                    mAddrLineModified = true;
+                }
+            }
+        });
 
         stateLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.stateLabel.text")); // NOI18N
 
@@ -220,6 +520,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
     public void set(Property root, Property address) {
         mAddress = address;
         mRoot = root;
+        updateOnGoing = true;
         if (mAddress != null) {
             AddrLineTextField.setText(address.getValue());
             Property propertyAdr1 = mAddress.getProperty("ADR1");
@@ -272,305 +573,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
             httpAddrTextField.setText(propertyhttpAddr != null ? propertyhttpAddr.getValue() : "");
         }
-
-        AddrLineTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLineModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mAddrLineModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLineModified = true;
-                }
-            }
-        });
-
-        addrLine1TextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine1Modified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mAddrLine1Modified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine1Modified = true;
-                }
-            }
-        });
-
-        addrLine2TextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine2Modified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mAddrLine2Modified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine2Modified = true;
-                }
-            }
-        });
-
-        addrLine3TextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine3Modified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mAddrLine3Modified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine3Modified = true;
-                }
-            }
-        });
-        cityTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mCityModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mCityModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mCityModified = true;
-                }
-            }
-        });
-
-        stateTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mStateModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mStateModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mStateModified = true;
-                }
-            }
-        });
-
-        postalCodeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mPostalCodeModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mPostalCodeModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mPostalCodeModified = true;
-                }
-            }
-        });
-
-        countryTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mCountryModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mCountryModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mCountryModified = true;
-                }
-            }
-        });
-
-        phoneTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mPhoneModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mPhoneModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mPhoneModified = true;
-                }
-            }
-        });
-
-        faxTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mFaxModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mFaxModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mFaxModified = true;
-                }
-            }
-        });
-
-        eMailAddrTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    meMailAddrModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                meMailAddrModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    meMailAddrModified = true;
-                }
-            }
-        });
-
-        httpAddrTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mHttpAddrModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mHttpAddrModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mHttpAddrModified = true;
-                }
-            }
-        });
+        updateOnGoing = false;
     }
 
     public Property commit() {

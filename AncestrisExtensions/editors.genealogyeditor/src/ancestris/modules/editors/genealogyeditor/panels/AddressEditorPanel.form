@@ -112,8 +112,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="phoneTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="phoneTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mPhoneModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mPhoneModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mPhoneModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="addrLine2TextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="addrLine2TextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mAddrLine2Modified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mAddrLine2Modified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mAddrLine2Modified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="cityLabel">
       <Properties>
@@ -123,10 +129,19 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="addrLine3TextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="addrLine3TextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mAddrLine3Modified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mAddrLine3Modified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mAddrLine3Modified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="cityTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cityTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mCityModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mCityModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mCityModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="countryTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="countryTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mCountryModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mCountryModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mCountryModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="countryLabel">
       <Properties>
@@ -136,6 +151,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="eMailAddrTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="eMailAddrTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            meMailAddrModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        meMailAddrModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            meMailAddrModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="eMailAddrLabel">
       <Properties>
@@ -145,8 +163,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="httpAddrTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="httpAddrTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mHttpAddrModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mHttpAddrModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mHttpAddrModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="postalCodeTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="postalCodeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mPostalCodeModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mPostalCodeModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mPostalCodeModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="httpAddrLabel">
       <Properties>
@@ -156,6 +180,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="addrLine1TextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="addrLine1TextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mAddrLine1Modified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mAddrLine1Modified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mAddrLine1Modified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="postalCodeLabel">
       <Properties>
@@ -165,8 +192,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="faxTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="faxTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mFaxModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mFaxModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mFaxModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="stateTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="stateTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mStateModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mStateModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mStateModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="faxLabel">
       <Properties>
@@ -176,6 +209,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="AddrLineTextField">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="AddrLineTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mAddrLineModified = true;&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        mAddressModified = true;&#xa;        mAddrLineModified = true;&#xa;    }&#xa;&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        if (!updateOnGoing) {&#xa;            mAddressModified = true;&#xa;            mAddrLineModified = true;&#xa;        }&#xa;    }&#xa;});"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="stateLabel">
       <Properties>
