@@ -681,9 +681,9 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                             if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                                 Property propertyeMailAddr = mAddress.getProperty("EMAIL");
                                 if (propertyeMailAddr == null) {
-                                    mAddress.addProperty("EMAIL", faxTextField.getText());
+                                    mAddress.addProperty("EMAIL", eMailAddrTextField.getText());
                                 } else {
-                                    propertyeMailAddr.setValue(faxTextField.getText());
+                                    propertyeMailAddr.setValue(eMailAddrTextField.getText());
                                 }
                             } else {
                                 Property propertyeMailAddr = mAddress.getProperty("_EMAIL");
