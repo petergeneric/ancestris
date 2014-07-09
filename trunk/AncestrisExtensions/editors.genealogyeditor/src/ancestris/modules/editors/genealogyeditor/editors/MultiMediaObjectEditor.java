@@ -217,7 +217,8 @@ public class MultiMediaObjectEditor extends Editor {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         if (mMultiMediaObject.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                            mMultiMediaObject.addFile(imageFile, imageFile.getName());
+                            PropertyFile file = (PropertyFile) mMultiMediaObject.addProperty("FILE", "");
+                            file.addFile(imageFile);
                         } else {
                             Property file = mMultiMediaObject.getProperty("FILE", false);
 
