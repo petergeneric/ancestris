@@ -357,16 +357,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
         this.root = root;
         this.name = name;
 
-        ArrayList<String> firstNames = new ArrayList<String>();
-        ArrayList<String> lastNames = new ArrayList<String>();
-
-        for (Indi indi : root.getGedcom().getIndis()) {
-            firstNames.add(indi.getFirstName());
-            lastNames.add(indi.getLastName());
-        }
-
-        AutoCompleteDecorator.decorate(firstNameTextField, firstNames, false);
-        AutoCompleteDecorator.decorate(familyNameTextField, lastNames, false);
+        AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(root.getGedcom(), true), false);
+        AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(root.getGedcom(), true), false);
 
         String version = root.getGedcom().getGrammar().getVersion();
         if (version.equals("5.5")) {
