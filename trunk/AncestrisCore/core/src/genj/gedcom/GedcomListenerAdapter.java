@@ -24,33 +24,43 @@ package genj.gedcom;
  */
 public class GedcomListenerAdapter implements GedcomListener, GedcomMetaListener {
   
+  @Override
   public void gedcomHeaderChanged(Gedcom gedcom) {
   }
   
+  @Override
   public void gedcomWriteLockAcquired(Gedcom gedcom) {
   }
   
+  @Override
   public void gedcomWriteLockReleased(Gedcom gedcom) {
   }
   
+  @Override
   public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
   }
   
+  @Override
   public void gedcomAfterUnitOfWork(Gedcom gedcom) {
   }
 
+  @Override
   public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
   }
 
+  @Override
   public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
   }
   
+  @Override
   public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
   }
   
+  @Override
   public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
   }
   
+  @Override
   public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property removed) {
   }
   

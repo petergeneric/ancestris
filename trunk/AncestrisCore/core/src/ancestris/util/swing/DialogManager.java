@@ -195,6 +195,10 @@ param text
         return this;
     }
 
+    public DialogManager setDialogId(Class type) {
+        return setDialogId(type.getName());
+    }
+
     public DialogManager setDialogId(String id) {
         dialogId = id;
         return this;

@@ -85,7 +85,7 @@
         <folder name="Window">
             <file name="ancestris-explorer-GedcomExplorerAction.instance">
                 <attr name="component" methodvalue="ancestris.explorer.GedcomExplorerTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerAction"/>
+                <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerTopComponent"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
             <file name="org-netbeans-core-windows-actions-ResetWindowsAction.instance_hidden"/>
