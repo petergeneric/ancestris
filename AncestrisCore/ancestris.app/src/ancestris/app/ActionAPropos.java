@@ -12,6 +12,7 @@ package ancestris.app;
 
 import ancestris.api.core.Version;
 import ancestris.core.pluginservice.PluginInterface;
+import ancestris.util.swing.DialogManager;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -133,8 +134,11 @@ public class ActionAPropos extends JDialog implements ActionListener {
             }
         }
         text += "</table><br></html>";
-        NotifyDescriptor d = new NotifyDescriptor.Confirmation(getScrollableText(text), title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
-        DialogDisplayer.getDefault().notify(d);
+        DialogManager.create(title, getScrollableText(text))
+                .setMessageType(DialogManager.INFORMATION_MESSAGE)
+                .setOptionType(DialogManager.OK_ONLY_OPTION)
+                .setDialogId("ancestris.about.versions")
+                .show();
     }
 
     private String getContributors() {
