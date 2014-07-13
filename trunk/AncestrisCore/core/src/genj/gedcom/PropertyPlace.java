@@ -358,7 +358,7 @@ public class PropertyPlace extends PropertyChoiceValue {
 
     @Override
     public int compareTo(Property that) {
-        String sortFormat = getGedcom().getRegistry().get("place.sort.format",(String) null);
+        String sortFormat = getGedcom().getPlaceSortOrder();
         if (sortFormat ==null)
             return compare(this.getValueStartingWithCity(),((PropertyPlace)that).getValueStartingWithCity());
         else
