@@ -44,6 +44,15 @@ public class AboutPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        if (timer != null){
+            timer.stop();
+        }
+        yTop = 0;
+    }
+
     public void setTimer() {
         hSize = jLabel4.getHeight() + jLabel12.getHeight();
         jPanel2.setPreferredSize(new Dimension(jPanel2.getWidth(), hSize));
@@ -131,6 +140,7 @@ public class AboutPanel extends javax.swing.JPanel {
         jLabel2.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel2.text")); // NOI18N
 
         jLabel1.setBackground(new java.awt.Color(240, 176, 111));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("");
         jLabel1.setPreferredSize(new java.awt.Dimension(640, 335));
         jLabel1.setIcon(new ImageIcon(App.class.getResource("/ancestris/app/splash.gif")));
@@ -180,8 +190,8 @@ public class AboutPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)
+                    .addComponent(jLabel4))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -200,7 +210,7 @@ public class AboutPanel extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,8 +245,8 @@ public class AboutPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(298, 298, 298))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
