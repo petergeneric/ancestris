@@ -1420,7 +1420,7 @@ public class Gedcom implements Comparable {
      * @return
      */
     public String getPlaceSortOrder() {
-        return getRegistry().get(GedcomOptions.PLACE_SORT_ORDER, (String) null);
+        return getRegistry().get(GedcomOptions.PLACE_SORT_ORDER, GedcomOptions.getInstance().getPlaceSortOrder());
     }
 
     /**
