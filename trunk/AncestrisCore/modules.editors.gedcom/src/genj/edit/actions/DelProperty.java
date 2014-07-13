@@ -120,8 +120,8 @@ public class DelProperty extends AbstractChange {
         // leaving an orphan?
         Set<Entity> orphans = new HashSet<Entity>();
         Property parent = null;
-
-        for (Property prop : candidates) {
+        
+        for (Property prop : new HashSet<Property>(candidates)) {
             if (prop instanceof Entity) {
                 gedcom.deleteEntity(((Entity) prop));
                 continue;
