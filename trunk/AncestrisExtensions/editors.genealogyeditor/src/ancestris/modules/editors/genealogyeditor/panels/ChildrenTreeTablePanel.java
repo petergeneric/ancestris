@@ -2,7 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
-import ancestris.modules.editors.genealogyeditor.models.ChlidrenTreeTableModel;
+import ancestris.modules.editors.genealogyeditor.models.ChildrenTreeTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import genj.util.Registry;
@@ -67,7 +67,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
         }
     }
     private final static Logger logger = Logger.getLogger(ChildrenTreeTablePanel.class.getName(), null);
-    private ChlidrenTreeTableModel  mChlidrenTreeTableModel = new ChlidrenTreeTableModel();
+    private ChildrenTreeTableModel  mChildrenTreeTableModel = new ChildrenTreeTableModel();
     private Registry mRegistry = Registry.get(ChildrenTreeTablePanel.class);
     private Property mRoot;
     private String mTableId = ChildrenTreeTablePanel.class.getName();
@@ -139,7 +139,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         childrenScrollPane = new javax.swing.JScrollPane();
-        childrenTreeTable = new org.jdesktop.swingx.JXTreeTable(mChlidrenTreeTableModel);
+        childrenTreeTable = new org.jdesktop.swingx.JXTreeTable(mChildrenTreeTableModel);
         childrenToolBar = new javax.swing.JToolBar();
         addChildrenButton = new javax.swing.JButton();
         linkToChildrenButton = new javax.swing.JButton();
@@ -396,7 +396,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             PropertyXRef addChild = ((Fam)mRoot).addChild(selectedIndividual);
-                            mChlidrenTreeTableModel.add((PropertyChild) addChild);
+                            mChildrenTreeTableModel.add((PropertyChild) addChild);
                         }
                     }); // end of doUnitOfWork
 
@@ -438,7 +438,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
 
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 individualEditor.commit();
-                mChlidrenTreeTableModel.add(mAddedChild);
+                mChildrenTreeTableModel.add(mAddedChild);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -460,7 +460,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
 
     public void set(Property root, List<PropertyChild> children) {
         this.mRoot = root;
-        ((ChlidrenTreeTableModel) childrenTreeTable.getTreeTableModel()).addAll(children);
+        ((ChildrenTreeTableModel) childrenTreeTable.getTreeTableModel()).addAll(children);
         childrenTreeTable.expandAll();
         childrenTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
     }
