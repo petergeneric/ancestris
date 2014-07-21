@@ -15,15 +15,15 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
+public class ChildrenTreeTableModel extends AbstractTreeTableModel {
 
     private static String[] mChildrenColumnsName = {
-        NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.familySpouse.column.ID.title"),
+        NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.familySpouse.column.ID.title"),
         "",
         "",
-        NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.familySpouse.column.date.title")};
+        NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.familySpouse.column.date.title")};
 
-    public ChlidrenTreeTableModel() {
+    public ChildrenTreeTableModel() {
         super(new DefaultMutableTreeNode());
     }
 
@@ -50,10 +50,10 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
                 switch (index) {
                     case 0:
                         if (child.getSex() == PropertySex.MALE) {
-                            return NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.son.title")
+                            return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.son.title")
                                     + " (" + child.getId() + ")";
                         } else if (child.getSex() == PropertySex.FEMALE) {
-                            return NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.daughter.title")
+                            return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.daughter.title")
                                     + " (" + child.getId() + ")";
                         } else {
                             return child.getId();
@@ -67,7 +67,7 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
 
                     case 3:
                         return child.getBirthDate() != null
-                                ? NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
+                                ? NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
                                 : "";
 
                     default:
@@ -87,7 +87,7 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
 
                     case 3:
                         return family.getMarriageDate() != null
-                                ? NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.family.wedding") + " " + family.getMarriageDate().getDisplayValue()
+                                ? NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.family.wedding") + " " + family.getMarriageDate().getDisplayValue()
                                 : "";
 
                     default:
@@ -98,10 +98,10 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
                 switch (index) {
                     case 0:
                         if (child.getSex() == PropertySex.MALE) {
-                            return NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.grandson.title")
+                            return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.grandson.title")
                                     + " (" + child.getId() + ")";
                         } else if (child.getSex() == PropertySex.FEMALE) {
-                            return NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.granddaughter.title")
+                            return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.granddaughter.title")
                                     + " (" + child.getId() + ")";
                         } else {
                             return child.getId();
@@ -115,7 +115,7 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
 
                     case 3:
                         return child.getBirthDate() != null
-                                ? NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
+                                ? NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
                                 : "";
 
                     default:
