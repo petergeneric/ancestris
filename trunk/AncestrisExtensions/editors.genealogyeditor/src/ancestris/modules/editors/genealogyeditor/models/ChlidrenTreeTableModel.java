@@ -50,7 +50,7 @@ public class ChlidrenTreeTableModel extends AbstractTreeTableModel {
                 switch (index) {
                     case 0:
                         if (child.getSex() == PropertySex.MALE) {
-                            return NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.sun.title")
+                            return NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.son.title")
                                     + " (" + child.getId() + ")";
                         } else if (child.getSex() == PropertySex.FEMALE) {
                             return NbBundle.getMessage(ChlidrenTreeTableModel.class, "ChlidrenTreeTableModel.daughter.title")
