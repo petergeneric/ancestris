@@ -127,6 +127,7 @@ public class SourceEditor extends Editor {
         sourceTextTextArea.setRows(5);
         sourceTextScrollPane.setViewportView(sourceTextTextArea);
 
+        SourceTextToolBar.setFloatable(false);
         SourceTextToolBar.setRollover(true);
 
         javax.swing.GroupLayout sourceTextPanelLayout = new javax.swing.GroupLayout(sourceTextPanel);
@@ -146,6 +147,7 @@ public class SourceEditor extends Editor {
 
         sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.sourceTextPanel.TabConstraints.tabTitle"), sourceTextPanel); // NOI18N
 
+        publicationFactsToolBar.setFloatable(false);
         publicationFactsToolBar.setRollover(true);
 
         publicationFactsTextArea.setColumns(20);

@@ -228,6 +228,7 @@
             </Container>
             <Container class="javax.swing.JToolBar" name="SourceTextToolBar">
               <Properties>
+                <Property name="floatable" type="boolean" value="false"/>
                 <Property name="rollover" type="boolean" value="true"/>
               </Properties>
 
@@ -238,9 +239,12 @@
         <Container class="javax.swing.JPanel" name="publicationFactsPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Publication facts">
+              <JTabbedPaneConstraints tabName="Publication facts" toolTip="When and where the record was created. For published works, this includes information such as the&#xa;city of publication, name of the publisher, and year of publication.&#xa;For an unpublished work, it includes the date the record was created and the place where it was&#xa;created. For example, the county and state of residence of a person making a declaration for a pension&#xa;or the city and state of residence of the writer of a letter.">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.publicationFactsPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+                <Property name="tabToolTip" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SourceEditor.publicationFactsPanel.TabConstraints.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -266,6 +270,7 @@
           <SubComponents>
             <Container class="javax.swing.JToolBar" name="publicationFactsToolBar">
               <Properties>
+                <Property name="floatable" type="boolean" value="false"/>
                 <Property name="rollover" type="boolean" value="true"/>
               </Properties>
 
