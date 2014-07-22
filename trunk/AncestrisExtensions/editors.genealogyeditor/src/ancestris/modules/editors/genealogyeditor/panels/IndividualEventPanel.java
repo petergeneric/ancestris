@@ -131,7 +131,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         placeTextField = new javax.swing.JTextField();
         privateRecordToggleButton = new javax.swing.JToggleButton();
         IndividualAgeLabel = new javax.swing.JLabel();
-        EventTypeLabel = new javax.swing.JLabel();
+        eventDescriptorLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
         aDateBean = new ancestris.modules.beans.ADateBean();
         eventNameTextField = new javax.swing.JTextField();
@@ -142,7 +142,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         editPlaceButton = new javax.swing.JButton();
         addPlaceButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        eventTypeTextArea = new javax.swing.JTextArea();
+        eventDescriptorTextArea = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         eventCauseTextArea = new javax.swing.JTextArea();
         sourcesPanel = new javax.swing.JPanel();
@@ -172,8 +172,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         IndividualAgeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         IndividualAgeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.IndividualAgeLabel.text")); // NOI18N
 
-        EventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        EventTypeLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.EventTypeLabel.text")); // NOI18N
+        eventDescriptorLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        eventDescriptorLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.eventDescriptorLabel.text")); // NOI18N
 
         dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.dateLabel.text"), new Object[] {})); // NOI18N
@@ -214,6 +214,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         eventNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
 
         individualAgeTextField.setColumns(4);
+        individualAgeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.IndividualAgeTextField.toolTipText")); // NOI18N
         individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -279,15 +280,17 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             }
         });
 
-        eventTypeTextArea.setColumns(20);
-        eventTypeTextArea.setLineWrap(true);
-        eventTypeTextArea.setRows(2);
-        eventTypeTextArea.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(eventTypeTextArea);
+        eventDescriptorTextArea.setColumns(20);
+        eventDescriptorTextArea.setLineWrap(true);
+        eventDescriptorTextArea.setRows(2);
+        eventDescriptorTextArea.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.eventDescriptorTextArea.toolTipText")); // NOI18N
+        eventDescriptorTextArea.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(eventDescriptorTextArea);
 
         eventCauseTextArea.setColumns(20);
         eventCauseTextArea.setLineWrap(true);
         eventCauseTextArea.setRows(2);
+        eventCauseTextArea.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.eventCauseTextArea.toolTipText")); // NOI18N
         eventCauseTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(eventCauseTextArea);
 
@@ -302,7 +305,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(eventNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(EventTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                    .addComponent(eventDescriptorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                     .addComponent(IndividualAgeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -358,7 +361,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(EventTypeLabel)
+                    .addComponent(eventDescriptorLabel)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -571,7 +574,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EventDetailPanel;
-    private javax.swing.JLabel EventTypeLabel;
     private javax.swing.JLabel IndividualAgeLabel;
     private ancestris.modules.beans.ADateBean aDateBean;
     private javax.swing.JButton addPlaceButton;
@@ -579,10 +581,11 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private javax.swing.JButton editPlaceButton;
     private javax.swing.JLabel eventCauseLabel;
     private javax.swing.JTextArea eventCauseTextArea;
+    private javax.swing.JLabel eventDescriptorLabel;
+    private javax.swing.JTextArea eventDescriptorTextArea;
     private javax.swing.JTabbedPane eventInformationTabbedPane;
     private javax.swing.JLabel eventNameLabel;
     private javax.swing.JTextField eventNameTextField;
-    private javax.swing.JTextArea eventTypeTextArea;
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JTextField individualAgeTextField;
     private javax.swing.JScrollPane jScrollPane1;
@@ -638,9 +641,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
-                eventTypeTextArea.setText(eventType.getValue());
+                eventDescriptorTextArea.setText(eventType.getValue());
             } else {
-                eventTypeTextArea.setText("");
+                eventDescriptorTextArea.setText("");
             }
 
 
@@ -656,9 +659,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             eventNameTextField.setVisible(false);
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
-                eventTypeTextArea.setText(eventType.getValue());
+                eventDescriptorTextArea.setText(eventType.getValue());
             } else {
-                eventTypeTextArea.setText("");
+                eventDescriptorTextArea.setText("");
             }
 
 
@@ -767,9 +770,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                             if (mEventTypeModified) {
                                 Property eventType = mEvent.getProperty("TYPE", false);
                                 if (eventType != null) {
-                                    eventType.setValue(eventTypeTextArea.getText());
+                                    eventType.setValue(eventDescriptorTextArea.getText());
                                 } else {
-                                    mEvent.addProperty("TYPE", eventTypeTextArea.getText());
+                                    mEvent.addProperty("TYPE", eventDescriptorTextArea.getText());
                                 }
                             }
                             if (mEventCauseModified) {
@@ -789,9 +792,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                             if (mEventTypeModified) {
                                 Property eventType = mEvent.getProperty("TYPE", false);
                                 if (eventType != null) {
-                                    eventType.setValue(eventTypeTextArea.getText());
+                                    eventType.setValue(eventDescriptorTextArea.getText());
                                 } else {
-                                    mEvent.addProperty("TYPE", eventTypeTextArea.getText());
+                                    mEvent.addProperty("TYPE", eventDescriptorTextArea.getText());
                                 }
                             }
                             if (mEventCauseModified) {
