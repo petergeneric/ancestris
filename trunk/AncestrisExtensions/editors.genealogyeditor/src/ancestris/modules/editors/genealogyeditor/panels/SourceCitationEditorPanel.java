@@ -183,6 +183,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        sourceReferencedTitleTextArea.setEditable(false);
         sourceReferencedTitleTextArea.setColumns(20);
         sourceReferencedTitleTextArea.setLineWrap(true);
         sourceReferencedTitleTextArea.setRows(2);
@@ -770,19 +771,19 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                             Property eventRole = mSourceCitation.getProperty("ROLE");
                             if (eventRole == null) {
                                 if (eventRoleComboBox.getSelectedIndex() == 0) {
-                                    mSourceCitation.addProperty("ROLE", "CHIL");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 1) {
-                                    mSourceCitation.addProperty("ROLE", "HUSB");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 2) {
-                                    mSourceCitation.addProperty("ROLE", "WIFE");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 3) {
-                                    mSourceCitation.addProperty("ROLE", "MOTH");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 4) {
-                                    mSourceCitation.addProperty("ROLE", "FATH");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 5) {
-                                    mSourceCitation.addProperty("ROLE", "SPOU");
-                                } else {
                                     eventRole.addProperty("ROLE", eventRoleComboBox.getSelectedItem().toString());
+                                } else if (eventRoleComboBox.getSelectedIndex() == 1) {
+                                    mSourceCitation.addProperty("ROLE", "CHIL");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 2) {
+                                    mSourceCitation.addProperty("ROLE", "HUSB");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 3) {
+                                    mSourceCitation.addProperty("ROLE", "WIFE");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 4) {
+                                    mSourceCitation.addProperty("ROLE", "MOTH");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 5) {
+                                    mSourceCitation.addProperty("ROLE", "FATH");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 6) {
+                                    mSourceCitation.addProperty("ROLE", "SPOU");
                                 }
                             } else {
                                 if (eventRoleComboBox.getSelectedIndex() == 0) {
