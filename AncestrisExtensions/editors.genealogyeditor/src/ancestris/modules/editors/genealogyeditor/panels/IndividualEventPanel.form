@@ -62,7 +62,7 @@
                           <Component id="placeLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="dateLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="eventNameLabel" alignment="0" max="32767" attributes="0"/>
-                          <Component id="EventTypeLabel" alignment="0" pref="171" max="32767" attributes="0"/>
+                          <Component id="eventDescriptorLabel" alignment="0" pref="171" max="32767" attributes="0"/>
                           <Component id="IndividualAgeLabel" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -134,7 +134,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="EventTypeLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventDescriptorLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -197,11 +197,11 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="EventTypeLabel">
+            <Component class="javax.swing.JLabel" name="eventDescriptorLabel">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEventPanel.EventTypeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEventPanel.eventDescriptorLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -242,6 +242,9 @@
             <Component class="javax.swing.JTextField" name="individualAgeTextField">
               <Properties>
                 <Property name="columns" type="int" value="4"/>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEventPanel.IndividualAgeTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;        &#xa;        @Override&#xa;        public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;        mEventModified = true;&#xa;        mIndividualAgeModified = true;&#xa;}&#xa;        }&#xa;        &#xa;        @Override&#xa;        public void removeUpdate(DocumentEvent e) {&#xa;                 if (!updateOnGoing) {&#xa;       mEventModified = true;&#xa;        mIndividualAgeModified = true;&#xa;}&#xa;}&#xa;        &#xa;        @Override&#xa;        public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;        mEventModified = true;&#xa;        mIndividualAgeModified = true;&#xa;}&#xa;}&#xa;        });"/>
@@ -323,11 +326,14 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="eventTypeTextArea">
+                <Component class="javax.swing.JTextArea" name="eventDescriptorTextArea">
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="2"/>
+                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEventPanel.eventDescriptorTextArea.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                    </Property>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                   </Properties>
                 </Component>
@@ -345,6 +351,9 @@
                     <Property name="columns" type="int" value="20"/>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="2"/>
+                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEventPanel.eventCauseTextArea.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                    </Property>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                   </Properties>
                 </Component>
