@@ -134,16 +134,16 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
-            repositoryEditorPanel.set(mRepository);
+            RepositoryEditor repositoryEditor = new RepositoryEditor();
+            repositoryEditor.set(mRepository);
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.create.title"),
-                    repositoryEditorPanel);
+                    NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditor.create.title"),
+                    repositoryEditor);
             editorDialog.setDialogId(RepositoryEditor.class.getName());
 
             if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
-                repositoryEditorPanel.commit();
+                repositoryEditor.commit();
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
@@ -169,17 +169,17 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
         int undoNb = gedcom.getUndoNb();
         if (selectedRow != -1) {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
-            RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
-            repositoryEditorPanel.set((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
+            RepositoryEditor repositoryEditor = new RepositoryEditor();
+            repositoryEditor.set((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
 
             DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.edit.title", mRepositoryCitationsTableModel.getValueAt(rowIndex)),
-                    repositoryEditorPanel);
+                    NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditor.edit.title", mRepositoryCitationsTableModel.getValueAt(rowIndex)),
+                    repositoryEditor);
             editorDialog.setDialogId(RepositoryEditor.class.getName());
 
             if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
-                    repositoryEditorPanel.commit();
+                    repositoryEditor.commit();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -228,18 +228,18 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
             int undoNb = gedcom.getUndoNb();
             if (selectedRow != -1) {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
-                RepositoryEditor repositoryEditorPanel = new RepositoryEditor();
-                repositoryEditorPanel.set((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
+                RepositoryEditor repositoryEditor = new RepositoryEditor();
+                repositoryEditor.set((Repository) mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity());
 
                 DialogManager.ADialog editorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditorPanel.edit.title",
+                        NbBundle.getMessage(RepositoryEditor.class, "RepositoryEditor.edit.title",
                                 mRepositoryCitationsTableModel.getValueAt(rowIndex)),
-                        repositoryEditorPanel);
+                        repositoryEditor);
                 editorDialog.setDialogId(RepositoryEditor.class.getName());
 
                 if (editorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
-                        repositoryEditorPanel.commit();
+                        repositoryEditor.commit();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
