@@ -265,7 +265,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         SourceDataPanel.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceDataPanel.toolTipText")); // NOI18N
 
         sourceDataTextArea.setColumns(20);
+        sourceDataTextArea.setLineWrap(true);
         sourceDataTextArea.setRows(5);
+        sourceDataTextArea.setWrapStyleWord(true);
         sourceDataTextArea.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override

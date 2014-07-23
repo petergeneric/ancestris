@@ -124,7 +124,9 @@ public class SourceEditor extends Editor {
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.registeredEventsPanel.TabConstraints.tabTitle"), new Object[] {}), registeredEventsPanel); // NOI18N
 
         sourceTextTextArea.setColumns(20);
+        sourceTextTextArea.setLineWrap(true);
         sourceTextTextArea.setRows(5);
+        sourceTextTextArea.setWrapStyleWord(true);
         sourceTextScrollPane.setViewportView(sourceTextTextArea);
 
         SourceTextToolBar.setFloatable(false);
@@ -169,7 +171,7 @@ public class SourceEditor extends Editor {
                 .addComponent(publicationFactsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
         );
 
-        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.publicationFactsPanel.TabConstraints.tabTitle"), publicationFactsPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.publicationFactsPanel.TabConstraints.tabTitle"), null, publicationFactsPanel, org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.publicationFactsPanel.TabConstraints.toolTipText")); // NOI18N
 
         repositoriesPanel.setRequestFocusEnabled(false);
 
