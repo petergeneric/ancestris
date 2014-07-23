@@ -27,25 +27,25 @@
                           <Component id="referencedEventLabel" max="32767" attributes="0"/>
                           <Component id="eventRoleLabel" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="dataQualityComboBox" max="32767" attributes="0"/>
                           <Component id="eventRoleComboBox" max="32767" attributes="0"/>
                           <Component id="referencedEventComboBox" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="recordingDateLabel" pref="118" max="32767" attributes="0"/>
                           <Component id="pageLabel" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="recordingDate" max="32767" attributes="0"/>
                           <Component id="pageTextField" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
