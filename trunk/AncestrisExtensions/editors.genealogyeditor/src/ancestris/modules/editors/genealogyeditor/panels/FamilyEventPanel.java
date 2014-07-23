@@ -149,6 +149,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.dateLabel.text"), new Object[] {})); // NOI18N
 
         eventNameTextField.setEditable(false);
+        eventNameTextField.setColumns(15);
 
         eventCauseLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         eventCauseLabel.setText(org.openide.util.NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.eventCauseLabel.text")); // NOI18N
@@ -292,10 +293,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                        .addComponent(eventNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                        .addGap(343, 343, 343))
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                        .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1)
@@ -305,7 +303,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(wifeAgeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wifeAgeTextField)))
+                        .addComponent(wifeAgeTextField))
+                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                        .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         EventDetailPanelLayout.setVerticalGroup(
