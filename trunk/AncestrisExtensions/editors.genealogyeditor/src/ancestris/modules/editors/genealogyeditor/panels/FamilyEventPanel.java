@@ -671,8 +671,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             if (mDate.isValid()) {
                 Delta age = ((Fam) mRoot).getHusband().getAge(mDate.getStart());
                 husbandAgeTextField.setText(age != null ? age.toString() : "");
+                husbandAgeTextField.setEditable(false);
             } else {
                 husbandAgeTextField.setText("");
+                husbandAgeTextField.setEditable(true);
             }
         }
 
@@ -683,8 +685,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             if (mDate.isValid()) {
                 Delta age = ((Fam) mRoot).getWife().getAge(mDate.getStart());
                 wifeAgeTextField.setText(age != null ? age.toString() : "");
+                wifeAgeTextField.setEditable(false);
             } else {
                 wifeAgeTextField.setText("");
+                wifeAgeTextField.setEditable(true);
             }
         }
 
