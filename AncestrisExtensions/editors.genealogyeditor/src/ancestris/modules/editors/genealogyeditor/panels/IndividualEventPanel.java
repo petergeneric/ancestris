@@ -709,8 +709,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 if (!mEvent.getTag().equals("BIRT") && mDate.isValid()) {
                     Delta deltaAge = ((Indi) mRoot).getAge(mDate.getStart());
                     individualAgeTextField.setText(deltaAge != null ? deltaAge.toString() : "");
+                    individualAgeTextField.setEditable(false);
                 } else {
                     individualAgeTextField.setText("");
+                    individualAgeTextField.setEditable(true);
                 }
             }
         } else {
