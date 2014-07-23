@@ -246,8 +246,10 @@ public class EventEditorPanel extends javax.swing.JPanel {
         eventCauseLabel.setText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.eventCauseLabel.text")); // NOI18N
 
         eventCauseTextArea.setColumns(20);
+        eventCauseTextArea.setLineWrap(true);
         eventCauseTextArea.setRows(2);
         eventCauseTextArea.setToolTipText(org.openide.util.NbBundle.getMessage(EventEditorPanel.class, "EventEditorPanel.eventCauseTextArea.toolTipText")); // NOI18N
+        eventCauseTextArea.setWrapStyleWord(true);
         eventCauseScrollPane.setViewportView(eventCauseTextArea);
 
         EventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);

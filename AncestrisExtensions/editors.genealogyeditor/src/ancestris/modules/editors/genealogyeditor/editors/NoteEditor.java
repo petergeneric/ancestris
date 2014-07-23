@@ -57,7 +57,9 @@ public class NoteEditor extends Editor {
         noteTextToolBar.setRollover(true);
 
         noteTextTextArea.setColumns(20);
+        noteTextTextArea.setLineWrap(true);
         noteTextTextArea.setRows(5);
+        noteTextTextArea.setWrapStyleWord(true);
         noteTextScrollPane.setViewportView(noteTextTextArea);
 
         javax.swing.GroupLayout noteTextPanelLayout = new javax.swing.GroupLayout(noteTextPanel);
