@@ -9,6 +9,7 @@ import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
@@ -44,50 +45,67 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private boolean mSourceTextModified = false;
     private boolean mSourceReferencedTitleModified = false;
     private boolean mPageModified = false;
-    private String[] mEventsType = {
-        "",
+    private final String[] mEventsTags = {
         // Individual Events
-        PropertyTag2Name.getTagName("ADOP"),
-        PropertyTag2Name.getTagName("BIRT"),
-        PropertyTag2Name.getTagName("BAPM"),
-        PropertyTag2Name.getTagName("BARM"),
-        PropertyTag2Name.getTagName("BASM"),
-        PropertyTag2Name.getTagName("BLES"),
-        PropertyTag2Name.getTagName("BURI"),
-        PropertyTag2Name.getTagName("CENS"),
-        PropertyTag2Name.getTagName("CHR"),
-        PropertyTag2Name.getTagName("CHRA"),
-        PropertyTag2Name.getTagName("CONF"),
-        PropertyTag2Name.getTagName("CREM"),
-        PropertyTag2Name.getTagName("DEAT"),
-        PropertyTag2Name.getTagName("EMIG"),
-        PropertyTag2Name.getTagName("FCOM"),
-        PropertyTag2Name.getTagName("GRAD"),
-        PropertyTag2Name.getTagName("IMMI"),
-        PropertyTag2Name.getTagName("NATU"),
-        PropertyTag2Name.getTagName("ORDN"),
-        PropertyTag2Name.getTagName("RETI"),
-        PropertyTag2Name.getTagName("PROB"),
-        PropertyTag2Name.getTagName("WILL"),
-        PropertyTag2Name.getTagName("EVEN"),
+        "ADOP",
+        "BIRT",
+        "BAPM",
+        "BARM",
+        "BASM",
+        "BLES",
+        "BURI",
+        "CENS",
+        "CHR",
+        "CHRA",
+        "CONF",
+        "CREM",
+        "DEAT",
+        "EMIG",
+        "FCOM",
+        "GRAD",
+        "IMMI",
+        "NATU",
+        "ORDN",
+        "RETI",
+        "PROB",
+        "WILL",
+        
         // Family Events
-        PropertyTag2Name.getTagName("ANUL"),
-        PropertyTag2Name.getTagName("CENS"),
-        PropertyTag2Name.getTagName("DIV"),
-        PropertyTag2Name.getTagName("DIVF"),
-        PropertyTag2Name.getTagName("ENGA"),
-        PropertyTag2Name.getTagName("MARR"),
-        PropertyTag2Name.getTagName("MARB"),
-        PropertyTag2Name.getTagName("MARC"),
-        PropertyTag2Name.getTagName("MARL"),
-        PropertyTag2Name.getTagName("MARS"),
-        PropertyTag2Name.getTagName("EVEN")
+        "ANUL",
+        "CENS",
+        "DIV",
+        "DIVF",
+        "ENGA",
+        "MARR",
+        "MARB",
+        "MARC",
+        "MARL",
+        "MARS",
+        
+        // common
+        "EVEN"
     };
+    private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
 
     /**
      * Creates new form SourceCitationEditorPanel
      */
     public SourceCitationEditorPanel() {
+        ArrayList<String> localizedEventsList = new ArrayList<String>();
+
+        for (String tag : mEventsTags) {
+            localizedEventsList.add(PropertyTag2Name.getTagName(tag));
+        }
+
+        java.util.Collections.sort(localizedEventsList);
+
+        mEventsModel.removeAllElements();
+        
+        mEventsModel.addElement("");
+
+        for (String tag : localizedEventsList) {
+            mEventsModel.addElement(tag);
+        }
         initComponents();
     }
 
@@ -108,7 +126,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         sourceReferencedTitleTextArea = new javax.swing.JTextArea();
         sourceReferencedTitleLabel = new javax.swing.JLabel();
-        referencedEventTypeLabel = new javax.swing.JLabel();
+        referencedEventLabel = new javax.swing.JLabel();
         eventRoleLabel = new javax.swing.JLabel();
         eventRoleComboBox = new javax.swing.JComboBox<String>();
         sourceCitationTabbedPane = new javax.swing.JTabbedPane();
@@ -125,7 +143,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         recordingDate = new ancestris.modules.beans.ADateBean();
         pageLabel = new javax.swing.JLabel();
         pageTextField = new javax.swing.JTextField();
-        referencedEventTypeTextField = new javax.swing.JTextField();
+        referencedEventComboBox = new javax.swing.JComboBox();
 
         editSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
@@ -227,8 +245,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        referencedEventTypeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        referencedEventTypeLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.referencedEventTypeLabel.text")); // NOI18N
+        referencedEventLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        referencedEventLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.referencedEventLabel.text")); // NOI18N
 
         eventRoleLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         eventRoleLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.eventRoleLabel.text")); // NOI18N
@@ -350,6 +368,13 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         });
         pageTextField.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.pageTextField.toolTipText")); // NOI18N
 
+        referencedEventComboBox.setModel(mEventsModel);
+        referencedEventComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                referencedEventComboBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -362,13 +387,13 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(referencedEventTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(referencedEventLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(eventRoleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dataQualityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(eventRoleComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(referencedEventTypeTextField))
+                            .addComponent(referencedEventComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(recordingDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
@@ -386,11 +411,11 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 .addComponent(SourceReferencePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(referencedEventTypeLabel)
+                    .addComponent(referencedEventLabel)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(pageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(pageLabel)
-                        .addComponent(referencedEventTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(referencedEventComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -550,6 +575,11 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private void dataQualityComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataQualityComboBoxActionPerformed
         mDataQualityModified = true;
     }//GEN-LAST:event_dataQualityComboBoxActionPerformed
+
+    private void referencedEventComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_referencedEventComboBoxActionPerformed
+        mEventTypeModified = true;
+    }//GEN-LAST:event_referencedEventComboBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SourceDataPanel;
     private javax.swing.JPanel SourceReferencePanel;
@@ -570,8 +600,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField pageTextField;
     private ancestris.modules.beans.ADateBean recordingDate;
     private javax.swing.JLabel recordingDateLabel;
-    private javax.swing.JLabel referencedEventTypeLabel;
-    private javax.swing.JTextField referencedEventTypeTextField;
+    private javax.swing.JComboBox referencedEventComboBox;
+    private javax.swing.JLabel referencedEventLabel;
     private javax.swing.JTabbedPane sourceCitationTabbedPane;
     private javax.swing.JScrollPane sourceDataScrollPane;
     private javax.swing.JTextArea sourceDataTextArea;
@@ -624,9 +654,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
             Property eventType = sourceCitation.getProperty("EVEN");
             if (eventType != null) {
-                referencedEventTypeTextField.setText(eventType.getValue());
+                referencedEventComboBox.setSelectedItem(PropertyTag2Name.getTagName(eventType.getValue()));
             } else {
-                referencedEventTypeTextField.setText("");
+                referencedEventComboBox.setSelectedItem("");
             }
             mEventTypeModified = false;
 
@@ -651,7 +681,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     eventRoleComboBox.setSelectedItem(eventRole.getValue());
                 }
             } else {
-                eventRoleComboBox.setSelectedIndex(6);
+                eventRoleComboBox.setSelectedIndex(0);
             }
 
             mEventRoleModified = false;
@@ -703,8 +733,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             pageLabel.setVisible(false);
             pageTextField.setVisible(false);
 
-            referencedEventTypeLabel.setVisible(false);
-            referencedEventTypeTextField.setVisible(false);
+            referencedEventLabel.setVisible(false);
+            referencedEventComboBox.setVisible(false);
 
             eventRoleLabel.setVisible(false);
             eventRoleComboBox.setVisible(false);
@@ -760,9 +790,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                             mEventTypeModified = false;
                             Property eventType = mSourceCitation.getProperty("EVEN");
                             if (eventType == null) {
-                                mSourceCitation.addProperty("EVEN", referencedEventTypeTextField.getText());
+                                mSourceCitation.addProperty("EVEN", PropertyTag2Name.getPropertyTag(referencedEventComboBox.getSelectedItem().toString()));
                             } else {
-                                mSourceCitation.setValue(referencedEventTypeTextField.getText());
+                                eventType.setValue(PropertyTag2Name.getPropertyTag(referencedEventComboBox.getSelectedItem().toString()));
                             }
                         }
 
@@ -771,7 +801,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                             Property eventRole = mSourceCitation.getProperty("ROLE");
                             if (eventRole == null) {
                                 if (eventRoleComboBox.getSelectedIndex() == 0) {
-                                    eventRole.addProperty("ROLE", eventRoleComboBox.getSelectedItem().toString());
+                                    mSourceCitation.addProperty("ROLE", eventRoleComboBox.getSelectedItem().toString());
                                 } else if (eventRoleComboBox.getSelectedIndex() == 1) {
                                     mSourceCitation.addProperty("ROLE", "CHIL");
                                 } else if (eventRoleComboBox.getSelectedIndex() == 2) {
@@ -787,30 +817,30 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                                 }
                             } else {
                                 if (eventRoleComboBox.getSelectedIndex() == 0) {
-                                    mSourceCitation.setValue("CHIL");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 1) {
-                                    mSourceCitation.setValue("HUSB");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 2) {
-                                    mSourceCitation.setValue("WIFE");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 3) {
-                                    mSourceCitation.setValue("MOTH");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 4) {
-                                    mSourceCitation.setValue("FATH");
-                                } else if (eventRoleComboBox.getSelectedIndex() == 5) {
-                                    mSourceCitation.setValue("SPOU");
-                                } else {
                                     eventRole.setValue(eventRoleComboBox.getSelectedItem().toString());
+                                } else if (eventRoleComboBox.getSelectedIndex() == 1) {
+                                    eventRole.setValue("CHIL");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 2) {
+                                    eventRole.setValue("HUSB");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 3) {
+                                    eventRole.setValue("WIFE");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 4) {
+                                    eventRole.setValue("MOTH");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 5) {
+                                    eventRole.setValue("FATH");
+                                } else if (eventRoleComboBox.getSelectedIndex() == 6) {
+                                    eventRole.setValue("SPOU");
                                 }
                             }
                         }
 
                         if (mPageModified) {
                             mPageModified = false;
-                            Property eventRole = mSourceCitation.getProperty("PAGE");
-                            if (eventRole == null) {
+                            Property page = mSourceCitation.getProperty("PAGE");
+                            if (page == null) {
                                 mSourceCitation.addProperty("PAGE", pageTextField.getText());
                             } else {
-                                eventRole.setValue(pageTextField.getText());
+                                page.setValue(pageTextField.getText());
                             }
                         }
 
