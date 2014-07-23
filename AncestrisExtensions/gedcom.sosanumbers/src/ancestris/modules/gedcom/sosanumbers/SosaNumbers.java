@@ -34,6 +34,17 @@ import org.openide.util.Exceptions;
  */
 public class SosaNumbers implements GedcomListener {
 
+    private class Pair {
+
+        Indi indi;
+        String value;
+
+        public Pair(Indi indi, String value) {
+            this.indi = indi;
+            this.value = value;
+        }
+    }
+
     private final static Logger LOG = Logger.getLogger(SosaNumbers.class.getName(), null);
     final private String SOSA_TAG = "_SOSA";
     final private String DABOVILLE_TAG = "_SOSA_DABOVILLE";
@@ -52,7 +63,7 @@ public class SosaNumbers implements GedcomListener {
             Indi wife;
             Indi husband;
             Property sosaProperty = null;
-            int sosaCounter = 1;
+            long sosaCounter = 1;
             Fam famc;
 
             // Put de-cujus first in list and update its sosa tag
@@ -65,7 +76,7 @@ public class SosaNumbers implements GedcomListener {
             ListIterator<Pair> listIter = sosaList.listIterator();
             while (listIter.hasNext()) {
                 Pair pair = listIter.next();
-                sosaCounter = Integer.parseInt(pair.value);
+                sosaCounter = Long.parseLong(pair.value);
                 // Sosa d'Aboville generation
                 if (pair.indi.equals(indiDeCujus) || (sosaAboNumbering && pair.indi.getSex() == PropertySex.MALE)) {
                     dabovilleNumbering(pair.indi, pair.value);
@@ -126,7 +137,7 @@ public class SosaNumbers implements GedcomListener {
      * @param sosa
      * @return String
      */
-    String computeGene(Integer sosa) {
+    String computeGene(long sosa) {
         Integer generation = 0;
         while ((sosa = sosa >> 1) != 0) {
             generation++;
@@ -203,16 +214,5 @@ public class SosaNumbers implements GedcomListener {
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property,
             int pos, Property deleted) {
-    }
-
-    private class Pair {
-
-        Indi indi;
-        String value;
-
-        public Pair(Indi indi, String value) {
-            this.indi = indi;
-            this.value = value;
-        }
     }
 }
