@@ -78,12 +78,12 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="aDateBean" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="eventNameTextField" max="32767" attributes="0"/>
-                                      <EmptySpace min="221" pref="221" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="eventNameTextField" min="-2" pref="128" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane2" alignment="1" max="32767" attributes="0"/>
@@ -218,6 +218,7 @@
             <Component class="javax.swing.JTextField" name="eventNameTextField">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="columns" type="int" value="15"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;                @Override&#xa;        public void changedUpdate(DocumentEvent e) {&#xa;                    if (!updateOnGoing) {&#xa;                        mEventModified = true;&#xa;                        mEventNameModified = true;&#xa;                    }&#xa;                }&#xa;&#xa;                @Override&#xa;        public void removeUpdate(DocumentEvent e) {&#xa;                    if (!updateOnGoing) {&#xa;                        mEventModified = true;&#xa;                        mEventNameModified = true;&#xa;                    }&#xa;                }&#xa;&#xa;                @Override&#xa;        public void insertUpdate(DocumentEvent e) {&#xa;                    if (!updateOnGoing) {&#xa;&#xa;                        mEventModified = true;&#xa;                        mEventNameModified = true;&#xa;                    }&#xa;                }&#xa;            });"/>

@@ -179,6 +179,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.dateLabel.text"), new Object[] {})); // NOI18N
 
         eventNameTextField.setEditable(false);
+        eventNameTextField.setColumns(15);
         eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -320,8 +321,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         .addGroup(EventDetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                                .addComponent(eventNameTextField)
-                                .addGap(221, 221, 221)))
+                                .addComponent(eventNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
