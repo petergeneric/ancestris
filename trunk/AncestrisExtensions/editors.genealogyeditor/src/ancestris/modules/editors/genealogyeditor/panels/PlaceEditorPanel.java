@@ -5,7 +5,6 @@ import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.*;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.*;

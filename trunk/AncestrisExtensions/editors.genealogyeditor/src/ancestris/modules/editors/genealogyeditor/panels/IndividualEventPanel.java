@@ -272,6 +272,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         });
 
         addPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addPlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.addPlaceButton.toolTipText")); // NOI18N
         addPlaceButton.setMaximumSize(new java.awt.Dimension(26, 26));
         addPlaceButton.setMinimumSize(new java.awt.Dimension(26, 26));
         addPlaceButton.setPreferredSize(new java.awt.Dimension(26, 26));
