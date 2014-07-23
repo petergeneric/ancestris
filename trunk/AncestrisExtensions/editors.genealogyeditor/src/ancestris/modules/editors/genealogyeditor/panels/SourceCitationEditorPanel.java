@@ -310,7 +310,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.jLabel5.text")); // NOI18N
 
-        dataQualityComboBox.setEditable(true);
         dataQualityComboBox.setModel(new ConfidenceLevelComboBoxModel ());
         dataQualityComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.dataQualityComboBox.toolTipText")); // NOI18N
         dataQualityComboBox.addActionListener(new java.awt.event.ActionListener() {
