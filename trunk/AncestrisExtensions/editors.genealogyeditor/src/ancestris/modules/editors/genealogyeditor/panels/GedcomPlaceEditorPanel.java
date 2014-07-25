@@ -800,7 +800,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                                 if (map == null) {
                                     map = mPlace.addProperty("_MAP", "");
                                     map.addProperty("_LATI", gedcomLatitudeTextField.getText());
-                                    map.addProperty("_LONG", gedcomLatitudeTextField.getText());
+                                    map.addProperty("_LONG", gedcomLongitudeTextField.getText());
                                 } else {
                                     Property latitude = map.getProperty("_LATI");
                                     if (latitude == null) {
