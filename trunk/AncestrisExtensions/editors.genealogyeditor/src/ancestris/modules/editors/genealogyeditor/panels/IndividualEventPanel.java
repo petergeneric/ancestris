@@ -707,8 +707,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 individualAgeTextField.setText(age.getDisplayValue());
                 if (mDate.isValid() && ((Indi) mRoot).getBirthDate().isValid()) {
                     individualAgeTextField.setEditable(false);
+                    individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.inactiveBackground"));
                 } else {
                     individualAgeTextField.setEditable(true);
+                    individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
                 }
             } else {
                 if (mDate.isValid()) {
@@ -716,13 +718,16 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (deltaAge != null) {
                         individualAgeTextField.setText(deltaAge.toString());
                         individualAgeTextField.setEditable(false);
+                        individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.inactiveBackground"));
                     } else {
                         individualAgeTextField.setText("");
                         individualAgeTextField.setEditable(true);
+                        individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
                     }
                 } else {
                     individualAgeTextField.setText("");
                     individualAgeTextField.setEditable(true);
+                    individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
                 }
             }
         } else {

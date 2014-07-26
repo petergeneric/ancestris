@@ -4,7 +4,6 @@ import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
 import ancestris.modules.editors.genealogyeditor.models.ConfidenceLevelComboBoxModel;
 import ancestris.modules.editors.genealogyeditor.models.EventsRoleComboBoxModel;
 import ancestris.modules.gedcom.utilities.PropertyTag2Name;
-import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
@@ -184,8 +183,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        sourceReferencedTitleTextArea.setEditable(false);
-        sourceReferencedTitleTextArea.setBackground(new java.awt.Color(238, 238, 238));
+        sourceReferencedTitleTextArea.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.inactiveBackground"));
         sourceReferencedTitleTextArea.setColumns(20);
         sourceReferencedTitleTextArea.setLineWrap(true);
         sourceReferencedTitleTextArea.setRows(2);
@@ -585,8 +583,13 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         mRoot = root;
         mSourceCitation = sourceCitation;
+        
         if (sourceCitation instanceof PropertySource) {
             mReferencedSource = (Source) ((PropertySource) sourceCitation).getTargetEntity();
+            
+            sourceReferencedTitleTextArea.setEnabled(false);
+            sourceReferencedTitleTextArea.setEditable(false);
+            
             if (mReferencedSource != null) {
                 addSourceButton.setVisible(false);
                 linkToSourceButton.setVisible(false);
