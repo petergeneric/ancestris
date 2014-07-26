@@ -116,9 +116,9 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
         ColorHighlighter hl = new ColorHighlighter(MyHighlightPredicate, familiesTreeTable.getBackground(), Color.blue);
         familiesTreeTable.addHighlighter(hl);
         if (mFamilyEditingType == EDIT_FAMC) {
-            addFamilyButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamiliesReferenceTreeTablePanel.class, "FamiFamiliesReferenceTreeTablePanel.addFamilyButton.familiesChildren.toolTipText")); // NOI18N
+            addFamilyButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamiliesReferenceTreeTablePanel.class, "FamiliesReferenceTreeTablePanel.addFamilyButton.familiesChildren.toolTipText")); // NOI18N
         } else {
-            addFamilyButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamiliesReferenceTreeTablePanel.class, "FamiFamiliesReferenceTreeTablePanel.addFamilyButton.familiesSpouses.toolTipText")); // NOI18N
+            addFamilyButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamiliesReferenceTreeTablePanel.class, "FamiliesReferenceTreeTablePanel.addFamilyButton.familiesSpouses.toolTipText")); // NOI18N
         }
     }
 
