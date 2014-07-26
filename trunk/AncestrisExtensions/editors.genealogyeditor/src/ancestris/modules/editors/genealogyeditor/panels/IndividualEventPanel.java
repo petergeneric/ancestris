@@ -483,9 +483,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                                     }
                                 }
                             } else {
-                                map = mPlace.getProperty("_MAP");
-                                selectedPlaceMap = selectedPlace.getProperty("MAP");
+                                selectedPlaceMap = selectedPlace.getProperty("_MAP");
                                 if (selectedPlaceMap != null) {
+                                    map = mPlace.getProperty("_MAP");
                                     if (map == null) {
                                         map = mPlace.addProperty("_MAP", "");
                                     } else {
