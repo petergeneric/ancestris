@@ -19,6 +19,7 @@
  */
 package genj.search;
 
+import ancestris.awt.FilteredMouseAdapter;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -35,6 +36,7 @@ import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import ancestris.swing.ToolBar;
+import ancestris.view.ExplorerHelper;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -43,6 +45,7 @@ import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -201,6 +204,8 @@ public class SearchView extends View {
         add(BorderLayout.CENTER, new JScrollPane(listResults));
         choiceValue.requestFocusInWindow();
 
+        // FIXME: right clic doesn't work because selection is handled by ListSelectionListener rather than MouseListener
+//        setExplorerHelper(new ExplorerHelper(listResults));
         // done
     }
 
@@ -307,8 +312,8 @@ public class SearchView extends View {
 
         // loop through DEFAULT_TAGS
         List<AbstractAncestrisAction> result = new ArrayList<AbstractAncestrisAction>();
-        for (int i = 0; i < DEFAULT_TAGS.length; i++) {
-            result.add(new ActionTag(DEFAULT_TAGS[i]));
+        for (String tag : DEFAULT_TAGS) {
+            result.add(new ActionTag(tag));
         }
 
         // done
@@ -356,7 +361,7 @@ public class SearchView extends View {
      */
     private class ActionTag extends AbstractAncestrisAction {
 
-        private String tags;
+        private final String tags;
 
         /**
          * Constructor
@@ -374,6 +379,7 @@ public class SearchView extends View {
         /**
          * @see genj.util.swing.AbstractAncestrisAction#execute()
          */
+        @Override
         public void actionPerformed(ActionEvent event) {
             choiceTag.setText(tags);
         }
@@ -389,7 +395,7 @@ public class SearchView extends View {
     private class ActionPattern extends AbstractAncestrisAction {
 
         /** pattern */
-        private String pattern;
+        private final String pattern;
 
         /**
          * Constructor
@@ -596,9 +602,9 @@ public class SearchView extends View {
     private class ResultWidget extends JList implements ListSelectionListener, ListCellRenderer {
 
         /** our text component for rendering */
-        private JTextPane text = new JTextPane();
+        private final JTextPane text = new JTextPane();
         /** background colors */
-        private Color[] bgColors = new Color[3];
+        private final Color[] bgColors = new Color[3];
 
         /**
          * Constructor
@@ -617,6 +623,24 @@ public class SearchView extends View {
             setCellRenderer(this);
             addListSelectionListener(this);
             text.setOpaque(true);
+                        //XXX: rework double click handler
+            // patch selecting
+            // Copied from PropertyTableWidget
+            addMouseListener(new FilteredMouseAdapter() {
+
+                @Override
+                public void mouseClickedFiltered(MouseEvent e) {
+                    int row = listResults.getSelectedIndex();
+                    if (row >= 0) {
+                        // FIXME: action is handled here and selection is handled in changeSelection
+                        Object cell = results.getHit(row).getProperty();
+                        if (cell != null && cell instanceof Property) {
+                            SelectionDispatcher.fireSelection(e, new Context((Property) cell));
+                        }
+                    }
+                }
+            });
+
         }
 
         /**
@@ -630,8 +654,8 @@ public class SearchView extends View {
 
             List<Property> properties = new ArrayList<Property>();
             Object[] selection = getSelectedValues();
-            for (int i = 0; i < selection.length; i++) {
-                Hit hit = (Hit) selection[i];
+            for (Object selection1 : selection) {
+                Hit hit = (Hit) selection1;
                 properties.add(hit.getProperty());
             }
             return new ViewContext(context.getGedcom(), null, properties);
