@@ -5,10 +5,14 @@ import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
 import java.util.*;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -17,8 +21,9 @@ import javax.swing.table.TableRowSorter;
 public class PlacesListPanel extends javax.swing.JPanel {
 
     String[] mPlaceFormat = null;
-    private GedcomPlaceTableModel mPlacesListTableModel;
-    private TableRowSorter<TableModel> mPlaceTableSorter;
+    private final GedcomPlaceTableModel mPlacesListTableModel;
+    private final TableRowSorter<TableModel> mPlaceTableSorter;
+    private final Preferences modulePreferences = NbPreferences.forModule(PlacesListPanel.class);
     private Gedcom mGedcom = null;
 
     /**
@@ -49,6 +54,17 @@ public class PlacesListPanel extends javax.swing.JPanel {
         mPlaceTableSorter = new TableRowSorter<TableModel>(placesListTable.getModel());
         placesListTable.setRowSorter(mPlaceTableSorter);
         placesListTable.setID(PlacesListPanel.class.getName());
+
+        try {
+            if (!modulePreferences.nodeExists(gedcom.getName())) {
+                searchPlaceComboBox.setSelectedIndex(0);
+            } else {
+                Preferences node = modulePreferences.node(gedcom.getName());
+                searchPlaceComboBox.setSelectedIndex(node.getInt("PlacesListPanel.searchPlaceComboBox.selectedIndex", 0));
+            }
+        } catch (BackingStoreException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     /**
@@ -174,6 +190,9 @@ public class PlacesListPanel extends javax.swing.JPanel {
     }
 
     public PropertyPlace getSelectedPlace() {
+        Preferences node = modulePreferences.node(mGedcom.getName());
+        node.putInt("PlacesListPanel.searchPlaceComboBox.selectedIndex", searchPlaceComboBox.getSelectedIndex());
+
         int selectedRow = placesListTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = placesListTable.convertRowIndexToModel(selectedRow);
