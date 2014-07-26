@@ -587,7 +587,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         if (sourceCitation instanceof PropertySource) {
             mReferencedSource = (Source) ((PropertySource) sourceCitation).getTargetEntity();
             
-            sourceReferencedTitleTextArea.setEnabled(false);
             sourceReferencedTitleTextArea.setEditable(false);
             
             if (mReferencedSource != null) {
