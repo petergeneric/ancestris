@@ -44,11 +44,11 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         0, // hamlet
         -1, // parish
         1, // city,
-        2, // zip Code
-        -1, // geo ID,
-        3, // county,
-        4, // state
-        5 // country
+        3, // zip Code
+        2, // geo ID,
+        4, // county,
+        5, // state
+        6 // country
     };
     JComponent mGedcomFields[][];
     boolean mPlaceModified = false;
