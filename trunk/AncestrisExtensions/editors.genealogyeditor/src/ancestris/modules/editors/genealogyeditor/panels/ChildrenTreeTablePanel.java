@@ -18,6 +18,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
@@ -67,7 +68,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
         }
     }
     private final static Logger logger = Logger.getLogger(ChildrenTreeTablePanel.class.getName(), null);
-    private ChildrenTreeTableModel  mChildrenTreeTableModel = new ChildrenTreeTableModel();
+    private ChildrenTreeTableModel mChildrenTreeTableModel = new ChildrenTreeTableModel();
     private Registry mRegistry = Registry.get(ChildrenTreeTablePanel.class);
     private Property mRoot;
     private String mTableId = ChildrenTreeTablePanel.class.getName();
@@ -75,7 +76,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
     private PropertyChild mAddedChild = null;
 
     /**
-     * Creates new form FamiliesTreeTablePanel
+     * Creates new form ChildrenTreeTablePanel
      */
     public ChildrenTreeTablePanel() {
         initComponents();
@@ -144,6 +145,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
         addChildrenButton = new javax.swing.JButton();
         linkToChildrenButton = new javax.swing.JButton();
         editButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
 
         childrenTreeTable.setEditable(false);
         childrenTreeTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -193,6 +195,18 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
         });
         childrenToolBar.add(editButton);
 
+        deleteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteButton.setToolTipText(org.openide.util.NbBundle.getMessage(ChildrenTreeTablePanel.class, "ChildrenTreeTablePanel.deleteButton.toolTipText")); // NOI18N
+        deleteButton.setFocusable(false);
+        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+        childrenToolBar.add(deleteButton);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -218,137 +232,12 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
             Object node = path.getLastPathComponent();
             if (node instanceof DefaultMutableTreeNode) {
                 DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) node;
+                TreeNode parent = dataNode.getParent();
 
-                Property property = (Property) dataNode.getUserObject();
-                if (property instanceof Fam) {
-                    Fam family = (Fam) property;
-                    FamilyEditor familyEditorPanel = new FamilyEditor();
-                    familyEditorPanel.set(family);
-
-                    DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                            NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.edit.title", family),
-                            familyEditorPanel);
-                    familyEditorDialog.setDialogId(FamilyEditor.class.getName());
-
-                    if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                        try {
-                            familyEditorPanel.commit();
-                        } catch (GedcomException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    } else {
-                        while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                            gedcom.undoUnitOfWork(false);
-                        }
-                    }
-                } else if (property instanceof Indi) {
-                    Indi child = (Indi) property;
-                    if (!child.equals(mRoot)) {
-                        IndividualEditor individualEditor = new IndividualEditor();
-                        individualEditor.set(child);
-
-                        DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
-                                individualEditor);
-                        individualEditorDialog.setDialogId(IndividualEditor.class.getName());
-
-                        if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                            try {
-                                individualEditor.commit();
-                            } catch (GedcomException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                        } else {
-                            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                                gedcom.undoUnitOfWork(false);
-                            }
-                        }
-                    }
-                } else if (property instanceof PropertyChild) {
-                    Indi child = ((PropertyChild) property).getChild();
-                    if (!child.equals(mRoot)) {
-                        IndividualEditor individualEditor = new IndividualEditor();
-                        individualEditor.set(child);
-
-                        DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
-                                individualEditor);
-                        individualEditorDialog.setDialogId(IndividualEditor.class.getName());
-
-                        if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                            try {
-                                individualEditor.commit();
-                            } catch (GedcomException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                        } else {
-                            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                                gedcom.undoUnitOfWork(false);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }//GEN-LAST:event_editButtonActionPerformed
-
-    private void childrenTreeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_childrenTreeTableMouseClicked
-        if (evt.getClickCount() >= 2) {
-            int rowIndex = childrenTreeTable.convertRowIndexToModel(childrenTreeTable.getSelectedRow());
-            Gedcom gedcom = mRoot.getGedcom();
-            int undoNb = gedcom.getUndoNb();
-            if (rowIndex != -1) {
-                TreePath path = childrenTreeTable.getPathForRow(rowIndex);
-                Object node = path.getLastPathComponent();
-                if (node instanceof DefaultMutableTreeNode) {
-                    DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) node;
+                if (parent instanceof DefaultMutableTreeNode && ((DefaultMutableTreeNode) parent).isRoot()) {
 
                     Property property = (Property) dataNode.getUserObject();
-                    if (property instanceof Fam) {
-                        Fam family = (Fam) property;
-                        FamilyEditor familyEditorPanel = new FamilyEditor();
-                        familyEditorPanel.set(family);
-
-                        DialogManager.ADialog familyEditorDialog = new DialogManager.ADialog(
-                                NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.edit.title", family),
-                                familyEditorPanel);
-                        familyEditorDialog.setDialogId(FamilyEditor.class.getName());
-
-                        if (familyEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                            try {
-                                familyEditorPanel.commit();
-                            } catch (GedcomException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                        } else {
-                            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                                gedcom.undoUnitOfWork(false);
-                            }
-                        }
-                    } else if (property instanceof Indi) {
-                        Indi child = (Indi) property;
-                        if (!child.equals(mRoot)) {
-                            IndividualEditor individualEditor = new IndividualEditor();
-                            individualEditor.set(child);
-
-                            DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
-                                    NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
-                                    individualEditor);
-                            individualEditorDialog.setDialogId(IndividualEditor.class.getName());
-
-                            if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                                try {
-                                    individualEditor.commit();
-                                } catch (GedcomException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                }
-                            } else {
-                                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                                    gedcom.undoUnitOfWork(false);
-                                }
-                            }
-                        }
-                    } else if (property instanceof PropertyChild) {
+                    if (property instanceof PropertyChild) {
                         Indi child = ((PropertyChild) property).getChild();
                         if (!child.equals(mRoot)) {
                             IndividualEditor individualEditor = new IndividualEditor();
@@ -368,6 +257,50 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                             } else {
                                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                                     gedcom.undoUnitOfWork(false);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void childrenTreeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_childrenTreeTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            int rowIndex = childrenTreeTable.convertRowIndexToModel(childrenTreeTable.getSelectedRow());
+            Gedcom gedcom = mRoot.getGedcom();
+            int undoNb = gedcom.getUndoNb();
+            if (rowIndex != -1) {
+                TreePath path = childrenTreeTable.getPathForRow(rowIndex);
+                Object node = path.getLastPathComponent();
+                if (node instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) node;
+                    TreeNode parent = dataNode.getParent();
+
+                    if (parent instanceof DefaultMutableTreeNode && ((DefaultMutableTreeNode) parent).isRoot()) {
+                        Property property = (Property) dataNode.getUserObject();
+                        if (property instanceof PropertyChild) {
+                            Indi child = ((PropertyChild) property).getChild();
+                            if (!child.equals(mRoot)) {
+                                IndividualEditor individualEditor = new IndividualEditor();
+                                individualEditor.set(child);
+
+                                DialogManager.ADialog individualEditorDialog = new DialogManager.ADialog(
+                                        NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.edit.title", child),
+                                        individualEditor);
+                                individualEditorDialog.setDialogId(IndividualEditor.class.getName());
+
+                                if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                                    try {
+                                        individualEditor.commit();
+                                    } catch (GedcomException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                } else {
+                                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                                        gedcom.undoUnitOfWork(false);
+                                    }
                                 }
                             }
                         }
@@ -395,8 +328,9 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
 
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
-                            PropertyXRef addChild = ((Fam)mRoot).addChild(selectedIndividual);
+                            PropertyXRef addChild = ((Fam) mRoot).addChild(selectedIndividual);
                             mChildrenTreeTableModel.add((PropertyChild) addChild);
+                            childrenTreeTable.expandAll();
                         }
                     }); // end of doUnitOfWork
 
@@ -416,12 +350,12 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mIndividual = (Indi) gedcom.createEntity(Gedcom.INDI);
-                    mAddedChild = (PropertyChild) ((Fam)mRoot).addChild(mIndividual);
+                    mAddedChild = (PropertyChild) ((Fam) mRoot).addChild(mIndividual);
                     String lastName = "";
-                    if (((Fam)mRoot).getHusband() != null) {
-                        lastName = ((Fam)mRoot).getHusband().getLastName();
-                    } else if (((Fam)mRoot).getWife() != null) {
-                        lastName = ((Fam)mRoot).getWife().getLastName();
+                    if (((Fam) mRoot).getHusband() != null) {
+                        lastName = ((Fam) mRoot).getHusband().getLastName();
+                    } else if (((Fam) mRoot).getWife() != null) {
+                        lastName = ((Fam) mRoot).getWife().getLastName();
                     }
 
                     mIndividual.setName("", lastName);
@@ -439,6 +373,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
             if (individualEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 individualEditor.commit();
                 mChildrenTreeTableModel.add(mAddedChild);
+                childrenTreeTable.expandAll();
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -449,11 +384,54 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_addChildrenButtonActionPerformed
 
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        int rowIndex = childrenTreeTable.convertRowIndexToModel(childrenTreeTable.getSelectedRow());
+        Gedcom gedcom = mRoot.getGedcom();
+
+        if (rowIndex != -1) {
+            TreePath path = childrenTreeTable.getPathForRow(rowIndex);
+            Object node = path.getLastPathComponent();
+            if (node instanceof DefaultMutableTreeNode) {
+                final DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) node;
+                final TreeNode parent = dataNode.getParent();
+
+                if (dataNode.getUserObject() instanceof PropertyChild) {
+                    if (parent instanceof DefaultMutableTreeNode && ((DefaultMutableTreeNode) parent).isRoot()) {
+                        DialogManager createYesNo = DialogManager.createYesNo(
+                                NbBundle.getMessage(
+                                        ChildrenTreeTablePanel.class, "ChildrenTreeTablePanel.deleteChildConfirmation.title",
+                                        ((PropertyChild) dataNode.getUserObject()).getChild()),
+                                NbBundle.getMessage(
+                                        ChildrenTreeTablePanel.class, "ChildrenTreeTablePanel.deleteChildConfirmation.text",
+                                        ((PropertyChild) dataNode.getUserObject()).getChild(),
+                                        mRoot));
+                        if (createYesNo.show() == DialogManager.YES_OPTION) {
+                            try {
+                                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                                    @Override
+                                    public void perform(Gedcom gedcom) throws GedcomException {
+                                        mRoot.delProperty((PropertyXRef) dataNode.getUserObject());
+                                    }
+                                }); // end of doUnitOfWork
+                                ((ChildrenTreeTableModel) childrenTreeTable.getTreeTableModel()).remove(dataNode);
+                                childrenTreeTable.expandAll();
+                            } catch (GedcomException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addChildrenButton;
     private javax.swing.JScrollPane childrenScrollPane;
     private javax.swing.JToolBar childrenToolBar;
     private org.jdesktop.swingx.JXTreeTable childrenTreeTable;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
     private javax.swing.JButton linkToChildrenButton;
     // End of variables declaration//GEN-END:variables

@@ -17,7 +17,7 @@ import org.openide.util.NbBundle;
  */
 public class ChildrenTreeTableModel extends AbstractTreeTableModel {
 
-    private static String[] mChildrenColumnsName = {
+    private static final String[] mChildrenColumnsName = {
         NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.familySpouse.column.ID.title"),
         "",
         "",
@@ -45,36 +45,71 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
     public Object getValueAt(Object object, int index) {
         if (object instanceof DefaultMutableTreeNode) {
             DefaultMutableTreeNode dataNode = (DefaultMutableTreeNode) object;
-            if (dataNode.getUserObject() instanceof Indi) {
-                Indi child = (Indi) dataNode.getUserObject();
-                switch (index) {
-                    case 0:
-                        if (child.getSex() == PropertySex.MALE) {
-                            return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.son.title")
-                                    + " (" + child.getId() + ")";
-                        } else if (child.getSex() == PropertySex.FEMALE) {
-                            return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.daughter.title")
-                                    + " (" + child.getId() + ")";
-                        } else {
-                            return child.getId();
+            if (dataNode.getUserObject() instanceof PropertyChild) {
+                TreeNode parent = dataNode.getParent();
+                if (parent instanceof DefaultMutableTreeNode) {
+                    if (((DefaultMutableTreeNode) parent).isRoot()) { // Son
+                        Indi child = ((PropertyChild) dataNode.getUserObject()).getChild();
+                        switch (index) {
+                            case 0:
+                                if (child.getSex() == PropertySex.MALE) {
+                                    return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.son.title")
+                                            + " (" + child.getId() + ")";
+                                } else if (child.getSex() == PropertySex.FEMALE) {
+                                    return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.daughter.title")
+                                            + " (" + child.getId() + ")";
+                                } else {
+                                    return child.getId();
+                                }
+
+                            case 1:
+                                return child.getFirstName();
+
+                            case 2:
+                                return child.getLastName();
+
+                            case 3:
+                                return child.getBirthDate() != null
+                                        ? NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
+                                        : "";
+
+                            default:
+                                return "";
                         }
+                    } else { // Grandson
+                        Indi child = ((PropertyChild) dataNode.getUserObject()).getChild();
+                        switch (index) {
+                            case 0:
+                                if (child.getSex() == PropertySex.MALE) {
+                                    return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.grandson.title")
+                                            + " (" + child.getId() + ")";
+                                } else if (child.getSex() == PropertySex.FEMALE) {
+                                    return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.granddaughter.title")
+                                            + " (" + child.getId() + ")";
+                                } else {
+                                    return child.getId();
+                                }
 
-                    case 1:
-                        return child.getFirstName();
+                            case 1:
+                                return child.getFirstName();
 
-                    case 2:
-                        return child.getLastName();
+                            case 2:
+                                return child.getLastName();
 
-                    case 3:
-                        return child.getBirthDate() != null
-                                ? NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
-                                : "";
+                            case 3:
+                                return child.getBirthDate() != null
+                                        ? NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
+                                        : "";
 
-                    default:
-                        return "";
+                            default:
+                                return "";
+                        }
+                    }
+                } else {
+                    return object.getClass().getCanonicalName();
                 }
-            } else if (dataNode.getUserObject() instanceof Fam) {
-                Fam family = ((Fam) dataNode.getUserObject());
+            } else if (dataNode.getUserObject() instanceof PropertyFamilySpouse) {
+                Fam family = ((PropertyFamilySpouse) dataNode.getUserObject()).getFamily();
                 switch (index) {
                     case 0:
                         return family.getId();
@@ -88,34 +123,6 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
                     case 3:
                         return family.getMarriageDate() != null
                                 ? NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.family.wedding") + " " + family.getMarriageDate().getDisplayValue()
-                                : "";
-
-                    default:
-                        return "";
-                }
-            } else if (dataNode.getUserObject() instanceof PropertyChild) {
-                Indi child = ((PropertyChild) dataNode.getUserObject()).getChild();
-                switch (index) {
-                    case 0:
-                        if (child.getSex() == PropertySex.MALE) {
-                            return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.grandson.title")
-                                    + " (" + child.getId() + ")";
-                        } else if (child.getSex() == PropertySex.FEMALE) {
-                            return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.granddaughter.title")
-                                    + " (" + child.getId() + ")";
-                        } else {
-                            return child.getId();
-                        }
-
-                    case 1:
-                        return child.getFirstName();
-
-                    case 2:
-                        return child.getLastName();
-
-                    case 3:
-                        return child.getBirthDate() != null
-                                ? NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.child.birth") + " " + child.getBirthDate().getDisplayValue()
                                 : "";
 
                     default:
@@ -153,10 +160,10 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
         return 0;
     }
 
-    public void add(PropertyChild children) {
-        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(children);
+    public void add(PropertyChild child) {
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
 
-        for (PropertyFamilySpouse familyRef : children.getProperties(PropertyFamilySpouse.class)) {
+        for (PropertyFamilySpouse familyRef : child.getProperties(PropertyFamilySpouse.class)) {
             childNode.add(new DefaultMutableTreeNode(familyRef));
         }
 
@@ -164,14 +171,13 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
         modelSupport.fireNewRoot();
     }
 
-    public void addAll(List<PropertyChild> childrenList) {
-        for (PropertyChild propertyChild : childrenList) {
-            Indi child = propertyChild.getChild();
+    public void addAll(List<PropertyChild> children) {
+        for (PropertyChild child : children) {
             DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
 
-            for (PropertyFamilySpouse familyRef : child.getProperties(PropertyFamilySpouse.class)) {
+            for (PropertyFamilySpouse familyRef : child.getChild().getProperties(PropertyFamilySpouse.class)) {
                 Fam family = familyRef.getFamily();
-                DefaultMutableTreeNode familyNode = new DefaultMutableTreeNode(family);
+                DefaultMutableTreeNode familyNode = new DefaultMutableTreeNode(familyRef);
 
                 childNode.add(familyNode);
 
