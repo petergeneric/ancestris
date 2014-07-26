@@ -40,9 +40,9 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
 
         childrenToolBar = new javax.swing.JToolBar();
         addChildrenButton = new javax.swing.JButton();
+        linkToChildrenButton = new javax.swing.JButton();
         editChildrenButton = new javax.swing.JButton();
         deleteChildrenButton = new javax.swing.JButton();
-        linkToChildrenButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         childrenTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
@@ -60,6 +60,19 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
             }
         });
         childrenToolBar.add(addChildrenButton);
+
+        linkToChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToChildrenButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.linkToChildrenButton.text"), new Object[] {})); // NOI18N
+        linkToChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.linkToChildrenButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToChildrenButton.setFocusable(false);
+        linkToChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToChildrenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkToChildrenButtonActionPerformed(evt);
+            }
+        });
+        childrenToolBar.add(linkToChildrenButton);
 
         editChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.editChildrenButton.toolTipText"), new Object[] {})); // NOI18N
@@ -84,19 +97,6 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
             }
         });
         childrenToolBar.add(deleteChildrenButton);
-
-        linkToChildrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToChildrenButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.linkToChildrenButton.text"), new Object[] {})); // NOI18N
-        linkToChildrenButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ChildrenTablePanel.linkToChildrenButton.toolTipText"), new Object[] {})); // NOI18N
-        linkToChildrenButton.setFocusable(false);
-        linkToChildrenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linkToChildrenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        linkToChildrenButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linkToChildrenButtonActionPerformed(evt);
-            }
-        });
-        childrenToolBar.add(linkToChildrenButton);
 
         childrenTable.setModel(mIndividualReferencesTableModel);
         childrenTable.addMouseListener(new java.awt.event.MouseAdapter() {
