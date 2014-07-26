@@ -648,7 +648,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 eventDescriptorTextArea.setText("");
             }
 
-
             Property eventCause = mEvent.getProperty("CAUS", false);
             if (eventCause != null) {
                 eventCauseTextArea.setText(eventCause.getValue());
@@ -665,7 +664,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             } else {
                 eventDescriptorTextArea.setText("");
             }
-
 
             Property eventCause = mEvent.getProperty("CAUS", false);
             if (eventCause != null) {
@@ -707,11 +705,21 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
             if (age != null) {
                 individualAgeTextField.setText(age.getDisplayValue());
-            } else {
-                if (!mEvent.getTag().equals("BIRT") && mDate.isValid()) {
-                    Delta deltaAge = ((Indi) mRoot).getAge(mDate.getStart());
-                    individualAgeTextField.setText(deltaAge != null ? deltaAge.toString() : "");
+                if (mDate.isValid() && ((Indi) mRoot).getBirthDate().isValid()) {
                     individualAgeTextField.setEditable(false);
+                } else {
+                    individualAgeTextField.setEditable(true);
+                }
+            } else {
+                if (mDate.isValid()) {
+                    Delta deltaAge = ((Indi) mRoot).getAge(mDate.getStart());
+                    if (deltaAge != null) {
+                        individualAgeTextField.setText(deltaAge.toString());
+                        individualAgeTextField.setEditable(false);
+                    } else {
+                        individualAgeTextField.setText("");
+                        individualAgeTextField.setEditable(true);
+                    }
                 } else {
                     individualAgeTextField.setText("");
                     individualAgeTextField.setEditable(true);

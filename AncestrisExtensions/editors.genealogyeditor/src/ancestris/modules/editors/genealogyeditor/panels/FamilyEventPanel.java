@@ -668,11 +668,21 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
         if (husbandAge != null) {
             husbandAgeTextField.setText(husbandAge.getDisplayValue());
+            if (mDate.isValid() && ((Fam) mRoot).getHusband().getBirthDate().isValid()) {
+                husbandAgeTextField.setEditable(false);
+            } else {
+                husbandAgeTextField.setEditable(true);
+            }
         } else {
             if (mDate.isValid()) {
                 Delta age = ((Fam) mRoot).getHusband().getAge(mDate.getStart());
-                husbandAgeTextField.setText(age != null ? age.toString() : "");
-                husbandAgeTextField.setEditable(false);
+                if (age != null) {
+                    husbandAgeTextField.setText(age.toString());
+                    husbandAgeTextField.setEditable(false);
+                } else {
+                    husbandAgeTextField.setText("");
+                    husbandAgeTextField.setEditable(true);
+                }
             } else {
                 husbandAgeTextField.setText("");
                 husbandAgeTextField.setEditable(true);
@@ -682,11 +692,21 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
         if (wifeAge != null) {
             wifeAgeTextField.setText(wifeAge.getDisplayValue());
+            if (mDate.isValid() && ((Fam) mRoot).getWife().getBirthDate().isValid()) {
+                wifeAgeTextField.setEditable(false);
+            } else {
+                wifeAgeTextField.setEditable(true);
+            }
         } else {
             if (mDate.isValid()) {
                 Delta age = ((Fam) mRoot).getWife().getAge(mDate.getStart());
-                wifeAgeTextField.setText(age != null ? age.toString() : "");
-                wifeAgeTextField.setEditable(false);
+                if (age != null) {
+                    wifeAgeTextField.setText(age.toString());
+                    wifeAgeTextField.setEditable(false);
+                } else {
+                    wifeAgeTextField.setText("");
+                    wifeAgeTextField.setEditable(true);
+                }
             } else {
                 wifeAgeTextField.setText("");
                 wifeAgeTextField.setEditable(true);
