@@ -18,35 +18,21 @@
  */
 package ancestris.modules.gedcom.sosanumbers;
 
-import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
-import ancestris.util.swing.SelectEntityDialog;
-import genj.app.GedcomFileListener;
-import genj.gedcom.Context;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
-import genj.gedcom.GedcomListener;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertySex;
+import genj.gedcom.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  *
  * @author dominique
  */
-public class SosaNumbers {
+public class SosaNumbers implements GedcomListener {
 
     private class Pair {
 
@@ -59,70 +45,7 @@ public class SosaNumbers {
         }
     }
 
-    private class GedcomEventHandler implements GedcomFileListener, GedcomListener {
-
-        private final Preferences modulePreferences = NbPreferences.forModule(SosaNumbers.class);
-
-        GedcomEventHandler() {
-            AncestrisPlugin.register(this);
-        }
-
-        @Override
-        public void commitRequested(Context context) {
-        }
-
-        @Override
-        public void gedcomClosed(Gedcom gedcom) {
-            //           gedcom.removeGedcomListener(this);
-        }
-
-        @Override
-        public void gedcomOpened(Gedcom gedcom) {
-            String selectedEntityID = modulePreferences.get("SelectEntityDialog." + gedcom.getName(), "");
-            Indi indiDeCujus = null;
-            if (selectedEntityID.isEmpty()) {
-                if (gedcom.getIndis().isEmpty() == false) {
-                    SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"), gedcom, Gedcom.INDI);
-                    if ((indiDeCujus = (Indi) selectEntityDialog.getEntity()) != null) {
-                        modulePreferences.put("SelectEntityDialog." + gedcom.getName(), indiDeCujus.getId());
-                    } else {
-                        modulePreferences.put("SelectEntityDialog." + gedcom.getName(), "No SOSA");
-                    }
-                }
-            } else if (!selectedEntityID.equals("No SOSA")) {
-                indiDeCujus = (Indi) gedcom.getEntity(Gedcom.INDI, selectedEntityID);
-            }
-            if (indiDeCujus != null) {
-                //               gedcom.addGedcomListener(this);
-                generateSosaNbs(gedcom, indiDeCujus);
-            }
-        }
-
-        @Override
-        public void gedcomEntityAdded(final Gedcom gedcom, final Entity entity) {
-        }
-
-        @Override
-        public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-            // Check if in Sosa if so delete all referenced tags
-        }
-
-        @Override
-        public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        }
-
-        @Override
-        public void gedcomPropertyAdded(Gedcom gedcom, Property property,
-                int pos, Property added) {
-        }
-
-        @Override
-        public void gedcomPropertyDeleted(Gedcom gedcom, Property property,
-                int pos, Property deleted) {
-        }
-    }
     private final static Logger LOG = Logger.getLogger(SosaNumbers.class.getName(), null);
-    private final GedcomEventHandler gedcomEventHandler = new GedcomEventHandler();
     final private String SOSA_TAG = "_SOSA";
     final private String DABOVILLE_TAG = "_SOSA_DABOVILLE";
     final private boolean sosaAboNumbering = true;
@@ -133,14 +56,14 @@ public class SosaNumbers {
         final DecimalFormat formatNbrs = new DecimalFormat("0");
 
         // Clean gedcom file for all SOSA and SOSA_ABBO tags
-        new GedcomUtilities(gedcom).deleteTags(SOSA_TAG, GedcomUtilities.ENT_INDI);
-        new GedcomUtilities(gedcom).deleteTags(DABOVILLE_TAG, GedcomUtilities.ENT_INDI);
+        GedcomUtilities.deleteTags(gedcom, SOSA_TAG, GedcomUtilities.ENT_INDI);
+        GedcomUtilities.deleteTags(gedcom, DABOVILLE_TAG, GedcomUtilities.ENT_INDI);
 
         try {
             Indi wife;
             Indi husband;
             Property sosaProperty = null;
-            int sosaCounter = 1;
+            long sosaCounter = 1;
             Fam famc;
 
             // Put de-cujus first in list and update its sosa tag
@@ -153,7 +76,7 @@ public class SosaNumbers {
             ListIterator<Pair> listIter = sosaList.listIterator();
             while (listIter.hasNext()) {
                 Pair pair = listIter.next();
-                sosaCounter = Integer.parseInt(pair.value);
+                sosaCounter = Long.parseLong(pair.value);
                 // Sosa d'Aboville generation
                 if (pair.indi.equals(indiDeCujus) || (sosaAboNumbering && pair.indi.getSex() == PropertySex.MALE)) {
                     dabovilleNumbering(pair.indi, pair.value);
@@ -214,7 +137,7 @@ public class SosaNumbers {
      * @param sosa
      * @return String
      */
-    String computeGene(Integer sosa) {
+    String computeGene(long sosa) {
         Integer generation = 0;
         while ((sosa = sosa >> 1) != 0) {
             generation++;
@@ -250,7 +173,7 @@ public class SosaNumbers {
                     try {
                         String counter = daboCounter + (families.length > 1 ? suffix.toString() + "." : ".") + ChildOrder;
                         // Skip if indi has already a sosa_aboville tag
-                        if ((dabovilleProperty = child.getProperty(DABOVILLE_TAG)) == null) {
+                        if (child.getProperty(DABOVILLE_TAG) == null) {
                             dabovilleProperty = child.addProperty(DABOVILLE_TAG, counter, setPropertyPosition(child));
                             dabovilleProperty.setGuessed(true);
 
@@ -268,5 +191,28 @@ public class SosaNumbers {
                 suffix++;
             }
         }
+    }
+
+    @Override
+    public void gedcomEntityAdded(final Gedcom gedcom, final Entity entity) {
+    }
+
+    @Override
+    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+        // Check if in Sosa if so delete all referenced tags
+    }
+
+    @Override
+    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+    }
+
+    @Override
+    public void gedcomPropertyAdded(Gedcom gedcom, Property property,
+            int pos, Property added) {
+    }
+
+    @Override
+    public void gedcomPropertyDeleted(Gedcom gedcom, Property property,
+            int pos, Property deleted) {
     }
 }

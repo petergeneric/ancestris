@@ -12,7 +12,6 @@
 package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.util.swing.SelectEntityDialog;
-import ancestris.app.App;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -21,9 +20,19 @@ import java.awt.event.ActionListener;
 import java.util.prefs.Preferences;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
+@ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction",
+category = "Tools")
+@ActionRegistration(iconBase = "ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png",
+iconInMenu = true,
+displayName = "#CTL_GenerateSosaAction")
+@ActionReference(path = "Menu/Tools/Gedcom")
 public final class GenerateSosaAction implements ActionListener {
 
     Gedcom myGedcom = null;
@@ -33,7 +42,7 @@ public final class GenerateSosaAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Context context;
 
-        if ((context = App.center.getSelectedContext(true)) != null) {
+        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             myGedcom = context.getGedcom();
 
             SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"), myGedcom, Gedcom.INDI);
