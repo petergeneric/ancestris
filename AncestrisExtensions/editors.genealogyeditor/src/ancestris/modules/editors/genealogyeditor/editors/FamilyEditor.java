@@ -54,6 +54,7 @@ public class FamilyEditor extends Editor {
                 familyEventPanel.commit();
                 if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
                     familyEventPanel.set(mFamily, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
+                    familyEventPanel.setVisible(true);
                 }
             }
         }
@@ -90,6 +91,7 @@ public class FamilyEditor extends Editor {
     public FamilyEditor() {
         initComponents();
         eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
+        familyEventPanel.setVisible(false);
     }
 
     /**
@@ -149,6 +151,7 @@ public class FamilyEditor extends Editor {
         deleteEventButton = new javax.swing.JButton();
         eventsListScrollPane = new javax.swing.JScrollPane();
         eventsList = new javax.swing.JList();
+        jPanel2 = new javax.swing.JPanel();
         familyEventPanel = new ancestris.modules.editors.genealogyeditor.panels.FamilyEventPanel();
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
@@ -529,7 +532,29 @@ public class FamilyEditor extends Editor {
         );
 
         eventsSplitPane.setLeftComponent(eventsListPanel);
-        eventsSplitPane.setRightComponent(familyEventPanel);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 864, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(familyEventPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 864, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 194, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(familyEventPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
+        );
+
+        eventsSplitPane.setRightComponent(jPanel2);
 
         javax.swing.GroupLayout eventsPanelLayout = new javax.swing.GroupLayout(eventsPanel);
         eventsPanel.setLayout(eventsPanelLayout);
@@ -1141,8 +1166,7 @@ public class FamilyEditor extends Editor {
                         }
                         seteventTypeComboBox(eventsProperties);
                         mEventsListModel.add(mEvent);
-                        familyEventPanel.set(mFamily, mEvent);
-
+                        eventsList.setSelectedIndex(mEventsListModel.getSize() - 1);
                     }
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -1230,6 +1254,7 @@ public class FamilyEditor extends Editor {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JButton linkToHusbandButton;
     private javax.swing.JButton linkToWifeButton;
     private javax.swing.JPanel motherPanel;
@@ -1526,7 +1551,7 @@ public class FamilyEditor extends Editor {
                 localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
             }
         }
-        
+
         java.util.Collections.sort(localizedEventsList);
 
         updateOnGoing = true;
