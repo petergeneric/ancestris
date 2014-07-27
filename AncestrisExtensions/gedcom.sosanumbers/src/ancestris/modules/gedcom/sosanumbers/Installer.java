@@ -11,6 +11,7 @@
  */
 package ancestris.modules.gedcom.sosanumbers;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
@@ -20,6 +21,8 @@ import org.openide.windows.WindowManager;
  */
 public class Installer extends ModuleInstall {
 
+    SosaNumbersPlugin sosaNumbersPlugin = new SosaNumbersPlugin();
+
     @Override
     public void restored() {
 
@@ -27,8 +30,13 @@ public class Installer extends ModuleInstall {
 
             @Override
             public void run() {
-                SosaNumbers sosaNumbers = new SosaNumbers();
+                AncestrisPlugin.register(sosaNumbersPlugin);
             }
         });
+    }
+
+    @Override
+    public void uninstalled() {
+        AncestrisPlugin.register(sosaNumbersPlugin);
     }
 }
