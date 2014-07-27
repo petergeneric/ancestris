@@ -442,7 +442,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 sourceReferencedTitleTextArea.setText(mReferencedSource.getTitle());
-                linkToSourceButton.setVisible(false);
                 addSourceButton.setVisible(false);
                 editSourceButton.setVisible(true);
             } else {
@@ -511,7 +510,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 }
 
                 addSourceButton.setVisible(false);
-                linkToSourceButton.setVisible(false);
                 editSourceButton.setVisible(true);
             }
         }
@@ -591,7 +589,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             
             if (mReferencedSource != null) {
                 addSourceButton.setVisible(false);
-                linkToSourceButton.setVisible(false);
 
                 sourceReferencedTitleTextArea.setText(mReferencedSource.getTitle());
                 mSourceReferencedTitleModified = false;
@@ -679,7 +676,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         } else {
             addSourceButton.setVisible(false);
             editSourceButton.setVisible(false);
-            linkToSourceButton.setVisible(false);
 
             pageLabel.setVisible(false);
             pageTextField.setVisible(false);
