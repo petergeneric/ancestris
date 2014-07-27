@@ -615,17 +615,17 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                  * Gedcom Predefined Roles are CHIL | HUSB | WIFE | MOTH | FATH | SPOU 
                  */
                 if (eventRole.getValue().equals("CHIL")) {
-                    eventRoleComboBox.setSelectedIndex(0);
-                } else if (eventRole.getValue().equals("HUSB")) {
                     eventRoleComboBox.setSelectedIndex(1);
-                } else if (eventRole.getValue().equals("WIFE")) {
+                } else if (eventRole.getValue().equals("HUSB")) {
                     eventRoleComboBox.setSelectedIndex(2);
-                } else if (eventRole.getValue().equals("MOTH")) {
+                } else if (eventRole.getValue().equals("WIFE")) {
                     eventRoleComboBox.setSelectedIndex(3);
-                } else if (eventRole.getValue().equals("FATH")) {
+                } else if (eventRole.getValue().equals("MOTH")) {
                     eventRoleComboBox.setSelectedIndex(4);
-                } else if (eventRole.getValue().equals("SPOU")) {
+                } else if (eventRole.getValue().equals("FATH")) {
                     eventRoleComboBox.setSelectedIndex(5);
+                } else if (eventRole.getValue().equals("SPOU")) {
+                    eventRoleComboBox.setSelectedIndex(6);
                 } else {
                     eventRoleComboBox.setSelectedItem(eventRole.getValue());
                 }
