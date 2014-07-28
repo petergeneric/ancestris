@@ -53,7 +53,8 @@ import java.util.List;
   /** padding (n, e, s, w) */
   protected int[] padIndis, padMinusPlus; 
   
-  private final static int MAX_GENERATION = 20;
+  //FIXME: was 20 now 60 to match max # of generation in sosa numbering plugin. to be change to unlimited
+  private final static int MAX_GENERATION = 60;
   
   /** 
    * gets an instance of a parser
