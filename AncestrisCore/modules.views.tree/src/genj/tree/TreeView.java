@@ -114,7 +114,7 @@ import org.openide.util.NbBundle;
 //@ServiceProvider(service=TreeView.class)
 public class TreeView extends View implements Filter {
 
-    static private Logger LOG = Logger.getLogger("ancestris.tree");
+    private static final Logger LOG = Logger.getLogger("ancestris.tree");
 
     protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");
     protected final static Registry REGISTRY = Registry.get(TreeView.class);
@@ -123,13 +123,14 @@ public class TreeView extends View implements Filter {
     /** the units we use */
     private final Point2D DPMM;
     /** our model */
-    private Model model;
+    private final Model model;
     /** our content */
-    private Content content;
+    private final Content content;
+    private final JScrollPane scroll;
     /** our overview */
-    private Overview overview;
+    private final Overview overview;
     /** our content renderer */
-    private ContentRenderer contentRenderer;
+    private final ContentRenderer contentRenderer;
     /** our current zoom */
     private double zoom = 1.0D;
     /** our current zoom */
@@ -139,21 +140,21 @@ public class TreeView extends View implements Filter {
     /** our colors */
     private Map<String, Color> colors = new HashMap<String, Color>();
     /** our blueprints */
-    private Map<String, String> tag2blueprint = new HashMap<String, String>();
+    private final Map<String, String> tag2blueprint = new HashMap<String, String>();
     /** our renderers */
-    private Map<String, BlueprintRenderer> tag2renderer = new HashMap<String, BlueprintRenderer>();
+    private final Map<String, BlueprintRenderer> tag2renderer = new HashMap<String, BlueprintRenderer>();
     /** our content's font */
     private Font contentFont = new Font("SansSerif", 0, 10);
     /** current centered position */
-    private Point2D.Double center = new Point2D.Double(0, 0);
+    private final Point2D.Double center = new Point2D.Double(0, 0);
     /** current context */
     private Context context = new Context();
     private boolean ignoreContextChange = false;
-    private Sticky sticky = new Sticky();
+    private final Sticky sticky = new Sticky();
     // Lookup listener for action callback
     private Lookup.Result<SelectionActionEvent> result;
 
-    private TemplateToolTip tt = new TemplateToolTip();
+    private final TemplateToolTip tt = new TemplateToolTip();
     private JLabel rootTitle;
 
     /**
@@ -177,10 +178,7 @@ public class TreeView extends View implements Filter {
 
         // grab font
         contentFont = REGISTRY.get("font", contentFont);
-
-        // grab blueprints
-        for (int t = 0; t < Gedcom.ENTITIES.length; t++) {
-            String tag = Gedcom.ENTITIES[t];
+        for (String tag : Gedcom.ENTITIES) {
             tag2blueprint.put(tag, REGISTRY.get("blueprint." + tag, ""));
         }
 
@@ -205,7 +203,7 @@ public class TreeView extends View implements Filter {
         contentRenderer = new ContentRenderer();
         content = new Content();
         setExplorerHelper(new ExplorerHelper(content));
-        JScrollPane scroll = new ScrollPaneWidget(new ViewPortAdapter(content));
+        scroll = new ScrollPaneWidget(new ViewPortAdapter(content));
         overview = new Overview(scroll);
         overview.setVisible(REGISTRY.get("overview", true));
         overview.setSize(REGISTRY.get("overview", new Dimension(160, 80)));
@@ -215,12 +213,18 @@ public class TreeView extends View implements Filter {
         add(overview);
         add(scroll);
 
-//    // scroll to current
-//    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-//      public void run() {
-//        scrollToCurrent();
-//      }
-//    });
+        // scroll to current
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Point center = getGedcom().getRegistry().get("tree.center", (Point) null);
+                if (center != null){
+                    scrollTo(center,true);
+                } else {
+                    scrollToCurrent(true);
+                }
+            }
+        });
         // done
     }
 
@@ -243,6 +247,12 @@ public class TreeView extends View implements Filter {
      */
     @Override
     public void removeNotify() {
+        AncestrisPlugin.unregister(this);
+        // done
+        super.removeNotify();
+    }
+    
+    public void writeProperties(){
         // settings
         REGISTRY.put("overview", overview.isVisible());
         REGISTRY.put("overview", overview.getSize());
@@ -267,16 +277,16 @@ public class TreeView extends View implements Filter {
 
         // root    
         if (model.getRoot() != null) {
-            model.getRoot().getGedcom().getRegistry().put("tree.root", model.getRoot().getId());
+            Registry r = getGedcom().getRegistry();
+            r.put("tree.root", model.getRoot().getId());
+            // Center position
+            r.put("tree.center", getCenter());
         }
 
         // stoppers
         REGISTRY.put("hide.ancestors", model.getHideAncestorsIDs());
         REGISTRY.put("hide.descendants", model.getHideDescendantsIDs());
-
-        AncestrisPlugin.unregister(this);
-        // done
-        super.removeNotify();
+        
     }
 
     // TreeView Preferences
@@ -313,11 +323,11 @@ public class TreeView extends View implements Filter {
         int w = getWidth(),
                 h = getHeight();
         Component[] cs = getComponents();
-        for (int c = 0; c < cs.length; c++) {
-            if (cs[c] == overview) {
+        for (Component c : cs) {
+            if (c == overview) {
                 continue;
             }
-            cs[c].setBounds(0, 0, w, h);
+            c.setBounds(0, 0, w, h);
         }
         // done
     }
@@ -543,7 +553,7 @@ public class TreeView extends View implements Filter {
         // done
         return true;
     }
-
+    
 //    /**
 //     * Show current entity, show root if failed
 //     */
@@ -562,26 +572,40 @@ public class TreeView extends View implements Filter {
     /**
      * Scroll to given position
      */
-    private void scrollTo(Point p, boolean forceCenter) {
+    private void scrollTo(Point2D p, boolean forceCenter) {
         if (forceCenter || isAutoScroll()) {
             // remember
             center.setLocation(p);
             // scroll
             Rectangle2D b = model.getBounds();
             Dimension d = getSize();
-            content.scrollRectToVisible(new Rectangle(
+            Rectangle r = new Rectangle(
                     (int) ((p.getX() - b.getMinX()) * (DPMM.getX() * zoom)) - d.width / 2,
                     (int) ((p.getY() - b.getMinY()) * (DPMM.getY() * zoom)) - d.height / 2,
                     d.width,
-                    d.height));
+                    d.height);
+            content.scrollRectToVisible(r);
             // done
         }
+    }
+
+    private Point getCenter(){
+        JViewport v = scroll.getViewport();
+        return view2model(new Point(
+                v.getViewPosition().x+v.getExtentSize().width/2,
+                v.getViewPosition().y+v.getExtentSize().height/2));
+    }
+    /**
+     * Scroll to current entity
+     */
+    private void scrollToCurrent() {
+        scrollToCurrent(false);
     }
 
     /**
      * Scroll to current entity
      */
-    private void scrollToCurrent() {
+    private void scrollToCurrent(boolean force) {
 
         Entity current = context.getEntity();
         if (current == null) {
@@ -595,7 +619,7 @@ public class TreeView extends View implements Filter {
         }
 
         // scroll
-        scrollTo(node.pos, false);
+        scrollTo(node.pos, force);
 
         // done    
     }
@@ -657,6 +681,7 @@ public class TreeView extends View implements Filter {
         pb.setToolTipText(RESOURCES.getString("bookmark.tip"));
         pb.setOpaque(false);
         toolbar.add(pb);
+        toolbar.add(new ActionGotoContext());
         toolbar.add(new ActionGotoRoot());
         toolbar.add(new ActionChooseRoot());
         toolbar.addSeparator();
@@ -1572,6 +1597,38 @@ public class TreeView extends View implements Filter {
                     }
                 }.actionPerformed(null);
             }
+        }
+    }
+
+        private class ActionGotoContext extends AbstractAncestrisContextAction {
+
+        private Entity entity;
+
+        public ActionGotoContext() {
+            super();
+            setTip(RESOURCES.getString("goto.context.tip"));
+            setImage(Images.imgGotoContext);
+        }
+
+        @Override
+        protected void contextChanged() {
+            if (!contextProperties.isEmpty()) {
+                Property prop = contextProperties.get(0);
+                if (prop.getEntity() instanceof Indi || prop.getEntity() instanceof Fam) {
+                    entity = prop.getEntity();
+                } else if (entity == null) {
+                    entity = prop.getGedcom().getFirstEntity(Gedcom.INDI);
+                }
+            }
+            if (entity != null){
+                setTip(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(false)));
+            }
+            super.contextChanged();
+        }
+
+        @Override
+        protected void actionPerformedImpl(final ActionEvent event) {
+            TreeView.this.scrollToCurrent(true);
         }
     }
 
