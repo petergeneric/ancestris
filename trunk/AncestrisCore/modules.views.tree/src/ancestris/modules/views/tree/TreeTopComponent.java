@@ -15,10 +15,6 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.view.GenjViewTopComponent;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Property;
-import genj.io.Filter;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
@@ -30,15 +26,16 @@ import org.openide.windows.RetainLocation;
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//ancestris.app//Tree//EN",
-autostore = false)
+        autostore = false)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class TreeTopComponent extends GenjViewTopComponent{
+public final class TreeTopComponent extends GenjViewTopComponent {
 
     private static TreeTopComponent factory;
-    private static ViewFactory viewfactory = new TreeViewFactory();
+    private static final ViewFactory viewfactory = new TreeViewFactory();
     private static final String PREFERRED_ID = "TreeTopComponent";
 
+    @Override
     public ViewFactory getViewFactory() {
         return viewfactory;
     }
@@ -55,12 +52,14 @@ public final class TreeTopComponent extends GenjViewTopComponent{
         return factory;
     }
 
+    @Override
     public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
+    @Override
     public void readProperties(java.util.Properties p) {
         super.readProperties(p);
     }
@@ -84,13 +83,15 @@ public final class TreeTopComponent extends GenjViewTopComponent{
         return true;
     }
 
-//FIXME: to be removed    
-//    @Override
-//    public void runWhenSizeIsCorrectImpl() {
-//        TreeView v = (TreeView) getView();
-//        v.setRoot(v.getRoot());
-//        v.show(v.getContext().getEntity(), true);
-//        }
+    // FIXME: we save treeview settings here because TreeView.remove is called twice
+    // The first time it is called the view is centered on root entity then we loose 
+    // the tree view placement.
+    @Override
+    public void componentClosed() {
+        TreeView v = (TreeView) getView();
+        v.writeProperties();
+        super.componentClosed();
+    }
 
     @Override
     protected String preferredID() {
