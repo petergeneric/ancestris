@@ -12,7 +12,7 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class NoteEditorPanel extends javax.swing.JPanel {
+public class NoteCitationEditorPanel extends javax.swing.JPanel {
 
     private Property mNote;
     private boolean mNoteModified = false;
@@ -22,7 +22,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
     /**
      * Creates new form NoteEditorPanel
      */
-    public NoteEditorPanel() {
+    public NoteCitationEditorPanel() {
         initComponents();
     }
 
@@ -48,11 +48,11 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
 
-        noteIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteIDLabel.text"), new Object[] {})); // NOI18N
+        noteIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteIDLabel.text"), new Object[] {})); // NOI18N
 
         noteIDTextField.setEditable(false);
         noteIDTextField.setColumns(8);
-        noteIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteIDTextField.text"), new Object[] {})); // NOI18N
+        noteIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteIDTextField.text"), new Object[] {})); // NOI18N
 
         noteTextToolBar.setFloatable(false);
         noteTextToolBar.setRollover(true);
@@ -78,7 +78,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
                 .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
         );
 
-        noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteTextPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteTextPanel); // NOI18N
+        noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteTextPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteTextPanel); // NOI18N
 
         javax.swing.GroupLayout noteReferencesPanelLayout = new javax.swing.GroupLayout(noteReferencesPanel);
         noteReferencesPanel.setLayout(noteReferencesPanelLayout);
@@ -91,10 +91,10 @@ public class NoteEditorPanel extends javax.swing.JPanel {
             .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
         );
 
-        noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel); // NOI18N
+        noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel); // NOI18N
 
-        inlineNoteCheckBox.setText(org.openide.util.NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.inlineNoteCheckBox.text")); // NOI18N
-        inlineNoteCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.inlineNoteCheckBox.toolTipText")); // NOI18N
+        inlineNoteCheckBox.setText(org.openide.util.NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.inlineNoteCheckBox.text")); // NOI18N
+        inlineNoteCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.inlineNoteCheckBox.toolTipText")); // NOI18N
         inlineNoteCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inlineNoteCheckBoxActionPerformed(evt);
@@ -102,7 +102,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
         });
 
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.changeDateLabel.text")); // NOI18N
+        changeDateLabel.setText(org.openide.util.NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.changeDateLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -148,13 +148,13 @@ public class NoteEditorPanel extends javax.swing.JPanel {
             noteIDTextField.setVisible(false);
             changeDateLabel.setVisible(false);
             changeDateLabeldate.setVisible(false);
-            noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesPanel.TabConstraints.tabTitle")));
+            noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.noteReferencesPanel.TabConstraints.tabTitle")));
         } else {
             noteIDLabel.setVisible(true);
             noteIDTextField.setVisible(true);
             changeDateLabel.setVisible(true);
             changeDateLabeldate.setVisible(true);
-            noteInformationTabbedPane.addTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel);
+            noteInformationTabbedPane.addTab(NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel);
         }
     }//GEN-LAST:event_inlineNoteCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -206,7 +206,7 @@ public class NoteEditorPanel extends javax.swing.JPanel {
                 noteIDLabel.setVisible(false);
                 changeDateLabel.setVisible(false);
                 changeDateLabeldate.setVisible(false);
-                noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.noteReferencesPanel.TabConstraints.tabTitle")));
+                noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.noteReferencesPanel.TabConstraints.tabTitle")));
             }
 
             noteTextTextArea.setText(mNote.getValue() != null ? mNote.getValue() : "");
