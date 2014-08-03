@@ -12,6 +12,7 @@ import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
+/*
 @ActionID(
         category = "View",
         id = "ancestris.modules.editors.genealogyeditor.GenealogyEditorOpenAction"
@@ -21,6 +22,7 @@ import org.openide.util.Utilities;
 )
 @ActionReference(path = "Menu/View", position = 125)
 @Messages("CTL_GenealogyEditorOpenAction=Genealogy Editor")
+*/
 public final class GenealogyEditorOpenAction implements ActionListener {
 
     private final DataObject context;
