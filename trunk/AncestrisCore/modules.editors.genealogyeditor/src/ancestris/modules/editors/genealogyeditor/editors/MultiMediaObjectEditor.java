@@ -324,15 +324,13 @@ public class MultiMediaObjectEditor extends EntityEditor {
     protected void setContextImpl(Context context) {
         this.context = context;
 
-        Entity entity = context.getEntity();
-        if (entity != null && entity instanceof Media) {
-            /*            if (entity instanceof PropertyMedia) {
-             mMultiMediaObject = ((PropertyMedia) entity).getTargetEntity();
-             } else {
-             mMultiMediaObject = entity;
-             }
-             */
-            mMultiMediaObject = entity;
+        Property property = context.getProperty();
+        if (property != null) {
+            if (property instanceof PropertyMedia) {
+                mMultiMediaObject = ((PropertyMedia) property).getTargetEntity();
+            } else {
+                mMultiMediaObject = property;
+            }
 
             setTitle(NbBundle.getMessage(MultiMediaObjectEditor.class, isNew() ? "MultiMediaObjectEditor.create.title" : "MultiMediaObjectEditor.edit.title", mMultiMediaObject));
 
