@@ -4,7 +4,6 @@ import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
 import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
 import ancestris.modules.editors.genealogyeditor.renderer.TextPaneTableCellRenderer;
 import ancestris.util.swing.DialogManager;
-import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -164,7 +163,6 @@ public class NotesListPanel extends javax.swing.JPanel {
     private void editNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNoteButtonActionPerformed
         int selectedRow = notesTable.getSelectedRow();
         Gedcom gedcom = mRoot.getGedcom();
-        int undoNb = gedcom.getUndoNb();
         if (selectedRow != -1) {
             int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
             NoteEditor noteEditor = new NoteEditor();
@@ -207,9 +205,9 @@ public class NotesListPanel extends javax.swing.JPanel {
         notesListPanel.set(mRoot, notesList);
         notesListPanel.setToolBarVisible(false);
         DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(NoteEditorPanel.class, "NoteEditorPanel.title"),
+                NbBundle.getMessage(NoteEditor.class, "NoteEditorPanel.title"),
                 notesListPanel);
-        individualsListDialog.setDialogId(NoteEditorPanel.class.getName());
+        individualsListDialog.setDialogId(NoteEditor.class.getName());
 
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Note selectedNote = notesListPanel.getSelectedNote();
