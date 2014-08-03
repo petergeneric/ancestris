@@ -1245,8 +1245,9 @@ public class Gedcom implements Comparable {
 
     /**
      * Get a reference set for given tag
+     * @param tag
      */
-    /*package*/ ReferenceSet<String, Property> getReferenceSet(String tag) {
+    public ReferenceSet<String, Property> getReferenceSet(String tag) {
         // lookup
         ReferenceSet<String, Property> result = tags2refsets.get(tag);
         if (result == null) {

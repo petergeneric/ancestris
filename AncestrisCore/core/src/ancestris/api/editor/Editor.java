@@ -46,7 +46,7 @@ public abstract class Editor extends JPanel {
     public abstract ViewContext getContext();
 
     public abstract Component getEditorComponent();
-    
+
     //FIXME: we should specify what explorerHelper is in detail and this method too
     public ExplorerHelper getExplorerHelper(){
         if (helper == null)

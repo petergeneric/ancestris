@@ -1,0 +1,493 @@
+package ancestris.modules.editors.genealogyeditor.panels;
+
+import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
+import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.DialogManager.ADialog;
+import genj.gedcom.*;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
+
+/**
+ *
+ * @author dominique
+ */
+public class RecordedEventEditorPanel extends javax.swing.JPanel {
+
+    private class CheckableItem {
+
+        private final String str;
+
+        private boolean isSelected;
+
+        public CheckableItem(String str) {
+            this.str = str;
+            isSelected = false;
+        }
+
+        public void setSelected(boolean b) {
+            isSelected = b;
+        }
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        @Override
+        public String toString() {
+            return str;
+        }
+    }
+
+    private class CheckListRenderer extends JCheckBox implements ListCellRenderer<CheckableItem> {
+
+        public CheckListRenderer() {
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends CheckableItem> list, CheckableItem checkableItem,
+                int index, boolean isSelected, boolean hasFocus) {
+            setEnabled(list.isEnabled());
+            setSelected(checkableItem.isSelected());
+            setText(checkableItem.toString());
+            return this;
+        }
+
+    }
+    private Property mEvent = null;
+    private PropertyPlace mPlace = null;
+    private PropertyDate mDate = null;
+    private ArrayList<String> mEvents = new ArrayList<String>() {
+        {
+            /*
+             * INDIVIDUAL_EVENT
+             */
+            add(PropertyTag2Name.getTagName("BIRT"));
+            add(PropertyTag2Name.getTagName("CHR"));
+            add(PropertyTag2Name.getTagName("DEAT"));
+            add(PropertyTag2Name.getTagName("BURI"));
+            add(PropertyTag2Name.getTagName("CREM"));
+            add(PropertyTag2Name.getTagName("ADOP"));
+            add(PropertyTag2Name.getTagName("BAPM"));
+            add(PropertyTag2Name.getTagName("BARM"));
+            add(PropertyTag2Name.getTagName("BASM"));
+            add(PropertyTag2Name.getTagName("BLES"));
+            add(PropertyTag2Name.getTagName("CHRA"));
+            add(PropertyTag2Name.getTagName("CONF"));
+            add(PropertyTag2Name.getTagName("FCOM"));
+            add(PropertyTag2Name.getTagName("ORDN"));
+            add(PropertyTag2Name.getTagName("NATU"));
+            add(PropertyTag2Name.getTagName("EMIG"));
+            add(PropertyTag2Name.getTagName("IMMI"));
+            add(PropertyTag2Name.getTagName("CENS"));
+            add(PropertyTag2Name.getTagName("PROB"));
+            add(PropertyTag2Name.getTagName("WILL"));
+            add(PropertyTag2Name.getTagName("GRAD"));
+            add(PropertyTag2Name.getTagName("RETI"));
+            /*
+             * FAMILY_EVENT
+             */
+            add(PropertyTag2Name.getTagName("ANUL"));
+            add(PropertyTag2Name.getTagName("CENS"));
+            add(PropertyTag2Name.getTagName("DIV"));
+            add(PropertyTag2Name.getTagName("DIVF"));
+            add(PropertyTag2Name.getTagName("MARR"));
+            add(PropertyTag2Name.getTagName("ENGA"));
+            add(PropertyTag2Name.getTagName("MARB"));
+            add(PropertyTag2Name.getTagName("MARC"));
+            add(PropertyTag2Name.getTagName("MARL"));
+            add(PropertyTag2Name.getTagName("MARS"));
+        }
+    };
+    private DefaultListModel<CheckableItem> mEventsModel = new DefaultListModel<CheckableItem>();
+
+    /**
+     * Creates new form RecordedEventEditorPanel
+     */
+    public RecordedEventEditorPanel() {
+        initComponents();
+        aDateBean.setPreferHorizontal(true);
+        java.util.Collections.sort(mEvents);
+        for (String event : mEvents) {
+            mEventsModel.addElement(new CheckableItem(event));
+        }
+
+        recordedEventsList.setVisibleRowCount(-1);
+        recordedEventsList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = recordedEventsList.getSelectedIndex();
+                CheckableItem item = (CheckableItem) recordedEventsList.getModel().getElementAt(index);
+                item.setSelected(!item.isSelected());
+            }
+        });
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        recordedEventsLabel = new javax.swing.JLabel();
+        dateLabel = new javax.swing.JLabel();
+        aDateBean = new ancestris.modules.beans.ADateBean();
+        placeLabel = new javax.swing.JLabel();
+        placeTextField = new javax.swing.JTextField();
+        addPlaceButton = new javax.swing.JButton();
+        editPlaceButton = new javax.swing.JButton();
+        linkToPlaceButton = new javax.swing.JButton();
+        recordedEventsScrollPane = new javax.swing.JScrollPane();
+        recordedEventsList = new javax.swing.JList();
+
+        recordedEventsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        recordedEventsLabel.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.recordedEventsLabel.text")); // NOI18N
+
+        dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        dateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RecordedEventEditorPanel.dateLabel.text"), new Object[] {})); // NOI18N
+
+        placeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        placeLabel.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.placeLabel.text")); // NOI18N
+
+        placeTextField.setEditable(false);
+        placeTextField.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.placeTextField.text")); // NOI18N
+
+        addPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addPlaceButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        addPlaceButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        addPlaceButton.setPreferredSize(new java.awt.Dimension(26, 26));
+        addPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addPlaceButtonActionPerformed(evt);
+            }
+        });
+
+        editPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RecordedEventEditorPanel.editPlaceButton.toolTipText"), new Object[] {})); // NOI18N
+        editPlaceButton.setFocusable(false);
+        editPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editPlaceButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        editPlaceButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        editPlaceButton.setPreferredSize(new java.awt.Dimension(26, 26));
+        editPlaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editPlaceButtonActionPerformed(evt);
+            }
+        });
+
+        linkToPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RecordedEventEditorPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToPlaceButton.setFocusable(false);
+        linkToPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToPlaceButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        linkToPlaceButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        linkToPlaceButton.setPreferredSize(new java.awt.Dimension(26, 26));
+        linkToPlaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkToPlaceButtonActionPerformed(evt);
+            }
+        });
+
+        recordedEventsScrollPane.setMinimumSize(new java.awt.Dimension(526, 104));
+        recordedEventsScrollPane.setPreferredSize(new java.awt.Dimension(526, 104));
+
+        recordedEventsList.setModel(mEventsModel);
+        recordedEventsList.setCellRenderer(new CheckListRenderer());
+        recordedEventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        recordedEventsList.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        recordedEventsScrollPane.setViewportView(recordedEventsList);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(recordedEventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(placeTextField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(editPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(recordedEventsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(recordedEventsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(recordedEventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(placeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(placeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void addPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPlaceButtonActionPerformed
+        Gedcom gedcom = mEvent.getGedcom();
+        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+        int undoNb = gedcom.getUndoNb();
+
+        placeEditorPanel.set(mEvent, mPlace, null);
+
+        ADialog eventEditorDialog = new ADialog(
+                NbBundle.getMessage(
+                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+                placeEditorPanel);
+        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
+
+        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        placeEditorPanel.commit();
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : "");
+            addPlaceButton.setVisible(false);
+            editPlaceButton.setVisible(true);
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_addPlaceButtonActionPerformed
+
+    private void editPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
+        Gedcom gedcom = mEvent.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+        placeEditorPanel.set(mEvent, mPlace, null);
+
+        ADialog eventEditorDialog = new ADialog(
+                NbBundle.getMessage(
+                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+                placeEditorPanel);
+        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
+
+        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        placeEditorPanel.commit();
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : "");
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_editPlaceButtonActionPerformed
+
+    private void linkToPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
+        PlacesListPanel placesListPanel = new PlacesListPanel(mEvent.getGedcom());
+        DialogManager.ADialog placesListPanelDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.title.link"),
+                placesListPanel);
+        placesListPanelDialog.setDialogId(PlacesListPanel.class.getName());
+
+        if (placesListPanelDialog.show() == DialogDescriptor.OK_OPTION) {
+            final PropertyPlace selectedPlace = placesListPanel.getSelectedPlace();
+            if (selectedPlace != null) {
+                try {
+                    mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            if (mPlace == null) {
+                                mPlace = (PropertyPlace) mEvent.addProperty("PLAC", selectedPlace.format("all"));
+                            } else {
+                                mPlace.setValue(selectedPlace.format("all"));
+                            }
+
+                            Property map;
+                            Property selectedPlaceMap;
+                            if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
+                                selectedPlaceMap = selectedPlace.getProperty("MAP");
+                                if (selectedPlaceMap != null) {
+                                    map = mPlace.getProperty("MAP");
+                                    if (map == null) {
+                                        map = mPlace.addProperty("MAP", "");
+                                        map.addProperty("LATI", selectedPlaceMap.getProperty("LATI").getValue());
+                                        map.addProperty("LONG", selectedPlaceMap.getProperty("LONG").getValue());
+                                    } else {
+                                        Property latitude = map.getProperty("LATI");
+                                        if (latitude == null) {
+                                            map.addProperty("LATI", selectedPlaceMap.getProperty("LATI").getValue());
+                                        } else {
+                                            latitude.setValue(selectedPlaceMap.getProperty("LATI").getValue());
+                                        }
+                                        Property longitude = map.getProperty("LONG");
+                                        if (longitude == null) {
+                                            map.addProperty("LONG", selectedPlaceMap.getProperty("LONG").getValue());
+                                        } else {
+                                            longitude.setValue(selectedPlaceMap.getProperty("LONG").getValue());
+                                        }
+                                    }
+                                } else {
+                                    map = mPlace.getProperty("MAP");
+                                    if (map != null) {
+                                        mPlace.delProperty(map);
+                                    }
+                                }
+                            } else {
+                                map = mPlace.getProperty("_MAP");
+                                selectedPlaceMap = selectedPlace.getProperty("MAP");
+                                if (selectedPlaceMap != null) {
+                                    if (map == null) {
+                                        map = mPlace.addProperty("_MAP", "");
+                                    } else {
+                                        Property latitude = map.getProperty("_LATI");
+                                        if (latitude == null) {
+                                            map.addProperty("_LATI", selectedPlaceMap.getProperty("_LATI").getValue());
+                                        } else {
+                                            latitude.setValue(selectedPlaceMap.getProperty("_LATI").getValue());
+                                        }
+                                        Property longitude = map.getProperty("_LONG");
+                                        if (longitude == null) {
+                                            map.addProperty("_LONG", selectedPlaceMap.getProperty("_LONG").getValue());
+                                        } else {
+                                            longitude.setValue(selectedPlaceMap.getProperty("_LONG").getValue());
+                                        }
+                                    }
+                                } else {
+                                    map = mPlace.getProperty("_MAP");
+                                    if (map != null) {
+                                        mPlace.delProperty(map);
+                                    }
+                                }
+                            }
+                        }
+                    }); // end of doUnitOfWork
+
+                    placeTextField.setText(mPlace.getDisplayValue());
+
+                    addPlaceButton.setVisible(false);
+                    editPlaceButton.setVisible(true);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_linkToPlaceButtonActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private ancestris.modules.beans.ADateBean aDateBean;
+    private javax.swing.JButton addPlaceButton;
+    private javax.swing.JLabel dateLabel;
+    private javax.swing.JButton editPlaceButton;
+    private javax.swing.JButton linkToPlaceButton;
+    private javax.swing.JLabel placeLabel;
+    private javax.swing.JTextField placeTextField;
+    private javax.swing.JLabel recordedEventsLabel;
+    private javax.swing.JList recordedEventsList;
+    private javax.swing.JScrollPane recordedEventsScrollPane;
+    // End of variables declaration//GEN-END:variables
+
+    public void set(Property event) {
+        this.mEvent = event;
+
+        for (String eventTag : mEvent.getValue().replaceAll(" ", "").split(",")) {
+            for (int index = 0; index < mEventsModel.size(); index++) {
+                if (mEventsModel.get(index).toString().equals(PropertyTag2Name.getTagName(eventTag))) {
+                    mEventsModel.get(index).setSelected(true);
+                }
+            }
+        }
+        mDate = (PropertyDate) mEvent.getProperty("DATE", false);
+        if (mDate == null) {
+            try {
+                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        aDateBean.setContext(mDate);
+
+        mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+        if (mPlace == null) {
+            try {
+                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mPlace = (PropertyPlace) mEvent.addProperty(PropertyPlace.TAG, "");
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+        placeTextField.setText(mPlace.getDisplayValue());
+    }
+
+    public void commit() {
+        String tmp = "";
+        for (int index = 0; index < mEventsModel.size(); index++) {
+            if (mEventsModel.get(index).isSelected) {
+                tmp += (tmp.isEmpty() ? "" : ", ") + PropertyTag2Name.getPropertyTag(mEventsModel.get(index).toString());
+            }
+        }
+        mEvent.setValue(tmp);
+        try {
+            aDateBean.commit();
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+}

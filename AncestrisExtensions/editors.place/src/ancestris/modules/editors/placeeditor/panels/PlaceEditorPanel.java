@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.netbeans.api.progress.ProgressUtils;
 import org.openide.util.*;
 
 /**
@@ -58,11 +57,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         searchPlaceButton = new javax.swing.JButton();
         geonamesScrollPane = new javax.swing.JScrollPane();
         geonamesPlacesListResult = new javax.swing.JList<String>();
+        replacePlaceButton = new javax.swing.JButton();
+        completePlaceButton = new javax.swing.JButton();
         PlaceReferencesPanel = new javax.swing.JPanel();
         placeReferenceScrollPane = new javax.swing.JScrollPane();
         placeReferencesTable = new javax.swing.JTable();
-        replacePlaceButton = new javax.swing.JButton();
-        completePlaceButton = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(537, 414));
 
@@ -100,17 +99,38 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         geonamesPlacesListResult.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         geonamesScrollPane.setViewportView(geonamesPlacesListResult);
 
+        org.openide.awt.Mnemonics.setLocalizedText(replacePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.replacePlaceButton.text")); // NOI18N
+        replacePlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replacePlaceButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(completePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.completePlaceButton.text")); // NOI18N
+        completePlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                completePlaceButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout searchPlacePanelLayout = new javax.swing.GroupLayout(searchPlacePanel);
         searchPlacePanel.setLayout(searchPlacePanelLayout);
         searchPlacePanelLayout.setHorizontalGroup(
             searchPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(geonamesScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(searchPlacePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(searchPlaceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchPlaceButton)
+                .addGroup(searchPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(searchPlacePanelLayout.createSequentialGroup()
+                        .addComponent(searchPlaceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchPlaceButton))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPlacePanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(replacePlaceButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(completePlaceButton)))
                 .addContainerGap())
-            .addComponent(geonamesScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         searchPlacePanelLayout.setVerticalGroup(
             searchPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,7 +140,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     .addComponent(searchPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchPlaceButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(geonamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
+                .addComponent(geonamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPlacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(replacePlaceButton)
+                    .addComponent(completePlaceButton))
+                .addContainerGap())
         );
 
         placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/placeeditor/panels/Bundle").getString("PlaceEditorPanel.searchPlacePanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/resources/Place.png")), searchPlacePanel); // NOI18N
@@ -151,20 +176,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         placeEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlacesEditorPanel.PlaceReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/resources/association.png")), PlaceReferencesPanel); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(replacePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.replacePlaceButton.text")); // NOI18N
-        replacePlaceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                replacePlaceButtonActionPerformed(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(completePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.completePlaceButton.text")); // NOI18N
-        completePlaceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                completePlaceButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -173,12 +184,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(gedcomPlaceEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(replacePlaceButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(completePlaceButton)))
+                    .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -187,11 +193,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(gedcomPlaceEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(replacePlaceButton)
-                    .addComponent(completePlaceButton))
+                .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
