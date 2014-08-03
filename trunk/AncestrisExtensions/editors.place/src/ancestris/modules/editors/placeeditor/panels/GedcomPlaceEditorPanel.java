@@ -43,8 +43,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         0, // hamlet
         -1, // parish
         1, // city,
-        2, // zip Code
-        3, // geo ID,
+        3, // zip Code
+        2, // geo ID,
         4, // county,
         5, // state
         6 // country

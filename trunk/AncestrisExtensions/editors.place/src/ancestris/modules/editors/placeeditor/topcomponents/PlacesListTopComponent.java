@@ -130,7 +130,6 @@ public final class PlacesListTopComponent extends TopComponent {
         }
 
         gedcomPlaceTableModel.update(placesMap);
-
     }
 
     private void newFilter(String filter) {
