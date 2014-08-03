@@ -206,7 +206,7 @@ public class ReportToDo extends Report {
     doc.nextTableRow(FORMAT_HEADER2);
     doc.addText( Gedcom.getName("HUSB"));
     doc.nextTableCell("number-columns-spanned=5");
-    doc.addText( tempIndi.getName() ); 
+    doc.addText( tempIndi==null?"":tempIndi.getName() ); 
 
     outputEventRow(tempIndi, "BIRT", todos, doc);
     outputEventRow(tempIndi, "BAPM", todos, doc);
@@ -234,7 +234,7 @@ public class ReportToDo extends Report {
     doc.nextTableRow(FORMAT_HEADER2);
     doc.addText( Gedcom.getName("WIFE") );
     doc.nextTableCell("number-columns-spanned=5");
-    doc.addText( tempIndi.getName() );
+    doc.addText( tempIndi==null?"":tempIndi.getName() );
 
     outputEventRow(tempIndi, "BIRT", todos, doc);
     outputEventRow(tempIndi, "BAPM", todos, doc);
