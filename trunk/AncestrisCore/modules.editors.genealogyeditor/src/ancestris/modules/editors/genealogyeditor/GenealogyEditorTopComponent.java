@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -40,7 +41,7 @@ import org.openide.windows.TopComponent;
  */
 @TopComponent.Description(
         preferredID = "EditorTopComponent",
-        //iconBase="SET/PATH/TO/ICON/HERE", 
+        iconBase = "ancestris/modules/editors/genealogyeditor/resources/Editor.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
 @TopComponent.Registration(mode = "explorer", openAtStartup = false)
@@ -64,14 +65,14 @@ public final class GenealogyEditorTopComponent
 
         @Override
         public void gedcomWriteLockReleased(Gedcom gedcom) {
-            /*
-             // foreign change while we're looking?
-             if (editor != null && !isChangeSource) {
-             Context ctx = editor.getContext();
-             editor.setContext(new Context());
-             editor.setContext(ctx);
-             }
-             */
+
+            // foreign change while we're looking?
+            if (editor != null && !isChangeSource) {
+                Context ctx = editor.getContext();
+                editor.setContext(new Context());
+                editor.setContext(ctx);
+            }
+
         }
     }
 
@@ -177,7 +178,7 @@ public final class GenealogyEditorTopComponent
             setEditor(panel);
         }
 
-        setPanel(editorContainer);
+        setPanel(new JScrollPane(editorContainer));
         repaint();
     }
 
@@ -192,7 +193,7 @@ public final class GenealogyEditorTopComponent
         editor.setContext(new Context());
         editor.setContext(ctx);
     }
-    
+
     @Override
     public void setName() {
         if (editor != null && editor.getName() != null) {
@@ -225,7 +226,6 @@ public final class GenealogyEditorTopComponent
         }
 
 //        editorContainer.removeAll();
-
         // set new and restore context
         editor = set;
         if (editor != null) {
@@ -243,7 +243,7 @@ public final class GenealogyEditorTopComponent
         revalidate();
         repaint();
     }
-    
+
     public void commit() {
         commit(true);
     }
