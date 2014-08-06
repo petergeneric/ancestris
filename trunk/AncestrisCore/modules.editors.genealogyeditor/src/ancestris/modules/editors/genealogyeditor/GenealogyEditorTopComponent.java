@@ -57,22 +57,22 @@ public final class GenealogyEditorTopComponent
         public void gedcomWriteLockAcquired(Gedcom gedcom) {
 
             // changes we have to commit?
-            if (!isChangeSource) {
-                commit(false);
-            }
-
+//            if (!isChangeSource) {
+            commit(false);
         }
 
+//        }
         @Override
         public void gedcomWriteLockReleased(Gedcom gedcom) {
 
             // foreign change while we're looking?
-            if (editor != null && !isChangeSource) {
-                Context ctx = editor.getContext();
-                editor.setContext(new Context());
-                editor.setContext(ctx);
-            }
-
+/*
+             if (editor != null && !isChangeSource) {
+             Context ctx = editor.getContext();
+             editor.setContext(new Context());
+             editor.setContext(ctx);
+             }
+             */
         }
     }
 
@@ -80,7 +80,8 @@ public final class GenealogyEditorTopComponent
     private final Map<Class<? extends Property>, Editor> panels = new HashMap<Class<? extends Property>, Editor>();
     private Editor editor;
     private ConfirmChangeWidget confirmPanel;
-    private JPanel editorContainer;
+    private JScrollPane editorContainer;
+    private JPanel editorPanel;
     private JLabel titleLabel;
     private final Callback callback = new Callback();
     private Gedcom gedcom;
@@ -112,10 +113,11 @@ public final class GenealogyEditorTopComponent
         titleLabel = new JLabel("");
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        editorPanel = new JPanel(new BorderLayout());
+        editorContainer = new JScrollPane(editorPanel);
 
-        editorContainer = new JPanel(new BorderLayout());
-        editorContainer.add(titleLabel, BorderLayout.NORTH);
-        editorContainer.add(confirmPanel, BorderLayout.SOUTH);
+        editorPanel.add(titleLabel, BorderLayout.NORTH);
+        editorPanel.add(confirmPanel, BorderLayout.SOUTH);
 
         return true;
     }
@@ -178,7 +180,7 @@ public final class GenealogyEditorTopComponent
             setEditor(panel);
         }
 
-        setPanel(new JScrollPane(editorContainer));
+        setPanel(editorContainer);
         repaint();
     }
 
@@ -221,23 +223,23 @@ public final class GenealogyEditorTopComponent
         if (editor != null) {
             editor.removeChangeListener(confirmPanel);
             editor.setContext(new Context());
-            editorContainer.remove(editor);
+            editorPanel.remove(editor);
             editor = null;
         }
 
-//        editorContainer.removeAll();
+//        editorPanel.removeAll();
         // set new and restore context
         editor = set;
         if (editor != null) {
             if (old != null) {
                 editor.setContext(old);
             }
-            editorContainer.add(editor, BorderLayout.CENTER);
+            editorPanel.add(editor, BorderLayout.CENTER);
             titleLabel.setText(editor.getTitle());
             editor.addChangeListener(confirmPanel);
         }
-//        editorContainer.add(titleLabel, BorderLayout.NORTH);
-//        editorContainer.add(confirmPanel, BorderLayout.SOUTH);
+//        editorPanel.add(titleLabel, BorderLayout.NORTH);
+//        editorPanel.add(confirmPanel, BorderLayout.SOUTH);
 
         // show
         revalidate();
@@ -250,9 +252,9 @@ public final class GenealogyEditorTopComponent
 
     private void commit(boolean ask) {
         // changes?
-        if (confirmPanel == null || !confirmPanel.hasChanged()) {
-            return;
-        }
+//        if (confirmPanel == null || !confirmPanel.hasChanged()) {
+//            return;
+//        }
 
         // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume
         // that the containing window was closed and we're not going to throw a dialog out there or do a change
@@ -262,27 +264,28 @@ public final class GenealogyEditorTopComponent
         }
 
         // check for auto commit
-        if (ask && !confirmPanel.isCommitChanges()) {
-            // Don't commit
-            confirmPanel.setChanged(false);
-            return;
-        }
-
+//        if (ask && !confirmPanel.isCommitChanges()) {
+        // Don't commit
+//            confirmPanel.setChanged(false);
+//            return;
+//        }
         try {
 
             isChangeSource = true;
             isIgnoreSetContext = true;
 
-            if (gedcom.isWriteLocked()) {
-                editor.commit();
-            } else {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+            if (editor != null) {
+                if (gedcom.isWriteLocked()) {
+                    editor.commit();
+                } else {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        editor.commit();
-                    }
-                });
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            editor.commit();
+                        }
+                    });
+                }
             }
 
         } catch (Throwable t) {
