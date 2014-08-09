@@ -9,6 +9,8 @@ import ancestris.view.AncestrisViewInterface;
 import ancestris.view.GenjViewTopComponent;
 import genj.table.TableViewFactory;
 import genj.view.ViewFactory;
+import java.awt.BorderLayout;
+import javax.swing.JToolBar;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
@@ -17,14 +19,14 @@ import org.openide.windows.RetainLocation;
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//ancestris.app//Table//EN",
-autostore = false)
+        autostore = false)
 @RetainLocation(AncestrisDockModes.TABLE)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class TableTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "TableTopComponent";
     private static TableTopComponent factory;
-    private static ViewFactory viewfactory = new TableViewFactory();
+    private static final ViewFactory viewfactory = new TableViewFactory();
 
     @Override
     public ViewFactory getViewFactory() {
@@ -58,5 +60,18 @@ public final class TableTopComponent extends GenjViewTopComponent {
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
+    }
+
+    /**
+     * ToolBar allways at top
+     *
+     * @param bar
+     * @param constraints
+     *
+     * @return
+     */
+    @Override
+    protected Object getToolBarConstraints(JToolBar bar, Object constraints) {
+        return BorderLayout.NORTH;
     }
 }

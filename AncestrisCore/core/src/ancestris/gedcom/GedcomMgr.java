@@ -153,7 +153,7 @@ public abstract class GedcomMgr {
         Origin newOrigin;
         // .. create new origin
         try {
-            newOrigin = Origin.create(output.getURL());
+            newOrigin = Origin.create(output.toURL());
             gedcom.setOrigin(newOrigin);
         } catch (Throwable t) {
             LOG.log(Level.FINER, "Failed to create origin for file " + output, t);

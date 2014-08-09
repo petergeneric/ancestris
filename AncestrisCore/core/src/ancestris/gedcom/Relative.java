@@ -177,7 +177,7 @@ public class Relative {
     private static final int POSITION = 1500;
 
     @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.ParentNavigateAction")
-    @ActionRegistration(displayName = "Parents")
+    @ActionRegistration(displayName = "Parents",lazy = false)
     @ActionReferences(value = {
         @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 10)})
     public static class ParentNavigateAction extends NavigateAction {
@@ -188,7 +188,7 @@ public class Relative {
     }
 
     @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.SiblingNavigateAction")
-    @ActionRegistration(displayName = "Sibling")
+    @ActionRegistration(displayName = "Sibling",lazy = false)
     @ActionReferences(value = {
         @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 20)})
     public static class SiblingNavigateAction extends NavigateAction {
@@ -199,7 +199,7 @@ public class Relative {
     }
 
     @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.SpouseNavigateAction")
-    @ActionRegistration(displayName = "Spouse")
+    @ActionRegistration(displayName = "Spouse",lazy = false)
     @ActionReferences(value = {
         @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 30)})
     public static class SpouseNavigateAction extends NavigateAction {
@@ -250,7 +250,7 @@ public class Relative {
 //    }
 //
     @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.UncleAuntNavigateAction")
-    @ActionRegistration(displayName = "Uncles")
+    @ActionRegistration(displayName = "Uncles",lazy = false)
     @ActionReferences(value = {
         @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 50)})
     @NbBundle.Messages({"uncle.aunt=Uncles and Aunts"})
@@ -262,7 +262,7 @@ public class Relative {
     }
 
     @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.CousinNavigateAction")
-    @ActionRegistration(displayName = "Cousin")
+    @ActionRegistration(displayName = "Cousin",lazy = false)
     @ActionReferences(value = {
         @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 60)})
     public static class CousinNavigateAction extends NavigateAction {
@@ -284,7 +284,7 @@ public class Relative {
 //        }
 //    }
     @ActionID(category = "Navigate", id = "ancestris.gedcom.Relative.GrandParentNavigateAction")
-    @ActionRegistration(displayName = "Mother")
+    @ActionRegistration(displayName = "Mother",lazy = false)
     @ActionReferences(value = {
         @ActionReference(path = "Ancestris/Actions/GedcomProperty/Navigate", position = POSITION + 5)})
     public static class GrandParentNavigateAction extends NavigateAction {

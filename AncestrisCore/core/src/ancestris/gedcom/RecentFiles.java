@@ -123,8 +123,8 @@ public abstract class RecentFiles {
         public void remove(FileObject gedcomFile) {
             String url;
             try {
-                url = gedcomFile.getURL().toString();
-            } catch (FileStateInvalidException ex) {
+                url = gedcomFile.toURL().toString();
+            } catch (Throwable ex) {
                 return;
             }
             // remove

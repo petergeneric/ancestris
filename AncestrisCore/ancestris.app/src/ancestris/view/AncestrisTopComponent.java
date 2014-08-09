@@ -104,7 +104,7 @@ public class AncestrisTopComponent extends TopComponent
      * netbeans api (see for instance
      * http://www.antonioshome.net/kitchen/swingnbrcp/swingnbrcp-explorer.php )
      */
-    private ExplorerManager manager;
+    private final ExplorerManager manager;
     private Lookup lookup;
 
     public AncestrisTopComponent() {
@@ -133,7 +133,8 @@ public class AncestrisTopComponent extends TopComponent
 //        return super.getLookup();
 //    }
 //
-    
+
+    @Override
     public ExplorerManager getExplorerManager() {
         return manager;
     }
@@ -184,10 +185,12 @@ public class AncestrisTopComponent extends TopComponent
         return modeName;
     }
 
+    @Override
     public void setDefaultMode(String mode) {
         genj.util.Registry.get(this).put(preferredID() + ".dockMode", mode);
     }
 
+    @Override
     public void setDefaultMode(Mode mode) {
         setDefaultMode(mode.getName());
     }
@@ -217,10 +220,12 @@ public class AncestrisTopComponent extends TopComponent
         super.open();
     }
 
+    @Override
     public Gedcom getGedcom() {
         return context == null ? null : context.getGedcom();
     }
 
+    @Override
     final public void setContext(Context context) {
         // appropriate?
         if (this.context != null && !this.context.sameGedcom(context)) {
@@ -235,7 +240,7 @@ public class AncestrisTopComponent extends TopComponent
 
         LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context});
 
-        if (this.lookup == null){
+        if (this.lookup == null) {
             try {
                 lookup = GedcomDirectory.getDefault().getDataObject(context).getLookup();
             } catch (ContextNotFoundException ex) {
@@ -270,7 +275,6 @@ public class AncestrisTopComponent extends TopComponent
         } catch (PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
         }
-
 
         setContextImpl(context);
     }
@@ -404,13 +408,16 @@ public class AncestrisTopComponent extends TopComponent
     /**
      * return
      *
+     * @param key
+     *
      * @return
-     * XXX:
+     *         XXX:
      */
     public String getPreferencesKey(String key) {
         return PREFERRED_ID + "." + key;
     }
 
+    @Override
     public AncestrisTopComponent create(Context context) {
         Gedcom gedcom = context == null ? null : context.getGedcom();
         AncestrisTopComponent topComponent = null;
@@ -441,9 +448,9 @@ public class AncestrisTopComponent extends TopComponent
      * Gets an action to display a GenjTopComponent. Used in layer.xml
      *
      * @param component
-param displayName
-     * param iconBase
-     * param noIconInMenu
+     * @param displayName
+     * @param iconBase
+     * @param noIconInMenu
      *
      * @return the action
      */
@@ -461,6 +468,7 @@ param displayName
         return new OpenGenjViewAction((AncestrisTopComponent) map.get("component"), map);
     }
 
+    @Override
     public void init(Context context) {
         setName();
         setToolTipText();
@@ -503,10 +511,12 @@ param displayName
         new Thread(new Runnable() {
 
             @SuppressWarnings("empty-statement")
+            @Override
             public void run() {
                 while (!App.center.isReady(0));
                 SwingUtilities.invokeLater(new Runnable() {
 
+                    @Override
                     public void run() {
                         if (App.center.getOpenedContext(gedName) == null) {
                             close();
@@ -520,6 +530,7 @@ param displayName
         }).start();
     }
 
+    @Override
     public Mode getMode() {
         return WindowManager.getDefault().findMode(this);
     }
@@ -556,6 +567,7 @@ param displayName
     protected void addImpl(Component comp, Object constraints, int index) {
         // restore toolbar orientation?
         if ((bar != null) && (comp == bar)) {
+            constraints = getToolBarConstraints(bar, constraints);
             // remember
             genj.util.Registry.get(this).put("toolbar", constraints.toString());
             // find orientation
@@ -571,4 +583,19 @@ param displayName
         super.addImpl(comp, constraints, index);
         // done
     }
+
+    /**
+     * Return Tool Bar constraints.
+     * Defult return constrain parameter.
+     * Can be overidden to prevent toolbar to be put vertically.
+     *
+     * @param bar
+     * @param constraints
+     *
+     * @return Tool Bar constraints
+     */
+    protected Object getToolBarConstraints(JToolBar bar, Object constraints) {
+        return constraints;
+    }
+
 }
