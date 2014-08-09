@@ -18,6 +18,8 @@ import ancestris.view.GenjViewTopComponent;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
+import java.awt.BorderLayout;
+import javax.swing.JToolBar;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
@@ -44,6 +46,7 @@ public final class TreeTopComponent extends GenjViewTopComponent {
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
      * To obtain the singleton instance, use {@link #findInstance}.
+     * @return Factory for this TC
      */
     public static synchronized TreeTopComponent getFactory() {
         if (factory == null) {
@@ -81,6 +84,17 @@ public final class TreeTopComponent extends GenjViewTopComponent {
             v.setRoot(getContext().getEntity());
         }
         return true;
+    }
+
+    /**
+     * ToolBar allways at top
+     * @param bar
+     * @param constraints 
+     * @return  BorderLayout.NORTH
+     */
+    @Override
+    protected Object getToolBarConstraints(JToolBar bar, Object constraints){
+        return BorderLayout.NORTH;
     }
 
     // FIXME: we save treeview settings here because TreeView.remove is called twice

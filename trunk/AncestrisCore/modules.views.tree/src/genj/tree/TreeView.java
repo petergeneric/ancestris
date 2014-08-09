@@ -625,10 +625,15 @@ public class TreeView extends View implements Filter {
     }
 
     private void setZoom(double d) {
+        Point centr = getCenter();
         zoom = Math.max(0.1D, Math.min(1.0, d));
         content.invalidate();
         TreeView.this.validate();
-        scrollToCurrent();
+        if (isAutoScroll()){
+            scrollToCurrent();
+        } else {
+            scrollTo(centr, true);
+        }
         repaint();
     }
 

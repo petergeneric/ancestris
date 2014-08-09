@@ -100,14 +100,14 @@ public abstract class Origin {
 
 /**
    * Factory method to create an instance for given url
-   * @param url either http://host/dir/file or ftp://dir/file or
-   *   protocol://[host/]dir/file.zip#file 
+     * @param file FileObject for this Origin 
+     * @return  
    */
   public static Origin create(FileObject file) {
       FOOrigin o;
         try {
-            o = new FOOrigin(file.getURL());
-        } catch (FileStateInvalidException ex) {
+            o = new FOOrigin(file.toURL());
+        } catch (Throwable ex) {
             return null;
         }
       o.setFileObject(file);
