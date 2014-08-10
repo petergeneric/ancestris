@@ -24,7 +24,7 @@ import org.openide.util.actions.BooleanStateAction;
         displayName = "#CTL_CheckFileOnStartupAction"
 )
 @ActionReference(path = "Menu/File", position = 1450)
-@Messages("CTL_CheckFileOnStartupAction=Check file on startup")
+@Messages("CTL_CheckFileOnStartupAction=Check for new Bundles package on startup")
 public final class CheckFileOnStartupAction extends BooleanStateAction {
 
     CheckFileOnStartupAction() {
