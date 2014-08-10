@@ -227,13 +227,15 @@ public class Installer extends ModuleInstall {
 
                     if (((ZipExplorerTopComponent) tc).getBundles().hasTranslation() == false && modulePreferences.getBoolean("Check-New-File-On-Server", true) == true) {
                         NotifyDescriptor checkForNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
-                        ConfirmationCheckBox confirmationCheckBox = new ConfirmationCheckBox(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server.CheckBox"));
-                        confirmationCheckBox.setSelected(true);
+                        /*                   
+                         ConfirmationCheckBox confirmationCheckBox = new ConfirmationCheckBox(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server.CheckBox"));
+                         confirmationCheckBox.setSelected(true);
 
-                        checkForNewFile.setAdditionalOptions(new Object[]{confirmationCheckBox});
+                         checkForNewFile.setAdditionalOptions(new Object[]{confirmationCheckBox});
+                         */
 
-                        DialogDisplayer.getDefault().notify(checkForNewFile);
-                        modulePreferences.putBoolean("Check-New-File-On-Server", confirmationCheckBox.isSelected());
+                         DialogDisplayer.getDefault().notify(checkForNewFile);
+//                         modulePreferences.putBoolean("Check-New-File-On-Server", confirmationCheckBox.isSelected());
                         if (checkForNewFile.getValue() == NotifyDescriptor.YES_OPTION) {
                             try {
                                 url = new URL(UrlAddress);
