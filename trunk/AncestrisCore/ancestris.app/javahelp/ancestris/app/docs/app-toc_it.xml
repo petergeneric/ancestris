@@ -4,7 +4,7 @@ Arborescence de l'aide
 -->
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
-  <tocitem image="toplevelfolder" text="La Genealogia con Ancestris">
+  <tocitem image="toplevelfolder" text="La Genealogia con Ancestris" target="ancestris.app.help.title">
     <tocitem target="ancestris.app.intro">Consigli preliminari
     </tocitem>
     <tocitem expand="true" text="Ancestris - Sommario" target="ancestris.app.about">
