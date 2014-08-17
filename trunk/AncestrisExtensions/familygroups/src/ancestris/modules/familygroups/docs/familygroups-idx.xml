@@ -12,5 +12,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -->
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
-    <indexitem text="About Groupes familiaux" target="ancestris.modules.familygroups.about"/>
+    <indexitem text="About Family Groups" target="ancestris.modules.familygroups.about"/>
 </index>

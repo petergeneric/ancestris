@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -->
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
-    <tocitem text="Family Groups" target="ancestris.modules.familygroups.title">
-        <tocitem text="Handbook" target="ancestris.modules.familygroups.about"/>
+    <tocitem text="Groupes familiaux" target="ancestris.modules.familygroups.title">
+        <tocitem text="Mode d'emploi" target="ancestris.modules.familygroups.about"/>
     </tocitem>
 </toc>
