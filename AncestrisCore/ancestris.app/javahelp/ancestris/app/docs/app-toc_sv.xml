@@ -7,7 +7,7 @@ arborescence de l'aide ?
   <tocitem image="toplevelfolder" text="Ditt släktträd med Ancestris">
     <tocitem target="ancestris.app.intro">Starttips
     </tocitem>
-    <tocitem expand="true" text="Ancestris - Innehåll" target="ancestris.app.about">
+    <tocitem expand="true" text="Ancestris - Innehåll" target="ancestris.app.about" target="ancestris.app.help.title">
         <tocitem expand="true" text="Användning" target="ancestris.app.discovering">
               <tocitem expand="false" text="Grundinställningar" target="ancestris.app.basic">
               </tocitem>

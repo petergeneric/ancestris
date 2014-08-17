@@ -6,7 +6,7 @@ and open the template in the editor.
 <!--arborescence de l'aide ?-->
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
-  <tocitem image="toplevelfolder" text="La Généalogie avec Ancestris">
+  <tocitem image="toplevelfolder" text="La Généalogie avec Ancestris" target="ancestris.app.help.title">
     <tocitem target="ancestris.app.intro">Conseils préalables
     </tocitem>
     <tocitem expand="true" text="Ancestris - Sommaire" target="ancestris.app.about">

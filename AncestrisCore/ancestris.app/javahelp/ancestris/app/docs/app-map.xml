@@ -16,6 +16,7 @@ and open the template in the editor.
     <mapID target="ancestris.app.gedcom.standard" url="./advanced/advanced_gedcom_standard.html"/>
     <mapID target="ancestris.app.gedcoms.manager" url="./first_steps/first_steps_gedcoms_manager.html"/>
     <mapID target="ancestris.app.genealogy.import" url="./first_steps/first_steps_genealogy_import.html"/>
+    <mapID target="ancestris.app.help.title" url="app-help-title.html"/>
     <mapID target="ancestris.app.import.issue" url="./first_steps/first_steps_conform_import_issue.html"/>
     <mapID target="ancestris.app.intro" url="ancestris.html"/>
     <mapID target="ancestris.app.juridictions.list" url="./basic_use/basic_use_juridictions_list_ancestris.html"/>
