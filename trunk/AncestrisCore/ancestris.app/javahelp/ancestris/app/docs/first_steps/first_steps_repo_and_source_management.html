@@ -7,119 +7,185 @@
 </head>
 <body>
   <center>
-  <h2 class="ancestris_help_title">Gestion des Sources <br>et Lieux de stockage</h2>
+  <h2 class="ancestris_help_title">Manage Sources <br>and repositories</h2>
   </center>
   <br>
   <p class="justify">
-    Les informations qui sont &agrave; la base de toute g&eacute;n&eacute;alogie peuvent &ecirc;tre le r&eacute;sultat de recherches personnelles (Archives, notaires,...), de partage avec d'autres g&eacute;n&eacute;alogistes, le recueil d'informations orales, papiers de famille, etc...<br>
-    Quelle qu’en soit l'origine, tout bon g&eacute;n&eacute;alogiste se doit d'afficher ses sources. Il n'est pas une g&eacute;n&eacute;alogie sans sources.
+    The informations at the base of all genealogy can result from 
+    personal searches (Archives, Courts,...), sharing with other 
+    genealogists, gathering oral information, family documents, etc...<br>
+    Whatever the origin is, a serious genealogist must show his sources. 
+    A genealogy without sources is not a genealogy.
   </p>
   <br>
-  <b>Deux mots-cl&eacute;s</b><br>
+  <b>Two key words</b><br>
   <ul>
-    <li><b>Le lieu de stockage</b> (pour la norme Gedcom, REPO, de l'anglais "repository", lieu de stockage, de d&eacute;p&ocirc;t): C'est le lieu de <b><u>d&eacute;p&ocirc;t physique</u></b> d'un document <b><u>original</u></b> (mairie, archives d&eacute;partementales, etc... ou simplement un classeur chez vous).</li>
-    <li><b>La source</b> (SOUR): c'est le document qui contient l'information (un registre paroissial, une table d&eacute;cennale, etc..).</li>
+    <li><b>The Repository</b> (for Gedcom standard, REPO, from 
+    English 'repository', place of storage, deposit): it's the  
+    <b><u>physical location</u></b> of an  
+    <b><u>original</u></b> document (Town Hall, Government archives, 
+    etc... or simply a folder at your home).</li>
+    <li><b>The Source</b> (SOUR): it's the document that contains all the  
+    information (a Church record, a decennial table, etc..).</li>
   </ul>
   <p class="justify">
-  Bien qu'il s'agisse de deux entit&eacute;s diff&eacute;rentes, il est plus logique et plus efficient de cr&eacute;er le lieu de stockage avant de cr&eacute;er la source. D'une part la source est contenue dans le lieu de stockage, d'autre part, lors de la cr&eacute;ation d'une source vous devrez faire un lien vers son lieu de stockage.<br>
+  Although we are talking of two different entities, it is simply 
+  logical and more efficient to create the repository before creating 
+  the source. For one, the source is contained in the repository first, 
+  and after creating a source, we can link it to its repository.<br>
+  The process described here to create repositories and sources 
+  entities, are the one you have to follow using the Gedcom editor.<br>
   </p>
   <a name="first_steps_repo_and_source_management_1"></a>  
-  <h3 class="ancestris_help_title">Cr&eacute;ation d'un lieu de stockage</h3>
+  <h3 class="ancestris_help_title">Creating a repository</h3>
   <ul>
-    <li>clic droit dans un endroit vide de la Table des entit&eacute;s, de l'Arbre dynamique ou d'un &eacute;diteur</li>
-    <li>s&eacute;lectionner la ligne "Gedcom <i>votre_fichier</i>.ged", puis dans le sous-menu "Cr&eacute;er un (des)	lieu(x) de stockage".</li>
-    <li>cliquer sur "Ex&eacute;cuter et cr&eacute;er un lieu de stockage".</li> 
-    <li>l'<a href="../basic_use/basic_use_view_editors_gedcom.html">&eacute;diteur Gedcom</a> affiche une arborescence de ce type:</li>
+    <li>right click an empty space on the Entities Table view, the 
+    Dynamic tree view or the Gedcom editor,</li>
+    <li>select 'Add Entity Property or Overall Entity', and choose 
+    'Create Repository'</li>
+    <li>click on 'Proceed and create repository'.</li> 
+    <li>The <a href="../basic_use/basic_use_view_editors_gedcom.html">Gedcom 
+    editor</a> will display a tree like this one:</li>
   </ul>
   <br>
-  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_SOUR.png" width="628" height="108" hspace="5" vspace="5" alt="Exemple d'un lieu de stockage."><br>
-  Cette fen&ecirc;tre affiche un certain nombre d'&eacute;tiquettes par d&eacute;faut que vous pouvez modifier, pour l'adapter &agrave; vos &eacute;l&eacute;ments d'information. Vous allez donc <i>g&eacute;rer les &eacute;tiquettes</i>.<br>
+  <img src="../images/screenshots/screenshots_first_steps_repo_and_source_management_tag_REPO.png" 
+  width="326" height="132" hspace="5" vspace="5" alt="Example of a repository."><br>
+  This window shows a certain number of default Tags that can be 
+  modified, and adapted to your information elements. So you have 
+  to <i>manage Tags</i>.<br>
   <br>
-  <b>G&eacute;rer les &eacute;tiquettes</b><br>
+  <b>Managing Tags</b><br>
   <ul>
-    <li>Suppression d'une &eacute;tiquette:</li>
+    <li>Delete a tag:</li>
       <ul>
-        <li>clic droit sur la ligne, puis dans le menu cliquer sur "Couper" (par exemple, pour supprimer STAE, inutilis&eacute; en France).</li>
+        <li>right click on the line, choose 'Cut' from the sub-menu 
+        (for example, try deleting STAE, it is not used in some countries 
+        in Europe).</li>
       </ul>
-    <li>Ajout d'une &eacute;tiquette:</li>
+    <li>Add a Tag:</li>
       <ul>
-        <li>un clic droit sur la 1&egrave;re ligne (<font color="red"><b>1</b></font>) "@Rx@ REPO", puis clic gauche sur "Liste des	propri&eacute;t&eacute;s Gedcom" vous permet de choisir parmi des labels pr&eacute;-&eacute;tablis (l'option tout en bas "Ajouter les sous-propri&eacute;t&eacute;s par d&eacute;faut" doit &ecirc;tre coch&eacute;e). Cliquer sur "OK" pour confirmer.<br>
-        La "Liste des propri&eacute;t&eacute;s Gedcom" propose les &eacute;tiquettes pouvant &ecirc;tre utilis&eacute;es dans le respect de la	grammaire Gedcom, selon la cible point&eacute;e.</li>
-        <li>Un clic droit sur certaines &eacute;tiquettes, puis clic gauche sur "Ajouter une propri&eacute;t&eacute;", vous proposera des sous-&eacute;tiquettes parmi les &eacute;tiquettes d&eacute;j&agrave; utilis&eacute;es &agrave; ce niveau.</li>
+        <li>right click the 1st line (<font color="red"><b>1</b></font>) 
+        '@Rx@ REPO', and then choose 'List of Gedcom properties', you 
+        will be able to select between pre-established labels (option 
+        at the bottom 'Add default sub-properties' should be checked). 
+        Click 'OK' to confirme.<br>
+        The 'List of Gedcom Properties' proposes all the Tags 
+        that can be used, complying with the Gedcom grammar, to the 
+        selected Tag.</li>
+        <li>right click over certain Tags, and click on 'Add a property', 
+        will let you choose sub-tags available for tags already used 
+        at this level.</li>
       </ul>
   </ul>
   <p class="justify">
-    Un lieu de d&eacute;p&ocirc;t est maintenant cr&eacute;&eacute;, il pourra &ecirc;tre r&eacute;utilis&eacute; pour l'ensemble de votre g&eacute;n&eacute;alogie. D&eacute;sormais, il appara&icirc;tra dans le menu d&eacute;roulant qui s'ouvrira lors des prochaines cr&eacute;ations de "Lieux de stockage".<br>
-    Les lieux de stockage sont list&eacute;s dans l'<a href="../first_steps/first_steps_gedcoms_manager.html">Explorateur Gedcom</a> et dans la <a href="../basic_use/basic_use_view_table_ancestris.html">Table des entit&eacute;s</a>, d'o&ugrave; ils peuvent extraits pour &ecirc;tre modifi&eacute;s (orthographe, par exemple).
+    You have now created a new repository, it can be reused throughout 
+    your entire genealogy. Now, it will appear in the drop-down 
+    menu which will open when you create new 'Repositories'.<br>
+    The repositories are listed in the 
+    <a href="../first_steps/first_steps_gedcoms_manager.html">Gedcom Explorer 
+    </a> and in the <a href="../basic_use/basic_use_view_table_ancestris.html">Entities 
+    Table View</a>, where you can open them for modifications (orthography, 
+    for example).
   </p>
   <a name="first_steps_repo_and_source_management_2"></a>  
-  <h3 class="ancestris_help_title">Cr&eacute;ation d'une source</h3>
+  <h3 class="ancestris_help_title">Creating a source</h3>
   <ul>
-    <li>clic droit dans un endroit vide de la Table, de l'arbre ou d'un &eacute;diteur</li>
-    <li>s&eacute;lectionner la ligne "Gedcom <i>votre fichier</i>.ged'", puis dans le sous-menu, "Cr&eacute;er une (des) Source(s)"</li>
-    <li>cliquer sur  "Ex&eacute;cuter et cr&eacute;er une Source".</li>       
-    <li>l'&eacute;diteur Gedcom affiche une arborescence &agrave; compl&eacute;ter avec vos &eacute;l&eacute;ments d'information.</li>
+    <li>right click an empty space on the Entities table, Dynamic tree 
+    or the Gedcom editor,</li>
+    <li>select 'Add Entity Property or Overall Entity', and choose 
+    'Create Source',</li>
+    <li>click on 'Proceed and create Source'.</li>       
+    <li>the editor displays a tree to be completed with your 
+    information.</li>
   </ul>
   <br>
-  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_REPO.png" width="326" height="132" hspace="5" vspace="5" alt="Un exemple de Source."><br>
+  <img src="../images/screenshots/screenshots_first_steps_repo_and_source_management_tag_SOUR.png" 
+  width="628" height="108" hspace="5" vspace="5" alt="An example of Source."><br>
   <br>
   <p>
-    Petite explication de texte (<font color="red"><b>2</b></font>):
+    Little text explanation (<font color="red"><b>2</b></font>):
     <ul>
       <ul>
-        <li>AUTH ( Auteur): comprendre "D&eacute;positaire ou Cr&eacute;ateur du document".</li>
-        <li>TITL (Titre): utilis&eacute;, ici, comme "Intitul&eacute; du document".</li>
+        <li>AUTH (Author): like 'Depositary or Document Creator'.</li>
+        <li>TITL (Title): used here as 'Title of the document'.</li>
       </ul>
     </ul>
   </p>
-  Vous pouvez modifier les &eacute;tiquettes sur le m&ecirc;me principe que pour REPO.<br>
+  You can change the Tags like you did for REPO.<br>
   <br> 
-  Il reste &agrave; localiser la source, c'est-&agrave;-dire cr&eacute;er un lien avec un lieu de stockage.
+  You must now locate the source, create a link to a repository you 
+  already created.
   <ul>
     <ul>
-      <li>clic droit sur la 1&egrave;re ligne "@Sx@ SOUR" (<font color="red"><b>1</b></font>), descendre sur Source 'Sx'</li>
-      <li>dans le sous-menu, s&eacute;lectionner "Cr&eacute;er  ou &eacute;tablir une liaison vers un Lieu de Stockage".</li>
-      <li>dans le menu d&eacute;roulant, rep&eacute;rer le lieu, confirmer par "Ex&eacute;cuter et Cr&eacute;er un Lieu de 	Stockage"</li>
-      Une nouvelle ligne est cr&eacute;&eacute;e dans la fen&ecirc;tre de l'&eacute;diteur Gedcom (<font color="red"><b>3</b></font>).
+      <li>right click on the 1st line '@Sxxxxx@ SOUR' (<font color="red"><b>1</b></font>), 
+      go to the line "Add Entity Property or Overall Entity",</li>
+      <li>select in the sub menu the line 'Repository'.</li>
+      <li>choose the place (the repository), or create a new one and 
+      confirm clicking on 'Proceed or create a repository'</li>
+      A new line is created in the Gedcom Editor 
+      (<font color="red"><b>3</b></font>).
     </ul>
   </ul>
   <p class="justify">
-    Une source est maintenant cr&eacute;&eacute;e, elle  pourra &ecirc;tre r&eacute;utilis&eacute;e pour l'ensemble de votre g&eacute;n&eacute;alogie. D&eacute;sormais, elle appara&icirc;tra dans le menu d&eacute;roulant qui s'ouvrira lors des prochaines cr&eacute;ations de "Source(s)". Les diff&eacute;rentes utilisations d'une source sont r&eacute;capitul&eacute;es en fin d'entit&eacute;  (<font color="red"><b>4</b></font>).<br> 
-    Les Sources sont list&eacute;es dans l'<a href="../first_steps/first_steps_gedcoms_manager.html">Explorateur Gedcom</a> et dans la <a href="../basic_use/basic_use_view_table_ancestris.html">Table des entit&eacute;s</a>, d'o&ugrave; elles peuvent &ecirc;tre affich&eacute;es pour &ecirc;tre modifi&eacute;es (orthographe, par exemple).</p> 
+    You have now created a new source, it can be reused throughout your 
+    entire genealogy. Now, it will appear in the drop-down menu 
+    which will open when you create new 'Source'. The different uses 
+    of a source are summarized at the bottom of the entity  
+    (<font color="red"><b>4</b></font>).<br> 
+    The Sources are listed on the <a href="../first_steps/first_steps_gedcoms_manager.html">Gedcom 
+    Explorer</a> and at the <a href="../basic_use/basic_use_view_table_ancestris.html">Entities 
+    Table view</a>, where you can open them for modifications (orthography, 
+    for example).</p> 
   </p>
   <br>
   <p class="justify">
-    <u>Une bonne gestion des sources</u> n&eacute;cessite <u>quelques pr&eacute;cisions suppl&eacute;mentaires</u>.<br>
+    <u>A good source management</u> needs <u>some more details</u>.<br>
     <br>
-    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Tout d'abord, il faut enregistrer sa c&ocirc;te(<font color="red"><b>*</b></font>) (CALN):
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;First, 
+    you have to register its side(<font color="red"><b>*</b></font>) (CALN):
     <ul>
       <ul>
-        <li>&agrave; partir de la fen&ecirc;tre "SOUR": clic droit sur la ligne REPO, s&eacute;lectionner "Ajouter une 	propri&eacute;t&eacute;".</li>
-        <li>un clic sur "Num&eacute;ro de r&eacute;pertoire CALN" cr&eacute;e une zone de saisie.</li>
+        <li>at the window 'SOUR': right click REPO, select 'Add a property'.</li>
+        <li>clik 'Call Number CALN', this will create an input area.</li>
       </ul>
     </ul>
-    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Puis, le type de support m&eacute;dia utilis&eacute; pour cette source:
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Then, 
+    the media type used for the source:
     <ul>
       <ul>
-        <li>clic gauche sur la ligne "CALN" puis, sur "Liste des propri&eacute;t&eacute;s Gedcom" vous propose le label "MEDI".</li>
-        <li>un clic sur "Ok" cr&eacute;e une zone de saisie associ&eacute;e &agrave; un menu d&eacute;roulant pr&eacute;-&eacute;tabli (si besoin, vous pouvez ajouter des types de support).</li> 
+        <li>right click 'CALN' and then, 'List of Gedcom Properties' 
+        and choose 'MEDI'.</li>
+        <li>click 'OK' and create an input area, associated to a default 
+        drop down list (if needed, you can create new types of media).</li> 
        </ul>
     </ul>
   </p>
   <br>
-  (<font color="red"><b>*</b></font>)num&eacute;ro qui sert &agrave; identifier une pi&egrave;ce dans une collection. Les normes de codifications nationales des A.D. ne sont pas toujours respect&eacute;es. La cote peut &ecirc;tre de ce type de format:<br>
-  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_CALN.png" width="646" height="70" hspace="5" vspace="5" alt="Un exemple de c&ocirc;te."><br>
+  (<font color="red"><b>*</b></font>)number used to identify a piece 
+  in a collection. The standards aren't always respected. The side 
+  may be this type of format:<br>
+  <img src="../images/screenshots/screenshots_first_steps_repo_and_source_management_tag_CALN.png" 
+  width="646" height="70" hspace="5" vspace="5" alt="French genealogy web 
+  side archive."><br>
   <br>    
   <p class="justify">
-    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Et pour finir d'enregistrer vos informations, cr&eacute;er une &eacute;tiquette "donn&eacute;es" (DATA en Gedcom). Vous savez faire, toujours le m&ecirc;me principe:
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;And 
+    to finish registering your informations, create a tag 'data' 
+    (DATA in Gedcom). You know how, always the same principle:
     <ul>
       <ul>
-        <li>clic droit sur la 1&egrave;re ligne "Liste des propri&eacute;t&eacute;s Gedcom", s&eacute;lectionner "Donn&eacute;es". Si l'option tout en bas "Ajouter les sous-propri&eacute;t&eacute;s par d&eacute;faut" est coch&eacute;e, vous aurez en prime sa sous-&eacute;tiquette EVEN.</li>
-        <li>un menu d&eacute;roulant est associ&eacute; &agrave; EVEN, m&ecirc;me pas besoin d'&eacute;crire. Choisir, confirmer par "OK".<br>
-        Vous pouvez utiliser cette zone &agrave; votre gr&eacute; (par exemple, pour un registre contenant plusieurs types d'actes).</li>
-        <li>&agrave; partir de la ligne EVEN, clic droit pour "Ajouter une propri&eacute;t&eacute; Gedcom" et choisir "DATE" et "PLAC". Toujours "OK" pour confirmer.</li>
-        <li>Il ne vous reste plus qu'&agrave; compl&eacute;ter les zones de saisie.</li>
-        On peut ajouter autant de sous-&eacute;tiquettes que n&eacute;cessaire.
+        <li>right click the 1st line, 'List of Gedcom Properties', 
+        select 'Data'. If the option at the bottom, 'Add default 
+        sub-properties' is checked, you will have at the top, the tag 
+        EVEN.</li>
+        <li>a drop down list is associated to EVEN, no need to write. 
+        Just choose and confirm with 'OK'.<br>
+        You can use this area as you wish (for example, for a register 
+        containing several types of acts).</li>
+        <li>from the line EVEN, right click 'Add a Gedcom Property' and 
+        choose 'DATE' and 'PLAC'. Always 'OK' to confirm.</li>
+        <li>It only remains to complete the input areas.</li>
+        You can add as many sub-tags as you need.
       </ul>
     </ul>
   </p>
@@ -133,7 +199,8 @@
               <center><img src="../images/idea.png" width="35" height="39"></center>
             </td>
             <td>
-              Pour s&eacute;lectionner deux &eacute;tiquettes &agrave; la fois:<br> Ctrl (maintenu) + clic gauche sur chaque ligne.
+              To select more than one tag at a time:<br> Ctrl (pressed) 
+              + left click on each line.
             </td>
           </tr>
         </table>
@@ -142,25 +209,28 @@
   </table>
   <br>
   <p>
-    Votre &eacute;diteur doit maintenant ressembler &agrave; &ccedil;a:
+    Your editor should now look like this:
     <pre>
     @S1@ SOUR
-      AUTH Archives D&eacute;partementales du Cantal
-      TITL Site Internet Arch. D&eacute;p. Cantal - Allanche - 1850-1859 - Naissances
+      AUTH 
+      TITL 
       DATA
         EVEN BIRT
-          DATE 1850-1859
-          PLAC ,Allanche,15160,Cantal,Auvergne, France
-      REPO Archives D&eacute;partementales du Cantal (R1)
-        CALN AD2E047/10
-          MEDI electronic
-      CHAN 2 F&eacute;v 2009, 13:06:24
+          DATE 
+          PLAC 
+      REPO 
+        CALN 
+          MEDI 
+      CHAN 2 Fév 2009, 13:06:24
     </pre>
-    L'ordre des &eacute;tiquettes peut &ecirc;tre diff&eacute;rent.
+    The tags can be in a different order.
   </p>
   <br>
   <p class="justify">
-  Maintenant tout est pr&ecirc;t pour pouvoir passer &agrave; l'&eacute;tape suivante <a href="../first_steps/first_steps_genealogy_import.html">Importer</a> ou <a href="../first_steps/first_steps_new_genealogy.html">cr&eacute;er une g&eacute;n&eacute;alogie</a>.
+  Everything is now ready to move forward to the next stage 
+  <a href="../first_steps/first_steps_genealogy_import.html">Import</a> 
+  or <a href="../first_steps/first_steps_new_genealogy.html">create 
+  a genealogy</a>.
   </p>
   <br>
   <!-- Debut des boutons Precedent - Suivant -->
@@ -174,7 +244,7 @@
             <td bgcolor="#e8fcd9">
               <p align="center">
               <font size="-1">
-              <a href="../first_steps/first_steps_ancestris_plugins.html">Page&nbsp;pr&eacute;c&eacute;dente</a>
+              <a href="../first_steps/first_steps_ancestris_plugins.html">Previous&nbsp;page</a>
               </font>
               </p>
             </td>
@@ -190,7 +260,7 @@
             <td bgcolor="#e8fcd9">
               <p align="center">
               <font size="-1">
-              <a href="../first_steps/first_steps_genealogy_import.html">Page&nbsp;suivante</a>
+              <a href="../first_steps/first_steps_genealogy_import.html">Next&nbsp;page</a>
               </font>
               </p>
             </td>
@@ -200,8 +270,7 @@
     </tr>
   </table>
   <!-- Fin des boutons Precedent - Suivant -->
-
-<!-- French Help - updated on 06/02/2012 -->
+  <!-- English help files - updated on 08/20/2014 -->
 </body>
 </html>
 
