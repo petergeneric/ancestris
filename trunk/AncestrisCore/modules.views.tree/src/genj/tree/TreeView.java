@@ -89,11 +89,11 @@ import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.Icon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
 import javax.swing.JToolTip;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
@@ -101,11 +101,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.awt.DropDownButtonFactory;
+import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /**
  * TreeView
@@ -156,6 +159,12 @@ public class TreeView extends View implements Filter {
 
     private final TemplateToolTip tt = new TemplateToolTip();
     private JLabel rootTitle;
+    
+    // set root menu
+    private JButton rootMenu;
+
+    // set goto menu
+    private JButton gotoMenu;
 
     /**
      * Constructor
@@ -212,7 +221,7 @@ public class TreeView extends View implements Filter {
         // setup layout
         add(overview);
         add(scroll);
-
+//FIXME: to be removed?
         // scroll to current
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -290,14 +299,6 @@ public class TreeView extends View implements Filter {
     }
 
     // TreeView Preferences
-    public static boolean isFollowSelection() {
-        return REGISTRY.get("selection.follow", false);
-    }
-
-    public static void setFollowSelection(boolean followSelection) {
-        REGISTRY.put("selection.follow", followSelection);
-    }
-
     public static boolean isAutoScroll() {
         return REGISTRY.get("auto.scroll", true);
     }
@@ -312,6 +313,17 @@ public class TreeView extends View implements Filter {
 
     public static void setShowPopup(boolean showPopup) {
         REGISTRY.put("show.popup", showPopup);
+    }
+    
+  /**
+   * option - behaviour on action event (double click)
+   */
+    public static TreeViewSettings.OnAction getOnAction(){
+        return REGISTRY.get("on.action",TreeViewSettings.OnAction.SETROOT);
+    }
+  
+    public static void setOnAction(TreeViewSettings.OnAction action){
+        REGISTRY.put("on.action",action);
     }
 
     /**
@@ -430,7 +442,7 @@ public class TreeView extends View implements Filter {
                             if (e.isAction()) {
                                 fireAction(e.getSource(), e.getContext());
                             } else if (isEventInMe(e.getSource())) {
-                                setContext(e.getContext(), true);
+                               setContext(e.getContext());
                             }
                         }
                     }
@@ -470,10 +482,15 @@ public class TreeView extends View implements Filter {
         if (source != null && source == this) {
             setRoot(context.getEntity());
         } else {
-            if (isFollowSelection()) {
-                setRoot(context.getEntity());
-            } else {
-                setContextImpl(context);
+            switch(TreeView.getOnAction()){
+                case NONE:
+                    break;
+                case SETROOT:
+                    setRoot(context.getEntity());
+                    break;
+                case CENTER:
+                    show(context.getEntity(), true);
+                    break;
             }
         }
     }
@@ -483,10 +500,6 @@ public class TreeView extends View implements Filter {
      */
     @Override
     public void setContext(Context newContext) {
-        setContext(newContext, false);
-    }
-
-    private void setContext(Context newContext, boolean force) {
         if (newContext == null) {
             return;
         }
@@ -505,9 +518,7 @@ public class TreeView extends View implements Filter {
             return;
         }
 
-        if (isFollowSelection() || force) {
             setContextImpl(newContext);
-        }
     }
 
     private void setContextImpl(Context newContext) {
@@ -628,12 +639,12 @@ public class TreeView extends View implements Filter {
         Point centr = getCenter();
         zoom = Math.max(0.1D, Math.min(1.0, d));
         content.invalidate();
-        TreeView.this.validate();
         if (isAutoScroll()){
             scrollToCurrent();
         } else {
             scrollTo(centr, true);
         }
+        TreeView.this.validate();
         repaint();
     }
 
@@ -686,9 +697,23 @@ public class TreeView extends View implements Filter {
         pb.setToolTipText(RESOURCES.getString("bookmark.tip"));
         pb.setOpaque(false);
         toolbar.add(pb);
-        toolbar.add(new ActionGotoContext());
-        toolbar.add(new ActionGotoRoot());
-        toolbar.add(new ActionChooseRoot());
+        
+        rootMenu = createDropDownButton(Images.imgView,null); 
+        Action def = new ActionChooseRoot(rootMenu);
+        rootMenu.putClientProperty(
+                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                Utilities.actionsToPopup(new Action[]{def,new ActionRootContext(rootMenu)}, Lookup.EMPTY));
+        rootMenu.setAction(def);
+        
+        gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
+        def = new ActionGotoRoot(gotoMenu);
+        gotoMenu.putClientProperty(
+                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                Utilities.actionsToPopup(new Action[]{def,new ActionGotoContext(gotoMenu)}, Lookup.EMPTY));
+        gotoMenu.setAction(def);
+
+        toolbar.add(gotoMenu);
+        toolbar.add(rootMenu);
         toolbar.addSeparator();
 
         // settings
@@ -1167,7 +1192,6 @@ public class TreeView extends View implements Filter {
                 } finally {
 //          ignoreContextChange = false;
                 }
-                return;
             }
             // done
         }
@@ -1354,14 +1378,21 @@ public class TreeView extends View implements Filter {
 
     /**
      * Action - choose a root through dialog
+     * set parent menu button action on this action 
      */
+    // FIXME: should we implement this in AbstractAncestrisAction?
     private class ActionChooseRoot extends AbstractAncestrisAction {
+        private JButton bMenu = null;
 
         /** constructor */
         private ActionChooseRoot() {
+            this(null);
+        }
+        private ActionChooseRoot(JButton b) {
             setText(RESOURCES.getString("select.root"));
             setTip(RESOURCES.getString("select.root"));
             setImage(Images.imgView);
+            bMenu = b;
         }
 
         /** do the choosin' */
@@ -1377,28 +1408,85 @@ public class TreeView extends View implements Filter {
             if (rc == DialogManager.OK_OPTION) {
                 setRoot(select.getSelection());
             }
-
+            if (bMenu.getAction() != this)
+                bMenu.setAction( this );
             // done
         }
     } //ActionChooseRoot
 
     /**
+     * Action to set root to current context 
+     */
+    private class ActionRootContext extends AbstractAncestrisContextAction {
+
+        private Entity entity;
+        private JButton bMenu = null;
+
+        public ActionRootContext() {
+            this(null);
+        }
+        public ActionRootContext(JButton b) {
+            super();
+            bMenu = b;
+            Entity e = null;
+            Context c = TreeView.this.context;
+            if (c != null)
+                e = c.getEntity();
+            if (e == null)
+                e = TreeView.this.getRoot();
+            setTip(RESOURCES.getString("root.context",e==null?"":e.toString(false)));
+            setText(RESOURCES.getString("root.context",e==null?"":e.toString(false)));
+            setImage(Images.imgView);
+        }
+
+        @Override
+        protected void contextChanged() {
+            if (!contextProperties.isEmpty()) {
+                Property prop = contextProperties.get(0);
+                if (prop.getEntity() instanceof Indi || prop.getEntity() instanceof Fam) {
+                    entity = prop.getEntity();
+                } else if (entity == null) {
+                    entity = prop.getGedcom().getFirstEntity(Gedcom.INDI);
+                }
+            }
+            if (entity != null){
+                setTip(RESOURCES.getString("root.context",entity==null?"":entity.toString(false)));
+                setText(RESOURCES.getString("root.context",entity==null?"":entity.toString(false)));
+            }
+            super.contextChanged();
+        }
+
+        @Override
+        protected void actionPerformedImpl(final ActionEvent event) {
+            setRoot(entity);
+            if (bMenu.getAction() != this)
+                bMenu.setAction( this );
+        }
+    }
+
+    /**
      * Action - recenter tree to root
      */
     private class ActionGotoRoot extends AbstractAncestrisAction {
-
+        private JButton bMenu = null;
+        
         /** constructor */
         private ActionGotoRoot() {
+            this(null);
+        }
+        private ActionGotoRoot(JButton b) {
+            bMenu = b;
             setTip(RESOURCES.getString("goto.root.tip"));
+            setText(RESOURCES.getString("goto.root.tip"));
             setImage(Images.imgGotoRoot);
         }
 
         /** do the choosin' */
         @Override
         public void actionPerformed(ActionEvent event) {
-
             show(getRoot(), true);
-
+            if (bMenu.getAction() != this)
+                bMenu.setAction( this );
             // done
         }
     } //ActionChooseRoot
@@ -1605,14 +1693,26 @@ public class TreeView extends View implements Filter {
         }
     }
 
-        private class ActionGotoContext extends AbstractAncestrisContextAction {
+    private class ActionGotoContext extends AbstractAncestrisContextAction {
 
         private Entity entity;
+        private JButton bMenu = null;
 
         public ActionGotoContext() {
+            this(null);
+        }
+        public ActionGotoContext(JButton b) {
             super();
-            setTip(RESOURCES.getString("goto.context.tip"));
-            setImage(Images.imgGotoContext);
+            bMenu = b;
+            Entity e = null;
+            Context c = TreeView.this.context;
+            if (c != null)
+                e = c.getEntity();
+            if (e == null)
+                e = TreeView.this.getRoot();
+            setTip(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(false)));
+            setText(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(false)));
+            setImage(Images.imgGotoRoot);
         }
 
         @Override
@@ -1627,6 +1727,7 @@ public class TreeView extends View implements Filter {
             }
             if (entity != null){
                 setTip(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(false)));
+                setText(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(false)));
             }
             super.contextChanged();
         }
@@ -1634,6 +1735,8 @@ public class TreeView extends View implements Filter {
         @Override
         protected void actionPerformedImpl(final ActionEvent event) {
             TreeView.this.scrollToCurrent(true);
+            if (bMenu.getAction() != this)
+                bMenu.setAction( this );
         }
     }
 
@@ -1697,8 +1800,8 @@ public class TreeView extends View implements Filter {
         }
         // maybe a referenced other type?
         Entity[] refs = PropertyXRef.getReferences(ent);
-        for (int r = 0; r < refs.length; r++) {
-            if (ents.contains(refs[r])) {
+        for (Entity ref : refs) {
+            if (ents.contains(ref)) {
                 return false;
             }
         }
