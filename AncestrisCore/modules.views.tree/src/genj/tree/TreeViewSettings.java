@@ -35,6 +35,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -59,18 +60,18 @@ public class TreeViewSettings extends JTabbedPane {
   private final static Resources RESOURCES = Resources.get(TreeViewSettings.class);
 
   /** members  */
-  private JSpinner[] spinners = new JSpinner[5]; 
-  private ColorsWidget colors;
-  private JCheckBox checkBending, checkAntialiasing, checkMarrSymbols;
-  private JCheckBox cbTreeFollowSelection;
-  private JCheckBox cbShowPopup;
-  private JCheckBox cbTreeAutoScroll;
+  private final JSpinner[] spinners = new JSpinner[5]; 
+  private final ColorsWidget colors;
+  private final JCheckBox checkBending, checkAntialiasing, checkMarrSymbols;
+  private final JComboBox<OnAction> jcAction;
+  private final JCheckBox cbShowPopup;
+  private final JCheckBox cbTreeAutoScroll;
   private AbstractAncestrisAction 
     up = new Move(-1), 
     down = new Move( 1), 
     delete =  new Delete(); 
-  private FontChooser font;
-  private Commit commit;
+  private final FontChooser font;
+  private final Commit commit;
   private Bookmarks bookmarks;
   private JList bList;
   
@@ -86,7 +87,7 @@ public class TreeViewSettings extends JTabbedPane {
     JPanel options = new JPanel(new NestedBlockLayout(
         "<col>"+
          "<check gx=\"1\"/>"+
-         "<check gx=\"1\"/>"+
+         "<row><label/><checkbox/></row>"+
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
@@ -103,7 +104,11 @@ public class TreeViewSettings extends JTabbedPane {
     checkBending = createCheck("bend", view.getModel().isBendArcs());
     checkAntialiasing = createCheck("antialiasing", view.isAntialising());
     checkMarrSymbols = createCheck("marrsymbols", view.getModel().isMarrSymbols());
-    cbTreeFollowSelection = createCheck("followselection", TreeView.isFollowSelection());
+
+    jcAction = new JComboBox<OnAction>(OnAction.values());
+    jcAction.setSelectedItem(TreeView.getOnAction());
+    jcAction.addActionListener(commit);
+
     cbTreeAutoScroll = createCheck("autoscroll", TreeView.isAutoScroll());
     cbShowPopup = createCheck("showpopup", TreeView.showPopup());
     font = new FontChooser();
@@ -111,7 +116,8 @@ public class TreeViewSettings extends JTabbedPane {
     font.addChangeListener(commit);
     
     options.add(cbShowPopup);
-    options.add(cbTreeFollowSelection);
+    options.add(new JLabel(RESOURCES.getString("tv.action")));
+    options.add(jcAction);
     options.add(cbTreeAutoScroll);
     options.add(checkBending);
     options.add(checkAntialiasing);
@@ -140,6 +146,7 @@ public class TreeViewSettings extends JTabbedPane {
     bList.getModel().addListDataListener(commit);
     bList.addListSelectionListener(new ListSelectionListener() {
       /** update buttons */
+      @Override
       public void valueChanged(ListSelectionEvent e) {
         int 
           i = bList.getSelectedIndex(),
@@ -194,16 +201,18 @@ public class TreeViewSettings extends JTabbedPane {
   
   private class Bookmarks extends AbstractListModel {
     
-    private ArrayList<Bookmark> list;
+    private final ArrayList<Bookmark> list;
     
     Bookmarks(List<Bookmark> list) {
       this.list = new ArrayList<Bookmark>(list);
     }
 
+    @Override
     public Object getElementAt(int index) {
       return list.get(index);
     }
 
+    @Override
     public int getSize() {
       return list.size();
     }
@@ -232,12 +241,13 @@ public class TreeViewSettings extends JTabbedPane {
    */
   private class Move extends AbstractAncestrisAction {
     /** by how much to move */
-    private int by;
+    private final int by;
     private Move(int how) {
       setText(RESOURCES.getString("bookmark.move."+how));
       setEnabled(false);
       by = how;
     }
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent e) {
       int i = bList.getSelectedIndex();
       bookmarks.swap(i, i+by);
@@ -253,6 +263,7 @@ public class TreeViewSettings extends JTabbedPane {
       setText(RESOURCES.getString("bookmark.del"));
       setEnabled(false);
     }
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent e) {
       int i = bList.getSelectedIndex();
       bookmarks.delete(i);
@@ -261,19 +272,21 @@ public class TreeViewSettings extends JTabbedPane {
 
   private class Commit implements ChangeListener, ActionListener, ListDataListener {
     
-    private TreeView view;
+    private final TreeView view;
     
     private Commit(TreeView view) {
       this.view = view;
     }
 
+    @Override
     public void stateChanged(ChangeEvent e) {
       actionPerformed(null);
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
       // options
-        TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
+        TreeView.setOnAction((OnAction) jcAction.getSelectedItem());
         TreeView.setAutoScroll(cbTreeAutoScroll.isSelected());
         TreeView.setShowPopup(cbShowPopup.isSelected());
       view.getModel().setBendArcs(checkBending.isSelected());
@@ -295,17 +308,42 @@ public class TreeViewSettings extends JTabbedPane {
       // done
     }
 
+    @Override
     public void contentsChanged(ListDataEvent e) {
       actionPerformed(null);
     }
 
+    @Override
     public void intervalAdded(ListDataEvent e) {
       actionPerformed(null);
     }
 
+    @Override
     public void intervalRemoved(ListDataEvent e) {
       actionPerformed(null);
     }
   }
-  
+
+  /**
+   * Enum for operation done on an action (ie double clic). Possible values are:
+   * <li/>NONE: Nothing special. In fact the same as selection
+   * <li/>CENTER: Centers tree view on this entity if possible (entity displayed in tree)
+   * <li/>SETROOT: this entity becomes the new root for this tree view
+   */
+    public enum OnAction {
+
+        NONE("tv.action.none"),
+        CENTER("tv.action.center"),
+        SETROOT("tv.action.setroot");
+        private final String description;
+
+        private OnAction(String desc) {
+            description = RESOURCES.getString(desc);
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
+    };
 } //TreeViewSettings
