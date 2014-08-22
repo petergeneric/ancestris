@@ -384,8 +384,12 @@ public class TimelineView extends View {
         } else {
             model.setGedcom(context.getGedcom());
             selection = model.getEvents(context);
+            
         }
-
+        if (!selection.isEmpty()){
+            //FIXME: doesn't scroll vertically
+            makeVisible(selection.iterator().next());
+        }
         // do a repaint, too
         content.repaint();
 
