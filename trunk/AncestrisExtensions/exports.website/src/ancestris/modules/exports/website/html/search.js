@@ -67,17 +67,16 @@ function jumpToSosa() {
 
 function makeLinkToIndi(id) {
 	var link = "";
-	var numbers = 2;
-	while (id > 99) {
-		var curr = id % 100;
-		id = (id - curr) / 100;
-		numbers += 2;
-		link = curr + "/" + link;
-		if (curr < 10) link = "0" + link;
+	var i = id.length;
+	if (i%2 == 1){
+            i += 1;
+            id = "0" + id;
 	}
-	link = id + "/" + link;
-	if (id < 10) link = "0" + link;
-	return "indi" + numbers + "/" + link + "{indexFile}";
+        while (id.length > 0) {
+            link = link + "/" + id.substring(0, 2);
+            id = id.substring(2);
+        }
+	return "indi" + i + link + "/"+"index.html";
 }
 
 function displayAdvanced() {
