@@ -23,6 +23,7 @@ final class WebSitePanel extends javax.swing.JPanel {
     WebSitePanel(WebSiteOptionsPanelController controller) {
         this.controller = controller;
 //        initComponents();
+        setLayout(new java.awt.BorderLayout());
         optionsPanel = new OptionsWidget("");
         add(new JScrollPane(optionsPanel));
         // TODO listen to changes in form fields and call controller.changed()
@@ -38,6 +39,8 @@ final class WebSitePanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
 
+        setLayout(new java.awt.BorderLayout());
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -49,16 +52,7 @@ final class WebSitePanel extends javax.swing.JPanel {
             .addGap(0, 112, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     /*
