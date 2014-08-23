@@ -9,6 +9,7 @@ package ancestris.modules.exports.website;
  * name     = Website
  */
 import ancestris.core.TextOptions;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.MultiLineProperty.Iterator;
 import genj.gedcom.*;
 import genj.report.Report;
@@ -136,7 +137,12 @@ public class ReportWebsite extends Report{
 
         // Ask for info
 
-        destDir = getDirectoryFromUser(translateGUI("qOutputDir"), translateGUI("qOk"));
+        destDir = new FileChooserBuilder(ReportWebsite.class)
+                .setTitle(translateGUI("qOutputDir"))
+                .setApproveText(translateGUI("qOk"))
+                .setFileHiding(true)
+                .setDirectoriesOnly(true)
+                .showSaveDialog(false);
         if (destDir == null) {
             return; // Operation canceled by user
         }
@@ -2527,6 +2533,8 @@ public class ReportWebsite extends Report{
      * Make a directory structure that works for many objecs
      * @return the address excluding any leading /. For example "indi4/04/12/"
      */
+    //TODO: this is buggy. We must not rely on entity's ID to guess its type. Use TAG Instead
+    // Also don't strip first character of entity's ID.
     protected String addressToDir(String id) {
         StringBuffer address = new StringBuffer();
         // Check the type of object
