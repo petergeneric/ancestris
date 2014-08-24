@@ -56,7 +56,7 @@ public class SelectionDispatcher {
      * Fire a selection event.
      *
      * @param event   The AWTEvent originating this selection dispacth. if not available
-     * event may be null.
+     *                event may be null.
      * @param context The seleted context. May be a property, an entity, an gedcom...
      */
     public static void fireSelection(AWTEvent event, Context context) {
@@ -64,17 +64,20 @@ public class SelectionDispatcher {
             return;
         }
         try {
+            SelectionActionEvent saEvent = new SelectionActionEvent(event, context);
             //An action on an XREF Property selects targeted property
-                if (SelectionActionEvent.isAction(event) && 
-                    context.getProperties().size() == 1) {
-                    Property p = context.getProperty();
-                    if (p instanceof PropertyXRef) {
-                        context = new Context(((PropertyXRef) p).getTarget());
-                    }
+            if (saEvent.isAction()
+                    && context.getProperties().size() == 1) {
+                Property p = context.getProperty();
+                if (p instanceof PropertyXRef) {
+                    context = new Context(((PropertyXRef) p).getTarget());
+                    saEvent.setContext(context);
+                    saEvent.setNotAction(true);
                 }
+            }
             GedcomDataObject gdao = GedcomDirectory.getDefault().getDataObject(context);
             gdao.assign(Context.class, context);
-            gdao.assign(SelectionActionEvent.class, new SelectionActionEvent(event, context));
+            gdao.assign(SelectionActionEvent.class, saEvent);
         } catch (ContextNotFoundException ex) {
         }
     }
