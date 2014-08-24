@@ -35,8 +35,9 @@ import java.awt.event.MouseEvent;
  */
 public class SelectionActionEvent {
 
-    private AWTEvent event;
+    private final AWTEvent event;
     private Context context;
+    private boolean notAction = false;
 
     public SelectionActionEvent(AWTEvent event, Context context) {
         this.context = context;
@@ -53,13 +54,34 @@ public class SelectionActionEvent {
     }
 
     /**
+     * sets the context for this selection event. used in gedcom editor
+     * to change change context when double clicked on an xref.
+     *
+     * @param context
+     */
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    /**
      * Returns true is this event is an Action type event (ie if a double clic occured).
-     * Delegates to {@link #isAction(java.awt.AWTEvent) 
+     * Delegates to {@link #isAction(java.awt.AWTEvent)
      *
      * @return true is this event is an Action type event.
      */
     public boolean isAction() {
-        return isAction(event);
+        return !notAction && isAction(event);
+    }
+
+    /**
+     * This can be used to force this Event not to be considered as an action.
+     * this is used for instance in gedcom editor where action is used to select
+     * an XREF target.
+     *
+     * @param notAction
+     */
+    public void setNotAction(boolean notAction) {
+        this.notAction = notAction;
     }
 
     /**
@@ -69,6 +91,7 @@ public class SelectionActionEvent {
      * <li/>{@link MouseEvent} with CTL Key pressed
      *
      * @param event this AWTEvent
+     *
      * @return true is this event is an Action type event.
      */
     public static boolean isAction(AWTEvent event) {
@@ -85,12 +108,13 @@ public class SelectionActionEvent {
         }
         return isActionPerformed;
     }
+
     /**
      * The object on which the Event initially occurred. Delegates to
      * {@link AWTEvent#getSource()}.
      *
      * @return The object on which the Event initially occurred or null if
-     * unknown.
+     *         unknown.
      */
     public Object getSource() {
         return event == null ? null : event.getSource();
