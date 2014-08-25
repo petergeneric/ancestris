@@ -85,7 +85,7 @@ public class ReportWebsite extends Report{
     public boolean omitXmlDeclaration = false;
     public String reportTitle = "Relatives";
 //    @Multiline
-    public String reportWelcomeText = translateGUI("ws.welcome.text");
+//    public String reportWelcomeText = translateGUI("ws.welcome.text");
     public boolean displaySosaStradonitz = false;
 
 
@@ -410,7 +410,7 @@ public class ReportWebsite extends Report{
         Document doc = html.getDoc();
         Element bodyNode = html.getBody();
         bodyNode.appendChild(html.h1(reportTitle));
-        bodyNode.appendChild(html.pNewlines(reportWelcomeText));
+        bodyNode.appendChild(html.pNewlines(translateLocal("ws.welcome.text")));
         Element div1 = html.div("left");
         bodyNode.appendChild(div1);
 
