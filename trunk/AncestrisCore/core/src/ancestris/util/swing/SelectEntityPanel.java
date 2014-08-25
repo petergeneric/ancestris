@@ -66,11 +66,11 @@ public class SelectEntityPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
-    void setSelection(Entity selectedEntity) {
+    public void setSelection(Entity selectedEntity) {
         selectEntityWidget.setSelection(selectedEntity);
     }
 
-    Entity getSelection() {
+    public Entity getSelection() {
         return selectEntityWidget.getSelection();
     }
 }
