@@ -180,6 +180,11 @@ param text
         return this;
     }
 
+    public DialogManager setAdditionalOptions(Object[] newOptions) {
+        getDescriptor().setAdditionalOptions(newOptions);
+        return this;
+    }
+
     public DialogManager setOptionType(int newType) {
         if (newType == OK_ONLY_OPTION) {
             return setOptions(new Object[]{OK_OPTION});
