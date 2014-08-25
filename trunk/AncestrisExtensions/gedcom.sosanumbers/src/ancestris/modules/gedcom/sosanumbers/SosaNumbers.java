@@ -58,6 +58,9 @@ public class SosaNumbers implements GedcomListener {
         // Clean gedcom file for all SOSA and SOSA_ABBO tags
         GedcomUtilities.deleteTags(gedcom, SOSA_TAG, GedcomUtilities.ENT_INDI);
         GedcomUtilities.deleteTags(gedcom, DABOVILLE_TAG, GedcomUtilities.ENT_INDI);
+        if (indiDeCujus == null) {
+            return;
+        }
 
         try {
             Indi wife;
@@ -119,6 +122,7 @@ public class SosaNumbers implements GedcomListener {
      * Set Property position
      *
      * @param prop
+     *
      * @return
      */
     private int setPropertyPosition(Property prop) {
@@ -135,6 +139,7 @@ public class SosaNumbers implements GedcomListener {
     /**
      *
      * @param sosa
+     *
      * @return String
      */
     String computeGene(long sosa) {
