@@ -356,11 +356,27 @@ public class AncestrisTopComponent extends TopComponent
     @Override
     public void componentClosed() {
         persistMode();
+        AncestrisPlugin.unregister(this);
     }
 
     // code pour forcer la persistence des mode (place ici aussi car ne fonctionne pas tjs dans close
     @Override
     public boolean canClose() {
+        // Find whether this is the last window opened on this gedcom
+        Context ctx = getContext();
+        int viewCount = 0;
+        // closes all views
+        for (AncestrisViewInterface gjvTc : AncestrisPlugin.lookupAll(AncestrisViewInterface.class)) {
+            if (ctx.getGedcom().equals(gjvTc.getGedcom()) && !this.equals(gjvTc)) {
+                viewCount++;
+            }
+        }
+        if (viewCount==0){
+            if (!GedcomDirectory.getDefault().closeGedcom(ctx)) {
+                // gedcom not closed returns false
+                return false;
+            }
+        }
         persistMode();
         return true;
     }

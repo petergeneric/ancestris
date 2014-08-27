@@ -374,40 +374,51 @@ public abstract class GedcomDirectory {
     }
 
     /**
-     * closes gedcom file
+     * closes gedcom file.
+     * 
+     * @param context to be closed
+     * @return true if gedcom has been close (ie not canceleld by user)
      */
     public boolean closeGedcom(Context context) {
         // noop?
         if (context == null || context.getGedcom() == null) {
             return true;
         }
+        try{
+            // if gedcom is no longer in directory don't close it again. 
+            // this situation is seen when the last closed window closes the gedcom file
+            getDataObject(context);
+            // commit changes
+            GedcomMgr.getDefault().commitRequested(context);
 
-        // commit changes
-        GedcomMgr.getDefault().commitRequested(context);
+            // changes?
+            if (context.getGedcom().hasChanged() || !context.getGedcom().getOrigin().getFile().exists()) {
 
-        // changes?
-        if (context.getGedcom().hasChanged() || !context.getGedcom().getOrigin().getFile().exists()) {
-
-            // close file officially
-            Object rc = DialogManager.create(null, RES.getString("cc.savechanges?", context.getGedcom().getName())).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_CANCEL_OPTION).show();
-            // cancel - we're done
-            if (rc == DialogManager.CANCEL_OPTION || rc == DialogManager.CLOSED_OPTION) {
-                return false;
-            }
-            // yes - close'n save it
-            if (rc == DialogManager.YES_OPTION) {
-                if (!saveGedcom(context)) {
+                // close file officially
+                Object rc = DialogManager.create(null, RES.getString("cc.savechanges?", context.getGedcom().getName())).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_CANCEL_OPTION).show();
+                // cancel - we're done
+                if (rc == DialogManager.CANCEL_OPTION || rc == DialogManager.CLOSED_OPTION) {
                     return false;
                 }
-            }
+                // yes - close'n save it
+                if (rc == DialogManager.YES_OPTION) {
+                    if (!saveGedcom(context)) {
+                        return false;
+                    }
+                }
 
-        }
-        if (GedcomMgr.getDefault().gedcomClose(context)) {
+            }
+//            if (GedcomMgr.getDefault().gedcomClose(context)) {
             unregisterGedcom(context);
+            GedcomMgr.getDefault().gedcomClose(context) ;
             return true;
-        } else {
-            return false;
+//            } else {
+//                return false;
+//            }
+        } catch (ContextNotFoundException e){
+            
         }
+        return true;
     }
 
     /**

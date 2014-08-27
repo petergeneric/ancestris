@@ -59,7 +59,8 @@ import spin.Spin;
  * Generally, this class must not be overidden, consider {@link GedcomDirectory} to
  * extend internal gedcom registry functionnality. The only case where overiding this
  * class is necessary is to provide another backend or gedcom file syntax.
- * <p>All file operations are done thru {@link FileObject} objects.
+ * <p>
+ * All file operations are done thru {@link FileObject} objects.
  *
  * @author daniel
  */
@@ -285,7 +286,7 @@ public abstract class GedcomMgr {
                 }
             } catch (GedcomIOException ex) {
                 // tell the user about it
-                DialogManager.createError(FileUtil.getFileDisplayName(input), 
+                DialogManager.createError(FileUtil.getFileDisplayName(input),
                         RES.getString("cc.open.read_error", "" + ex.getLine()) + ":\n" + ex.getMessage()).show();
                 // abort
                 return null;
@@ -300,6 +301,7 @@ public abstract class GedcomMgr {
             return context;
         }
 
+        @Override
         public Context setGedcom(Gedcom gedcom) {
             LOG.log(Level.FINE, "{0}: setGedcom", TimingUtility.geInstance().getTime());
             Context context = new Context();
@@ -333,6 +335,7 @@ public abstract class GedcomMgr {
          * save gedcom file
          */
         //XXX: use fileobject api and outfile parameter
+        @Override
         public boolean saveGedcomImpl(Gedcom gedcom, Collection<Filter> filters, FileObject outFile) {
             IGedcomWriter writer;
 
@@ -351,7 +354,6 @@ public abstract class GedcomMgr {
 
                     // .. create writer
                     writer = (IGedcomWriter) Spin.off(new GedcomWriter(gedcom, new FileOutputStream(temp)));
-
 
                 } catch (GedcomEncodingException gee) {
                     DialogManager.createError(gedcom.getName(), RES.getString("cc.save.write_encoding_error", gee.getMessage())).show();
@@ -383,7 +385,7 @@ public abstract class GedcomMgr {
                 }
 
             } catch (GedcomIOException gioex) {
-                DialogManager.createError(gedcom.getName(),  RES.getString("cc.save.write_error", "" + gioex.getLine()) + ":\n" + gioex.getMessage()).show();
+                DialogManager.createError(gedcom.getName(), RES.getString("cc.save.write_error", "" + gioex.getLine()) + ":\n" + gioex.getMessage()).show();
                 return false;
             }
 
