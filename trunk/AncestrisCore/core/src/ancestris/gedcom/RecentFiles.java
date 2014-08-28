@@ -102,11 +102,7 @@ public abstract class RecentFiles {
             if (!gedcomFile.isValid())
                 return;
             String url;
-            try {
-                url = gedcomFile.getURL().toString();
-            } catch (FileStateInvalidException ex) {
-                return;
-            }
+            url = gedcomFile.toURL().toString();
             // remember
             List<String> history = REGISTRY.get("history", new ArrayList<String>());
             history.remove(url);

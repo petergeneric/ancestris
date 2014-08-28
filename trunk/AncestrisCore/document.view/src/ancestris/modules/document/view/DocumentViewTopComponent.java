@@ -113,7 +113,7 @@ public class DocumentViewTopComponent extends TopComponent {
                 add(panel, BorderLayout.CENTER);
                 if (panel instanceof AbstractDocumentView) {
                     ic.set(new ArrayList<Context>(), null);
-                    ic.add(((AbstractDocumentView) panel).getContext());
+                    ic.add(panel.getContext());
                 }
             } else {
                 remove(comp);
