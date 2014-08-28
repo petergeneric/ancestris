@@ -13,6 +13,8 @@ package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
 import ancestris.core.beans.ConfirmChangeWidget;
+import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
+import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -65,8 +67,10 @@ public class EditorTopComponent extends AncestrisTopComponent
 
     @Override
     public boolean createPanel() {
-        panels.put(Fam.class, new FamPanel());
-        panels.put(Indi.class, new IndiPanel());
+//        panels.put(Fam.class, new FamPanel());
+//        panels.put(Indi.class, new IndiPanel());
+        panels.put(Fam.class, new FamilyEditor());
+        panels.put(Indi.class, new IndividualEditor());
 
         editorContainer = new JPanel(
                 new MigLayout(new LC().fillX().hideMode(2),

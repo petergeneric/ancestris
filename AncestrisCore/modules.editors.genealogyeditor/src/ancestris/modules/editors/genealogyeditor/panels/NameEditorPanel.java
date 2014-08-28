@@ -2,9 +2,11 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NameTypeComboBoxModel;
 import genj.gedcom.*;
+import genj.util.ChangeSupport;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
@@ -18,7 +20,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private NameTypeComboBoxModel nameTypeComboBoxModelModel = new NameTypeComboBoxModel();
     private Indi root;
     private PropertyName name;
-    private boolean nameModified = false;
+//    private boolean nameModified = false;
     private boolean nameTypeModified = false;
     private boolean familyNamePrefixModified = false;
     private boolean familyNameModified = false;
@@ -27,6 +29,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private boolean firstNameModified = false;
     private boolean nicknameModified = false;
     private final static Logger logger = Logger.getLogger(NameEditorPanel.class.getName(), null);
+    private final ChangeSupport changeSupport = new ChangeSupport((this));
 
     /**
      * Creates new form NameEditorPanel
@@ -40,7 +43,15 @@ public class NameEditorPanel extends javax.swing.JPanel {
         familyNamePrefixTextField.setVisible(false);
         firstNameSuffixLabel.setVisible(false);
         firstNameSuffixTextField.setVisible(false);
-    }
+        
+        // add changelistener
+        firstNamePrefixTextField.getDocument().addDocumentListener(changeSupport);
+        familyNamePrefixTextField.getDocument().addDocumentListener(changeSupport);
+        firstNameTextField.getDocument().addDocumentListener(changeSupport);
+        familyNameTextField.getDocument().addDocumentListener(changeSupport);
+        nicknameTextField.getDocument().addDocumentListener(changeSupport);
+        firstNameSuffixTextField.getDocument().addDocumentListener(changeSupport);
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -96,19 +107,16 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 firstNamePrefixModified = true;
-                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 firstNamePrefixModified = true;
-                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 firstNamePrefixModified = true;
-                nameModified = true;
             }
         });
 
@@ -118,19 +126,16 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 firstNameModified = true;
-                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 firstNameModified = true;
-                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 firstNameModified = true;
-                nameModified = true;
             }
         });
 
@@ -144,19 +149,16 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 familyNamePrefixModified = true;
-                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 familyNamePrefixModified = true;
-                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 familyNamePrefixModified = true;
-                nameModified = true;
             }
         });
 
@@ -167,19 +169,16 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 familyNameModified = true;
-                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 familyNameModified = true;
-                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 familyNameModified = true;
-                nameModified = true;
             }
         });
 
@@ -191,19 +190,16 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 firstNameSuffixModified = true;
-                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 firstNameSuffixModified = true;
-                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 firstNameSuffixModified = true;
-                nameModified = true;
             }
         });
 
@@ -218,19 +214,16 @@ public class NameEditorPanel extends javax.swing.JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 nicknameModified = true;
-                nameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 nicknameModified = true;
-                nameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
                 nicknameModified = true;
-                nameModified = true;
             }
         });
 
@@ -314,7 +307,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
 
     private void nameTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTypeComboBoxActionPerformed
         nameTypeModified = true;
-        nameModified = true;
+        changeSupport.fireChangeEvent();
+//        nameModified = true;
     }//GEN-LAST:event_nameTypeComboBoxActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
@@ -357,8 +351,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
         this.root = root;
         this.name = name;
 
-        AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(root.getGedcom(), true), false);
-        AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(root.getGedcom(), true), false);
+//        AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(root.getGedcom(), true), false);
+//        AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(root.getGedcom(), true), false);
 
         String version = root.getGedcom().getGrammar().getVersion();
         if (version.equals("5.5")) {
@@ -464,13 +458,35 @@ public class NameEditorPanel extends javax.swing.JPanel {
             firstNameSuffixTextField.setVisible(false);
         }
         revalidate();
-        nameModified = false;
+//        nameModified = false;
+        changeSupport.setChanged(false);
+    }
+
+    /**
+     * Whether the bean has changed since first listener was attached
+     */
+    public boolean hasChanged() {
+        return changeSupport.hasChanged();
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
     }
 
     public void commit() {
         final String version = root.getGedcom().getGrammar().getVersion();
 
-        if (nameModified) {
+        if (hasChanged()) {
             logger.log(Level.INFO, "Commiting ...");
             if (name == null) {
                 logger.log(Level.INFO, "Add property NAME");
@@ -589,6 +605,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
                     false);
             logger.log(Level.INFO, "... finished");
         }
+        // clear changed
+        changeSupport.setChanged(false);
     }
 
     PropertyName get() {

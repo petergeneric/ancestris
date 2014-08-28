@@ -142,6 +142,7 @@ public final class IndividualEditor extends EntityEditor {
         initComponents();
         eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
         individualEventEditorPanel.setVisible(false);
+        nameEditorPanel.addChangeListener(changes);
     }
 
     /**
