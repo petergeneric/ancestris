@@ -178,7 +178,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>ancestris.modules.editors.genealogyeditor.editors</package>
+            </public-packages>
         </data>
     </configuration>
 </project>
