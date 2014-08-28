@@ -38,7 +38,7 @@ import org.openide.util.NbBundle;
  * External action
  */
 @ActionID(category = "Edit", id = "ancestris.core.actions.RunExternal")
-@ActionRegistration(displayName = "Run External")
+@ActionRegistration(displayName = "Run External",lazy = false)
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1000)})
 @NbBundle.Messages({"file.open=Open..."})

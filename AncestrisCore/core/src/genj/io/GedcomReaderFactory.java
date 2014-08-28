@@ -41,6 +41,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -201,8 +203,8 @@ public class GedcomReaderFactory {
                 }
                 ;
                 // allow gc to collect gedcom
-                gedcom = null;
                 lazyLinks.clear();
+                gedcom = null;
             }
 
             // nothing happening here

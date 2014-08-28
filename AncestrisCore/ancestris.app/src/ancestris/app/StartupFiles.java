@@ -137,11 +137,7 @@ public abstract class StartupFiles {
         @Override
         public void add(FileObject gedcomFile) {
             String url;
-            try {
-                url = gedcomFile.getURL().toString();
-            } catch (FileStateInvalidException ex) {
-                return;
-            }
+            url = gedcomFile.toURL().toString();
             // remember
             List<String> history = REGISTRY.get(KEY, new ArrayList<String>());
             history.remove(url);

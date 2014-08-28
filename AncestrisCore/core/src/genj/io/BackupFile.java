@@ -37,6 +37,7 @@ public class BackupFile {
 
                 FilenameFilter filter = new FilenameFilter() {
 
+                    @Override
                     public boolean accept(File dir, String name) {
                         return (dir.equals(theFile.getParentFile()) && p.matcher(name).matches());
                     }
@@ -71,8 +72,9 @@ public class BackupFile {
             }
             result = true;
         } finally {
-            return result;
+//            return result;
         }
+        return result;
     }
 
     private static File getBackupFile(File file) {

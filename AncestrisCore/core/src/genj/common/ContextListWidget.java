@@ -72,21 +72,19 @@ public class ContextListWidget extends JList {
   //Should we remove and refactor selectionChanged listener?
   private ViewContext getContext() {
     
-    Object[] selection = getSelectedValues();
+    List<Context> selection = getSelectedValuesList();
     
     // one selected?
-    if (selection.length==1&&selection[0] instanceof ViewContext)
-      return (ViewContext)selection[0];
+    if (selection.size()==1&&selection.get(0) instanceof ViewContext)
+      return (ViewContext)selection.get(0);
     
     // merge
     List<Property> props = new ArrayList<Property>(16);
     List<Entity> ents = new ArrayList<Entity>(16);
-    
-    for (int i = 0; i < selection.length; i++) {
-      Context context = (Context)selection[i];
-      props.addAll(context.getProperties());
-      ents.addAll(context.getEntities());
-    }
+      for (Context context : selection) {
+          props.addAll(context.getProperties());
+          ents.addAll(context.getEntities());
+      }
     
     // done
     return new ViewContext(new Context(gedcom, ents, props));
