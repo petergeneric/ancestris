@@ -1506,6 +1506,7 @@ public class FamilyEditor extends EntityEditor {
                 mFamily.delProperty(restrictionNotice);
             }
         }
+        familyEventPanel.commit();
     }
 
     private void seteventTypeComboBox(List<Property> eventsList) {
