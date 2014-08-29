@@ -465,19 +465,18 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                                     map = mPlace.getProperty("_MAP");
                                     if (map == null) {
                                         map = mPlace.addProperty("_MAP", "");
+                                    }
+                                    Property latitude = map.getProperty("_LATI");
+                                    if (latitude == null) {
+                                        map.addProperty("_LATI", selectedPlaceMap.getProperty("_LATI").getValue());
                                     } else {
-                                        Property latitude = map.getProperty("_LATI");
-                                        if (latitude == null) {
-                                            map.addProperty("_LATI", selectedPlaceMap.getProperty("_LATI").getValue());
-                                        } else {
-                                            latitude.setValue(selectedPlaceMap.getProperty("_LATI").getValue());
-                                        }
-                                        Property longitude = map.getProperty("_LONG");
-                                        if (longitude == null) {
-                                            map.addProperty("_LONG", selectedPlaceMap.getProperty("_LONG").getValue());
-                                        } else {
-                                            longitude.setValue(selectedPlaceMap.getProperty("_LONG").getValue());
-                                        }
+                                        latitude.setValue(selectedPlaceMap.getProperty("_LATI").getValue());
+                                    }
+                                    Property longitude = map.getProperty("_LONG");
+                                    if (longitude == null) {
+                                        map.addProperty("_LONG", selectedPlaceMap.getProperty("_LONG").getValue());
+                                    } else {
+                                        longitude.setValue(selectedPlaceMap.getProperty("_LONG").getValue());
                                     }
                                 } else {
                                     map = mPlace.getProperty("_MAP");
@@ -795,10 +794,13 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         }
                     }
                 }
-                try {
-                    aDateBean.commit();
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
+                
+                if (aDateBean.hasChanged()) {
+                    try {
+                        aDateBean.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
 
                 Property restrictionNotice = mEvent.getProperty("RESN", true);
