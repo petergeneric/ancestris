@@ -387,12 +387,13 @@ public class ReportView extends View {
 
                 Registry foRegistry = Registry.get(getClass());
 
-                Action[] actions = AbstractAncestrisAction.okCancel();
                 FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
-                //XXX: remove connect api and create a validatelistener
-                options.connect(actions[0]);
 
-                Object rc = DialogManager.create(title, options).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.optionsfromuser").show();
+                DialogManager dialog = DialogManager.create(title, options).
+                        setOptionType(DialogManager.OK_CANCEL_OPTION).
+                        setDialogId("report.optionsfromuser");
+                options.connect(dialog);
+                Object rc = dialog.show();
                 Format formatter = options.getFormat();
                 File file = options.getFile();
                 if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {

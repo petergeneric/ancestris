@@ -46,7 +46,8 @@ import org.openide.util.NbBundle;
  * PDelete - delete a property
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.DelProperty")
-@ActionRegistration(displayName = "#delete")
+@ActionRegistration(displayName = "#delete",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class DelProperty extends AbstractChange {

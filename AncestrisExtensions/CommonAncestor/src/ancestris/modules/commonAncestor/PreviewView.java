@@ -226,15 +226,12 @@ public class PreviewView extends JPanel {
 
             Registry foRegistry = Registry.get(getClass());
 
-            Action[] actions = AbstractAncestrisAction.okCancel();
             FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
-            options.connect(actions[0]);
-            //XXX: will have to reenable ok button listener
-
-            Object rc = DialogManager.create(title, options)
+            DialogManager dialog = DialogManager.create(title, options)
                     .setOptionType(DialogManager.OK_CANCEL_OPTION)
-                    .setDialogId("common.preview")
-                    .show();
+                    .setDialogId("common.preview");
+            options.connect(dialog);
+            Object rc = dialog.show();
             Format formatter = options.getFormat();
             File file = options.getFile();
             if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {

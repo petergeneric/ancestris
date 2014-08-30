@@ -38,7 +38,8 @@ import org.openide.util.LookupEvent;
  * Create an alias between records of two individuals indicating that the person is the same
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateAlias")
-@ActionRegistration(displayName = "#create.alias")
+@ActionRegistration(displayName = "#create.alias",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateAlias extends CreateRelationship {

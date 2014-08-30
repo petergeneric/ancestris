@@ -161,7 +161,7 @@ public class ReportAncestorStatistics extends Report {
         println(LINE_SEPARATOR);
 
         // Iteration on generations
-        Iterator itr = vecGenerationInfo.iterator();
+        Iterator<GenerationInfo> itr = vecGenerationInfo.iterator();
         while (itr.hasNext()) {
             GenerationInfo info = (GenerationInfo) itr.next();
 
@@ -182,10 +182,10 @@ public class ReportAncestorStatistics extends Report {
         println(LINE_SEPARATOR);
 
         // Scan common individuals
-        Collection col = mapImplexCommonIndi.values();
-        itr = col.iterator();
-        while (itr.hasNext()) {
-            println(itr.next());
+        Collection<Indi> col = mapImplexCommonIndi.values();
+        Iterator<Indi> itr1 = col.iterator();
+        while (itr1.hasNext()) {
+            println(itr1.next());
         }
         println();
     }
@@ -199,8 +199,8 @@ public class ReportAncestorStatistics extends Report {
         println(LINE_SEPARATOR);
 
         // Scan common individuals
-        Collection col = mapConsanguinityCommonIndi.values();
-        Iterator itr = col.iterator();
+        Collection<ConsanguinityInfo> col = mapConsanguinityCommonIndi.values();
+        Iterator<ConsanguinityInfo> itr = col.iterator();
         while (itr.hasNext()) {
             ConsanguinityInfo info = (ConsanguinityInfo) itr.next();
 
@@ -211,7 +211,7 @@ public class ReportAncestorStatistics extends Report {
             // Print ancestor lists
             if (DEBUG) {
                 StringBuffer strLine = new StringBuffer();
-                Iterator itrStack = info.stackIndi.iterator();
+                Iterator<String> itrStack = info.stackIndi.iterator();
                 while (itrStack.hasNext()) {
                     String strToken = (String) itrStack.next();
                     if (strToken.equals(STACK_SEPARATOR)) {
@@ -250,7 +250,7 @@ public class ReportAncestorStatistics extends Report {
         int iPossibleCumul = 0;
         int iKnownCumul = 0;
         int iDiffCumul = 0;
-        Iterator itr = vecGenerationInfo.iterator();
+        Iterator<GenerationInfo> itr = vecGenerationInfo.iterator();
         while (itr.hasNext()) {
             GenerationInfo info = (GenerationInfo) itr.next();
 
@@ -309,12 +309,7 @@ public class ReportAncestorStatistics extends Report {
         // Prepare generation information
         GenerationInfo info = new GenerationInfo(iLevel);
         vecGenerationInfo.add(info);
-
-        // Scan individual of the generation
-        Iterator itr = listIndi.iterator();
-        while (itr.hasNext()) {
-            Indi indi = (Indi) itr.next();
-
+        for (Indi indi : listIndi) {
             // Get ancestor ID and search it in the list
             String strId = indi.getId();
             if (setIndi.contains(strId)) {

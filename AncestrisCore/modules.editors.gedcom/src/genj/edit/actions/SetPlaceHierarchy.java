@@ -44,7 +44,8 @@ import org.openide.util.LookupEvent;
  * Set the place hierarchy used in a gedcom file
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.SetPlaceHierarchy")
-@ActionRegistration(displayName = "#place.hierarchy")
+@ActionRegistration(displayName = "#place.hierarchy",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class SetPlaceHierarchy extends AbstractChange {

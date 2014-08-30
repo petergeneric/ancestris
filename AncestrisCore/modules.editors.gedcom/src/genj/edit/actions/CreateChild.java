@@ -38,7 +38,8 @@ import org.openide.util.NbBundle;
  * Create a child of a family or person
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateChild")
-@ActionRegistration(displayName = "#create.child")
+@ActionRegistration(displayName = "#create.child",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 @NbBundle.Messages("create.child=Add Child")

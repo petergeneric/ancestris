@@ -229,12 +229,10 @@ public class ReportDemography extends Report {
       FamAnalyzer[] famAnalyzers) {
     
     // loop over each individual in GedCom
-    Iterator indis = gedcom.getEntities( Gedcom.INDI ).iterator();
-    while ( indis.hasNext() ) {
-      Indi indi = (Indi) indis.next();
-      for ( int i=0 ; i<indiAnalyzers.length ; i++ ) {
-        indiAnalyzers[i].addFact( indi );
-      }
+      for (Indi indi: gedcom.getIndis()){
+        for (IndiAnalyzer indiAnalyzer : indiAnalyzers) {
+            indiAnalyzer.addFact(indi);
+        }
     }
 
     // loop over each family in GedCom

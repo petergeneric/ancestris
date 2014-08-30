@@ -98,13 +98,6 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
         // prepare confirmation message for user
         String msg = getConfirmMessage();
         if (msg != null) {
-
-            // prepare actions
-            Action[] actions = {
-                new AbstractAncestrisAction(resources.getString("confirm.proceed", getText())),
-                AbstractAncestrisAction.cancel()
-            };
-            
             String confirmButton = resources.getString("confirm.proceed", getText());
 
             // Recheck with the user

@@ -60,10 +60,10 @@ public class ChoosePropertyBean extends JComponent {
 
   private JRadioButton rbChoose,rbCustom;
   private JTextField tfCustom;
-  private JList lChoose;
+  private JList<MetaProperty> lChoose;
   private JTextPane tpInfo;
-  private List<ActionListener> listeners = new CopyOnWriteArrayList<ActionListener>();
-  private Callback callback = new Callback();
+  private final List<ActionListener> listeners = new CopyOnWriteArrayList<ActionListener>();
+  private final Callback callback = new Callback();
 
   /**
    * Constructor
@@ -101,7 +101,7 @@ public class ChoosePropertyBean extends JComponent {
       add(new JLabel(RESOURCES.getString("choose.known")));
     
     // .. List of tags
-    lChoose = new JList(defs);
+    lChoose = new JList<MetaProperty>(defs);
     lChoose.setVisibleRowCount(4);
     lChoose.setEnabled(defs.length>0);
     lChoose.setCellRenderer(new MetaDefRenderer());
@@ -153,7 +153,7 @@ public class ChoosePropertyBean extends JComponent {
    */
   public String[] getSelectedTags() {
 
-    String[] result = null;
+    String[] result;
 
     // list of selected properties
     if (rbChoose.isSelected() == true) {

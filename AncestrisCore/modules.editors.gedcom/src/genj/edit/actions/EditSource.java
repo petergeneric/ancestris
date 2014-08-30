@@ -33,13 +33,11 @@ import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
-import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TableWidget;
 import genj.util.swing.NestedBlockLayout.Cell;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,15 +161,13 @@ public class EditSource extends AbstractAncestrisAction {
       
     }
 
-    // grab window now as current source component for e might go away during dialog/edit ops
-    Window win = DialogHelper.getWindow(e);
     
     // create new source
     CreateXReference create = new CreateXReference(property, "SOUR");
     create.actionPerformed(e);
     PropertySource source = (PropertySource)create.getReference();
     if (source!=null)
-      new Edit(source, true).actionPerformed(new ActionEvent(win, 0, ""));
+      new Edit(source, true).actionPerformed(new ActionEvent(e.getSource(), 0, ""));
 
   }
   

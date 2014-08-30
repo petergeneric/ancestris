@@ -42,7 +42,8 @@ import org.openide.util.LookupEvent;
  * Swap HUSB/WIFE for family
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.SwapSpouses")
-@ActionRegistration(displayName = "#swap.spouses")
+@ActionRegistration(displayName = "#swap.spouses",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class SwapSpouses extends AbstractChange {
