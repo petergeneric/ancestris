@@ -38,7 +38,8 @@ import org.openide.util.NbBundle;
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.SetSubmitter")
 @ActionRegistration(displayName = "#submitter.short"
 //,iconBase = "genj.gedcom.images/Submitter.png"
-        )
+        ,
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")
 })

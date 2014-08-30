@@ -125,7 +125,8 @@ public class CreateXReference extends CreateRelationship {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefFamc")
-    @ActionRegistration(displayName = "create.famc")
+    @ActionRegistration(displayName = "create.famc",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position = 900, path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
     public static CreateXReference addFamcFactory() {
@@ -133,7 +134,8 @@ public class CreateXReference extends CreateRelationship {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefNote")
-    @ActionRegistration(displayName = "create.note")
+    @ActionRegistration(displayName = "create.note",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position = 100, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addNoteFactory() {
@@ -141,7 +143,8 @@ public class CreateXReference extends CreateRelationship {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefRepo")
-    @ActionRegistration(displayName = "create.repo")
+    @ActionRegistration(displayName = "create.repo",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position = 400, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addRepoFactory() {
@@ -149,7 +152,8 @@ public class CreateXReference extends CreateRelationship {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefSour")
-    @ActionRegistration(displayName = "create.sour")
+    @ActionRegistration(displayName = "create.sour",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position = 300, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addSourFactory() {
@@ -157,7 +161,8 @@ public class CreateXReference extends CreateRelationship {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefSubm")
-    @ActionRegistration(displayName = "create.subm")
+    @ActionRegistration(displayName = "create.subm",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position = 500, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addSubmFactory() {
@@ -165,7 +170,8 @@ public class CreateXReference extends CreateRelationship {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefObje")
-    @ActionRegistration(displayName = "create.obje")
+    @ActionRegistration(displayName = "create.obje",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position = 200, path = CREATE_XREF_ACTION_SUBMENU)})
     public static CreateXReference addObjeFactory() {

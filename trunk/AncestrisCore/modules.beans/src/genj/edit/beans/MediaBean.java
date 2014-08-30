@@ -89,7 +89,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
   private ThumbnailWidget thumbs = new ThumbnailWidget() {
         @Override
     public String getToolTipText(InputSource source) {
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       result.append("<html><body>");
       result.append("<b>");
       result.append(source.getName());
@@ -270,7 +270,6 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       File file = ((PropertyFile)FILE).getFile();
       if (file!=null) 
         currentOBJEs.get(InputSource.get(OBJE.getPropertyValue("TITL"), file)).add(OBJE);
-      return;
     }
     
     // unusable OBJE
@@ -285,8 +284,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
   private class Add extends AbstractAncestrisAction implements ListSelectionListener, ChangeListener {
     
     private JList<Property> to;
-    private AbstractAncestrisAction ok;
-    private FileChooserWidget chooser = new FileChooserWidget();
+    private final FileChooserWidget chooser = new FileChooserWidget();
     
     Add(File file) {
       chooser.setFile(file);
@@ -347,7 +345,6 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       options.add(new JLabel(RES.getString("file.add", "...")));
       options.add(new JScrollPane(to));
 
-      ok = AbstractAncestrisAction.ok();
 
       to.addListSelectionListener(this);
       chooser.addChangeListener(this);
@@ -386,7 +383,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
     
     private void validate() {
       File file = getFile();
-      ok.setEnabled(to.getSelectedIndices().length>0 && file!=null && file.exists());
+//      ok.setEnabled(to.getSelectedIndices().length>0 && file!=null && file.exists());
     }
     
     public void valueChanged(ListSelectionEvent e) {

@@ -19,6 +19,7 @@
  */
 package genj.fo;
 
+import ancestris.util.swing.DialogManager;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.swing.FileChooserWidget;
@@ -45,10 +46,11 @@ import javax.swing.event.ChangeListener;
  */
 public class FormatOptionsWidget extends JPanel {
   
-  private Action validAction;
-  private Document doc;
-  private FileChooserWidget chooseFile;
-  private JComboBox<Format> chooseFormat;
+    //FIXME: use interface and not dialogmanager class
+  private DialogManager dialog;
+  private final Document doc;
+  private final FileChooserWidget chooseFile;
+  private final JComboBox<Format> chooseFormat;
   
   /**
    * Constructor
@@ -137,8 +139,8 @@ public class FormatOptionsWidget extends JPanel {
    * sets the action that we want this widget to manage, enabled if options
    * are ok, disabled otherwise 
    */
-  public void connect(Action validAction) {
-    this.validAction = validAction;
+  public void connect(DialogManager dialog) {
+    this.dialog = dialog;
     validateOptions(true);
   }
   
@@ -163,7 +165,8 @@ public class FormatOptionsWidget extends JPanel {
       chooseFile.setFile(getFile());
     
     // update valid action
-    validAction.setEnabled(valid);
+    if (dialog != null)
+        dialog.setValid(valid);
   }
 
 } //OutputWidget

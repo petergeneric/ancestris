@@ -39,7 +39,8 @@ import org.openide.util.LookupEvent;
  * TogglePrivate - toggle "private" of a property
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.TogglePropertyPrivate")
-@ActionRegistration(displayName = "#private")
+@ActionRegistration(displayName = "#private",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools"
         ,position= 3000)})

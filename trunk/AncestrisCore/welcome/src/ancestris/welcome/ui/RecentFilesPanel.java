@@ -145,11 +145,7 @@ public class RecentFilesPanel extends JPanel implements Constants {
         ActionOpen action = new ActionOpen(file);
         action.setText(file.getNameExt());
         ActionButton b;
-        try {
-            b = new ActionButton(action, file.getURL().toString(), false, "RecentFile"); //NOI18N
-        } catch (FileStateInvalidException ex) {
-            return;
-        }
+        b = new ActionButton(action, file.toURL().toString(), false, "RecentFile"); //NOI18N
         b.setFont(BUTTON_FONT);
         b.getAccessibleContext().setAccessibleName(b.getText());
         b.getAccessibleContext().setAccessibleDescription(
@@ -163,7 +159,10 @@ public class RecentFilesPanel extends JPanel implements Constants {
         panel.add(b, new GridBagConstraints(1, row, 1, 1, 1.0, 0.0,
                 GridBagConstraints.LINE_END, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
     }
-    @NbBundle.Messages("del.from.history=<html>Remove <b>{0}</b> from history</html>")
+    @NbBundle.Messages({
+        "# {0} - gedcom file in history",
+        "del.from.history=<html>Remove <b>{0}</b> from history</html>"
+    })
     private static class DelFile extends AbstractAncestrisAction{
         private final FileObject file;
 

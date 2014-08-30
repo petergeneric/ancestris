@@ -41,7 +41,8 @@ import org.openide.util.NbBundle;
  * knows how to create a sibling for an individual
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSibling")
-@ActionRegistration(displayName = "#create.sibling")
+@ActionRegistration(displayName = "#create.sibling",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 @NbBundle.Messages("create.sibling=Add Sibling")

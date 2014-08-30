@@ -36,7 +36,8 @@ import org.openide.awt.ActionRegistration;
  * Action that knows how to create a spouse for an individual
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSpouse")
-@ActionRegistration(displayName = "#create.spouse")
+@ActionRegistration(displayName = "#create.spouse",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateSpouse extends CreateRelationship {

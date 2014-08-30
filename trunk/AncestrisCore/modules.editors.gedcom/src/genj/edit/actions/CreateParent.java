@@ -41,7 +41,8 @@ import org.openide.awt.ActionRegistration;
  * Create a child of a family or person
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateParent")
-@ActionRegistration(displayName = "#create.parent")
+@ActionRegistration(displayName = "#create.parent",
+        lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateParent extends CreateRelationship {

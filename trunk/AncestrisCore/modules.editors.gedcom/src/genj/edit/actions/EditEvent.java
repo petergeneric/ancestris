@@ -59,20 +59,18 @@ public class EditEvent extends AbstractAncestrisAction {
     final BeanPanel panel = new BeanPanel();
     panel.setRoot(property);
     
-    final Action[] actions = AbstractAncestrisAction.okCancel();
-    actions[0].setEnabled(false);
-    //XXX: add change listener
+    final DialogManager dialog = DialogManager.create(getText(),panel)
+            .setOptionType(DialogManager.OK_CANCEL_OPTION)
+            .setDialogId("edit.event");
     panel.addChangeListener(new ChangeListener() {
+        @Override
       public void stateChanged(ChangeEvent e) {
-        actions[0].setEnabled(panel.isCommittable());
+          dialog.setValid(panel.isCommittable());
       }
     });
-    
-    if (DialogManager.OK_OPTION == DialogManager.create(getText(),panel)
-            .setOptionType(DialogManager.OK_CANCEL_OPTION)
-            .setDialogId("edit.event")
-            .show()){
+    if (DialogManager.OK_OPTION == dialog.show()){
       property.getGedcom().doMuteUnitOfWork(new UnitOfWork() {
+          @Override
         public void perform(Gedcom gedcom) throws GedcomException {
           panel.commit();
         }

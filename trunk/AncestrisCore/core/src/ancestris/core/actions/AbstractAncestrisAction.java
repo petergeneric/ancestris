@@ -132,57 +132,13 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
         return (Icon) super.getValue(KEY_ICON);
     }
 
+    @Override
     public JMenuItem getPopupPresenter() {
         JMenuItem m;
         m = new Actions.MenuItem(this, true);
         return m;
     }
 
-
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    public static AbstractAncestrisAction ok() {
-        return new Constant(AbstractAncestrisAction.TXT_OK);
-    }
-
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    public static AbstractAncestrisAction cancel() {
-        return new Constant(AbstractAncestrisAction.TXT_CANCEL);
-    }
-
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    public static AbstractAncestrisAction[] okCancel() {
-        return new AbstractAncestrisAction[]{ok(), cancel()};
-    }
-
-    /** convenience factory
-     *
-     * @deprecated
-     */
-    @Deprecated
-    private static class Constant extends AbstractAncestrisAction {
-
-        private Constant(String txt) {
-            super(txt);
-        }
-
-        public void actionPerformed(ActionEvent e) {
-        }
-    ;
-
-    };
-  
 //  public AbstractAncestrisAction install(JComponent component, String shortcut) {
 //    return install(component,shortcut,JComponent.WHEN_IN_FOCUSED_WINDOW);
 //  }

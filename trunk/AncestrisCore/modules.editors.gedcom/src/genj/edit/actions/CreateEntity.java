@@ -127,7 +127,8 @@ public class CreateEntity extends AbstractChange {
 
 // register actions
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateFam")
-    @ActionRegistration(displayName = "#create.fam")
+    @ActionRegistration(displayName = "#create.fam",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1100,path = ADD_ACTION_SUBMENU)})
     @NbBundle.Messages("create.fam=Create Family")
@@ -136,7 +137,8 @@ public class CreateEntity extends AbstractChange {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateIndiAction")
-    @ActionRegistration(displayName = "#create.indi")
+    @ActionRegistration(displayName = "#create.indi",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1000,separatorBefore=900,path = ADD_ACTION_SUBMENU)})
     @NbBundle.Messages("create.indi=Create Person")
@@ -145,7 +147,8 @@ public class CreateEntity extends AbstractChange {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateNoteAction")
-    @ActionRegistration(displayName = "#create.note")
+    @ActionRegistration(displayName = "#create.note",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1200,path = ADD_ACTION_SUBMENU)})
     @NbBundle.Messages("create.note=Create Note")
@@ -154,7 +157,8 @@ public class CreateEntity extends AbstractChange {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateObjeAction")
-    @ActionRegistration(displayName = "#create.obje")
+    @ActionRegistration(displayName = "#create.obje",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1300,path = ADD_ACTION_SUBMENU)})
     @NbBundle.Messages("create.obje=Create Multimedia Object")
@@ -163,7 +167,8 @@ public class CreateEntity extends AbstractChange {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateRepoAction")
-    @ActionRegistration(displayName = "#create.repo")
+    @ActionRegistration(displayName = "#create.repo",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1500,path = ADD_ACTION_SUBMENU)})
     @NbBundle.Messages("create.repo=Create Repository")
@@ -172,7 +177,8 @@ public class CreateEntity extends AbstractChange {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSourAction")
-    @ActionRegistration(displayName = "#create.sour")
+    @ActionRegistration(displayName = "#create.sour",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1400,path = ADD_ACTION_SUBMENU)})
     @NbBundle.Messages("create.sour=Create Source")
@@ -181,7 +187,8 @@ public class CreateEntity extends AbstractChange {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSubmAction")
-    @ActionRegistration(displayName = "#create.subm")
+    @ActionRegistration(displayName = "#create.subm",
+        lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1600,path = ADD_ACTION_SUBMENU)})
     @NbBundle.Messages("create.subm=Create Submitter")
@@ -190,7 +197,8 @@ public class CreateEntity extends AbstractChange {
     }
 
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateEntityMenu")
-    @ActionRegistration(displayName = "#create.entity")
+    @ActionRegistration(displayName = "#create.entity",
+        lazy = false)
     @NbBundle.Messages("create.entity=Create Gedcom Entity")
     public static SubMenuAction getCreateEntityMenu() {
         SubMenuAction menuAction = new SubMenuAction(NbBundle.getMessage(CreateEntity.class, "create.entity"));
