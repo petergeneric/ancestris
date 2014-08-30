@@ -332,7 +332,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       preview.setPreferredSize(new Dimension(128,128));
       chooser.setAccessory(preview);
       
-      to = new JList(candidates());
+      to = new JList<Property>(candidates());
       to.setVisibleRowCount(5);
       
       TextFieldWidget title = new TextFieldWidget();
@@ -367,8 +367,8 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       
       // keep track of all sources
       Set<Property> props = propsNeedingOBJEs.get(source); 
-      for (Object prop : to.getSelectedValues())
-        props.add((Property)prop);
+      for (Property prop : to.getSelectedValuesList())
+        props.add(prop);
       
       // mark
       MediaBean.this.changeSupport.fireChangeEvent();
@@ -397,7 +397,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
   
   private class Del extends AbstractAncestrisAction implements PropertyChangeListener,ListSelectionListener {
     
-    private JList from;
+    private JList<Property> from;
     
     public Del() {
       setImage(ThumbnailWidget.IMG_THUMBNAIL.getGrayedOut().getOverLayed(ancestris.core.resources.Images.imgDel));
@@ -445,7 +445,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       }
         
       // ask user
-      from = new JList(choices.toArray());
+      from = new JList<Property>(choices.toArray(new Property[]{}));
       from.setVisibleRowCount(5);
       if (!choices.isEmpty()) 
         from.setSelectionInterval(0, choices.size()-1);
