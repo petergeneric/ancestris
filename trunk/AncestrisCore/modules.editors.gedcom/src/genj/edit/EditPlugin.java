@@ -51,10 +51,6 @@ public class EditPlugin
    */
   /*package*/ EditPlugin() {
     AncestrisPlugin.register(this);
-    
-    // prime bean cache
-    PropertyBean.getAvailableBeans();
-
   }
   
 //  @Override
