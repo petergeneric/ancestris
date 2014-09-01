@@ -66,7 +66,6 @@ import javax.swing.event.ChangeListener;
  */
 public abstract class PropertyBean extends JPanel {
 
-    private final static int CACHE_PRELOAD = 10;
     protected final static Resources RESOURCES = Resources.get(PropertyBean.class);
     protected final static Logger LOG = Logger.getLogger("genj.edit.beans");
     protected final static Registry REGISTRY = Registry.get(PropertyBean.class);
@@ -86,8 +85,6 @@ public abstract class PropertyBean extends JPanel {
         PropertyXRef.class, XRefBean.class,
         Property.class, SimpleValueBean.class // last!
     };
-    private final static boolean isCache = "true".equals(EnvironmentChecker.getProperty("ancestris.edit.beans.cache", "true", "checking if bean cache is enabled or not"));
-    private final static Map<Class<? extends PropertyBean>, List<PropertyBean>> BEANCACHE = createBeanCache();
     /** the context to edit */
     protected Property root;
     protected TagPath path;
@@ -100,28 +97,6 @@ public abstract class PropertyBean extends JPanel {
 
     /* Default tag value is null if not explicitly set */
     private String tag = null;
-
-    @SuppressWarnings("unchecked")
-    private static Map<Class<? extends PropertyBean>, List<PropertyBean>> createBeanCache() {
-        LOG.fine("Initializing bean cache");
-
-        Map<Class<? extends PropertyBean>, List<PropertyBean>> result = new HashMap<Class<? extends PropertyBean>, List<PropertyBean>>();
-
-        if (isCache) {
-            for (int i = 0; i < PROPERTY2BEANTYPE.length; i += 2) {
-                try {
-                    List<PropertyBean> cache = new ArrayList<PropertyBean>(CACHE_PRELOAD);
-                    for (int j = 0; j < CACHE_PRELOAD; j++) {
-                        cache.add((PropertyBean) PROPERTY2BEANTYPE[i + 1].newInstance());
-                    }
-                    result.put((Class<? extends PropertyBean>) PROPERTY2BEANTYPE[i + 1], cache);
-                } catch (Throwable t) {
-                    LOG.log(Level.WARNING, "can't instantiate bean " + PROPERTY2BEANTYPE[i + 1], t);
-                }
-            }
-        }
-        return result;
-    }
 
     /**
      * Lookup
@@ -151,15 +126,6 @@ public abstract class PropertyBean extends JPanel {
 
     private static PropertyBean getBeanImpl(Class<? extends PropertyBean> clazz) {
         try {
-            // grab from cache if we can
-            List<PropertyBean> cache = BEANCACHE.get(clazz);
-            if (cache != null && !cache.isEmpty()) {
-                PropertyBean bean = cache.remove(cache.size() - 1);
-                if (bean.getParent() == null) {
-                    return bean;
-                }
-                LOG.log(Level.FINE, "Bean has parent coming out of cache {0}", bean);
-            }
             return ((PropertyBean) clazz.newInstance());
         } catch (Throwable t) {
             LOG.log(Level.FINE, "Problem with bean lookup " + clazz.getName(), t);
@@ -182,28 +148,6 @@ public abstract class PropertyBean extends JPanel {
         bean.path = null;
         bean.property = null;
         bean.session = null;
-
-        // ignore cache?
-        if (!isCache) {
-            return;
-        }
-
-        // cache it
-        List<PropertyBean> cache = BEANCACHE.get(bean.getClass());
-        if (cache == null) {
-            cache = new ArrayList<PropertyBean>();
-            BEANCACHE.put(bean.getClass(), cache);
-        }
-        if (cache.size() < CACHE_PRELOAD) {
-            cache.add(bean);
-        }
-    }
-
-    /**
-     * Available beans
-     */
-    public static Set<Class<? extends PropertyBean>> getAvailableBeans() {
-        return Collections.unmodifiableSet(BEANCACHE.keySet());
     }
 
     /** constructor */
