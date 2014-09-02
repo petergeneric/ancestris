@@ -3,13 +3,13 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.NameTypeComboBoxModel;
 import genj.gedcom.*;
 import genj.util.ChangeSupport;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -43,7 +43,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
         familyNamePrefixTextField.setVisible(false);
         firstNameSuffixLabel.setVisible(false);
         firstNameSuffixTextField.setVisible(false);
-        
+
         // add changelistener
         firstNamePrefixTextField.getDocument().addDocumentListener(changeSupport);
         familyNamePrefixTextField.getDocument().addDocumentListener(changeSupport);
@@ -51,7 +51,15 @@ public class NameEditorPanel extends javax.swing.JPanel {
         familyNameTextField.getDocument().addDocumentListener(changeSupport);
         nicknameTextField.getDocument().addDocumentListener(changeSupport);
         firstNameSuffixTextField.getDocument().addDocumentListener(changeSupport);
+
+        Context contextToOpen = Utilities.actionsGlobalContext().lookup(Context.class);
+        if (contextToOpen != null) {
+            Gedcom gedcom = contextToOpen.getGedcom();
+
+            AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(gedcom, true), false);
+            AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(gedcom, true), false);
         }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -351,9 +359,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
         this.root = root;
         this.name = name;
 
-//        AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(root.getGedcom(), true), false);
-//        AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(root.getGedcom(), true), false);
-
         String version = root.getGedcom().getGrammar().getVersion();
         if (version.equals("5.5")) {
             nameTypeLabel.setVisible(false);
@@ -532,7 +537,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
             if (firstNameModified == true) {
                 Property givenName = name.getProperty("GIVN");
                 if (givenName == null) {
-                                // Suppressed as an IndexOutOfBoundsException is thrown on undo
+                    // Suppressed as an IndexOutOfBoundsException is thrown on undo
                     // logger.log(Level.INFO, "Add property GIVN");
                     // name.addProperty("GIVN", firstNameTextField.getText().trim());
                 } else {
@@ -576,7 +581,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
             if (familyNameModified == true) {
                 Property familyName = name.getProperty("SURN");
                 if (familyName == null) {
-                                // Suppressed as an IndexOutOfBoundsException is thrown on undo
+                    // Suppressed as an IndexOutOfBoundsException is thrown on undo
                     // logger.log(Level.INFO, "Add property SURN");
                     // name.addProperty("SURN", familyNameTextField.getText().trim());
                 } else {
