@@ -54,17 +54,19 @@ public final class IndividualEditor extends EntityEditor {
         @Override
         public void valueChanged(ListSelectionEvent lse) {
             ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
-            if (lse.getValueIsAdjusting() == false && lsm.isSelectionEmpty() == false) {
-                try {
-                    mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
+            if (!lse.getValueIsAdjusting() && !lsm.isSelectionEmpty()) {
+                if (individualEventEditorPanel.hasChanged()) {
+                    try {
+                        mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            individualEventEditorPanel.commit();
-                        }
-                    });
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                individualEventEditorPanel.commit();
+                            }
+                        });
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
                 if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
                     individualEventEditorPanel.set(mIndividual, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
@@ -134,15 +136,16 @@ public final class IndividualEditor extends EntityEditor {
      * Creates new form IndividualEditor
      */
     public IndividualEditor() {
-        this (false);
+        this(false);
     }
-    
+
     public IndividualEditor(boolean isNew) {
-        super (isNew);
+        super(isNew);
         initComponents();
         eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
         individualEventEditorPanel.setVisible(false);
         nameEditorPanel.addChangeListener(changes);
+        individualEventEditorPanel.addChangeListener(changes);
     }
 
     /**
@@ -490,7 +493,7 @@ public final class IndividualEditor extends EntityEditor {
 
     private void imageBeanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageBeanMouseClicked
         Gedcom gedcom = mIndividual.getGedcom();
-        
+
         if ((mMultiMediaObject = mIndividual.getProperty("OBJE")) == null) {
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
@@ -702,7 +705,7 @@ public final class IndividualEditor extends EntityEditor {
         if (entity != null && entity instanceof Indi) {
 
             mIndividual = (Indi) entity;
-            
+
             setTitle(NbBundle.getMessage(IndividualEditor.class, isNew() ? "IndividualEditor.create.title" : "IndividualEditor.edit.title", mIndividual));
 
             String gedcomVersion = mIndividual.getGedcom().getGrammar().getVersion();
