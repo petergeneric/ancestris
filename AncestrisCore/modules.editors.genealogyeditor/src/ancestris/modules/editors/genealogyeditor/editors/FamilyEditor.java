@@ -50,16 +50,18 @@ public class FamilyEditor extends EntityEditor {
         public void valueChanged(ListSelectionEvent lse) {
             ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
             if (lse.getValueIsAdjusting() == false && lsm.isSelectionEmpty() == false) {
-                try {
-                    mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
+                if (familyEventPanel.hasChanged()) {
+                    try {
+                        mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            familyEventPanel.commit();
-                        }
-                    });
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                familyEventPanel.commit();
+                            }
+                        });
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
                 if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
                     familyEventPanel.set(mFamily, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
@@ -106,6 +108,7 @@ public class FamilyEditor extends EntityEditor {
         initComponents();
         eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
         familyEventPanel.setVisible(false);
+        familyEventPanel.addChangeListener(changes);
     }
 
     /**
@@ -1332,6 +1335,7 @@ public class FamilyEditor extends EntityEditor {
                     familyEvents.add(property);
                 }
             }
+            mEventsListModel.clear();
             mEventsListModel.addAll(familyEvents);
             seteventTypeComboBox(familyEvents);
             eventsList.setSelectedIndex(0);
