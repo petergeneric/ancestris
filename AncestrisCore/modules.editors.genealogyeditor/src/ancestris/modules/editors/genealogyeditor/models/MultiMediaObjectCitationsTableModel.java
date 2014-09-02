@@ -101,7 +101,11 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     case 3: {
                         Property file = multimediaObject.getProperty("FILE", true);
                         if (file != null && file instanceof PropertyFile) {
-                            return ((PropertyFile) file).getFile().getAbsolutePath();
+                            if (((PropertyFile) file).getFile() != null) {
+                                return ((PropertyFile) file).getFile().getAbsolutePath();
+                            } else {
+                                return null;
+                            }
                         } else {
                             return "";
                         }
