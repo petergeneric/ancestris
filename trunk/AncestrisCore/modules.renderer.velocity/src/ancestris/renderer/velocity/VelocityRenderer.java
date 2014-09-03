@@ -22,7 +22,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.runtime.RuntimeInstance;
 import org.apache.velocity.tools.generic.DateTool;
-import org.apache.velocity.tools.generic.ListTool;
 import org.apache.velocity.tools.generic.SortTool;
 import org.openide.modules.Places;
 import org.openide.util.lookup.ServiceProvider;
@@ -68,7 +67,6 @@ public class VelocityRenderer implements Renderer {
     private void restart() {
         context = new VelocityContext();
         context.put("gedcom", new Gedcom());
-        context.put("list", new ListTool());
         context.put("sorter", new SortTool());
 //		context.put("date", (new Date()).toString());
         context.put("date", new DateTool());

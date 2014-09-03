@@ -122,7 +122,9 @@ public abstract class AncestrisEditor {
     }
 @ActionID(category = "Edit",
         id = "ancestris.api.editor.OpenEditorAction")
-@ActionRegistration(displayName = "#OpenInEditor.title"
+@ActionRegistration(
+        displayName = "#OpenInEditor.title",
+        lazy=false
 )
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
