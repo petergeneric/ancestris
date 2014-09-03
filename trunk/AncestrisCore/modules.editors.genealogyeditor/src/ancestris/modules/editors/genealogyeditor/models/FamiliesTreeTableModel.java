@@ -178,6 +178,13 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
         modelSupport.fireNewRoot();
     }
 
+    public void clear() {
+        Object root = getRoot();
+        if (root instanceof DefaultMutableTreeNode) {
+            ((DefaultMutableTreeNode) root).removeAllChildren();
+        }
+    }
+
     @Override
     public boolean isLeaf(Object node) {
         return getChildCount(node) == 0;
