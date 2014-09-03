@@ -161,7 +161,7 @@ text-align: left;
 
 #set($residence=$INDI.getProperty("RESI"))
 #if ($residence)
-  #if($list.size($INDI.getProperties("RESI"))>=2)
+  #if($INDI.getProperties("RESI").size()>=2)
     <br><span class="underline_shadow">ADRESSES</span> : 
   #else
     <br><span class="underline_shadow">ADRESSE</span> : 
@@ -185,7 +185,7 @@ text-align: left;
 
 #set($profession=$INDI.getProperty("OCCU"))
 #if ($profession)
-  #if($list.size($INDI.getProperties("OCCU"))>=2)
+  #if($INDI.getProperties("OCCU").size()>=2)
     <br><span class="underline_shadow">PROFESSIONS</span> : 
   #else
     <br><span class="underline_shadow">PROFESSION</span> : 
@@ -200,9 +200,12 @@ text-align: left;
 
 <!---------------------------------- Mariage ----------------------------------------------->
 
-#testaff($INDI.getProperty("FAMS"))#if ($isShown!=0)
-  #if($list.size($INDI.getProperties("FAMS"))>=2)
+#testaff($fams)#if ($isShown!=0)
+  #if($fams.size()>=2)
     <br><span class="underline_shadow">MARIAGES</span> :
+  #else
+    <br><span class="underline_shadow">MARIAGE</span> : 
+  #end
     <ul>
     #foreach ($fam in $fams)
       #set($conjoint = $fam.getOtherSpouse())
@@ -225,31 +228,6 @@ text-align: left;
       </li>
     #end
     </ul>
-  #else
-    <br><span class="underline_shadow">MARIAGE</span> : 
-    <ul>
-    #foreach ($fam in $fams)
-    #set($conjoint = $fam.getOtherSpouse())
-    #set($mariage=$fam.getProperty("MARR"))
-    #set($divorce=$fam.getProperty("DIV"))
-    #set($cm=$fam.getProperty("MARC"))
-    #set($naiss_conjoint=$conjoint.getProperty("BIRT"))
-    #set($dec_conjoint=$conjoint.getProperty("DEAT"))
-    <li>
-    #if ($mariage)
-      $!conjoint.getProperty("NAME") ($conjoint.Id)</span><br>
-      <span class="italic">$!mariage.getProperty("DATE")</span> 
-      &agrave; <span class="italic">$!mariage.getProperty("PLAC")</span>
-    #end
-    #if ($divorce)	
-      <br><span class="underline_shadow">Divorce</span> : 
-      <span class="italic">$!divorce.Date</span> 
-      &agrave; <span class="italic">$!divorce.Place</span><br>
-    #end
-    </li>
-    #end
-    </ul>
-  #end
 #end
 
 <p align="right"><span class="version">
