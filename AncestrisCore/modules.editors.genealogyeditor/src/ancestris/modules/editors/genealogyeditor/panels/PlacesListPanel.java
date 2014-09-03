@@ -4,8 +4,6 @@ import ancestris.modules.editors.genealogyeditor.models.GedcomPlaceTableModel;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
-import genj.gedcom.TagPath;
-import genj.util.ReferenceSet;
 import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
