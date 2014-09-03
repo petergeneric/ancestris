@@ -5,6 +5,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertyChild;
 import genj.gedcom.PropertyFamilySpouse;
 import genj.gedcom.PropertySex;
+import java.util.Enumeration;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -197,6 +198,13 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
             ((DefaultMutableTreeNode) parent).remove(dataNode);
         }
         modelSupport.fireNewRoot();
+    }
+
+    public void clear() {
+        Object root = getRoot();
+        if (root instanceof DefaultMutableTreeNode) {
+            ((DefaultMutableTreeNode) root).removeAllChildren();
+        }
     }
 
     @Override
