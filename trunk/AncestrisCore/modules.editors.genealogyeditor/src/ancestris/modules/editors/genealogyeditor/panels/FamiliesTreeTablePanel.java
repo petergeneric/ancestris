@@ -439,6 +439,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
     public void setFamiliesList(Property root, List<Fam> familiesList) {
         this.mRoot = root;
+        ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).clear();
         ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(familiesList);
         familiesTreeTable.expandAll();
         familiesTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
