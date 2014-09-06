@@ -29,7 +29,6 @@ public class RepositoryEditor extends EntityEditor {
 
     private Context context;
     private Repository mRepository;
-    private boolean mRepositoryNameModified = false;
 
     /**
      * Creates new form RepositoryEditorPanel
@@ -41,6 +40,7 @@ public class RepositoryEditor extends EntityEditor {
     public RepositoryEditor(boolean isNew) {
         super(isNew);
         initComponents();
+        repositoryNameTextField.getDocument().addDocumentListener(changes);
     }
 
     /**
@@ -204,6 +204,7 @@ public class RepositoryEditor extends EntityEditor {
     protected void setContextImpl(Context context) {
         this.context = context;
 
+        changes.mute();
         Entity entity = context.getEntity();
         if (entity != null && entity instanceof Repository) {
             mRepository = (Repository) entity;
@@ -214,23 +215,6 @@ public class RepositoryEditor extends EntityEditor {
 
             Property repositoryName = mRepository.getProperty("NAME");
             repositoryNameTextField.setText(repositoryName != null ? repositoryName.getValue() : "");
-            repositoryNameTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    mRepositoryNameModified = true;
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    mRepositoryNameModified = true;
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    mRepositoryNameModified = true;
-                }
-            });
 
             Property address = mRepository.getProperty("ADDR");
             addressEditorPanel.set(mRepository, address);
@@ -249,11 +233,12 @@ public class RepositoryEditor extends EntityEditor {
                 changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
             }
         }
+        changes.unmute();
     }
 
     @Override
     public void commit() {
-        if (mRepositoryNameModified) {
+        if (changes.hasChanged()) {
             Property repositoryName = mRepository.getProperty("NAME");
             if (repositoryName == null) {
                 mRepository.addProperty("NAME", repositoryNameTextField.getText());

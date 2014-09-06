@@ -9,8 +9,6 @@ import genj.gedcom.Submitter;
 import genj.view.ViewContext;
 import java.awt.Component;
 import java.util.Arrays;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import org.openide.util.NbBundle;
 
 /**
@@ -21,8 +19,6 @@ public class SubmitterEditor extends EntityEditor {
 
     private Context context;
     private Submitter mSubmitter;
-    private boolean submitterNameModified = false;
-    private boolean submitterLanguageModified = false;
 
     /**
      * Creates new form SubmitterEditor
@@ -34,6 +30,9 @@ public class SubmitterEditor extends EntityEditor {
     public SubmitterEditor(boolean isNew) {
         super(isNew);
         initComponents();
+        submitterNameTextField.getDocument().addDocumentListener(changes);
+        submitterLanguageTextField.getDocument().addDocumentListener(changes);
+        addressEditorPanel.addChangeListener(changes);
     }
 
     /**
@@ -61,43 +60,7 @@ public class SubmitterEditor extends EntityEditor {
 
         org.openide.awt.Mnemonics.setLocalizedText(submitterNameLabel, org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.submitterNameLabel.text")); // NOI18N
 
-        submitterNameTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                submitterNameModified = true;
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                submitterNameModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                submitterNameModified = true;
-            }
-        });
-
         org.openide.awt.Mnemonics.setLocalizedText(languageLabel, org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.languageLabel.text")); // NOI18N
-
-        submitterLanguageTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                submitterLanguageModified = true;
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                submitterLanguageModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                submitterLanguageModified = true;
-            }
-        });
 
         submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.addressEditorPanel.TabConstraints.tabTitle"), addressEditorPanel); // NOI18N
         submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.multimediaObjectCitationsListPanel.TabConstraints.tabTitle"), multimediaObjectCitationsListPanel); // NOI18N
@@ -257,24 +220,23 @@ public class SubmitterEditor extends EntityEditor {
 
     @Override
     public void commit() throws GedcomException {
-        Property name = mSubmitter.getProperty("NAME");
-        if (submitterNameModified) {
+
+        if (changes.hasChanged()) {
+            Property name = mSubmitter.getProperty("NAME");
             if (name != null) {
                 name.setValue(submitterNameTextField.getText());
             } else {
                 mSubmitter.addProperty("NAME", submitterNameTextField.getText());
             }
-        }
 
-        if (submitterLanguageModified) {
             Property language = mSubmitter.getProperty("LANG", false);
             if (language != null) {
                 language.setValue(submitterLanguageTextField.getText());
             } else {
                 mSubmitter.addProperty("LANG", submitterLanguageTextField.getText());
             }
+            
+            addressEditorPanel.commit();
         }
-
-        addressEditorPanel.commit();
     }
 }

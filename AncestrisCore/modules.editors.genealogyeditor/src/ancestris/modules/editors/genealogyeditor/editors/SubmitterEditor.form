@@ -84,9 +84,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="submitterNameTextField">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="submitterNameTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;        @Override&#xa;        public void changedUpdate(DocumentEvent e) {&#xa;            submitterNameModified = true;&#xa;        }&#xa;&#xa;        @Override&#xa;        public void removeUpdate(DocumentEvent e) {&#xa;            submitterNameModified = true;&#xa;        }&#xa;&#xa;        @Override&#xa;        public void insertUpdate(DocumentEvent e) {&#xa;            submitterNameModified = true;&#xa;        }&#xa;    });"/>
-      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="languageLabel">
       <Properties>
@@ -96,9 +93,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="submitterLanguageTextField">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="submitterLanguageTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;        @Override&#xa;        public void changedUpdate(DocumentEvent e) {&#xa;            submitterLanguageModified = true;&#xa;        }&#xa;&#xa;        @Override&#xa;        public void removeUpdate(DocumentEvent e) {&#xa;            submitterLanguageModified = true;&#xa;        }&#xa;&#xa;        @Override&#xa;        public void insertUpdate(DocumentEvent e) {&#xa;            submitterLanguageModified = true;&#xa;        }&#xa;    });"/>
-      </AuxValues>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="submitterTabbedPane">
 

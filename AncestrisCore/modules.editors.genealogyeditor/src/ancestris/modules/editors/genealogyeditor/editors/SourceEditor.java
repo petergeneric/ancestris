@@ -54,6 +54,10 @@ public class SourceEditor extends EntityEditor {
     public SourceEditor(boolean isNew) {
         super(isNew);
         initComponents();
+        authorTextField.getDocument().addDocumentListener(changes);
+        sourceTitleTextField.getDocument().addDocumentListener(changes);
+        abbreviationTextField.getDocument().addDocumentListener(changes);
+        agencyTextField.getDocument().addDocumentListener(changes);
     }
 
     /**
@@ -483,35 +487,38 @@ public class SourceEditor extends EntityEditor {
 
     @Override
     public void commit() {
-        Property sourceTitle = mSource.getProperty("TITL");
-        if (sourceTitle == null) {
-            mSource.addProperty("TITL", sourceTitleTextField.getText());
-        } else {
-            sourceTitle.setValue(sourceTitleTextField.getText());
-        }
-        Property publicationFacts = mSource.getProperty("PUBL");
-        if (publicationFacts == null) {
-            mSource.addProperty("PUBL", sourceTextTextArea.getText());
-        } else {
-            publicationFacts.setValue(sourceTextTextArea.getText());
-        }
-        Property sourceText = mSource.getProperty("TEXT");
-        if (sourceText == null) {
-            mSource.addProperty("TEXT", sourceTextTextArea.getText());
-        } else {
-            sourceText.setValue(sourceTextTextArea.getText());
-        }
-        Property abbreviation = mSource.getProperty("ABBR");
-        if (abbreviation == null) {
-            mSource.addProperty("ABBR", abbreviationTextField.getText());
-        } else {
-            abbreviation.setValue(abbreviationTextField.getText());
-        }
-        Property sourceAuthor = mSource.getProperty("AUTH");
-        if (sourceAuthor == null) {
-            mSource.addProperty("AUTH", authorTextField.getText());
-        } else {
-            sourceAuthor.setValue(authorTextField.getText());
+
+        if (changes.hasChanged()) {
+            Property sourceTitle = mSource.getProperty("TITL");
+            if (sourceTitle == null) {
+                mSource.addProperty("TITL", sourceTitleTextField.getText());
+            } else {
+                sourceTitle.setValue(sourceTitleTextField.getText());
+            }
+            Property publicationFacts = mSource.getProperty("PUBL");
+            if (publicationFacts == null) {
+                mSource.addProperty("PUBL", sourceTextTextArea.getText());
+            } else {
+                publicationFacts.setValue(sourceTextTextArea.getText());
+            }
+            Property sourceText = mSource.getProperty("TEXT");
+            if (sourceText == null) {
+                mSource.addProperty("TEXT", sourceTextTextArea.getText());
+            } else {
+                sourceText.setValue(sourceTextTextArea.getText());
+            }
+            Property abbreviation = mSource.getProperty("ABBR");
+            if (abbreviation == null) {
+                mSource.addProperty("ABBR", abbreviationTextField.getText());
+            } else {
+                abbreviation.setValue(abbreviationTextField.getText());
+            }
+            Property sourceAuthor = mSource.getProperty("AUTH");
+            if (sourceAuthor == null) {
+                mSource.addProperty("AUTH", authorTextField.getText());
+            } else {
+                sourceAuthor.setValue(authorTextField.getText());
+            }
         }
     }
 }

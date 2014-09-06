@@ -39,6 +39,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
         super(isNew);
         initComponents();
         multimediaFilesTable.setID(MultiMediaObjectEditor.class.getName());
+        multiMediaObjectTitleTextField.getDocument().addDocumentListener(changes);
     }
 
     /**
@@ -372,14 +373,16 @@ public class MultiMediaObjectEditor extends EntityEditor {
 
     @Override
     public void commit() {
-        if (mMultiMediaObject instanceof Media) {
-            ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText());
-        } else {
-            Property propertyTitle = mMultiMediaObject.getProperty("TITL");
-            if (propertyTitle == null) {
-                mMultiMediaObject.addProperty("TITL", multiMediaObjectTitleTextField.getText());
+        if (changes.hasChanged()) {
+            if (mMultiMediaObject instanceof Media) {
+                ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText());
             } else {
-                propertyTitle.setValue(multiMediaObjectTitleTextField.getText());
+                Property propertyTitle = mMultiMediaObject.getProperty("TITL");
+                if (propertyTitle == null) {
+                    mMultiMediaObject.addProperty("TITL", multiMediaObjectTitleTextField.getText());
+                } else {
+                    propertyTitle.setValue(multiMediaObjectTitleTextField.getText());
+                }
             }
         }
     }
