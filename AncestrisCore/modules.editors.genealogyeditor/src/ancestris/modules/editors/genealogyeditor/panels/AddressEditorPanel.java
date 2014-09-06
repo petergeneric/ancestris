@@ -1,12 +1,10 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import genj.gedcom.UnitOfWork;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.openide.util.Exceptions;
+import org.openide.util.ChangeSupport;
 
 /**
  *
@@ -46,13 +44,49 @@ public class AddressEditorPanel extends javax.swing.JPanel {
     private boolean mFaxModified = false;
     private boolean meMailAddrModified = false;
     private boolean mHttpAddrModified = false;
-    private boolean updateOnGoing = false;
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(AddressEditorPanel.class);
 
     /**
      * Creates new form AddressEditorPanel
      */
     public AddressEditorPanel() {
         initComponents();
+        AddrLineTextField.getDocument().addDocumentListener(changeListner);
+        AddrLineTextField.getDocument().putProperty("name", "AddrLineTextField");
+
+        addrLine1TextField.getDocument().addDocumentListener(changeListner);
+        addrLine1TextField.getDocument().putProperty("name", "addrLine1TextField");
+
+        addrLine2TextField.getDocument().addDocumentListener(changeListner);
+        addrLine2TextField.getDocument().putProperty("name", "addrLine2TextField");
+
+        addrLine3TextField.getDocument().addDocumentListener(changeListner);
+        addrLine3TextField.getDocument().putProperty("name", "addrLine3TextField");
+
+        cityTextField.getDocument().addDocumentListener(changeListner);
+        cityTextField.getDocument().putProperty("name", "cityTextField");
+
+        postalCodeTextField.getDocument().addDocumentListener(changeListner);
+        postalCodeTextField.getDocument().putProperty("name", "postalCodeTextField");
+
+        stateTextField.getDocument().addDocumentListener(changeListner);
+        stateTextField.getDocument().putProperty("name", "stateTextField");
+
+        countryTextField.getDocument().addDocumentListener(changeListner);
+        countryTextField.getDocument().putProperty("name", "countryTextField");
+
+        phoneTextField.getDocument().addDocumentListener(changeListner);
+        phoneTextField.getDocument().putProperty("name", "phoneTextField");
+
+        faxTextField.getDocument().addDocumentListener(changeListner);
+        faxTextField.getDocument().putProperty("name", "faxTextField");
+
+        httpAddrTextField.getDocument().addDocumentListener(changeListner);
+        httpAddrTextField.getDocument().putProperty("name", "httpAddrTextField");
+
+        eMailAddrTextField.getDocument().addDocumentListener(changeListner);
+        eMailAddrTextField.getDocument().putProperty("name", "eMailAddrTextField");
     }
 
     /**
@@ -87,317 +121,17 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
         phoneLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.phoneLabel.text")); // NOI18N
 
-        phoneTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mPhoneModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mPhoneModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mPhoneModified = true;
-                }
-            }
-        });
-
-        addrLine2TextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine2Modified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mAddrLine2Modified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine2Modified = true;
-                }
-            }
-        });
-
         cityLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.cityLabel.text")); // NOI18N
-
-        addrLine3TextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine3Modified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mAddrLine3Modified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine3Modified = true;
-                }
-            }
-        });
-
-        cityTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mCityModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mCityModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mCityModified = true;
-                }
-            }
-        });
-
-        countryTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mCountryModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mCountryModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mCountryModified = true;
-                }
-            }
-        });
 
         countryLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.countryLabel.text")); // NOI18N
 
-        eMailAddrTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    meMailAddrModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                meMailAddrModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    meMailAddrModified = true;
-                }
-            }
-        });
-
         eMailAddrLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.eMailAddrLabel.text")); // NOI18N
-
-        httpAddrTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mHttpAddrModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mHttpAddrModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mHttpAddrModified = true;
-                }
-            }
-        });
-
-        postalCodeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mPostalCodeModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mPostalCodeModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mPostalCodeModified = true;
-                }
-            }
-        });
 
         httpAddrLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.httpAddrLabel.text")); // NOI18N
 
-        addrLine1TextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine1Modified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mAddrLine1Modified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLine1Modified = true;
-                }
-            }
-        });
-
         postalCodeLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.postalCodeLabel.text")); // NOI18N
 
-        faxTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mFaxModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mFaxModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mFaxModified = true;
-                }
-            }
-        });
-
-        stateTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mStateModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mStateModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mStateModified = true;
-                }
-            }
-        });
-
         faxLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.faxLabel.text")); // NOI18N
-
-        AddrLineTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLineModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mAddressModified = true;
-                mAddrLineModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mAddressModified = true;
-                    mAddrLineModified = true;
-                }
-            }
-        });
 
         stateLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.stateLabel.text")); // NOI18N
 
@@ -499,6 +233,19 @@ public class AddressEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel stateLabel;
     private javax.swing.JTextField stateTextField;
     // End of variables declaration//GEN-END:variables
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
 
     /**
      * @param root the parent property
@@ -520,7 +267,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
     public void set(Property root, Property address) {
         mAddress = address;
         mRoot = root;
-        updateOnGoing = true;
+        changeListner.mute();
         if (mAddress != null) {
             AddrLineTextField.setText(address.getValue());
             Property propertyAdr1 = mAddress.getProperty("ADR1");
@@ -573,11 +320,12 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
             httpAddrTextField.setText(propertyhttpAddr != null ? propertyhttpAddr.getValue() : "");
         }
-        updateOnGoing = false;
+        changeListner.unmute();
     }
 
-    public Property commit() {
+    public void commit() {
         if (mAddressModified) {
+            mAddressModified = false;
             if (mAddress == null) {
                 mAddress = mRoot.addProperty("ADDR", AddrLineTextField.getText());
             } else {
@@ -587,6 +335,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (mAddrLine1Modified) {
+                mAddrLine1Modified = false;
                 Property propertyAdr1 = mAddress.getProperty("ADR1");
                 if (propertyAdr1 == null) {
                     mAddress.addProperty("ADR1", addrLine1TextField.getText());
@@ -596,6 +345,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (mAddrLine2Modified) {
+                mAddrLine2Modified = false;
                 Property propertyAdr2 = mAddress.getProperty("ADR2");
                 if (propertyAdr2 == null) {
                     mAddress.addProperty("ADR2", addrLine2TextField.getText());
@@ -605,6 +355,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (mAddrLine3Modified) {
+                mAddrLine3Modified = false;
                 Property propertyAdr3 = mAddress.getProperty("ADR3");
                 if (propertyAdr3 == null) {
                     mAddress.addProperty("ADR3", addrLine3TextField.getText());
@@ -614,7 +365,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (mCityModified) {
-
+                mCityModified = false;
                 Property propertyCity = mAddress.getProperty("CITY");
                 if (propertyCity == null) {
                     mAddress.addProperty("CITY", cityTextField.getText());
@@ -622,7 +373,9 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                     propertyCity.setValue(cityTextField.getText());
                 }
             }
+
             if (mStateModified) {
+                mStateModified = false;
                 Property propertyState = mAddress.getProperty("STAE");
                 if (propertyState == null) {
                     mAddress.addProperty("STAE", stateTextField.getText());
@@ -630,7 +383,9 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                     propertyState.setValue(stateTextField.getText());
                 }
             }
+
             if (mPostalCodeModified) {
+                mPostalCodeModified = false;
                 Property propertyPostalCode = mAddress.getProperty("POST");
                 if (propertyPostalCode == null) {
                     mAddress.addProperty("POST", postalCodeTextField.getText());
@@ -640,6 +395,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (mCountryModified) {
+                mCountryModified = false;
                 Property propertyCountry = mAddress.getProperty("CTRY");
                 if (propertyCountry == null) {
                     mAddress.addProperty("CTRY", countryTextField.getText());
@@ -649,6 +405,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (mPhoneModified) {
+                mPhoneModified = false;
                 Property propertyPhone = mAddress.getProperty("PHON");
                 if (propertyPhone == null) {
                     mAddress.addProperty("PHON", phoneTextField.getText());
@@ -658,6 +415,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (mFaxModified) {
+                mFaxModified = false;
                 if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     Property propertyFax = mAddress.getProperty("FAX");
                     if (propertyFax == null) {
@@ -676,6 +434,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (meMailAddrModified) {
+                meMailAddrModified = false;
                 if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     Property propertyeMailAddr = mAddress.getProperty("EMAIL");
                     if (propertyeMailAddr == null) {
@@ -694,6 +453,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             }
 
             if (mHttpAddrModified) {
+                mHttpAddrModified = false;
                 if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     Property propertyhttpAddr = mAddress.getProperty("WWW");
                     if (propertyhttpAddr == null) {
@@ -711,7 +471,165 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                 }
             }
         }
+    }
 
-        return mAddress;
+    public class ChangeListner implements DocumentListener {
+
+        private boolean mute = false;
+
+        @Override
+        public void insertUpdate(DocumentEvent de) {
+            if (!mute) {
+                mAddressModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("AddrLineTextField")) {
+                        mAddrLineModified = true;
+                    }
+                    if (propertyName.equals("addrLine1TextField")) {
+                        mAddrLine1Modified = true;
+                    }
+                    if (propertyName.equals("addrLine2TextField")) {
+                        mAddrLine2Modified = true;
+                    }
+                    if (propertyName.equals("addrLine3TextField")) {
+                        mAddrLine3Modified = true;
+                    }
+                    if (propertyName.equals("cityTextField")) {
+                        mCityModified = true;
+                    }
+                    if (propertyName.equals("postalCodeTextField")) {
+                        mStateModified = true;
+                    }
+                    if (propertyName.equals("stateTextField")) {
+                        mPostalCodeModified = true;
+                    }
+                    if (propertyName.equals("countryTextField")) {
+                        mCountryModified = true;
+                    }
+                    if (propertyName.equals("phoneTextField")) {
+                        mPhoneModified = true;
+                    }
+                    if (propertyName.equals("faxTextField")) {
+                        mFaxModified = true;
+                    }
+                    if (propertyName.equals("httpAddrTextField")) {
+                        meMailAddrModified = true;
+                    }
+                    if (propertyName.equals("eMailAddrTextField")) {
+                        mHttpAddrModified = true;
+                    }
+
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent de) {
+            if (!mute) {
+                mAddressModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("AddrLineTextField")) {
+                        mAddrLineModified = true;
+                    }
+                    if (propertyName.equals("addrLine1TextField")) {
+                        mAddrLine1Modified = true;
+                    }
+                    if (propertyName.equals("addrLine2TextField")) {
+                        mAddrLine2Modified = true;
+                    }
+                    if (propertyName.equals("addrLine3TextField")) {
+                        mAddrLine3Modified = true;
+                    }
+                    if (propertyName.equals("cityTextField")) {
+                        mCityModified = true;
+                    }
+                    if (propertyName.equals("postalCodeTextField")) {
+                        mStateModified = true;
+                    }
+                    if (propertyName.equals("stateTextField")) {
+                        mPostalCodeModified = true;
+                    }
+                    if (propertyName.equals("countryTextField")) {
+                        mCountryModified = true;
+                    }
+                    if (propertyName.equals("phoneTextField")) {
+                        mPhoneModified = true;
+                    }
+                    if (propertyName.equals("faxTextField")) {
+                        mFaxModified = true;
+                    }
+                    if (propertyName.equals("httpAddrTextField")) {
+                        meMailAddrModified = true;
+                    }
+                    if (propertyName.equals("eMailAddrTextField")) {
+                        mHttpAddrModified = true;
+                    }
+
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent de) {
+            if (!mute) {
+                mAddressModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("AddrLineTextField")) {
+                        mAddrLineModified = true;
+                    }
+                    if (propertyName.equals("addrLine1TextField")) {
+                        mAddrLine1Modified = true;
+                    }
+                    if (propertyName.equals("addrLine2TextField")) {
+                        mAddrLine2Modified = true;
+                    }
+                    if (propertyName.equals("addrLine3TextField")) {
+                        mAddrLine3Modified = true;
+                    }
+                    if (propertyName.equals("cityTextField")) {
+                        mCityModified = true;
+                    }
+                    if (propertyName.equals("postalCodeTextField")) {
+                        mStateModified = true;
+                    }
+                    if (propertyName.equals("stateTextField")) {
+                        mPostalCodeModified = true;
+                    }
+                    if (propertyName.equals("countryTextField")) {
+                        mCountryModified = true;
+                    }
+                    if (propertyName.equals("phoneTextField")) {
+                        mPhoneModified = true;
+                    }
+                    if (propertyName.equals("faxTextField")) {
+                        mFaxModified = true;
+                    }
+                    if (propertyName.equals("httpAddrTextField")) {
+                        meMailAddrModified = true;
+                    }
+                    if (propertyName.equals("eMailAddrTextField")) {
+                        mHttpAddrModified = true;
+                    }
+
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        public void mute() {
+            mute = true;
+        }
+
+        public void unmute() {
+            mute = false;
+        }
     }
 }

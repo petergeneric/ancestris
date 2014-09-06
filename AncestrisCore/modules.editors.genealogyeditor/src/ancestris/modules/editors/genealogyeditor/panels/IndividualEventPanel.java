@@ -6,7 +6,6 @@ import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import genj.gedcom.time.Delta;
-import genj.util.ChangeSupport;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,10 +26,12 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -122,8 +123,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private Property mAddress;
     private PropertyPlace mPlace;
     private PropertyDate mDate;
-    private final ChangeSupport changeSupport = new ChangeSupport(this);
-    private boolean updateOnGoing = false;
+    private final IndividualEventPanel.ChangeListner changeListner = new IndividualEventPanel.ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(IndividualEventPanel.class);
     private boolean mEventModified = false;
     private boolean mEventCauseModified = false;
     private boolean mIndividualAgeModified = false;
@@ -136,11 +137,15 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     public IndividualEventPanel() {
         initComponents();
         aDateBean.setPreferHorizontal(true);
-        aDateBean.addChangeListener(changeSupport);
-        eventNameTextField.getDocument().addDocumentListener(changeSupport);
-        eventCauseTextArea.getDocument().addDocumentListener(changeSupport);
-        eventDescriptorTextArea.getDocument().addDocumentListener(changeSupport);
-        individualAgeTextField.getDocument().addDocumentListener(changeSupport);
+        aDateBean.addChangeListener(changeListner);
+        eventNameTextField.getDocument().addDocumentListener(changeListner);
+        eventNameTextField.getDocument().putProperty("name", "eventNameTextField");
+        eventCauseTextArea.getDocument().addDocumentListener(changeListner);
+        eventCauseTextArea.getDocument().putProperty("name", "eventCauseTextArea");
+        eventDescriptorTextArea.getDocument().addDocumentListener(changeListner);
+        eventDescriptorTextArea.getDocument().putProperty("name", "eventDescriptorTextArea");
+        individualAgeTextField.getDocument().addDocumentListener(changeListner);
+        individualAgeTextField.getDocument().putProperty("name", "individualAgeTextField");
     }
 
     /**
@@ -207,33 +212,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         eventNameTextField.setEditable(false);
         eventNameTextField.setColumns(15);
-        eventNameTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mEventNameModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mEventNameModified = true;
-                }
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-
-                    mEventModified = true;
-                    mEventNameModified = true;
-                }
-            }
-        });
 
         eventCauseLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         eventCauseLabel.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.eventCauseLabel.text")); // NOI18N
@@ -243,32 +221,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         individualAgeTextField.setColumns(4);
         individualAgeTextField.setToolTipText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.IndividualAgeTextField.toolTipText")); // NOI18N
-        individualAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mIndividualAgeModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mIndividualAgeModified = true;
-                }
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mIndividualAgeModified = true;
-                }
-            }
-        });
 
         linkToPlaceButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
         linkToPlaceButton.setToolTipText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
@@ -653,7 +605,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
      * Whether the bean has changed since first listener was attached
      */
     public boolean hasChanged() {
-        return changeSupport.hasChanged();
+        return mEventModified;
     }
 
     /**
@@ -677,13 +629,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         this.mRoot = root;
         this.mEvent = event;
 
-        mEventModified = false;
-        mEventCauseModified = false;
-        mIndividualAgeModified = false;
-        mEventNameModified = false;
-        mEventTypeModified = false;
-        updateOnGoing = true;
-
+        changeListner.mute();
         if (!mEvent.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
             privateRecordToggleButton.setVisible(false);
         }
@@ -821,16 +767,17 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
 
-        updateOnGoing = false;
-
+        changeListner.unmute();
     }
 
     public void commit() {
         if (mRoot != null) {
 
             if (mEventModified == true || aDateBean.hasChanged()) {
+                mEventModified = false;
                 if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
                     if (mEventNameModified) {
+                        mEventNameModified = false;
                         Property eventType = mEvent.getProperty("TYPE", false);
                         if (eventType != null) {
                             eventType.setValue(eventNameTextField.getText());
@@ -839,13 +786,16 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         }
                     }
                     if (mEventCauseModified) {
+                        mEventCauseModified = false;
                         mEvent.setValue(eventCauseTextArea.getText());
                     }
                 } else if (mIndividualAttributesTags.contains(mEvent.getTag())) {
                     if (mEventNameModified) {
+                        mEventNameModified = false;
                         mEvent.setValue(eventNameTextField.getText());
                     }
                     if (mEventTypeModified) {
+                        mEventTypeModified = false;
                         Property eventType = mEvent.getProperty("TYPE", false);
                         if (eventType != null) {
                             eventType.setValue(eventDescriptorTextArea.getText());
@@ -854,6 +804,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         }
                     }
                     if (mEventCauseModified) {
+                        mEventCauseModified = false;
                         String causeText = eventCauseTextArea.getText();
                         Property eventCause = mEvent.getProperty("CAUS", false);
                         if (causeText.length() > 0) {
@@ -868,6 +819,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     }
                 } else {
                     if (mEventTypeModified) {
+                        mEventTypeModified = false;
                         Property eventType = mEvent.getProperty("TYPE", false);
                         if (eventType != null) {
                             eventType.setValue(eventDescriptorTextArea.getText());
@@ -876,6 +828,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         }
                     }
                     if (mEventCauseModified) {
+                        mEventCauseModified = false;
                         String causeText = eventCauseTextArea.getText();
                         Property eventCause = mEvent.getProperty("CAUS", false);
                         if (causeText.length() > 0) {
@@ -889,7 +842,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         }
                     }
                 }
-                
+
                 if (aDateBean.hasChanged()) {
                     try {
                         aDateBean.commit();
@@ -910,6 +863,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 }
 
                 if (mIndividualAgeModified) {
+                    mIndividualAgeModified = false;
                     PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
                     if (age != null) {
                         age.setValue(individualAgeTextField.getText() + " y");
@@ -917,16 +871,99 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         mEvent.addProperty("AGE", individualAgeTextField.getText() + " y");
                     }
                 }
-
-                updateOnGoing = false;
-                mEventModified = false;
-                mEventCauseModified = false;
-                mIndividualAgeModified = false;
-                mEventNameModified = false;
-                mEventTypeModified = false;
             }
 //        gedcomPlacePanel.commit();
 //        addressPanel.commit();
+        }
+    }
+
+    public class ChangeListner implements DocumentListener, ChangeListener {
+
+        private boolean mute = false;
+
+        @Override
+        public void insertUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventDescriptorTextArea")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("individualAgeTextField")) {
+                        mIndividualAgeModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventDescriptorTextArea")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("individualAgeTextField")) {
+                        mIndividualAgeModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventDescriptorTextArea")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("individualAgeTextField")) {
+                        mIndividualAgeModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        public void mute() {
+            mute = true;
+        }
+
+        public void unmute() {
+            mute = false;
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
         }
     }
 }

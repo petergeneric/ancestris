@@ -5,7 +5,6 @@ import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import genj.gedcom.time.Delta;
-import genj.util.ChangeSupport;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -87,7 +87,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private Property mAddress;
     private PropertyPlace mPlace;
     private PropertyDate mDate;
-    private final ChangeSupport changeSupport = new ChangeSupport(this);
+    private final FamilyEventPanel.ChangeListner changeListner = new FamilyEventPanel.ChangeListner();
+    private final org.openide.util.ChangeSupport changeSupport = new org.openide.util.ChangeSupport(FamilyEventPanel.class);
     private boolean updateOnGoing = false;
     private boolean mEventModified = false;
     private boolean mEventCauseModified = false;
@@ -102,12 +103,17 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     public FamilyEventPanel() {
         initComponents();
         aDateBean.setPreferHorizontal(true);
-        aDateBean.addChangeListener(changeSupport);
-        eventNameTextField.getDocument().addDocumentListener(changeSupport);
-        eventCauseTextArea.getDocument().addDocumentListener(changeSupport);
-        eventTypeTextArea.getDocument().addDocumentListener(changeSupport);
-        husbandAgeTextField.getDocument().addDocumentListener(changeSupport);
-        wifeAgeTextField.getDocument().addDocumentListener(changeSupport);
+        aDateBean.addChangeListener(changeListner);
+        eventNameTextField.getDocument().addDocumentListener(changeListner);
+        eventNameTextField.getDocument().putProperty("name", "eventNameTextField");
+        eventCauseTextArea.getDocument().addDocumentListener(changeListner);
+        eventCauseTextArea.getDocument().putProperty("name", "eventCauseTextArea");
+        eventTypeTextArea.getDocument().addDocumentListener(changeListner);
+        eventTypeTextArea.getDocument().putProperty("name", "eventTypeTextArea");
+        husbandAgeTextField.getDocument().addDocumentListener(changeListner);
+        husbandAgeTextField.getDocument().putProperty("name", "husbandAgeTextField");
+        wifeAgeTextField.getDocument().addDocumentListener(changeListner);
+        wifeAgeTextField.getDocument().putProperty("name", "wifeAgeTextField");
     }
 
     /**
@@ -639,7 +645,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
      * Whether the bean has changed since first listener was attached
      */
     public boolean hasChanged() {
-        return changeSupport.hasChanged();
+        return mEventModified;
     }
 
     /**
@@ -663,14 +669,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         this.mRoot = root;
         this.mEvent = event;
 
-        mEventModified = false;
-        mEventCauseModified = false;
-        mHusbandAgeModified = false;
-        mWifeAgeModified = false;
-        mEventNameModified = false;
-        mEventTypeModified = false;
-        updateOnGoing = true;
-
+        changeListner.mute();
         if (!mEvent.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
             privateRecordToggleButton.setVisible(false);
         }
@@ -800,16 +799,18 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
 
-        updateOnGoing = false;
+        changeListner.unmute();
 
     }
 
     public void commit() {
         if (mRoot != null) {
-
             if (mEventModified == true || aDateBean.hasChanged()) {
+                mEventModified = false;
+
                 if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
                     if (mEventNameModified) {
+                        mEventNameModified = false;
                         Property eventType = mEvent.getProperty("TYPE", false);
                         if (eventType != null) {
                             eventType.setValue(eventNameTextField.getText());
@@ -818,10 +819,12 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         }
                     }
                     if (mEventCauseModified) {
+                        mEventCauseModified = false;
                         mEvent.setValue(eventCauseTextArea.getText());
                     }
                 } else {
                     if (mEventTypeModified) {
+                        mEventTypeModified = false;
                         Property eventType = mEvent.getProperty("TYPE", false);
                         if (eventType != null) {
                             eventType.setValue(eventTypeTextArea.getText());
@@ -830,6 +833,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         }
                     }
                     if (mEventCauseModified) {
+                        mEventCauseModified = false;
                         String causeText = eventCauseTextArea.getText();
                         Property eventCause = mEvent.getProperty("CAUS", false);
                         if (causeText.length() > 0) {
@@ -843,7 +847,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         }
                     }
                 }
-                
+
                 if (aDateBean.hasChanged()) {
                     try {
                         aDateBean.commit();
@@ -864,6 +868,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                 }
 
                 if (mHusbandAgeModified) {
+                    mHusbandAgeModified = false;
                     PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
                     if (husbandAge != null) {
                         husbandAge.setValue(husbandAgeTextField.getText() + " y");
@@ -873,6 +878,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     }
                 }
                 if (mWifeAgeModified) {
+                    mWifeAgeModified = false;
                     PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
                     if (wifeAge != null) {
                         wifeAge.setValue(wifeAgeTextField.getText() + " y");
@@ -882,15 +888,107 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     }
                 }
             }
-            updateOnGoing = false;
-            mEventModified = false;
-            mEventCauseModified = false;
-            mHusbandAgeModified = false;
-            mWifeAgeModified = false;
-            mEventNameModified = false;
-            mEventTypeModified = false;
 //        gedcomPlacePanel.commit();
 //        addressPanel.commit();
+        }
+    }
+
+    public class ChangeListner implements DocumentListener, ChangeListener {
+
+        private boolean mute = false;
+
+        @Override
+        public void insertUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventTypeTextArea")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("husbandAgeTextField")) {
+                        mHusbandAgeModified = true;
+                    }
+                    if (propertyName.equals("wifeAgeTextField")) {
+                        mWifeAgeModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventTypeTextArea")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("husbandAgeTextField")) {
+                        mHusbandAgeModified = true;
+                    }
+                    if (propertyName.equals("wifeAgeTextField")) {
+                        mWifeAgeModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventTypeTextArea")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("husbandAgeTextField")) {
+                        mHusbandAgeModified = true;
+                    }
+                    if (propertyName.equals("wifeAgeTextField")) {
+                        mWifeAgeModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        public void mute() {
+            mute = true;
+        }
+
+        public void unmute() {
+            mute = false;
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
         }
     }
 }
