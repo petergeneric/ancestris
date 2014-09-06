@@ -14,7 +14,7 @@ import org.openide.util.NbBundle;
  * @author dominique
  */
 public class NoteEditor extends EntityEditor {
-
+    
     private Context context;
     private Note mNote;
     private boolean mNoteModified = false;
@@ -25,10 +25,11 @@ public class NoteEditor extends EntityEditor {
     public NoteEditor() {
         this(false);
     }
-
+    
     public NoteEditor(boolean isNew) {
         super(isNew);
         initComponents();
+        noteTextTextArea.getDocument().addDocumentListener(changes);
     }
 
     /**
@@ -154,12 +155,12 @@ public class NoteEditor extends EntityEditor {
     public ViewContext getContext() {
         return new ViewContext(context);
     }
-
+    
     @Override
     public Component getEditorComponent() {
         return this;
     }
-
+    
     @Override
     protected String getTitleImpl() {
         if (context == null || context.getEntity() == null) {
@@ -181,7 +182,7 @@ public class NoteEditor extends EntityEditor {
     @Override
     protected void setContextImpl(Context context) {
         this.context = context;
-
+        
         Entity entity = context.getEntity();
         if (entity != null && entity instanceof Note) {
             mNote = (Note) entity;
@@ -194,26 +195,26 @@ public class NoteEditor extends EntityEditor {
                 entitiesList.add(entityRef.getTargetEntity());
             }
             referencesListPanel.set(mNote, entitiesList);
-
+            
             noteTextTextArea.setText(mNote.getValue() != null ? mNote.getValue() : "");
-
+            
             Property changeDate = mNote.getProperty("CHAN");
             if (changeDate != null) {
                 changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
             }
-
+            
             noteTextTextArea.getDocument().addDocumentListener(new DocumentListener() {
-
+                
                 @Override
                 public void changedUpdate(DocumentEvent e) {
                     mNoteModified = true;
                 }
-
+                
                 @Override
                 public void removeUpdate(DocumentEvent e) {
                     mNoteModified = true;
                 }
-
+                
                 @Override
                 public void insertUpdate(DocumentEvent e) {
                     mNoteModified = true;
@@ -221,10 +222,10 @@ public class NoteEditor extends EntityEditor {
             });
         }
     }
-
+    
     @Override
     public void commit() {
-
+        
         if (mNoteModified) {
             mNote.setValue(noteTextTextArea.getText());
         }
