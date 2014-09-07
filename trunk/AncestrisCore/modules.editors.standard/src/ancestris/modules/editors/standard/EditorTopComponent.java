@@ -15,6 +15,11 @@ import ancestris.api.editor.Editor;
 import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
+import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
+import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
+import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
+import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
+import ancestris.modules.editors.genealogyeditor.editors.SubmitterEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -24,9 +29,15 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
+import genj.gedcom.Media;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
+import genj.gedcom.Repository;
+import genj.gedcom.Source;
+import genj.gedcom.Submitter;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import net.miginfocom.layout.AC;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
@@ -64,6 +76,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     private Gedcom gedcom;
     private JPanel editorContainer;
     private JLabel titleLabel;
+    private int undoNb;
 
     @Override
     public boolean createPanel() {
@@ -71,6 +84,11 @@ public class EditorTopComponent extends AncestrisTopComponent
 //        panels.put(Indi.class, new IndiPanel());
         panels.put(Fam.class, new FamilyEditor());
         panels.put(Indi.class, new IndividualEditor());
+        panels.put(Note.class, new NoteEditor());
+        panels.put(Repository.class, new RepositoryEditor());
+        panels.put(Source.class, new SourceEditor());
+        panels.put(Submitter.class, new SubmitterEditor());
+        panels.put(Media.class, new MultiMediaObjectEditor());
 
         editorContainer = new JPanel(
                 new MigLayout(new LC().fillX().hideMode(2),
@@ -133,7 +151,7 @@ public class EditorTopComponent extends AncestrisTopComponent
             if (old != null) {
                 editor.setContext(old);
             }
-            editorContainer.add(editor, new CC().growX());
+            editorContainer.add(new JScrollPane(editor), new CC().growX());
             titleLabel.setText(editor.getTitle());
             editor.addChangeListener(confirmPanel);
         }
@@ -232,6 +250,8 @@ public class EditorTopComponent extends AncestrisTopComponent
             setEditor(panel);
         }
 
+        // save undo index for use in cancel
+        undoNb = gedcom.getUndoNb();
         setPanel(editorContainer);
         repaint();
     }
@@ -241,10 +261,13 @@ public class EditorTopComponent extends AncestrisTopComponent
     }
 
     public void cancelCallBack(ActionEvent event) {
-        // re-set for cancel
-        Context ctx = editor.getContext();
-        editor.setContext(new Context());
-        editor.setContext(ctx);
+        while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+            gedcom.undoUnitOfWork(false);
+        }
+//        // re-set for cancel
+//        Context ctx = editor.getContext();
+//        editor.setContext(new Context());
+//        editor.setContext(ctx);
 //        populate(toolbar);
     }
 
