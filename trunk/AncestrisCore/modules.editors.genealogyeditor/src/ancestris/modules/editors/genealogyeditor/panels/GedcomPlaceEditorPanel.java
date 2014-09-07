@@ -9,14 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.DialogDescriptor;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -517,18 +515,16 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
 
         if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            Preferences modulePreferences = NbPreferences.forModule(PlaceEditorPanel.class);
-            Preferences node;
             mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
-            node = modulePreferences.node(mPlace.getGedcom().getName());
-            node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
-            node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
-            node.putInt("placeOrder.index.city", mPlaceOrder[2]);
-            node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
-            node.putInt("placeOrder.index.geoID", mPlaceOrder[4]);
-            node.putInt("placeOrder.index.county", mPlaceOrder[5]);
-            node.putInt("placeOrder.index.state", mPlaceOrder[6]);
-            node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
+            Registry registry = mRoot.getGedcom().getRegistry();
+            registry.put("PLAC.hamlet.index", mPlaceOrder[0]);
+            registry.put("PLAC.parish.index", mPlaceOrder[1]);
+            registry.put("PLAC.city.index", mPlaceOrder[2]);
+            registry.put("PLAC.zipCode.index", mPlaceOrder[3]);
+            registry.put("PLAC.geoID.index", mPlaceOrder[4]);
+            registry.put("PLAC.county.index", mPlaceOrder[5]);
+            registry.put("PLAC.state.index", mPlaceOrder[6]);
+            registry.put("PLAC.country.index", mPlaceOrder[7]);
 
             for (int index = 0; index < mPlaceOrder.length; index++) {
                 if (mPlaceOrder[index] != -1) {
@@ -594,7 +590,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
             node = modulePreferences.node(mRoot.getGedcom().getName());
             if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                registry.get("PLAC.index.set", true);
                 mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
                 registry.put("PLAC.hamlet.index", mPlaceOrder[0]);
                 registry.put("PLAC.parish.index", mPlaceOrder[1]);
