@@ -17,6 +17,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.util.Registry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.prefs.Preferences;
@@ -38,7 +39,6 @@ import org.openide.util.Utilities;
 public final class GenerateSosaAction implements ActionListener {
 
     Gedcom myGedcom = null;
-    private final Preferences modulePreferences = NbPreferences.forModule(SosaNumbers.class);
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -46,9 +46,11 @@ public final class GenerateSosaAction implements ActionListener {
 
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             myGedcom = context.getGedcom();
+            Registry registry = myGedcom.getRegistry();
+
             SelectEntityPanel selectEntityPanel = new SelectEntityPanel(myGedcom, Gedcom.INDI);
 
-            String selectedEntityID = modulePreferences.get("SelectEntityDialog." + myGedcom.getName() + "." + Gedcom.INDI, "");
+            String selectedEntityID = registry.get("INDI.decujus.id", "");
             if (!selectedEntityID.isEmpty()) {
                 Entity selectedEntity = myGedcom.getEntity(selectedEntityID);
                 if (selectedEntity != null) {
@@ -73,9 +75,9 @@ public final class GenerateSosaAction implements ActionListener {
                 // else null means clear sosa
                 new SosaNumbers().generateSosaNbs(myGedcom, indiDeCujus);
                 if (indiDeCujus == null) {
-                    modulePreferences.remove("SelectEntityDialog." + myGedcom.getName());
+                    registry.remove("INDI.decujus.id");
                 } else {
-                    modulePreferences.put("SelectEntityDialog." + myGedcom.getName(), indiDeCujus.getId());
+                    registry.put("INDI.decujus.id", indiDeCujus.getId());
                     DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.done", indiDeCujus.getName()), NotifyDescriptor.INFORMATION_MESSAGE));
                 }
             }
