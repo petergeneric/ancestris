@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.api.place.Place;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -581,41 +582,38 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         this.mPlace = place;
         this.mRoot = root;
         mPlaceFormat = PropertyPlace.getFormat(mRoot.getGedcom());
+        Registry registry = mRoot.getGedcom().getRegistry();
 
-        try {
-            if (!modulePreferences.nodeExists(mRoot.getGedcom().getName())) {
+        if (registry.get("PLAC.hamlet.index", -2) == -2) {
 
-                PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
+            PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
 
-                DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
-                        gedcomPlaceFormatEditorPanel);
-                gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
-                node = modulePreferences.node(mRoot.getGedcom().getName());
-                if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
-                    node.putInt("placeOrder.index.hamlet", mPlaceOrder[0]);
-                    node.putInt("placeOrder.index.parish", mPlaceOrder[1]);
-                    node.putInt("placeOrder.index.city", mPlaceOrder[2]);
-                    node.putInt("placeOrder.index.zipCode", mPlaceOrder[3]);
-                    node.putInt("placeOrder.index.geoID", mPlaceOrder[4]);
-                    node.putInt("placeOrder.index.county", mPlaceOrder[5]);
-                    node.putInt("placeOrder.index.state", mPlaceOrder[6]);
-                    node.putInt("placeOrder.index.Country", mPlaceOrder[7]);
-                }
-            } else {
-                node = modulePreferences.node(mRoot.getGedcom().getName());
-                mPlaceOrder[0] = node.getInt("placeOrder.index.hamlet", mPlaceOrder[0]);
-                mPlaceOrder[1] = node.getInt("placeOrder.index.parish", mPlaceOrder[1]);
-                mPlaceOrder[2] = node.getInt("placeOrder.index.city", mPlaceOrder[2]);
-                mPlaceOrder[3] = node.getInt("placeOrder.index.zipCode", mPlaceOrder[3]);
-                mPlaceOrder[4] = node.getInt("placeOrder.index.geoID", mPlaceOrder[4]);
-                mPlaceOrder[5] = node.getInt("placeOrder.index.county", mPlaceOrder[5]);
-                mPlaceOrder[6] = node.getInt("placeOrder.index.state", mPlaceOrder[6]);
-                mPlaceOrder[7] = node.getInt("placeOrder.index.Country", mPlaceOrder[7]);
+            DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
+                    gedcomPlaceFormatEditorPanel);
+            gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
+            node = modulePreferences.node(mRoot.getGedcom().getName());
+            if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                registry.get("PLAC.index.set", true);
+                mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
+                registry.put("PLAC.hamlet.index", mPlaceOrder[0]);
+                registry.put("PLAC.parish.index", mPlaceOrder[1]);
+                registry.put("PLAC.city.index", mPlaceOrder[2]);
+                registry.put("PLAC.zipCode.index", mPlaceOrder[3]);
+                registry.put("PLAC.geoID.index", mPlaceOrder[4]);
+                registry.put("PLAC.county.index", mPlaceOrder[5]);
+                registry.put("PLAC.state.index", mPlaceOrder[6]);
+                registry.put("PLAC.country.index", mPlaceOrder[7]);
             }
-        } catch (BackingStoreException ex) {
-            Exceptions.printStackTrace(ex);
+        } else {
+            mPlaceOrder[0] = registry.get("PLAC.hamlet.index", mPlaceOrder[0]);
+            mPlaceOrder[1] = registry.get("PLAC.parish.index", mPlaceOrder[1]);
+            mPlaceOrder[2] = registry.get("PLAC.city.index", mPlaceOrder[2]);
+            mPlaceOrder[3] = registry.get("PLAC.zipCode.index", mPlaceOrder[3]);
+            mPlaceOrder[4] = registry.get("PLAC.geoID.index", mPlaceOrder[4]);
+            mPlaceOrder[5] = registry.get("PLAC.county.index", mPlaceOrder[5]);
+            mPlaceOrder[6] = registry.get("PLAC.state.index", mPlaceOrder[6]);
+            mPlaceOrder[7] = registry.get("PLAC.country.index", mPlaceOrder[7]);
         }
 
         for (int index = 0; index < mPlaceOrder.length; index++) {
