@@ -4,6 +4,7 @@ import ancestris.core.actions.CommonActions;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.util.Registry;
 import java.awt.event.ActionEvent;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
@@ -38,8 +39,9 @@ public class TreeViewSosaAction
 
     @Override
     public void actionPerformed(ActionEvent ae) {
+        Registry registry = myGedcom.getRegistry();
+        registry.put("INDI.decujus.id", indiDeCujus.getId());
         new SosaNumbers().generateSosaNbs(myGedcom, indiDeCujus);
-        modulePreferences.put("SelectEntityDialog." + myGedcom.getName(), indiDeCujus.getId());
         DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.done", indiDeCujus.getName()), NotifyDescriptor.INFORMATION_MESSAGE));
     }
 
