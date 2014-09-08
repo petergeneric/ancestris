@@ -525,8 +525,6 @@ public class AncestrisTopComponent extends TopComponent
     public void waitStartup(String name) {
         final String gedName = name;
         new Thread(new Runnable() {
-
-            @SuppressWarnings("empty-statement")
             @Override
             public void run() {
                 while (!App.center.isReady(0));
