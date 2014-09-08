@@ -37,7 +37,6 @@ import genj.gedcom.Source;
 import genj.gedcom.Submitter;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,9 +66,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     private static EditorTopComponent factory;
 
     /* package */ final static Logger LOG = Logger.getLogger("ancestris.edit");
-    private final Map<Class<? extends Property>, Editor> panels = new HashMap<Class<? extends Property>, Editor>();
-    private Callback callback = new Callback();
-    private boolean isIgnoreSetContext = false;
+    private final Callback callback = new Callback();
     private boolean isChangeSource = false;
     private Editor editor;
     private ConfirmChangeWidget confirmPanel;
@@ -78,17 +75,24 @@ public class EditorTopComponent extends AncestrisTopComponent
     private JLabel titleLabel;
     private int undoNb;
 
+    private static Map<Class<? extends Property>, Editor> panels;
+    private static Editor getEditorFromClass(Class<? extends Property> clazz){
+        if (panels == null){
+            panels = new HashMap<Class<? extends Property>, Editor>();
+            panels.put(Fam.class, new FamilyEditor());
+            panels.put(Indi.class, new IndividualEditor());
+            panels.put(Note.class, new NoteEditor());
+            panels.put(Repository.class, new RepositoryEditor());
+            panels.put(Source.class, new SourceEditor());
+            panels.put(Submitter.class, new SubmitterEditor());
+            panels.put(Media.class, new MultiMediaObjectEditor());
+        }
+        return panels.get(clazz);
+    }
+
+    
     @Override
     public boolean createPanel() {
-//        panels.put(Fam.class, new FamPanel());
-//        panels.put(Indi.class, new IndiPanel());
-        panels.put(Fam.class, new FamilyEditor());
-        panels.put(Indi.class, new IndividualEditor());
-        panels.put(Note.class, new NoteEditor());
-        panels.put(Repository.class, new RepositoryEditor());
-        panels.put(Source.class, new SourceEditor());
-        panels.put(Submitter.class, new SubmitterEditor());
-        panels.put(Media.class, new MultiMediaObjectEditor());
 
         editorContainer = new JPanel(
                 new MigLayout(new LC().fillX().hideMode(2),
@@ -98,12 +102,15 @@ public class EditorTopComponent extends AncestrisTopComponent
         confirmPanel = new ConfirmChangeWidget(this);
         confirmPanel.setChanged(false);
 
-        //FIXME: was setContext(getContext(), true);
-        setContext(getContext());
-
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         editorContainer.add(titleLabel, new CC().dockNorth());
         editorContainer.add(confirmPanel, new CC().dockSouth());
+
+        // retrigger a context change
+        // FIXME: we need that because createpanel is called after setcontext
+        Context ctx = getContext();
+        setContext(new Context(ctx.getGedcom()));
+        setContext(ctx);
 
         return true;
     }
@@ -124,6 +131,9 @@ public class EditorTopComponent extends AncestrisTopComponent
      * Set editor to use
      */
     private void setEditor(Editor set) {
+        // editor not yet initialized 
+        if (editorContainer == null)
+            return;
 //        // commit old editor unless set==null
         Context old = null;
         if (set != null) {
@@ -190,7 +200,6 @@ public class EditorTopComponent extends AncestrisTopComponent
         try {
 
             isChangeSource = true;
-            isIgnoreSetContext = true;
 
             if (gedcom.isWriteLocked()) {
                 editor.commit();
@@ -208,7 +217,6 @@ public class EditorTopComponent extends AncestrisTopComponent
             LOG.log(Level.WARNING, "error committing editor", t);
         } finally {
             isChangeSource = false;
-            isIgnoreSetContext = false;
             confirmPanel.setChanged(false);
         }
     }
@@ -244,7 +252,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         if (context.getEntity() == null) {
             return;
         }
-        Editor panel = panels.get(context.getEntity().getClass());
+        Editor panel = getEditorFromClass(context.getEntity().getClass());
         if (panel != null) {
             panel.setContext(context);
             setEditor(panel);
