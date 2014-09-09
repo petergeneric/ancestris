@@ -177,7 +177,6 @@ public class PrivacyPolicy {
      *   INDI or FAM which has a private years date
      * Store privateYears entity in set as we go to improve performance
      */
-    @SuppressWarnings("unchecked")
     private boolean isWithinPrivateYears(Property prop) {
         if (prop == null) {
             return false;
@@ -342,7 +341,6 @@ public class PrivacyPolicy {
     /***************************************************************************
      * Supporting methods follow
      **************************************************************************/
-    @SuppressWarnings("unchecked")
     private boolean hasPrivateYearsDate(Property prop) {
         List<PropertyDate> dateProps = prop.getProperties(PropertyDate.class);
         for (Iterator<PropertyDate> it = dateProps.iterator(); it.hasNext();) {
@@ -380,7 +378,6 @@ public class PrivacyPolicy {
         return (ddate == null) && (anniversary != null) && (anniversary.getYears() < yearsIndiCanBeAlive);
     }
 
-    @SuppressWarnings("unchecked")
     private List<Entity> getRelatedPeople(Entity ent) {
         List<Entity> list = new ArrayList<Entity>();
         List<PropertyXRef> refProps = ent.getProperties(PropertyXRef.class);
@@ -398,7 +395,6 @@ public class PrivacyPolicy {
     }
 
     // Find a sub-property by tag and type
-    @SuppressWarnings("unchecked")
     private Property getPropertyFor(Property prop, String tag, Class<?> type) {
         // check children
         for (int i = 0, j = prop.getNoOfProperties(); i < j; i++) {
