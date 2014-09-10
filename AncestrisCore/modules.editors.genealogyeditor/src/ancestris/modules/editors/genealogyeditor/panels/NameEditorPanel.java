@@ -20,7 +20,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private NameTypeComboBoxModel nameTypeComboBoxModelModel = new NameTypeComboBoxModel();
     private Indi root;
     private PropertyName name;
-//    private boolean nameModified = false;
     private boolean nameTypeModified = false;
     private boolean familyNamePrefixModified = false;
     private boolean familyNameModified = false;
@@ -359,6 +358,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
         this.root = root;
         this.name = name;
 
+        changeSupport.mute();
         String version = root.getGedcom().getGrammar().getVersion();
         if (version.equals("5.5")) {
             nameTypeLabel.setVisible(false);
@@ -463,8 +463,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
             firstNameSuffixTextField.setVisible(false);
         }
         revalidate();
-//        nameModified = false;
         changeSupport.setChanged(false);
+        changeSupport.unmute();
     }
 
     /**
