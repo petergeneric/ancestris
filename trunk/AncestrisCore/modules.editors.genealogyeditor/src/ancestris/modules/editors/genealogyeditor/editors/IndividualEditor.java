@@ -49,41 +49,13 @@ import org.openide.util.NbBundle;
  */
 public final class IndividualEditor extends EntityEditor {
 
-    private class EventsListSelectionHandler implements ListSelectionListener {
-
-        @Override
-        public void valueChanged(ListSelectionEvent lse) {
-            ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
-            if (!lse.getValueIsAdjusting() && !lsm.isSelectionEmpty()) {
-                if (individualEventEditorPanel.hasChanged()) {
-                    try {
-                        mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                individualEventEditorPanel.commit();
-                            }
-                        });
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-                if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
-                    individualEventEditorPanel.set(mIndividual, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
-                    individualEventEditorPanel.setVisible(true);
-                }
-            }
-        }
-    }
-
     private Context context;
     private Indi mIndividual;
     private Property mEvent = null;
     private Property mMultiMediaObject;
     private boolean updateOnGoing = false;
-    private EventsListModel mEventsListModel = new EventsListModel();
-
-    private ArrayList<String> mIndividualEventsTags = new ArrayList<String>() {
+    private final EventsListModel mEventsListModel = new EventsListModel();
+    private static final ArrayList<String> mIndividualEventsTags = new ArrayList<String>() {
         {
             /*
              * INDIVIDUAL_EVENT
@@ -146,6 +118,13 @@ public final class IndividualEditor extends EntityEditor {
         individualEventEditorPanel.setVisible(false);
         nameEditorPanel.addChangeListener(changes);
         individualEventEditorPanel.addChangeListener(changes);
+        familiesChildTreeTablePanel.addChangeListener(changes);
+        familiesSpouseTreeTablePanel.addChangeListener(changes);
+        sourceCitationsListPanel.addChangeListener(changes);
+        namesListPanel.addChangeListener(changes);
+        noteCitationsListPanel.addChangeListener(changes);
+        associationsListPanel.addChangeListener(changes);
+        multimediaObjectCitationsListPanel.addChangeListener(changes);
     }
 
     /**
@@ -955,4 +934,32 @@ public final class IndividualEditor extends EntityEditor {
 
         updateOnGoing = false;
     }
+
+    private class EventsListSelectionHandler implements ListSelectionListener {
+
+        @Override
+        public void valueChanged(ListSelectionEvent lse) {
+            ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
+            if (!lse.getValueIsAdjusting() && !lsm.isSelectionEmpty()) {
+                if (individualEventEditorPanel.hasChanged()) {
+                    try {
+                        mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                individualEventEditorPanel.commit();
+                            }
+                        });
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
+                    individualEventEditorPanel.set(mIndividual, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
+                    individualEventEditorPanel.setVisible(true);
+                }
+            }
+        }
+    }
+
 }
