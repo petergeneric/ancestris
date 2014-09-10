@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
@@ -23,6 +24,7 @@ import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -32,43 +34,12 @@ import org.openide.util.NbBundle;
  */
 public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
-    private class FamiliesTreeTableTableColumnModelListener implements TableColumnModelListener {
-
-        private final Logger logger = Logger.getLogger(FamiliesTreeTableTableColumnModelListener.class.getName(), null);
-
-        @Override
-        public void columnAdded(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnAdded: {0}", tcme.getFromIndex());
-        }
-
-        @Override
-        public void columnRemoved(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnRemoved: {0}", tcme.getFromIndex());
-        }
-
-        @Override
-        public void columnMoved(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnMoved: {0}", tcme.getFromIndex());
-        }
-
-        @Override
-        public void columnMarginChanged(ChangeEvent ce) {
-            logger.log(Level.FINE, "columnMarginChanged: {0}", ce.toString());
-            for (int index = 0; index < familiesTreeTable.getColumnCount(); index++) {
-                int preferredWidth = familiesTreeTable.getColumn(index).getPreferredWidth();
-                logger.log(Level.FINE, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
-                mRegistry.put(mTableId + ".column" + index + ".size", preferredWidth);
-            }
-        }
-
-        @Override
-        public void columnSelectionChanged(ListSelectionEvent lse) {
-        }
-    }
     public static int LIST_FAM = 0;
     public static int EDIT_FAMC = FamilyReferencesTreeTableModel.FAMILY_CHILD;
     public static int EDIT_FAMS = FamilyReferencesTreeTableModel.FAMILY_SPOUSE;
     private final static Logger logger = Logger.getLogger(FamiliesReferenceTreeTablePanel.class.getName(), null);
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(FamiliesReferenceTreeTablePanel.class);
     private int mFamilyEditingType = EDIT_FAMC;
     private Registry mRegistry = Registry.get(FamiliesReferenceTreeTablePanel.class);
     private Property mRoot;
@@ -237,6 +208,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
             FamilyEditor familyEditor = new FamilyEditor();
             familyEditor.setContext(new Context(mCreateFamily));
 
+            familyEditor.addChangeListener(changeListner);
             if (familyEditor.showPanel()) {
                 ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).clear();
                 if (mFamilyEditingType == EDIT_FAMC) {
@@ -246,6 +218,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                 }
                 familiesTreeTable.expandAll();
             }
+            familyEditor.removeChangeListener(changeListner);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -287,6 +260,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                         ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilySpouse.class));
                     }
                     familiesTreeTable.expandAll();
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -311,13 +285,17 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                         Fam family = (Fam) entity;
                         FamilyEditor familyEditor = new FamilyEditor();
                         familyEditor.setContext(new Context(family));
+                        familyEditor.addChangeListener(changeListner);
                         familyEditor.showPanel();
+                        familyEditor.removeChangeListener(changeListner);
                     } else if (entity instanceof Indi) {
                         Indi child = (Indi) entity;
                         if (!child.equals(mRoot)) {
                             IndividualEditor individualEditor = new IndividualEditor();
                             individualEditor.setContext(new Context(child));
+                            individualEditor.addChangeListener(changeListner);
                             individualEditor.showPanel();
+                            individualEditor.removeChangeListener(changeListner);
                         }
                     }
                 }
@@ -359,6 +337,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                                     }
                                 }); // end of doUnitOfWork
                                 ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).remove(dataNode);
+                                changeSupport.fireChange();
                             } catch (GedcomException ex) {
                                 Exceptions.printStackTrace(ex);
                             }
@@ -389,6 +368,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                                                 }
                                             }); // end of doUnitOfWork
                                             ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).remove(dataNode);
+                                            changeSupport.fireChange();
                                         } catch (GedcomException ex) {
                                             Exceptions.printStackTrace(ex);
                                         }
@@ -420,13 +400,17 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                             Fam family = (Fam) entity;
                             FamilyEditor familyEditor = new FamilyEditor();
                             familyEditor.setContext(new Context(family));
+                            familyEditor.addChangeListener(changeListner);
                             familyEditor.showPanel();
+                            familyEditor.removeChangeListener(changeListner);
                         } else if (entity instanceof Indi) {
                             Indi child = (Indi) entity;
                             if (!child.equals(mRoot)) {
                                 IndividualEditor individualEditor = new IndividualEditor();
                                 individualEditor.setContext(new Context(child));
+                                individualEditor.addChangeListener(changeListner);
                                 individualEditor.showPanel();
+                                individualEditor.removeChangeListener(changeListner);
                             }
                         }
                     }
@@ -452,5 +436,61 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
         familyReferencesTreeTableModel.addAll(familiesList);
         familiesTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
         familiesTreeTable.expandAll();
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
+    }
+
+    private class FamiliesTreeTableTableColumnModelListener implements TableColumnModelListener {
+
+        private final Logger logger = Logger.getLogger(FamiliesTreeTableTableColumnModelListener.class.getName(), null);
+
+        @Override
+        public void columnAdded(TableColumnModelEvent tcme) {
+            logger.log(Level.FINE, "columnAdded: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnRemoved(TableColumnModelEvent tcme) {
+            logger.log(Level.FINE, "columnRemoved: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnMoved(TableColumnModelEvent tcme) {
+            logger.log(Level.FINE, "columnMoved: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnMarginChanged(ChangeEvent ce) {
+            logger.log(Level.FINE, "columnMarginChanged: {0}", ce.toString());
+            for (int index = 0; index < familiesTreeTable.getColumnCount(); index++) {
+                int preferredWidth = familiesTreeTable.getColumn(index).getPreferredWidth();
+                logger.log(Level.FINE, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
+                mRegistry.put(mTableId + ".column" + index + ".size", preferredWidth);
+            }
+        }
+
+        @Override
+        public void columnSelectionChanged(ListSelectionEvent lse) {
+        }
     }
 }

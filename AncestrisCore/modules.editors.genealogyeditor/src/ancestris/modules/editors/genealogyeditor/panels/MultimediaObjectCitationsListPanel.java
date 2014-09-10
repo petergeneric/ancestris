@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -22,6 +25,8 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
     private Property mMultiMediaObject;
     private String mGedcomVersion = "";
     private MultiMediaObjectCitationsTableModel multiMediaObjectCitationsTableModel = new MultiMediaObjectCitationsTableModel();
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(MultimediaObjectCitationsListPanel.class);
 
     /**
      * Creates new form MultimediaObjectsListPanel
@@ -125,7 +130,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
     private void addMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMMObjectButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
-        
+
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -142,10 +147,13 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
             MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
             multiMediaObjectEditor.setContext(new Context(mMultiMediaObject));
+
+            multiMediaObjectEditor.addChangeListener(changeListner);
             if (multiMediaObjectEditor.showPanel()) {
                 multiMediaObjectCitationsTableModel.clear();
                 multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
             }
+            multiMediaObjectEditor.removeChangeListener(changeListner);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -183,6 +191,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                     }); // end of doUnitOfWork
 
                     multiMediaObjectCitationsTableModel.remove(rowIndex);
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -191,26 +200,17 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteMMObjectButtonActionPerformed
 
     private void editMMObjecButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMMObjecButtonActionPerformed
-        Gedcom gedcom = mRoot.getGedcom();
-        
-
         int selectedRow = multiMediaObjectCitationsTable.getSelectedRow();
-        
-        // >>> FIX ME
+
         if (selectedRow != -1) {
             int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
             Property multiMediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
             MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
             multiMediaObjectEditor.setContext(new Context(multiMediaObject));
 
-            String multiMediaObjectTitle;
-            if (multiMediaObject instanceof PropertyMedia) {
-                multiMediaObjectTitle = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getTitle();
-            } else {
-                Property propertyTitle = multiMediaObject.getProperty("TITL");
-                multiMediaObjectTitle = propertyTitle != null ? propertyTitle.getValue() : "";
-            }
+            multiMediaObjectEditor.addChangeListener(changeListner);
             multiMediaObjectEditor.showPanel();
+            multiMediaObjectEditor.removeChangeListener(changeListner);
         }
     }//GEN-LAST:event_editMMObjecButtonActionPerformed
 
@@ -223,7 +223,10 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
                 MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
                 multiMediaObjectEditor.setContext(new Context(multiMediaObject));
+
+                multiMediaObjectEditor.addChangeListener(changeListner);
                 multiMediaObjectEditor.showPanel();
+                multiMediaObjectEditor.removeChangeListener(changeListner);
             }
         }
     }//GEN-LAST:event_multiMediaObjectCitationsTableMouseClicked
@@ -249,6 +252,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
+                changeSupport.fireChange();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -273,5 +277,27 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         multiMediaObjectCitationsTableModel.clear();
         multiMediaObjectCitationsTableModel.addAll(multiMediasList);
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
     }
 }

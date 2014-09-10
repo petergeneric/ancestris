@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.ChildrenTreeTableModel;
 import ancestris.util.swing.DialogManager;
@@ -14,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
@@ -25,6 +25,7 @@ import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.decorator.IconHighlighter;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -34,41 +35,10 @@ import org.openide.util.NbBundle;
  */
 public class ChildrenTreeTablePanel extends javax.swing.JPanel {
 
-    private class FamiliesTreeTableTableColumnModelListener implements TableColumnModelListener {
-
-        private final Logger logger = Logger.getLogger(FamiliesTreeTableTableColumnModelListener.class.getName(), null);
-
-        @Override
-        public void columnAdded(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnAdded: {0}", tcme.getFromIndex());
-        }
-
-        @Override
-        public void columnRemoved(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnRemoved: {0}", tcme.getFromIndex());
-        }
-
-        @Override
-        public void columnMoved(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnMoved: {0}", tcme.getFromIndex());
-        }
-
-        @Override
-        public void columnMarginChanged(ChangeEvent ce) {
-            logger.log(Level.FINE, "columnMarginChanged: {0}", ce.toString());
-            for (int index = 0; index < childrenTreeTable.getColumnCount(); index++) {
-                int preferredWidth = childrenTreeTable.getColumn(index).getPreferredWidth();
-                logger.log(Level.FINE, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
-                mRegistry.put(mTableId + ".column" + index + ".size", preferredWidth);
-            }
-        }
-
-        @Override
-        public void columnSelectionChanged(ListSelectionEvent lse) {
-        }
-    }
     private final static Logger logger = Logger.getLogger(ChildrenTreeTablePanel.class.getName(), null);
     private ChildrenTreeTableModel mChildrenTreeTableModel = new ChildrenTreeTableModel();
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(ChildrenTreeTablePanel.class);
     private Registry mRegistry = Registry.get(ChildrenTreeTablePanel.class);
     private Property mRoot;
     private String mTableId = ChildrenTreeTablePanel.class.getName();
@@ -242,7 +212,9 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                         if (!child.equals(mRoot)) {
                             IndividualEditor individualEditor = new IndividualEditor();
                             individualEditor.setContext(new Context(child));
+                            individualEditor.addChangeListener(changeListner);
                             individualEditor.showPanel();
+                            individualEditor.removeChangeListener(changeListner);
                         }
                     }
                 }
@@ -269,7 +241,9 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                             if (!child.equals(mRoot)) {
                                 IndividualEditor individualEditor = new IndividualEditor();
                                 individualEditor.setContext(new Context(child));
+                                individualEditor.addChangeListener(changeListner);
                                 individualEditor.showPanel();
+                                individualEditor.removeChangeListener(changeListner);
                             }
                         }
                     }
@@ -301,7 +275,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                             childrenTreeTable.expandAll();
                         }
                     }); // end of doUnitOfWork
-
+                    changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -333,7 +307,9 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
             IndividualEditor individualEditor = new IndividualEditor();
             individualEditor.setContext(new Context(mIndividual));
 
+            individualEditor.addChangeListener(changeListner);
             individualEditor.showPanel();
+            individualEditor.removeChangeListener(changeListner);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -369,6 +345,8 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                                         mRoot.delProperty((PropertyXRef) dataNode.getUserObject());
                                     }
                                 }); // end of doUnitOfWork
+                                
+                                changeListner.stateChanged(null);
                                 ((ChildrenTreeTableModel) childrenTreeTable.getTreeTableModel()).remove(dataNode);
                                 childrenTreeTable.expandAll();
                             } catch (GedcomException ex) {
@@ -397,5 +375,61 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
         ((ChildrenTreeTableModel) childrenTreeTable.getTreeTableModel()).addAll(children);
         childrenTreeTable.expandAll();
         childrenTreeTable.getColumnModel().addColumnModelListener(new FamiliesTreeTableTableColumnModelListener());
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
+    }
+
+    private class FamiliesTreeTableTableColumnModelListener implements TableColumnModelListener {
+
+        private final Logger logger = Logger.getLogger(FamiliesTreeTableTableColumnModelListener.class.getName(), null);
+
+        @Override
+        public void columnAdded(TableColumnModelEvent tcme) {
+            logger.log(Level.FINE, "columnAdded: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnRemoved(TableColumnModelEvent tcme) {
+            logger.log(Level.FINE, "columnRemoved: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnMoved(TableColumnModelEvent tcme) {
+            logger.log(Level.FINE, "columnMoved: {0}", tcme.getFromIndex());
+        }
+
+        @Override
+        public void columnMarginChanged(ChangeEvent ce) {
+            logger.log(Level.FINE, "columnMarginChanged: {0}", ce.toString());
+            for (int index = 0; index < childrenTreeTable.getColumnCount(); index++) {
+                int preferredWidth = childrenTreeTable.getColumn(index).getPreferredWidth();
+                logger.log(Level.FINE, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
+                mRegistry.put(mTableId + ".column" + index + ".size", preferredWidth);
+            }
+        }
+
+        @Override
+        public void columnSelectionChanged(ListSelectionEvent lse) {
+        }
     }
 }

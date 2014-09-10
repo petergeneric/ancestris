@@ -15,7 +15,7 @@ import org.openide.util.NbBundle;
 public class RepositoriesListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
-    private RepositoriesTableModel mRepositoriesTableModel = new RepositoriesTableModel();
+    private final RepositoriesTableModel mRepositoriesTableModel = new RepositoriesTableModel();
     private Repository mRepository;
 
     /**

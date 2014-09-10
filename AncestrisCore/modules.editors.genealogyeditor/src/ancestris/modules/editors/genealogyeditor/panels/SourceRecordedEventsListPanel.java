@@ -7,7 +7,10 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -28,6 +31,10 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
     private Property mRoot;
     private Property mRegisteredEvent;
     SourceRecordedEventsTableModel mSourceEventTypesTableModel = new SourceRecordedEventsTableModel();
+    private final RecordedEventEditorPanel recordedEventPanel;
+    private final DialogManager.ADialog recordedEventDialog;
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(FamiliesReferenceTreeTablePanel.class);
 
     /**
      * Creates new form SourceRecordedEventsListPanel
@@ -35,6 +42,12 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
     public SourceRecordedEventsListPanel() {
         initComponents();
         sourceEventsTable.setID(SourceRecordedEventsListPanel.class.getName());
+        this.recordedEventPanel = new RecordedEventEditorPanel();
+        this.recordedEventDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
+                recordedEventPanel);
+        recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
+        recordedEventPanel.addChangeListener(changeListner);
     }
 
     /**
@@ -113,14 +126,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            final RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
             recordedEventPanel.set(mRegisteredEvent);
-
-            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.create.title"),
-                    recordedEventPanel);
-            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
-
             if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -152,14 +158,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
             Gedcom gedcom = mRoot.getGedcom();
             int undoNb = gedcom.getUndoNb();
 
-            final RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
             recordedEventPanel.set(mSourceEventTypesTableModel.getValueAt(rowIndex));
-
-            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
-                    recordedEventPanel);
-            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
-
             if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -188,14 +187,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
             Gedcom gedcom = mRoot.getGedcom();
             int undoNb = gedcom.getUndoNb();
 
-            final RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
             recordedEventPanel.set(mSourceEventTypesTableModel.getValueAt(rowIndex));
-
-            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
-                    recordedEventPanel);
-            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
-
             if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -222,6 +214,28 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
     private ancestris.modules.editors.genealogyeditor.table.EditorTable sourceEventsTable;
     private javax.swing.JToolBar sourceEventsToolBar;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
+    }
 
     public void setEventTypesList(Property root, List<Property> eventsTypeList) {
         this.mRoot = root;

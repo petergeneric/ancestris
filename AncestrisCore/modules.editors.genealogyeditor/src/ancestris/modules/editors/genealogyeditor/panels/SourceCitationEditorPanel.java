@@ -1,7 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
+import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.ConfidenceLevelComboBoxModel;
 import ancestris.modules.editors.genealogyeditor.models.EventsRoleComboBoxModel;
 import ancestris.util.swing.DialogManager.ADialog;
@@ -551,7 +551,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     // +1 <<NOTE_STRUCTURE>>
     //]
 
-    void set(Property root, final Property sourceCitation) {
+    public void set(Property root, final Property sourceCitation) {
 
         mRoot = root;
         mSourceCitation = sourceCitation;

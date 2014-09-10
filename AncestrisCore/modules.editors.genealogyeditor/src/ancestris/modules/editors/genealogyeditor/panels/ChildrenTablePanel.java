@@ -6,7 +6,10 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -16,7 +19,10 @@ import org.openide.util.NbBundle;
  */
 public class ChildrenTablePanel extends javax.swing.JPanel {
 
-    private IndividualReferencesTableModel mIndividualReferencesTableModel = new IndividualReferencesTableModel();
+    private final IndividualReferencesTableModel mIndividualReferencesTableModel = new IndividualReferencesTableModel();
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(ChildrenTablePanel.class);
+
     private Fam mRoot;
     private Indi mIndividual;
     PropertyXRef mAddedChild = null;
@@ -145,10 +151,11 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
 
             IndividualEditor individualEditor = new IndividualEditor();
             individualEditor.setContext(new Context(mIndividual));
-
+            individualEditor.addChangeListener(changeListner);
             if (individualEditor.showPanel()) {
                 mIndividualReferencesTableModel.add(mAddedChild);
             }
+            individualEditor.removeChangeListener(changeListner);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -161,11 +168,9 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
             int undoNb = mRoot.getGedcom().getUndoNb();
             IndividualEditor individualEditor = new IndividualEditor();
             individualEditor.setContext(new Context((Indi) individualRef.getTargetEntity()));
-            if (!individualEditor.showPanel()) {
-                while (mRoot.getGedcom().getUndoNb() > undoNb && mRoot.getGedcom().canUndo()) {
-                    mRoot.getGedcom().undoUnitOfWork(false);
-                }
-            }
+            individualEditor.addChangeListener(changeListner);
+            individualEditor.showPanel();
+            individualEditor.removeChangeListener(changeListner);
         }
     }//GEN-LAST:event_editChildrenButtonActionPerformed
 
@@ -194,6 +199,7 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
                         }
                     }); // end of doUnitOfWork
                     mIndividualReferencesTableModel.remove(rowIndex);
+                    changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -223,7 +229,7 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
                             mIndividualReferencesTableModel.add(addChild);
                         }
                     }); // end of doUnitOfWork
-
+                    changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -235,15 +241,12 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int rowIndex = childrenTable.convertRowIndexToModel(childrenTable.getSelectedRow());
             if (rowIndex != -1) {
-                int undoNb = mRoot.getGedcom().getUndoNb();
                 PropertyXRef individualRef = mIndividualReferencesTableModel.getValueAt(rowIndex);
                 IndividualEditor individualEditor = new IndividualEditor();
                 individualEditor.setContext(new Context((Indi) individualRef.getTargetEntity()));
-                if (!individualEditor.showPanel()) {
-                    while (mRoot.getGedcom().getUndoNb() > undoNb && mRoot.getGedcom().canUndo()) {
-                        mRoot.getGedcom().undoUnitOfWork(false);
-                    }
-                }
+                individualEditor.addChangeListener(changeListner);
+                individualEditor.showPanel();
+                changeListner.stateChanged(null);
             }
         }
     }//GEN-LAST:event_childrenTableMouseClicked
@@ -275,5 +278,38 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
 
     public void setToolBarVisible(boolean visible) {
         childrenToolBar.setVisible(visible);
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    public class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
+
+        private boolean mute = false;
+
+        public void mute() {
+            mute = true;
+        }
+
+        public void unmute() {
+            mute = false;
+        }
+
     }
 }

@@ -2,12 +2,9 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.IndividualsTableModel;
-import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.List;
-import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -15,7 +12,7 @@ import org.openide.util.NbBundle;
  */
 public class IndividualsListPanel extends javax.swing.JPanel {
 
-    private IndividualsTableModel mIndividualsTableModel = new IndividualsTableModel();
+    private final IndividualsTableModel mIndividualsTableModel = new IndividualsTableModel();
     private Property mRoot;
     Indi mIndividual;
 

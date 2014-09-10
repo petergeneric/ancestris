@@ -12,7 +12,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -22,46 +24,6 @@ import org.openide.util.NbBundle;
  */
 public class RecordedEventEditorPanel extends javax.swing.JPanel {
 
-    private class CheckableItem {
-
-        private final String str;
-
-        private boolean isSelected;
-
-        public CheckableItem(String str) {
-            this.str = str;
-            isSelected = false;
-        }
-
-        public void setSelected(boolean b) {
-            isSelected = b;
-        }
-
-        public boolean isSelected() {
-            return isSelected;
-        }
-
-        @Override
-        public String toString() {
-            return str;
-        }
-    }
-
-    private class CheckListRenderer extends JCheckBox implements ListCellRenderer<CheckableItem> {
-
-        public CheckListRenderer() {
-        }
-
-        @Override
-        public Component getListCellRendererComponent(JList<? extends CheckableItem> list, CheckableItem checkableItem,
-                int index, boolean isSelected, boolean hasFocus) {
-            setEnabled(list.isEnabled());
-            setSelected(checkableItem.isSelected());
-            setText(checkableItem.toString());
-            return this;
-        }
-
-    }
     private Property mEvent = null;
     private PropertyPlace mPlace = null;
     private PropertyDate mDate = null;
@@ -108,6 +70,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         }
     };
     private DefaultListModel<CheckableItem> mEventsModel = new DefaultListModel<CheckableItem>();
+    private final ChangeSupport changeSupport = new ChangeSupport(AssociationsListPanel.class);
 
     /**
      * Creates new form RecordedEventEditorPanel
@@ -489,5 +452,61 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+
+    private class CheckableItem {
+
+        private final String str;
+
+        private boolean isSelected;
+
+        public CheckableItem(String str) {
+            this.str = str;
+            isSelected = false;
+        }
+
+        public void setSelected(boolean b) {
+            isSelected = b;
+        }
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        @Override
+        public String toString() {
+            return str;
+        }
+    }
+
+    private class CheckListRenderer extends JCheckBox implements ListCellRenderer<CheckableItem> {
+
+        public CheckListRenderer() {
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends CheckableItem> list, CheckableItem checkableItem,
+                int index, boolean isSelected, boolean hasFocus) {
+            setEnabled(list.isEnabled());
+            setSelected(checkableItem.isSelected());
+            setText(checkableItem.toString());
+            return this;
+        }
+
     }
 }

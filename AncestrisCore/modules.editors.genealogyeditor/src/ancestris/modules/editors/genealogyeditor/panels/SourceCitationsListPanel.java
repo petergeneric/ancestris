@@ -9,7 +9,10 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertySource;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -22,12 +25,20 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
     private Property mRoot;
     private PropertySource mSourceCitation;
     private SourceCitationsTableModel mSourceCitationsTableModel = new SourceCitationsTableModel();
+    private final SourceCitationEditorPanel sourceCitationEditor;
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(SourceCitationsListPanel.class);
+    private final ADialog sourceCitationEditorDialog;
 
     /**
      * Creates new form SourceCitationsListPanel
      */
     public SourceCitationsListPanel() {
         initComponents();
+        this.sourceCitationEditor = new SourceCitationEditorPanel();
+        this.sourceCitationEditorDialog = new ADialog(
+                NbBundle.getMessage(SourceCitationEditorPanel.class,
+                        "SourceCitationEditorPanel.create.title"), sourceCitationEditor);
         sourceCitationsTable.setID(SourceCitationsListPanel.class.getName());
     }
 
@@ -114,7 +125,6 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
         Gedcom gedcom = mRoot.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        final SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
         // create a the source link
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
@@ -125,12 +135,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            sourceCitationEditorPanel.set(mRoot, mSourceCitation);
-
-            ADialog sourceCitationEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceCitationEditorPanel.class,
-                            "SourceCitationEditorPanel.create.title"), sourceCitationEditorPanel);
-            sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
+            sourceCitationEditor.set(mRoot, mSourceCitation);
 
             if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
@@ -138,13 +143,14 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
-                            sourceCitationEditorPanel.commit();
+                            sourceCitationEditor.commit();
                         }
                     });
+                    mSourceCitationsTableModel.add(mSourceCitation);
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
-                mSourceCitationsTableModel.add(mSourceCitation);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -161,12 +167,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
             int rowIndex = sourceCitationsTable.convertRowIndexToModel(selectedRow);
             Gedcom gedcom = mRoot.getGedcom();
             int undoNb = gedcom.getUndoNb();
-            final SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
-            sourceCitationEditorPanel.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
-            ADialog sourceCitationEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
-                    sourceCitationEditorPanel);
-            sourceCitationEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
+            sourceCitationEditor.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
 
             if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
@@ -174,7 +175,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
-                            sourceCitationEditorPanel.commit();
+                            sourceCitationEditor.commit();
                         }
                     });
                 } catch (GedcomException ex) {
@@ -208,6 +209,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                             mRoot.delProperty(mSourceCitationsTableModel.remove(sourceCitationsTable.convertRowIndexToModel(selectedRow)));
                         }
                     }); // end of doUnitOfWork
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -223,19 +225,16 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                 int rowIndex = sourceCitationsTable.convertRowIndexToModel(selectedRow);
                 Gedcom gedcom = mRoot.getGedcom();
                 int undoNb = gedcom.getUndoNb();
-                final SourceCitationEditorPanel sourceCitationEditorPanel = new SourceCitationEditorPanel();
-                sourceCitationEditorPanel.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
-                ADialog sourceEditorDialog = new ADialog(NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.edit.title"),
-                        sourceCitationEditorPanel);
-                sourceEditorDialog.setDialogId(SourceCitationEditorPanel.class.getName());
 
-                if (sourceEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                sourceCitationEditor.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
+
+                if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                     try {
                         gedcom.doUnitOfWork(new UnitOfWork() {
 
                             @Override
                             public void perform(Gedcom gedcom) throws GedcomException {
-                                sourceCitationEditorPanel.commit();
+                                sourceCitationEditor.commit();
                             }
                         });
                     } catch (GedcomException ex) {
@@ -262,5 +261,27 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mSourceCitationsTableModel.clear();
         mSourceCitationsTableModel.addAll(sourcesList);
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
     }
 }

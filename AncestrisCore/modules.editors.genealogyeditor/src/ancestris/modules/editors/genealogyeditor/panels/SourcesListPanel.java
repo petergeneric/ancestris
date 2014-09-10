@@ -8,9 +8,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Source;
 import genj.gedcom.UnitOfWork;
 import java.util.Collection;
-import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -18,8 +16,8 @@ import org.openide.util.NbBundle;
  */
 public class SourcesListPanel extends javax.swing.JPanel {
 
-    private Gedcom mGedcom;
-    private SourcesTableModel mSourcesTableModel = new SourcesTableModel();
+    private final Gedcom mGedcom;
+    private final SourcesTableModel mSourcesTableModel = new SourcesTableModel();
     private Source mSource;
 
     /**
