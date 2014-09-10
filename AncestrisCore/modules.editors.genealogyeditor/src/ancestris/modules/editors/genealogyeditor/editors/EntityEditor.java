@@ -15,11 +15,11 @@ import org.openide.util.Exceptions;
 public abstract class EntityEditor extends Editor {
 
     private final boolean isNew;
-    
+
     public EntityEditor (boolean isNew) {
         this.isNew = isNew;
     }
-    
+
     @Override
     public boolean showPanel() {
 
@@ -31,17 +31,20 @@ public abstract class EntityEditor extends Editor {
                 this);
         dialogManager.setDialogId(this.getClass().getName());
         if (dialogManager.show().equals(NotifyDescriptor.OK_OPTION)) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+            if (changes.hasChanged()) {
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        commit();
-                    }
-                });
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-                return false;
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            commit();
+                        }
+                    });
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return false;
+                }
+                changes.fireChangeEvent();
             }
             return true;
         } else {

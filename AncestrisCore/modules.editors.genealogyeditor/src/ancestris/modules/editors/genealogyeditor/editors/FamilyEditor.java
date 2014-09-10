@@ -44,33 +44,6 @@ import org.openide.util.NbBundle;
  */
 public class FamilyEditor extends EntityEditor {
 
-    private class EventsListSelectionHandler implements ListSelectionListener {
-
-        @Override
-        public void valueChanged(ListSelectionEvent lse) {
-            ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
-            if (lse.getValueIsAdjusting() == false && lsm.isSelectionEmpty() == false) {
-                if (familyEventPanel.hasChanged()) {
-                    try {
-                        mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                familyEventPanel.commit();
-                            }
-                        });
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-                if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
-                    familyEventPanel.set(mFamily, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
-                    familyEventPanel.setVisible(true);
-                }
-            }
-        }
-
-    }
     final private ArrayList<String> mFamilyEventsTags = new ArrayList<String>() {
         {
             add("ANUL");
@@ -93,8 +66,8 @@ public class FamilyEditor extends EntityEditor {
     private Indi mWife;
     private Property mEvent = null;
     private boolean updateOnGoing = false;
-    private EventsListModel mEventsListModel = new EventsListModel();
-    private DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
+    private final EventsListModel mEventsListModel = new EventsListModel();
+    private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
 
     /**
      * Creates new form FamilyEditor
@@ -109,6 +82,10 @@ public class FamilyEditor extends EntityEditor {
         eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
         familyEventPanel.setVisible(false);
         familyEventPanel.addChangeListener(changes);
+        childrenTreeTablePanel.addChangeListener(changes);
+        sourceCitationsListPanel.addChangeListener(changes);
+        noteCitationsListPanel.addChangeListener(changes);
+        multimediaObjectCitationsListPanel.addChangeListener(changes);
     }
 
     /**
@@ -1550,5 +1527,33 @@ public class FamilyEditor extends EntityEditor {
         }
 
         updateOnGoing = false;
+    }
+
+    private class EventsListSelectionHandler implements ListSelectionListener {
+
+        @Override
+        public void valueChanged(ListSelectionEvent lse) {
+            ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
+            if (lse.getValueIsAdjusting() == false && lsm.isSelectionEmpty() == false) {
+                if (familyEventPanel.hasChanged()) {
+                    try {
+                        mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                familyEventPanel.commit();
+                            }
+                        });
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
+                    familyEventPanel.set(mFamily, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
+                    familyEventPanel.setVisible(true);
+                }
+            }
+        }
+
     }
 }
