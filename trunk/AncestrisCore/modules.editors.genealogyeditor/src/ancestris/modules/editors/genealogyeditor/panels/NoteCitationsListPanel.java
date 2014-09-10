@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.TableCellRenderer;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -22,6 +25,8 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private NoteCitationsTableModel mNoteCitationsTableModel = new NoteCitationsTableModel();
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(NoteCitationsListPanel.class);
 
     /**
      * Creates new form NoteCitationsListPanel
@@ -192,6 +197,8 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                             mRoot.delProperty(mNoteCitationsTableModel.remove(rowIndex));
                         }
                     }); // end of doUnitOfWork
+
+                    changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -221,6 +228,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
+                changeListner.stateChanged(null);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -287,6 +295,28 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
             }
+        }
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
         }
     }
 }

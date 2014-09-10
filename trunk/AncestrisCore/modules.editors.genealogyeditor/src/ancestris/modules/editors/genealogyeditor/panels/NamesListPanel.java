@@ -8,7 +8,10 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertyName;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -19,6 +22,8 @@ import org.openide.util.NbBundle;
 public class NamesListPanel extends javax.swing.JPanel {
 
     private NamesTableModel mNamesTableModel = new NamesTableModel();
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(NamesListPanel.class);
     private Indi root;
 
     /**
@@ -203,5 +208,27 @@ public class NamesListPanel extends javax.swing.JPanel {
         this.root = root;
         mNamesTableModel.clear();
         mNamesTableModel.addAll(namesList);
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
     }
 }

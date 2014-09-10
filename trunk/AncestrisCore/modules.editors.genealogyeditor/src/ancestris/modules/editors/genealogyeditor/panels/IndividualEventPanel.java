@@ -123,7 +123,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private Property mAddress;
     private PropertyPlace mPlace;
     private PropertyDate mDate;
-    private final IndividualEventPanel.ChangeListner changeListner = new IndividualEventPanel.ChangeListner();
+    private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(IndividualEventPanel.class);
     private boolean mEventModified = false;
     private boolean mEventCauseModified = false;

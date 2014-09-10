@@ -8,7 +8,10 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -21,6 +24,8 @@ public class AssociationsListPanel extends javax.swing.JPanel {
     private Entity mRootEntity;
     private PropertyAssociation mAssociation;
     private final AssociationsTableModel mAssociationsTableModel = new AssociationsTableModel();
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(AssociationsListPanel.class);
 
     /**
      * Creates new form ReferencesListPanel
@@ -117,6 +122,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
 
             if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mAssociationsTableModel.add(associationEditorPanel.commit());
+                changeListner.stateChanged(null);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -208,5 +214,27 @@ public class AssociationsListPanel extends javax.swing.JPanel {
     public void setAssociationsList(Entity rootEntity, List<PropertyAssociation> associationsList) {
         this.mRootEntity = rootEntity;
         mAssociationsTableModel.addAll(associationsList);
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
     }
 }

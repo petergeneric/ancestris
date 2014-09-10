@@ -173,6 +173,8 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     /**
+     * @param gedcom
+     * @param parent
      * @param note the note to set
      *
      * @<XREF:NOTE>@ NOTE <SUBMITTER_TEXT>
