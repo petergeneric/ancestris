@@ -71,43 +71,43 @@ public class EditorTopComponent extends AncestrisTopComponent
     private Editor editor;
     private ConfirmChangeWidget confirmPanel;
     private Gedcom gedcom;
-    private JPanel editorContainer;
+    private JScrollPane editorContainer;
     private JLabel titleLabel;
     private int undoNb;
 
-    private static Map<Class<? extends Property>, Editor> panels;
-    private static Editor getEditorFromClass(Class<? extends Property> clazz){
-        if (panels == null){
-            panels = new HashMap<Class<? extends Property>, Editor>();
-            panels.put(Fam.class, new FamilyEditor());
-            panels.put(Indi.class, new IndividualEditor());
-            panels.put(Note.class, new NoteEditor());
-            panels.put(Repository.class, new RepositoryEditor());
-            panels.put(Source.class, new SourceEditor());
-            panels.put(Submitter.class, new SubmitterEditor());
-            panels.put(Media.class, new MultiMediaObjectEditor());
-        }
-        return panels.get(clazz);
+    private static final Map<Class<? extends Property>, Editor> panels;
+    static {
+        panels = new HashMap<Class<? extends Property>, Editor>();
+        panels.put(Fam.class, new FamilyEditor());
+        panels.put(Indi.class, new IndividualEditor());
+        panels.put(Note.class, new NoteEditor());
+        panels.put(Repository.class, new RepositoryEditor());
+        panels.put(Source.class, new SourceEditor());
+        panels.put(Submitter.class, new SubmitterEditor());
+        panels.put(Media.class, new MultiMediaObjectEditor());
     }
 
-    
     @Override
     public boolean createPanel() {
 
-        editorContainer = new JPanel(
-                new MigLayout(new LC().fillX().hideMode(2),
+        JPanel editorPanel;
+        editorPanel = new JPanel(
+                new MigLayout(new LC().fill().hideMode(3),
                 new AC().grow().fill()));
+        editorContainer = new JScrollPane();
+        editorPanel.add(editorContainer, new CC().grow());
         titleLabel = new JLabel("");
 
         confirmPanel = new ConfirmChangeWidget(this);
         confirmPanel.setChanged(false);
 
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        editorContainer.add(titleLabel, new CC().dockNorth());
-        editorContainer.add(confirmPanel, new CC().dockSouth());
+        editorPanel.add(titleLabel, new CC().dockNorth());
+        editorPanel.add(confirmPanel, new CC().dockSouth());
 
         // retrigger a context change
         // FIXME: we need that because createpanel is called after setcontext
+        setPanel(editorPanel);
         Context ctx = getContext();
         setContext(new Context(ctx.getGedcom()));
         setContext(ctx);
@@ -153,7 +153,6 @@ public class EditorTopComponent extends AncestrisTopComponent
             editor.setContext(new Context());
             editor = null;
         }
-        editorContainer.removeAll();
 
         // set new and restore context
         editor = set;
@@ -161,12 +160,10 @@ public class EditorTopComponent extends AncestrisTopComponent
             if (old != null) {
                 editor.setContext(old);
             }
-            editorContainer.add(new JScrollPane(editor), new CC().growX());
+            editorContainer.setViewportView(editor);
             titleLabel.setText(editor.getTitle());
             editor.addChangeListener(confirmPanel);
         }
-        editorContainer.add(titleLabel, new CC().dockNorth());
-        editorContainer.add(confirmPanel, new CC().dockSouth());
 
         // show
         revalidate();
@@ -252,7 +249,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         if (context.getEntity() == null) {
             return;
         }
-        Editor panel = getEditorFromClass(context.getEntity().getClass());
+        Editor panel = panels.get(context.getEntity().getClass());
         if (panel != null) {
             panel.setContext(context);
             setEditor(panel);
@@ -260,7 +257,7 @@ public class EditorTopComponent extends AncestrisTopComponent
 
         // save undo index for use in cancel
         undoNb = gedcom.getUndoNb();
-        setPanel(editorContainer);
+//        setPanel(editorContainer);
         repaint();
     }
 
@@ -272,10 +269,10 @@ public class EditorTopComponent extends AncestrisTopComponent
         while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
             gedcom.undoUnitOfWork(false);
         }
-//        // re-set for cancel
-//        Context ctx = editor.getContext();
+        // re-set for cancel
+        Context ctx = editor.getContext();
 //        editor.setContext(new Context());
-//        editor.setContext(ctx);
+        editor.setContext(ctx);
 //        populate(toolbar);
     }
 
