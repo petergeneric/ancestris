@@ -1190,6 +1190,7 @@ public class FamilyEditor extends EntityEditor {
                     }
                     seteventTypeComboBox(eventsProperties);
                     eventsList.setSelectedIndex(0);
+                    changes.fireChangeEvent();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
