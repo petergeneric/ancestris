@@ -494,6 +494,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
                     addPlaceButton.setVisible(false);
                     editPlaceButton.setVisible(true);
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -528,6 +529,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
             mAddress = mEvent.getProperty("ADDR", false);
             placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
+            changeSupport.fireChange();
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -565,6 +567,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
             addPlaceButton.setVisible(false);
             editPlaceButton.setVisible(true);
+            changeSupport.fireChange();
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);

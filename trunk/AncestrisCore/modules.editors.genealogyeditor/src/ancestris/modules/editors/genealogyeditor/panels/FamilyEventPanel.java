@@ -473,6 +473,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
                     addPlaceButton.setVisible(false);
                     editPlaceButton.setVisible(true);
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -507,6 +508,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
             mAddress = mEvent.getProperty("ADDR", false);
             placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
+            changeSupport.fireChange();
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -550,6 +552,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                 addPlaceButton.setVisible(true);
                 editPlaceButton.setVisible(false);
             }
+            changeSupport.fireChange();
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
