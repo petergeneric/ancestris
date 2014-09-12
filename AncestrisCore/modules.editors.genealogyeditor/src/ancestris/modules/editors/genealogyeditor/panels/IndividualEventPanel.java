@@ -963,7 +963,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         @Override
         public void stateChanged(ChangeEvent ce) {
-            changeSupport.fireChange();
+            if (!mute) {
+                changeSupport.fireChange();
+            }
         }
     }
 }
