@@ -836,7 +836,9 @@ public final class IndividualEditor extends EntityEditor {
             /*
              * +1 <<MULTIMEDIA_LINK>>
              */
-            for (Property multiMediaObject : mIndividual.getProperties("OBJE")) {
+            Property[] multiMediaObjects = mIndividual.getProperties("OBJE");
+            Property selectedMultiMediaObject = null;
+            for (Property multiMediaObject : multiMediaObjects) {
                 String objetFormat = null;
                 if (gedcomVersion.equals("5.5.1")) {
                     if (multiMediaObject instanceof PropertyMedia) {
@@ -866,12 +868,18 @@ public final class IndividualEditor extends EntityEditor {
 
                 // bmp | gif | jpeg
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                    imageBean.setImage(multiMediaObject);
+                    selectedMultiMediaObject = multiMediaObject;
                     break;
                 }
             }
 
-            multimediaObjectCitationsListPanel.set(mIndividual, Arrays.asList(mIndividual.getProperties("OBJE")));
+            if (selectedMultiMediaObject != null) {
+                imageBean.setImage(selectedMultiMediaObject);
+            } else {
+                imageBean.setImage(null);
+            }
+            
+            multimediaObjectCitationsListPanel.set(mIndividual, Arrays.asList(multiMediaObjects));
         }
     }
 
@@ -961,5 +969,4 @@ public final class IndividualEditor extends EntityEditor {
             }
         }
     }
-
 }
