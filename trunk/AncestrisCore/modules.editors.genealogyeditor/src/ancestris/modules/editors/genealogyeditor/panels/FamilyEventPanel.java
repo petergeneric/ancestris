@@ -89,7 +89,6 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private PropertyDate mDate;
     private final FamilyEventPanel.ChangeListner changeListner = new FamilyEventPanel.ChangeListner();
     private final org.openide.util.ChangeSupport changeSupport = new org.openide.util.ChangeSupport(FamilyEventPanel.class);
-    private boolean updateOnGoing = false;
     private boolean mEventModified = false;
     private boolean mEventCauseModified = false;
     private boolean mHusbandAgeModified = false;
@@ -233,63 +232,11 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         husbandAgeLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.husbandAgeLabel.text")); // NOI18N
 
         husbandAgeTextField.setColumns(4);
-        husbandAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mHusbandAgeModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mHusbandAgeModified = true;
-                }
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mHusbandAgeModified = true;
-                }
-            }
-        });
 
         wifeAgeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         wifeAgeLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.wifeAgeLabel.text")); // NOI18N
 
         wifeAgeTextField.setColumns(4);
-        wifeAgeTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mWifeAgeModified = true;
-                }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mWifeAgeModified = true;
-                }
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!updateOnGoing) {
-                    mEventModified = true;
-                    mWifeAgeModified = true;
-                }
-            }
-        });
 
         eventCauseTextArea.setColumns(20);
         eventCauseTextArea.setLineWrap(true);
@@ -988,7 +935,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         @Override
         public void stateChanged(ChangeEvent ce) {
-            changeSupport.fireChange();
+            if (!mute) {
+                changeSupport.fireChange();
+            }
         }
     }
 }
