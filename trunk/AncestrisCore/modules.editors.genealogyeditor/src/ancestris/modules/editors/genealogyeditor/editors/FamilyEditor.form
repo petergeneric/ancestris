@@ -3,7 +3,10 @@
 <Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[1011, 439]"/>
+      <Dimension value="[800, 493]"/>
+    </Property>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[800, 493]"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -27,9 +30,9 @@
                   <Component id="jPanel1" max="32767" attributes="0"/>
                   <Component id="familyTabbedPane" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="fatherPanel" pref="531" max="32767" attributes="0"/>
+                      <Component id="fatherPanel" linkSize="1" min="-2" pref="385" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="motherPanel" pref="491" max="32767" attributes="0"/>
+                      <Component id="motherPanel" linkSize="1" min="-2" pref="385" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="changeDateLabel" pref="0" max="32767" attributes="0"/>
@@ -48,11 +51,11 @@
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="fatherPanel" min="-2" max="-2" attributes="0"/>
-                  <Component id="motherPanel" min="-2" max="-2" attributes="0"/>
+                  <Component id="fatherPanel" linkSize="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="motherPanel" linkSize="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="familyTabbedPane" pref="221" max="32767" attributes="0"/>
+              <Component id="familyTabbedPane" pref="275" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="changeDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -70,7 +73,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace pref="842" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="familyIDLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="familyIDTextField" min="-2" max="-2" attributes="0"/>
@@ -162,7 +165,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Component id="husbandNameTextField" max="32767" attributes="0"/>
-                      <Component id="fatherToolBar" pref="414" max="32767" attributes="0"/>
+                      <Component id="fatherToolBar" pref="268" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -370,7 +373,7 @@
                   <Component id="wifeImageBean" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="motherToolBar" alignment="0" pref="380" max="32767" attributes="0"/>
+                      <Component id="motherToolBar" alignment="0" pref="274" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
@@ -602,12 +605,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="childrenTreeTablePanel" alignment="0" pref="1023" max="32767" attributes="0"/>
+                  <Component id="childrenTreeTablePanel" alignment="0" pref="771" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="childrenTreeTablePanel" alignment="0" pref="194" max="32767" attributes="0"/>
+                  <Component id="childrenTreeTablePanel" alignment="0" pref="248" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -676,9 +679,8 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="eventsListToolBar" min="-2" pref="25" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="eventsListScrollPane" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="eventsListScrollPane" pref="217" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -692,13 +694,6 @@
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="eventTypeLabel">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="FamilyEditor.eventTypeLabel.text" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
-                            </Property>
-                          </Properties>
-                        </Component>
                         <Component class="javax.swing.Box$Filler" name="filler2">
                           <Properties>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -794,26 +789,12 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="864" max="32767" attributes="0"/>
-                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                                  <Component id="familyEventPanel" pref="864" max="32767" attributes="0"/>
-                                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="familyEventPanel" alignment="1" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="194" max="32767" attributes="0"/>
-                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                                  <Component id="familyEventPanel" pref="194" max="32767" attributes="0"/>
-                                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="familyEventPanel" alignment="0" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -841,12 +822,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="1023" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="771" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="194" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="248" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -877,12 +858,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="1023" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="771" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="194" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="248" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -908,12 +889,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="1023" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="771" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="194" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="248" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
