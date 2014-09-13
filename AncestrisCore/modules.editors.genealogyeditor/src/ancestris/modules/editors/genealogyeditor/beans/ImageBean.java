@@ -19,7 +19,6 @@ import org.openide.util.Exceptions;
  */
 public class ImageBean extends javax.swing.JPanel {
 
-    private BufferedImage resizedImage;
     private BufferedImage loadImage = null;
 
     /**
@@ -70,7 +69,7 @@ public class ImageBean extends javax.swing.JPanel {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         if (loadImage != null) {
-            resizedImage = resizeImage(loadImage, getWidth(), getHeight());
+            repaint();
         }
     }//GEN-LAST:event_formComponentResized
 
@@ -90,7 +89,6 @@ public class ImageBean extends javax.swing.JPanel {
                 try {
                     imageInputStream = new FileInputStream(((PropertyFile) file).getFile());
                     loadImage = ImageIO.read(imageInputStream);
-                    resizedImage = resizeImage(loadImage, this.getPreferredSize().width, this.getPreferredSize().height);
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -99,40 +97,37 @@ public class ImageBean extends javax.swing.JPanel {
             imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
             try {
                 loadImage = ImageIO.read(imageInputStream);
-                resizedImage = resizeImage(loadImage, this.getPreferredSize().width, this.getPreferredSize().height);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-        
-        repaint ();
+
+        repaint();
     }
 
-    public BufferedImage resizeImage(BufferedImage img, int newW, int newH) {
-        int w = img.getWidth();
-        int h = img.getHeight();
+    private float scaleFactor() {
+        if (loadImage == null) {
+            return 1;
+        }
+        int newW = getWidth();
+        int newH = getHeight();
+        int w = loadImage.getWidth();
+        int h = loadImage.getHeight();
         float percentW = (float) newW / (float) w;
         float percentH = (float) newH / (float) h;
-        BufferedImage dimg;
-        if (h * percentW < newH) {
-            dimg = new BufferedImage((int) (w * percentW), (int) (h * percentW), img.getType());
-            Graphics2D g = dimg.createGraphics();
-            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g.drawImage(img, 0, 0, (int) (w * percentW), (int) (h * percentW), 0, 0, w, h, null);
-            g.dispose();
-        } else {
-            dimg = new BufferedImage((int) (w * percentH), (int) (h * percentH), img.getType());
-            Graphics2D g = dimg.createGraphics();
-            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g.drawImage(img, 0, 0, (int) (w * percentH), (int) (h * percentH), 0, 0, w, h, null);
-            g.dispose();
-        }
-        return dimg;
+        return (h * percentW < newH) ? percentW : percentH;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(resizedImage, 0, 0, null);
+        if (loadImage != null) {
+            Graphics2D g2 = (Graphics2D) g;
+            int newW = (int) (loadImage.getWidth() * scaleFactor());
+            int newH = (int) (loadImage.getHeight() * scaleFactor());
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2.drawImage(loadImage, 0, 0, newW, newH, null);
+        }
     }
 }
