@@ -7,6 +7,10 @@
         <EmptyBorder/>
       </Border>
     </Property>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[643, 243]"/>
+    </Property>
+    <Property name="name" type="java.lang.String" value="" noResource="true"/>
   </Properties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
@@ -23,12 +27,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="eventInformationTabbedPane" pref="754" max="32767" attributes="0"/>
+          <Component id="eventInformationTabbedPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="eventInformationTabbedPane" alignment="0" pref="238" max="32767" attributes="0"/>
+          <Component id="eventInformationTabbedPane" alignment="0" pref="241" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -57,6 +61,9 @@
                 <EmptyBorder/>
               </Border>
             </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[464, 214]"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -76,15 +83,15 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="eventNameLabel" alignment="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="dateLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="placeLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="eventCauseLabel" alignment="0" max="32767" attributes="0"/>
-                          <Component id="EventTypeLabel" alignment="0" pref="162" max="32767" attributes="0"/>
                           <Component id="husbandAgeLabel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="EventTypeLabel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="eventNameLabel" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="placeTextField" max="32767" attributes="0"/>
@@ -96,7 +103,7 @@
                               <Component id="linkToPlaceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Component id="aDateBean" pref="515" max="32767" attributes="0"/>
+                              <Component id="aDateBean" pref="447" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -383,6 +390,11 @@
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="sourcesPanel">
+          <Properties>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[541, 208]"/>
+            </Property>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Sources">
@@ -399,12 +411,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="634" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="209" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="212" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -437,12 +449,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="634" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="209" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="212" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -475,12 +487,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="634" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="209" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="212" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

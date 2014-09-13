@@ -53,8 +53,11 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         multiMediaObjectCitationsScrollPane = new javax.swing.JScrollPane();
         multiMediaObjectCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
+        setMinimumSize(new java.awt.Dimension(453, 57));
+
         galleryToolBar.setFloatable(false);
         galleryToolBar.setRollover(true);
+        galleryToolBar.setPreferredSize(new java.awt.Dimension(453, 57));
 
         addMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
         addMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.addMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
@@ -116,7 +119,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(galleryToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(galleryToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(multiMediaObjectCitationsScrollPane)
         );
         layout.setVerticalGroup(
@@ -124,7 +127,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(galleryToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(multiMediaObjectCitationsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                .addComponent(multiMediaObjectCitationsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
