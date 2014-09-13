@@ -58,6 +58,9 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         sourceCitationsTableScrollPane = new javax.swing.JScrollPane();
         sourceCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
+        setMinimumSize(new java.awt.Dimension(453, 57));
+        setName(""); // NOI18N
+
         sourcesToolBar.setFloatable(false);
         sourcesToolBar.setRollover(true);
 
@@ -109,7 +112,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(sourcesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(sourceCitationsTableScrollPane)
         );
         layout.setVerticalGroup(
@@ -117,7 +120,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(sourcesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourceCitationsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                .addComponent(sourceCitationsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
