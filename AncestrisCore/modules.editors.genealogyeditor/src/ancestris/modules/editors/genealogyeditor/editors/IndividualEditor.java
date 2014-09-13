@@ -148,7 +148,6 @@ public final class IndividualEditor extends EntityEditor {
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        eventTypeLabel = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         eventTypeComboBox = new javax.swing.JComboBox<String>();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
@@ -256,9 +255,6 @@ public final class IndividualEditor extends EntityEditor {
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
-
-        eventTypeLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.eventTypeLabel.text"), new Object[] {})); // NOI18N
-        jToolBar1.add(eventTypeLabel);
         jToolBar1.add(filler2);
 
         eventTypeComboBox.setModel(mEventsModel);
@@ -625,7 +621,6 @@ public final class IndividualEditor extends EntityEditor {
     private javax.swing.JLabel changeDateLabeldate;
     private javax.swing.JButton deleteEventButton;
     private javax.swing.JComboBox<String> eventTypeComboBox;
-    private javax.swing.JLabel eventTypeLabel;
     private javax.swing.JList eventsList;
     private javax.swing.JPanel eventsListPanel;
     private javax.swing.JPanel eventsPanel;
