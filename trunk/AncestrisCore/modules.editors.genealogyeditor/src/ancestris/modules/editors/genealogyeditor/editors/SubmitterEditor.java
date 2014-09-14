@@ -199,7 +199,10 @@ public class SubmitterEditor extends EntityEditor {
              * +1 <<NOTE_STRUCTURE>>
              */
             if (!mSubmitter.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                submitterTabbedPane.removeTabAt(submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsListPanel.TabConstraints.tabTitle")));
+                int indexOfTab = submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsListPanel.TabConstraints.tabTitle"));
+                if (indexOfTab != -1) {
+                    submitterTabbedPane.removeTabAt(indexOfTab);
+                }
             } else {
                 if (submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsListPanel.TabConstraints.tabTitle")) == -1) {
                     submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsListPanel.TabConstraints.tabTitle"), noteCitationsListPanel);
@@ -235,7 +238,7 @@ public class SubmitterEditor extends EntityEditor {
             } else {
                 mSubmitter.addProperty("LANG", submitterLanguageTextField.getText());
             }
-            
+
             addressEditorPanel.commit();
         }
     }
