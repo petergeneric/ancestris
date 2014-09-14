@@ -1311,6 +1311,7 @@ public class FamilyEditor extends EntityEditor {
                 husbandNameTextField.setText(mHusband.getName());
                 husbandBirthDateLabelDate.setText(mHusband.getBirthAsString());
                 husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
+                Property selectedMultiMediaObject = null;
 
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
@@ -1342,10 +1343,12 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        husbandImageBean.setImage(multiMediaObject);
+                        selectedMultiMediaObject = multiMediaObject;
                         break;
                     }
                 }
+                husbandImageBean.setImage(selectedMultiMediaObject);
+
                 addHusbandButton.setVisible(false);
                 linkToHusbandButton.setVisible(false);
                 removeHusbandButton.setVisible(true);
@@ -1355,6 +1358,7 @@ public class FamilyEditor extends EntityEditor {
                 linkToHusbandButton.setVisible(true);
                 removeHusbandButton.setVisible(false);
                 editHusbandButton.setVisible(false);
+                husbandImageBean.setImage(null);
             }
 
             /*
@@ -1365,6 +1369,7 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText(mWife.getName());
                 wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
+                Property selectedMultiMediaObject = null;
 
                 for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
@@ -1396,15 +1401,17 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        wifeImageBean.setImage(multiMediaObject);
+                        selectedMultiMediaObject = multiMediaObject;
                         break;
                     }
                 }
+                wifeImageBean.setImage(selectedMultiMediaObject);
                 addWifeButton.setVisible(false);
                 linkToWifeButton.setVisible(false);
                 removeWifeButton.setVisible(true);
                 editWifeButton.setVisible(true);
             } else {
+                wifeImageBean.setImage(null);
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
                 removeWifeButton.setVisible(false);
