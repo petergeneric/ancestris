@@ -5,6 +5,7 @@ import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import genj.gedcom.time.Delta;
+import genj.util.swing.ChoiceWidget;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -103,8 +104,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         initComponents();
         aDateBean.setPreferHorizontal(true);
         aDateBean.addChangeListener(changeListner);
-        eventNameTextField.getDocument().addDocumentListener(changeListner);
-        eventNameTextField.getDocument().putProperty("name", "eventNameTextField");
+        eventNameChoiceWidget.addChangeListener(changeListner);
         eventCauseTextArea.getDocument().addDocumentListener(changeListner);
         eventCauseTextArea.getDocument().putProperty("name", "eventCauseTextArea");
         eventTypeTextArea.getDocument().addDocumentListener(changeListner);
@@ -132,7 +132,6 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         EventTypeLabel = new JLabel();
         dateLabel = new JLabel();
         aDateBean = new ADateBean();
-        eventNameTextField = new JTextField();
         eventCauseLabel = new JLabel();
         eventNameLabel = new JLabel();
         linkToPlaceButton = new JButton();
@@ -146,6 +145,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         eventCauseTextArea = new JTextArea();
         jScrollPane2 = new JScrollPane();
         eventTypeTextArea = new JTextArea();
+        eventNameChoiceWidget = new ChoiceWidget();
         sourcesPanel = new JPanel();
         sourceCitationsListPanel = new SourceCitationsListPanel();
         notesPanel = new JPanel();
@@ -183,9 +183,6 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         dateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         dateLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.dateLabel.text"), new Object[] {})); // NOI18N
-
-        eventNameTextField.setEditable(false);
-        eventNameTextField.setColumns(15);
 
         eventCauseLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         eventCauseLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.eventCauseLabel.text")); // NOI18N
@@ -289,7 +286,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(wifeAgeTextField))
                     .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                        .addComponent(eventNameTextField, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -299,7 +296,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(eventNameLabel)
-                    .addComponent(eventNameTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -575,8 +572,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private JLabel eventCauseLabel;
     private JTextArea eventCauseTextArea;
     private JTabbedPane eventInformationTabbedPane;
+    private ChoiceWidget eventNameChoiceWidget;
     private JLabel eventNameLabel;
-    private JTextField eventNameTextField;
     private JTextArea eventTypeTextArea;
     private JPanel galleryPanel;
     private JLabel husbandAgeLabel;
@@ -632,20 +629,21 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
             // Event Name
             eventNameLabel.setVisible(true);
-            eventNameTextField.setVisible(true);
-            eventNameTextField.setEditable(true);
+            eventNameChoiceWidget.setVisible(true);
+            eventNameChoiceWidget.setEditable(true);
+            eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet("TYPE").getKeys());
             Property eventType = mEvent.getProperty("TYPE", false);
             if (eventType != null) {
-                eventNameTextField.setText(eventType.getValue());
+                eventNameChoiceWidget.setText(eventType.getValue());
             } else {
-                eventNameTextField.setText("");
+                eventNameChoiceWidget.setText("");
             }
 
             eventCauseTextArea.setText(mEvent.getValue());
         } else {
             // Event Name
             eventNameLabel.setVisible(false);
-            eventNameTextField.setVisible(false);
+            eventNameChoiceWidget.setVisible(false);
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
                 eventTypeTextArea.setText(eventType.getValue());
@@ -768,9 +766,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         mEventNameModified = false;
                         Property eventType = mEvent.getProperty("TYPE", false);
                         if (eventType != null) {
-                            eventType.setValue(eventNameTextField.getText());
+                            eventType.setValue(eventNameChoiceWidget.getText());
                         } else {
-                            mEvent.addProperty("TYPE", eventNameTextField.getText());
+                            mEvent.addProperty("TYPE", eventNameChoiceWidget.getText());
                         }
                     }
                     if (mEventCauseModified) {
@@ -933,19 +931,21 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             }
         }
 
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            if (!mute) {
+                mEventModified = true;
+                mEventNameModified = true;
+                changeSupport.fireChange();
+            }
+        }
+
         public void mute() {
             mute = true;
         }
 
         public void unmute() {
             mute = false;
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent ce) {
-            if (!mute) {
-                changeSupport.fireChange();
-            }
         }
     }
 }
