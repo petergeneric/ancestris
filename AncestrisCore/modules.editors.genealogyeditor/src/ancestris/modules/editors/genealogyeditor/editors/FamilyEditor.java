@@ -1487,22 +1487,19 @@ public class FamilyEditor extends EntityEditor {
         ArrayList<String> localizedEventsList = new ArrayList<String>();
 
         for (String tag : mFamilyEventsTags) {
-            localizedEventsList.add(PropertyTag2Name.getTagName(tag));
-        }
-
-        for (Property event : eventsList) {
-
             /*
              * Filter by gedcom version
              */
-            if (event.getTag().equals("RESI") && !mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
+            if (!tag.equals("RESI") && !mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                localizedEventsList.add(PropertyTag2Name.getTagName(tag));
             }
+        }
 
+        for (Property event : eventsList) {
             /*
              * Filter by events already present and unique
              */
-            if (!event.getTag().equals("EVEN")) {
+            if (!event.getTag().equals("EVEN") || !event.getTag().equals("CENS")) {
                 localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
             }
         }
