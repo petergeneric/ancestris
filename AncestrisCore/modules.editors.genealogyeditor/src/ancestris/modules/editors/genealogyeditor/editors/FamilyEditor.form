@@ -25,14 +25,14 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanel1" max="32767" attributes="0"/>
                   <Component id="familyTabbedPane" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="fatherPanel" linkSize="1" min="-2" pref="385" max="-2" attributes="0"/>
+                      <Component id="fatherPanel" pref="385" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="motherPanel" linkSize="1" min="-2" pref="385" max="-2" attributes="0"/>
+                      <Component id="motherPanel" pref="385" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="changeDateLabel" pref="0" max="32767" attributes="0"/>
@@ -40,7 +40,7 @@
                       <Component id="changeDateLabeldate" min="-2" pref="171" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -51,8 +51,8 @@
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="fatherPanel" linkSize="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="motherPanel" linkSize="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="fatherPanel" min="-2" max="-2" attributes="0"/>
+                  <Component id="motherPanel" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="familyTabbedPane" pref="275" max="32767" attributes="0"/>
