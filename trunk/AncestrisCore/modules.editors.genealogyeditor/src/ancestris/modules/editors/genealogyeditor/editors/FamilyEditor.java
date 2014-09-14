@@ -1490,7 +1490,11 @@ public class FamilyEditor extends EntityEditor {
             /*
              * Filter by gedcom version
              */
-            if (!tag.equals("RESI") && !mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            if (!mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                if (!tag.equals("RESI")) {
+                    localizedEventsList.add(PropertyTag2Name.getTagName(tag));
+                }
+            } else {
                 localizedEventsList.add(PropertyTag2Name.getTagName(tag));
             }
         }
