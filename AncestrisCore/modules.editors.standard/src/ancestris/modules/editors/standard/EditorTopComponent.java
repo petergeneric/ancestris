@@ -190,6 +190,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         // check for auto commit
         if (ask && !confirmPanel.isCommitChanges()) {
             // Don't commit
+            cancel();
             confirmPanel.setChanged(false);
             return;
         }
@@ -216,6 +217,25 @@ public class EditorTopComponent extends AncestrisTopComponent
             isChangeSource = false;
             confirmPanel.setChanged(false);
         }
+    }
+
+    private void cancel(){
+        // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume
+        // that the containing window was closed and we're not going to throw a dialog out there or do a change
+        // behind the covers - we really would need a about-to-close hook for contained components here :(
+        if (!isOpened()) {
+            return;
+        }
+
+
+            if (gedcom.isWriteLocked()) {
+                //FIXME: do we need a canclel here? editor.cancel();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+
     }
 
     @Override
@@ -266,9 +286,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     }
 
     public void cancelCallBack(ActionEvent event) {
-        while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-            gedcom.undoUnitOfWork(false);
-        }
+        cancel();
         // re-set for cancel
         Context ctx = editor.getContext();
 //        editor.setContext(new Context());
