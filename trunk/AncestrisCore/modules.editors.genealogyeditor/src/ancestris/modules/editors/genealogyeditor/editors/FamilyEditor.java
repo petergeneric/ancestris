@@ -1136,6 +1136,7 @@ public class FamilyEditor extends EntityEditor {
                         seteventTypeComboBox(eventsProperties);
                         mEventsListModel.add(mEvent);
                         eventsList.setSelectedIndex(mEventsListModel.getSize() - 1);
+                        changes.fireChangeEvent();
                     }
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -1503,7 +1504,7 @@ public class FamilyEditor extends EntityEditor {
             /*
              * Filter by events already present and unique
              */
-            if (!event.getTag().equals("EVEN") || !event.getTag().equals("CENS")) {
+            if (!event.getTag().equals("EVEN") && !event.getTag().equals("CENS")) {
                 localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
             }
         }

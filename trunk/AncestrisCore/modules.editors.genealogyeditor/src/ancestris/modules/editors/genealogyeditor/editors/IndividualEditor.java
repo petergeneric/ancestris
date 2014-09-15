@@ -607,6 +607,7 @@ public final class IndividualEditor extends EntityEditor {
                         seteventTypeComboBox(eventsProperties);
                         mEventsListModel.add(mEvent);
                         eventsList.setSelectedIndex(mEventsListModel.getSize() - 1);
+                        changes.fireChangeEvent();
                     }
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
