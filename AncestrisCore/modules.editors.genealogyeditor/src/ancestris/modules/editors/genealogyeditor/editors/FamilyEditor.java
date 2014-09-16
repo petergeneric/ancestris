@@ -1303,6 +1303,7 @@ public class FamilyEditor extends EntityEditor {
                     familyEvents.add(property);
                 }
             }
+            familyEventPanel.setVisible(false);
             mEventsListModel.clear();
             mEventsListModel.addAll(familyEvents);
             seteventTypeComboBox(familyEvents);
