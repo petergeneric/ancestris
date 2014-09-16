@@ -12,7 +12,11 @@
 package ancestris.gedcom;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import genj.gedcom.*;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomMetaListener;
+import genj.gedcom.Property;
 import genj.view.SelectionListener;
 import java.io.IOException;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -43,22 +47,13 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     private GedcomUndoRedo undoredo;
     private final Lookup lookup;
     private final InstanceContent lookupContents = new InstanceContent();
-    private static Lookup.Result<Context> result;
+    private final Lookup.Result<Context> result;
 //    private GedcomMgr gedcomMgr;
     /**
      * SaveCookie for this support instance. The cookie is adding/removing data
      * object's cookie set depending on if modification flag was set/unset.
      */
-    private final SaveCookie saveCookie = new SaveCookie() {
-
-        /**
-         * Implements
-         * <code>SaveCookie</code> interface.
-         */
-        public void save() throws IOException {
-            GedcomDataObject.this.saveDocument();
-        }
-    };
+    private final SaveCookie saveCookie;
 
     //XXX: will have to rework on this
     //XXX: FileObject are saved in a pool by DataOject loader. So if the same fo is loaded twice
@@ -70,6 +65,17 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
      */
     public GedcomDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
+        this.saveCookie = new SaveCookie() {
+
+            /**
+             * Implements
+             * <code>SaveCookie</code> interface.
+             */
+            @Override
+            public void save() throws IOException {
+                GedcomDataObject.this.saveDocument();
+            }
+        };
         // associatelookup is 1 so super.getlookup is getCookieSet().getLookup()
         //lookup = new ProxyLookup(getCookieSet().getLookup(), new AbstractLookup(lookupContents));
         lookup = new ProxyLookup(super.getLookup(), new AbstractLookup(lookupContents));
@@ -78,6 +84,7 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
         result = lookup.lookupResult(Context.class);
         result.addLookupListener(new LookupListener() {
 
+            @Override
             public void resultChanged(LookupEvent ev) {
                 // notify
                 //XXX: we must put selected nodes in global selection lookup (in fact use Explorer API)
@@ -89,8 +96,6 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
                 }
             }
         });
-
-
 
         registerEditor("text/x-gedcom", true);
         //XXX: fix it
@@ -129,8 +134,8 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
      * FIXME: There may be some optimization to do here...
      *
      * @param <T>
-     *param clazz
-    param instances
+     *            param clazz
+     *            param instances
      */
     public <T> void assign(Class<? extends T> clazz, T... instances) {
         for (T ic : lookup.lookupAll(clazz)) {
@@ -146,53 +151,63 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     }
 
     @MultiViewElement.Registration(displayName = "#LBL_Gedcom_EDITOR",
-    iconBase = "ancestris/gedcom/Gedcom.png",
-    mimeType = "text/x-gedcom",
-    persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
-    preferredID = "Gedcom",
-    position = 1000)
+            iconBase = "ancestris/gedcom/Gedcom.png",
+            mimeType = "text/x-gedcom",
+            persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+            preferredID = "Gedcom",
+            position = 1000)
     @Messages("LBL_Gedcom_EDITOR=Source")
     public static MultiViewEditorElement createEditor(Lookup lkp) {
         return new MultiViewEditorElement(lkp);
     }
 
+    @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        setModified(gedcom);
+        updateModified();
     }
 
+    @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        setModified(gedcom);
+        updateModified();
     }
 
+    @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        setModified(gedcom);
+        updateModified();
     }
 
+    @Override
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        setModified(gedcom);
+        updateModified();
     }
 
+    @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        setModified(gedcom);
+        updateModified();
     }
 
+    @Override
     public void gedcomHeaderChanged(Gedcom gedcom) {
-        setModified(gedcom);
+        updateModified();
     }
 
+    @Override
     public void gedcomWriteLockAcquired(Gedcom gedcom) {
     }
 
+    @Override
     public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
     }
 
+    @Override
     public void gedcomAfterUnitOfWork(Gedcom gedcom) {
     }
 
+    @Override
     public void gedcomWriteLockReleased(Gedcom gedcom) {
         try {
             getUndoRedo().gedcomUpdated(gedcom);
-            setModified(gedcom);
+            updateModified();
         } catch (NullPointerException e) {
         }
     }
@@ -206,29 +221,24 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
 //    } else {
 //        getCookieSet().assign(SaveCookie.class);
 //    }
-    private void setModified(Gedcom g) {
-        // Adds save cookie to the data object.
-        if (getCookie(SaveCookie.class) == null) {
-            getCookieSet().add(saveCookie);
-        }
-    }
+    private void updateModified() {
+        if (context.getGedcom().hasChanged()) {
+            if (getLookup().lookup(SaveCookie.class) == null) {
+                getCookieSet().add(saveCookie);
+            }
+        } else {
+            // Remove save cookie from the data object.
+            Cookie cookie = getLookup().lookup(SaveCookie.class);
 
-    /**
-     * Helper method. Removes save cookie from the data object.
-     */
-    private void clearModified() {
-
-        // Remove save cookie from the data object.
-        Cookie cookie = getCookie(SaveCookie.class);
-
-        if (cookie != null && cookie.equals(saveCookie)) {
-            getCookieSet().remove(saveCookie);
+            if (cookie != null && cookie.equals(saveCookie)) {
+                getCookieSet().remove(saveCookie);
+            }
         }
     }
 
     private void saveDocument() {
         GedcomMgr.getDefault().saveGedcom(context, getPrimaryFile());
-        clearModified();
+        updateModified();
     }
 
     // Remember context
