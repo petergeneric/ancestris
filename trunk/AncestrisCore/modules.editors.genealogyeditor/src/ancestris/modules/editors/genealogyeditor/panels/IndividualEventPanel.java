@@ -699,22 +699,26 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         }
 
         mDate = (PropertyDate) mEvent.getProperty("DATE", false);
-        if (mDate == null) {
-            try {
-                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+//        if (mDate == null) {
+//            try {
+//                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+//
+//                    @Override
+//                    public void perform(Gedcom gedcom) throws GedcomException {
+//                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
+//                    }
+//                }); // end of doUnitOfWork
+//            } catch (GedcomException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        }
+        if (mDate == null){
+            aDateBean.setContext(mEvent,null);
+        } else {
+            aDateBean.setContext(mDate);
         }
-        aDateBean.setContext(mDate);
 
-        if (!mEvent.getTag().equals("BIRT")) {
+        if (!mEvent.getTag().equals("BIRT") && mDate!=null) {
             IndividualAgeLabel.setVisible(true);
             individualAgeTextField.setVisible(true);
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
