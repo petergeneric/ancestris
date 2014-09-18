@@ -33,6 +33,8 @@ public class SubmitterEditor extends EntityEditor {
         submitterNameTextField.getDocument().addDocumentListener(changes);
         submitterLanguageTextField.getDocument().addDocumentListener(changes);
         addressEditorPanel.addChangeListener(changes);
+        multimediaObjectCitationsListPanel.addChangeListener(changes);
+        noteCitationsListPanel.addChangeListener(changes);
     }
 
     /**

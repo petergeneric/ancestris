@@ -58,6 +58,12 @@ public class SourceEditor extends EntityEditor {
         sourceTitleTextField.getDocument().addDocumentListener(changes);
         abbreviationTextField.getDocument().addDocumentListener(changes);
         agencyTextField.getDocument().addDocumentListener(changes);
+        eventTypePanel.addChangeListener(changes);
+        sourceTextTextArea.getDocument().addDocumentListener(changes);
+        publicationFactsTextArea.getDocument().addDocumentListener(changes);
+        repositoryCitationsListPanel.addChangeListener(changes);
+        noteCitationsListPanel.addChangeListener(changes);
+        multimediaObjectCitationsListPanel.addChangeListener(changes);
     }
 
     /**

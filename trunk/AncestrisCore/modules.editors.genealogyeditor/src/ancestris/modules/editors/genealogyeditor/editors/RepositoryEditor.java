@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import org.openide.util.NbBundle;
 
 /**
@@ -41,6 +39,9 @@ public class RepositoryEditor extends EntityEditor {
         super(isNew);
         initComponents();
         repositoryNameTextField.getDocument().addDocumentListener(changes);
+        addressEditorPanel.addChangeListener(changes);
+        noteCitationsListPanel.addChangeListener(changes);
+        
     }
 
     /**
