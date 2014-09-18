@@ -159,11 +159,13 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                         }
                     }
                 }); // end of doUnitOfWork
+
+                mNoteCitationsTableModel.clear();
+                mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
+                changeListner.stateChanged(null);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            mNoteCitationsTableModel.clear();
-            mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -230,13 +232,12 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
+                mNoteCitationsTableModel.clear();
+                mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
                 changeListner.stateChanged(null);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-
-            mNoteCitationsTableModel.clear();
-            mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
         }
     }//GEN-LAST:event_linkToNoteButtonActionPerformed
 
@@ -290,6 +291,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                         noteCitationEditorPanel.commit();
                     }
                 });
+                changeListner.stateChanged(null);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }

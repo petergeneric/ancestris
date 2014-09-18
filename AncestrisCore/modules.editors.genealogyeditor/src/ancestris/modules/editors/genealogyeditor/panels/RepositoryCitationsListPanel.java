@@ -7,7 +7,10 @@ import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -21,6 +24,8 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
     private RepositoryCitationsTableModel mRepositoryCitationsTableModel = new RepositoryCitationsTableModel();
     private Repository mRepository;
     private PropertyRepository mRepositoryCitation;
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(RepositoryCitationsListPanel.class);
 
     /**
      * Creates new form SourcesListPanel
@@ -146,6 +151,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 mRepositoryCitationsTableModel.add(mRepositoryCitation);
+                changeSupport.fireChange();
             }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -155,12 +161,14 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
     private void editRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRepositoryButtonActionPerformed
         int selectedRow = repositoriesTable.getSelectedRow();
         Gedcom gedcom = mRoot.getGedcom();
-        
+
         if (selectedRow != -1) {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
             RepositoryEditor repositoryEditor = new RepositoryEditor();
             repositoryEditor.setContext(new Context(mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity()));
+            repositoryEditor.addChangeListener(changeListner);
             repositoryEditor.showPanel();
+            repositoryEditor.removeChangeListener(changeListner);
         }
     }//GEN-LAST:event_editRepositoryButtonActionPerformed
 
@@ -187,6 +195,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                             mRoot.delProperty(mRepositoryCitationsTableModel.remove(repositoriesTable.convertRowIndexToModel(selectedRow)));
                         }
                     }); // end of doUnitOfWork
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -198,12 +207,15 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int selectedRow = repositoriesTable.getSelectedRow();
             Gedcom gedcom = mRoot.getGedcom();
-            
+
             if (selectedRow != -1) {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
                 RepositoryEditor repositoryEditor = new RepositoryEditor();
                 repositoryEditor.setContext(new Context(mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity()));
+            repositoryEditor.addChangeListener(changeListner);
                 repositoryEditor.showPanel();
+                            repositoryEditor.removeChangeListener(changeListner);
+
             }
         }
     }//GEN-LAST:event_repositoriesTableMouseClicked
@@ -232,6 +244,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                         }
                     }); // end of doUnitOfWork
                     mRepositoryCitationsTableModel.add(mRepositoryCitation);
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -253,5 +266,27 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mRepositoryCitationsTableModel.clear();
         mRepositoryCitationsTableModel.addAll(repositoriesList);
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            changeSupport.fireChange();
+        }
     }
 }
