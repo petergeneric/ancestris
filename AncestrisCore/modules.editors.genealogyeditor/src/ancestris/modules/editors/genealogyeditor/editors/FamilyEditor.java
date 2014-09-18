@@ -477,6 +477,7 @@ public class FamilyEditor extends EntityEditor {
         eventsListPanel.setMinimumSize(new java.awt.Dimension(259, 162));
         eventsListPanel.setPreferredSize(new java.awt.Dimension(259, 162));
         eventsListPanel.setRequestFocusEnabled(false);
+        eventsListPanel.setLayout(new java.awt.BorderLayout());
 
         eventsListToolBar.setFloatable(false);
         eventsListToolBar.setRollover(true);
@@ -504,24 +505,13 @@ public class FamilyEditor extends EntityEditor {
         });
         eventsListToolBar.add(deleteEventButton);
 
+        eventsListPanel.add(eventsListToolBar, java.awt.BorderLayout.NORTH);
+
         eventsList.setModel(mEventsListModel);
         eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         eventsListScrollPane.setViewportView(eventsList);
 
-        javax.swing.GroupLayout eventsListPanelLayout = new javax.swing.GroupLayout(eventsListPanel);
-        eventsListPanel.setLayout(eventsListPanelLayout);
-        eventsListPanelLayout.setHorizontalGroup(
-            eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eventsListToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(eventsListScrollPane)
-        );
-        eventsListPanelLayout.setVerticalGroup(
-            eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsListPanelLayout.createSequentialGroup()
-                .addComponent(eventsListToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eventsListScrollPane))
-        );
+        eventsListPanel.add(eventsListScrollPane, java.awt.BorderLayout.CENTER);
 
         eventsSplitPane.setLeftComponent(eventsListPanel);
 
@@ -1554,6 +1544,5 @@ public class FamilyEditor extends EntityEditor {
                 }
             }
         }
-
     }
 }

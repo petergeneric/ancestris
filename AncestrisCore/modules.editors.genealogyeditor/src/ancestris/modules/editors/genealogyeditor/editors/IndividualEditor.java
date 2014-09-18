@@ -253,6 +253,8 @@ public final class IndividualEditor extends EntityEditor {
         eventsSplitPane.setBorder(null);
         eventsSplitPane.setDividerSize(1);
 
+        eventsListPanel.setLayout(new java.awt.BorderLayout());
+
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
         jToolBar1.add(filler2);
@@ -279,28 +281,13 @@ public final class IndividualEditor extends EntityEditor {
         });
         jToolBar1.add(deleteEventButton);
 
+        eventsListPanel.add(jToolBar1, java.awt.BorderLayout.NORTH);
+
         eventsList.setModel(mEventsListModel);
         eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(eventsList);
 
-        javax.swing.GroupLayout eventsListPanelLayout = new javax.swing.GroupLayout(eventsListPanel);
-        eventsListPanel.setLayout(eventsListPanelLayout);
-        eventsListPanelLayout.setHorizontalGroup(
-            eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(eventsListPanelLayout.createSequentialGroup()
-                .addGroup(eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addGap(0, 0, 0))
-        );
-        eventsListPanelLayout.setVerticalGroup(
-            eventsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsListPanelLayout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
-                .addGap(0, 0, 0))
-        );
+        eventsListPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         eventsSplitPane.setLeftComponent(eventsListPanel);
 
