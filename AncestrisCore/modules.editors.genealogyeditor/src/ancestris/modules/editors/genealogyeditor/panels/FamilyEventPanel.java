@@ -219,6 +219,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         });
 
         addPlaceButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addPlaceButton.setToolTipText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.addPlaceButton.toolTipText")); // NOI18N
         addPlaceButton.setMaximumSize(new Dimension(26, 26));
         addPlaceButton.setMinimumSize(new Dimension(26, 26));
         addPlaceButton.setPreferredSize(new Dimension(26, 26));
@@ -252,8 +253,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
         EventDetailPanel.setLayout(EventDetailPanelLayout);
-        EventDetailPanelLayout.setHorizontalGroup(
-            EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(EventDetailPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
@@ -290,8 +290,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        EventDetailPanelLayout.setVerticalGroup(
-            EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(EventDetailPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -338,12 +337,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         GroupLayout sourcesPanelLayout = new GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
-        sourcesPanelLayout.setHorizontalGroup(
-            sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        sourcesPanelLayout.setHorizontalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(sourceCitationsListPanel, GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
         );
-        sourcesPanelLayout.setVerticalGroup(
-            sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(sourceCitationsListPanel, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
         );
 
@@ -353,12 +350,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         GroupLayout notesPanelLayout = new GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
-        notesPanelLayout.setHorizontalGroup(
-            notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        notesPanelLayout.setHorizontalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(noteCitationsListPanel, GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
         );
-        notesPanelLayout.setVerticalGroup(
-            notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(noteCitationsListPanel, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
         );
 
@@ -368,12 +363,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         GroupLayout galleryPanelLayout = new GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
-        galleryPanelLayout.setHorizontalGroup(
-            galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        galleryPanelLayout.setHorizontalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(multimediaObjectCitationsListPanel, GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
         );
-        galleryPanelLayout.setVerticalGroup(
-            galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(multimediaObjectCitationsListPanel, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
         );
 
@@ -381,12 +374,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -671,19 +662,21 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         mDate = (PropertyDate) mEvent.getProperty("DATE", false);
         if (mDate == null) {
-            try {
-                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+//            try {
+//              mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+//
+//                  @Override
+//                  public void perform(Gedcom gedcom) throws GedcomException {
+//                      mDate = (PropertyDate) mEvent.addProperty("DATE", "");
+//                  }
+//              }); // end of doUnitOfWork
+//          } catch (GedcomException ex) {
+//              Exceptions.printStackTrace(ex);
+//          }
+            aDateBean.setContext(mEvent, null);
+        } else {
+            aDateBean.setContext(mDate);
         }
-        aDateBean.setContext(mDate);
 
         PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
         if (husbandAge != null) {

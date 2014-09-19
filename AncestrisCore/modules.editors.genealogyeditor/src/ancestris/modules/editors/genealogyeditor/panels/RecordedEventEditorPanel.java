@@ -407,19 +407,22 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         }
         mDate = (PropertyDate) mEvent.getProperty("DATE", false);
         if (mDate == null) {
-            try {
-                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+//            try {
+//              mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+//
+//                  @Override
+//                  public void perform(Gedcom gedcom) throws GedcomException {
+//                      mDate = (PropertyDate) mEvent.addProperty("DATE", "");
+//                  }
+//              }); // end of doUnitOfWork
+//          } catch (GedcomException ex) {
+//              Exceptions.printStackTrace(ex);
+//          }
+            aDateBean.setContext(mEvent, null);
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+        } else {
+            aDateBean.setContext(mDate);
         }
-        aDateBean.setContext(mDate);
 
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         if (mPlace == null) {
@@ -467,7 +470,6 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
-
 
     private class CheckableItem {
 

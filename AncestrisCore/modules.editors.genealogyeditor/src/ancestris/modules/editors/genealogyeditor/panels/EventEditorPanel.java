@@ -727,19 +727,22 @@ public class EventEditorPanel extends javax.swing.JPanel {
 
         mDate = (PropertyDate) mEvent.getProperty("DATE", false);
         if (mDate == null) {
-            try {
-                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+//          try {
+//              mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
+//
+//                  @Override
+//                  public void perform(Gedcom gedcom) throws GedcomException {
+//                      mDate = (PropertyDate) mEvent.addProperty("DATE", "");
+//                  }
+//              }); // end of doUnitOfWork
+//          } catch (GedcomException ex) {
+//              Exceptions.printStackTrace(ex);
+//          }
+            aDateBean.setContext(mEvent, null);
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+        } else {
+            aDateBean.setContext(mDate);
         }
-        aDateBean.setContext(mDate);
         aDateBean.addChangeListener(new DateBeanListener());
 
         if (mEventType == INDIVIDUAL_EVENT_TYPE) {
