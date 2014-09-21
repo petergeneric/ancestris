@@ -29,7 +29,7 @@ import org.openide.util.ContextAwareAction;
  * @author daniel
  */
 @ActionID(category = "Tree", id = "genj.tree.actions.BookmarkAction")
-@ActionRegistration(displayName = "BookMark")
+@ActionRegistration(displayName = "BookMark",lazy = false)
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", position = 1010)})
 /**
