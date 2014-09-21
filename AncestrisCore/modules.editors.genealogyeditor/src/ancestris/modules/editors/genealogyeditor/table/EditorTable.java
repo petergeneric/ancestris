@@ -101,31 +101,34 @@ public class EditorTable extends JTable {
             logger.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{tableId, index, columnSize});
         }
 
-        /**
-         * SortOrder[] sortOrders = new
-         * SortOrder[getColumnModel().getColumnCount()]; int[] sortIndexs = new
-         * int[getColumnModel().getColumnCount()]; List<RowSorter.SortKey>
-         * sortKeys = new ArrayList<RowSorter.SortKey>();
-         *
-         * for (int index = 0; index < getColumnModel().getColumnCount(); index++) {
-         * sortIndexs[index] = mRegistry.get(mTableId + ".column" + index + ".sortIndex", -1);
-         * if (sortIndexs[index] > -1) { sortOrders[index] =
-         * SortOrder.valueOf(mRegistry.get(mTableId + ".column" + index +
-         * ".sortOrder", SortOrder.UNSORTED.toString())); } }
-         *
-         * for (int index = 0; index < getColumnModel().getColumnCount(); index++) {
-         * if (sortIndexs[index] > -1) { sortKeys.add(new
-         * RowSorter.SortKey(sortIndexs[index], sortOrders[index]));
-         * logger.log(Level.INFO, "setID: table id {0} column index {1} size
-         * {2}", new Object[]{tableId, sortIndexs[index], sortOrders[index]}); }
-         * }
-         *
-         * RowSorter<? extends TableModel> rowSorter = getRowSorter(); if
-         * (getRowSorter() == null) { setRowSorter(new
-         * TableRowSorter<TableModel>(getModel())); rowSorter = getRowSorter();
-         * } rowSorter.setSortKeys(sortKeys); rowSorter.addRowSorterListener(new
-         * EditorTableRowSorterListener());
-         */
+//    SortOrder[] sortOrders = new SortOrder[getColumnModel().getColumnCount()];
+//    int[] sortIndexs = new int[getColumnModel().getColumnCount()];
+//    List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+//
+//    for (int index = 0; index < getColumnModel().getColumnCount(); index++) {
+//        sortIndexs[index] = mRegistry.get(mTableId + ".column" + index + ".sortIndex", -1);
+//        if (sortIndexs[index] > -1) {
+//            sortOrders[index] = SortOrder.valueOf(mRegistry.get(mTableId + ".column" + index
+//                    + ".sortOrder", SortOrder.UNSORTED.toString()));
+//        }
+//    }
+//
+//    for (int index = 0; index < getColumnModel().getColumnCount(); index++) {
+//        if (sortIndexs[index] > -1) {
+//            sortKeys.add(new RowSorter.SortKey(sortIndexs[index], sortOrders[index]));
+//            logger.log(Level.INFO, "setID: table id {0} column index {1} size {2}", new Object[]{tableId, sortIndexs[index], sortOrders[index]});
+//        }
+//    }
+//
+        RowSorter<? extends TableModel> rowSorter = getRowSorter();
+        if (getRowSorter() == null) {
+            setRowSorter(new TableRowSorter<TableModel>(getModel()));
+            rowSorter = getRowSorter();
+        }
+
+//        rowSorter.setSortKeys(sortKeys);
+        rowSorter.addRowSorterListener(new EditorTableRowSorterListener());
+
         getColumnModel().addColumnModelListener(new EditorTableTableColumnModelListener());
     }
 }
