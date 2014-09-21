@@ -29,7 +29,7 @@ import org.openide.util.ContextAwareAction;
  * @author daniel
  */
 @ActionID(category = "Tree", id = "genj.tree.actions.RootAction")
-@ActionRegistration(displayName = "SetRoot")
+@ActionRegistration(displayName = "SetRoot",lazy = false)
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", separatorBefore = 950, position = 1000)})
 /**
