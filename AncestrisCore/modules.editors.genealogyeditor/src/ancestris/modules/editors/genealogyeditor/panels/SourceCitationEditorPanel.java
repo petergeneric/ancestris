@@ -613,17 +613,17 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             if (sourceData != null) {
                 PropertyDate date = (PropertyDate) sourceData.getProperty("DATE", false);
                 if (date == null) {
-                    try {
-                        mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+//                    try {
+//                        mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                recordingDate.setContext((PropertyDate) sourceData.addProperty("DATE", ""));
-                            }
-                        }); // end of doUnitOfWork
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+//                            @Override
+//                            public void perform(Gedcom gedcom) throws GedcomException {
+                                recordingDate.setContext(sourceData, null);
+//                            }
+//                        }); // end of doUnitOfWork
+//                    } catch (GedcomException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
                 } else {
                     recordingDate.setContext(date);
                 }
@@ -640,7 +640,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             Property sourceData = sourceCitation.addProperty("DATA", "");
-                            recordingDate.setContext((PropertyDate) sourceData.addProperty("DATE", ""));
+                            recordingDate.setContext(sourceData, null);
                         }
                     }); // end of doUnitOfWork
                 } catch (GedcomException ex) {
