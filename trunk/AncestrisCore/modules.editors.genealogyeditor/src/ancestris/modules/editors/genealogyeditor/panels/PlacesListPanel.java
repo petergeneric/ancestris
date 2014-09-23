@@ -39,7 +39,6 @@ public class PlacesListPanel extends javax.swing.JPanel {
         this.mGedcom = gedcom;
         mPlacesListTableModel.update(gedcom.getReferenceSet("PLAC"));
         mPlaceTableSorter = new TableRowSorter<TableModel>(placesListTable.getModel());
-        placesListTable.setRowSorter(mPlaceTableSorter);
         placesListTable.setID(PlacesListPanel.class.getName());
 
         try {
