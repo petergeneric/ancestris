@@ -23,7 +23,7 @@ import org.openide.util.NbBundle;
 public class NotesListPanel extends javax.swing.JPanel {
     
     private Property mRoot;
-    private NotesTableModel mNotesTableModel = new NotesTableModel();
+    private final NotesTableModel mNotesTableModel = new NotesTableModel();
     private Note mNote;
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(NotesListPanel.class);
@@ -168,7 +168,6 @@ public class NotesListPanel extends javax.swing.JPanel {
 
     private void editNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNoteButtonActionPerformed
         int selectedRow = notesTable.getSelectedRow();
-        Gedcom gedcom = mRoot.getGedcom();
         if (selectedRow != -1) {
             int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
             NoteEditor noteEditor = new NoteEditor();
@@ -237,8 +236,6 @@ public class NotesListPanel extends javax.swing.JPanel {
     private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
         if (evt.getClickCount() >= 2) {
             int selectedRow = notesTable.getSelectedRow();
-            Gedcom gedcom = mRoot.getGedcom();
-            int undoNb = gedcom.getUndoNb();
             if (selectedRow != -1) {
                 int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
                 NoteEditor noteEditor = new NoteEditor();
