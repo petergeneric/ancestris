@@ -17,7 +17,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private final static Logger logger = Logger.getLogger(PlaceEditorPanel.class.getName(), null);
     private PropertyPlace mPlace;
-    private GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
+    private final GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
     private Property mAddress;
 
     /**
@@ -93,6 +93,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         geonamesPlacesList.setModel(geonamePlacesListModel);
         geonamesPlacesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        geonamesPlacesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                geonamesPlacesListValueChanged(evt);
+            }
+        });
         geonamesScrollPane.setViewportView(geonamesPlacesList);
 
         org.openide.awt.Mnemonics.setLocalizedText(completePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.completePlaceButton.text")); // NOI18N
@@ -225,6 +230,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
         // TODO add your handling code here:
     }//GEN-LAST:event_completePlaceButtonActionPerformed
+
+    private void geonamesPlacesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListValueChanged
+        if (geonamesPlacesList.getSelectedIndex() != -1) {
+            Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
+            jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
+        }
+    }//GEN-LAST:event_geonamesPlacesListValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane MapScrollPane;
