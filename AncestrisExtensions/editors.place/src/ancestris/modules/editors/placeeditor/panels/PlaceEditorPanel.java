@@ -337,13 +337,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                                     map.addProperty(latitudeTAG, gedcomPlaceEditorPanel.getLatitude());
                                     map.addProperty(longitudeTAG, gedcomPlaceEditorPanel.getLongitude());
                                 } else {
-                                    Property latitude = map.getProperty("LATI");
+                                    Property latitude = map.getProperty(latitudeTAG);
                                     if (latitude == null) {
                                         map.addProperty(latitudeTAG, gedcomPlaceEditorPanel.getLatitude());
                                     } else {
                                         latitude.setValue(gedcomPlaceEditorPanel.getLatitude());
                                     }
-                                    Property longitude = map.getProperty("LONG");
+                                    Property longitude = map.getProperty(longitudeTAG);
                                     if (longitude == null) {
                                         map.addProperty(longitudeTAG, gedcomPlaceEditorPanel.getLongitude());
                                     } else {
