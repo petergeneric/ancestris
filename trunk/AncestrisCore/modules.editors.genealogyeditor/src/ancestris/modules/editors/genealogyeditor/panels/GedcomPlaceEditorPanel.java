@@ -665,6 +665,11 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     private void updatePlace(PropertyPlace place, int startIndex) {
 
         updateOnGoing = true;
+        Property latitude = null;
+        Property longitude = null;
+        final String mapTAG;
+        final String latitudeTAG;
+        final String longitudeTAG;
 
         if (place != null) {
             logger.log(Level.INFO, "startIndex {0}", new Object[]{startIndex});
@@ -680,21 +685,20 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 }
             }
 
-            Property latitude = null;
-            Property longitude = null;
-
             if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                Property map = place.getProperty("MAP");
-                if (map != null) {
-                    latitude = map.getProperty("LATI");
-                    longitude = map.getProperty("LONG");
-                }
+                mapTAG = "MAP";
+                latitudeTAG = "LATI";
+                longitudeTAG = "LONG";
             } else {
-                Property map = place.getProperty("_MAP");
-                if (map != null) {
-                    latitude = map.getProperty("_LATI");
-                    longitude = map.getProperty("_LONG");
-                }
+                mapTAG = "_MAP";
+                latitudeTAG = "_LATI";
+                longitudeTAG = "_LONG";
+            }
+
+            Property map = place.getProperty(mapTAG);
+            if (map != null) {
+                latitude = map.getProperty(latitudeTAG);
+                longitude = map.getProperty(longitudeTAG);
             }
 
             if (latitude != null && longitude != null) {
@@ -741,53 +745,47 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
     public void commit() {
         if (mPlaceModified) {
+            final String mapTAG;
+            Property map;
+            final String latitudeTAG;
+            Property latitude;
+            final String longitudeTAG;
+            Property longitude;
+
             if (mPlace == null) {
                 mPlace = (PropertyPlace) mRoot.addProperty(PropertyPlace.TAG, "");
             }
             mPlace.setValue(getPlaceString(BEGINNING));
 
             if (!gedcomLatitudeTextField.getText().isEmpty() && !gedcomLongitudeTextField.getText().isEmpty()) {
-                Property map;
-                if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
-                    map = mPlace.getProperty("MAP");
-                    if (map == null) {
-                        map = mPlace.addProperty("MAP", "");
-                        map.addProperty("LATI", gedcomLatitudeTextField.getText());
-                        map.addProperty("LONG", gedcomLongitudeTextField.getText());
+                if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                    mapTAG = "MAP";
+                    latitudeTAG = "LATI";
+                    longitudeTAG = "LONG";
+                } else {
+                    mapTAG = "_MAP";
+                    latitudeTAG = "_LATI";
+                    longitudeTAG = "_LONG";
+                }
+
+                map = mPlace.getProperty(mapTAG);
+                if (map != null) {
+                    latitude = map.getProperty(latitudeTAG);
+                    if (latitude == null) {
+                        map.addProperty(latitudeTAG, gedcomLatitudeTextField.getText());
                     } else {
-                        Property latitude = map.getProperty("LATI");
-                        if (latitude == null) {
-                            map.addProperty("LATI", gedcomLatitudeTextField.getText());
-                        } else {
-                            latitude.setValue(gedcomLatitudeTextField.getText());
-                        }
-                        Property longitude = map.getProperty("LONG");
-                        if (longitude == null) {
-                            map.addProperty("LONG", gedcomLongitudeTextField.getText());
-                        } else {
-                            longitude.setValue(gedcomLongitudeTextField.getText());
-                        }
+                        latitude.setValue(gedcomLatitudeTextField.getText());
+                    }
+                    longitude = map.getProperty(longitudeTAG);
+                    if (longitude == null) {
+                        map.addProperty(latitudeTAG, gedcomLongitudeTextField.getText());
+                    } else {
+                        longitude.setValue(gedcomLongitudeTextField.getText());
                     }
                 } else {
-                    map = mPlace.getProperty("_MAP");
-                    if (map == null) {
-                        map = mPlace.addProperty("_MAP", "");
-                        map.addProperty("_LATI", gedcomLatitudeTextField.getText());
-                        map.addProperty("_LONG", gedcomLongitudeTextField.getText());
-                    } else {
-                        Property latitude = map.getProperty("_LATI");
-                        if (latitude == null) {
-                            map.addProperty("_LATI", gedcomLatitudeTextField.getText());
-                        } else {
-                            latitude.setValue(gedcomLatitudeTextField.getText());
-                        }
-                        Property longitude = map.getProperty("_LONG");
-                        if (longitude == null) {
-                            map.addProperty("_LONG", gedcomLongitudeTextField.getText());
-                        } else {
-                            longitude.setValue(gedcomLongitudeTextField.getText());
-                        }
-                    }
+                    map = mPlace.addProperty(mapTAG, "");
+                    map.addProperty(latitudeTAG, gedcomLatitudeTextField.getText());
+                    map.addProperty(longitudeTAG, gedcomLongitudeTextField.getText());
                 }
             }
         }
