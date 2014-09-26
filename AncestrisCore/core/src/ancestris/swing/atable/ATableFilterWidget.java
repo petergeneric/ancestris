@@ -39,7 +39,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.actions.Presenter;
 
 @NbBundle.Messages({
-    "allfilter=All",
+    //    "allfilter=All",
     "exactmatch=Exact Match",
     "# {0} - number of occurences",
     "occurrences.label={0} occurrences"
@@ -79,7 +79,6 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
 
     private void setHeaders(TableModel model) {
         headers = new ArrayList<String>();
-        headers.add(allfilter());
         for (int c = 0; c < model.getColumnCount(); c++) {
             headers.add(model.getColumnName(c));
         }
@@ -195,18 +194,14 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
         private void invokeFilter() {
             if (sorter != null) {
                 RowFilter<TableModel, Object> rf;
-                int col = getIndex() - 1;
+                int col = getIndex();
                 String flags = "";
                 if (!exactMatch.isSelected()) {
                     flags = "(?i)(?u)";
                 }
                 //If current expression doesn't parse, don't update.
                 try {
-                    if (col < 0) {
-                        rf = RowFilter.regexFilter(flags + filterText.getText());
-                    } else {
-                        rf = RowFilter.regexFilter(flags + filterText.getText(), col);
-                    }
+                    rf = RowFilter.regexFilter(flags + filterText.getText(), col);
                 } catch (java.util.regex.PatternSyntaxException e) {
                     return;
                 }
