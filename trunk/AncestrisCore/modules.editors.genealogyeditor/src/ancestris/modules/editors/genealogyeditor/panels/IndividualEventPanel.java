@@ -712,13 +712,13 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 //                Exceptions.printStackTrace(ex);
 //            }
 //        }
-        if (mDate == null){
-            aDateBean.setContext(mEvent,null);
+        if (mDate == null) {
+            aDateBean.setContext(mEvent, null);
         } else {
             aDateBean.setContext(mDate);
         }
 
-        if (!mEvent.getTag().equals("BIRT") && mDate!=null) {
+        if (!mEvent.getTag().equals("BIRT") && mDate != null) {
             IndividualAgeLabel.setVisible(true);
             individualAgeTextField.setVisible(true);
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
@@ -732,7 +732,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
                 }
             } else {
-                if (mDate.isValid()) {
+                if (mDate != null && mDate.isValid()) {
                     Delta deltaAge = ((Indi) mRoot).getAge(mDate.getStart());
                     if (deltaAge != null) {
                         individualAgeTextField.setText(deltaAge.toString());
