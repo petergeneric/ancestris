@@ -26,7 +26,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
     private Context context;
     private Property mRoot;
     private Property mMultiMediaObject;
-    private MultimediaFilesTableModel mMultimediaFilesTableModel = new MultimediaFilesTableModel();
+    private final MultimediaFilesTableModel mMultimediaFilesTableModel = new MultimediaFilesTableModel();
 
     /**
      * Creates new form MultiMediaObjectEditor
@@ -239,6 +239,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                     }
                 }); // end of doUnitOfWork
 
+                changes.fireChangeEvent();
                 mMultimediaFilesTableModel.clear();
                 for (Property multimediaFile : mMultiMediaObject.getProperties("FILE", true)) {
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
