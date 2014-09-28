@@ -96,6 +96,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private boolean mWifeAgeModified = false;
     private boolean mEventNameModified = false;
     private boolean mEventTypeModified = false;
+    private boolean mResponsibleAgencyModified = false;
 
     /**
      * Creates new form EventEditorPanel
@@ -113,6 +114,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         husbandAgeTextField.getDocument().putProperty("name", "husbandAgeTextField");
         wifeAgeTextField.getDocument().addDocumentListener(changeListner);
         wifeAgeTextField.getDocument().putProperty("name", "wifeAgeTextField");
+        responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
+        responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
     }
 
     /**
@@ -146,6 +149,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         jScrollPane2 = new JScrollPane();
         eventTypeTextArea = new JTextArea();
         eventNameChoiceWidget = new ChoiceWidget();
+        responsibleAgencyLabel = new JLabel();
+        responsibleAgencyTextField = new JTextField();
         sourcesPanel = new JPanel();
         sourceCitationsListPanel = new SourceCitationsListPanel();
         notesPanel = new JPanel();
@@ -251,6 +256,11 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         eventTypeTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(eventTypeTextArea);
 
+        responsibleAgencyLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        responsibleAgencyLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.responsibleAgencyLabel.text")); // NOI18N
+
+        responsibleAgencyTextField.setToolTipText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.responsibleAgencyTextField.toolTipText")); // NOI18N
+
         GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
         EventDetailPanel.setLayout(EventDetailPanelLayout);
         EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -262,7 +272,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     .addComponent(eventCauseLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(husbandAgeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(EventTypeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(eventNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(eventNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(responsibleAgencyLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(EventDetailPanelLayout.createSequentialGroup()
@@ -274,7 +285,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                        .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                        .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1)
@@ -287,7 +298,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addComponent(wifeAgeTextField))
                     .addGroup(EventDetailPanelLayout.createSequentialGroup()
                         .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(responsibleAgencyTextField))
                 .addContainerGap())
         );
         EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -326,7 +338,11 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     .addGroup(EventDetailPanelLayout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addComponent(EventTypeLabel)))
-                .addContainerGap())
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(responsibleAgencyLabel)
+                    .addComponent(responsibleAgencyTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         eventInformationTabbedPane.addTab(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png")), EventDetailPanel); // NOI18N
@@ -341,7 +357,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             .addComponent(sourceCitationsListPanel, GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+            .addComponent(sourceCitationsListPanel, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
@@ -354,7 +370,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             .addComponent(noteCitationsListPanel, GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+            .addComponent(noteCitationsListPanel, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -367,7 +383,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             .addComponent(multimediaObjectCitationsListPanel, GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsListPanel, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
@@ -578,6 +594,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private JLabel placeLabel;
     private JTextField placeTextField;
     private JToggleButton privateRecordToggleButton;
+    private JLabel responsibleAgencyLabel;
+    private JTextField responsibleAgencyTextField;
     private SourceCitationsListPanel sourceCitationsListPanel;
     private JPanel sourcesPanel;
     private JLabel wifeAgeLabel;
@@ -745,6 +763,13 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
 
+        Property responsibleAgency = mEvent.getProperty("AGNC");
+        if (responsibleAgency != null) {
+            responsibleAgencyTextField.setText(responsibleAgency.getValue());
+        } else {
+            responsibleAgencyTextField.setText("");
+        }
+
         changeListner.unmute();
 
     }
@@ -833,6 +858,16 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         addProperty.addProperty("AGE", wifeAgeTextField.getText() + " y");
                     }
                 }
+                
+                if (mResponsibleAgencyModified) {
+                    mResponsibleAgencyModified = false;
+                    Property responsibleAgency = mEvent.getProperty("AGNC", false);
+                    if (responsibleAgency != null) {
+                        responsibleAgency.setValue(responsibleAgencyTextField.getText());
+                    } else {
+                        mEvent.addProperty("AGNC", responsibleAgencyTextField.getText());
+                    }
+                }
             }
 //        gedcomPlacePanel.commit();
 //        addressPanel.commit();
@@ -865,6 +900,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("wifeAgeTextField")) {
                         mWifeAgeModified = true;
                     }
+                    if (propertyName.equals("responsibleAgencyTextField")) {
+                        mResponsibleAgencyModified = true;
+                    }
                     changeSupport.fireChange();
                 }
             }
@@ -892,6 +930,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("wifeAgeTextField")) {
                         mWifeAgeModified = true;
                     }
+                    if (propertyName.equals("responsibleAgencyTextField")) {
+                        mResponsibleAgencyModified = true;
+                    }
                     changeSupport.fireChange();
                 }
             }
@@ -918,6 +959,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     }
                     if (propertyName.equals("wifeAgeTextField")) {
                         mWifeAgeModified = true;
+                    }
+                    if (propertyName.equals("responsibleAgencyTextField")) {
+                        mResponsibleAgencyModified = true;
                     }
                     changeSupport.fireChange();
                 }
