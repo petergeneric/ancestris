@@ -81,8 +81,8 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="dateLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="placeLabel" alignment="0" max="32767" attributes="0"/>
@@ -90,6 +90,7 @@
                           <Component id="husbandAgeLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="EventTypeLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="eventNameLabel" max="32767" attributes="0"/>
+                          <Component id="responsibleAgencyLabel" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -103,7 +104,7 @@
                               <Component id="linkToPlaceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Component id="aDateBean" pref="447" max="32767" attributes="0"/>
+                              <Component id="aDateBean" pref="422" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -116,10 +117,11 @@
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="wifeAgeTextField" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Component id="eventNameChoiceWidget" min="-2" pref="259" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
+                          <Component id="responsibleAgencyTextField" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -172,6 +174,11 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="responsibleAgencyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="responsibleAgencyTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -386,6 +393,21 @@
             </Container>
             <Component class="genj.util.swing.ChoiceWidget" name="eventNameChoiceWidget">
             </Component>
+            <Component class="javax.swing.JLabel" name="responsibleAgencyLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEventPanel.responsibleAgencyLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="responsibleAgencyTextField">
+              <Properties>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEventPanel.responsibleAgencyTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="sourcesPanel">
@@ -415,7 +437,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" pref="212" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsListPanel" alignment="0" pref="163" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -453,7 +475,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" pref="212" max="32767" attributes="0"/>
+                  <Component id="noteCitationsListPanel" alignment="0" pref="163" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -491,7 +513,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="212" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsListPanel" alignment="0" pref="163" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
