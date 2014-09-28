@@ -639,7 +639,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             eventNameLabel.setVisible(true);
             eventNameChoiceWidget.setVisible(true);
             eventNameChoiceWidget.setEditable(true);
-            eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet("TYPE").getKeys());
+            eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet("TYPE").getKeys(mEvent.getGedcom().getCollator()));
             Property eventType = mEvent.getProperty("TYPE", false);
             if (eventType != null) {
                 eventNameChoiceWidget.setText(eventType.getValue());
@@ -651,7 +651,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         } else if (mIndividualAttributesTags.contains(event.getTag()) && !event.getTag().equals("RESI")) {
             eventNameLabel.setVisible(true);
             eventNameChoiceWidget.setVisible(true);
-            eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet(mEvent.getTag()).getKeys());
+            eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet(mEvent.getTag()).getKeys(mEvent.getGedcom().getCollator()));
             eventNameLabel.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
             eventNameChoiceWidget.setText(mEvent.getValue());
             eventNameChoiceWidget.setEditable(true);
