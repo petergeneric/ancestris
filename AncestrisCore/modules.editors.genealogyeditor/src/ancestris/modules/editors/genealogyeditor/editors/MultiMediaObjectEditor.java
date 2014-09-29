@@ -355,11 +355,24 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 multiMediaObjectIDTextField.setText(((Media) mMultiMediaObject).getId());
                 multiMediaObjectTitleTextField.setText(((Media) mMultiMediaObject).getTitle());
 
+                changeDateLabel.setVisible(true);
+                changeDateLabeldate.setVisible(true);
+                Property changeDate = mMultiMediaObject.getProperty("CHAN");
+                if (changeDate != null) {
+                    changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
+                }
+
                 List<Entity> entitiesList = new ArrayList<Entity>();
                 for (PropertyXRef entityRef : mMultiMediaObject.getProperties(PropertyXRef.class)) {
                     entitiesList.add(entityRef.getTargetEntity());
                 }
+
                 referencesListPanel.set((Media) mMultiMediaObject, entitiesList);
+                int indexOfTab = multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"));
+                if (indexOfTab == -1) {
+                    multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), multiMediaObjectReferencesPanel); // NOI18N
+                }
+
             } else {
                 Property propertyTitle = mMultiMediaObject.getProperty("TITL");
                 multiMediaObjectTitleTextField.setText(propertyTitle != null ? propertyTitle.getValue() : "");
@@ -384,11 +397,6 @@ public class MultiMediaObjectEditor extends EntityEditor {
              * +1 <<NOTE_STRUCTURE>>
              */
             noteCitationsListPanel.set(mMultiMediaObject, Arrays.asList(mMultiMediaObject.getProperties("NOTE")));
-
-            Property changeDate = mMultiMediaObject.getProperty("CHAN");
-            if (changeDate != null) {
-                changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
-            }
         }
     }
 
