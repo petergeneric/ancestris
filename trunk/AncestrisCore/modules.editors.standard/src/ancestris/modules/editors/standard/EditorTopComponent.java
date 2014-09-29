@@ -45,10 +45,13 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import net.miginfocom.layout.AC;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
+import org.openide.awt.UndoRedo;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -74,8 +77,10 @@ public class EditorTopComponent extends AncestrisTopComponent
     private JScrollPane editorContainer;
     private JLabel titleLabel;
     private int undoNb;
-
+    UndoRedoListener undoRedoListener;
+    
     private static final Map<Class<? extends Property>, Editor> panels;
+
     static {
         panels = new HashMap<Class<? extends Property>, Editor>();
         panels.put(Fam.class, new FamilyEditor());
@@ -93,7 +98,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         JPanel editorPanel;
         editorPanel = new JPanel(
                 new MigLayout(new LC().fill().hideMode(3),
-                new AC().grow().fill()));
+                        new AC().grow().fill()));
         editorContainer = new JScrollPane();
         editorPanel.add(editorContainer, new CC().grow());
         titleLabel = new JLabel("");
@@ -132,8 +137,9 @@ public class EditorTopComponent extends AncestrisTopComponent
      */
     private void setEditor(Editor set) {
         // editor not yet initialized 
-        if (editorContainer == null)
+        if (editorContainer == null) {
             return;
+        }
 //        // commit old editor unless set==null
         Context old = null;
         if (set != null) {
@@ -168,6 +174,13 @@ public class EditorTopComponent extends AncestrisTopComponent
         // show
         revalidate();
         repaint();
+    }
+
+    @Override
+    public void componentOpened() {
+        undoRedoListener = new UndoRedoListener();
+        UndoRedo undoRedo = getUndoRedo();
+        undoRedo.addChangeListener(undoRedoListener);
     }
 
     public void commit() {
@@ -219,7 +232,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         }
     }
 
-    private void cancel(){
+    private void cancel() {
         // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume
         // that the containing window was closed and we're not going to throw a dialog out there or do a change
         // behind the covers - we really would need a about-to-close hook for contained components here :(
@@ -227,14 +240,13 @@ public class EditorTopComponent extends AncestrisTopComponent
             return;
         }
 
-
-            if (gedcom.isWriteLocked()) {
-                //FIXME: do we need a canclel here? editor.cancel();
-            } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
-                }
+        if (gedcom.isWriteLocked()) {
+            //FIXME: do we need a canclel here? editor.cancel();
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
             }
+        }
 
     }
 
@@ -360,5 +372,16 @@ public class EditorTopComponent extends AncestrisTopComponent
 ////                populate(toolbar);
 //            }
 //        }
+    }
+
+    private class UndoRedoListener implements ChangeListener {
+
+        ancestris.modules.editors.genealogyeditor.editors.EntityEditor entityEditor;
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            Context ctx = editor.getContext();
+            editor.setContext(ctx);
+        }
     }
 }
