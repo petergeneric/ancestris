@@ -412,7 +412,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
     private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
-        
 
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
@@ -447,7 +446,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private void editSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSourceButtonActionPerformed
         if (mReferencedSource != null) {
             Gedcom gedcom = mRoot.getGedcom();
-            
+
             SourceEditor sourceEditor = new SourceEditor();
             sourceEditor.setContext(new Context(mReferencedSource));
             sourceEditor.showPanel();
@@ -618,7 +617,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
 //                            @Override
 //                            public void perform(Gedcom gedcom) throws GedcomException {
-                                recordingDate.setContext(sourceData, null);
+                    recordingDate.setContext(sourceData, null);
 //                            }
 //                        }); // end of doUnitOfWork
 //                    } catch (GedcomException ex) {
@@ -634,18 +633,18 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     mSourceTextModified = false;
                 }
             } else {
-                try {
-                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+//                try {
+//                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            Property sourceData = sourceCitation.addProperty("DATA", "");
-                            recordingDate.setContext(sourceData, null);
-                        }
-                    }); // end of doUnitOfWork
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+//                        @Override
+//                        public void perform(Gedcom gedcom) throws GedcomException {
+//                            Property sourceData = sourceCitation.addProperty("DATA", "");
+                recordingDate.setContext(sourceCitation, new TagPath(".:DATA"), (Property) null, (String) null);
+//                        }
+//                    }); // end of doUnitOfWork
+//                } catch (GedcomException ex) {
+//                    Exceptions.printStackTrace(ex);
+//               }
             }
         } else {
             addSourceButton.setVisible(false);
@@ -764,6 +763,12 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             if (mSourceTextModified) {
                 mSourceTextModified = false;
 
+                try {
+                    recordingDate.commit();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+
                 Property sourceData = mSourceCitation.getProperty("DATA");
                 if (sourceData == null) {
                     sourceData = mSourceCitation.addProperty("DATA", "");
@@ -773,15 +778,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     if (sourceText == null) {
                         sourceData.addProperty("TEXT", sourceDataTextArea.getText());
                     } else {
-                        sourceData.setValue(sourceDataTextArea.getText());
+                        sourceText.setValue(sourceDataTextArea.getText());
                     }
                 }
-            }
-
-            try {
-                recordingDate.commit();
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
             }
         } else {
             if (mSourceReferencedTitleModified) {
