@@ -12,15 +12,11 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  *
- * SOURCE_RECORD:=
- * n @<XREF:SOUR>@ SOUR
- * +1 DATA
- * +2 EVEN <EVENTS_RECORDED>
+ * SOURCE_RECORD:= n @<XREF:SOUR>@ SOUR +1 DATA +2 EVEN <EVENTS_RECORDED>
  * +3 DATE <DATE_PERIOD>
  * +3 PLAC <SOURCE_JURISDICTION_PLACE>
  * +2 AGNC <RESPONSIBLE_AGENCY>
- * +2 <<NOTE_STRUCTURE>>
- * +1 AUTH <SOURCE_ORIGINATOR>
+ * +2 <<NOTE_STRUCTURE>> +1 AUTH <SOURCE_ORIGINATOR>
  * +2 [CONC|CONT] <SOURCE_ORIGINATOR>
  * +1 TITL <SOURCE_DESCRIPTIVE_TITLE>
  * +2 [CONC|CONT] <SOURCE_DESCRIPTIVE_TITLE>
@@ -29,21 +25,19 @@ import org.openide.util.NbBundle;
  * +2 [CONC|CONT] <SOURCE_PUBLICATION_FACTS>
  * +1 TEXT <TEXT_FROM_SOURCE>
  * +2 [CONC|CONT] <TEXT_FROM_SOURCE>
- * +1 <<SOURCE_REPOSITORY_CITATION>>
- * +1 REFN <USER_REFERENCE_NUMBER>
+ * +1 <<SOURCE_REPOSITORY_CITATION>> +1 REFN <USER_REFERENCE_NUMBER>
  * +2 TYPE <USER_REFERENCE_TYPE>
  * +1 RIN <AUTOMATED_RECORD_ID>
- * +1 <<CHANGE_DATE>>
- * +1 <<NOTE_STRUCTURE>>
- * +1 <<MULTIMEDIA_LINK>>
+ * +1 <<CHANGE_DATE>> +1 <<NOTE_STRUCTURE>> +1 <<MULTIMEDIA_LINK>>
  */
 public class SourcesTableModel extends AbstractTableModel {
 
     List<Source> mSourcesList = new ArrayList<Source>();
-    private String[] columnsName = {
+    private final String[] columnsName = {
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.ID.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.description.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.events.title")
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.events.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.date.title")
     };
 
     public SourcesTableModel() {
@@ -67,13 +61,22 @@ public class SourcesTableModel extends AbstractTableModel {
                 return source.getId();
             } else if (column == 1) {
                 return source.getTitle();
-            } else {
+            } else if (column == 2) {
                 Property propertyByPath = source.getPropertyByPath("DATA:EVEN");
                 if (propertyByPath != null) {
                     return propertyByPath.getDisplayValue();
                 } else {
                     return "";
                 }
+            } else if (column == 3) {
+                Property propertyByPath = source.getPropertyByPath("DATA:EVEN:DATE");
+                if (propertyByPath != null) {
+                    return propertyByPath.getDisplayValue();
+                } else {
+                    return "";
+                }
+            } else {
+                return "";
             }
         } else {
             return "";
@@ -94,7 +97,6 @@ public class SourcesTableModel extends AbstractTableModel {
         mSourcesList.addAll(sourcesList);
         fireTableDataChanged();
     }
-
 
     public void clear() {
         this.mSourcesList.clear();
