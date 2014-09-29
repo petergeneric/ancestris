@@ -62,14 +62,14 @@ public class SourcesTableModel extends AbstractTableModel {
             } else if (column == 1) {
                 return source.getTitle();
             } else if (column == 2) {
-                Property propertyByPath = source.getPropertyByPath("DATA:EVEN");
+                Property propertyByPath = source.getPropertyByPath(".:DATA:EVEN");
                 if (propertyByPath != null) {
                     return propertyByPath.getDisplayValue();
                 } else {
                     return "";
                 }
             } else if (column == 3) {
-                Property propertyByPath = source.getPropertyByPath("DATA:EVEN:DATE");
+                Property propertyByPath = source.getPropertyByPath(".:DATA:EVEN:DATE");
                 if (propertyByPath != null) {
                     return propertyByPath.getDisplayValue();
                 } else {
