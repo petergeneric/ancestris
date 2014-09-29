@@ -367,9 +367,13 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 multiMediaObjectIDLabel.setVisible(false);
                 changeDateLabel.setVisible(false);
                 changeDateLabeldate.setVisible(false);
-                multiMediaObjectTabbedPane.removeTabAt(multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle")));
+                int indexOfTab = multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"));
+                if (indexOfTab != -1) {
+                    multiMediaObjectTabbedPane.removeTabAt(multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle")));
+                }
             }
 
+            mMultimediaFilesTableModel.clear();
             for (Property multimediaFile : mMultiMediaObject.getProperties("FILE", true)) {
                 if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
                     mMultimediaFilesTableModel.add(((PropertyFile) multimediaFile).getFile());
