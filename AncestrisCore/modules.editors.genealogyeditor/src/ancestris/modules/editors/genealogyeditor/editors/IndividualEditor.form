@@ -6,9 +6,6 @@
       <Dimension value="[1042, 462]"/>
     </Property>
     <Property name="name" type="java.lang.String" value="" noResource="true"/>
-    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[1042, 462]"/>
-    </Property>
   </Properties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
@@ -51,7 +48,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="generalPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="individualInformationTabbedPane" pref="269" max="32767" attributes="0"/>
+              <Component id="individualInformationTabbedPane" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="changeDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -73,7 +70,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Component id="imageBean" min="-2" pref="120" max="-2" attributes="0"/>
+                  <Component id="imageBean" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
@@ -106,7 +103,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="nameEditorPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="imageBean" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
+                      <Component id="imageBean" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               </Group>
@@ -145,12 +142,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="150" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="200" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -189,7 +186,7 @@
           <Dimension value="[1018, 219]"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[1018, 219]"/>
+          <Dimension value="null"/>
         </Property>
       </Properties>
 
@@ -231,6 +228,9 @@
                   <Border info="null"/>
                 </Property>
                 <Property name="dividerSize" type="int" value="1"/>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="null"/>
+                </Property>
               </Properties>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -359,7 +359,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                              <Component id="individualEventEditorPanel" pref="753" max="32767" attributes="0"/>
+                              <Component id="individualEventEditorPanel" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -367,7 +367,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                              <Component id="individualEventEditorPanel" pref="242" max="32767" attributes="0"/>
+                              <Component id="individualEventEditorPanel" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
