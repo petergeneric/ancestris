@@ -365,6 +365,8 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 multiMediaObjectTitleTextField.setText(propertyTitle != null ? propertyTitle.getValue() : "");
                 multiMediaObjectIDTextField.setVisible(false);
                 multiMediaObjectIDLabel.setVisible(false);
+                changeDateLabel.setVisible(false);
+                changeDateLabeldate.setVisible(false);
                 multiMediaObjectTabbedPane.removeTabAt(multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle")));
             }
 
