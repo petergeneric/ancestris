@@ -330,11 +330,11 @@ public class MultiMediaObjectEditor extends EntityEditor {
         Property property;
 
         this.context = context;
-        property = context.getEntity();
+        property = context.getProperty();
         if (property == null) {
-            property = context.getProperty();
+            property = context.getEntity();
         }
-        
+
         if (property != null) {
             if (property instanceof PropertyMedia) {
                 mMultiMediaObject = ((PropertyMedia) property).getTargetEntity();
