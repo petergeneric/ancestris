@@ -239,6 +239,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
 
     public void setEventTypesList(Property root, List<Property> eventsTypeList) {
         this.mRoot = root;
+        mSourceEventTypesTableModel.clear();
         if (eventsTypeList != null) {
             mSourceEventTypesTableModel.addAll(eventsTypeList);
         }
