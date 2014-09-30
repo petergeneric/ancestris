@@ -233,7 +233,8 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
     private void addFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFamilyButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
-        
+        int undoNb = gedcom.getUndoNb();
+
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -256,6 +257,10 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
             familyEditor.setContext(new Context(mCreateFamily));
             if (familyEditor.showPanel()) {
                 ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(mCreateFamily);
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -300,7 +305,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         int rowIndex = familiesTreeTable.convertRowIndexToModel(familiesTreeTable.getSelectedRow());
         Gedcom gedcom = mRoot.getGedcom();
-        
+
         if (rowIndex != -1) {
             TreePath path = familiesTreeTable.getPathForRow(rowIndex);
             Object node = path.getLastPathComponent();
@@ -402,7 +407,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int rowIndex = familiesTreeTable.convertRowIndexToModel(familiesTreeTable.getSelectedRow());
             Gedcom gedcom = mRoot.getGedcom();
-            
+
             if (rowIndex != -1) {
                 TreePath path = familiesTreeTable.getPathForRow(rowIndex);
                 Object node = path.getLastPathComponent();

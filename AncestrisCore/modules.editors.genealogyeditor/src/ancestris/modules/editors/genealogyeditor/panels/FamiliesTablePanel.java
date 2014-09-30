@@ -153,7 +153,8 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
 
     private void addFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFamilyNameButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
-        
+        int undoNb = gedcom.getUndoNb();
+
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -174,7 +175,13 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
 
             FamilyEditor familyEditor = new FamilyEditor();
             familyEditor.setContext(new Context(mCreateFamily));
-            familyEditor.showPanel();
+            if (familyEditor.showPanel()) {
+                mFamiliesTableModel.add(mCreateFamily);
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -183,7 +190,7 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
     private void editFamilyNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFamilyNameButtonActionPerformed
         int rowIndex = familyNamesTable.convertRowIndexToModel(familyNamesTable.getSelectedRow());
         Gedcom gedcom = mRoot.getGedcom();
-        
+
         if (rowIndex != -1) {
             Fam family = mFamiliesTableModel.getValueAt(rowIndex);
             FamilyEditor familyEditor = new FamilyEditor();
@@ -263,7 +270,7 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int rowIndex = familyNamesTable.convertRowIndexToModel(familyNamesTable.getSelectedRow());
             Gedcom gedcom = mRoot.getGedcom();
-            
+
             if (rowIndex != -1) {
                 Fam family = mFamiliesTableModel.getValueAt(rowIndex);
                 FamilyEditor familyEditor = new FamilyEditor();

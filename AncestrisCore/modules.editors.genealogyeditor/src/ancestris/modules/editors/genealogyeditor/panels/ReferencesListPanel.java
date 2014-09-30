@@ -31,24 +31,11 @@ public class ReferencesListPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         referencesToolBar = new javax.swing.JToolBar();
-        addReferenceButton = new javax.swing.JButton();
         referencesTableScrollPane = new javax.swing.JScrollPane();
         referencesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         referencesToolBar.setFloatable(false);
         referencesToolBar.setRollover(true);
-
-        addReferenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addReferenceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("ReferencesListPanel.addReferenceButton.toolTipText"), new Object[] {})); // NOI18N
-        addReferenceButton.setFocusable(false);
-        addReferenceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addReferenceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addReferenceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addReferenceButtonActionPerformed(evt);
-            }
-        });
-        referencesToolBar.add(addReferenceButton);
 
         referencesTable.setModel(mReferencesTableModel);
         referencesTableScrollPane.setViewportView(referencesTable);
@@ -69,11 +56,7 @@ public class ReferencesListPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addReferenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReferenceButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addReferenceButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addReferenceButton;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable referencesTable;
     private javax.swing.JScrollPane referencesTableScrollPane;
     private javax.swing.JToolBar referencesToolBar;

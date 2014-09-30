@@ -285,6 +285,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
 
     private void addChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildrenButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
 
         try {
             mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -308,7 +309,14 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
             individualEditor.setContext(new Context(mIndividual));
 
             individualEditor.addChangeListener(changeListner);
-            individualEditor.showPanel();
+            if (individualEditor.showPanel()) {
+                mChildrenTreeTableModel.add(mAddedChild);
+                childrenTreeTable.expandAll();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
             individualEditor.removeChangeListener(changeListner);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -345,7 +353,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                                         mRoot.delProperty((PropertyXRef) dataNode.getUserObject());
                                     }
                                 }); // end of doUnitOfWork
-                                
+
                                 changeListner.stateChanged(null);
                                 ((ChildrenTreeTableModel) childrenTreeTable.getTreeTableModel()).remove(dataNode);
                                 childrenTreeTable.expandAll();

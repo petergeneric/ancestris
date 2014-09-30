@@ -129,6 +129,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
 
     private void addRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRepositoryButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
 
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
@@ -152,6 +153,10 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                 }); // end of doUnitOfWork
                 mRepositoryCitationsTableModel.add(mRepositoryCitation);
                 changeSupport.fireChange();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -212,9 +217,9 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
                 RepositoryEditor repositoryEditor = new RepositoryEditor();
                 repositoryEditor.setContext(new Context(mRepositoryCitationsTableModel.getValueAt(rowIndex).getTargetEntity()));
-            repositoryEditor.addChangeListener(changeListner);
+                repositoryEditor.addChangeListener(changeListner);
                 repositoryEditor.showPanel();
-                            repositoryEditor.removeChangeListener(changeListner);
+                repositoryEditor.removeChangeListener(changeListner);
 
             }
         }
