@@ -573,6 +573,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             Property page = sourceCitation.getProperty("PAGE");
             if (page != null) {
                 pageTextField.setText(page.getValue());
+            } else {
+                pageTextField.setText("");
             }
 
             Property eventType = sourceCitation.getProperty("EVEN");
