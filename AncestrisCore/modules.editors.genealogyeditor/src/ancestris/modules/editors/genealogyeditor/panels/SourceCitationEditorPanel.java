@@ -567,6 +567,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 mSourceReferencedTitleModified = false;
             } else {
                 editSourceButton.setVisible(false);
+                sourceReferencedTitleTextArea.setText("");
             }
 
             Property page = sourceCitation.getProperty("PAGE");
@@ -631,6 +632,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 if (sourceText != null) {
                     sourceDataTextArea.setText(sourceText.getValue());
                     mSourceTextModified = false;
+                } else {
+                    sourceDataTextArea.setText(sourceText.getValue());
+                    mSourceTextModified = false;
                 }
             } else {
 //                try {
@@ -669,6 +673,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             Property sourceText = sourceCitation.getProperty("TEXT");
             if (sourceText != null) {
                 sourceDataTextArea.setText(sourceText.getValue());
+                mSourceTextModified = false;
+            } else {
+                sourceDataTextArea.setText("");
                 mSourceTextModified = false;
             }
         }
