@@ -102,7 +102,8 @@ public class IndividualsListPanel extends javax.swing.JPanel {
 
     private void addIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIndividualButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
-        
+        int undoNb = gedcom.getUndoNb();
+
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -115,6 +116,10 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             individualEditor.setContext(new Context(mIndividual));
             if (individualEditor.showPanel()) {
                 mIndividualsTableModel.add(mIndividual);
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -124,7 +129,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
     private void editIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editIndividualButtonActionPerformed
         int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
         Gedcom gedcom = mRoot.getGedcom();
-        
+
         if (rowIndex != -1) {
             Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
             IndividualEditor individualEditor = new IndividualEditor();
@@ -140,7 +145,7 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int rowIndex = individualsTable.convertRowIndexToModel(individualsTable.getSelectedRow());
             Gedcom gedcom = mRoot.getGedcom();
-            
+
             if (rowIndex != -1) {
                 Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
                 IndividualEditor individualEditor = new IndividualEditor();

@@ -186,6 +186,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
 
     private void addFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFamilyButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
 
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
@@ -217,6 +218,10 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                     ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).addAll(mRoot.getProperties(PropertyFamilySpouse.class));
                 }
                 familiesTreeTable.expandAll();
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
             familyEditor.removeChangeListener(changeListner);
         } catch (GedcomException ex) {

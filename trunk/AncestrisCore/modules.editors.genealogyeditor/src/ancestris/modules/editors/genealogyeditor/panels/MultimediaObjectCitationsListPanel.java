@@ -133,6 +133,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
 
     private void addMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMMObjectButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
 
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
@@ -155,6 +156,10 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             if (multiMediaObjectEditor.showPanel()) {
                 multiMediaObjectCitationsTableModel.clear();
                 multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
             multiMediaObjectEditor.removeChangeListener(changeListner);
         } catch (GedcomException ex) {

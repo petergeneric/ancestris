@@ -107,7 +107,8 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
 
     private void addRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRepositoryButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
-        
+        int undoNb = gedcom.getUndoNb();
+
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -129,6 +130,10 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 mRepositoriesTableModel.add(mRepository);
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -138,7 +143,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
     private void editRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRepositoryButtonActionPerformed
         int selectedRow = repositoriesTable.getSelectedRow();
         Gedcom gedcom = mRoot.getGedcom();
-        
+
         if (selectedRow != -1) {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
             RepositoryEditor repositoryEditor = new RepositoryEditor();
@@ -181,7 +186,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2) {
             int selectedRow = repositoriesTable.getSelectedRow();
             Gedcom gedcom = mRoot.getGedcom();
-            
+
             if (selectedRow != -1) {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
                 RepositoryEditor repositoryEditor = new RepositoryEditor();

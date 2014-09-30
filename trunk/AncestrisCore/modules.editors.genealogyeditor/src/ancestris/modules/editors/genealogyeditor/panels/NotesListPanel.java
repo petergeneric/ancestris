@@ -21,7 +21,7 @@ import org.openide.util.NbBundle;
  * @author dominique
  */
 public class NotesListPanel extends javax.swing.JPanel {
-    
+
     private Property mRoot;
     private final NotesTableModel mNotesTableModel = new NotesTableModel();
     private Note mNote;
@@ -138,10 +138,11 @@ public class NotesListPanel extends javax.swing.JPanel {
 
     private void addNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
-        
+        int undoNb = gedcom.getUndoNb();
+
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
-                
+
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mNote = (Note) gedcom.createEntity(Gedcom.NOTE);
@@ -152,7 +153,7 @@ public class NotesListPanel extends javax.swing.JPanel {
             noteEditor.setContext(new Context(mNote));
             if (noteEditor.showPanel()) {
                 gedcom.doUnitOfWork(new UnitOfWork() {
-                    
+
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         mRoot.addNote(mNote);
@@ -160,6 +161,10 @@ public class NotesListPanel extends javax.swing.JPanel {
                 }); // end of doUnitOfWork
                 mNotesTableModel.add(mNote);
                 changeListner.stateChanged(null);
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -189,11 +194,11 @@ public class NotesListPanel extends javax.swing.JPanel {
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-                        
+
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             mRoot.delProperty(mNotesTableModel.remove(rowIndex));
-                            
+
                         }
                     }); // end of doUnitOfWork
                     changeListner.stateChanged(null);
@@ -206,7 +211,7 @@ public class NotesListPanel extends javax.swing.JPanel {
 
     private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
         List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
-        
+
         NotesListPanel notesListPanel = new NotesListPanel();
         notesListPanel.set(mRoot, notesList);
         notesListPanel.setToolBarVisible(false);
@@ -214,13 +219,13 @@ public class NotesListPanel extends javax.swing.JPanel {
                 NbBundle.getMessage(NoteEditor.class, "NoteEditorPanel.title"),
                 notesListPanel);
         individualsListDialog.setDialogId(NoteEditor.class.getName());
-        
+
         if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
             final Note selectedNote = notesListPanel.getSelectedNote();
             mNotesTableModel.add(selectedNote);
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-                    
+
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         mRoot.addNote(selectedNote);
@@ -261,11 +266,11 @@ public class NotesListPanel extends javax.swing.JPanel {
         mNotesTableModel.clear();
         mNotesTableModel.addAll(notesList);
     }
-    
+
     public void setToolBarVisible(boolean visible) {
         notesToolBar.setVisible(visible);
     }
-    
+
     public Note getSelectedNote() {
         int selectedRow = notesTable.getSelectedRow();
         if (selectedRow != -1) {
@@ -289,9 +294,9 @@ public class NotesListPanel extends javax.swing.JPanel {
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
-    
+
     private class ChangeListner implements ChangeListener {
-        
+
         @Override
         public void stateChanged(ChangeEvent ce) {
             changeSupport.fireChange();

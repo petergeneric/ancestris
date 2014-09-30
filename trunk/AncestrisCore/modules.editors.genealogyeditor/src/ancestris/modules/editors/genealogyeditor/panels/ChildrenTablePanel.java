@@ -130,6 +130,7 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
 
     private void addChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildrenButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
 
         try {
             mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -154,6 +155,10 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
             individualEditor.addChangeListener(changeListner);
             if (individualEditor.showPanel()) {
                 mIndividualReferencesTableModel.add(mAddedChild);
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
             individualEditor.removeChangeListener(changeListner);
         } catch (GedcomException ex) {
