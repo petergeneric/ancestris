@@ -116,6 +116,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         wifeAgeTextField.getDocument().putProperty("name", "wifeAgeTextField");
         responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
         responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
+        sourceCitationsListPanel.addChangeListener(changeListner);
+        noteCitationsListPanel.addChangeListener(changeListner);
+        multimediaObjectCitationsListPanel.addChangeListener(changeListner);
     }
 
     /**
