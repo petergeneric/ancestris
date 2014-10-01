@@ -478,6 +478,7 @@ public final class IndividualEditor extends EntityEditor {
                     }
                     imageBean.setImage(mMultiMediaObject);
                     repaint();
+                    changes.fireChangeEvent();
                 }
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
@@ -522,6 +523,7 @@ public final class IndividualEditor extends EntityEditor {
                         }
                         imageBean.setImage(mMultiMediaObject);
                         repaint();
+                        changes.fireChangeEvent();
                     }
                     break;
                 }
@@ -862,7 +864,7 @@ public final class IndividualEditor extends EntityEditor {
             } else {
                 imageBean.setImage(null);
             }
-            
+
             multimediaObjectCitationsListPanel.set(mIndividual, Arrays.asList(multiMediaObjects));
         }
     }
