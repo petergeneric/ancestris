@@ -412,6 +412,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
     private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
 
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
@@ -437,6 +438,10 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 sourceReferencedTitleTextArea.setText(mReferencedSource.getTitle());
                 addSourceButton.setVisible(false);
                 editSourceButton.setVisible(true);
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
