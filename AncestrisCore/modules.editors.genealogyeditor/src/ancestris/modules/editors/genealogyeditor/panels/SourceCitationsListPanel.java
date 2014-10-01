@@ -183,6 +183,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                             sourceCitationEditor.commit();
                         }
                     });
+                    changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -246,6 +247,8 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                                 sourceCitationEditor.commit();
                             }
                         });
+
+                        changeSupport.fireChange();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }

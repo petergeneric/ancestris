@@ -149,6 +149,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         individualAgeTextField.getDocument().putProperty("name", "individualAgeTextField");
         responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
         responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
+        sourceCitationsListPanel.addChangeListener(changeListner);
+        noteCitationsListPanel.addChangeListener(changeListner);
+        multimediaObjectCitationsListPanel.addChangeListener(changeListner);
     }
 
     /**
