@@ -296,7 +296,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             phoneTextField.setText(propertyPhone != null ? propertyPhone.getValue() : "");
 
             Property propertyFax;
-            if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                 propertyFax = mAddress.getProperty("FAX");
             } else {
                 propertyFax = mAddress.getProperty("_FAX");
@@ -304,7 +304,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             faxTextField.setText(propertyFax != null ? propertyFax.getValue() : "");
 
             Property propertyeMailAddr;
-            if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
 
                 propertyeMailAddr = mAddress.getProperty("EMAIL");
             } else {
@@ -313,7 +313,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             eMailAddrTextField.setText(propertyeMailAddr != null ? propertyeMailAddr.getValue() : "");
 
             Property propertyhttpAddr;
-            if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                 propertyhttpAddr = mAddress.getProperty("WWW");
             } else {
                 propertyhttpAddr = mAddress.getProperty("_WWW");
@@ -416,7 +416,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
             if (mFaxModified) {
                 mFaxModified = false;
-                if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     Property propertyFax = mAddress.getProperty("FAX");
                     if (propertyFax == null) {
                         mAddress.addProperty("FAX", faxTextField.getText());
@@ -435,7 +435,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
             if (meMailAddrModified) {
                 meMailAddrModified = false;
-                if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     Property propertyeMailAddr = mAddress.getProperty("EMAIL");
                     if (propertyeMailAddr == null) {
                         mAddress.addProperty("EMAIL", eMailAddrTextField.getText());
@@ -454,7 +454,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
             if (mHttpAddrModified) {
                 mHttpAddrModified = false;
-                if (!mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     Property propertyhttpAddr = mAddress.getProperty("WWW");
                     if (propertyhttpAddr == null) {
                         mAddress.addProperty("WWW", httpAddrTextField.getText());
