@@ -172,7 +172,7 @@ public class SubmitterEditor extends EntityEditor {
         if (entity != null && entity instanceof Submitter) {
             mSubmitter = (Submitter) entity;
 
-            setTitle(NbBundle.getMessage(SubmitterEditor.class, isNew() ? "SubmitterEditor.create.title" : "SubmitterEditor.edit.title", mSubmitter));
+            setTitle(NbBundle.getMessage(SubmitterEditor.class, isNew() ? "SubmitterEditor.create.title" : "SubmitterEditor.edit.title", mSubmitter.getName()));
 
             /*
              * +1 NAME <SUBMITTER_NAME>
