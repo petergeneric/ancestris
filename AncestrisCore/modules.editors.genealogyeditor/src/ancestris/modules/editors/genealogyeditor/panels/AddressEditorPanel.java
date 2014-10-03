@@ -437,16 +437,16 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         if (meMailAddrModified) {
             meMailAddrModified = false;
             if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                Property propertyeMailAddr = mAddress.getProperty("EMAIL");
+                Property propertyeMailAddr = mRoot.getProperty("EMAIL");
                 if (propertyeMailAddr == null) {
-                    mAddress.addProperty("EMAIL", eMailAddrTextField.getText());
+                    mRoot.addProperty("EMAIL", eMailAddrTextField.getText());
                 } else {
                     propertyeMailAddr.setValue(eMailAddrTextField.getText());
                 }
             } else {
-                Property propertyeMailAddr = mAddress.getProperty("_EMAIL");
+                Property propertyeMailAddr = mRoot.getProperty("_EMAIL");
                 if (propertyeMailAddr == null) {
-                    mAddress.addProperty("_EMAIL", eMailAddrTextField.getText());
+                    mRoot.addProperty("_EMAIL", eMailAddrTextField.getText());
                 } else {
                     propertyeMailAddr.setValue(eMailAddrTextField.getText());
                 }
