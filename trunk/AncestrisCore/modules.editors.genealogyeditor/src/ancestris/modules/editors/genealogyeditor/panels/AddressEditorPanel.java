@@ -292,31 +292,31 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             countryTextField.setText(propertyCountry != null ? propertyCountry.getValue() : "");
 
             Property propertyPhone;
-            propertyPhone = mAddress.getProperty("PHON");
+            propertyPhone = mRoot.getProperty("PHON");
             phoneTextField.setText(propertyPhone != null ? propertyPhone.getValue() : "");
 
             Property propertyFax;
             if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                propertyFax = mAddress.getProperty("FAX");
+                propertyFax = mRoot.getProperty("FAX");
             } else {
-                propertyFax = mAddress.getProperty("_FAX");
+                propertyFax = mRoot.getProperty("_FAX");
             }
             faxTextField.setText(propertyFax != null ? propertyFax.getValue() : "");
 
             Property propertyeMailAddr;
             if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
 
-                propertyeMailAddr = mAddress.getProperty("EMAIL");
+                propertyeMailAddr = mRoot.getProperty("EMAIL");
             } else {
-                propertyeMailAddr = mAddress.getProperty("_EMAIL");
+                propertyeMailAddr = mRoot.getProperty("_EMAIL");
             }
             eMailAddrTextField.setText(propertyeMailAddr != null ? propertyeMailAddr.getValue() : "");
 
             Property propertyhttpAddr;
             if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                propertyhttpAddr = mAddress.getProperty("WWW");
+                propertyhttpAddr = mRoot.getProperty("WWW");
             } else {
-                propertyhttpAddr = mAddress.getProperty("_WWW");
+                propertyhttpAddr = mRoot.getProperty("_WWW");
             }
             httpAddrTextField.setText(propertyhttpAddr != null ? propertyhttpAddr.getValue() : "");
         }
@@ -403,71 +403,71 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                     propertyCountry.setValue(countryTextField.getText());
                 }
             }
+        }
 
-            if (mPhoneModified) {
-                mPhoneModified = false;
-                Property propertyPhone = mAddress.getProperty("PHON");
-                if (propertyPhone == null) {
-                    mAddress.addProperty("PHON", phoneTextField.getText());
+        if (mPhoneModified) {
+            mPhoneModified = false;
+            Property propertyPhone = mRoot.getProperty("PHON");
+            if (propertyPhone == null) {
+                mRoot.addProperty("PHON", phoneTextField.getText());
+            } else {
+                propertyPhone.setValue(phoneTextField.getText());
+            }
+        }
+
+        if (mFaxModified) {
+            mFaxModified = false;
+            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                Property propertyFax = mRoot.getProperty("FAX");
+                if (propertyFax == null) {
+                    mRoot.addProperty("FAX", faxTextField.getText());
                 } else {
-                    propertyPhone.setValue(phoneTextField.getText());
+                    propertyFax.setValue(faxTextField.getText());
+                }
+            } else {
+                Property propertyFax = mRoot.getProperty("_FAX");
+                if (propertyFax == null) {
+                    mRoot.addProperty("_FAX", faxTextField.getText());
+                } else {
+                    propertyFax.setValue(faxTextField.getText());
                 }
             }
+        }
 
-            if (mFaxModified) {
-                mFaxModified = false;
-                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                    Property propertyFax = mAddress.getProperty("FAX");
-                    if (propertyFax == null) {
-                        mAddress.addProperty("FAX", faxTextField.getText());
-                    } else {
-                        propertyFax.setValue(faxTextField.getText());
-                    }
+        if (meMailAddrModified) {
+            meMailAddrModified = false;
+            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                Property propertyeMailAddr = mAddress.getProperty("EMAIL");
+                if (propertyeMailAddr == null) {
+                    mAddress.addProperty("EMAIL", eMailAddrTextField.getText());
                 } else {
-                    Property propertyFax = mAddress.getProperty("_FAX");
-                    if (propertyFax == null) {
-                        mAddress.addProperty("_FAX", faxTextField.getText());
-                    } else {
-                        propertyFax.setValue(faxTextField.getText());
-                    }
+                    propertyeMailAddr.setValue(eMailAddrTextField.getText());
+                }
+            } else {
+                Property propertyeMailAddr = mAddress.getProperty("_EMAIL");
+                if (propertyeMailAddr == null) {
+                    mAddress.addProperty("_EMAIL", eMailAddrTextField.getText());
+                } else {
+                    propertyeMailAddr.setValue(eMailAddrTextField.getText());
                 }
             }
+        }
 
-            if (meMailAddrModified) {
-                meMailAddrModified = false;
-                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                    Property propertyeMailAddr = mAddress.getProperty("EMAIL");
-                    if (propertyeMailAddr == null) {
-                        mAddress.addProperty("EMAIL", eMailAddrTextField.getText());
-                    } else {
-                        propertyeMailAddr.setValue(eMailAddrTextField.getText());
-                    }
+        if (mHttpAddrModified) {
+            mHttpAddrModified = false;
+            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                Property propertyhttpAddr = mRoot.getProperty("WWW");
+                if (propertyhttpAddr == null) {
+                    mRoot.addProperty("WWW", httpAddrTextField.getText());
                 } else {
-                    Property propertyeMailAddr = mAddress.getProperty("_EMAIL");
-                    if (propertyeMailAddr == null) {
-                        mAddress.addProperty("_EMAIL", eMailAddrTextField.getText());
-                    } else {
-                        propertyeMailAddr.setValue(eMailAddrTextField.getText());
-                    }
+                    propertyhttpAddr.setValue(httpAddrTextField.getText());
                 }
-            }
-
-            if (mHttpAddrModified) {
-                mHttpAddrModified = false;
-                if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                    Property propertyhttpAddr = mAddress.getProperty("WWW");
-                    if (propertyhttpAddr == null) {
-                        mAddress.addProperty("WWW", httpAddrTextField.getText());
-                    } else {
-                        propertyhttpAddr.setValue(httpAddrTextField.getText());
-                    }
+            } else {
+                Property propertyhttpAddr = mRoot.getProperty("_WWW");
+                if (propertyhttpAddr == null) {
+                    mRoot.addProperty("_WWW", httpAddrTextField.getText());
                 } else {
-                    Property propertyhttpAddr = mAddress.getProperty("_WWW");
-                    if (propertyhttpAddr == null) {
-                        mAddress.addProperty("_WWW", httpAddrTextField.getText());
-                    } else {
-                        propertyhttpAddr.setValue(httpAddrTextField.getText());
-                    }
+                    propertyhttpAddr.setValue(httpAddrTextField.getText());
                 }
             }
         }
