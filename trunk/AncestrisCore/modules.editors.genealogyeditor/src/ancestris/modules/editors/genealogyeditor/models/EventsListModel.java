@@ -63,6 +63,10 @@ public class EventsListModel extends AbstractListModel<String> {
         return "";
     }
 
+    public int indexOf(Object o) {
+        return this.eventsList.indexOf(o);
+    }
+
     public void addAll(List<Property> eventsList) {
         if (!eventsList.isEmpty()) {
             this.eventsList.addAll(eventsList);

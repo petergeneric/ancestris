@@ -594,8 +594,9 @@ public final class IndividualEditor extends EntityEditor {
                             }
                         }
                         seteventTypeComboBox(eventsProperties);
-                        mEventsListModel.add(mEvent);
-                        eventsList.setSelectedIndex(mEventsListModel.getSize() - 1);
+                        if (mEventsListModel.indexOf(mEvent) == -1)
+                            mEventsListModel.add(mEvent);
+                        eventsList.setSelectedIndex(mEventsListModel.indexOf(mEvent));
                         changes.fireChangeEvent();
                     }
                 } catch (GedcomException ex) {
