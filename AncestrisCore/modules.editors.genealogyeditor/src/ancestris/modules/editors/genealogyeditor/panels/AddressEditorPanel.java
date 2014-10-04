@@ -4,6 +4,7 @@ import genj.gedcom.Property;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.util.ChangeSupport;
 
 /**
@@ -268,6 +269,11 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         mAddress = address;
         mRoot = root;
         changeListner.mute();
+        AutoCompleteDecorator.decorate((javax.swing.JTextField) cityTextField, mRoot.getGedcom().getReferenceSet("CITY").getKeys(), false);
+        AutoCompleteDecorator.decorate((javax.swing.JTextField) stateTextField, mRoot.getGedcom().getReferenceSet("STAE").getKeys(), false);
+        AutoCompleteDecorator.decorate((javax.swing.JTextField) postalCodeTextField, mRoot.getGedcom().getReferenceSet("POST").getKeys(), false);
+        AutoCompleteDecorator.decorate((javax.swing.JTextField) countryTextField, mRoot.getGedcom().getReferenceSet("CTRY").getKeys(), false);
+
         if (mAddress != null) {
             AddrLineTextField.setText(address.getValue());
             Property propertyAdr1 = mAddress.getProperty("ADR1");
@@ -290,36 +296,37 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
             Property propertyCountry = mAddress.getProperty("CTRY");
             countryTextField.setText(propertyCountry != null ? propertyCountry.getValue() : "");
-
-            Property propertyPhone;
-            propertyPhone = mRoot.getProperty("PHON");
-            phoneTextField.setText(propertyPhone != null ? propertyPhone.getValue() : "");
-
-            Property propertyFax;
-            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                propertyFax = mRoot.getProperty("FAX");
-            } else {
-                propertyFax = mRoot.getProperty("_FAX");
-            }
-            faxTextField.setText(propertyFax != null ? propertyFax.getValue() : "");
-
-            Property propertyeMailAddr;
-            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-
-                propertyeMailAddr = mRoot.getProperty("EMAIL");
-            } else {
-                propertyeMailAddr = mRoot.getProperty("_EMAIL");
-            }
-            eMailAddrTextField.setText(propertyeMailAddr != null ? propertyeMailAddr.getValue() : "");
-
-            Property propertyhttpAddr;
-            if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                propertyhttpAddr = mRoot.getProperty("WWW");
-            } else {
-                propertyhttpAddr = mRoot.getProperty("_WWW");
-            }
-            httpAddrTextField.setText(propertyhttpAddr != null ? propertyhttpAddr.getValue() : "");
         }
+
+        Property propertyPhone;
+        propertyPhone = mRoot.getProperty("PHON");
+        phoneTextField.setText(propertyPhone != null ? propertyPhone.getValue() : "");
+
+        Property propertyFax;
+        if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            propertyFax = mRoot.getProperty("FAX");
+        } else {
+            propertyFax = mRoot.getProperty("_FAX");
+        }
+        faxTextField.setText(propertyFax != null ? propertyFax.getValue() : "");
+
+        Property propertyeMailAddr;
+        if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+
+            propertyeMailAddr = mRoot.getProperty("EMAIL");
+        } else {
+            propertyeMailAddr = mRoot.getProperty("_EMAIL");
+        }
+        eMailAddrTextField.setText(propertyeMailAddr != null ? propertyeMailAddr.getValue() : "");
+
+        Property propertyhttpAddr;
+        if (mRoot.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            propertyhttpAddr = mRoot.getProperty("WWW");
+        } else {
+            propertyhttpAddr = mRoot.getProperty("_WWW");
+        }
+        httpAddrTextField.setText(propertyhttpAddr != null ? propertyhttpAddr.getValue() : "");
+
         changeListner.unmute();
     }
 
