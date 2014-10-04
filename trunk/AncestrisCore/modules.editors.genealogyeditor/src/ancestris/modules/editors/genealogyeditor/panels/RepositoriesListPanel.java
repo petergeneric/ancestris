@@ -121,6 +121,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
             RepositoryEditor repositoryEditor = new RepositoryEditor();
             repositoryEditor.setContext(new Context(mRepository));
             if (repositoryEditor.showPanel()) {
+                mRepositoriesTableModel.add(mRepository);
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
@@ -129,7 +130,6 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
                         ((PropertyRepository) addProperty).link();
                     }
                 }); // end of doUnitOfWork
-                mRepositoriesTableModel.add(mRepository);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);

@@ -152,6 +152,8 @@ public class NotesListPanel extends javax.swing.JPanel {
             NoteEditor noteEditor = new NoteEditor();
             noteEditor.setContext(new Context(mNote));
             if (noteEditor.showPanel()) {
+                mNotesTableModel.add(mNote);
+                changeListner.stateChanged(null);
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
                     @Override
@@ -159,8 +161,6 @@ public class NotesListPanel extends javax.swing.JPanel {
                         mRoot.addNote(mNote);
                     }
                 }); // end of doUnitOfWork
-                mNotesTableModel.add(mNote);
-                changeListner.stateChanged(null);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);

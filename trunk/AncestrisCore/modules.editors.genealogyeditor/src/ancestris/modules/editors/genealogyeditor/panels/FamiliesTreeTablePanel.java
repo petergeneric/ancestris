@@ -241,15 +241,6 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mCreateFamily = (Fam) gedcom.createEntity(Gedcom.FAM);
-                    if (mFamilyEditingType == EDIT_FAMC) {
-                        mCreateFamily.addChild((Indi) mRoot);
-                    } else if (mFamilyEditingType == EDIT_FAMS) {
-                        if (((Indi) mRoot).getSex() == PropertySex.MALE) {
-                            mCreateFamily.setHusband((Indi) mRoot);
-                        } else {
-                            mCreateFamily.setWife((Indi) mRoot);
-                        }
-                    }
                 }
             }); // end of doUnitOfWork
 
@@ -257,6 +248,21 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
             familyEditor.setContext(new Context(mCreateFamily));
             if (familyEditor.showPanel()) {
                 ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(mCreateFamily);
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (mFamilyEditingType == EDIT_FAMC) {
+                            mCreateFamily.addChild((Indi) mRoot);
+                        } else if (mFamilyEditingType == EDIT_FAMS) {
+                            if (((Indi) mRoot).getSex() == PropertySex.MALE) {
+                                mCreateFamily.setHusband((Indi) mRoot);
+                            } else {
+                                mCreateFamily.setWife((Indi) mRoot);
+                            }
+                        }
+                    }
+                }); // end of doUnitOfWork
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -279,6 +285,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
             final Fam selectedFamily = familiesListPanel.getSelectedFamily();
             if (selectedFamily != null) {
                 try {
+                    ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(selectedFamily);
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                         @Override
@@ -294,7 +301,6 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
                             }
                         }
                     }); // end of doUnitOfWork
-                    ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(selectedFamily);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }

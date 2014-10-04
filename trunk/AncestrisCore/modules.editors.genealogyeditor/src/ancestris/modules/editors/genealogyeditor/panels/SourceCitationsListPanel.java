@@ -140,6 +140,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
             if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
+                    mSourceCitationsTableModel.add(mSourceCitation);
                     gedcom.doUnitOfWork(new UnitOfWork() {
 
                         @Override
@@ -147,7 +148,6 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                             sourceCitationEditor.commit();
                         }
                     });
-                    mSourceCitationsTableModel.add(mSourceCitation);
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
