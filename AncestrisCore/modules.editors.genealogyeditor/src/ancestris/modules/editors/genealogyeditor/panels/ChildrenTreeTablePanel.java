@@ -293,7 +293,6 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mIndividual = (Indi) gedcom.createEntity(Gedcom.INDI);
-                    mAddedChild = (PropertyChild) ((Fam) mRoot).addChild(mIndividual);
                     String lastName = "";
                     if (((Fam) mRoot).getHusband() != null) {
                         lastName = ((Fam) mRoot).getHusband().getLastName();
@@ -312,6 +311,13 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
             if (individualEditor.showPanel()) {
                 mChildrenTreeTableModel.add(mAddedChild);
                 childrenTreeTable.expandAll();
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mAddedChild = (PropertyChild) ((Fam) mRoot).addChild(mIndividual);
+                    }
+                }); // end of doUnitOfWork
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);

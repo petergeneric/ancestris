@@ -801,7 +801,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     public void commit() {
         if (mRoot != null) {
-
             if (mEventModified == true || aDateBean.hasChanged()) {
                 mEventModified = false;
                 if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {

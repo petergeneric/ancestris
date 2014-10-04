@@ -143,6 +143,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
             RepositoryEditor repositoryEditor = new RepositoryEditor();
             repositoryEditor.setContext(new Context(mRepository));
             if (repositoryEditor.showPanel()) {
+                mRepositoryCitationsTableModel.add(mRepositoryCitation);
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
@@ -151,7 +152,6 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                         mRepositoryCitation.link();
                     }
                 }); // end of doUnitOfWork
-                mRepositoryCitationsTableModel.add(mRepositoryCitation);
                 changeSupport.fireChange();
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -240,6 +240,7 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
             final Repository selectedRepository = repositoriesListPanel.getSelectedRepository();
             if (selectedRepository != null) {
                 try {
+                    mRepositoryCitationsTableModel.add(mRepositoryCitation);
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                         @Override
@@ -248,7 +249,6 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
                             mRepositoryCitation.link();
                         }
                     }); // end of doUnitOfWork
-                    mRepositoryCitationsTableModel.add(mRepositoryCitation);
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);

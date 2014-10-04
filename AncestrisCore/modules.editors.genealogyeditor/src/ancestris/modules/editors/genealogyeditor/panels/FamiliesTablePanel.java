@@ -161,6 +161,17 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     mCreateFamily = (Fam) gedcom.createEntity(Gedcom.FAM);
+                }
+            }); // end of doUnitOfWork
+
+            FamilyEditor familyEditor = new FamilyEditor();
+            familyEditor.setContext(new Context(mCreateFamily));
+            if (familyEditor.showPanel()) {
+                mFamiliesTableModel.add(mCreateFamily);
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
                     if (mFamilyEditingType == EDIT_FAMC) {
                         mCreateFamily.addChild((Indi) mRoot);
                     } else if (mFamilyEditingType == EDIT_FAMS) {
@@ -172,11 +183,6 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
                     }
                 }
             }); // end of doUnitOfWork
-
-            FamilyEditor familyEditor = new FamilyEditor();
-            familyEditor.setContext(new Context(mCreateFamily));
-            if (familyEditor.showPanel()) {
-                mFamiliesTableModel.add(mCreateFamily);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);

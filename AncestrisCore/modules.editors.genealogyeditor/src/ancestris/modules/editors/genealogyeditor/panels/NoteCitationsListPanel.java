@@ -160,8 +160,6 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
-                mNoteCitationsTableModel.clear();
-                mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
                 changeListner.stateChanged(null);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);

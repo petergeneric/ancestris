@@ -121,6 +121,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
 
         if (nameEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            mNamesTableModel.add(nameEditorPanel.get());
             try {
                 root.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -132,7 +133,6 @@ public class NamesListPanel extends javax.swing.JPanel {
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            mNamesTableModel.add(nameEditorPanel.get());
         }
     }//GEN-LAST:event_addNameButtonActionPerformed
 
