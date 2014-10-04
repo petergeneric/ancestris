@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -244,6 +245,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         if (property != null) {
             relationTextField.setText(property.getValue());
         }
+        AutoCompleteDecorator.decorate((javax.swing.JTextField) relationTextField, mAssociation.getGedcom().getReferenceSet("RELA").getKeys(), false);
 
         noteCitationsListPanel.set(association, Arrays.asList(association.getProperties("NOTE")));
 
