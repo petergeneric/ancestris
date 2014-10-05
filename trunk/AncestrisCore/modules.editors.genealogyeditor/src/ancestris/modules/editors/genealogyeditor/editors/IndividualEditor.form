@@ -577,7 +577,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel" name="associationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel" name="associationsListPanel">
             </Component>
           </SubComponents>
         </Container>

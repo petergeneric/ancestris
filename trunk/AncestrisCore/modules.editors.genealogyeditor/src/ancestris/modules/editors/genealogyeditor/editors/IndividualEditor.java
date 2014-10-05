@@ -169,7 +169,7 @@ public final class IndividualEditor extends EntityEditor {
         notesPanel = new javax.swing.JPanel();
         noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
         associationsPanel = new javax.swing.JPanel();
-        associationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel();
+        associationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel();
         galleryPanel = new javax.swing.JPanel();
         multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
         changeDateLabel = new javax.swing.JLabel();
@@ -610,7 +610,7 @@ public final class IndividualEditor extends EntityEditor {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.editors.genealogyeditor.panels.AliasTablePanel aliasTablePanel;
-    private ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel associationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel associationsListPanel;
     private javax.swing.JPanel associationsPanel;
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JLabel changeDateLabeldate;

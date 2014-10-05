@@ -19,20 +19,20 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class AssociationsListPanel extends javax.swing.JPanel {
+public class AssociationsTablePanel extends javax.swing.JPanel {
 
     private Entity mRootEntity;
     private PropertyAssociation mAssociation;
     private final AssociationsTableModel mAssociationsTableModel = new AssociationsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
-    private final ChangeSupport changeSupport = new ChangeSupport(AssociationsListPanel.class);
+    private final ChangeSupport changeSupport = new ChangeSupport(AssociationsTablePanel.class);
 
     /**
      * Creates new form ReferencesListPanel
      */
-    public AssociationsListPanel() {
+    public AssociationsTablePanel() {
         initComponents();
-        associationsTable.setID(AssociationsListPanel.class.getName());
+        associationsTable.setID(AssociationsTablePanel.class.getName());
     }
 
     /**
@@ -55,7 +55,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
         associationsToolBar.setRollover(true);
 
         addAssociationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addAssociationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationsListPanel.addAssociationButton.toolTipText"), new Object[] {})); // NOI18N
+        addAssociationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationsTablePanel.addAssociationButton.toolTipText"), new Object[] {})); // NOI18N
         addAssociationButton.setFocusable(false);
         addAssociationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addAssociationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -67,7 +67,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
         associationsToolBar.add(addAssociationButton);
 
         editAssociationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editAssociationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationsListPanel.editAssociationButton.toolTipText"), new Object[] {})); // NOI18N
+        editAssociationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationsTablePanel.editAssociationButton.toolTipText"), new Object[] {})); // NOI18N
         editAssociationButton.setFocusable(false);
         editAssociationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editAssociationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -79,7 +79,7 @@ public class AssociationsListPanel extends javax.swing.JPanel {
         associationsToolBar.add(editAssociationButton);
 
         deleteAssociationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteAssociationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationsListPanel.deleteAssociationButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteAssociationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationsTablePanel.deleteAssociationButton.toolTipText"), new Object[] {})); // NOI18N
         deleteAssociationButton.setFocusable(false);
         deleteAssociationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteAssociationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
