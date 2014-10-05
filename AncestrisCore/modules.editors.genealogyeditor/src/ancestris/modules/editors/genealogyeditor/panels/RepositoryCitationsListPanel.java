@@ -143,13 +143,13 @@ public class RepositoryCitationsListPanel extends javax.swing.JPanel {
             RepositoryEditor repositoryEditor = new RepositoryEditor();
             repositoryEditor.setContext(new Context(mRepository));
             if (repositoryEditor.showPanel()) {
-                mRepositoryCitationsTableModel.add(mRepositoryCitation);
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         mRepositoryCitation = (PropertyRepository) mRoot.addProperty("REPO", '@' + mRepository.getId() + '@');
                         mRepositoryCitation.link();
+                        mRepositoryCitationsTableModel.add(mRepositoryCitation);
                     }
                 }); // end of doUnitOfWork
                 changeSupport.fireChange();
