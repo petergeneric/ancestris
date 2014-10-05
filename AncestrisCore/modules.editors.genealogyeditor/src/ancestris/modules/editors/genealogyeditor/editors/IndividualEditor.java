@@ -122,6 +122,7 @@ public final class IndividualEditor extends EntityEditor {
         familiesSpouseTreeTablePanel.addChangeListener(changes);
         sourceCitationsListPanel.addChangeListener(changes);
         namesListPanel.addChangeListener(changes);
+        aliasTablePanel.addChangeListener(changes);
         noteCitationsListPanel.addChangeListener(changes);
         associationsListPanel.addChangeListener(changes);
         multimediaObjectCitationsListPanel.addChangeListener(changes);
@@ -164,6 +165,7 @@ public final class IndividualEditor extends EntityEditor {
         sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
         namesPanel = new javax.swing.JPanel();
         namesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NamesListPanel();
+        aliasTablePanel = new ancestris.modules.editors.genealogyeditor.panels.AliasTablePanel();
         notesPanel = new javax.swing.JPanel();
         noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
         associationsPanel = new javax.swing.JPanel();
@@ -340,13 +342,13 @@ public final class IndividualEditor extends EntityEditor {
         familiesSpousePanel.setLayout(familiesSpousePanelLayout);
         familiesSpousePanelLayout.setHorizontalGroup(
             familiesSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1013, Short.MAX_VALUE)
         );
         familiesSpousePanelLayout.setVerticalGroup(
             familiesSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, familiesSpousePanelLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(203, 203, 203)
+                .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE))
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.familiesSpousePanel.TabConstraints.tabTitle"), new Object[] {}), familiesSpousePanel); // NOI18N
@@ -376,6 +378,7 @@ public final class IndividualEditor extends EntityEditor {
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.namesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Name.png")), namesPanel); // NOI18N
+        individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.aliasTablePanel.TabConstraints.tabTitle"), aliasTablePanel); // NOI18N
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
@@ -592,8 +595,9 @@ public final class IndividualEditor extends EntityEditor {
                             }
                         }
                         seteventTypeComboBox(eventsProperties);
-                        if (mEventsListModel.indexOf(mEvent) == -1)
+                        if (mEventsListModel.indexOf(mEvent) == -1) {
                             mEventsListModel.add(mEvent);
+                        }
                         eventsList.setSelectedIndex(mEventsListModel.indexOf(mEvent));
                         changes.fireChangeEvent();
                     }
@@ -605,6 +609,7 @@ public final class IndividualEditor extends EntityEditor {
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private ancestris.modules.editors.genealogyeditor.panels.AliasTablePanel aliasTablePanel;
     private ancestris.modules.editors.genealogyeditor.panels.AssociationsListPanel associationsListPanel;
     private javax.swing.JPanel associationsPanel;
     private javax.swing.JLabel changeDateLabel;
@@ -778,7 +783,10 @@ public final class IndividualEditor extends EntityEditor {
             /*
              * +1 ALIA @<XREF:INDI>@
              * Not used
-             *
+             */
+            aliasTablePanel.set(mIndividual, mIndividual.getProperties(PropertyAlias.class));
+
+            /*
              * +1 ANCI @<XREF:SUBM>@
              * Not used
              *
