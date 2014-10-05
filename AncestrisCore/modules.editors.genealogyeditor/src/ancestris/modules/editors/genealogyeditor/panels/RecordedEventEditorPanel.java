@@ -70,7 +70,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         }
     };
     private DefaultListModel<CheckableItem> mEventsModel = new DefaultListModel<CheckableItem>();
-    private final ChangeSupport changeSupport = new ChangeSupport(AssociationsListPanel.class);
+    private final ChangeSupport changeSupport = new ChangeSupport(AssociationsTablePanel.class);
 
     /**
      * Creates new form RecordedEventEditorPanel
