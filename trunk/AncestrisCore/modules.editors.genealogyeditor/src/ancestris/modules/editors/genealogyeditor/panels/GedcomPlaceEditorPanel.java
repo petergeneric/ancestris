@@ -10,9 +10,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultEditorKit;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.DialogDescriptor;
 import org.openide.util.NbBundle;
@@ -618,8 +621,12 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                     List<String> jurisdictions = Arrays.asList(PropertyPlace.getAllJurisdictions(mRoot.getGedcom(), mPlaceOrder[index], true));
                     if (jurisdictions != null) {
                         AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
+                        InputMap map = ((javax.swing.JTextField) mGedcomFields[index][1]).getInputMap();
+                        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
                     } else {
                         AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], new <String>ArrayList(), false);
+                        InputMap map = ((javax.swing.JTextField) mGedcomFields[index][1]).getInputMap();
+                        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
                     }
                 }
             } else {
