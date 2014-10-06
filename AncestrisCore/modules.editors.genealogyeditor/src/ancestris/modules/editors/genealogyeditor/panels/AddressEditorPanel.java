@@ -1,9 +1,12 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import genj.gedcom.Property;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultEditorKit;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.util.ChangeSupport;
 
@@ -270,9 +273,20 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         mRoot = root;
         changeListner.mute();
         AutoCompleteDecorator.decorate((javax.swing.JTextField) cityTextField, mRoot.getGedcom().getReferenceSet("CITY").getKeys(), false);
+        InputMap map = cityTextField.getInputMap();
+        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
+
         AutoCompleteDecorator.decorate((javax.swing.JTextField) stateTextField, mRoot.getGedcom().getReferenceSet("STAE").getKeys(), false);
+        map = stateTextField.getInputMap();
+        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
+
         AutoCompleteDecorator.decorate((javax.swing.JTextField) postalCodeTextField, mRoot.getGedcom().getReferenceSet("POST").getKeys(), false);
+        map = postalCodeTextField.getInputMap();
+        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
+
         AutoCompleteDecorator.decorate((javax.swing.JTextField) countryTextField, mRoot.getGedcom().getReferenceSet("CTRY").getKeys(), false);
+        map = countryTextField.getInputMap();
+        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
 
         if (mAddress != null) {
             AddrLineTextField.setText(address.getValue());
