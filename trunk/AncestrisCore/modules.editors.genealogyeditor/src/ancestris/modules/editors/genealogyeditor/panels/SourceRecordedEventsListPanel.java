@@ -30,9 +30,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private Property mRegisteredEvent;
-    SourceRecordedEventsTableModel mSourceEventTypesTableModel = new SourceRecordedEventsTableModel();
-    private final RecordedEventEditorPanel recordedEventPanel;
-    private final DialogManager.ADialog recordedEventDialog;
+    private SourceRecordedEventsTableModel mSourceEventTypesTableModel = new SourceRecordedEventsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(FamiliesReferenceTreeTablePanel.class);
 
@@ -42,12 +40,6 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
     public SourceRecordedEventsListPanel() {
         initComponents();
         sourceEventsTable.setID(SourceRecordedEventsListPanel.class.getName());
-        this.recordedEventPanel = new RecordedEventEditorPanel();
-        this.recordedEventDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.edit.title"),
-                recordedEventPanel);
-        recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
-        recordedEventPanel.addChangeListener(changeListner);
     }
 
     /**
@@ -126,7 +118,14 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
+            final RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
+            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.create.title"),
+                    recordedEventPanel);
             recordedEventPanel.set(mRegisteredEvent);
+            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
+
+            recordedEventPanel.addChangeListener(changeListner);
             if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -145,6 +144,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+            recordedEventPanel.removeChangeListener(changeListner);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -158,7 +158,14 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
             Gedcom gedcom = mRoot.getGedcom();
             int undoNb = gedcom.getUndoNb();
 
+            final RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
+            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.edit.title", mSourceEventTypesTableModel.getValueAt(rowIndex)),
+                    recordedEventPanel);
+            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
             recordedEventPanel.set(mSourceEventTypesTableModel.getValueAt(rowIndex));
+
+            recordedEventPanel.addChangeListener(changeListner);
             if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -176,6 +183,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+            recordedEventPanel.removeChangeListener(changeListner);
         }
     }//GEN-LAST:event_editSourceEventButtonActionPerformed
 
@@ -187,7 +195,14 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
             Gedcom gedcom = mRoot.getGedcom();
             int undoNb = gedcom.getUndoNb();
 
+            final RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
+            DialogManager.ADialog recordedEventDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.edit.title", mSourceEventTypesTableModel.getValueAt(rowIndex)),
+                    recordedEventPanel);
             recordedEventPanel.set(mSourceEventTypesTableModel.getValueAt(rowIndex));
+            recordedEventDialog.setDialogId(RecordedEventEditorPanel.class.getName());
+
+            recordedEventPanel.addChangeListener(changeListner);
             if (recordedEventDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -205,6 +220,7 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+            recordedEventPanel.removeChangeListener(changeListner);
         }
     }//GEN-LAST:event_sourceEventsTableMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
