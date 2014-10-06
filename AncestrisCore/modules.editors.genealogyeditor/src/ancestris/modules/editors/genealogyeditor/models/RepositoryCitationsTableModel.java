@@ -17,7 +17,8 @@ public class RepositoryCitationsTableModel extends AbstractTableModel {
     List<PropertyRepository> mRepositoriesList = new ArrayList<PropertyRepository>();
     private String[] columnsName = {
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.ID.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.name.title")
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.name.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.name.shelfNumber")
     };
 
     public RepositoryCitationsTableModel() {
@@ -42,7 +43,10 @@ public class RepositoryCitationsTableModel extends AbstractTableModel {
             } else if (column == 1) {
                 Property name = repository.getProperty("NAME");
                 return name != null ? name.getValue() : "";
-            } else {
+            }  else if (column == 2) {
+                Property shelfNumber = mRepositoriesList.get(row).getProperty("CALN");
+                return shelfNumber != null ? shelfNumber.getValue() : "";
+            }else {
                 return "";
             }
         } else {
