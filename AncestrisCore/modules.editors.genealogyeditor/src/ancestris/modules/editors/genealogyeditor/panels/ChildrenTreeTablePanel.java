@@ -309,13 +309,13 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
 
             individualEditor.addChangeListener(changeListner);
             if (individualEditor.showPanel()) {
-                mChildrenTreeTableModel.add(mAddedChild);
-                childrenTreeTable.expandAll();
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         mAddedChild = (PropertyChild) ((Fam) mRoot).addChild(mIndividual);
+                        mChildrenTreeTableModel.add(mAddedChild);
+                        childrenTreeTable.expandAll();
                     }
                 }); // end of doUnitOfWork
             } else {
