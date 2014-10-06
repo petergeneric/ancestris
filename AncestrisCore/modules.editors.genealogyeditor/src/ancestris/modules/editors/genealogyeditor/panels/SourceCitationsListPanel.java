@@ -133,7 +133,9 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
             }); // end of doUnitOfWork
             final SourceCitationEditorPanel sourceCitationEditor = new SourceCitationEditorPanel();
             ADialog sourceCitationEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.create.title", Gedcom.getName(mRoot.getTag()), mRoot.getEntity()),
+                    NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.create.title",
+                            Gedcom.getName(mRoot.getTag()),
+                            mRoot.getEntity()),
                     sourceCitationEditor);
 
             sourceCitationEditor.set(mRoot, mSourceCitation);
@@ -170,7 +172,9 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
             int undoNb = gedcom.getUndoNb();
             final SourceCitationEditorPanel sourceCitationEditor = new SourceCitationEditorPanel();
             ADialog sourceCitationEditorDialog = new ADialog(
-                    NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.edit.title", Gedcom.getName(mRoot.getTag()), mRoot.getEntity()),
+                    NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.edit.title",
+                            Gedcom.getName(mRoot.getTag()),
+                            mRoot.getEntity()),
                     sourceCitationEditor);
             sourceCitationEditor.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
 
@@ -234,7 +238,9 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
                 final SourceCitationEditorPanel sourceCitationEditor = new SourceCitationEditorPanel();
                 ADialog sourceCitationEditorDialog = new ADialog(
-                        NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.edit.title", Gedcom.getName(mRoot.getTag()), mRoot.getEntity()),
+                        NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.edit.title",
+                                Gedcom.getName(mRoot.getTag()),
+                                mRoot.getEntity()),
                         sourceCitationEditor);
                 sourceCitationEditor.set(mRoot, mSourceCitationsTableModel.getValueAt(rowIndex));
 
