@@ -695,23 +695,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         }
         mDataQualityModified = false;
 
-        ArrayList<Property> notes = new ArrayList<Property>();
-        if (mSourceCitation instanceof PropertySource) {
-            Source targetEntity = (Source) ((PropertySource) mSourceCitation).getTargetEntity();
-            if (targetEntity != null) {
-                notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
-            }
-        }
-        noteCitationsListPanel.set(mSourceCitation, notes);
-
-        ArrayList<Property> multimediaObjects = new ArrayList<Property>(Arrays.asList(mSourceCitation.getProperties("OBJE")));
-        if (mSourceCitation instanceof PropertySource) {
-            Source targetEntity = (Source) ((PropertySource) mSourceCitation).getTargetEntity();
-            if (targetEntity != null) {
-                multimediaObjects.addAll(Arrays.asList(targetEntity.getProperties("OBJE")));
-            }
-        }
-        multimediaObjectCitationsListPanel.set(mSourceCitation, multimediaObjects);
+        noteCitationsListPanel.set(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("NOTE")));
+        multimediaObjectCitationsListPanel.set(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("OBJE")));
     }
 
     public void commit() {
