@@ -240,6 +240,10 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
                 repositoryTextField.setText(mRepository.getValue());
+                editRepositoryButton.setVisible(true);
+                deleteRepositoryButton.setVisible(true);
+                addRepositoryButton.setVisible(false);
+                linkToRepositoryButton.setVisible(false);
                 changeSupport.fireChange();
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -254,7 +258,7 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
     private void editRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRepositoryButtonActionPerformed
 
         RepositoryEditor repositoryEditor = new RepositoryEditor();
-        repositoryEditor.setContext(new Context(mRepository));
+        repositoryEditor.setContext(new Context(mRepositoryCitation.getTargetEntity()));
         repositoryEditor.addChangeListener(changeListner);
         repositoryEditor.showPanel();
         repositoryEditor.removeChangeListener(changeListner);
@@ -262,9 +266,9 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
 
     private void deleteRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRepositoryButtonActionPerformed
         DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoriesListPanel.deleteRepository.title",
-                        mRepository),
+                mRepositoryCitation),
                 NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoriesListPanel.deleteRepository.text",
-                        mRepository,
+                        mRepositoryCitation,
                         mParentProperty));
         if (createYesNo.show() == DialogManager.YES_OPTION) {
             try {
@@ -272,15 +276,19 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        mParentProperty.delProperty(mRepository);
+                        mParentProperty.delProperty(mRepositoryCitation);
                     }
                 }); // end of doUnitOfWork
+                editRepositoryButton.setVisible(false);
+                deleteRepositoryButton.setVisible(false);
+                addRepositoryButton.setVisible(true);
+                linkToRepositoryButton.setVisible(true);
+                repositoryTextField.setText("");
                 changeSupport.fireChange();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-
     }//GEN-LAST:event_deleteRepositoryButtonActionPerformed
 
     private void linkToRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToRepositoryButtonActionPerformed
@@ -308,6 +316,10 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                             repositoryTextField.setText(selectedRepository.toString());
                         }
                     }); // end of doUnitOfWork
+                    editRepositoryButton.setVisible(true);
+                    deleteRepositoryButton.setVisible(true);
+                    addRepositoryButton.setVisible(false);
+                    linkToRepositoryButton.setVisible(false);
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -435,10 +447,18 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
         mParentProperty = parentProperty;
         mRepositoryCitation = repositoryCitation;
         if (mRepositoryCitation != null) {
+            editRepositoryButton.setVisible(true);
+            deleteRepositoryButton.setVisible(true);
+            addRepositoryButton.setVisible(false);
+            linkToRepositoryButton.setVisible(false);
             repositoryTextField.setText(mRepositoryCitation.getTargetEntity().toString());
             mShelfNumberTableModel.addAll(Arrays.asList(mRepositoryCitation.getProperties("CALN")));
             noteCitationsListPanel.set(mRepositoryCitation, Arrays.asList(repositoryCitation.getProperties("NOTE")));
         } else {
+            editRepositoryButton.setVisible(false);
+            deleteRepositoryButton.setVerifyInputWhenFocusTarget(false);
+            addRepositoryButton.setVisible(true);
+            linkToRepositoryButton.setVisible(true);
             noteCitationsListPanel.set(parentProperty, new ArrayList<Property>());
         }
     }
