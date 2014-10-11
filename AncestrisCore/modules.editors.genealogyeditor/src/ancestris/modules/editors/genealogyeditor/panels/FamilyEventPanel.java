@@ -132,6 +132,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         eventInformationTabbedPane = new JTabbedPane();
         EventDetailPanel = new JPanel();
+        EventDetailEditorPanel = new JPanel();
         placeLabel = new JLabel();
         placeTextField = new JTextField();
         privateRecordToggleButton = new JToggleButton();
@@ -162,15 +163,16 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         multimediaObjectCitationsListPanel = new MultimediaObjectCitationsListPanel();
 
         setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        setMinimumSize(null);
         setName(""); // NOI18N
 
         eventInformationTabbedPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        eventInformationTabbedPane.setMinimumSize(null);
-        eventInformationTabbedPane.setPreferredSize(null);
+        eventInformationTabbedPane.setRequestFocusEnabled(false);
 
-        EventDetailPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        EventDetailPanel.setMinimumSize(new Dimension(444, 244));
+        EventDetailPanel.setRequestFocusEnabled(false);
+
+        EventDetailEditorPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        EventDetailEditorPanel.setMinimumSize(null);
+        EventDetailEditorPanel.setName(""); // NOI18N
 
         placeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         placeLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.placeLabel.text")); // NOI18N
@@ -264,22 +266,21 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         responsibleAgencyTextField.setToolTipText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.responsibleAgencyTextField.toolTipText")); // NOI18N
 
-        GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
-        EventDetailPanel.setLayout(EventDetailPanelLayout);
-        EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+        GroupLayout EventDetailEditorPanelLayout = new GroupLayout(EventDetailEditorPanel);
+        EventDetailEditorPanel.setLayout(EventDetailEditorPanelLayout);
+        EventDetailEditorPanelLayout.setHorizontalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                     .addComponent(dateLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(placeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(eventCauseLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(husbandAgeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(EventTypeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(eventNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(responsibleAgencyLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(responsibleAgencyLabel))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(placeTextField)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -287,68 +288,80 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1)
                     .addComponent(jScrollPane2)
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(husbandAgeTextField)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(wifeAgeLabel, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(wifeAgeTextField))
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(responsibleAgencyTextField))
-                .addContainerGap())
+                    .addComponent(responsibleAgencyTextField)))
         );
-        EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+        EventDetailEditorPanelLayout.setVerticalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(eventNameLabel)
                     .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
                         .addComponent(dateLabel)
                         .addComponent(aDateBean, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
                     .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(placeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(placeLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
                     .addComponent(addPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(eventCauseLabel)
                     .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(husbandAgeTextField, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
                             .addComponent(wifeAgeLabel)
                             .addComponent(wifeAgeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(husbandAgeLabel, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addComponent(EventTypeLabel)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(responsibleAgencyLabel)
-                    .addComponent(responsibleAgencyTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(responsibleAgencyTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
         );
 
-        eventInformationTabbedPane.addTab(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png")), EventDetailPanel); // NOI18N
+        GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
+        EventDetailPanel.setLayout(EventDetailPanelLayout);
+        EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        eventInformationTabbedPane.addTab(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Event.png")), EventDetailPanel); // NOI18N
 
         sourcesPanel.setMinimumSize(new Dimension(541, 208));
 
@@ -394,18 +407,97 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane)
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addPlaceButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+        int undoNb = gedcom.getUndoNb();
+
+        placeEditorPanel.set(mEvent, mPlace, mAddress);
+
+        ADialog eventEditorDialog = new ADialog(
+            NbBundle.getMessage(
+                PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+            placeEditorPanel);
+        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
+
+        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        placeEditorPanel.commit();
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+            mAddress = mEvent.getProperty("ADDR", false);
+            if (mPlace != null || mAddress != null) {
+                placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
+                addPlaceButton.setVisible(false);
+                editPlaceButton.setVisible(true);
+            } else {
+                placeTextField.setText("");
+                addPlaceButton.setVisible(true);
+                editPlaceButton.setVisible(false);
+            }
+            changeSupport.fireChange();
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_addPlaceButtonActionPerformed
+
+    private void editPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+        placeEditorPanel.set(mEvent, mPlace, mAddress);
+
+        ADialog eventEditorDialog = new ADialog(
+            NbBundle.getMessage(
+                PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+            placeEditorPanel);
+        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
+
+        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        placeEditorPanel.commit();
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+            mAddress = mEvent.getProperty("ADDR", false);
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
+            changeSupport.fireChange();
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_editPlaceButtonActionPerformed
 
     private void linkToPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
         PlacesListPanel placesListPanel = new PlacesListPanel(mRoot.getGedcom());
         DialogManager.ADialog placesListPanelDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.title.link"),
-                placesListPanel);
+            NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.title.link"),
+            placesListPanel);
         placesListPanelDialog.setDialogId(PlacesListPanel.class.getName());
 
         if (placesListPanelDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -493,86 +585,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_linkToPlaceButtonActionPerformed
 
-    private void editPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
-        Gedcom gedcom = mRoot.getGedcom();
-        int undoNb = gedcom.getUndoNb();
-        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        placeEditorPanel.set(mEvent, mPlace, mAddress);
-
-        ADialog eventEditorDialog = new ADialog(
-                NbBundle.getMessage(
-                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
-                placeEditorPanel);
-        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        placeEditorPanel.commit();
-                    }
-                });
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-            mAddress = mEvent.getProperty("ADDR", false);
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
-            changeSupport.fireChange();
-        } else {
-            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
-        }
-    }//GEN-LAST:event_editPlaceButtonActionPerformed
-
-    private void addPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addPlaceButtonActionPerformed
-        Gedcom gedcom = mRoot.getGedcom();
-        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        int undoNb = gedcom.getUndoNb();
-
-        placeEditorPanel.set(mEvent, mPlace, mAddress);
-
-        ADialog eventEditorDialog = new ADialog(
-                NbBundle.getMessage(
-                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
-                placeEditorPanel);
-        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        placeEditorPanel.commit();
-                    }
-                });
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-            mAddress = mEvent.getProperty("ADDR", false);
-            if (mPlace != null || mAddress != null) {
-                placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
-                addPlaceButton.setVisible(false);
-                editPlaceButton.setVisible(true);
-            } else {
-                placeTextField.setText("");
-                addPlaceButton.setVisible(true);
-                editPlaceButton.setVisible(false);
-            }
-            changeSupport.fireChange();
-        } else {
-            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
-        }
-    }//GEN-LAST:event_addPlaceButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JPanel EventDetailEditorPanel;
     private JPanel EventDetailPanel;
     private JLabel EventTypeLabel;
     private ADateBean aDateBean;
