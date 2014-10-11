@@ -165,6 +165,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         eventInformationTabbedPane = new JTabbedPane();
         EventDetailPanel = new JPanel();
+        EventDetailEditorPanel = new JPanel();
         placeLabel = new JLabel();
         placeTextField = new JTextField();
         privateRecordToggleButton = new JToggleButton();
@@ -192,13 +193,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         galleryPanel = new JPanel();
         multimediaObjectCitationsListPanel = new MultimediaObjectCitationsListPanel();
 
-        setMinimumSize(new Dimension(641, 271));
-
-        eventInformationTabbedPane.setMinimumSize(new Dimension(641, 192));
-        eventInformationTabbedPane.setPreferredSize(new Dimension(641, 192));
-
-        EventDetailPanel.setMinimumSize(new Dimension(634, 217));
-        EventDetailPanel.setPreferredSize(new Dimension(634, 217));
+        EventDetailEditorPanel.setMinimumSize(new Dimension(634, 217));
 
         placeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         placeLabel.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.placeLabel.text")); // NOI18N
@@ -289,88 +284,99 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         responsibleAgencyTextField.setToolTipText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.responsibleAgencyTextField.toolTipText")); // NOI18N
 
-        GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
-        EventDetailPanel.setLayout(EventDetailPanelLayout);
-        EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+        GroupLayout EventDetailEditorPanelLayout = new GroupLayout(EventDetailEditorPanel);
+        EventDetailEditorPanel.setLayout(EventDetailEditorPanelLayout);
+        EventDetailEditorPanelLayout.setHorizontalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addComponent(responsibleAgencyLabel)
-                    .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                         .addComponent(eventCauseLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(placeLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(dateLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(eventNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(eventDescriptorLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(IndividualAgeLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(IndividualAgeLabel, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(GroupLayout.Alignment.TRAILING, EventDetailPanelLayout.createSequentialGroup()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(GroupLayout.Alignment.TRAILING, EventDetailPanelLayout.createSequentialGroup()
-                        .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                            .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                                 .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, 261, GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, GroupLayout.Alignment.TRAILING)
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(placeTextField)
                         .addGap(96, 96, 96))
                     .addComponent(jScrollPane1)
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                        .addComponent(individualAgeTextField, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addComponent(individualAgeTextField)
                         .addGap(251, 251, 251))
-                    .addComponent(responsibleAgencyTextField))
-                .addContainerGap())
+                    .addComponent(responsibleAgencyTextField)))
         );
-        EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(EventDetailPanelLayout.createSequentialGroup()
-                        .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+        EventDetailEditorPanelLayout.setVerticalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(eventNameLabel)
                             .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(aDateBean, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(dateLabel, GroupLayout.Alignment.TRAILING)))
                     .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
                     .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(placeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(placeLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
                     .addComponent(addPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(eventCauseLabel)
                     .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(eventDescriptorLabel)
                     .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(IndividualAgeLabel)
                     .addComponent(individualAgeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(responsibleAgencyLabel)
-                    .addComponent(responsibleAgencyTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(responsibleAgencyTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        );
+
+        GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
+        EventDetailPanel.setLayout(EventDetailPanelLayout);
+        EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        eventInformationTabbedPane.addTab(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png")), EventDetailPanel); // NOI18N
+        eventInformationTabbedPane.addTab(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Event.png")), EventDetailPanel); // NOI18N
 
         sourceCitationsListPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -414,10 +420,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane)
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -587,6 +593,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addPlaceButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JPanel EventDetailEditorPanel;
     private JPanel EventDetailPanel;
     private JLabel IndividualAgeLabel;
     private ADateBean aDateBean;
