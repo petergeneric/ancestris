@@ -1,10 +1,12 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NamesTableModel;
+import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyName;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
@@ -21,10 +23,11 @@ import org.openide.util.NbBundle;
  */
 public class NamesListPanel extends javax.swing.JPanel {
 
-    private NamesTableModel mNamesTableModel = new NamesTableModel();
+    private final NamesTableModel mNamesTableModel = new NamesTableModel();
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(NamesListPanel.class);
     private Indi root;
+    private PropertyName addedName = null;
 
     /**
      * Creates new form NamesListPanel
@@ -114,7 +117,20 @@ public class NamesListPanel extends javax.swing.JPanel {
 
     private void addNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNameButtonActionPerformed
         final NameEditorPanel nameEditorPanel = new NameEditorPanel();
-        nameEditorPanel.set(root, null);
+        Gedcom gedcom = root.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    addedName = (PropertyName) root.addProperty("NAME", "");
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        nameEditorPanel.set(root, addedName);
         ADialog nameEditorDialog = new ADialog(
                 NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.title.create"),
                 nameEditorPanel);
@@ -132,6 +148,10 @@ public class NamesListPanel extends javax.swing.JPanel {
                 });
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
+            }
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
             }
         }
     }//GEN-LAST:event_addNameButtonActionPerformed
@@ -164,7 +184,30 @@ public class NamesListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editNameButtonActionPerformed
 
     private void deleteNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNameButtonActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = namesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            final int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
+            DialogManager createYesNo = DialogManager.createYesNo(
+                    NbBundle.getMessage(
+                            NotesListPanel.class, "NamesListPanel.deleteName.title"),
+                    NbBundle.getMessage(
+                            NotesListPanel.class, "NamesListPanel.deleteName.text",
+                            root));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    root.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            root.delProperty(mNamesTableModel.remove(rowIndex));
+                        }
+                    }); // end of doUnitOfWork
+                    changeListner.stateChanged(null);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
     }//GEN-LAST:event_deleteNameButtonActionPerformed
 
     private void namesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_namesTableMouseClicked
