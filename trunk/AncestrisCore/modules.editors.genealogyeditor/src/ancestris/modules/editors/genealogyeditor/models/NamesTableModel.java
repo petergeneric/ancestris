@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
+import genj.gedcom.Property;
 import genj.gedcom.PropertyName;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,5 +62,11 @@ public class NamesTableModel extends AbstractTableModel {
 
     public PropertyName getValueAt(int row) {
         return namesList.get(row);
+    }
+
+    public Property remove(int rowIndex) {
+        PropertyName removedName = namesList.remove(rowIndex);
+        fireTableDataChanged();
+        return removedName;
     }
 }

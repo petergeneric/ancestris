@@ -5,7 +5,6 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertyChild;
 import genj.gedcom.PropertyFamilySpouse;
 import genj.gedcom.PropertySex;
-import java.util.Enumeration;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
