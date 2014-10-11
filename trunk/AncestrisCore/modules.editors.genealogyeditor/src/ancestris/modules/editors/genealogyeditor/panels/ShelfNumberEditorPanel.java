@@ -1,6 +1,8 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import genj.gedcom.Property;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -10,12 +12,19 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
 
     private Property mParentProperty = null;
     private Property mShelfNumberProperty = null;
+    private final ChangeListner changeListner = new ChangeListner();
 
     /**
      * Creates new form ShelfNumberPanel
      */
     public ShelfNumberEditorPanel() {
         initComponents();
+
+        shelfNumberTextField.getDocument().addDocumentListener(changeListner);
+        shelfNumberTextField.getDocument().putProperty("name", "shelfNumberTextField");
+
+        mediaTypeTextField.getDocument().addDocumentListener(changeListner);
+        mediaTypeTextField.getDocument().putProperty("name", "mediaTypeTextField");
     }
 
     /**
@@ -76,7 +85,8 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField shelfNumberTextField;
     // End of variables declaration//GEN-END:variables
 
-    public void set(Property parentProperty, final Property shelfNumberProperty) {
+    public void set(Property parentProperty, Property shelfNumberProperty) {
+        changeListner.mute();
         mParentProperty = parentProperty;
         mShelfNumberProperty = shelfNumberProperty;
         if (mShelfNumberProperty != null) {
@@ -87,21 +97,95 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
             shelfNumberTextField.setText("");
             mediaTypeTextField.setText("");
         }
+        changeListner.unmute();
     }
 
     public Property commit() {
-        if (mShelfNumberProperty != null) {
-            mShelfNumberProperty.setValue(shelfNumberTextField.getText());
-            Property mediProperty = mShelfNumberProperty.getProperty("MEDI");
+        if (changeListner.hasChange()) {
             if (mShelfNumberProperty != null) {
-                mediProperty.setValue(mediaTypeTextField.getText());
+                mShelfNumberProperty.setValue(shelfNumberTextField.getText());
+                Property mediProperty = mShelfNumberProperty.getProperty("MEDI");
+                if (mShelfNumberProperty != null) {
+                    mediProperty.setValue(mediaTypeTextField.getText());
+                } else {
+                    mShelfNumberProperty.addProperty("MEDI", mediaTypeTextField.getText());
+                }
             } else {
+                mShelfNumberProperty = mParentProperty.addProperty("CALN", shelfNumberTextField.getText());
                 mShelfNumberProperty.addProperty("MEDI", mediaTypeTextField.getText());
             }
-        } else {
-            mShelfNumberProperty = mParentProperty.addProperty("CALN", shelfNumberTextField.getText());
-            mShelfNumberProperty.addProperty("MEDI", mediaTypeTextField.getText());
+            changeListner.setChange(false);
         }
         return mShelfNumberProperty;
+    }
+
+    public class ChangeListner implements DocumentListener {
+
+        private boolean mute = false;
+        private boolean hasChange = false;
+
+        @Override
+        public void insertUpdate(DocumentEvent de) {
+            if (!mute) {
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("ShelfNumberField")) {
+                        setChange(true);
+                    } else if (propertyName.equals("MediaType")) {
+                        setChange(true);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent de) {
+            if (!mute) {
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("ShelfNumberField")) {
+                        setChange(true);
+                    } else if (propertyName.equals("MediaType")) {
+                        setChange(true);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent de) {
+            if (!mute) {
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("ShelfNumberField")) {
+                        setChange(true);
+                    } else if (propertyName.equals("MediaType")) {
+                        setChange(true);
+                    }
+                }
+            }
+        }
+
+        public void mute() {
+            mute = true;
+        }
+
+        public void unmute() {
+            mute = false;
+        }
+
+        /**
+         * @return the hasChange
+         */
+        public boolean hasChange() {
+            return hasChange;
+        }
+
+        /**
+         * @param hasChange the hasChange to set
+         */
+        public void setChange(boolean hasChange) {
+            this.hasChange = hasChange;
+        }
     }
 }
