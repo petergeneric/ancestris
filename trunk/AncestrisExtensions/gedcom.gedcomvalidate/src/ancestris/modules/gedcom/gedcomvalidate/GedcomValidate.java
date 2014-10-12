@@ -9,17 +9,12 @@ package ancestris.modules.gedcom.gedcomvalidate;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
-import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
-import genj.gedcom.UnitOfWork;
-import genj.util.EnvironmentChecker;
-import ancestris.core.actions.AbstractAncestrisAction;
+import genj.gedcom.time.PointInTime;
 import genj.view.ViewContext;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -31,6 +26,7 @@ import org.openide.util.NbPreferences;
  * anomalies and 'standard' compliancy issues
  */
 public class GedcomValidate {
+
     Preferences modulePreferences = NbPreferences.forModule(GedcomValidate.class);
 
     /** whether order of properties counts or not */
@@ -57,14 +53,16 @@ public class GedcomValidate {
     public int minAgeFather = modulePreferences.getInt("minAgeFather", 14);
     public int minAgeMother = modulePreferences.getInt("minAgeMother", 10);
     public int maxAgeMother = modulePreferences.getInt("maxAgeMother", 48);
+    public PointInTime minYear = new PointInTime(1, 1, GedcomValidateOptions.getInstance().getMinYear());
+    public PointInTime maxYear = new PointInTime(1, 1, GedcomValidateOptions.getInstance().getMaxYear());
     /** Jerome's checks that haven't made it yet
-
-    [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die
-    [ ] families containing a man who has fathered a child (more than 9 months) after they have died
-    [ ] age difference between husband and wife is not greater than SOME_VALUE.
-    [ ] women who have given birth more than once within 9 months (discounting twins)
-
-     **/
+     *
+     * [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die
+     * [ ] families containing a man who has fathered a child (more than 9 months) after they have died
+     * [ ] age difference between husband and wife is not greater than SOME_VALUE.
+     * [ ] women who have given birth more than once within 9 months (discounting twins)
+     *
+     * */
     private final static String[] LIFETIME_DATES = {
         "INDI:ADOP:DATE",
         "INDI:ADOP:DATE",
@@ -112,7 +110,6 @@ public class GedcomValidate {
 //            });
 //            issues.add(ctx);
 //        }
-
         // Loop through entities and test 'em
         for (int t = 0; t < Gedcom.ENTITIES.length; t++) {
             for (Entity e : gedcom.getEntities(Gedcom.ENTITIES[t])) {
@@ -193,7 +190,6 @@ public class GedcomValidate {
         List<Test> result = new ArrayList<Test>();
 
         // ******************** SPECIALIZED TESTS *******************************
-
         // singleton properties
         result.add(new TestCardinality());
 
@@ -203,8 +199,11 @@ public class GedcomValidate {
         // non-valid properties
         result.add(new TestValid(this));
 
+        // year out of range
+        result.add(new TestDateRangeValid(this));
+
         // spouses with wrong gender
-        if (!isSameSexFamValid){
+        if (!isSameSexFamValid) {
             result.add(new TestSpouseGender());
         }
 
@@ -233,7 +232,6 @@ public class GedcomValidate {
         }
 
         // ****************** DATE COMPARISON TESTS *****************************
-
         // birth after death
         result.add(new TestDate("INDI:BIRT:DATE", TestDate.AFTER, "INDI:DEAT:DATE"));
 
@@ -266,7 +264,6 @@ public class GedcomValidate {
         }
 
         // ************************* AGE TESTS **********************************
-
         // max lifespane
         if (maxLife > 0) {
             result.add(new TestAge("INDI:DEAT:DATE", "..:..", TestAge.OVER, maxLife, "maxLife"));
@@ -305,7 +302,6 @@ public class GedcomValidate {
         if (minAgeFather > 0) {
             result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:HUSB:*:..", TestAge.UNDER, minAgeFather, "minAgeFather"));
         }
-
 
         // **********************************************************************
         return result;
