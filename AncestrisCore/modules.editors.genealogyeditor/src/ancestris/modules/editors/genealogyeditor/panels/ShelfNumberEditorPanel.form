@@ -25,7 +25,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="shelfNumberTextField" pref="270" max="32767" attributes="0"/>
-                  <Component id="mediaTypeTextField" max="32767" attributes="0"/>
+                  <Component id="mediaTypeChoiceWidget" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -42,7 +42,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="mediaTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="mediaTypeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="mediaTypeChoiceWidget" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -68,7 +68,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="mediaTypeTextField">
+    <Component class="genj.util.swing.ChoiceWidget" name="mediaTypeChoiceWidget">
     </Component>
   </SubComponents>
 </Form>
