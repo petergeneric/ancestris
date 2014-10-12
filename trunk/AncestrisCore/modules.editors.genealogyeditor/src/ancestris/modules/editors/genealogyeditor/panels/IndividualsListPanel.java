@@ -116,6 +116,8 @@ public class IndividualsListPanel extends javax.swing.JPanel {
             individualEditor.setContext(new Context(mIndividual));
             if (individualEditor.showPanel()) {
                 mIndividualsTableModel.add(mIndividual);
+                editIndividualButton.setEnabled(true);
+                deleteIndividualButton.setEnabled(true);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -167,6 +169,13 @@ public class IndividualsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mIndividualsTableModel.clear(individualsList);
         mIndividualsTableModel.addAll(individualsList);
+        if (mIndividualsTableModel.getRowCount() > 0) {
+            editIndividualButton.setEnabled(true);
+            deleteIndividualButton.setEnabled(true);
+        } else {
+            editIndividualButton.setEnabled(false);
+            deleteIndividualButton.setEnabled(false);
+        }
     }
 
     public Indi getSelectedIndividual() {

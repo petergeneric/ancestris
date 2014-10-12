@@ -64,9 +64,9 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
         shelfNumberScrollPane = new javax.swing.JScrollPane();
         shelfNumberTable = new javax.swing.JTable();
         shelfNumberToolBar = new javax.swing.JToolBar();
+        addShelfNumberButton = new javax.swing.JButton();
         editShelfNumberButton = new javax.swing.JButton();
         deleteShelfNumberButton = new javax.swing.JButton();
-        addShelfNumberButton = new javax.swing.JButton();
         noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
 
         org.openide.awt.Mnemonics.setLocalizedText(repositoryLabel, org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.repositoryLabel.text")); // NOI18N
@@ -158,6 +158,18 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
         shelfNumberToolBar.setFloatable(false);
         shelfNumberToolBar.setRollover(true);
 
+        addShelfNumberButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
+        addShelfNumberButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryCitationEditorPanel.addShelfNumberButton.toolTipText"), new Object[] {})); // NOI18N
+        addShelfNumberButton.setFocusable(false);
+        addShelfNumberButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addShelfNumberButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addShelfNumberButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addShelfNumberButtonActionPerformed(evt);
+            }
+        });
+        shelfNumberToolBar.add(addShelfNumberButton);
+
         editShelfNumberButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editShelfNumberButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryCitationEditorPanel.editShelfNumberButton.toolTipText"), new Object[] {})); // NOI18N
         editShelfNumberButton.setFocusable(false);
@@ -181,18 +193,6 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             }
         });
         shelfNumberToolBar.add(deleteShelfNumberButton);
-
-        addShelfNumberButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addShelfNumberButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryCitationEditorPanel.addShelfNumberButton.toolTipText"), new Object[] {})); // NOI18N
-        addShelfNumberButton.setFocusable(false);
-        addShelfNumberButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addShelfNumberButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addShelfNumberButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addShelfNumberButtonActionPerformed(evt);
-            }
-        });
-        shelfNumberToolBar.add(addShelfNumberButton);
 
         javax.swing.GroupLayout shelfNumberPanelLayout = new javax.swing.GroupLayout(shelfNumberPanel);
         shelfNumberPanel.setLayout(shelfNumberPanelLayout);
@@ -450,6 +450,10 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                             mRepositoryCitation.delProperty(mShelfNumberTableModel.remove(selectedIndex));
                         }
                     }); // end of doUnitOfWork
+                    if (mShelfNumberTableModel.getRowCount() <= 0) {
+                        editShelfNumberButton.setEnabled(false);
+                        deleteShelfNumberButton.setEnabled(false);
+                    }
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -482,6 +486,8 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                 });
                 mShelfNumberTableModel.clear();
                 mShelfNumberTableModel.addAll(Arrays.asList(mRepositoryCitation.getProperties("CALN")));
+                editShelfNumberButton.setEnabled(true);
+                deleteShelfNumberButton.setEnabled(true);
                 changeSupport.fireChange();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
@@ -570,6 +576,13 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             }
             mShelfNumberTableModel.clear();
             mShelfNumberTableModel.addAll(Arrays.asList(mRepositoryCitation.getProperties("CALN")));
+            if (mShelfNumberTableModel.getRowCount() > 0) {
+                editShelfNumberButton.setEnabled(true);
+                deleteShelfNumberButton.setEnabled(true);
+            } else {
+                editShelfNumberButton.setEnabled(false);
+                deleteShelfNumberButton.setEnabled(false);
+            }
 
             int noteCitationsListPanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"));
             if (noteCitationsListPanelindexOfTab == -1) {
@@ -589,9 +602,6 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             if (noteCitationsListPanelindexOfTab != -1) {
                 repositoryCitationTabbedPane.removeTabAt(noteCitationsListPanelindexOfTab);
             }
-
-//            mShelfNumberTableModel.addAll(Arrays.asList(mRepositoryCitation.getProperties("CALN")));
-//            noteCitationsListPanel.set(parentProperty, new ArrayList<Property>());
         }
     }
 

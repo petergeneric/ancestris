@@ -135,6 +135,8 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
 
             if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mAssociationsTableModel.add(associationEditorPanel.commit());
+                deleteAssociationButton.setEnabled(false);
+                editAssociationButton.setEnabled(false);
                 changeListner.stateChanged(null);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -240,6 +242,10 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
                             mRootEntity.delProperty(individualRef);
                         }
                     }); // end of doUnitOfWork
+                    if (mAssociationsTableModel.getRowCount() <= 0) {
+                        deleteAssociationButton.setEnabled(false);
+                        editAssociationButton.setEnabled(false);
+                    }
                     changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -259,7 +265,15 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
 
     public void setAssociationsList(Entity rootEntity, List<PropertyAssociation> associationsList) {
         this.mRootEntity = rootEntity;
+        mAssociationsTableModel.clear();
         mAssociationsTableModel.addAll(associationsList);
+        if (mAssociationsTableModel.getRowCount() > 0) {
+            deleteAssociationButton.setEnabled(true);
+            editAssociationButton.setEnabled(true);
+        } else {
+            deleteAssociationButton.setEnabled(false);
+            editAssociationButton.setEnabled(false);
+        }
     }
 
     /**

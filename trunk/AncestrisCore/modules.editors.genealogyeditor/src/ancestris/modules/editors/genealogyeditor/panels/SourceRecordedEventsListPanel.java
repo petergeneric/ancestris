@@ -135,10 +135,11 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
                             recordedEventPanel.commit();
                         }
                     });
+                    mSourceEventTypesTableModel.add(mRegisteredEvent);
+                    editSourceEventButton.setEnabled(true);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
-                mSourceEventTypesTableModel.add(mRegisteredEvent);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -258,6 +259,11 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
         mSourceEventTypesTableModel.clear();
         if (eventsTypeList != null) {
             mSourceEventTypesTableModel.addAll(eventsTypeList);
+        }
+        if (mSourceEventTypesTableModel.getRowCount() > 0) {
+            editSourceEventButton.setEnabled(true);
+        } else {
+            editSourceEventButton.setEnabled(false);
         }
     }
 }

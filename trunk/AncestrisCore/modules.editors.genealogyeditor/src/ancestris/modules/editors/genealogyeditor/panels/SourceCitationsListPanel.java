@@ -142,7 +142,6 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
 
             if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 try {
-                    mSourceCitationsTableModel.add(mSourceCitation);
                     gedcom.doUnitOfWork(new UnitOfWork() {
 
                         @Override
@@ -150,6 +149,9 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                             sourceCitationEditor.commit();
                         }
                     });
+                    mSourceCitationsTableModel.add(mSourceCitation);
+                    editSourceCitationButton.setEnabled(true);
+                    deleteSourceCitationButton.setEnabled(true);
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -219,6 +221,10 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
                             mRoot.delProperty(mSourceCitationsTableModel.remove(sourceCitationsTable.convertRowIndexToModel(selectedRow)));
                         }
                     }); // end of doUnitOfWork
+                    if (mSourceCitationsTableModel.getRowCount() <= 0) {
+                        editSourceCitationButton.setEnabled(false);
+                        deleteSourceCitationButton.setEnabled(false);
+                    }
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -279,6 +285,13 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mSourceCitationsTableModel.clear();
         mSourceCitationsTableModel.addAll(sourcesList);
+        if (mSourceCitationsTableModel.getRowCount() > 0) {
+            editSourceCitationButton.setEnabled(true);
+            deleteSourceCitationButton.setEnabled(true);
+        } else {
+            editSourceCitationButton.setEnabled(false);
+            deleteSourceCitationButton.setEnabled(false);
+        }
     }
 
     /**

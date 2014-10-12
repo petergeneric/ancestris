@@ -47,9 +47,9 @@ public class NotesListPanel extends javax.swing.JPanel {
 
         notesToolBar = new javax.swing.JToolBar();
         addNoteButton = new javax.swing.JButton();
+        linkToNoteButton = new javax.swing.JButton();
         editNoteButton = new javax.swing.JButton();
         deleteNoteButton = new javax.swing.JButton();
-        linkToNoteButton = new javax.swing.JButton();
         notesTableScrollPane = new javax.swing.JScrollPane();
         notesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable() {
             public TableCellRenderer getCellRenderer(int row, int column) {
@@ -75,6 +75,18 @@ public class NotesListPanel extends javax.swing.JPanel {
         });
         notesToolBar.add(addNoteButton);
 
+        linkToNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
+        linkToNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NotesListPanel.linkToNoteButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToNoteButton.setFocusable(false);
+        linkToNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkToNoteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkToNoteButtonActionPerformed(evt);
+            }
+        });
+        notesToolBar.add(linkToNoteButton);
+
         editNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
         editNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NotesListPanel.editNoteButton.toolTipText"), new Object[] {})); // NOI18N
         editNoteButton.setFocusable(false);
@@ -98,18 +110,6 @@ public class NotesListPanel extends javax.swing.JPanel {
             }
         });
         notesToolBar.add(deleteNoteButton);
-
-        linkToNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NotesListPanel.linkToNoteButton.toolTipText"), new Object[] {})); // NOI18N
-        linkToNoteButton.setFocusable(false);
-        linkToNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linkToNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        linkToNoteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linkToNoteButtonActionPerformed(evt);
-            }
-        });
-        notesToolBar.add(linkToNoteButton);
 
         notesTable.setModel(mNotesTableModel);
         notesTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
@@ -161,6 +161,8 @@ public class NotesListPanel extends javax.swing.JPanel {
                         mRoot.addNote(mNote);
                     }
                 }); // end of doUnitOfWork
+                deleteNoteButton.setEnabled(true);
+                editNoteButton.setEnabled(true);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -202,6 +204,10 @@ public class NotesListPanel extends javax.swing.JPanel {
                         }
                     }); // end of doUnitOfWork
                     changeListner.stateChanged(null);
+                    if (mNotesTableModel.getRowCount() == 0) {
+                        deleteNoteButton.setEnabled(false);
+                        editNoteButton.setEnabled(false);
+                    }
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -231,6 +237,8 @@ public class NotesListPanel extends javax.swing.JPanel {
                         mRoot.addNote(selectedNote);
                     }
                 }); // end of doUnitOfWork
+                deleteNoteButton.setEnabled(true);
+                editNoteButton.setEnabled(true);
                 changeListner.stateChanged(null);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
@@ -265,6 +273,13 @@ public class NotesListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mNotesTableModel.clear();
         mNotesTableModel.addAll(notesList);
+        if (mNotesTableModel.getRowCount() > 0) {
+            deleteNoteButton.setEnabled(false);
+            editNoteButton.setEnabled(false);
+        } else {
+            deleteNoteButton.setEnabled(true);
+            editNoteButton.setEnabled(true);
+        }
     }
 
     public void setToolBarVisible(boolean visible) {

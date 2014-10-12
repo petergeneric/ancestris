@@ -149,6 +149,10 @@ public class AliasTablePanel extends javax.swing.JPanel {
                             mRoot.delProperty(individualRef);
                         }
                     }); // end of doUnitOfWork
+                    if (mIndividualReferencesTableModel.getRowCount() <= 0) {
+                        deleteAliasButton.setEnabled(false);
+                        editAliasButton.setEnabled(false);
+                    }
                     changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -180,6 +184,9 @@ public class AliasTablePanel extends javax.swing.JPanel {
                             mIndividualReferencesTableModel.add(mAlias);
                         }
                     }); // end of doUnitOfWork
+                    deleteAliasButton.setEnabled(true);
+                    editAliasButton.setEnabled(true);
+
                     changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -214,6 +221,13 @@ public class AliasTablePanel extends javax.swing.JPanel {
         this.mRoot = root;
         mIndividualReferencesTableModel.clear();
         mIndividualReferencesTableModel.addAll(individualsList);
+        if (mIndividualReferencesTableModel.getRowCount() > 0) {
+            deleteAliasButton.setEnabled(true);
+            editAliasButton.setEnabled(true);
+        } else {
+            deleteAliasButton.setEnabled(false);
+            editAliasButton.setEnabled(false);
+        }
     }
 
     /**

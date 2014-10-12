@@ -167,22 +167,25 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
             FamilyEditor familyEditor = new FamilyEditor();
             familyEditor.setContext(new Context(mCreateFamily));
             if (familyEditor.showPanel()) {
-                mFamiliesTableModel.add(mCreateFamily);
-            gedcom.doUnitOfWork(new UnitOfWork() {
+                gedcom.doUnitOfWork(new UnitOfWork() {
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    if (mFamilyEditingType == EDIT_FAMC) {
-                        mCreateFamily.addChild((Indi) mRoot);
-                    } else if (mFamilyEditingType == EDIT_FAMS) {
-                        if (((Indi) mRoot).getSex() == PropertySex.MALE) {
-                            mCreateFamily.setHusband((Indi) mRoot);
-                        } else {
-                            mCreateFamily.setWife((Indi) mRoot);
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        if (mFamilyEditingType == EDIT_FAMC) {
+                            mCreateFamily.addChild((Indi) mRoot);
+                        } else if (mFamilyEditingType == EDIT_FAMS) {
+                            if (((Indi) mRoot).getSex() == PropertySex.MALE) {
+                                mCreateFamily.setHusband((Indi) mRoot);
+                            } else {
+                                mCreateFamily.setWife((Indi) mRoot);
+                            }
                         }
                     }
-                }
-            }); // end of doUnitOfWork
+                }); // end of doUnitOfWork
+                mFamiliesTableModel.add(mCreateFamily);
+                editFamilyNameButton.setEnabled(true);
+                deleteFamilyNameButton.setEnabled(true);
+
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -230,6 +233,11 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
                             mRoot.delProperty(mFamiliesTableModel.remove(familyNamesTable.convertRowIndexToModel(selectedRow)));
                         }
                     }); // end of doUnitOfWork
+                    if (mFamiliesTableModel.getRowCount() <= 0) {
+                        editFamilyNameButton.setEnabled(false);
+                        deleteFamilyNameButton.setEnabled(false);
+                    }
+
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -265,6 +273,8 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
                         }
                     }); // end of doUnitOfWork
                     mFamiliesTableModel.add(selectedFamily);
+                    editFamilyNameButton.setEnabled(true);
+                    deleteFamilyNameButton.setEnabled(true);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -299,6 +309,13 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
         this.mRoot = root;
         mFamiliesTableModel.clear();
         mFamiliesTableModel.addAll(familiesList);
+        if (mFamiliesTableModel.getRowCount() > 0) {
+            editFamilyNameButton.setEnabled(true);
+            deleteFamilyNameButton.setEnabled(true);
+        } else {
+            editFamilyNameButton.setEnabled(false);
+            deleteFamilyNameButton.setEnabled(false);
+        }
     }
 
     public Fam getSelectedFamily() {

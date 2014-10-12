@@ -155,6 +155,8 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
             individualEditor.addChangeListener(changeListner);
             if (individualEditor.showPanel()) {
                 mIndividualReferencesTableModel.add(mAddedChild);
+                deleteChildrenButton.setEnabled(true);
+                editChildrenButton.setEnabled(true);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -204,6 +206,10 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
                         }
                     }); // end of doUnitOfWork
                     mIndividualReferencesTableModel.remove(rowIndex);
+                    if (mIndividualReferencesTableModel.getRowCount() <= 0) {
+                        deleteChildrenButton.setEnabled(false);
+                        editChildrenButton.setEnabled(false);
+                    }
                     changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -234,6 +240,8 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
                             mIndividualReferencesTableModel.add(addChild);
                         }
                     }); // end of doUnitOfWork
+                    deleteChildrenButton.setEnabled(true);
+                    editChildrenButton.setEnabled(true);
                     changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -269,6 +277,13 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
         this.mRoot = root;
         mIndividualReferencesTableModel.clear();
         mIndividualReferencesTableModel.addAll(individualsList);
+        if (mIndividualReferencesTableModel.getRowCount() > 0) {
+            deleteChildrenButton.setEnabled(true);
+            editChildrenButton.setEnabled(true);
+        } else {
+            deleteChildrenButton.setEnabled(false);
+            editChildrenButton.setEnabled(false);
+        }
     }
 
     public Indi getSelectedChildren() {
