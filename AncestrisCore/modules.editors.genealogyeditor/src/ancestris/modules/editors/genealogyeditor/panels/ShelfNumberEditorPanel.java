@@ -100,7 +100,7 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
         changeListner.unmute();
     }
 
-    public Property commit() {
+    public void commit() {
         if (changeListner.hasChange()) {
             if (mShelfNumberProperty != null) {
                 mShelfNumberProperty.setValue(shelfNumberTextField.getText());
@@ -116,7 +116,6 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
             }
             changeListner.setChange(false);
         }
-        return mShelfNumberProperty;
     }
 
     public class ChangeListner implements DocumentListener {
@@ -129,9 +128,9 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
             if (!mute) {
                 Object propertyName = de.getDocument().getProperty("name");
                 if (propertyName != null) {
-                    if (propertyName.equals("ShelfNumberField")) {
+                    if (propertyName.equals("shelfNumberTextField")) {
                         setChange(true);
-                    } else if (propertyName.equals("MediaType")) {
+                    } else if (propertyName.equals("mediaTypeTextField")) {
                         setChange(true);
                     }
                 }
@@ -143,9 +142,9 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
             if (!mute) {
                 Object propertyName = de.getDocument().getProperty("name");
                 if (propertyName != null) {
-                    if (propertyName.equals("ShelfNumberField")) {
+                    if (propertyName.equals("shelfNumberTextField")) {
                         setChange(true);
-                    } else if (propertyName.equals("MediaType")) {
+                    } else if (propertyName.equals("mediaTypeTextField")) {
                         setChange(true);
                     }
                 }
@@ -157,9 +156,9 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
             if (!mute) {
                 Object propertyName = de.getDocument().getProperty("name");
                 if (propertyName != null) {
-                    if (propertyName.equals("ShelfNumberField")) {
+                    if (propertyName.equals("shelfNumberTextField")) {
                         setChange(true);
-                    } else if (propertyName.equals("MediaType")) {
+                    } else if (propertyName.equals("mediaTypeTextField")) {
                         setChange(true);
                     }
                 }
