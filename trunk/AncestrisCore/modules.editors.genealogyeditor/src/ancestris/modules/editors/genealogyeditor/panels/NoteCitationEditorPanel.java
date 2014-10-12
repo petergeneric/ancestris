@@ -35,6 +35,8 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        inlineNotePanel = new javax.swing.JPanel();
+        inlineNoteCheckBox = new javax.swing.JCheckBox();
         noteIDLabel = new javax.swing.JLabel();
         noteIDTextField = new javax.swing.JTextField();
         noteInformationTabbedPane = new javax.swing.JTabbedPane();
@@ -44,15 +46,44 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
         noteTextTextArea = new javax.swing.JTextArea();
         noteReferencesPanel = new javax.swing.JPanel();
         referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
-        inlineNoteCheckBox = new javax.swing.JCheckBox();
+        changeDatePanel = new javax.swing.JPanel();
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
+
+        inlineNoteCheckBox.setText(org.openide.util.NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.inlineNoteCheckBox.text")); // NOI18N
+        inlineNoteCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.inlineNoteCheckBox.toolTipText")); // NOI18N
+        inlineNoteCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inlineNoteCheckBoxActionPerformed(evt);
+            }
+        });
 
         noteIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteIDLabel.text"), new Object[] {})); // NOI18N
 
         noteIDTextField.setEditable(false);
         noteIDTextField.setColumns(8);
         noteIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteIDTextField.text"), new Object[] {})); // NOI18N
+
+        javax.swing.GroupLayout inlineNotePanelLayout = new javax.swing.GroupLayout(inlineNotePanel);
+        inlineNotePanel.setLayout(inlineNotePanelLayout);
+        inlineNotePanelLayout.setHorizontalGroup(
+            inlineNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inlineNotePanelLayout.createSequentialGroup()
+                .addComponent(inlineNoteCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(noteIDLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        inlineNotePanelLayout.setVerticalGroup(
+            inlineNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inlineNotePanelLayout.createSequentialGroup()
+                .addGroup(inlineNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inlineNoteCheckBox)
+                    .addComponent(noteIDLabel)
+                    .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 2, Short.MAX_VALUE))
+        );
 
         noteTextToolBar.setFloatable(false);
         noteTextToolBar.setRollover(true);
@@ -68,14 +99,14 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
         noteTextPanelLayout.setHorizontalGroup(
             noteTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(noteTextToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
+            .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
         noteTextPanelLayout.setVerticalGroup(
             noteTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(noteTextPanelLayout.createSequentialGroup()
                 .addComponent(noteTextToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
+                .addComponent(noteTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
         );
 
         noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteTextPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteTextPanel); // NOI18N
@@ -84,25 +115,37 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
         noteReferencesPanel.setLayout(noteReferencesPanelLayout);
         noteReferencesPanelLayout.setHorizontalGroup(
             noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
         noteReferencesPanelLayout.setVerticalGroup(
             noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
         );
 
         noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel); // NOI18N
 
-        inlineNoteCheckBox.setText(org.openide.util.NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.inlineNoteCheckBox.text")); // NOI18N
-        inlineNoteCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.inlineNoteCheckBox.toolTipText")); // NOI18N
-        inlineNoteCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inlineNoteCheckBoxActionPerformed(evt);
-            }
-        });
+        changeDatePanel.setMinimumSize(new java.awt.Dimension(559, 15));
+        changeDatePanel.setName(""); // NOI18N
+        changeDatePanel.setPreferredSize(new java.awt.Dimension(559, 15));
 
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         changeDateLabel.setText(org.openide.util.NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.changeDateLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout changeDatePanelLayout = new javax.swing.GroupLayout(changeDatePanel);
+        changeDatePanel.setLayout(changeDatePanelLayout);
+        changeDatePanelLayout.setHorizontalGroup(
+            changeDatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, changeDatePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))
+        );
+        changeDatePanelLayout.setVerticalGroup(
+            changeDatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(changeDateLabel)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -112,32 +155,21 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(noteInformationTabbedPane)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(inlineNoteCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(noteIDLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(changeDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(changeDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(inlineNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(noteIDLabel)
-                    .addComponent(noteIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inlineNoteCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(inlineNotePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(noteInformationTabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(changeDateLabel)
-                    .addComponent(changeDateLabeldate))
+                .addComponent(changeDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -160,7 +192,9 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JLabel changeDateLabeldate;
+    private javax.swing.JPanel changeDatePanel;
     private javax.swing.JCheckBox inlineNoteCheckBox;
+    private javax.swing.JPanel inlineNotePanel;
     private javax.swing.JLabel noteIDLabel;
     private javax.swing.JTextField noteIDTextField;
     private javax.swing.JTabbedPane noteInformationTabbedPane;
