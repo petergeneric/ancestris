@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
-import ancestris.*;
 import genj.gedcom.PropertyAssociation;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class AssociationsTableModel extends AbstractTableModel {
     public PropertyAssociation getValueAt(int row) {
         return propertyAssociationList.get(row);
     }
-    
+
     public void add(PropertyAssociation propertyAssociation) {
         propertyAssociationList.add(propertyAssociation);
         fireTableDataChanged();
@@ -61,9 +60,14 @@ public class AssociationsTableModel extends AbstractTableModel {
         propertyAssociationList.addAll(propertyAssociationList);
         fireTableDataChanged();
     }
+
     public PropertyAssociation remove(int row) {
         PropertyAssociation source = propertyAssociationList.remove(row);
         fireTableDataChanged();
         return source;
+    }
+
+    public void clear() {
+        propertyAssociationList.clear();
     }
 }
