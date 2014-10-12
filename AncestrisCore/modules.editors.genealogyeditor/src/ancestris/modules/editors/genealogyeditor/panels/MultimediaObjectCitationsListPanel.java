@@ -156,6 +156,8 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             if (multiMediaObjectEditor.showPanel()) {
                 multiMediaObjectCitationsTableModel.clear();
                 multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+                editMMObjecButton.setEnabled(true);
+                deleteMMObjectButton.setEnabled(true);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -199,6 +201,10 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                     }); // end of doUnitOfWork
 
                     multiMediaObjectCitationsTableModel.remove(rowIndex);
+                    if (multiMediaObjectCitationsTableModel.getRowCount() <= 0) {
+                        editMMObjecButton.setEnabled(false);
+                        deleteMMObjectButton.setEnabled(false);
+                    }
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -260,13 +266,14 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
                     }
                 }); // end of doUnitOfWork
 
+                multiMediaObjectCitationsTableModel.clear();
+                multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+                editMMObjecButton.setEnabled(true);
+                deleteMMObjectButton.setEnabled(true);
                 changeSupport.fireChange();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-
-            multiMediaObjectCitationsTableModel.clear();
-            multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
         }
     }//GEN-LAST:event_linkMMObjectButtonActionPerformed
 
@@ -285,6 +292,13 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         multiMediaObjectCitationsTableModel.clear();
         multiMediaObjectCitationsTableModel.addAll(multiMediasList);
+        if (multiMediaObjectCitationsTableModel.getRowCount() > 0) {
+            editMMObjecButton.setEnabled(true);
+            deleteMMObjectButton.setEnabled(true);
+        } else {
+            editMMObjecButton.setEnabled(false);
+            deleteMMObjectButton.setEnabled(false);
+        }
     }
 
     /**

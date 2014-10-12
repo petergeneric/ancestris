@@ -28,6 +28,13 @@ public class SourcesListPanel extends javax.swing.JPanel {
         initComponents();
         sourcesTable.setID(SourcesListPanel.class.getName());
         mSourcesTableModel.addAll((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
+        if (mSourcesTableModel.getRowCount() > 0) {
+            editSourceButton.setEnabled(true);
+            deleteSourceButton.setEnabled(true);
+        } else {
+            editSourceButton.setEnabled(false);
+            deleteSourceButton.setEnabled(false);
+        }
     }
 
     /**
@@ -124,6 +131,9 @@ public class SourcesListPanel extends javax.swing.JPanel {
             sourceEditor.setContext(new Context(mSource));
             if (sourceEditor.showPanel()) {
                 mSourcesTableModel.add(mSource);
+                editSourceButton.setEnabled(true);
+                deleteSourceButton.setEnabled(true);
+
             } else {
                 while (mGedcom.getUndoNb() > undoNb && mGedcom.canUndo()) {
                     mGedcom.undoUnitOfWork(false);
@@ -165,6 +175,10 @@ public class SourcesListPanel extends javax.swing.JPanel {
                         mGedcom.deleteEntity(mSourcesTableModel.remove(rowIndex));
                     }
                 }); // end of doUnitOfWork
+                if (mSourcesTableModel.getRowCount() <= 0) {
+                    editSourceButton.setEnabled(false);
+                    deleteSourceButton.setEnabled(false);
+                }
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }

@@ -6,7 +6,6 @@ import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.Property;
 import genj.gedcom.PropertyName;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
@@ -137,7 +136,6 @@ public class NamesListPanel extends javax.swing.JPanel {
         nameEditorDialog.setDialogId(NameEditorPanel.class.getName());
 
         if (nameEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            mNamesTableModel.add(nameEditorPanel.get());
             try {
                 root.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -146,6 +144,9 @@ public class NamesListPanel extends javax.swing.JPanel {
                         nameEditorPanel.commit();
                     }
                 });
+                mNamesTableModel.add(nameEditorPanel.get());
+                editNameButton.setEnabled(true);
+                deleteNameButton.setEnabled(true);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -202,6 +203,10 @@ public class NamesListPanel extends javax.swing.JPanel {
                             root.delProperty(mNamesTableModel.remove(rowIndex));
                         }
                     }); // end of doUnitOfWork
+                    if (mNamesTableModel.getRowCount() <= 0) {
+                        editNameButton.setEnabled(false);
+                        deleteNameButton.setEnabled(false);
+                    }
                     changeListner.stateChanged(null);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -251,6 +256,13 @@ public class NamesListPanel extends javax.swing.JPanel {
         this.root = root;
         mNamesTableModel.clear();
         mNamesTableModel.addAll(namesList);
+        if (mNamesTableModel.getRowCount() > 0) {
+            editNameButton.setEnabled(true);
+            deleteNameButton.setEnabled(true);
+        } else {
+            editNameButton.setEnabled(false);
+            deleteNameButton.setEnabled(false);
+        }
     }
 
     /**

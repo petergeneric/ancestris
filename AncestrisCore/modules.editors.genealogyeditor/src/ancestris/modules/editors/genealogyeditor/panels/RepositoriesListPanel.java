@@ -121,7 +121,6 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
             RepositoryEditor repositoryEditor = new RepositoryEditor();
             repositoryEditor.setContext(new Context(mRepository));
             if (repositoryEditor.showPanel()) {
-                mRepositoriesTableModel.add(mRepository);
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
@@ -130,6 +129,10 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
                         ((PropertyRepository) addProperty).link();
                     }
                 }); // end of doUnitOfWork
+                mRepositoriesTableModel.add(mRepository);
+                editRepositoryButton.setEnabled(true);
+                deleteRepositoryButton.setEnabled(true);
+
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                     gedcom.undoUnitOfWork(false);
@@ -175,6 +178,10 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
                             mRoot.delProperty(mRepositoriesTableModel.remove(repositoriesTable.convertRowIndexToModel(selectedRow)));
                         }
                     }); // end of doUnitOfWork
+                    if (mRepositoriesTableModel.getRowCount() <= 0) {
+                        editRepositoryButton.setEnabled(false);
+                        deleteRepositoryButton.setEnabled(false);
+                    }
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -208,6 +215,13 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         this.mRoot = root;
         mRepositoriesTableModel.clear();
         mRepositoriesTableModel.addAll(repositoriesList);
+        if (mRepositoriesTableModel.getRowCount() > 0) {
+            editRepositoryButton.setEnabled(true);
+            deleteRepositoryButton.setEnabled(true);
+        } else {
+            editRepositoryButton.setEnabled(false);
+            deleteRepositoryButton.setEnabled(false);
+        }
     }
 
     public void setToolBarVisible(boolean b) {
