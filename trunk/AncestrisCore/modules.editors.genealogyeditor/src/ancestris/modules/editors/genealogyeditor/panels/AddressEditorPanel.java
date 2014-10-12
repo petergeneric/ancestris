@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import genj.gedcom.Property;
+import java.awt.CardLayout;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeListener;
@@ -56,8 +57,8 @@ public class AddressEditorPanel extends javax.swing.JPanel {
      */
     public AddressEditorPanel() {
         initComponents();
-        AddrLineTextField.getDocument().addDocumentListener(changeListner);
-        AddrLineTextField.getDocument().putProperty("name", "AddrLineTextField");
+        addressTextArea.getDocument().addDocumentListener(changeListner);
+        addressTextArea.getDocument().putProperty("name", "addressTextArea");
 
         addrLine1TextField.getDocument().addDocumentListener(changeListner);
         addrLine1TextField.getDocument().putProperty("name", "addrLine1TextField");
@@ -102,42 +103,162 @@ public class AddressEditorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        addressPanel = new javax.swing.JPanel();
+        AddressPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        addressTextArea = new javax.swing.JTextArea();
+        AddressStructurePanel = new javax.swing.JPanel();
+        addrLine1TextField = new javax.swing.JTextField();
+        addrLine2TextField = new javax.swing.JTextField();
+        addrLine3TextField = new javax.swing.JTextField();
+        cityLabel = new javax.swing.JLabel();
+        cityTextField = new javax.swing.JTextField();
+        postalCodeLabel = new javax.swing.JLabel();
+        postalCodeTextField = new javax.swing.JTextField();
+        countryLabel = new javax.swing.JLabel();
+        countryTextField = new javax.swing.JTextField();
+        stateLabel = new javax.swing.JLabel();
+        stateTextField = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
         phoneLabel = new javax.swing.JLabel();
         phoneTextField = new javax.swing.JTextField();
-        addrLine2TextField = new javax.swing.JTextField();
-        cityLabel = new javax.swing.JLabel();
-        addrLine3TextField = new javax.swing.JTextField();
-        cityTextField = new javax.swing.JTextField();
-        countryTextField = new javax.swing.JTextField();
-        countryLabel = new javax.swing.JLabel();
-        eMailAddrTextField = new javax.swing.JTextField();
-        eMailAddrLabel = new javax.swing.JLabel();
-        httpAddrTextField = new javax.swing.JTextField();
-        postalCodeTextField = new javax.swing.JTextField();
-        httpAddrLabel = new javax.swing.JLabel();
-        addrLine1TextField = new javax.swing.JTextField();
-        postalCodeLabel = new javax.swing.JLabel();
-        faxTextField = new javax.swing.JTextField();
-        stateTextField = new javax.swing.JTextField();
         faxLabel = new javax.swing.JLabel();
-        AddrLineTextField = new javax.swing.JTextField();
-        stateLabel = new javax.swing.JLabel();
+        faxTextField = new javax.swing.JTextField();
+        httpAddrLabel = new javax.swing.JLabel();
+        httpAddrTextField = new javax.swing.JTextField();
+        eMailAddrLabel = new javax.swing.JLabel();
+        eMailAddrTextField = new javax.swing.JTextField();
+
+        addressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.addressPanel.border.title"))); // NOI18N
+        addressPanel.setLayout(new java.awt.CardLayout());
+
+        addressTextArea.setColumns(20);
+        addressTextArea.setRows(5);
+        jScrollPane1.setViewportView(addressTextArea);
+
+        javax.swing.GroupLayout AddressPanelLayout = new javax.swing.GroupLayout(AddressPanel);
+        AddressPanel.setLayout(AddressPanelLayout);
+        AddressPanelLayout.setHorizontalGroup(
+            AddressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+        );
+        AddressPanelLayout.setVerticalGroup(
+            AddressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+        );
+
+        addressPanel.add(AddressPanel, "addressCard");
+        AddressPanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.AddressPanel.AccessibleContext.accessibleName")); // NOI18N
+
+        cityLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        cityLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.cityLabel.text")); // NOI18N
+
+        postalCodeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        postalCodeLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.postalCodeLabel.text")); // NOI18N
+
+        countryLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        countryLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.countryLabel.text")); // NOI18N
+
+        stateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        stateLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.stateLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout AddressStructurePanelLayout = new javax.swing.GroupLayout(AddressStructurePanel);
+        AddressStructurePanel.setLayout(AddressStructurePanelLayout);
+        AddressStructurePanelLayout.setHorizontalGroup(
+            AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AddressStructurePanelLayout.createSequentialGroup()
+                .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                    .addComponent(cityLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addrLine1TextField)
+                    .addComponent(addrLine2TextField)
+                    .addComponent(addrLine3TextField)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AddressStructurePanelLayout.createSequentialGroup()
+                        .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(countryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                            .addComponent(cityTextField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(postalCodeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                            .addComponent(stateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(postalCodeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                            .addComponent(stateTextField)))))
+        );
+        AddressStructurePanelLayout.setVerticalGroup(
+            AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AddressStructurePanelLayout.createSequentialGroup()
+                .addComponent(addrLine1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addrLine2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addrLine3TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cityLabel)
+                    .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(postalCodeLabel)
+                        .addComponent(postalCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(countryLabel)
+                    .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stateLabel)
+                    .addComponent(stateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        addressPanel.add(AddressStructurePanel, "AddressStructurecard");
 
         phoneLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.phoneLabel.text")); // NOI18N
 
-        cityLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.cityLabel.text")); // NOI18N
-
-        countryLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.countryLabel.text")); // NOI18N
-
-        eMailAddrLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.eMailAddrLabel.text")); // NOI18N
+        faxLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.faxLabel.text")); // NOI18N
 
         httpAddrLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.httpAddrLabel.text")); // NOI18N
 
-        postalCodeLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.postalCodeLabel.text")); // NOI18N
+        eMailAddrLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.eMailAddrLabel.text")); // NOI18N
 
-        faxLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.faxLabel.text")); // NOI18N
-
-        stateLabel.setText(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.stateLabel.text")); // NOI18N
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(phoneLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(httpAddrLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(httpAddrTextField)
+                    .addComponent(phoneTextField))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(faxLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eMailAddrLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(faxTextField)
+                    .addComponent(eMailAddrTextField)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(phoneLabel)
+                    .addComponent(phoneTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(faxLabel)
+                    .addComponent(faxTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(httpAddrLabel)
+                    .addComponent(httpAddrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eMailAddrLabel)
+                    .addComponent(eMailAddrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -145,81 +266,30 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(httpAddrLabel)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(phoneLabel)
-                        .addComponent(stateLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(cityLabel, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(addrLine1TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addrLine2TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addrLine3TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(AddrLineTextField)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cityTextField)
-                            .addComponent(stateTextField)
-                            .addComponent(phoneTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-                            .addComponent(httpAddrTextField))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(postalCodeLabel)
-                            .addComponent(countryLabel)
-                            .addComponent(faxLabel)
-                            .addComponent(eMailAddrLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(faxTextField)
-                            .addComponent(countryTextField)
-                            .addComponent(postalCodeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                            .addComponent(eMailAddrTextField))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addressPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(AddrLineTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(addressPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addrLine1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addrLine2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addrLine3TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cityLabel)
-                    .addComponent(cityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(postalCodeLabel)
-                    .addComponent(postalCodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(stateLabel)
-                    .addComponent(stateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(countryLabel)
-                    .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(phoneLabel)
-                    .addComponent(phoneTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(faxLabel)
-                    .addComponent(faxTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(httpAddrLabel)
-                    .addComponent(httpAddrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eMailAddrLabel)
-                    .addComponent(eMailAddrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField AddrLineTextField;
+    private javax.swing.JPanel AddressPanel;
+    private javax.swing.JPanel AddressStructurePanel;
     private javax.swing.JTextField addrLine1TextField;
     private javax.swing.JTextField addrLine2TextField;
     private javax.swing.JTextField addrLine3TextField;
+    private javax.swing.JPanel addressPanel;
+    private javax.swing.JTextArea addressTextArea;
     private javax.swing.JLabel cityLabel;
     private javax.swing.JTextField cityTextField;
     private javax.swing.JLabel countryLabel;
@@ -230,6 +300,8 @@ public class AddressEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField faxTextField;
     private javax.swing.JLabel httpAddrLabel;
     private javax.swing.JTextField httpAddrTextField;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel phoneLabel;
     private javax.swing.JTextField phoneTextField;
     private javax.swing.JLabel postalCodeLabel;
@@ -288,28 +360,36 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         map = countryTextField.getInputMap();
         map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
 
+        CardLayout cardLayout = (CardLayout) (addressPanel.getLayout());
         if (mAddress != null) {
-            AddrLineTextField.setText(address.getValue());
-            Property propertyAdr1 = mAddress.getProperty("ADR1");
-            addrLine1TextField.setText(propertyAdr1 != null ? propertyAdr1.getValue() : "");
+            if (!address.getValue().isEmpty()) {
+                cardLayout.show(addressPanel, "addressCard");
+                addressTextArea.setText(address.getValue());
+            } else {
+                cardLayout.show(addressPanel, "AddressStructurecard");
+                Property propertyAdr1 = mAddress.getProperty("ADR1");
+                addrLine1TextField.setText(propertyAdr1 != null ? propertyAdr1.getValue() : "");
 
-            Property propertyAdr2 = mAddress.getProperty("ADR2");
-            addrLine2TextField.setText(propertyAdr2 != null ? propertyAdr2.getValue() : "");
+                Property propertyAdr2 = mAddress.getProperty("ADR2");
+                addrLine2TextField.setText(propertyAdr2 != null ? propertyAdr2.getValue() : "");
 
-            Property propertyAdr3 = mAddress.getProperty("ADR3");
-            addrLine3TextField.setText(propertyAdr3 != null ? propertyAdr3.getValue() : "");
+                Property propertyAdr3 = mAddress.getProperty("ADR3");
+                addrLine3TextField.setText(propertyAdr3 != null ? propertyAdr3.getValue() : "");
 
-            Property propertyCity = mAddress.getProperty("CITY");
-            cityTextField.setText(propertyCity != null ? propertyCity.getValue() : "");
+                Property propertyCity = mAddress.getProperty("CITY");
+                cityTextField.setText(propertyCity != null ? propertyCity.getValue() : "");
 
-            Property propertyState = mAddress.getProperty("STAE");
-            stateTextField.setText(propertyState != null ? propertyState.getValue() : "");
+                Property propertyState = mAddress.getProperty("STAE");
+                stateTextField.setText(propertyState != null ? propertyState.getValue() : "");
 
-            Property propertyPostalCode = mAddress.getProperty("POST");
-            postalCodeTextField.setText(propertyPostalCode != null ? propertyPostalCode.getValue() : "");
+                Property propertyPostalCode = mAddress.getProperty("POST");
+                postalCodeTextField.setText(propertyPostalCode != null ? propertyPostalCode.getValue() : "");
 
-            Property propertyCountry = mAddress.getProperty("CTRY");
-            countryTextField.setText(propertyCountry != null ? propertyCountry.getValue() : "");
+                Property propertyCountry = mAddress.getProperty("CTRY");
+                countryTextField.setText(propertyCountry != null ? propertyCountry.getValue() : "");
+            }
+        } else {
+            cardLayout.show(addressPanel, "AddressStructurecard");
         }
 
         Property propertyPhone;
@@ -348,10 +428,10 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         if (mAddressModified) {
             mAddressModified = false;
             if (mAddress == null) {
-                mAddress = mRoot.addProperty("ADDR", AddrLineTextField.getText());
+                mAddress = mRoot.addProperty("ADDR", addressTextArea.getText());
             } else {
                 if (mAddrLineModified) {
-                    mAddress.setValue(AddrLineTextField.getText());
+                    mAddress.setValue(addressTextArea.getText());
                 }
             }
 
@@ -505,7 +585,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
                 Object propertyName = de.getDocument().getProperty("name");
                 if (propertyName != null) {
-                    if (propertyName.equals("AddrLineTextField")) {
+                    if (propertyName.equals("addressTextArea")) {
                         mAddrLineModified = true;
                     }
                     if (propertyName.equals("addrLine1TextField")) {
@@ -554,7 +634,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
                 Object propertyName = de.getDocument().getProperty("name");
                 if (propertyName != null) {
-                    if (propertyName.equals("AddrLineTextField")) {
+                    if (propertyName.equals("addressTextArea")) {
                         mAddrLineModified = true;
                     }
                     if (propertyName.equals("addrLine1TextField")) {
@@ -603,7 +683,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
 
                 Object propertyName = de.getDocument().getProperty("name");
                 if (propertyName != null) {
-                    if (propertyName.equals("AddrLineTextField")) {
+                    if (propertyName.equals("addressTextArea")) {
                         mAddrLineModified = true;
                     }
                     if (propertyName.equals("addrLine1TextField")) {
