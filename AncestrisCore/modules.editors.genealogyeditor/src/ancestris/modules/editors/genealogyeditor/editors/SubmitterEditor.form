@@ -19,6 +19,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="languagesPanel" max="32767" attributes="0"/>
                   <Component id="submitterTabbedPane" pref="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="changeDateLabel" pref="309" max="32767" attributes="0"/>
@@ -26,15 +27,10 @@
                       <Component id="changeDateLabeldate" min="-2" pref="171" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="languageLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="submitterNameLabel" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                      <Component id="submitterNameLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="submitterNameTextField" max="32767" attributes="0"/>
-                          <Component id="submitterLanguageTextField" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="submitterNameTextField" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -50,22 +46,68 @@
                   <Component id="submitterNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="languageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="submitterLanguageTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="languagesPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="submitterTabbedPane" max="32767" attributes="0"/>
+              <Component id="submitterTabbedPane" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="changeDateLabeldate" min="-2" pref="14" max="-2" attributes="0"/>
                   <Component id="changeDateLabel" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
+    <Container class="javax.swing.JPanel" name="languagesPanel">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Prefered languages">
+              <ResourceString PropertyName="titleX" bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SubmitterEditor.languagesPanel.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="firstPreferLanguageTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="secondPreferLanguageTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="thirdPreferLanguageTextField" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="firstPreferLanguageTextField" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="secondPreferLanguageTextField" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="thirdPreferLanguageTextField" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JTextField" name="firstPreferLanguageTextField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="secondPreferLanguageTextField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="thirdPreferLanguageTextField">
+        </Component>
+      </SubComponents>
+    </Container>
     <Component class="javax.swing.JLabel" name="changeDateLabel">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
@@ -84,15 +126,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="submitterNameTextField">
-    </Component>
-    <Component class="javax.swing.JLabel" name="languageLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SubmitterEditor.languageLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="submitterLanguageTextField">
     </Component>
     <Container class="javax.swing.JTabbedPane" name="submitterTabbedPane">
 
