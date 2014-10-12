@@ -91,9 +91,6 @@
                     <EmptyBorder/>
                   </Border>
                 </Property>
-                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="null"/>
-                </Property>
                 <Property name="name" type="java.lang.String" value="" noResource="true"/>
               </Properties>
 
@@ -168,6 +165,11 @@
                               <Component id="addPlaceButton" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="responsibleAgencyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="responsibleAgencyTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="eventCauseLabel" min="-2" max="-2" attributes="0"/>
                               <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
@@ -190,10 +192,6 @@
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="responsibleAgencyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="responsibleAgencyTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
