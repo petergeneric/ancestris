@@ -415,6 +415,8 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                             shelfNumberEditorPanel.commit();
                         }
                     });
+                    mShelfNumberTableModel.clear();
+                    mShelfNumberTableModel.addAll(Arrays.asList(mRepositoryCitation.getProperties("CALN")));
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -515,6 +517,8 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                                 shelfNumberEditorPanel.commit();
                             }
                         });
+                        mShelfNumberTableModel.clear();
+                        mShelfNumberTableModel.addAll(Arrays.asList(mRepositoryCitation.getProperties("CALN")));
                         changeSupport.fireChange();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
