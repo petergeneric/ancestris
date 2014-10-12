@@ -218,25 +218,25 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="faxLabel" max="32767" attributes="0"/>
                       <Component id="phoneLabel" max="32767" attributes="0"/>
-                      <Component id="httpAddrLabel" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="httpAddrTextField" max="32767" attributes="0"/>
-                      <Component id="phoneTextField" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="faxLabel" min="-2" pref="96" max="-2" attributes="0"/>
-                      <Component id="eMailAddrLabel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="phoneTextField" pref="132" max="32767" attributes="0"/>
                       <Component id="faxTextField" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="httpAddrLabel" max="32767" attributes="0"/>
+                      <Component id="eMailAddrLabel" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="httpAddrTextField" pref="132" max="32767" attributes="0"/>
                       <Component id="eMailAddrTextField" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -248,17 +248,18 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="phoneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="phoneTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="faxLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="faxTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                          <Component id="httpAddrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="httpAddrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="httpAddrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="httpAddrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="eMailAddrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="eMailAddrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="faxLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="faxTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -266,6 +267,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="phoneLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="AddressEditorPanel.phoneLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
@@ -275,6 +277,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="faxLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="AddressEditorPanel.faxLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
@@ -284,6 +287,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="httpAddrLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="AddressEditorPanel.httpAddrLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
@@ -293,6 +297,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="eMailAddrLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="AddressEditorPanel.eMailAddrLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
