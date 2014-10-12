@@ -1,6 +1,10 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyChoiceValue;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -20,11 +24,10 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
     public ShelfNumberEditorPanel() {
         initComponents();
 
+        mediaTypeChoiceWidget.setEditable(false);
+        mediaTypeChoiceWidget.addChangeListener(changeListner);
         shelfNumberTextField.getDocument().addDocumentListener(changeListner);
         shelfNumberTextField.getDocument().putProperty("name", "shelfNumberTextField");
-
-        mediaTypeTextField.getDocument().addDocumentListener(changeListner);
-        mediaTypeTextField.getDocument().putProperty("name", "mediaTypeTextField");
     }
 
     /**
@@ -39,7 +42,7 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
         shelfNumberLabel = new javax.swing.JLabel();
         shelfNumberTextField = new javax.swing.JTextField();
         mediaTypeLabel = new javax.swing.JLabel();
-        mediaTypeTextField = new javax.swing.JTextField();
+        mediaTypeChoiceWidget = new genj.util.swing.ChoiceWidget();
 
         shelfNumberLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(shelfNumberLabel, org.openide.util.NbBundle.getMessage(ShelfNumberEditorPanel.class, "ShelfNumberEditorPanel.shelfNumberLabel.text")); // NOI18N
@@ -59,7 +62,7 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(shelfNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                    .addComponent(mediaTypeTextField))
+                    .addComponent(mediaTypeChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -72,15 +75,15 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(mediaTypeLabel)
-                    .addComponent(mediaTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(mediaTypeChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private genj.util.swing.ChoiceWidget mediaTypeChoiceWidget;
     private javax.swing.JLabel mediaTypeLabel;
-    private javax.swing.JTextField mediaTypeTextField;
     private javax.swing.JLabel shelfNumberLabel;
     private javax.swing.JTextField shelfNumberTextField;
     // End of variables declaration//GEN-END:variables
@@ -89,13 +92,15 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
         changeListner.mute();
         mParentProperty = parentProperty;
         mShelfNumberProperty = shelfNumberProperty;
+        mediaTypeChoiceWidget.setValues(PropertyChoiceValue.getChoices(parentProperty.getGedcom(), "MEDI", true));
+
         if (mShelfNumberProperty != null) {
             shelfNumberTextField.setText(mShelfNumberProperty.getValue());
             Property mediProperty = mShelfNumberProperty.getProperty("MEDI");
-            mediaTypeTextField.setText(mediProperty != null ? mediProperty.getValue() : "");
+            mediaTypeChoiceWidget.setSelectedItem(mediProperty != null ? mediProperty.getValue() : "");
         } else {
             shelfNumberTextField.setText("");
-            mediaTypeTextField.setText("");
+            mediaTypeChoiceWidget.setSelectedItem("");
         }
         changeListner.unmute();
     }
@@ -106,19 +111,19 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
                 mShelfNumberProperty.setValue(shelfNumberTextField.getText());
                 Property mediProperty = mShelfNumberProperty.getProperty("MEDI");
                 if (mShelfNumberProperty != null) {
-                    mediProperty.setValue(mediaTypeTextField.getText());
+                    mediProperty.setValue(mediaTypeChoiceWidget.getSelectedItem().toString());
                 } else {
-                    mShelfNumberProperty.addProperty("MEDI", mediaTypeTextField.getText());
+                    mShelfNumberProperty.addProperty("MEDI", mediaTypeChoiceWidget.getSelectedItem().toString());
                 }
             } else {
                 mShelfNumberProperty = mParentProperty.addProperty("CALN", shelfNumberTextField.getText());
-                mShelfNumberProperty.addProperty("MEDI", mediaTypeTextField.getText());
+                mShelfNumberProperty.addProperty("MEDI", mediaTypeChoiceWidget.getSelectedItem().toString());
             }
             changeListner.setChange(false);
         }
     }
 
-    public class ChangeListner implements DocumentListener {
+    public class ChangeListner implements DocumentListener, ChangeListener {
 
         private boolean mute = false;
         private boolean hasChange = false;
@@ -185,6 +190,11 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
          */
         public void setChange(boolean hasChange) {
             this.hasChange = hasChange;
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            setChange(true);
         }
     }
 }
