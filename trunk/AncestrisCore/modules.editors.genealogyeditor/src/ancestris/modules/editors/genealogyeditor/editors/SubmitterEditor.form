@@ -50,11 +50,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="submitterTabbedPane" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="changeDateLabeldate" min="-2" pref="14" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="changeDateLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="changeDateLabeldate" min="-2" pref="14" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
