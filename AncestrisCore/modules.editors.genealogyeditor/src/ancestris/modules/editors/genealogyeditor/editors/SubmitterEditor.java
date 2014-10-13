@@ -241,51 +241,88 @@ public class SubmitterEditor extends EntityEditor {
                     thirdPreferLanguageTextField.setText("");
                 }
             }
-                /*
-                 * +1 <<NOTE_STRUCTURE>>
-                 */
-                if (!mSubmitter.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                    int indexOfTab = submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle"));
-                    if (indexOfTab != -1) {
-                        submitterTabbedPane.removeTabAt(indexOfTab);
-                    }
-                } else {
-                    if (submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle")) == -1) {
-                        submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle"), noteCitationsTablePanel);
-                    }
-                    noteCitationsTablePanel.set(mSubmitter, Arrays.asList(mSubmitter.getProperties("NOTE")));
+            /*
+             * +1 <<NOTE_STRUCTURE>>
+             */
+            if (!mSubmitter.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                int indexOfTab = submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle"));
+                if (indexOfTab != -1) {
+                    submitterTabbedPane.removeTabAt(indexOfTab);
                 }
-
-                /*
-                 * +1 <<CHANGE_DATE>>
-                 * Handle by gedcom doUnitOfWork
-                 */
-                Property changeDate = mSubmitter.getProperty("CHAN");
-                if (changeDate != null) {
-                    changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
+            } else {
+                if (submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle")) == -1) {
+                    submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle"), noteCitationsTablePanel);
                 }
+                noteCitationsTablePanel.set(mSubmitter, Arrays.asList(mSubmitter.getProperties("NOTE")));
             }
-        }
 
-        @Override
-        public void commit() throws GedcomException {
-
-            if (changes.hasChanged()) {
-                Property name = mSubmitter.getProperty("NAME");
-                if (name != null) {
-                    name.setValue(submitterNameTextField.getText());
-                } else {
-                    mSubmitter.addProperty("NAME", submitterNameTextField.getText());
-                }
-
-                Property language = mSubmitter.getProperty("LANG", false);
-                if (language != null) {
-                    language.setValue(firstPreferLanguageTextField.getText());
-                } else {
-                    mSubmitter.addProperty("LANG", firstPreferLanguageTextField.getText());
-                }
-
-                addressEditorPanel.commit();
+            /*
+             * +1 <<CHANGE_DATE>>
+             * Handle by gedcom doUnitOfWork
+             */
+            Property changeDate = mSubmitter.getProperty("CHAN");
+            if (changeDate != null) {
+                changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
             }
         }
     }
+
+    @Override
+    public void commit() throws GedcomException {
+
+        if (changes.hasChanged()) {
+            Property name = mSubmitter.getProperty("NAME");
+            if (name != null) {
+                name.setValue(submitterNameTextField.getText());
+            } else {
+                mSubmitter.addProperty("NAME", submitterNameTextField.getText());
+            }
+
+            Property[] preferedLanguages = mSubmitter.getProperties("LANG", false);
+
+            if (!firstPreferLanguageTextField.getText().isEmpty()) {
+                if (preferedLanguages.length > 0 && preferedLanguages[0] != null) {
+                    if (firstPreferLanguageTextField.getText().isEmpty()) {
+                        preferedLanguages[0].setValue(firstPreferLanguageTextField.getText());
+                    }
+                } else {
+                    mSubmitter.addProperty("LANG", firstPreferLanguageTextField.getText());
+                }
+            } else {
+                if (preferedLanguages.length > 0 && preferedLanguages[0] != null) {
+                    mSubmitter.delProperty(preferedLanguages[0]);
+                }
+            }
+
+            if (!secondPreferLanguageTextField.getText().isEmpty()) {
+                if (preferedLanguages.length > 1 && preferedLanguages[1] != null) {
+                    if (secondPreferLanguageTextField.getText().isEmpty()) {
+                        preferedLanguages[1].setValue(secondPreferLanguageTextField.getText());
+                    }
+                } else {
+                    mSubmitter.addProperty("LANG", secondPreferLanguageTextField.getText());
+                }
+            } else {
+                if (preferedLanguages.length > 1 && preferedLanguages[1] != null) {
+                    mSubmitter.delProperty(preferedLanguages[1]);
+                }
+            }
+
+            if (!thirdPreferLanguageTextField.getText().isEmpty()) {
+                if (preferedLanguages.length > 2 && preferedLanguages[2] != null) {
+                    if (thirdPreferLanguageTextField.getText().isEmpty()) {
+                        preferedLanguages[2].setValue(thirdPreferLanguageTextField.getText());
+                    }
+                } else {
+                    mSubmitter.addProperty("LANG", thirdPreferLanguageTextField.getText());
+                }
+            } else {
+                if (preferedLanguages.length > 2 && preferedLanguages[2] != null) {
+                    mSubmitter.delProperty(preferedLanguages[2]);
+                }
+            }
+
+            addressEditorPanel.commit();
+        }
+    }
+}
