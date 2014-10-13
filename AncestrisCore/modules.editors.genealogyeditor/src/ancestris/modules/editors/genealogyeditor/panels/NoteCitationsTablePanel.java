@@ -21,19 +21,19 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class NoteCitationsListPanel extends javax.swing.JPanel {
+public class NoteCitationsTablePanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private final NoteCitationsTableModel mNoteCitationsTableModel = new NoteCitationsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
-    private final ChangeSupport changeSupport = new ChangeSupport(NoteCitationsListPanel.class);
+    private final ChangeSupport changeSupport = new ChangeSupport(NoteCitationsTablePanel.class);
 
     /**
-     * Creates new form NoteCitationsListPanel
+     * Creates new form NoteCitationsTablePanel
      */
-    public NoteCitationsListPanel() {
+    public NoteCitationsTablePanel() {
         initComponents();
-        noteCitationsTable.setID(NoteCitationsListPanel.class.getName());
+        noteCitationsTable.setID(NoteCitationsTablePanel.class.getName());
     }
 
     /**
@@ -66,7 +66,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         notesToolBar.setRollover(true);
 
         addNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationsListPanel.addNoteButton.toolTipText"), new Object[] {})); // NOI18N
+        addNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationsTablePanel.addNoteButton.toolTipText"), new Object[] {})); // NOI18N
         addNoteButton.setFocusable(false);
         addNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -78,7 +78,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         notesToolBar.add(addNoteButton);
 
         linkToNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationsListPanel.linkToNoteButton.toolTipText"), new Object[] {})); // NOI18N
+        linkToNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationsTablePanel.linkToNoteButton.toolTipText"), new Object[] {})); // NOI18N
         linkToNoteButton.setFocusable(false);
         linkToNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         linkToNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -90,7 +90,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         notesToolBar.add(linkToNoteButton);
 
         editNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationsListPanel.editNoteButton.toolTipText"), new Object[] {})); // NOI18N
+        editNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationsTablePanel.editNoteButton.toolTipText"), new Object[] {})); // NOI18N
         editNoteButton.setFocusable(false);
         editNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -102,7 +102,7 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         notesToolBar.add(editNoteButton);
 
         deleteNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationsListPanel.deleteNoteButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteNoteButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationsTablePanel.deleteNoteButton.toolTipText"), new Object[] {})); // NOI18N
         deleteNoteButton.setFocusable(false);
         deleteNoteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteNoteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -188,11 +188,8 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
         int selectedRow = noteCitationsTable.getSelectedRow();
         if (selectedRow != -1) {
             final int rowIndex = noteCitationsTable.convertRowIndexToModel(selectedRow);
-            DialogManager createYesNo = DialogManager.createYesNo(
-                    NbBundle.getMessage(
-                            NoteCitationsListPanel.class, "NoteCitationsListPanel.deleteNote.title"),
-                    NbBundle.getMessage(
-                            NoteCitationsListPanel.class, "NoteCitationsListPanel.deleteNote.text",
+            DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(NoteCitationsTablePanel.class, "NoteCitationsTableDialog.deleteNote.title"),
+                    NbBundle.getMessage(NoteCitationsTablePanel.class, "NoteCitationsTableDialog.deleteNote.text",
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
@@ -219,16 +216,16 @@ public class NoteCitationsListPanel extends javax.swing.JPanel {
     private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
         List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
 
-        NotesListPanel notesListPanel = new NotesListPanel();
-        notesListPanel.set(mRoot, notesList);
-        notesListPanel.setToolBarVisible(false);
-        DialogManager.ADialog notesListListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(NotesListPanel.class, "NotesListPanel.linkTo.title"),
-                notesListPanel);
-        notesListListDialog.setDialogId(NotesListPanel.class.getName());
+        NotesTablePanel notesTablePanel = new NotesTablePanel();
+        notesTablePanel.set(mRoot, notesList);
+        notesTablePanel.setToolBarVisible(false);
+        DialogManager.ADialog notesTableDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(NotesTablePanel.class, "NotesTableDialog.linkTo.title"),
+                notesTablePanel);
+        notesTableDialog.setDialogId(NotesTablePanel.class.getName());
 
-        if (notesListListDialog.show() == DialogDescriptor.OK_OPTION) {
-            final Note selectedNote = notesListPanel.getSelectedNote();
+        if (notesTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Note selectedNote = notesTablePanel.getSelectedNote();
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 

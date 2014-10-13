@@ -138,9 +138,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         sourceDataScrollPane = new javax.swing.JScrollPane();
         sourceDataTextArea = new javax.swing.JTextArea();
         notesPanel = new javax.swing.JPanel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         multiMediaPanel = new javax.swing.JPanel();
-        multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
+        multimediaObjectCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel();
 
         sourceReferencedTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         sourceReferencedTitleLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.sourceReferencedTitleLabel.text")); // NOI18N
@@ -372,17 +372,17 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceDataPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), SourceDataPanel); // NOI18N
 
-        noteCitationsListPanel.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.noteCitationsListPanel.toolTipText")); // NOI18N
+        noteCitationsTablePanel.setToolTipText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.noteCitationsTablePanel.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -393,11 +393,11 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         multiMediaPanel.setLayout(multiMediaPanelLayout);
         multiMediaPanelLayout.setHorizontalGroup(
             multiMediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
         );
         multiMediaPanelLayout.setVerticalGroup(
             multiMediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.multiMediaPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multiMediaPanel); // NOI18N
@@ -474,19 +474,19 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
     private void linkToSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToSourceButtonActionPerformed
 
-        SourcesListPanel sourcesListPanel = new SourcesListPanel(mRoot.getGedcom());
-        sourcesListPanel.setToolBarVisible(false);
+        SourcesTablePanel sourcesTablePanel = new SourcesTablePanel(mRoot.getGedcom());
+        sourcesTablePanel.setToolBarVisible(false);
 
-        ADialog sourcesListDialog = new ADialog(NbBundle.getMessage(PlacesListPanel.class,
-                "SourcesListPanel.linkTo.title"), sourcesListPanel);
-        sourcesListDialog.setDialogId(SourcesListPanel.class.getName());
+        ADialog sourcesTableDialog = new ADialog(NbBundle.getMessage(PlacesTablePanel.class,
+                "sourcesTableDialog.linkTo.title"), sourcesTablePanel);
+        sourcesTableDialog.setDialogId(SourcesTablePanel.class.getName());
 
-        if (sourcesListDialog.show() == DialogDescriptor.OK_OPTION) {
-            if (sourcesListPanel.getSelectedSource() != null) {
+        if (sourcesTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            if (sourcesTablePanel.getSelectedSource() != null) {
                 if (mReferencedSource != null) {
                     ((PropertySource) mSourceCitation).unlink();
                 }
-                mReferencedSource = sourcesListPanel.getSelectedSource();
+                mReferencedSource = sourcesTablePanel.getSelectedSource();
                 sourceReferencedTitleTextArea.setText(mReferencedSource.getTitle());
                 try {
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -532,8 +532,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton linkToSourceButton;
     private javax.swing.JPanel multiMediaPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JLabel pageLabel;
     private javax.swing.JTextField pageTextField;
@@ -710,8 +710,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         }
         mDataQualityModified = false;
 
-        noteCitationsListPanel.set(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("NOTE")));
-        multimediaObjectCitationsListPanel.set(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("OBJE")));
+        noteCitationsTablePanel.set(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("NOTE")));
+        multimediaObjectCitationsTablePanel.set(mSourceCitation, Arrays.asList(mSourceCitation.getProperties("OBJE")));
     }
 
     public void commit() {

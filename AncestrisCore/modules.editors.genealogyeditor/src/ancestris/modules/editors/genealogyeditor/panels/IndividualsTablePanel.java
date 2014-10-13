@@ -10,18 +10,18 @@ import org.openide.util.Exceptions;
  *
  * @author dominique
  */
-public class IndividualsListPanel extends javax.swing.JPanel {
+public class IndividualsTablePanel extends javax.swing.JPanel {
 
     private final IndividualsTableModel mIndividualsTableModel = new IndividualsTableModel();
     private Property mRoot;
     Indi mIndividual;
 
     /**
-     * Creates new form IndividualsListPanel
+     * Creates new form IndividualsTablePanel
      */
-    public IndividualsListPanel() {
+    public IndividualsTablePanel() {
         initComponents();
-        individualsTable.setID(IndividualsListPanel.class.getName());
+        individualsTable.setID(IndividualsTablePanel.class.getName());
     }
 
     /**

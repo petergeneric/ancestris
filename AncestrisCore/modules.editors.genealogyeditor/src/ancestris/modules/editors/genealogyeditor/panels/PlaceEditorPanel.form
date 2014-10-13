@@ -270,26 +270,26 @@
                     </Container>
                   </SubComponents>
                 </Container>
-                <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel" name="sourceCitationsListPanel">
+                <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel" name="sourceCitationsTablePanel">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="Sources">
                         <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.sourceCitationsListPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.sourceCitationsTablePanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                         </Property>
                       </JTabbedPaneConstraints>
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel" name="noteCitationsListPanel">
+                <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel" name="noteCitationsTablePanel">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="Notes" toolTip="">
                         <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                         </Property>
                         <Property name="tabToolTip" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.noteCitationsListPanel.TabConstraints.tabToolTip" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.noteCitationsTablePanel.TabConstraints.tabToolTip" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                         </Property>
                       </JTabbedPaneConstraints>
                     </Constraint>

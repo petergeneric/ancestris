@@ -28,7 +28,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
     private final ChangeSupport changeSupport = new ChangeSupport(AssociationsTablePanel.class);
 
     /**
-     * Creates new form ReferencesListPanel
+     * Creates new form AssociationsTablePanel
      */
     public AssociationsTablePanel() {
         initComponents();
@@ -227,9 +227,9 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            ChildrenTablePanel.class, "AssociationsListPanel.deleteAssociation.confirmation.title"),
+                            ChildrenTablePanel.class, "AssociationsTableDialog.deleteAssociation.confirmation.title"),
                     NbBundle.getMessage(
-                            ChildrenTablePanel.class, "AssociationsListPanel.deleteAssociation.confirmation.text",
+                            ChildrenTablePanel.class, "AssociationsTableDialog.deleteAssociation.confirmation.text",
                             individualRef.getTargetEntity(),
                             mRootEntity));
             if (createYesNo.show() == DialogManager.YES_OPTION) {

@@ -817,17 +817,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel" name="sourceCitationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel" name="sourceCitationsTablePanel">
               <Properties>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="null"/>
@@ -853,17 +853,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="noteCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="noteCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel" name="noteCitationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel" name="noteCitationsTablePanel">
             </Component>
           </SubComponents>
         </Container>
@@ -884,17 +884,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel" name="multimediaObjectCitationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel" name="multimediaObjectCitationsTablePanel">
             </Component>
           </SubComponents>
         </Container>

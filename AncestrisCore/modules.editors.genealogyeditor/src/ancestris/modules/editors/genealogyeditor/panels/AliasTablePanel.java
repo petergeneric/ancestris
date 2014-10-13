@@ -27,7 +27,7 @@ public class AliasTablePanel extends javax.swing.JPanel {
     private PropertyAlias mAlias = null;
 
     /**
-     * Creates new form IndividualsListPanel
+     * Creates new form IndividualsTablePanel
      */
     public AliasTablePanel() {
         initComponents();
@@ -162,17 +162,17 @@ public class AliasTablePanel extends javax.swing.JPanel {
    }//GEN-LAST:event_deleteAliasButtonActionPerformed
 
     private void linkToAliasButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToAliasButtonActionPerformed
-        IndividualsListPanel individualsListPanel = new IndividualsListPanel();
+        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
         List<Indi> individualsList = new ArrayList<Indi>(mRoot.getGedcom().getIndis());
-        individualsListPanel.setToolBarVisible(false);
-        individualsListPanel.set(mRoot, individualsList);
-        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.child"),
-                individualsListPanel);
-        individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
+        individualsTablePanel.setToolBarVisible(false);
+        individualsTablePanel.set(mRoot, individualsList);
+        DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(IndividualsTablePanel.class, "individualsTableDialog.title.select.child"),
+                individualsTablePanel);
+        individualsTableDialog.setDialogId(IndividualsTablePanel.class.getName());
 
-        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            final Indi selectedIndividual = individualsListPanel.getSelectedIndividual();
+        if (individualsTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Indi selectedIndividual = individualsTablePanel.getSelectedIndividual();
             if (selectedIndividual != null) {
                 try {
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {

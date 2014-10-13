@@ -291,14 +291,14 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editPlaceButtonActionPerformed
 
     private void linkToPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
-        PlacesListPanel placesListPanel = new PlacesListPanel(mEvent.getGedcom());
-        DialogManager.ADialog placesListPanelDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.title.link"),
-                placesListPanel);
-        placesListPanelDialog.setDialogId(PlacesListPanel.class.getName());
+        PlacesTablePanel placesTablePanel = new PlacesTablePanel(mEvent.getGedcom());
+        DialogManager.ADialog placesTablePanelDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(PlacesTablePanel.class, "PlacesTableDialog.title.link"),
+                placesTablePanel);
+        placesTablePanelDialog.setDialogId(PlacesTablePanel.class.getName());
 
-        if (placesListPanelDialog.show() == DialogDescriptor.OK_OPTION) {
-            final PropertyPlace selectedPlace = placesListPanel.getSelectedPlace();
+        if (placesTablePanelDialog.show() == DialogDescriptor.OK_OPTION) {
+            final PropertyPlace selectedPlace = placesTablePanel.getSelectedPlace();
             if (selectedPlace != null) {
                 try {
                     mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {

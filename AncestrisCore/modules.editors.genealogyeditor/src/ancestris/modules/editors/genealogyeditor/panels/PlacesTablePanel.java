@@ -18,18 +18,18 @@ import org.openide.util.NbPreferences;
  *
  * @author dominique
  */
-public class PlacesListPanel extends javax.swing.JPanel {
+public class PlacesTablePanel extends javax.swing.JPanel {
 
     String[] mPlaceFormat = null;
     private final GedcomPlaceTableModel mPlacesListTableModel;
     private final TableRowSorter<TableModel> mPlaceTableSorter;
-    private final Preferences modulePreferences = NbPreferences.forModule(PlacesListPanel.class);
+    private final Preferences modulePreferences = NbPreferences.forModule(PlacesTablePanel.class);
     private Gedcom mGedcom = null;
 
     /**
-     * Creates new form PlacesListPanel
+     * Creates new form PlacesTablePanel
      */
-    public PlacesListPanel(final Gedcom gedcom) {
+    public PlacesTablePanel(final Gedcom gedcom) {
         this.mGedcom = gedcom;
         mPlaceFormat = PropertyPlace.getFormat(gedcom);
 
@@ -40,14 +40,14 @@ public class PlacesListPanel extends javax.swing.JPanel {
         mPlacesListTableModel.update(gedcom.getReferenceSet("PLAC"));
         mPlaceTableSorter = new TableRowSorter<TableModel>(placesListTable.getModel());
         placesListTable.setRowSorter(mPlaceTableSorter);
-        placesListTable.setID(PlacesListPanel.class.getName());
+        placesListTable.setID(PlacesTablePanel.class.getName());
 
         try {
             if (!modulePreferences.nodeExists(gedcom.getName())) {
                 searchPlaceComboBox.setSelectedIndex(0);
             } else {
                 Preferences node = modulePreferences.node(gedcom.getName());
-                searchPlaceComboBox.setSelectedIndex(node.getInt("PlacesListPanel.searchPlaceComboBox.selectedIndex", 0));
+                searchPlaceComboBox.setSelectedIndex(node.getInt("PlacesTablePanel.searchPlaceComboBox.selectedIndex", 0));
             }
         } catch (BackingStoreException ex) {
             Exceptions.printStackTrace(ex);
@@ -71,9 +71,9 @@ public class PlacesListPanel extends javax.swing.JPanel {
         placesListTableScrollPane = new javax.swing.JScrollPane();
         placesListTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
-        searchPlaceLabel.setText(org.openide.util.NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.searchPlaceLabel.text")); // NOI18N
+        searchPlaceLabel.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.searchPlaceLabel.text")); // NOI18N
 
-        filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.filterGedcomPlaceTextField.text")); // NOI18N
+        filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.filterGedcomPlaceTextField.text")); // NOI18N
         filterGedcomPlaceTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filterGedcomPlaceButtonActionPerformed(evt);
@@ -87,14 +87,14 @@ public class PlacesListPanel extends javax.swing.JPanel {
 
         searchPlaceComboBox.setModel(new DefaultComboBoxModel<String>(mPlaceFormat));
 
-        filterGedcomPlaceButton.setText(org.openide.util.NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.filterGedcomPlaceButton.text")); // NOI18N
+        filterGedcomPlaceButton.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.filterGedcomPlaceButton.text")); // NOI18N
         filterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filterGedcomPlaceButtonActionPerformed(evt);
             }
         });
 
-        clearFilterGedcomPlaceButton.setText(org.openide.util.NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.clearFilterGedcomPlaceButton.text")); // NOI18N
+        clearFilterGedcomPlaceButton.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.clearFilterGedcomPlaceButton.text")); // NOI18N
         clearFilterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearFilterGedcomPlaceButtonActionPerformed(evt);
@@ -178,7 +178,7 @@ public class PlacesListPanel extends javax.swing.JPanel {
 
     public PropertyPlace getSelectedPlace() {
         Preferences node = modulePreferences.node(mGedcom.getName());
-        node.putInt("PlacesListPanel.searchPlaceComboBox.selectedIndex", searchPlaceComboBox.getSelectedIndex());
+        node.putInt("PlacesTablePanel.searchPlaceComboBox.selectedIndex", searchPlaceComboBox.getSelectedIndex());
 
         int selectedRow = placesListTable.getSelectedRow();
         if (selectedRow != -1) {

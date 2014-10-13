@@ -196,12 +196,12 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.NamesListPanel" name="namesListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel" name="namesTablePanel">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Others names">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="IndividualEditor.namesListPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="IndividualEditor.namesTablePanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -492,17 +492,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel" name="sourceCitationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel" name="sourceCitationsTablePanel">
             </Component>
           </SubComponents>
         </Container>
@@ -534,17 +534,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="noteCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="noteCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel" name="noteCitationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel" name="noteCitationsTablePanel">
             </Component>
           </SubComponents>
         </Container>
@@ -565,17 +565,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="associationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="associationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="associationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="associationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel" name="associationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel" name="associationsTablePanel">
             </Component>
           </SubComponents>
         </Container>
@@ -596,17 +596,17 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsListPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel" name="multimediaObjectCitationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel" name="multimediaObjectCitationsTablePanel">
             </Component>
           </SubComponents>
         </Container>

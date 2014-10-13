@@ -66,9 +66,9 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         relationTextField = new javax.swing.JTextField();
         associationTabbedPane = new javax.swing.JTabbedPane();
         notesPanel = new javax.swing.JPanel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         sourcesPanel = new javax.swing.JPanel();
-        sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
+        sourceCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel();
 
         org.openide.awt.Mnemonics.setLocalizedText(referenceIndividualLabel, org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.referenceIndividualLabel.text")); // NOI18N
 
@@ -117,13 +117,13 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
         );
 
         associationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -134,13 +134,13 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sourcesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(sourceCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sourcesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                .addComponent(sourceCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
         );
 
         associationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.sourcesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
@@ -185,18 +185,18 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void linkToIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToIndividualButtonActionPerformed
-        IndividualsListPanel individualsListPanel = new IndividualsListPanel();
+        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
         List<Indi> individualsList = new ArrayList<Indi>(mAssociation.getGedcom().getIndis());
 
-        individualsListPanel.set(mAssociation, individualsList);
-        individualsListPanel.setToolBarVisible(false);
-        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.husband"),
-                individualsListPanel);
-        individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
+        individualsTablePanel.set(mAssociation, individualsList);
+        individualsTablePanel.setToolBarVisible(false);
+        DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(IndividualsTablePanel.class, "individualsTableDialog.title.select.husband"),
+                individualsTablePanel);
+        individualsTableDialog.setDialogId(IndividualsTablePanel.class.getName());
 
-        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            mIndividual = individualsListPanel.getSelectedIndividual();
+        if (individualsTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            mIndividual = individualsTablePanel.getSelectedIndividual();
             try {
                 mAssociation.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -220,13 +220,13 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane associationTabbedPane;
     private javax.swing.JButton linkToIndividualButton;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JLabel referenceIndividualLabel;
     private javax.swing.JTextField referenceIndividualTextField;
     private javax.swing.JLabel relationLabel;
     private javax.swing.JTextField relationTextField;
-    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel sourceCitationsTablePanel;
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -247,9 +247,9 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         }
         AutoCompleteDecorator.decorate((javax.swing.JTextField) relationTextField, mAssociation.getGedcom().getReferenceSet("RELA").getKeys(), false);
 
-        noteCitationsListPanel.set(association, Arrays.asList(association.getProperties("NOTE")));
+        noteCitationsTablePanel.set(association, Arrays.asList(association.getProperties("NOTE")));
 
-        sourceCitationsListPanel.set(association, Arrays.asList(association.getProperties("SOUR")));
+        sourceCitationsTablePanel.set(association, Arrays.asList(association.getProperties("SOUR")));
     }
 
     PropertyAssociation commit() {

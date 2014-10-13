@@ -40,7 +40,7 @@ public class RepositoryEditor extends EntityEditor {
         initComponents();
         repositoryNameTextField.getDocument().addDocumentListener(changes);
         addressEditorPanel.addChangeListener(changes);
-        noteCitationsListPanel.addChangeListener(changes);
+        noteCitationsTablePanel.addChangeListener(changes);
         
     }
 
@@ -61,9 +61,9 @@ public class RepositoryEditor extends EntityEditor {
         addressPanel = new javax.swing.JPanel();
         addressEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.AddressEditorPanel();
         notesPanel = new javax.swing.JPanel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         referencesPanel = new javax.swing.JPanel();
-        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
+        referencesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel();
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
 
@@ -95,11 +95,11 @@ public class RepositoryEditor extends EntityEditor {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Notes", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -110,13 +110,13 @@ public class RepositoryEditor extends EntityEditor {
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, referencesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE))
+                .addComponent(referencesTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE))
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, referencesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
+                .addComponent(referencesTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("References", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
@@ -173,10 +173,10 @@ public class RepositoryEditor extends EntityEditor {
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JLabel changeDateLabeldate;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel notesPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     private javax.swing.JPanel referencesPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel referencesTablePanel;
     private javax.swing.JLabel repositoryIDLabel;
     private javax.swing.JTextField repositoryIDTextField;
     private javax.swing.JLabel repositoryNameLabel;
@@ -225,9 +225,9 @@ public class RepositoryEditor extends EntityEditor {
                 entitiesList.add(entityRef.getTargetEntity());
             }
 
-            referencesListPanel.set(mRepository, entitiesList);
+            referencesTablePanel.set(mRepository, entitiesList);
 
-            noteCitationsListPanel.set(mRepository, Arrays.asList(mRepository.getProperties("NOTE")));
+            noteCitationsTablePanel.set(mRepository, Arrays.asList(mRepository.getProperties("NOTE")));
 
             Property changeDate = mRepository.getProperty("CHAN");
             if (changeDate != null) {

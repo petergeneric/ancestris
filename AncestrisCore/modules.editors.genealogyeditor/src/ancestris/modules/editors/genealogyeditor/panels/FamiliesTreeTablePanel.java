@@ -274,15 +274,15 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addFamilyButtonActionPerformed
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
-        FamiliesTablePanel familiesListPanel = new FamiliesTablePanel(LIST_FAM);
-        familiesListPanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
-        DialogManager.ADialog familiesListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(FamiliesTablePanel.class, "FamiliesListPanel.linkto.title"),
-                familiesListPanel);
-        familiesListDialog.setDialogId(FamiliesTablePanel.class.getName());
+        FamiliesTablePanel familiesTablePanel = new FamiliesTablePanel(LIST_FAM);
+        familiesTablePanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
+        DialogManager.ADialog familiesTableDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(FamiliesTablePanel.class, "familiesTableDialog.linkto.title"),
+                familiesTablePanel);
+        familiesTableDialog.setDialogId(FamiliesTablePanel.class.getName());
 
-        if (familiesListDialog.show() == DialogDescriptor.OK_OPTION) {
-            final Fam selectedFamily = familiesListPanel.getSelectedFamily();
+        if (familiesTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Fam selectedFamily = familiesTablePanel.getSelectedFamily();
             if (selectedFamily != null) {
                 try {
                     ((FamiliesTreeTableModel) familiesTreeTable.getTreeTableModel()).add(selectedFamily);

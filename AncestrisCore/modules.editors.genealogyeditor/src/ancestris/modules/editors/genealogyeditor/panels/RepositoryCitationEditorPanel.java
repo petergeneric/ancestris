@@ -67,7 +67,7 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
         addShelfNumberButton = new javax.swing.JButton();
         editShelfNumberButton = new javax.swing.JButton();
         deleteShelfNumberButton = new javax.swing.JButton();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
 
         org.openide.awt.Mnemonics.setLocalizedText(repositoryLabel, org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.repositoryLabel.text")); // NOI18N
 
@@ -210,7 +210,7 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
         );
 
         repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.shelfNumberPanel.TabConstraints.tabTitle"), shelfNumberPanel); // NOI18N
-        repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsListPanel); // NOI18N
+        repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsTablePanel); // NOI18N
 
         javax.swing.GroupLayout repositoryCitationTabbedPanePanelLayout = new javax.swing.GroupLayout(repositoryCitationTabbedPanePanel);
         repositoryCitationTabbedPanePanel.setLayout(repositoryCitationTabbedPanePanelLayout);
@@ -275,11 +275,11 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                         mShelfNumberTableModel.clear();
                         mShelfNumberTableModel.addAll(Arrays.asList(mRepositoryCitation.getProperties("CALN")));
 
-                        int noteCitationsListPanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"));
-                        if (noteCitationsListPanelindexOfTab == -1) {
-                            repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsListPanel); // NOI18N
+                        int noteCitationsTablePanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"));
+                        if (noteCitationsTablePanelindexOfTab == -1) {
+                            repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsTablePanel); // NOI18N
                         }
-                        noteCitationsListPanel.set(mRepositoryCitation, Arrays.asList(mRepositoryCitation.getProperties("NOTE")));
+                        noteCitationsTablePanel.set(mRepositoryCitation, Arrays.asList(mRepositoryCitation.getProperties("NOTE")));
                     }
                 }); // end of doUnitOfWork
                 repositoryTextField.setText(mRepository.getValue());
@@ -308,9 +308,9 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editRepositoryButtonActionPerformed
 
     private void deleteRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRepositoryButtonActionPerformed
-        DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoriesListPanel.deleteRepository.title",
+        DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoriesTableDialog.deleteRepository.title",
                 mRepositoryCitation),
-                NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.deleteRepository.text",
+                NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoriesTableDialog.deleteRepository.text",
                         mRepositoryCitation,
                         mParentProperty));
         if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -331,9 +331,9 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                 if (shelfNumberPanelindexOfTab != -1) {
                     repositoryCitationTabbedPane.removeTabAt(shelfNumberPanelindexOfTab);
                 }
-                int noteCitationsListPanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"));
-                if (noteCitationsListPanelindexOfTab != -1) {
-                    repositoryCitationTabbedPane.removeTabAt(noteCitationsListPanelindexOfTab);
+                int noteCitationsTablePanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"));
+                if (noteCitationsTablePanelindexOfTab != -1) {
+                    repositoryCitationTabbedPane.removeTabAt(noteCitationsTablePanelindexOfTab);
                 }
                 changeSupport.fireChange();
             } catch (GedcomException ex) {
@@ -345,17 +345,17 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
     private void linkToRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToRepositoryButtonActionPerformed
         List<Repository> repositoriesList = new ArrayList<Repository>((Collection<Repository>) mParentProperty.getGedcom().getEntities(Gedcom.REPO));
 
-        RepositoriesListPanel repositoriesListPanel = new RepositoriesListPanel();
-        repositoriesListPanel.set(mParentProperty, repositoriesList);
-        repositoriesListPanel.setToolBarVisible(false);
-        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
+        RepositoriesTablePanel repositoriesTablePanel = new RepositoriesTablePanel();
+        repositoriesTablePanel.set(mParentProperty, repositoriesList);
+        repositoriesTablePanel.setToolBarVisible(false);
+        DialogManager.ADialog repositoriesTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.linkTo.title"),
-                repositoriesListPanel);
-        individualsListDialog.setDialogId(RepositoryCitationEditorPanel.class
+                repositoriesTablePanel);
+        repositoriesTableDialog.setDialogId(RepositoryCitationEditorPanel.class
                 .getName());
 
-        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            final Repository selectedRepository = repositoriesListPanel.getSelectedRepository();
+        if (repositoriesTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Repository selectedRepository = repositoriesTablePanel.getSelectedRepository();
             if (selectedRepository != null) {
                 try {
                     mParentProperty.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -373,11 +373,11 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                             mShelfNumberTableModel.clear();
                             mShelfNumberTableModel.addAll(Arrays.asList(mRepositoryCitation.getProperties("CALN")));
 
-                            int noteCitationsListPanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"));
-                            if (noteCitationsListPanelindexOfTab == -1) {
-                                repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsListPanel); // NOI18N
+                            int noteCitationsListTableindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"));
+                            if (noteCitationsListTableindexOfTab == -1) {
+                                repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsTablePanel); // NOI18N
                             }
-                            noteCitationsListPanel.set(mRepositoryCitation, Arrays.asList(mRepositoryCitation.getProperties("NOTE")));
+                            noteCitationsTablePanel.set(mRepositoryCitation, Arrays.asList(mRepositoryCitation.getProperties("NOTE")));
                         }
                     }); // end of doUnitOfWork
                     editRepositoryButton.setVisible(true);
@@ -548,7 +548,7 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JButton editRepositoryButton;
     private javax.swing.JButton editShelfNumberButton;
     private javax.swing.JButton linkToRepositoryButton;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JTabbedPane repositoryCitationTabbedPane;
     private javax.swing.JPanel repositoryCitationTabbedPanePanel;
     private javax.swing.JLabel repositoryLabel;
@@ -584,11 +584,11 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                 deleteShelfNumberButton.setEnabled(false);
             }
 
-            int noteCitationsListPanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"));
-            if (noteCitationsListPanelindexOfTab == -1) {
-                repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsListPanel); // NOI18N
+            int noteCitationsTablePanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"));
+            if (noteCitationsTablePanelindexOfTab == -1) {
+                repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsTablePanel); // NOI18N
             }
-            noteCitationsListPanel.set(mRepositoryCitation, Arrays.asList(mRepositoryCitation.getProperties("NOTE")));
+            noteCitationsTablePanel.set(mRepositoryCitation, Arrays.asList(mRepositoryCitation.getProperties("NOTE")));
         } else {
             editRepositoryButton.setVisible(false);
             deleteRepositoryButton.setVerifyInputWhenFocusTarget(false);
@@ -598,9 +598,9 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             if (shelfNumberPanelindexOfTab != -1) {
                 repositoryCitationTabbedPane.removeTabAt(shelfNumberPanelindexOfTab);
             }
-            int noteCitationsListPanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"));
-            if (noteCitationsListPanelindexOfTab != -1) {
-                repositoryCitationTabbedPane.removeTabAt(noteCitationsListPanelindexOfTab);
+            int noteCitationsTablePanelindexOfTab = repositoryCitationTabbedPane.indexOfTab(NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"));
+            if (noteCitationsTablePanelindexOfTab != -1) {
+                repositoryCitationTabbedPane.removeTabAt(noteCitationsTablePanelindexOfTab);
             }
         }
     }
