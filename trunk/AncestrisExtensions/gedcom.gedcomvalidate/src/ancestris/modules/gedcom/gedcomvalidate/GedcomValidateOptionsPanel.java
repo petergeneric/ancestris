@@ -43,9 +43,10 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         maxAgeMotherFormattedTextField = new javax.swing.JFormattedTextField();
         minAgeRETIFormattedTextField = new javax.swing.JFormattedTextField();
         isSameSexFamValid = new javax.swing.JCheckBox();
-        yeayRangeLabel = new javax.swing.JLabel();
+        yearRangeLabel = new javax.swing.JLabel();
         minYear = new javax.swing.JFormattedTextField();
         maxYear = new javax.swing.JFormattedTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(isExtramaritalValidCheckBox, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "isExtramaritalValid")); // NOI18N
 
@@ -97,13 +98,15 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(isSameSexFamValid, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.isSameSexFamValid.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(yeayRangeLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.yeayRangeLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(yearRangeLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.yearRangeLabel.text")); // NOI18N
 
         minYear.setColumns(3);
         minYear.setText(org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.minYear.text")); // NOI18N
 
         maxYear.setColumns(3);
         maxYear.setText(org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.maxYear.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.jLabel2.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -149,10 +152,12 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
                             .addComponent(minAgeMARRLabel)))
                     .addComponent(isSameSexFamValid)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(yeayRangeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(yearRangeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(minYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -205,9 +210,10 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
                     .addComponent(minAgeRETIFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(yeayRangeLabel)
+                    .addComponent(yearRangeLabel)
                     .addComponent(minYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(maxYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -267,6 +273,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox isRelaxedPlaceFormatCheckBox;
     private javax.swing.JCheckBox isSameSexFamValid;
     private javax.swing.JCheckBox isUnderscoreValidCheckBox;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JFormattedTextField maxAgeBAPMFormattedTextField;
     private javax.swing.JLabel maxAgeBAPMLabel;
     private javax.swing.JFormattedTextField maxAgeMotherFormattedTextField;
@@ -283,6 +290,6 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField minAgeRETIFormattedTextField;
     private javax.swing.JLabel minAgeRETILabel;
     private javax.swing.JFormattedTextField minYear;
-    private javax.swing.JLabel yeayRangeLabel;
+    private javax.swing.JLabel yearRangeLabel;
     // End of variables declaration//GEN-END:variables
 }
