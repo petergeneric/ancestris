@@ -143,7 +143,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="noteCitationsListPanel" max="32767" attributes="0"/>
+                      <Component id="noteCitationsTablePanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -151,13 +151,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="noteCitationsListPanel" pref="199" max="32767" attributes="0"/>
+                      <Component id="noteCitationsTablePanel" pref="199" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel" name="noteCitationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel" name="noteCitationsTablePanel">
             </Component>
           </SubComponents>
         </Container>
@@ -180,7 +180,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="sourceCitationsListPanel" max="32767" attributes="0"/>
+                      <Component id="sourceCitationsTablePanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -188,13 +188,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="sourceCitationsListPanel" pref="199" max="32767" attributes="0"/>
+                      <Component id="sourceCitationsTablePanel" pref="199" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel" name="sourceCitationsListPanel">
+            <Component class="ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel" name="sourceCitationsTablePanel">
             </Component>
           </SubComponents>
         </Container>

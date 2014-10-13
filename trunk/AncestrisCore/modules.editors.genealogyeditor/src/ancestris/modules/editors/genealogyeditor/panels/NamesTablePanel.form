@@ -45,7 +45,7 @@
               <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NamesListPanel.addNameButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NamesTablePanel.addNameButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -61,7 +61,7 @@
               <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/edit.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NamesListPanel.editNameButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NamesTablePanel.editNameButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -77,7 +77,7 @@
               <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NamesListPanel.deleteNameButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NamesTablePanel.deleteNameButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>

@@ -20,18 +20,18 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class NamesListPanel extends javax.swing.JPanel {
+public class NamesTablePanel extends javax.swing.JPanel {
 
     private final NamesTableModel mNamesTableModel = new NamesTableModel();
     private final ChangeListner changeListner = new ChangeListner();
-    private final ChangeSupport changeSupport = new ChangeSupport(NamesListPanel.class);
+    private final ChangeSupport changeSupport = new ChangeSupport(NamesTablePanel.class);
     private Indi root;
     private PropertyName addedName = null;
 
     /**
-     * Creates new form NamesListPanel
+     * Creates new form NamesTablePanel
      */
-    public NamesListPanel() {
+    public NamesTablePanel() {
         initComponents();
     }
 
@@ -55,7 +55,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         namesToolBar.setRollover(true);
 
         addNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addNameButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NamesListPanel.addNameButton.toolTipText"), new Object[] {})); // NOI18N
+        addNameButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NamesTablePanel.addNameButton.toolTipText"), new Object[] {})); // NOI18N
         addNameButton.setFocusable(false);
         addNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -67,7 +67,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         namesToolBar.add(addNameButton);
 
         editNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editNameButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NamesListPanel.editNameButton.toolTipText"), new Object[] {})); // NOI18N
+        editNameButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NamesTablePanel.editNameButton.toolTipText"), new Object[] {})); // NOI18N
         editNameButton.setFocusable(false);
         editNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -79,7 +79,7 @@ public class NamesListPanel extends javax.swing.JPanel {
         namesToolBar.add(editNameButton);
 
         deleteNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteNameButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NamesListPanel.deleteNameButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteNameButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NamesTablePanel.deleteNameButton.toolTipText"), new Object[] {})); // NOI18N
         deleteNameButton.setFocusable(false);
         deleteNameButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteNameButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -190,9 +190,9 @@ public class NamesListPanel extends javax.swing.JPanel {
             final int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            NotesListPanel.class, "NamesListPanel.deleteName.title"),
+                            NotesTablePanel.class, "NamesTableDialog.deleteName.title"),
                     NbBundle.getMessage(
-                            NotesListPanel.class, "NamesListPanel.deleteName.text",
+                            NotesTablePanel.class, "NamesTableDialog.deleteName.text",
                             root));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {

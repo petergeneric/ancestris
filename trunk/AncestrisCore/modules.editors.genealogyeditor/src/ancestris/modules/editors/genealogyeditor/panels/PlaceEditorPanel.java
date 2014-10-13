@@ -58,8 +58,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         geonamesPlacesList = new javax.swing.JList<String>();
         completePlaceButton = new javax.swing.JButton();
         replacePlaceButton = new javax.swing.JButton();
-        sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        sourceCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         addressEditorTabPanel = new javax.swing.JPanel();
         addressEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.AddressEditorPanel();
 
@@ -172,8 +172,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.sourceCitationsListPanel.TabConstraints.tabTitle"), sourceCitationsListPanel); // NOI18N
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"), noteCitationsListPanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.sourceCitationsTablePanel.TabConstraints.tabTitle"), sourceCitationsTablePanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"), null, noteCitationsTablePanel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.noteCitationsTablePanel.TabConstraints.tabToolTip")); // NOI18N
 
         javax.swing.GroupLayout placeEditorTabPanelLayout = new javax.swing.GroupLayout(placeEditorTabPanel);
         placeEditorTabPanel.setLayout(placeEditorTabPanelLayout);
@@ -267,14 +267,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane jTabbedPane1;
     private org.jdesktop.swingx.JXMapKit jXMapKit1;
     private javax.swing.JPanel mapPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel placeEditorTabPanel;
     private javax.swing.JTabbedPane placeEditorTabbedPane;
     private javax.swing.JButton replacePlaceButton;
     private javax.swing.JButton searchPlaceButton;
     private javax.swing.JPanel searchPlacePanel;
     private javax.swing.JTextField searchPlaceTextField;
-    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel sourceCitationsTablePanel;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -322,12 +322,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             /*
              * +1 <<NOTE_STRUCTURE>>
              */
-            noteCitationsListPanel.set(mPlace, Arrays.asList(mPlace.getProperties("NOTE")));
+            noteCitationsTablePanel.set(mPlace, Arrays.asList(mPlace.getProperties("NOTE")));
             
             /*
              * +1 <<SOURCE_CITATION>>
              */
-            sourceCitationsListPanel.set(mPlace, Arrays.asList(mPlace.getProperties("SOUR")));
+            sourceCitationsTablePanel.set(mPlace, Arrays.asList(mPlace.getProperties("SOUR")));
             
         } else if (mAddress != null) {
             editorsTabbedPane.setSelectedComponent(addressEditorPanel);

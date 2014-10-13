@@ -35,8 +35,8 @@ public class SubmitterEditor extends EntityEditor {
         secondPreferLanguageTextField.getDocument().addDocumentListener(changes);
         thirdPreferLanguageTextField.getDocument().addDocumentListener(changes);
         addressEditorPanel.addChangeListener(changes);
-        multimediaObjectCitationsListPanel.addChangeListener(changes);
-        noteCitationsListPanel.addChangeListener(changes);
+        multimediaObjectCitationsTablePanel.addChangeListener(changes);
+        noteCitationsTablePanel.addChangeListener(changes);
     }
 
     /**
@@ -58,8 +58,8 @@ public class SubmitterEditor extends EntityEditor {
         submitterNameTextField = new javax.swing.JTextField();
         submitterTabbedPane = new javax.swing.JTabbedPane();
         addressEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.AddressEditorPanel();
-        multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        multimediaObjectCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
 
         languagesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.languagesPanel.border.title"))); // NOI18N
 
@@ -93,8 +93,8 @@ public class SubmitterEditor extends EntityEditor {
         org.openide.awt.Mnemonics.setLocalizedText(submitterNameLabel, org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.submitterNameLabel.text")); // NOI18N
 
         submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.addressEditorPanel.TabConstraints.tabTitle"), addressEditorPanel); // NOI18N
-        submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.multimediaObjectCitationsListPanel.TabConstraints.tabTitle"), multimediaObjectCitationsListPanel); // NOI18N
-        submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsListPanel.TabConstraints.tabTitle"), noteCitationsListPanel); // NOI18N
+        submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.multimediaObjectCitationsTablePanel.TabConstraints.tabTitle"), multimediaObjectCitationsTablePanel); // NOI18N
+        submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle"), noteCitationsTablePanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -141,8 +141,8 @@ public class SubmitterEditor extends EntityEditor {
     private javax.swing.JLabel changeDateLabeldate;
     private javax.swing.JTextField firstPreferLanguageTextField;
     private javax.swing.JPanel languagesPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JTextField secondPreferLanguageTextField;
     private javax.swing.JLabel submitterNameLabel;
     private javax.swing.JTextField submitterNameTextField;
@@ -215,7 +215,7 @@ public class SubmitterEditor extends EntityEditor {
             /*
              * +1 <<MULTIMEDIA_LINK>>
              */
-            multimediaObjectCitationsListPanel.set(mSubmitter, Arrays.asList(mSubmitter.getProperties("OBJE")));
+            multimediaObjectCitationsTablePanel.set(mSubmitter, Arrays.asList(mSubmitter.getProperties("OBJE")));
 
             /*
              * +1 LANG <LANGUAGE_PREFERENCE>    
@@ -245,15 +245,15 @@ public class SubmitterEditor extends EntityEditor {
                  * +1 <<NOTE_STRUCTURE>>
                  */
                 if (!mSubmitter.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                    int indexOfTab = submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsListPanel.TabConstraints.tabTitle"));
+                    int indexOfTab = submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle"));
                     if (indexOfTab != -1) {
                         submitterTabbedPane.removeTabAt(indexOfTab);
                     }
                 } else {
-                    if (submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsListPanel.TabConstraints.tabTitle")) == -1) {
-                        submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsListPanel.TabConstraints.tabTitle"), noteCitationsListPanel);
+                    if (submitterTabbedPane.indexOfTab(NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle")) == -1) {
+                        submitterTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.noteCitationsTablePanel.TabConstraints.tabTitle"), noteCitationsTablePanel);
                     }
-                    noteCitationsListPanel.set(mSubmitter, Arrays.asList(mSubmitter.getProperties("NOTE")));
+                    noteCitationsTablePanel.set(mSubmitter, Arrays.asList(mSubmitter.getProperties("NOTE")));
                 }
 
                 /*

@@ -62,9 +62,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
         jScrollPane2 = new javax.swing.JScrollPane();
         multimediaFilesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
         notesPanel = new javax.swing.JPanel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         multiMediaObjectReferencesPanel = new javax.swing.JPanel();
-        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
+        referencesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel();
         multiMediaObjectTitleLabel = new javax.swing.JLabel();
         multiMediaObjectTitleTextField = new javax.swing.JTextField();
         changeDateLabel = new javax.swing.JLabel();
@@ -132,12 +132,12 @@ public class MultiMediaObjectEditor extends EntityEditor {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notesPanelLayout.createSequentialGroup()
-                .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -147,11 +147,11 @@ public class MultiMediaObjectEditor extends EntityEditor {
         multiMediaObjectReferencesPanel.setLayout(multiMediaObjectReferencesPanelLayout);
         multiMediaObjectReferencesPanelLayout.setHorizontalGroup(
             multiMediaObjectReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+            .addComponent(referencesTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
         );
         multiMediaObjectReferencesPanelLayout.setVerticalGroup(
             multiMediaObjectReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+            .addComponent(referencesTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
         );
 
         multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), multiMediaObjectReferencesPanel); // NOI18N
@@ -308,9 +308,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
     private javax.swing.JLabel multiMediaObjectTitleLabel;
     private javax.swing.JTextField multiMediaObjectTitleTextField;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable multimediaFilesTable;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel notesPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel referencesTablePanel;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -367,7 +367,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                     entitiesList.add(entityRef.getTargetEntity());
                 }
 
-                referencesListPanel.set((Media) mMultiMediaObject, entitiesList);
+                referencesTablePanel.set((Media) mMultiMediaObject, entitiesList);
                 int indexOfTab = multiMediaObjectTabbedPane.indexOfTab(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"));
                 if (indexOfTab == -1) {
                     multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectReferencesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), multiMediaObjectReferencesPanel); // NOI18N
@@ -396,7 +396,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
             /*
              * +1 <<NOTE_STRUCTURE>>
              */
-            noteCitationsListPanel.set(mMultiMediaObject, Arrays.asList(mMultiMediaObject.getProperties("NOTE")));
+            noteCitationsTablePanel.set(mMultiMediaObject, Arrays.asList(mMultiMediaObject.getProperties("NOTE")));
         }
     }
 

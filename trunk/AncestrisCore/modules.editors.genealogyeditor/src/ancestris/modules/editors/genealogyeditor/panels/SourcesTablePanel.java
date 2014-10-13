@@ -14,19 +14,19 @@ import org.openide.util.Exceptions;
  *
  * @author dominique
  */
-public class SourcesListPanel extends javax.swing.JPanel {
+public class SourcesTablePanel extends javax.swing.JPanel {
 
     private final Gedcom mGedcom;
     private final SourcesTableModel mSourcesTableModel = new SourcesTableModel();
     private Source mSource;
 
     /**
-     * Creates new form SourcesListPanel
+     * Creates new form SourcesTablePanel
      */
-    public SourcesListPanel(Gedcom gedcom) {
+    public SourcesTablePanel(Gedcom gedcom) {
         this.mGedcom = gedcom;
         initComponents();
-        sourcesTable.setID(SourcesListPanel.class.getName());
+        sourcesTable.setID(SourcesTablePanel.class.getName());
         mSourcesTableModel.addAll((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
         if (mSourcesTableModel.getRowCount() > 0) {
             editSourceButton.setEnabled(true);
@@ -57,7 +57,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
         sourcesToolBar.setRollover(true);
 
         addSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourcesListPanel.addSourceButton.toolTipText"), new Object[] {})); // NOI18N
+        addSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourcesTablePanel.addSourceButton.toolTipText"), new Object[] {})); // NOI18N
         addSourceButton.setFocusable(false);
         addSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -69,7 +69,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
         sourcesToolBar.add(addSourceButton);
 
         editSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourcesListPanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
+        editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourcesTablePanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
         editSourceButton.setFocusable(false);
         editSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -81,7 +81,7 @@ public class SourcesListPanel extends javax.swing.JPanel {
         sourcesToolBar.add(editSourceButton);
 
         deleteSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourcesListPanel.deleteSourceButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourcesTablePanel.deleteSourceButton.toolTipText"), new Object[] {})); // NOI18N
         deleteSourceButton.setFocusable(false);
         deleteSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

@@ -27,7 +27,7 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
     private Fam mCreateFamily = null;
 
     /**
-     * Creates new form FamiliesListPanel
+     * Creates new form FamiliesTablePanel
      */
     public FamiliesTablePanel() {
         mFamilyEditingType = LIST_FAM;
@@ -218,10 +218,10 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            FamiliesTablePanel.class, "FamiliesListPanel.deleteFamilyConfirmation.title",
+                            FamiliesTablePanel.class, "FamiliesTableDialog.deleteFamilyConfirmation.title",
                             family),
                     NbBundle.getMessage(
-                            FamiliesTablePanel.class, "FamiliesListPanel.deleteFamilyConfirmation.text",
+                            FamiliesTablePanel.class, "FamiliesTableDialog.deleteFamilyConfirmation.text",
                             family,
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -246,15 +246,15 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteFamilyNameButtonActionPerformed
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
-        FamiliesTablePanel familiesListPanel = new FamiliesTablePanel(LIST_FAM);
-        familiesListPanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
-        DialogManager.ADialog familiesListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(FamiliesTablePanel.class, "FamiliesListPanel.linkto.title"),
-                familiesListPanel);
-        familiesListDialog.setDialogId(FamiliesTablePanel.class.getName());
+        FamiliesTablePanel familiesTablePanel = new FamiliesTablePanel(LIST_FAM);
+        familiesTablePanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
+        DialogManager.ADialog familiesTableDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(FamiliesTablePanel.class, "familiesTableDialog.linkto.title"),
+                familiesTablePanel);
+        familiesTableDialog.setDialogId(FamiliesTablePanel.class.getName());
 
-        if (familiesListDialog.show() == DialogDescriptor.OK_OPTION) {
-            final Fam selectedFamily = familiesListPanel.getSelectedFamily();
+        if (familiesTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Fam selectedFamily = familiesTablePanel.getSelectedFamily();
             if (selectedFamily != null) {
                 try {
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {

@@ -28,7 +28,7 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
     PropertyXRef mAddedChild = null;
 
     /**
-     * Creates new form IndividualsListPanel
+     * Creates new form IndividualsTablePanel
      */
     public ChildrenTablePanel() {
         initComponents();
@@ -190,10 +190,10 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            ChildrenTablePanel.class, "ChildrenListPanel.deleteChildConfirmation.title",
+                            ChildrenTablePanel.class, "ChildrenTableDialog.deleteChildConfirmation.title",
                             individualRef.getTargetEntity()),
                     NbBundle.getMessage(
-                            ChildrenTablePanel.class, "ChildrenListPanel.deleteChildConfirmation.text",
+                            ChildrenTablePanel.class, "ChildrenTableDialog.deleteChildConfirmation.text",
                             individualRef.getTargetEntity(),
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -219,17 +219,17 @@ public class ChildrenTablePanel extends javax.swing.JPanel {
    }//GEN-LAST:event_deleteChildrenButtonActionPerformed
 
     private void linkToChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToChildrenButtonActionPerformed
-        IndividualsListPanel individualsListPanel = new IndividualsListPanel();
+        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
         List<Indi> individualsList = new ArrayList<Indi>(mRoot.getGedcom().getIndis());
-        individualsListPanel.setToolBarVisible(false);
-        individualsListPanel.set(mRoot, individualsList);
-        DialogManager.ADialog individualsListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(IndividualsListPanel.class, "IndividualsListPanel.title.select.child"),
-                individualsListPanel);
-        individualsListDialog.setDialogId(IndividualsListPanel.class.getName());
+        individualsTablePanel.setToolBarVisible(false);
+        individualsTablePanel.set(mRoot, individualsList);
+        DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(IndividualsTablePanel.class, "individualsTableDialog.title.select.child"),
+                individualsTablePanel);
+        individualsTableDialog.setDialogId(IndividualsTablePanel.class.getName());
 
-        if (individualsListDialog.show() == DialogDescriptor.OK_OPTION) {
-            final Indi selectedIndividual = individualsListPanel.getSelectedIndividual();
+        if (individualsTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Indi selectedIndividual = individualsTablePanel.getSelectedIndividual();
             if (selectedIndividual != null) {
                 try {
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {

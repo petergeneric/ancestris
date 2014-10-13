@@ -149,9 +149,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         individualAgeTextField.getDocument().putProperty("name", "individualAgeTextField");
         responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
         responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
-        sourceCitationsListPanel.addChangeListener(changeListner);
-        noteCitationsListPanel.addChangeListener(changeListner);
-        multimediaObjectCitationsListPanel.addChangeListener(changeListner);
+        sourceCitationsTablePanel.addChangeListener(changeListner);
+        noteCitationsTablePanel.addChangeListener(changeListner);
+        multimediaObjectCitationsTablePanel.addChangeListener(changeListner);
     }
 
     /**
@@ -187,11 +187,11 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         responsibleAgencyLabel = new JLabel();
         responsibleAgencyTextField = new JTextField();
         sourcesPanel = new JPanel();
-        sourceCitationsListPanel = new SourceCitationsListPanel();
+        sourceCitationsTablePanel = new SourceCitationsTablePanel();
         notesPanel = new JPanel();
-        noteCitationsListPanel = new NoteCitationsListPanel();
+        noteCitationsTablePanel = new NoteCitationsTablePanel();
         galleryPanel = new JPanel();
-        multimediaObjectCitationsListPanel = new MultimediaObjectCitationsListPanel();
+        multimediaObjectCitationsTablePanel = new MultimediaObjectCitationsTablePanel();
 
         EventDetailEditorPanel.setMinimumSize(new Dimension(634, 217));
 
@@ -379,41 +379,41 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         eventInformationTabbedPane.addTab(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Event.png")), EventDetailPanel); // NOI18N
 
-        sourceCitationsListPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        sourceCitationsTablePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         GroupLayout sourcesPanelLayout = new GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
 
-        noteCitationsListPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        noteCitationsTablePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         GroupLayout notesPanelLayout = new GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
 
-        multimediaObjectCitationsListPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        multimediaObjectCitationsTablePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         GroupLayout galleryPanelLayout = new GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
@@ -429,14 +429,14 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void linkToPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
-        PlacesListPanel placesListPanel = new PlacesListPanel(mRoot.getGedcom());
-        DialogManager.ADialog placesListPanelDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlacesListPanel.class, "PlacesListPanel.title.link"),
-                placesListPanel);
-        placesListPanelDialog.setDialogId(PlacesListPanel.class.getName());
+        PlacesTablePanel placesTablePanel = new PlacesTablePanel(mRoot.getGedcom());
+        DialogManager.ADialog placesTableDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(PlacesTablePanel.class, "PlacesTableDialog.title.link"),
+                placesTablePanel);
+        placesTableDialog.setDialogId(PlacesTablePanel.class.getName());
 
-        if (placesListPanelDialog.show() == DialogDescriptor.OK_OPTION) {
-            final PropertyPlace selectedPlace = placesListPanel.getSelectedPlace();
+        if (placesTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            final PropertyPlace selectedPlace = placesTablePanel.getSelectedPlace();
             if (selectedPlace != null) {
                 try {
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -613,15 +613,15 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JButton linkToPlaceButton;
-    private MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
-    private NoteCitationsListPanel noteCitationsListPanel;
+    private MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
+    private NoteCitationsTablePanel noteCitationsTablePanel;
     private JPanel notesPanel;
     private JLabel placeLabel;
     private JTextField placeTextField;
     private JToggleButton privateRecordToggleButton;
     private JLabel responsibleAgencyLabel;
     private JTextField responsibleAgencyTextField;
-    private SourceCitationsListPanel sourceCitationsListPanel;
+    private SourceCitationsTablePanel sourceCitationsTablePanel;
     private JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -791,11 +791,11 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         }
 
         Property[] sourcesList = mEvent.getProperties("SOUR");
-        sourceCitationsListPanel.set(mEvent, Arrays.asList(sourcesList));
+        sourceCitationsTablePanel.set(mEvent, Arrays.asList(sourcesList));
 
-        noteCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
+        noteCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
 
-        multimediaObjectCitationsListPanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
+        multimediaObjectCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
         
         Property responsibleAgency = mEvent.getProperty("AGNC");
         if (responsibleAgency != null) {

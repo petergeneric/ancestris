@@ -12,18 +12,18 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class RepositoriesListPanel extends javax.swing.JPanel {
+public class RepositoriesTablePanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private final RepositoriesTableModel mRepositoriesTableModel = new RepositoriesTableModel();
     private Repository mRepository;
 
     /**
-     * Creates new form SourcesListPanel
+     * Creates new form RepositoriesTablePanel
      */
-    public RepositoriesListPanel() {
+    public RepositoriesTablePanel() {
         initComponents();
-        repositoriesTable.setID(RepositoriesListPanel.class.getName());
+        repositoriesTable.setID(RepositoriesTablePanel.class.getName());
     }
 
     /**
@@ -46,7 +46,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         repositoriesToolBar.setRollover(true);
 
         addRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.addRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
+        addRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesTablePanel.addRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
         addRepositoryButton.setFocusable(false);
         addRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -58,7 +58,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         repositoriesToolBar.add(addRepositoryButton);
 
         editRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.editRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
+        editRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesTablePanel.editRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
         editRepositoryButton.setFocusable(false);
         editRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -70,7 +70,7 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
         repositoriesToolBar.add(editRepositoryButton);
 
         deleteRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesListPanel.deleteRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoriesTablePanel.deleteRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
         deleteRepositoryButton.setFocusable(false);
         deleteRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -161,12 +161,9 @@ public class RepositoriesListPanel extends javax.swing.JPanel {
 
         if (selectedRow != -1) {
             Repository repository = mRepositoriesTableModel.getValueAt(repositoriesTable.convertRowIndexToModel(selectedRow));
-            DialogManager createYesNo = DialogManager.createYesNo(
-                    NbBundle.getMessage(
-                            RepositoriesListPanel.class, "RepositoriesListPanel.deleteRepository.title",
+            DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(RepositoriesTablePanel.class, "RepositoriesTableDialog.deleteRepository.title",
                             repository),
-                    NbBundle.getMessage(
-                            RepositoriesListPanel.class, "RepositoriesListPanel.deleteRepository.text",
+                    NbBundle.getMessage(RepositoriesTablePanel.class, "RepositoriesTableDialog.deleteRepository.text",
                             repository,
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {

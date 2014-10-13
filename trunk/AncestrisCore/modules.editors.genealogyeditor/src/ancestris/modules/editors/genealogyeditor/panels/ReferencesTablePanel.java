@@ -8,17 +8,17 @@ import java.util.List;
  *
  * @author dominique
  */
-public class ReferencesListPanel extends javax.swing.JPanel {
+public class ReferencesTablePanel extends javax.swing.JPanel {
 
     private Entity mRoot;
-    private ReferencesTableModel mReferencesTableModel = new ReferencesTableModel();
+    private final ReferencesTableModel mReferencesTableModel = new ReferencesTableModel();
 
     /**
-     * Creates new form ReferencesListPanel
+     * Creates new form ReferencesTablePanel
      */
-    public ReferencesListPanel() {
+    public ReferencesTablePanel() {
         initComponents();
-        referencesTable.setID(ReferencesListPanel.class.getName());
+        referencesTable.setID(ReferencesTablePanel.class.getName());
     }
 
     /**

@@ -58,14 +58,14 @@
     <Component class="javax.swing.JLabel" name="searchPlaceLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlacesListPanel.searchPlaceLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlacesTablePanel.searchPlaceLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="filterGedcomPlaceTextField">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlacesListPanel.filterGedcomPlaceTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlacesTablePanel.filterGedcomPlaceTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -86,7 +86,7 @@
     <Component class="javax.swing.JButton" name="filterGedcomPlaceButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlacesListPanel.filterGedcomPlaceButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlacesTablePanel.filterGedcomPlaceButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -96,7 +96,7 @@
     <Component class="javax.swing.JButton" name="clearFilterGedcomPlaceButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlacesListPanel.clearFilterGedcomPlaceButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlacesTablePanel.clearFilterGedcomPlaceButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>

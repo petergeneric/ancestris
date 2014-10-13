@@ -45,7 +45,7 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
         noteTextScrollPane = new javax.swing.JScrollPane();
         noteTextTextArea = new javax.swing.JTextArea();
         noteReferencesPanel = new javax.swing.JPanel();
-        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
+        referencesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel();
         changeDatePanel = new javax.swing.JPanel();
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
@@ -115,11 +115,11 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
         noteReferencesPanel.setLayout(noteReferencesPanelLayout);
         noteReferencesPanelLayout.setHorizontalGroup(
             noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+            .addComponent(referencesTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
         noteReferencesPanelLayout.setVerticalGroup(
             noteReferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+            .addComponent(referencesTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
         );
 
         noteInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NoteCitationEditorPanel.noteReferencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), noteReferencesPanel); // NOI18N
@@ -203,7 +203,7 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane noteTextScrollPane;
     private javax.swing.JTextArea noteTextTextArea;
     private javax.swing.JToolBar noteTextToolBar;
-    private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel referencesTablePanel;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -236,7 +236,7 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
                 for (PropertyXRef entityRef : mNote.getProperties(PropertyXRef.class)) {
                     entitiesList.add(entityRef.getTargetEntity());
                 }
-                referencesListPanel.set(((Note) mNote), entitiesList);
+                referencesTablePanel.set(((Note) mNote), entitiesList);
             } else {
                 noteIDTextField.setVisible(false);
                 noteIDLabel.setVisible(false);

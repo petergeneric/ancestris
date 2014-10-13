@@ -120,11 +120,11 @@ public final class IndividualEditor extends EntityEditor {
         individualEventEditorPanel.addChangeListener(changes);
         familiesChildTreeTablePanel.addChangeListener(changes);
         familiesSpouseTreeTablePanel.addChangeListener(changes);
-        sourceCitationsListPanel.addChangeListener(changes);
+        sourceCitationsTablePanel.addChangeListener(changes);
         aliasTablePanel.addChangeListener(changes);
-        noteCitationsListPanel.addChangeListener(changes);
-        associationsListPanel.addChangeListener(changes);
-        multimediaObjectCitationsListPanel.addChangeListener(changes);
+        noteCitationsTablePanel.addChangeListener(changes);
+        associationsTablePanel.addChangeListener(changes);
+        multimediaObjectCitationsTablePanel.addChangeListener(changes);
     }
 
     /**
@@ -144,7 +144,7 @@ public final class IndividualEditor extends EntityEditor {
         privateRecordToggleButton = new javax.swing.JToggleButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         nameEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel();
-        namesListPanel = new ancestris.modules.editors.genealogyeditor.panels.NamesListPanel();
+        namesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
         eventsPanel = new javax.swing.JPanel();
         eventsSplitPane = new javax.swing.JSplitPane();
@@ -163,14 +163,14 @@ public final class IndividualEditor extends EntityEditor {
         familiesSpousePanel = new javax.swing.JPanel();
         familiesSpouseTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel(FamiliesReferenceTreeTablePanel.EDIT_FAMS);
         sourcesPanel = new javax.swing.JPanel();
-        sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
+        sourceCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel();
         aliasTablePanel = new ancestris.modules.editors.genealogyeditor.panels.AliasTablePanel();
         notesPanel = new javax.swing.JPanel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         associationsPanel = new javax.swing.JPanel();
-        associationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel();
+        associationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel();
         galleryPanel = new javax.swing.JPanel();
-        multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
+        multimediaObjectCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel();
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
 
@@ -212,7 +212,7 @@ public final class IndividualEditor extends EntityEditor {
         privateRecordToggleButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.nameEditorPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Name.png")), nameEditorPanel); // NOI18N
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.namesListPanel.TabConstraints.tabTitle"), namesListPanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.namesTablePanel.TabConstraints.tabTitle"), namesTablePanel); // NOI18N
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
@@ -359,11 +359,11 @@ public final class IndividualEditor extends EntityEditor {
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
@@ -373,11 +373,11 @@ public final class IndividualEditor extends EntityEditor {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -386,11 +386,11 @@ public final class IndividualEditor extends EntityEditor {
         associationsPanel.setLayout(associationsPanelLayout);
         associationsPanelLayout.setHorizontalGroup(
             associationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(associationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(associationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         associationsPanelLayout.setVerticalGroup(
             associationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(associationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(associationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.associationsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), associationsPanel); // NOI18N
@@ -399,11 +399,11 @@ public final class IndividualEditor extends EntityEditor {
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(
             galleryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "FamilyEditor.galleryPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), galleryPanel); // NOI18N
@@ -599,8 +599,8 @@ public final class IndividualEditor extends EntityEditor {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.editors.genealogyeditor.panels.AliasTablePanel aliasTablePanel;
-    private ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel associationsListPanel;
     private javax.swing.JPanel associationsPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel associationsTablePanel;
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JLabel changeDateLabeldate;
     private javax.swing.JButton deleteEventButton;
@@ -626,14 +626,14 @@ public final class IndividualEditor extends EntityEditor {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
-    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
     private ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel nameEditorPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.NamesListPanel namesListPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel namesTablePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JToggleButton privateRecordToggleButton;
     private ancestris.modules.editors.genealogyeditor.beans.SexBean sexBeanPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel sourceCitationsTablePanel;
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -699,7 +699,7 @@ public final class IndividualEditor extends EntityEditor {
             } else {
                 nameEditorPanel.set(mIndividual, null);
             }
-            namesListPanel.set(mIndividual, namesList);
+            namesTablePanel.set(mIndividual, namesList);
 
             /*
              * +1 SEX <SEX_VALUE>
@@ -767,7 +767,7 @@ public final class IndividualEditor extends EntityEditor {
             /*
              * +1 <<ASSOCIATION_STRUCTURE>>
              */
-            associationsListPanel.setAssociationsList(mIndividual, mIndividual.getProperties(PropertyAssociation.class));
+            associationsTablePanel.setAssociationsList(mIndividual, mIndividual.getProperties(PropertyAssociation.class));
 
             /*
              * +1 ALIA @<XREF:INDI>@
@@ -808,12 +808,12 @@ public final class IndividualEditor extends EntityEditor {
             /*
              * +1 <<NOTE_STRUCTURE>>
              */
-            noteCitationsListPanel.set(mIndividual, Arrays.asList(mIndividual.getProperties("NOTE")));
+            noteCitationsTablePanel.set(mIndividual, Arrays.asList(mIndividual.getProperties("NOTE")));
 
             /*
              * +1 <<SOURCE_CITATION>>
              */
-            sourceCitationsListPanel.set(mIndividual, Arrays.asList(mIndividual.getProperties("SOUR")));
+            sourceCitationsTablePanel.set(mIndividual, Arrays.asList(mIndividual.getProperties("SOUR")));
 
             /*
              * +1 <<MULTIMEDIA_LINK>>
@@ -861,7 +861,7 @@ public final class IndividualEditor extends EntityEditor {
                 imageBean.setImage(null);
             }
 
-            multimediaObjectCitationsListPanel.set(mIndividual, Arrays.asList(multiMediaObjects));
+            multimediaObjectCitationsTablePanel.set(mIndividual, Arrays.asList(multiMediaObjects));
         }
     }
 

@@ -26,7 +26,7 @@ import org.openide.util.NbBundle;
  * +2 AGNC <RESPONSIBLE_AGENCY> {0:1}
  * +2 <<NOTE_STRUCTURE>> {0:M}
  */
-public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
+public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private Property mRegisteredEvent;
@@ -35,11 +35,11 @@ public class SourceRecordedEventsListPanel extends javax.swing.JPanel {
     private final ChangeSupport changeSupport = new ChangeSupport(FamiliesReferenceTreeTablePanel.class);
 
     /**
-     * Creates new form SourceRecordedEventsListPanel
+     * Creates new form SourceRecordedEventsTablePanel
      */
-    public SourceRecordedEventsListPanel() {
+    public SourceRecordedEventsTablePanel() {
         initComponents();
-        sourceEventsTable.setID(SourceRecordedEventsListPanel.class.getName());
+        sourceEventsTable.setID(SourceRecordedEventsTablePanel.class.getName());
     }
 
     /**

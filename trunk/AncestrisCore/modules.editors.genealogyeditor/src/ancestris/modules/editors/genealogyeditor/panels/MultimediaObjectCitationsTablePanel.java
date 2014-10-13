@@ -19,21 +19,21 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
+public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private Property mMultiMediaObject;
     private String mGedcomVersion = "";
     private MultiMediaObjectCitationsTableModel multiMediaObjectCitationsTableModel = new MultiMediaObjectCitationsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
-    private final ChangeSupport changeSupport = new ChangeSupport(MultimediaObjectCitationsListPanel.class);
+    private final ChangeSupport changeSupport = new ChangeSupport(MultimediaObjectCitationsTablePanel.class);
 
     /**
-     * Creates new form MultimediaObjectsListPanel
+     * Creates new form MultimediaObjectCitationsTablePanel
      */
-    public MultimediaObjectCitationsListPanel() {
+    public MultimediaObjectCitationsTablePanel() {
         initComponents();
-        multiMediaObjectCitationsTable.setID(MultimediaObjectCitationsListPanel.class.getName());
+        multiMediaObjectCitationsTable.setID(MultimediaObjectCitationsTablePanel.class.getName());
     }
 
     /**
@@ -60,7 +60,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         galleryToolBar.setPreferredSize(new java.awt.Dimension(453, 57));
 
         addMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.addMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
+        addMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsTablePanel.addMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
         addMMObjectButton.setFocusable(false);
         addMMObjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addMMObjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -72,7 +72,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         galleryToolBar.add(addMMObjectButton);
 
         linkMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.linkMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
+        linkMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsTablePanel.linkMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
         linkMMObjectButton.setFocusable(false);
         linkMMObjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         linkMMObjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -84,7 +84,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         galleryToolBar.add(linkMMObjectButton);
 
         editMMObjecButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editMMObjecButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.editMMObjecButton.toolTipText"), new Object[] {})); // NOI18N
+        editMMObjecButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsTablePanel.editMMObjecButton.toolTipText"), new Object[] {})); // NOI18N
         editMMObjecButton.setFocusable(false);
         editMMObjecButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editMMObjecButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -96,7 +96,7 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
         galleryToolBar.add(editMMObjecButton);
 
         deleteMMObjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsListPanel.deleteMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteMMObjectButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("MultimediaObjectCitationsTablePanel.deleteMMObjectButton.toolTipText"), new Object[] {})); // NOI18N
         deleteMMObjectButton.setFocusable(false);
         deleteMMObjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteMMObjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -182,12 +182,9 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
             } else {
                 objectName = "";
             }
-            DialogManager createYesNo = DialogManager.createYesNo(
-                    NbBundle.getMessage(
-                            MultimediaObjectCitationsListPanel.class, "MultimediaObjectCitationsListPanel.deleteObjectConfirmation.title",
+            DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(MultimediaObjectCitationsTablePanel.class, "MultimediaObjectCitationsTableDialog.deleteObjectConfirmation.title",
                             objectName),
-                    NbBundle.getMessage(
-                            MultimediaObjectCitationsListPanel.class, "MultimediaObjectCitationsListPanel.deleteObjectConfirmation.text",
+                    NbBundle.getMessage(MultimediaObjectCitationsTablePanel.class, "MultimediaObjectCitationsTableDialog.deleteObjectConfirmation.text",
                             objectName,
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
@@ -248,15 +245,15 @@ public class MultimediaObjectCitationsListPanel extends javax.swing.JPanel {
     private void linkMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkMMObjectButtonActionPerformed
         List<Media> notesList = new ArrayList<Media>((Collection<Media>) mRoot.getGedcom().getEntities(Gedcom.OBJE));
 
-        MultimediaObjectListPanel multimediaObjectListPanel = new MultimediaObjectListPanel();
-        multimediaObjectListPanel.set(mRoot, notesList);
-        DialogManager.ADialog multimediaObjectListDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(MultimediaObjectListPanel.class, "MultimediaObjectListPanel.linkTo.title"),
-                multimediaObjectListPanel);
-        multimediaObjectListDialog.setDialogId(MultimediaObjectListPanel.class.getName());
+        MultimediaObjectTablePanel multimediaObjectTablePanel = new MultimediaObjectTablePanel();
+        multimediaObjectTablePanel.set(mRoot, notesList);
+        DialogManager.ADialog multimediaObjectTableDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(MultimediaObjectTablePanel.class, "MultimediaObjectTableDialog.linkTo.title"),
+                multimediaObjectTablePanel);
+        multimediaObjectTableDialog.setDialogId(MultimediaObjectTablePanel.class.getName());
 
-        if (multimediaObjectListDialog.show() == DialogDescriptor.OK_OPTION) {
-            final Media selectedMultimediaObject = multimediaObjectListPanel.getSelectedMultiMediaObject();
+        if (multimediaObjectTableDialog.show() == DialogDescriptor.OK_OPTION) {
+            final Media selectedMultimediaObject = multimediaObjectTablePanel.getSelectedMultiMediaObject();
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 

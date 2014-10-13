@@ -20,20 +20,20 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class SourceCitationsListPanel extends javax.swing.JPanel {
+public class SourceCitationsTablePanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private PropertySource mSourceCitation;
     private SourceCitationsTableModel mSourceCitationsTableModel = new SourceCitationsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
-    private final ChangeSupport changeSupport = new ChangeSupport(SourceCitationsListPanel.class);
+    private final ChangeSupport changeSupport = new ChangeSupport(SourceCitationsTablePanel.class);
 
     /**
-     * Creates new form SourceCitationsListPanel
+     * Creates new form SourceCitationsTablePanel
      */
-    public SourceCitationsListPanel() {
+    public SourceCitationsTablePanel() {
         initComponents();
-        sourceCitationsTable.setID(SourceCitationsListPanel.class.getName());
+        sourceCitationsTable.setID(SourceCitationsTablePanel.class.getName());
     }
 
     /**
@@ -59,7 +59,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         sourcesToolBar.setRollover(true);
 
         addSourceCitationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.addSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
+        addSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsTablePanel.addSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
         addSourceCitationButton.setFocusable(false);
         addSourceCitationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addSourceCitationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -71,7 +71,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         sourcesToolBar.add(addSourceCitationButton);
 
         editSourceCitationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
-        editSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.editSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
+        editSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsTablePanel.editSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
         editSourceCitationButton.setFocusable(false);
         editSourceCitationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editSourceCitationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -83,7 +83,7 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         sourcesToolBar.add(editSourceCitationButton);
 
         deleteSourceCitationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsListPanel.deleteSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteSourceCitationButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationsTablePanel.deleteSourceCitationButton.toolTipText"), new Object[] {})); // NOI18N
         deleteSourceCitationButton.setFocusable(false);
         deleteSourceCitationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteSourceCitationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -206,11 +206,8 @@ public class SourceCitationsListPanel extends javax.swing.JPanel {
         Gedcom gedcom = mRoot.getGedcom();
 
         if (selectedRow != -1) {
-            DialogManager createYesNo = DialogManager.createYesNo(
-                    NbBundle.getMessage(
-                            SourceCitationsListPanel.class, "SourceCitationsListPanel.deleteSourceCitation.title"),
-                    NbBundle.getMessage(
-                            SourceCitationsListPanel.class, "SourceCitationsListPanel.deleteSourceCitation.text",
+            DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(SourceCitationsTablePanel.class, "SourceCitationsTableDialog.deleteSourceCitation.title"),
+                    NbBundle.getMessage(SourceCitationsTablePanel.class, "SourceCitationsTableDialog.deleteSourceCitation.text",
                             mRoot, mRoot.getEntity()));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {

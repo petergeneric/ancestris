@@ -61,8 +61,8 @@ public class SourceEditor extends EntityEditor {
         eventTypePanel.addChangeListener(changes);
         sourceTextTextArea.getDocument().addDocumentListener(changes);
         publicationFactsTextArea.getDocument().addDocumentListener(changes);
-        noteCitationsListPanel.addChangeListener(changes);
-        multimediaObjectCitationsListPanel.addChangeListener(changes);
+        noteCitationsTablePanel.addChangeListener(changes);
+        multimediaObjectCitationsTablePanel.addChangeListener(changes);
     }
 
     /**
@@ -84,7 +84,7 @@ public class SourceEditor extends EntityEditor {
         agencyTextField = new javax.swing.JTextField();
         sourceInformationTabbedPane = new javax.swing.JTabbedPane();
         registeredEventsPanel = new javax.swing.JPanel();
-        eventTypePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceRecordedEventsListPanel();
+        eventTypePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceRecordedEventsTablePanel();
         sourceTextPanel = new javax.swing.JPanel();
         sourceTextScrollPane = new javax.swing.JScrollPane();
         sourceTextTextArea = new javax.swing.JTextArea();
@@ -96,11 +96,11 @@ public class SourceEditor extends EntityEditor {
         repositoriesPanel = new javax.swing.JPanel();
         repositoryCitationPanel = new ancestris.modules.editors.genealogyeditor.panels.RepositoryCitationEditorPanel();
         notesPanel = new javax.swing.JPanel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         referencesPanel = new javax.swing.JPanel();
-        referencesListPanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel();
+        referencesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel();
         multimediaObjectPanel = new javax.swing.JPanel();
-        multimediaObjectCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel();
+        multimediaObjectCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel();
         abbreviationLabel = new javax.swing.JLabel();
         abbreviationTextField = new javax.swing.JTextField();
         changeDateLabel = new javax.swing.JLabel();
@@ -208,11 +208,11 @@ public class SourceEditor extends EntityEditor {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -225,11 +225,11 @@ public class SourceEditor extends EntityEditor {
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, referencesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(referencesTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         referencesPanelLayout.setVerticalGroup(
             referencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(referencesListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+            .addComponent(referencesTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.referencesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), referencesPanel); // NOI18N
@@ -238,11 +238,11 @@ public class SourceEditor extends EntityEditor {
         multimediaObjectPanel.setLayout(multimediaObjectPanelLayout);
         multimediaObjectPanelLayout.setHorizontalGroup(
             multimediaObjectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         multimediaObjectPanelLayout.setVerticalGroup(
             multimediaObjectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
         );
 
         sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.multimediaObjectPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multimediaObjectPanel); // NOI18N
@@ -326,17 +326,17 @@ public class SourceEditor extends EntityEditor {
     private javax.swing.JTextField authorTextField;
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JLabel changeDateLabeldate;
-    private ancestris.modules.editors.genealogyeditor.panels.SourceRecordedEventsListPanel eventTypePanel;
-    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsListPanel multimediaObjectCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceRecordedEventsTablePanel eventTypePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
     private javax.swing.JPanel multimediaObjectPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel notesPanel;
     private javax.swing.JPanel publicationFactsPanel;
     private javax.swing.JScrollPane publicationFactsScrollPane;
     private javax.swing.JTextArea publicationFactsTextArea;
     private javax.swing.JToolBar publicationFactsToolBar;
-    private ancestris.modules.editors.genealogyeditor.panels.ReferencesListPanel referencesListPanel;
     private javax.swing.JPanel referencesPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel referencesTablePanel;
     private javax.swing.JPanel registeredEventsPanel;
     private javax.swing.JPanel repositoriesPanel;
     private ancestris.modules.editors.genealogyeditor.panels.RepositoryCitationEditorPanel repositoryCitationPanel;
@@ -475,18 +475,18 @@ public class SourceEditor extends EntityEditor {
             for (PropertyNote noteRef : mSource.getProperties(PropertyNote.class)) {
                 notesList.add((Note) noteRef.getTargetEntity());
             }
-            noteCitationsListPanel.set(mSource, Arrays.asList(mSource.getProperties("NOTE")));
+            noteCitationsTablePanel.set(mSource, Arrays.asList(mSource.getProperties("NOTE")));
 
             /*
              * +1 <<MULTIMEDIA_LINK>>
              */
-            multimediaObjectCitationsListPanel.set(mSource, Arrays.asList(mSource.getProperties("OBJE")));
+            multimediaObjectCitationsTablePanel.set(mSource, Arrays.asList(mSource.getProperties("OBJE")));
 
             List<Entity> entitiesList = new ArrayList<Entity>();
             for (PropertyXRef entityRef : mSource.getProperties(PropertyXRef.class)) {
                 entitiesList.add(entityRef.getTargetEntity());
             }
-            referencesListPanel.set(mSource, entitiesList);
+            referencesTablePanel.set(mSource, entitiesList);
         }
     }
 

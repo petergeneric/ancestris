@@ -10,17 +10,17 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author dominique
  */
-public class MultimediaObjectListPanel extends javax.swing.JPanel {
+public class MultimediaObjectTablePanel extends javax.swing.JPanel {
 
     private Property mRoot;
     private MultiMediaObjectsTableModel mMultiMediaObjectsTableModel = new MultiMediaObjectsTableModel();
 
     /**
-     * Creates new form NotesListPanel
+     * Creates new form MultimediaObjectTablePanel
      */
-    public MultimediaObjectListPanel() {
+    public MultimediaObjectTablePanel() {
         initComponents();
-        MultimediaObjectsTable.setID(MultimediaObjectListPanel.class.getName());
+        MultimediaObjectsTable.setID(MultimediaObjectTablePanel.class.getName());
     }
 
     /**

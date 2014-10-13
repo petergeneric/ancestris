@@ -50,7 +50,7 @@
               <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteCitationsListPanel.addNoteButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteCitationsTablePanel.addNoteButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -66,7 +66,7 @@
               <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/link_add.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteCitationsListPanel.linkToNoteButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteCitationsTablePanel.linkToNoteButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -82,7 +82,7 @@
               <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/edit.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteCitationsListPanel.editNoteButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteCitationsTablePanel.editNoteButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -98,7 +98,7 @@
               <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteCitationsListPanel.deleteNoteButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NoteCitationsTablePanel.deleteNoteButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>

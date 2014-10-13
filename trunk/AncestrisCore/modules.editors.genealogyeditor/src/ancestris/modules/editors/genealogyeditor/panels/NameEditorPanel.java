@@ -88,8 +88,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
         firstnameLabel = new javax.swing.JLabel();
         familyNameLabel = new javax.swing.JLabel();
         firstNameSuffixLabel = new javax.swing.JLabel();
-        noteCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel();
-        sourceCitationsListPanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel();
+        noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
+        sourceCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel();
 
         jCheckBox1.setText(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.jCheckBox1.text")); // NOI18N
         jCheckBox1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -329,8 +329,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
         );
 
         nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.namePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Name.png")), namePanel); // NOI18N
-        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.noteCitationsListPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsListPanel); // NOI18N
-        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.sourceCitationsListPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourceCitationsListPanel); // NOI18N
+        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsTablePanel); // NOI18N
+        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.sourceCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourceCitationsTablePanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -388,8 +388,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel nameTypeLabel;
     private javax.swing.JLabel nicknameLabel;
     private javax.swing.JTextField nicknameTextField;
-    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsListPanel noteCitationsListPanel;
-    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsListPanel sourceCitationsListPanel;
+    private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
+    private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel sourceCitationsTablePanel;
     // End of variables declaration//GEN-END:variables
 
     public void set(Indi mRoot, PropertyName mName) {
@@ -492,12 +492,12 @@ public class NameEditorPanel extends javax.swing.JPanel {
                         /*
              * +1 <<NOTE_STRUCTURE>>
              */
-            noteCitationsListPanel.set(mName, Arrays.asList(mName.getProperties("NOTE")));
+            noteCitationsTablePanel.set(mName, Arrays.asList(mName.getProperties("NOTE")));
 
             /*
              * +1 <<SOURCE_CITATION>>
              */
-            sourceCitationsListPanel.set(mName, Arrays.asList(mName.getProperties("SOUR")));
+            sourceCitationsTablePanel.set(mName, Arrays.asList(mName.getProperties("SOUR")));
 
         } else {
             nameTypeComboBox.setSelectedIndex(1);
