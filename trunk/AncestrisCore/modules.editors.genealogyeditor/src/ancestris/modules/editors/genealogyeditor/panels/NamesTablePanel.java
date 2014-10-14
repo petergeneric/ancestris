@@ -142,9 +142,9 @@ public class NamesTablePanel extends javax.swing.JPanel {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         nameEditorPanel.commit();
+                        mNamesTableModel.add(nameEditorPanel.get());
                     }
                 });
-                mNamesTableModel.add(nameEditorPanel.get());
                 editNameButton.setEnabled(true);
                 deleteNameButton.setEnabled(true);
             } catch (GedcomException ex) {
