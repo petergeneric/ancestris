@@ -425,7 +425,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="motherToolBar" min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="wifeImageBean" pref="113" max="32767" attributes="0"/>
+                      <Component id="wifeImageBean" pref="114" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
