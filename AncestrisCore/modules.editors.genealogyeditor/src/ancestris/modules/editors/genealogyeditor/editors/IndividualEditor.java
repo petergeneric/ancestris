@@ -10,7 +10,9 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -125,6 +127,16 @@ public final class IndividualEditor extends EntityEditor {
         noteCitationsTablePanel.addChangeListener(changes);
         associationsTablePanel.addChangeListener(changes);
         multimediaObjectCitationsTablePanel.addChangeListener(changes);
+        JComboBox.KeySelectionManager manager
+                = new JComboBox.KeySelectionManager() {
+                    @Override
+                    public int selectionForKey(char aKey, ComboBoxModel aModel) {
+                        System.out.println(aKey);
+                        return -1;
+                    }
+                };
+        eventTypeComboBox.setKeySelectionManager(manager);
+        eventTypeComboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
     }
 
     /**
