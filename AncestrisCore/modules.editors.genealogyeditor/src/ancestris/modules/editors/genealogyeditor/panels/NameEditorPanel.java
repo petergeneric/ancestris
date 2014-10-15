@@ -665,4 +665,11 @@ public class NameEditorPanel extends javax.swing.JPanel {
     PropertyName get() {
         return mName;
     }
+
+    /**
+     * @return the nameEditorTabbedPane
+     */
+    public javax.swing.JTabbedPane getNameEditorTabbedPane() {
+        return nameEditorTabbedPane;
+    }
 }
