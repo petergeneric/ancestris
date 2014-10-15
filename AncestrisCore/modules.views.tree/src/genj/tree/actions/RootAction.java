@@ -14,6 +14,8 @@ package genj.tree.actions;
 import ancestris.core.actions.CommonActions;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.gedcom.Entity;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
 import genj.tree.TreeView;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -47,7 +49,15 @@ public class RootAction
     public @Override
     Action createContextAwareInstance(org.openide.util.Lookup context) {
 
-        Entity e = context.lookup(Entity.class);
+        Entity e = null;
+        Property p = context.lookup(Property.class);
+        if (p instanceof Entity){
+            e = (Entity)p;
+        }
+        if (p instanceof PropertyXRef){
+            e = ((PropertyXRef)p).getTargetEntity();
+        }
+        
         if (e == null) {
             return CommonActions.NOOP;
         }
