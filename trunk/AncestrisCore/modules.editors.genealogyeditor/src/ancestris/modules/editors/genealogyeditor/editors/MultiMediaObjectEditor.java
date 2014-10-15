@@ -244,13 +244,13 @@ public class MultiMediaObjectEditor extends EntityEditor {
                     }
                 }); // end of doUnitOfWork
 
-                changes.fireChangeEvent();
                 mMultimediaFilesTableModel.clear();
                 for (Property multimediaFile : mMultiMediaObject.getProperties("FILE", true)) {
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
                         mMultimediaFilesTableModel.add(((PropertyFile) multimediaFile).getFile());
                     }
                 }
+                changes.fireChangeEvent();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -336,9 +336,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
         Property property;
 
         this.context = context;
-        property = context.getProperty();
+        property = context.getEntity();
         if (property == null) {
-            property = context.getEntity();
+            property = context.getProperty();
         }
 
         if (property != null) {
