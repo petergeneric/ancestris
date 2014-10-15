@@ -6,9 +6,12 @@ import genj.util.ChangeSupport;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultEditorKit;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.util.Utilities;
 
@@ -57,7 +60,11 @@ public class NameEditorPanel extends javax.swing.JPanel {
             Gedcom gedcom = contextToOpen.getGedcom();
 
             AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(gedcom, true), false);
+            InputMap map = firstNameTextField.getInputMap();
+            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
             AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(gedcom, true), false);
+            map = familyNameTextField.getInputMap();
+            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
         }
     }
 
@@ -489,7 +496,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 firstNameSuffixLabel.setVisible(false);
                 firstNameSuffixTextField.setVisible(false);
             }
-                        /*
+            /*
              * +1 <<NOTE_STRUCTURE>>
              */
             noteCitationsTablePanel.set(mName, Arrays.asList(mName.getProperties("NOTE")));
