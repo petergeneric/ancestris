@@ -42,7 +42,7 @@ public final class GenealogyEditorCreateIndividualAction implements ActionListen
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         entity = gedcom.createEntity(Gedcom.INDI);
-                        entity.addProperty("NAME", null);
+                        entity.addProperty("NAME", "");
                     }
                 }); // end of doUnitOfWork
 
