@@ -63,12 +63,12 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         referenceIndividualTextField = new javax.swing.JTextField();
         linkToIndividualButton = new javax.swing.JButton();
         relationLabel = new javax.swing.JLabel();
-        relationTextField = new javax.swing.JTextField();
         associationTabbedPane = new javax.swing.JTabbedPane();
         notesPanel = new javax.swing.JPanel();
         noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel();
+        relationChoiceWidget = new genj.util.swing.ChoiceWidget();
 
         org.openide.awt.Mnemonics.setLocalizedText(referenceIndividualLabel, org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.referenceIndividualLabel.text")); // NOI18N
 
@@ -79,9 +79,6 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(linkToIndividualButton, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationEditorPanel.linkToIndividualButton.text"), new Object[] {})); // NOI18N
         linkToIndividualButton.setFocusable(false);
         linkToIndividualButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linkToIndividualButton.setMaximumSize(new java.awt.Dimension(26, 26));
-        linkToIndividualButton.setMinimumSize(new java.awt.Dimension(26, 26));
-        linkToIndividualButton.setPreferredSize(new java.awt.Dimension(26, 26));
         linkToIndividualButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         linkToIndividualButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,25 +88,6 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
         relationLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(relationLabel, org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.relationLabel.text")); // NOI18N
-
-        relationTextField.setText(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.relationTextField.text")); // NOI18N
-        relationTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mRelationModified = true;
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mRelationModified = true;
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mRelationModified = true;
-            }
-        });
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
@@ -159,11 +137,11 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                             .addComponent(relationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(relationTextField)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(linkToIndividualButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(linkToIndividualButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(referenceIndividualTextField)))))
+                                .addComponent(referenceIndividualTextField))
+                            .addComponent(relationChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -177,7 +155,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(relationLabel)
-                    .addComponent(relationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(relationChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(associationTabbedPane)
                 .addContainerGap())
@@ -224,8 +202,8 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel notesPanel;
     private javax.swing.JLabel referenceIndividualLabel;
     private javax.swing.JTextField referenceIndividualTextField;
+    private genj.util.swing.ChoiceWidget relationChoiceWidget;
     private javax.swing.JLabel relationLabel;
-    private javax.swing.JTextField relationTextField;
     private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel sourceCitationsTablePanel;
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
@@ -243,9 +221,9 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
         Property property = association.getProperty("RELA", false);
         if (property != null) {
-            relationTextField.setText(property.getValue());
+            relationChoiceWidget.setText(property.getValue());
         }
-        AutoCompleteDecorator.decorate((javax.swing.JTextField) relationTextField, mAssociation.getGedcom().getReferenceSet("RELA").getKeys(), false);
+        relationChoiceWidget.setValues(mAssociation.getGedcom().getReferenceSet("RELA").getKeys());
 
         noteCitationsTablePanel.set(association, Arrays.asList(association.getProperties("NOTE")));
 
@@ -261,9 +239,9 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                     public void perform(Gedcom gedcom) throws GedcomException {
                         Property property = mAssociation.getProperty("RELA", false);
                         if (property == null) {
-                            mAssociation.addProperty("RELA", relationTextField.getText());
+                            mAssociation.addProperty("RELA", relationChoiceWidget.getText());
                         } else {
-                            property.setValue(relationTextField.getText());
+                            property.setValue(relationChoiceWidget.getText());
                         }
                     }
                 }); // end of doUnitOfWork
