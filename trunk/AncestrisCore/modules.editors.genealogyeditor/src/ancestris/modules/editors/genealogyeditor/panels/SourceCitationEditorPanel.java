@@ -655,7 +655,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     sourceDataTextArea.setText(sourceText.getValue());
                     mSourceTextModified = false;
                 } else {
-                    sourceDataTextArea.setText(sourceText.getValue());
                     mSourceTextModified = false;
                 }
             } else {
