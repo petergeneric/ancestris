@@ -111,13 +111,13 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
                 mShelfNumberProperty.setValue(shelfNumberTextField.getText());
                 Property mediProperty = mShelfNumberProperty.getProperty("MEDI");
                 if (mShelfNumberProperty != null) {
-                    mediProperty.setValue(mediaTypeChoiceWidget.getSelectedItem().toString());
+                    mediProperty.setValue(mediaTypeChoiceWidget.getText());
                 } else {
-                    mShelfNumberProperty.addProperty("MEDI", mediaTypeChoiceWidget.getSelectedItem().toString());
+                    mShelfNumberProperty.addProperty("MEDI", mediaTypeChoiceWidget.getText());
                 }
             } else {
                 mShelfNumberProperty = mParentProperty.addProperty("CALN", shelfNumberTextField.getText());
-                mShelfNumberProperty.addProperty("MEDI", mediaTypeChoiceWidget.getSelectedItem().toString());
+                mShelfNumberProperty.addProperty("MEDI", mediaTypeChoiceWidget.getText());
             }
             changeListner.setChange(false);
         }
