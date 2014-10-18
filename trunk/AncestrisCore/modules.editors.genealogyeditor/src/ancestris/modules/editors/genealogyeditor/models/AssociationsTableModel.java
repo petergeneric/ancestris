@@ -13,7 +13,7 @@ import org.openide.util.NbBundle;
  */
 public class AssociationsTableModel extends AbstractTableModel {
 
-    List<PropertyAssociation> propertyAssociationList = new ArrayList<PropertyAssociation>();
+    List<PropertyAssociation> mPropertyAssociationList = new ArrayList<PropertyAssociation>();
     String[] columnsName = {
         NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.eventType.title"),
         NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.ID.date")
@@ -24,7 +24,7 @@ public class AssociationsTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return propertyAssociationList.size();
+        return mPropertyAssociationList.size();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AssociationsTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-        PropertyAssociation propertyAssociation = propertyAssociationList.get(row);
+        PropertyAssociation propertyAssociation = mPropertyAssociationList.get(row);
         if (column == 0) {
             return PropertyTag2Name.getTagName(propertyAssociation.getTag());
         } else {
@@ -48,26 +48,26 @@ public class AssociationsTableModel extends AbstractTableModel {
     }
 
     public PropertyAssociation getValueAt(int row) {
-        return propertyAssociationList.get(row);
+        return mPropertyAssociationList.get(row);
     }
 
     public void add(PropertyAssociation propertyAssociation) {
-        propertyAssociationList.add(propertyAssociation);
+        mPropertyAssociationList.add(propertyAssociation);
         fireTableDataChanged();
     }
 
     public void addAll(List<PropertyAssociation> propertyAssociationList) {
-        propertyAssociationList.addAll(propertyAssociationList);
+        mPropertyAssociationList.addAll(propertyAssociationList);
         fireTableDataChanged();
     }
 
     public PropertyAssociation remove(int row) {
-        PropertyAssociation source = propertyAssociationList.remove(row);
+        PropertyAssociation source = mPropertyAssociationList.remove(row);
         fireTableDataChanged();
         return source;
     }
 
     public void clear() {
-        propertyAssociationList.clear();
+        mPropertyAssociationList.clear();
     }
 }
