@@ -284,10 +284,12 @@ public class MultiMediaObjectEditor extends EntityEditor {
             if (selectedRow != -1) {
                 int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
                 File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex);
-                try {
-                    Desktop.getDesktop().open(multiMediafile);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                if (multiMediafile != null && multiMediafile.exists()) {
+                    try {
+                        Desktop.getDesktop().open(multiMediafile);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
             }
         }
