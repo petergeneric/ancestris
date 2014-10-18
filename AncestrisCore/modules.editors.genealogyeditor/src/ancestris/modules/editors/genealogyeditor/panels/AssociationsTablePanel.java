@@ -135,8 +135,8 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
 
             if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 mAssociationsTableModel.add(associationEditorPanel.commit());
-                deleteAssociationButton.setEnabled(false);
-                editAssociationButton.setEnabled(false);
+                deleteAssociationButton.setEnabled(true);
+                editAssociationButton.setEnabled(true);
                 changeListner.stateChanged(null);
             } else {
                 while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
