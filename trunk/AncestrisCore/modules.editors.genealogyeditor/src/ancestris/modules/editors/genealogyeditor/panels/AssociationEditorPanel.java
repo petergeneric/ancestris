@@ -11,9 +11,8 @@ import genj.gedcom.UnitOfWork;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -42,12 +41,14 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     private PropertyAssociation mAssociation;
     private Indi mIndividual;
     private boolean mRelationModified = false;
+    private final ChangeListner changeListner = new ChangeListner();
 
     /**
      * Creates new form AssociationEditorPanel
      */
     public AssociationEditorPanel() {
         initComponents();
+        relationChoiceWidget.addChangeListener(changeListner);
     }
 
     /**
@@ -187,7 +188,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                 referenceIndividualTextField.setText(mIndividual.getName());
                 referenceIndividualTextField.setVisible(true);
                 linkToIndividualButton.setVisible(false);
-
+                mRelationModified = true;
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -209,6 +210,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     void set(PropertyAssociation association) {
+        changeListner.mute();
         mAssociation = association;
         Entity targetEntity = association.getTargetEntity();
         if (targetEntity != null) {
@@ -228,27 +230,38 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         noteCitationsTablePanel.set(association, Arrays.asList(association.getProperties("NOTE")));
 
         sourceCitationsTablePanel.set(association, Arrays.asList(association.getProperties("SOUR")));
+        changeListner.unmute();
     }
 
     PropertyAssociation commit() {
         if (mRelationModified) {
-            try {
-                mAssociation.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        Property property = mAssociation.getProperty("RELA", false);
-                        if (property == null) {
-                            mAssociation.addProperty("RELA", relationChoiceWidget.getText());
-                        } else {
-                            property.setValue(relationChoiceWidget.getText());
-                        }
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+            Property property = mAssociation.getProperty("RELA", false);
+            if (property == null) {
+                mAssociation.addProperty("RELA", relationChoiceWidget.getText());
+            } else {
+                property.setValue(relationChoiceWidget.getText());
             }
         }
         return mAssociation;
+    }
+
+    private class ChangeListner implements ChangeListener {
+
+        private boolean mute = false;
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            if (!mute) {
+                mRelationModified = true;
+            }
+        }
+
+        public void mute() {
+            mute = true;
+        }
+
+        public void unmute() {
+            mute = false;
+        }
     }
 }
