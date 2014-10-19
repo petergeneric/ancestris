@@ -7,8 +7,10 @@ import genj.gedcom.PropertyMedia;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.Exceptions;
@@ -60,7 +62,15 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
                             if (multimediaFile.exists()) {
                                 try {
-                                    Image image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
+                                    Image image;
+                                    try {
+                                        image = ImageIO.read(multimediaFile);
+                                        if (image != null) {
+                                            image = image.getScaledInstance(16, 16, image.SCALE_DEFAULT);
+                                        }
+                                    } catch (IOException ex) {
+                                        image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
+                                    }
                                     if (image != null) {
                                         imageIcon = new ImageIcon(image);
                                     }
@@ -101,7 +111,15 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
                             if (multimediaFile.exists()) {
                                 try {
-                                    Image image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
+                                    Image image;
+                                    try {
+                                        image = ImageIO.read(multimediaFile);
+                                        if (image != null) {
+                                            image = image.getScaledInstance(16, 16, image.SCALE_DEFAULT);
+                                        }
+                                    } catch (IOException ex) {
+                                        image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
+                                    }
                                     if (image != null) {
                                         imageIcon = new ImageIcon(image);
                                     }
