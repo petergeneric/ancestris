@@ -171,6 +171,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
                             associationEditorPanel.commit();
                         }
                     });
+                    mAssociationsTableModel.fireTableDataChanged();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -206,6 +207,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
                                 associationEditorPanel.commit();
                             }
                         });
+                        mAssociationsTableModel.fireTableDataChanged();
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
