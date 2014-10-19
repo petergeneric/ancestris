@@ -29,11 +29,12 @@ import org.openide.util.NbBundle;
 public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
 
     List<Property> multimediaObjectsRefList = new ArrayList<Property>();
-    private String[] columnsName = {
+    private final String[] columnsName = {
         "",
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.ID.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.title.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"), //        "Image"
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.title")
     };
 
     public MultiMediaObjectCitationsTableModel() {
@@ -99,13 +100,20 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             return "";
                         }
                     }
+                    case 4: {
+                        if (((PropertyMedia) multimediaObject).getTargetEntity().getProperty("NOTE") != null) {
+                            return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
+                        } else {
+                            return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
+                        }
+                    }
                     default:
                         return "";
                 }
             } else {
                 switch (column) {
                     case 0: {
-                        Property propertyfile = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
+                        Property propertyfile = multimediaObject.getProperty("FILE", true);
                         if (propertyfile != null && propertyfile instanceof PropertyFile) {
                             File multimediaFile = ((PropertyFile) propertyfile).getFile();
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
@@ -155,6 +163,13 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             }
                         } else {
                             return "";
+                        }
+                    }
+                    case 4: {
+                        if (multimediaObject.getProperty("NOTE") != null) {
+                            return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
+                        } else {
+                            return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
                         }
                     }
                     default:
