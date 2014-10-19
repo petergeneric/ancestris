@@ -24,7 +24,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
     private Property mRoot;
     private Property mMultiMediaObject;
     private String mGedcomVersion = "";
-    private MultiMediaObjectCitationsTableModel multiMediaObjectCitationsTableModel = new MultiMediaObjectCitationsTableModel();
+    private final MultiMediaObjectCitationsTableModel multiMediaObjectCitationsTableModel = new MultiMediaObjectCitationsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(MultimediaObjectCitationsTablePanel.class);
 
@@ -183,7 +183,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
                 objectName = "";
             }
             DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(MultimediaObjectCitationsTablePanel.class, "MultimediaObjectCitationsTableDialog.deleteObjectConfirmation.title",
-                            objectName),
+                    objectName),
                     NbBundle.getMessage(MultimediaObjectCitationsTablePanel.class, "MultimediaObjectCitationsTableDialog.deleteObjectConfirmation.text",
                             objectName,
                             mRoot));
@@ -220,7 +220,9 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
             multiMediaObjectEditor.setContext(new Context(multiMediaObject));
 
             multiMediaObjectEditor.addChangeListener(changeListner);
-            multiMediaObjectEditor.showPanel();
+            if (multiMediaObjectEditor.showPanel()) {
+                multiMediaObjectCitationsTable.tableChanged(null);
+            }
             multiMediaObjectEditor.removeChangeListener(changeListner);
         }
     }//GEN-LAST:event_editMMObjecButtonActionPerformed
@@ -236,7 +238,10 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
                 multiMediaObjectEditor.setContext(new Context(multiMediaObject));
 
                 multiMediaObjectEditor.addChangeListener(changeListner);
-                multiMediaObjectEditor.showPanel();
+                if (multiMediaObjectEditor.showPanel()) {
+                    multiMediaObjectCitationsTable.tableChanged(null);
+                }
+
                 multiMediaObjectEditor.removeChangeListener(changeListner);
             }
         }
