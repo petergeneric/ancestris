@@ -61,7 +61,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                         if (propertyfile != null && propertyfile instanceof PropertyFile) {
                             File multimediaFile = ((PropertyFile) propertyfile).getFile();
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
-                            if (multimediaFile.exists()) {
+                            if (multimediaFile != null && multimediaFile.exists()) {
                                 try {
                                     Image image;
                                     try {
@@ -93,9 +93,14 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                         return ((Media) ((PropertyMedia) multimediaObject).getTargetEntity()).getTitle();
                     }
                     case 3: {
-                        Property file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
-                        if (file != null && file instanceof PropertyFile) {
-                            return ((PropertyFile) file).getFile().getAbsolutePath();
+                        Property propertyFile = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            File file = ((PropertyFile) propertyFile).getFile();
+                            if (file != null) {
+                                return file.getAbsolutePath();
+                            } else {
+                                return "";
+                            }
                         } else {
                             return "";
                         }
@@ -117,7 +122,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                         if (propertyfile != null && propertyfile instanceof PropertyFile) {
                             File multimediaFile = ((PropertyFile) propertyfile).getFile();
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
-                            if (multimediaFile.exists()) {
+                            if (multimediaFile != null && multimediaFile.exists()) {
                                 try {
                                     Image image;
                                     try {
@@ -154,12 +159,13 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                         }
                     }
                     case 3: {
-                        Property file = multimediaObject.getProperty("FILE", true);
-                        if (file != null && file instanceof PropertyFile) {
-                            if (((PropertyFile) file).getFile() != null) {
-                                return ((PropertyFile) file).getFile().getAbsolutePath();
+                        Property propertyFile = multimediaObject.getProperty("FILE", true);
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            File file = ((PropertyFile) propertyFile).getFile();
+                            if ( file != null) {
+                                return file.getAbsolutePath();
                             } else {
-                                return null;
+                                return "";
                             }
                         } else {
                             return "";
