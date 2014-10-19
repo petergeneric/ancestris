@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +15,9 @@ import org.openide.util.NbBundle;
 public class AssociationsTableModel extends AbstractTableModel {
 
     List<PropertyAssociation> mPropertyAssociationList = new ArrayList<PropertyAssociation>();
-    String[] columnsName = {
-        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.eventType.title"),
-        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.ID.date")
+    final String[] columnsName = {
+        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.associatedIndi.title"),
+        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.relation.title")
     };
 
     public AssociationsTableModel() {
@@ -35,10 +36,19 @@ public class AssociationsTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         PropertyAssociation propertyAssociation = mPropertyAssociationList.get(row);
-        if (column == 0) {
-            return PropertyTag2Name.getTagName(propertyAssociation.getTag());
+        if (propertyAssociation != null) {
+            if (column == 0) {
+                return propertyAssociation.getDisplayValue();
+            } else {
+                Property relation = propertyAssociation.getProperty("RELA");
+                if (relation != null) {
+                    return relation.getValue();
+                } else {
+                    return "";
+                }
+            }
         } else {
-            return propertyAssociation.getDisplayValue();
+            return "";
         }
     }
 
