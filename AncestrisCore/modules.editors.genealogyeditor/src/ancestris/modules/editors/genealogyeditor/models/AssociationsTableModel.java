@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
-import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
 import java.util.ArrayList;
@@ -17,7 +16,9 @@ public class AssociationsTableModel extends AbstractTableModel {
     List<PropertyAssociation> mPropertyAssociationList = new ArrayList<PropertyAssociation>();
     final String[] columnsName = {
         NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.associatedIndi.title"),
-        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.relation.title")
+        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.relation.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.source.title"),
+        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.note.title")
     };
 
     public AssociationsTableModel() {
@@ -37,15 +38,32 @@ public class AssociationsTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         PropertyAssociation propertyAssociation = mPropertyAssociationList.get(row);
         if (propertyAssociation != null) {
-            if (column == 0) {
-                return propertyAssociation.getDisplayValue();
-            } else {
-                Property relation = propertyAssociation.getProperty("RELA");
-                if (relation != null) {
-                    return relation.getValue();
-                } else {
-                    return "";
+            switch (column) {
+                case 0: {
+                    return propertyAssociation.getDisplayValue();
                 }
+                case 1: {
+                    Property relation = propertyAssociation.getProperty("RELA");
+                    if (relation != null) {
+                        return relation.getValue();
+                    }
+                }
+                case 2: {
+                    if (propertyAssociation.getProperty("SOUR") != null) {
+                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.source.value.yes");
+                    } else {
+                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.source.value.no");
+                    }
+                }
+                case 3: {
+                    if (propertyAssociation.getProperty("NOTE") != null) {
+                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.note.value.yes");
+                    } else {
+                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.note.value.no");
+                    }
+                }
+                 default:
+                    return "";
             }
         } else {
             return "";
