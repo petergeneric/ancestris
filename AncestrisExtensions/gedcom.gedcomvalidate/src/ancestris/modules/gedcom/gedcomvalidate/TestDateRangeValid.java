@@ -73,6 +73,12 @@ import org.openide.util.Parameters;
         if (pit == null) {
             return true;
         }
+        /* invalid PIT are considered in range as PropertyDate.getStart or getEnd may
+         * return invalid PIT if not set
+        */
+        if (!pit.isValid()){
+            return true;
+        }
         Parameters.notNull("min", min);
         Parameters.notNull("max", max);
         return pit.compareTo(min) >= 0 && pit.compareTo(max) <= 0;
