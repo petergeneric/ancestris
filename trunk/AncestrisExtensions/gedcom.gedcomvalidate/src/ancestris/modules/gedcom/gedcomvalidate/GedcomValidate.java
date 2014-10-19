@@ -53,8 +53,8 @@ public class GedcomValidate {
     public int minAgeFather = modulePreferences.getInt("minAgeFather", 14);
     public int minAgeMother = modulePreferences.getInt("minAgeMother", 10);
     public int maxAgeMother = modulePreferences.getInt("maxAgeMother", 48);
-    public PointInTime minYear = new PointInTime(1, 1, GedcomValidateOptions.getInstance().getMinYear());
-    public PointInTime maxYear = new PointInTime(1, 1, GedcomValidateOptions.getInstance().getMaxYear());
+    public PointInTime minYear = new PointInTime(0, 0, GedcomValidateOptions.getInstance().getMinYear());
+    public PointInTime maxYear = new PointInTime(0, 0, GedcomValidateOptions.getInstance().getMaxYear());
     /** Jerome's checks that haven't made it yet
      *
      * [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die

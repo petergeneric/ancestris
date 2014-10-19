@@ -34,11 +34,14 @@ public class GedcomValidateOptions {
     private static final String MIN_YEAR = "year.min";         // NOI18N
 
     public void setMinYear(int value) {
+        if (value == 0){
+            value = 1;
+        }
         getPreferences().put(MIN_YEAR, value);
     }
 
     public int getMinYear() {
-        return getPreferences().get(MIN_YEAR, 0);
+        return getPreferences().get(MIN_YEAR, 1);
     }
 
     private static final String MAX_YEAR = "year.max";         // NOI18N
