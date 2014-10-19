@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
+import genj.gedcom.PropertyFile;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,7 +25,7 @@ import org.openide.util.NbBundle;
  */
 public class MultimediaFilesTableModel extends AbstractTableModel {
 
-    List<File> multimediaFilesList = new ArrayList<File>();
+    List<PropertyFile> multimediaFilesList = new ArrayList<PropertyFile>();
     private final String[] columnsName = {
         "",
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultimediaFilesTableModel.column.fileName.title"), //        "Image"
@@ -46,7 +47,7 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         if (row < multimediaFilesList.size()) {
-            File multimediaFile = multimediaFilesList.get(row);
+            File multimediaFile = multimediaFilesList.get(row).getFile();
             if (multimediaFile != null) {
                 switch (column) {
                     case 0: {
@@ -102,23 +103,24 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
         return columnsName[col];
     }
 
-    public void add(File multimediaObject) {
+    public void add(PropertyFile multimediaObject) {
         multimediaFilesList.add(multimediaObject);
         fireTableDataChanged();
     }
 
-    public void addAll(List<File> multimediaObjectsList) {
+    public void addAll(List<PropertyFile> multimediaObjectsList) {
         multimediaFilesList.addAll(multimediaObjectsList);
         fireTableDataChanged();
     }
 
-    public File getValueAt(int row) {
+    public PropertyFile getValueAt(int row) {
         return multimediaFilesList.get(row);
     }
 
-    public void remove(int rowIndex) {
-        multimediaFilesList.remove(rowIndex);
+    public PropertyFile remove(int rowIndex) {
+        PropertyFile remove = multimediaFilesList.remove(rowIndex);
         fireTableDataChanged();
+        return remove;
     }
 
     public void clear() {
