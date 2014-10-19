@@ -88,14 +88,13 @@ public class FamilyEditor extends EntityEditor {
         sourceCitationsTablePanel.addChangeListener(changes);
         noteCitationsTablePanel.addChangeListener(changes);
         multimediaObjectCitationsTablePanel.addChangeListener(changes);
-        JComboBox.KeySelectionManager manager
-                = new JComboBox.KeySelectionManager() {
-                    @Override
-                    public int selectionForKey(char aKey, ComboBoxModel aModel) {
-                        System.out.println(aKey);
-                        return -1;
-                    }
-                };
+        JComboBox.KeySelectionManager manager = new JComboBox.KeySelectionManager() {
+            @Override
+            public int selectionForKey(char aKey, ComboBoxModel aModel) {
+                System.out.println(aKey);
+                return -1;
+            }
+        };
         eventTypeComboBox.setKeySelectionManager(manager);
         eventTypeComboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
     }
