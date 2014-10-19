@@ -1,12 +1,13 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
+import java.awt.Image;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.table.AbstractTableModel;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -22,7 +23,7 @@ import org.openide.util.NbBundle;
 public class MultimediaFilesTableModel extends AbstractTableModel {
 
     List<File> multimediaFilesList = new ArrayList<File>();
-    private String[] columnsName = {
+    private final String[] columnsName = {
         "",
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultimediaFilesTableModel.column.fileName.title"), //        "Image"
     };
@@ -44,11 +45,23 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < multimediaFilesList.size()) {
             File multimediaFile = multimediaFilesList.get(row);
-            if (multimediaFile != null && multimediaFile.exists()) {
+            if (multimediaFile != null) {
                 switch (column) {
                     case 0: {
-                        Icon icon = new JFileChooser().getIcon(multimediaFile);
-                        return icon;
+                        if (multimediaFile.exists()) {
+                            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                            try {
+                                Image image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
+                                if (image != null) {
+                                    imageIcon = new ImageIcon(image);
+                                }
+                            } catch (FileNotFoundException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                            return imageIcon;
+                        } else {
+                            return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
+                        }
                     }
 
                     case 1: {
@@ -67,7 +80,11 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
 
     @Override
     public Class getColumnClass(int column) {
-        return getValueAt(0, column).getClass();
+        if (column == 0) {
+            return ImageIcon.class;
+        } else {
+            return String.class;
+        }
     }
 
     @Override
