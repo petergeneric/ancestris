@@ -103,7 +103,7 @@
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="nameEditorPanel" pref="185" max="32767" attributes="0"/>
+                  <Component id="nameEditorPanel" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
