@@ -2,6 +2,7 @@ package ancestris.modules.editors.genealogyeditor.editors;
 
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.models.MultimediaFilesTableModel;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import genj.util.Registry;
 import genj.view.ViewContext;
@@ -59,6 +60,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
         filesToolBar = new javax.swing.JToolBar();
         addFileButton = new javax.swing.JButton();
         editFileButton = new javax.swing.JButton();
+        deleteFileButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         multimediaFilesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
         notesPanel = new javax.swing.JPanel();
@@ -102,6 +104,18 @@ public class MultiMediaObjectEditor extends EntityEditor {
             }
         });
         filesToolBar.add(editFileButton);
+
+        deleteFileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteFileButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("MultiMediaObjectEditor.deleteFileButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteFileButton.setFocusable(false);
+        deleteFileButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteFileButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteFileButtonActionPerformed(evt);
+            }
+        });
+        filesToolBar.add(deleteFileButton);
 
         multimediaFilesTable.setModel(mMultimediaFilesTableModel);
         multimediaFilesTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -247,7 +261,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 mMultimediaFilesTableModel.clear();
                 for (Property multimediaFile : mMultiMediaObject.getProperties("FILE", true)) {
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                        mMultimediaFilesTableModel.add(((PropertyFile) multimediaFile).getFile());
+                        mMultimediaFilesTableModel.add((PropertyFile) multimediaFile);
                     }
                 }
                 changes.fireChangeEvent();
@@ -261,7 +275,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
         int selectedRow = multimediaFilesTable.getSelectedRow();
         if (selectedRow != -1) {
             int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
-            File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex);
+            File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex).getFile();
             if (multiMediafile.exists()) {
                 try {
                     Desktop.getDesktop().edit(multiMediafile);
@@ -283,7 +297,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
             int selectedRow = multimediaFilesTable.getSelectedRow();
             if (selectedRow != -1) {
                 int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
-                File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex);
+                File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex).getFile();
                 if (multiMediafile != null && multiMediafile.exists()) {
                     try {
                         Desktop.getDesktop().open(multiMediafile);
@@ -294,10 +308,41 @@ public class MultiMediaObjectEditor extends EntityEditor {
             }
         }
     }//GEN-LAST:event_multimediaFilesTableMouseClicked
+
+    private void deleteFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFileButtonActionPerformed
+        int selectedRow = multimediaFilesTable.getSelectedRow();
+        if (selectedRow != -1) {
+            final int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
+            DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.deleteFileButton.title"),
+                NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.deleteFileButton.text",
+                    mRoot));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mMultiMediaObject.delProperty(mMultimediaFilesTableModel.remove(rowIndex));
+                        }
+                    }); // end of doUnitOfWork
+
+                    changes.stateChanged(null);
+                    if (mMultimediaFilesTableModel.getRowCount() <= 0) {
+                        editFileButton.setEnabled(false);
+                        deleteFileButton.setEnabled(false);
+                    }
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_deleteFileButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFileButton;
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JLabel changeDateLabeldate;
+    private javax.swing.JButton deleteFileButton;
     private javax.swing.JButton editFileButton;
     private javax.swing.JToolBar filesToolBar;
     private javax.swing.Box.Filler filler1;
@@ -391,7 +436,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
             mMultimediaFilesTableModel.clear();
             for (Property multimediaFile : mMultiMediaObject.getProperties("FILE", true)) {
                 if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                    mMultimediaFilesTableModel.add(((PropertyFile) multimediaFile).getFile());
+                    mMultimediaFilesTableModel.add((PropertyFile) multimediaFile);
                 }
             }
 
