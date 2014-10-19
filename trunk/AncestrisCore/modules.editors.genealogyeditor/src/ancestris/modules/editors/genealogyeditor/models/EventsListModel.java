@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
-import ancestris.*;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import java.util.ArrayList;
