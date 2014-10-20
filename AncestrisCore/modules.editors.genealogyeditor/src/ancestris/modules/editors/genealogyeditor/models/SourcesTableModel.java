@@ -34,10 +34,10 @@ public class SourcesTableModel extends AbstractTableModel {
 
     List<Source> mSourcesList = new ArrayList<Source>();
     private final String[] columnsName = {
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.ID.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.description.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.events.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourcesTableModel.column.date.title")
+        NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.ID.title"),
+        NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.description.title"),
+        NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.events.title"),
+        NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.date.title")
     };
 
     public SourcesTableModel() {

@@ -15,10 +15,10 @@ import org.openide.util.NbBundle;
 public class RepositoryCitationsTableModel extends AbstractTableModel {
 
     List<PropertyRepository> mRepositoriesList = new ArrayList<PropertyRepository>();
-    private String[] columnsName = {
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.ID.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.name.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.name.shelfNumber")
+    private final String[] columnsName = {
+        NbBundle.getMessage(RepositoryCitationsTableModel.class, "RepositoriesTableModel.column.ID.title"),
+        NbBundle.getMessage(RepositoryCitationsTableModel.class, "RepositoriesTableModel.column.name.title"),
+        NbBundle.getMessage(RepositoryCitationsTableModel.class, "RepositoriesTableModel.column.name.shelfNumber")
     };
 
     public RepositoryCitationsTableModel() {

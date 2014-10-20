@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
-import ancestris.*;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Source;
@@ -44,11 +43,11 @@ public class SourceCitationsTableModel extends AbstractTableModel {
 
     ArrayList<Property> mSourcesList = new ArrayList<Property>();
     private String[] columnsName = {
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.events.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.description.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.page.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.note.title")
+        NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.events.title"),
+        NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.description.title"),
+        NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.page.title"),
+        NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.multimedia.title"),
+        NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.note.title")
     };
 
     public SourceCitationsTableModel() {
@@ -114,9 +113,9 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                         }
                     }
                     if (multimediaObjects.size() > 0) {
-                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.yes");
+                        return NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.yes");
                     } else {
-                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.no");
+                        return NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.multimedia.value.no");
                     }
                 }
                 case 4: {
@@ -126,9 +125,9 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                         notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
                     }
                     if (notes.size() > 0) {
-                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.note.value.yes");
+                        return NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.note.value.yes");
                     } else {
-                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "SourceCitationsTableModel.column.note.value.no");
+                        return NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.note.value.no");
                     }
                 }
                 default: {
