@@ -24,8 +24,8 @@ public class NoteCitationsTableModel extends AbstractTableModel {
 
     List<Property> notesList = new ArrayList<Property>();
     private String[] columnsName = {
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "NoteCitationsTableModel.column.ID.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "NoteCitationsTableModel.column.noteText.title")
+        NbBundle.getMessage(NoteCitationsTableModel.class, "NoteCitationsTableModel.column.ID.title"),
+        NbBundle.getMessage(NoteCitationsTableModel.class, "NoteCitationsTableModel.column.noteText.title")
     };
 
     public NoteCitationsTableModel() {

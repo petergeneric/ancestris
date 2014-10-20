@@ -15,10 +15,10 @@ public class AssociationsTableModel extends AbstractTableModel {
 
     List<PropertyAssociation> mPropertyAssociationList = new ArrayList<PropertyAssociation>();
     final String[] columnsName = {
-        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.associatedIndi.title"),
-        NbBundle.getMessage(EventsTableModel.class, "AssociationsTableModel.column.relation.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.source.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.note.title")
+        NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.associatedIndi.title"),
+        NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.relation.title"),
+        NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.source.title"),
+        NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.note.title")
     };
 
     public AssociationsTableModel() {
@@ -50,16 +50,16 @@ public class AssociationsTableModel extends AbstractTableModel {
                 }
                 case 2: {
                     if (propertyAssociation.getProperty("SOUR") != null) {
-                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.source.value.yes");
+                        return NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.source.value.yes");
                     } else {
-                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.source.value.no");
+                        return NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.source.value.no");
                     }
                 }
                 case 3: {
                     if (propertyAssociation.getProperty("NOTE") != null) {
-                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.note.value.yes");
+                        return NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.note.value.yes");
                     } else {
-                        return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "AssociationsTableModel.column.note.value.no");
+                        return NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.note.value.no");
                     }
                 }
                  default:

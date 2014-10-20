@@ -14,9 +14,9 @@ import org.openide.util.NbBundle;
 public class RepositoriesTableModel extends AbstractTableModel {
 
     List<Repository> mRepositoriesList = new ArrayList<Repository>();
-    private String[] columnsName = {
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.ID.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "RepositoriesTableModel.column.name.title")
+    private final String[] columnsName = {
+        NbBundle.getMessage(RepositoriesTableModel.class, "RepositoriesTableModel.column.ID.title"),
+        NbBundle.getMessage(RepositoriesTableModel.class, "RepositoriesTableModel.column.name.title")
     };
 
     public RepositoriesTableModel() {
