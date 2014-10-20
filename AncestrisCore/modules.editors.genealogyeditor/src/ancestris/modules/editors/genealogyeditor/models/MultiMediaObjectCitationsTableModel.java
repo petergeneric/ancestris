@@ -31,10 +31,10 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
     List<Property> multimediaObjectsRefList = new ArrayList<Property>();
     private final String[] columnsName = {
         "",
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.ID.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.title.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"),
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.title")
+        NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.ID.title"),
+        NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.title.title"),
+        NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.fileName.title"),
+        NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.title")
     };
 
     public MultiMediaObjectCitationsTableModel() {
@@ -67,7 +67,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                                     try {
                                         image = ImageIO.read(multimediaFile);
                                         if (image != null) {
-                                            image = image.getScaledInstance(16, 16, image.SCALE_DEFAULT);
+                                            image = image.getScaledInstance(-1, 32, image.SCALE_DEFAULT);
                                         }
                                     } catch (IOException ex) {
                                         image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
@@ -107,9 +107,9 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     }
                     case 4: {
                         if (((PropertyMedia) multimediaObject).getTargetEntity().getProperty("NOTE") != null) {
-                            return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
+                            return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
                         } else {
-                            return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
+                            return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
                         }
                     }
                     default:
@@ -128,7 +128,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                                     try {
                                         image = ImageIO.read(multimediaFile);
                                         if (image != null) {
-                                            image = image.getScaledInstance(16, 16, image.SCALE_DEFAULT);
+                                            image = image.getScaledInstance(-1, 32, image.SCALE_DEFAULT);
                                         }
                                     } catch (IOException ex) {
                                         image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
@@ -173,9 +173,9 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     }
                     case 4: {
                         if (multimediaObject.getProperty("NOTE") != null) {
-                            return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
+                            return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
                         } else {
-                            return NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
+                            return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
                         }
                     }
                     default:

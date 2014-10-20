@@ -28,7 +28,7 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
     List<PropertyFile> multimediaFilesList = new ArrayList<PropertyFile>();
     private final String[] columnsName = {
         "",
-        NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultimediaFilesTableModel.column.fileName.title"), //        "Image"
+        NbBundle.getMessage(MultimediaFilesTableModel.class, "MultimediaFilesTableModel.column.fileName.title"), //        "Image"
     };
 
     public MultimediaFilesTableModel() {
@@ -58,7 +58,7 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
                                 try {
                                     image = ImageIO.read(multimediaFile);
                                     if (image != null) {
-                                        image = image.getScaledInstance(16, 16, image.SCALE_DEFAULT);
+                                        image = image.getScaledInstance(-1, 32, image.SCALE_DEFAULT);
                                     }
                                 } catch (IOException ex) {
                                     image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);

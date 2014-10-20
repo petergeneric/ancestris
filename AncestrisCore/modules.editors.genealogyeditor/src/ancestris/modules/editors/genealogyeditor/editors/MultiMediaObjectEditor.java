@@ -40,6 +40,10 @@ public class MultiMediaObjectEditor extends EntityEditor {
         super(isNew);
         initComponents();
         multimediaFilesTable.setID(MultiMediaObjectEditor.class.getName());
+        multimediaFilesTable.setRowHeight(36);
+        multimediaFilesTable.getColumnModel().getColumn(0).setPreferredWidth(36);
+        multimediaFilesTable.getColumnModel().getColumn(0).setMinWidth(36);
+        multimediaFilesTable.getColumnModel().getColumn(0).setMaxWidth(36);
         multiMediaObjectTitleTextField.getDocument().addDocumentListener(changes);
     }
 
@@ -314,8 +318,8 @@ public class MultiMediaObjectEditor extends EntityEditor {
         if (selectedRow != -1) {
             final int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
             DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.deleteFileButton.title"),
-                NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.deleteFileButton.text",
-                    mRoot));
+                    NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.deleteFileButton.text",
+                            mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
                     mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {

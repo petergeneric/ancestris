@@ -34,6 +34,10 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
     public MultimediaObjectCitationsTablePanel() {
         initComponents();
         multiMediaObjectCitationsTable.setID(MultimediaObjectCitationsTablePanel.class.getName());
+        multiMediaObjectCitationsTable.setRowHeight(36);
+        multiMediaObjectCitationsTable.getColumnModel().getColumn(0).setPreferredWidth(36);
+        multiMediaObjectCitationsTable.getColumnModel().getColumn(0).setMinWidth(36);
+        multiMediaObjectCitationsTable.getColumnModel().getColumn(0).setMaxWidth(36);
     }
 
     /**
