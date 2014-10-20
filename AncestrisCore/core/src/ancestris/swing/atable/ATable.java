@@ -13,8 +13,6 @@ package ancestris.swing.atable;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertyName;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -127,40 +125,42 @@ public class ATable extends JTable {
         }
     }
 
-    public void tsvExport(File file) throws IOException{
+    public void tsvExport(File file) throws IOException {
         TableModel model = getModel();
         FileWriter writer = new FileWriter(file);
 
-        for(int i = 0; i < model.getColumnCount(); i++){
+        for (int i = 0; i < model.getColumnCount(); i++) {
             writer.write(model.getColumnName(i) + "\t");
         }
 
         writer.write("\n");
 
-        for(int r=0; r< sorter.getViewRowCount(); r++) {
-            for(int col=0; col < model.getColumnCount(); col++) {
+        for (int r = 0; r < sorter.getViewRowCount(); r++) {
+            for (int col = 0; col < model.getColumnCount(); col++) {
                 writer.write(exportCellValue(model.getValueAt(convertRowIndexToModel(r), col), r, col));
                 writer.write("\t");
             }
             writer.write("\n");
         }
         writer.close();
-    }    
+    }
 
     /**
      * convert a cell content to a string for export functionnality.
      * Default convert object to string using toString.
+     *
      * @param object
      * @param row
      * @param col
-     * @return 
+     *
+     * @return
      */
     public String exportCellValue(Object object, int row, int col) {
-        if (object == null){
+        if (object == null) {
             return "";
         }
         return object.toString();
-    }  
+    }
 
     /** create a shortcut */
     AbstractAncestrisAction createShortcut(String txt, final int y) {
@@ -219,18 +219,13 @@ public class ATable extends JTable {
             int vr = (dir == SortOrder.ASCENDING ? r : sorter.getViewRowCount() - r - 1);
             // FIXME: try not to use Property here
             Property prop = (Property) model.getValueAt(convertRowIndexToModel(vr), col);
-            if (prop instanceof PropertyDate) {
-                break;
-            }
             if (prop == null) {
                 continue;
             }
-
-            String value = prop instanceof PropertyName ? ((PropertyName) prop).getLastName().trim() : prop.getDisplayValue().trim();
+            String value = prop.getComparator().getSortGroup(prop);
             if (value.length() == 0) {
                 continue;
             }
-            value = value.substring(0, 1).toLowerCase();
 
             if (collator.compare(cursor, value) >= 0) {
                 continue;
@@ -253,7 +248,7 @@ public class ATable extends JTable {
             return;
         }
 
-        int w = LinkWidget.sampleDimension().width;
+        int w = LinkWidget.sampleDimension(actions.get(actions.size() / 2).getText().length()).width;
         int n = Math.min(actions.size(), (container.getSize().width) / w - 1);
         for (int i = 0; i < n; i++) {
             LinkWidget link = new LinkWidget(actions.get(i * actions.size() / n));
@@ -329,6 +324,15 @@ public class ATable extends JTable {
 
         public static Dimension sampleDimension() {
             return sampleDimension("W");
+        }
+
+        public static Dimension sampleDimension(int size) {
+            StringBuilder outputBuffer = new StringBuilder(size);
+            outputBuffer.append("W");
+            for (int i = 1; i < size; i++) {
+                outputBuffer.append("0");
+            }
+            return sampleDimension(outputBuffer.toString());
         }
 
         public static Dimension sampleDimension(String label) {

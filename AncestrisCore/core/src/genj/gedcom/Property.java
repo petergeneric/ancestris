@@ -10,12 +10,12 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.gedcom;
 
@@ -136,6 +136,7 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Associates a file with this property
+     *
      * @return success or not
      */
     public boolean addFile(File file) {
@@ -244,6 +245,7 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Adds a sub-property to this property
+     *
      * @param prop new property to add
      */
     /*package*/ Property addProperty(Property prop) {
@@ -252,8 +254,9 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Adds another property to this property
+     *
      * @param child the property to add
-     * @param pos, 0-n for position, -1 for placement
+     * @param pos,  0-n for position, -1 for placement
      */
     /*package*/ Property addProperty(Property child, int pos) {
 
@@ -422,6 +425,7 @@ public abstract class Property implements Comparable<Property> {
     /**
      * Returns a warning string that describes what happens when this
      * property would be deleted
+     *
      * @return warning as <code>String</code>, <code>null</code> when no warning
      */
     public String getDeleteVeto() {
@@ -513,6 +517,7 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Returns the path to this property. This is a sequence of tags leading to this property from its containing entity.
+     *
      * @param unique whether tags should be unqiue, e.g. INDI:BIRT#0:DATE and INDI:BIRT#1:DATE vs INDI:BIRT:DATE
      */
     public TagPath getPath(boolean unique) {
@@ -597,8 +602,10 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Returns property's properties by criteria
-     * @param tag  regular expression pattern of tag to match
+     *
+     * @param tag   regular expression pattern of tag to match
      * @param value regular expression pattern of value to match
+     *
      * @return matching properties
      */
     public List<Property> findProperties(Pattern tag, Pattern value) {
@@ -765,6 +772,7 @@ public abstract class Property implements Comparable<Property> {
 
         PropertyVisitor visitor = new PropertyVisitor() {
 
+            @Override
             protected boolean leaf(Property prop) {
                 result[0] = prop;
                 return false;
@@ -785,6 +793,7 @@ public abstract class Property implements Comparable<Property> {
 
         PropertyVisitor visitor = new PropertyVisitor() {
 
+            @Override
             protected boolean leaf(Property prop) {
                 result.add(prop);
                 return true;
@@ -970,6 +979,7 @@ public abstract class Property implements Comparable<Property> {
 
         PropertyVisitor visitor = new PropertyVisitor() {
 
+            @Override
             protected boolean leaf(Property prop) {
                 // don't apply setValue to xref - use substitute instead
                 if (prop instanceof PropertyXRef && ((PropertyXRef) prop).getTarget() != null) {
@@ -982,6 +992,7 @@ public abstract class Property implements Comparable<Property> {
                 return false;
             }
 
+            @Override
             protected boolean recursion(Property parent, String child) {
                 if (parent.getProperty(child, false) == null) {
                     parent.addProperty(child, "");
@@ -1010,12 +1021,34 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Compares this property to another property
-     * @return  a negative integer, zero, or a positive integer as this object
-     *      is less than, equal to, or greater than the specified object.
+     *
+     * @return a negative integer, zero, or a positive integer as this object
+     *         is less than, equal to, or greater than the specified object.
      */
+    @Override
+    // XXX:replace all compareTo to use PropertyComparator2
     public int compareTo(Property that) {
         // no gedcom available?
-        return compare(this.getDisplayValue(), that.getDisplayValue());
+        return getComparator().compare(this, that);
+    }
+
+    /**
+     * Return "default natural order" PropertyComparator for this opject.
+     * Defaults to display value comparator
+     *
+     * @return
+     */
+    public PropertyComparator2 getComparator() {
+        return getDisplayComparator();
+    }
+
+    /**
+     * return a comparator by display value.
+     *
+     * @return
+     */
+    public PropertyComparator2 getDisplayComparator() {
+        return PropertyComparator2.Default.getInstance();
     }
 
     /**
@@ -1028,7 +1061,6 @@ public abstract class Property implements Comparable<Property> {
         // always faster and the keys have a respectable size themselves
         // which leads me to believe a simple Collator.compare() is
         // the better compromise here (even for sort algs)
-
         // gedcom and its collator available?
         Gedcom ged = getGedcom();
         if (ged != null) {
@@ -1049,6 +1081,7 @@ public abstract class Property implements Comparable<Property> {
     }
 
     private boolean isGuessed = false;
+
     /**
      * A guessed property should act as any other property except that
      * its value is computed at run time and shouldn't be saved to file.
@@ -1062,18 +1095,21 @@ public abstract class Property implements Comparable<Property> {
     public void setGuessed(boolean value) {
         isGuessed = value;
         // a Guessed property is read only
-        if (value)
+        if (value) {
             setReadOnly(true);
+        }
     }
 
     private boolean isReadOnly = false;
+
     /**
      * A read-only attribute that can be honoured by the UI
      */
     public boolean isReadOnly() {
         return isReadOnly;
     }
-    public void setReadOnly(boolean value){
+
+    public void setReadOnly(boolean value) {
         this.isReadOnly = value;
     }
 
@@ -1089,9 +1125,9 @@ public abstract class Property implements Comparable<Property> {
 
         // loop
         MetaProperty[] subs = getNestedMetaProperties(MetaProperty.WHERE_DEFAULT);
-        for (int s = 0; s < subs.length; s++) {
-            if (getProperty(subs[s].getTag()) == null) {
-                addProperty(subs[s].getTag(), "").addDefaultProperties();
+        for (MetaProperty sub : subs) {
+            if (getProperty(sub.getTag()) == null) {
+                addProperty(sub.getTag(), "").addDefaultProperties();
             }
         }
 
@@ -1108,6 +1144,7 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Resolve meta properties
+     *
      * @param filter
      */
     public MetaProperty[] getNestedMetaProperties(int filter) {
@@ -1158,6 +1195,7 @@ public abstract class Property implements Comparable<Property> {
     /**
      * Resolves end-user information about this property - by
      * default whatever is in the language resource files
+     *
      * @return name and info or null
      */
     public String getPropertyInfo() {
@@ -1167,6 +1205,7 @@ public abstract class Property implements Comparable<Property> {
     /**
      * Resolves end-user information about this property - by
      * default whatever is in the language resource files
+     *
      * @return name
      */
     public String getPropertyName() {
@@ -1175,8 +1214,9 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Returns a list of property names for given list of properties
+     *
      * @param properties the properties to look at
-     * @param limit max number of names followed by "..." where zero is all
+     * @param limit      max number of names followed by "..." where zero is all
      */
     public static String getPropertyNames(Iterable<? extends Property> properties, int limit) {
 
@@ -1196,7 +1236,9 @@ public abstract class Property implements Comparable<Property> {
      * Returns a normalized list of properties for given argument. Normalization
      * means that there are no two properties in the result shareing a common
      * containing property and no transient property.
+     *
      * @param properties properties to normalize
+     *
      * @return normalized list
      */
     public static List<Property> normalize(List<? extends Property> properties) {
@@ -1226,6 +1268,7 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Generate a string representation based on given template.
+     *
      * @see Property#format(String, PrivacyPolicy)
      */
     public String format(String format) {
@@ -1244,19 +1287,21 @@ public abstract class Property implements Comparable<Property> {
      *   {$v} display value
      *   {$V} value
      * </pre>
+     *
      * @param format as described
      * @param policy applied privacy policy
+     *
      * @return formatted string if at least one marker matched, "" otherwise
      */
     public String format(String format, PrivacyPolicy policy) {
 
-        if (format == null)
+        if (format == null) {
             return "";
+        }
 
         // match format given
         Matcher matcher = FORMAT_PATTERN.matcher(format);
-        // prepare running parameters
-        StringBuffer result = new StringBuffer(format.length() + 20);
+        StringBuilder result = new StringBuilder(format.length() + 20);
         int masked = 0;
         int matches = 0;
         int cursor = 0;
@@ -1311,80 +1356,84 @@ public abstract class Property implements Comparable<Property> {
      *   {$V} value
      *   {$e} output prefix/suffis if property exists
      * </pre>
-     * @param marker as described 
+     *
+     * @param marker as described
+     *
      * @return formatted string if at least one marker matched, "" otherwise
      */
-    PropertyFormatter formatImpl(char marker){
+    PropertyFormatter formatImpl(char marker) {
         Property property = this;
         Property prop = null;
         String value = "";
 
-            switch (marker) {
-                case 'D': {
-                    prop = property.getProperty("DATE");
-                    value = (prop instanceof PropertyDate) && prop.isValid() ? prop.getDisplayValue() : null;
-                    break;
+        switch (marker) {
+            case 'D': {
+                prop = property.getProperty("DATE");
+                value = (prop instanceof PropertyDate) && prop.isValid() ? prop.getDisplayValue() : null;
+                break;
+            }
+            case 'y': {
+                prop = property.getProperty("DATE");
+                value = (prop instanceof PropertyDate) && prop.isValid() ? Integer.toString(((PropertyDate) prop).getStart().getYear()) : null;
+                break;
+            }
+            case 'p': {
+                prop = property.getProperty("PLAC");
+                value = (prop instanceof PropertyPlace) ? ((PropertyPlace) prop).getCity() : null;
+                break;
+            }
+            case 'P': {
+                prop = property.getProperty("PLAC");
+                value = (prop instanceof PropertyPlace) ? prop.getDisplayValue() : null;
+                break;
+            }
+            case 'v': {
+                prop = property;
+                value = property.getDisplayValue();
+                break;
+            }
+            case 'V': {
+                prop = property;
+                value = property.getValue();
+                // remove @ chars (ie in PropertyXRef)
+                if (value.startsWith("@") && value.endsWith("@")) {
+                    value = value.substring(1, value.length() - 1);
                 }
-                case 'y': {
-                    prop = property.getProperty("DATE");
-                    value = (prop instanceof PropertyDate) && prop.isValid() ? Integer.toString(((PropertyDate) prop).getStart().getYear()) : null;
-                    break;
-                }
-                case 'p': {
-                    prop = property.getProperty("PLAC");
-                    value = (prop instanceof PropertyPlace) ? ((PropertyPlace) prop).getCity() : null;
-                    break;
-                }
-                case 'P': {
-                    prop = property.getProperty("PLAC");
-                    value = (prop instanceof PropertyPlace) ? prop.getDisplayValue() : null;
-                    break;
-                }
-                case 'v': {
-                    prop = property;
-                    value = property.getDisplayValue();
-                    break;
-                }
-                case 'V': {
-                    prop = property;
-                    value = property.getValue();
-                    // remove @ chars (ie in PropertyXRef)
-                    if (value.startsWith("@") && value.endsWith("@"))
-                        value = value.substring(1,value.length()-1);
-                    break;
-                }
-                case 't': {
-                    prop = null;
-                    value = property.getTag();
-                    break;
-                }
-                case 'T': {
-                    prop = null;
-                    value = Gedcom.getName(property.getTag());
-                    break;
-                }
-                case 'e': {
-                    prop = property;
+                break;
+            }
+            case 't': {
+                prop = null;
+                value = property.getTag();
+                break;
+            }
+            case 'T': {
+                prop = null;
+                value = Gedcom.getName(property.getTag());
+                break;
+            }
+            case 'e': {
+                prop = property;
+                value = "";
+                break;
+            }
+            default:
+                if (Character.isDigit(marker)) {
                     value = "";
+                    prop = property;
+                    String splitValues[] = prop.getValue().split(", *");
+                    int i = Character.digit(marker, 10) - 1;
+                    if (i < 0) {
+                        value = prop.getValue();
+                    } else if (i < splitValues.length) {
+                        value = splitValues[i];
+                    }
                     break;
                 }
-                default:
-                    if (Character.isDigit(marker)){
-                        value = "";
-                        prop = property;
-                        String splitValues[] = prop.getValue().split(", *");
-                        int i = Character.digit(marker,10)-1;
-                        if (i<0){
-                            value = prop.getValue();
-                        } else if (i<splitValues.length)
-                            value = splitValues[i];
-                        break;
-                    }
 //                    throw new IllegalArgumentException("unknown formatting marker " + marker);
             }
-            return new PropertyFormatter(prop, value);
+        return new PropertyFormatter(prop, value);
 
-        }
+    }
 
     /**
      * Calculates an appropriate date that puts this property into a time context
@@ -1444,9 +1493,10 @@ public abstract class Property implements Comparable<Property> {
         }
     }
 
-    static class PropertyFormatter{
-        private Property prop;
-        private String value;
+    static class PropertyFormatter {
+
+        private final Property prop;
+        private final String value;
 
         public Property getProp() {
             return prop;
@@ -1455,7 +1505,8 @@ public abstract class Property implements Comparable<Property> {
         public String getValue() {
             return value;
         }
-        PropertyFormatter(Property property, String value){
+
+        PropertyFormatter(Property property, String value) {
             this.prop = property;
             this.value = value;
         }
