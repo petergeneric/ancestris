@@ -776,7 +776,11 @@ import org.openide.nodes.Node;
                     newProp = pdate;
                 }
             }
-            tree.setSelectionPath(new TreePath(tree.getPathFor(newProp)));
+            // Capture IllegalArgumentException : no selection can be done
+            // DAN: I don't understand how a null or empty path can be found here
+            try {
+                tree.setSelectionPath(new TreePath(tree.getPathFor(newProp)));
+            } catch (IllegalArgumentException e){}
 
 
             // done
