@@ -76,13 +76,17 @@
                       <Group type="102" attributes="0">
                           <Component id="sexBeanPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
+                          <Component id="SOSALabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="SOSATextField" min="-2" pref="122" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="individualIDLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="individualIDTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="nameEditorPanel" max="32767" attributes="0"/>
+                      <Component id="nameEditorPanel" pref="862" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -94,13 +98,13 @@
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="sexBeanPanel" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="privateRecordToggleButton" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="individualIDTextField" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="individualIDLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="sexBeanPanel" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="individualIDLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="individualIDTextField" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="privateRecordToggleButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="SOSALabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="SOSATextField" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="nameEditorPanel" max="32767" attributes="0"/>
@@ -165,6 +169,18 @@
           </Properties>
         </Component>
         <Component class="ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel" name="nameEditorPanel">
+        </Component>
+        <Component class="javax.swing.JLabel" name="SOSALabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="IndividualEditor.SOSALabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="SOSATextField">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
