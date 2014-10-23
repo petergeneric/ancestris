@@ -149,9 +149,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         addSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.addSourceButton.toolTipText"), new Object[] {})); // NOI18N
         addSourceButton.setFocusable(false);
         addSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addSourceButton.setMaximumSize(new java.awt.Dimension(26, 26));
-        addSourceButton.setMinimumSize(new java.awt.Dimension(26, 26));
-        addSourceButton.setPreferredSize(new java.awt.Dimension(26, 26));
         addSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         addSourceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -163,9 +160,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         editSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.editSourceButton.toolTipText"), new Object[] {})); // NOI18N
         editSourceButton.setFocusable(false);
         editSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editSourceButton.setMaximumSize(new java.awt.Dimension(26, 26));
-        editSourceButton.setMinimumSize(new java.awt.Dimension(26, 26));
-        editSourceButton.setPreferredSize(new java.awt.Dimension(26, 26));
         editSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         editSourceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -177,9 +171,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         linkToSourceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceCitationEditorPanel.linkToSourceButton.toolTipText"), new Object[] {})); // NOI18N
         linkToSourceButton.setFocusable(false);
         linkToSourceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linkToSourceButton.setMaximumSize(new java.awt.Dimension(26, 26));
-        linkToSourceButton.setMinimumSize(new java.awt.Dimension(26, 26));
-        linkToSourceButton.setPreferredSize(new java.awt.Dimension(26, 26));
         linkToSourceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         linkToSourceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -262,11 +253,11 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(sourceReferencedTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(linkToSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(linkToSourceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editSourceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(addSourceButton))
             .addComponent(jScrollPane1)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -275,16 +266,16 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     .addComponent(eventRoleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventRoleComboBox, 0, 1, Short.MAX_VALUE)
-                    .addComponent(referencedEventComboBox, 0, 114, Short.MAX_VALUE)
+                    .addComponent(eventRoleComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(referencedEventComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dataQualityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(recordingDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                    .addComponent(recordingDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(recordingDate, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                    .addComponent(recordingDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pageTextField)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -315,7 +306,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(dataQualityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(recordingDate, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE))
+                    .addComponent(recordingDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -363,11 +354,11 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         SourceDataPanel.setLayout(SourceDataPanelLayout);
         SourceDataPanelLayout.setHorizontalGroup(
             SourceDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceDataScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+            .addComponent(sourceDataScrollPane)
         );
         SourceDataPanelLayout.setVerticalGroup(
             SourceDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceDataScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+            .addComponent(sourceDataScrollPane)
         );
 
         sourceCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.SourceDataPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), SourceDataPanel); // NOI18N
@@ -378,7 +369,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -393,7 +384,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         multiMediaPanel.setLayout(multiMediaPanelLayout);
         multiMediaPanelLayout.setHorizontalGroup(
             multiMediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         multiMediaPanelLayout.setVerticalGroup(
             multiMediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -409,7 +400,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sourceCitationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
+                    .addComponent(sourceCitationTabbedPane)
                     .addComponent(SourceReferencePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -714,7 +705,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     }
 
     public void commit() {
-        if (mSourceCitation instanceof PropertySource) {
+        if (mSourceCitation != null && mSourceCitation instanceof PropertySource) {
             if (mEventTypeModified) {
                 mEventTypeModified = false;
                 Property eventType = mSourceCitation.getProperty("EVEN");
@@ -796,6 +787,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 }
             }
         } else {
+            mSourceCitation = mRoot.addProperty("SOUR", "");
             if (mSourceReferencedTitleModified) {
                 mSourceReferencedTitleModified = false;
                 mSourceCitation.setValue(sourceReferencedTitleTextArea.getText());
