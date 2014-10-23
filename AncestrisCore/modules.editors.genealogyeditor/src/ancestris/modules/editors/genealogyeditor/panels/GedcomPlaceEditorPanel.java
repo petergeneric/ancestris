@@ -733,7 +733,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
         javax.swing.JTextField gedcomFieldsOrder[] = new javax.swing.JTextField[mPlaceFormat.length];
         for (int placeOrderindex = startingFrom; placeOrderindex < mPlaceOrder.length; placeOrderindex++) {
-            if (mPlaceOrder[placeOrderindex] != -1) {
+            if (mPlaceOrder[placeOrderindex] != -1 && mPlaceOrder[placeOrderindex] < gedcomFieldsOrder.length) {
                 gedcomFieldsOrder[mPlaceOrder[placeOrderindex]] = (javax.swing.JTextField) mGedcomFields[placeOrderindex][1];
             }
         }
