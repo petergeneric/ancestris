@@ -161,6 +161,8 @@ public final class IndividualEditor extends EntityEditor {
         imageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
         privateRecordToggleButton = new javax.swing.JToggleButton();
         nameEditorPanel = new ancestris.modules.editors.genealogyeditor.panels.NameEditorPanel();
+        SOSALabel = new javax.swing.JLabel();
+        SOSATextField = new javax.swing.JTextField();
         individualInformationTabbedPane = new javax.swing.JTabbedPane();
         eventsPanel = new javax.swing.JPanel();
         eventsSplitPane = new javax.swing.JSplitPane();
@@ -224,6 +226,10 @@ public final class IndividualEditor extends EntityEditor {
         privateRecordToggleButton.setRolloverSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
         privateRecordToggleButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
 
+        SOSALabel.setText(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.SOSALabel.text")); // NOI18N
+
+        SOSATextField.setEditable(false);
+
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
         generalPanelLayout.setHorizontalGroup(
@@ -235,12 +241,16 @@ public final class IndividualEditor extends EntityEditor {
                     .addGroup(generalPanelLayout.createSequentialGroup()
                         .addComponent(sexBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SOSALabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SOSATextField, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(individualIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton))
-                    .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE)))
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,12 +258,13 @@ public final class IndividualEditor extends EntityEditor {
                 .addComponent(imageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(generalPanelLayout.createSequentialGroup()
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(sexBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(privateRecordToggleButton)
-                        .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(individualIDLabel)))
+                    .addComponent(individualIDLabel)
+                    .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(privateRecordToggleButton)
+                    .addComponent(SOSALabel)
+                    .addComponent(SOSATextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -605,6 +616,8 @@ public final class IndividualEditor extends EntityEditor {
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel SOSALabel;
+    private javax.swing.JTextField SOSATextField;
     private ancestris.modules.editors.genealogyeditor.panels.AliasTablePanel aliasTablePanel;
     private javax.swing.JPanel associationsPanel;
     private ancestris.modules.editors.genealogyeditor.panels.AssociationsTablePanel associationsTablePanel;
@@ -680,6 +693,20 @@ public final class IndividualEditor extends EntityEditor {
              * n @XREF:INDI@ INDI
              */
             individualIDTextField.setText(mIndividual.getId());
+
+            /*
+             * SOSA number if exists
+             */
+            Property SOSANumber = mIndividual.getProperty("_SOSA", true);
+            if (SOSANumber != null) {
+                SOSALabel.setVisible(true);
+                SOSATextField.setVerifyInputWhenFocusTarget(true);
+                SOSATextField.setText(SOSANumber.getValue());
+            } else {
+                SOSALabel.setVisible(false);
+                SOSATextField.setVisible(false);
+                SOSATextField.setText("");
+            }
 
             /*
              * +1 RESN <RESTRICTION_NOTICE>
