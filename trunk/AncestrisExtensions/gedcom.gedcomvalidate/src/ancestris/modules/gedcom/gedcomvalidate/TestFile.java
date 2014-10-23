@@ -37,7 +37,7 @@ public class TestFile extends Test {
         PropertyFile file = (PropertyFile) prop;
 
         // check it
-        if (file.getFile() == null) {
+        if (file.getFile() == null || ! file.getFile().exists()) {
             issues.add(new ViewContext(prop).setText(NbBundle.getMessage(this.getClass(), "err.nofile")));
         }
 
