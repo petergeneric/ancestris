@@ -61,7 +61,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         cbSplitJuridictions = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
         jSpinner1 = new javax.swing.JSpinner(new SpinnerNumberModel(10, 10, 300, 5));
         jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -80,9 +79,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSplitJuridictions, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbSplitJuridictions.text")); // NOI18N
         cbSplitJuridictions.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbSplitJuridictions.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox2.text")); // NOI18N
-        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox2.toolTipText")); // NOI18N
 
         jSpinner1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jSpinner1.toolTipText")); // NOI18N
 
@@ -164,15 +160,11 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                             .addComponent(jLabel4))
                         .addGap(72, 72, 72)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbSplitJuridictions)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox2)
-                                    .addComponent(cbSplitJuridictions)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel6)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel6))
                             .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -209,10 +201,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                             .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbSplitJuridictions)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox2)))
-                .addContainerGap(137, Short.MAX_VALUE))
+                        .addComponent(cbSplitJuridictions)))
+                .addContainerGap(185, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -233,7 +223,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jCheckBox1.setSelected(ancestris.app.AppOptions.isRestoreViews());
         jSpinner1.setValue(GedcomOptions.getInstance().getNumberOfUndos());
         cbSplitJuridictions.setSelected(CoreOptions.getInstance().isSplitJurisdictions());
-//XXX:        setOpenEditor(editPrefs.get("isOpenEditor", ""));
     }
 
     void store() {
@@ -256,8 +245,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         CoreOptions.getInstance().setSplitJurisdictions(cbSplitJuridictions.isSelected());
 
-//XXX:        editPrefs.put("isOpenEditor", getOpenEditor());
-
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
         if (needRestart) 
         // the markForRestart is not applicable here as the restart process loop done in nbexec file
@@ -277,7 +264,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbSplitJuridictions;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -370,13 +356,5 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             return null;
         }
         return locales[i];
-    }
-
-    void setOpenEditor(String str) {
-        jCheckBox2.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getOpenEditor() {
-        return jCheckBox2.isSelected() ? "true" : "false";
     }
 }
