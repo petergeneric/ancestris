@@ -6,8 +6,6 @@ import genj.gedcom.PropertyMedia;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -110,9 +108,15 @@ public class ImageBean extends javax.swing.JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (loadImage != null) {
-            Image scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+            Image scaledImage;
+            if (getWidth() < getHeight()) {
+                scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+            } else {
+                scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
+            }
+
             Graphics2D g2 = (Graphics2D) g;
-            g2.drawImage(scaledImage, 0 +((getWidth() -scaledImage.getWidth(this))/2), ((getHeight()-scaledImage.getHeight(this))/2), null);
+            g2.drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);
         }
     }
 }
