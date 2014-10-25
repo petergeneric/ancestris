@@ -51,7 +51,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
         multiMediaObjectIDTextField = new javax.swing.JTextField();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         multiMediaObjectTabbedPane = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
+        imagePanel = new javax.swing.JPanel();
         imageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
         notesPanel = new javax.swing.JPanel();
         noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
@@ -67,6 +67,8 @@ public class MultiMediaObjectEditor extends EntityEditor {
         multiMediaObjectIDTextField.setEditable(false);
         multiMediaObjectIDTextField.setColumns(8);
         multiMediaObjectIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("MultiMediaObjectEditor.multiMediaObjectIDTextField.text"), new Object[] {})); // NOI18N
+
+        imagePanel.setLayout(new java.awt.BorderLayout());
 
         imageBean.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -85,24 +87,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(imageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(imageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        imagePanel.add(imageBean, java.awt.BorderLayout.CENTER);
 
-        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+        multiMediaObjectTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.imagePanel.TabConstraints.tabTitle"), imagePanel); // NOI18N
 
         noteCitationsTablePanel.setMinimumSize(null);
         noteCitationsTablePanel.setPreferredSize(null);
@@ -226,7 +213,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
     private javax.swing.JLabel changeDateLabeldate;
     private javax.swing.Box.Filler filler1;
     private ancestris.modules.editors.genealogyeditor.beans.ImageBean imageBean;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel imagePanel;
     private javax.swing.JLabel multiMediaObjectIDLabel;
     private javax.swing.JTextField multiMediaObjectIDTextField;
     private javax.swing.JPanel multiMediaObjectReferencesPanel;
