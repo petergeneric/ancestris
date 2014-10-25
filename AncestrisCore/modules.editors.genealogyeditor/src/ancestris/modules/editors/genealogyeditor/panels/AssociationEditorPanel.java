@@ -39,7 +39,8 @@ import org.openide.util.NbBundle;
 public class AssociationEditorPanel extends javax.swing.JPanel {
 
     private PropertyAssociation mAssociation;
-    private Indi mIndividual;
+    private Entity mIndividual;
+    private Indi mAssociatedIndividual;
     private boolean mRelationModified = false;
     private final ChangeListner changeListner = new ChangeListner();
 
@@ -80,6 +81,9 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(linkToIndividualButton, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationEditorPanel.linkToIndividualButton.text"), new Object[] {})); // NOI18N
         linkToIndividualButton.setFocusable(false);
         linkToIndividualButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkToIndividualButton.setMaximumSize(new java.awt.Dimension(26, 26));
+        linkToIndividualButton.setMinimumSize(new java.awt.Dimension(26, 26));
+        linkToIndividualButton.setPreferredSize(new java.awt.Dimension(26, 26));
         linkToIndividualButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         linkToIndividualButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,7 +143,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(linkToIndividualButton)
+                                .addComponent(linkToIndividualButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(referenceIndividualTextField))
                             .addComponent(relationChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -165,7 +169,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
     private void linkToIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToIndividualButtonActionPerformed
         IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
-        List<Indi> individualsList = new ArrayList<Indi>(mAssociation.getGedcom().getIndis());
+        List<Indi> individualsList = new ArrayList<Indi>(mIndividual.getGedcom().getIndis());
 
         individualsTablePanel.set(mAssociation, individualsList);
         individualsTablePanel.setToolBarVisible(false);
@@ -175,17 +179,20 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         individualsTableDialog.setDialogId(IndividualsTablePanel.class.getName());
 
         if (individualsTableDialog.show() == DialogDescriptor.OK_OPTION) {
-            mIndividual = individualsTablePanel.getSelectedIndividual();
+            mAssociatedIndividual = individualsTablePanel.getSelectedIndividual();
             try {
+                if (mAssociation == null) {
+                    mAssociation = (PropertyAssociation) mIndividual.addProperty("ASSO", "@@");
+                }
                 mAssociation.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        mAssociation.setValue('@' + mIndividual.getId() + '@');
+                        mAssociation.setValue('@' + mAssociatedIndividual.getId() + '@');
                         mAssociation.link();
                     }
                 }); // end of doUnitOfWork
-                referenceIndividualTextField.setText(mIndividual.getName());
+                referenceIndividualTextField.setText(mAssociatedIndividual.getName());
                 referenceIndividualTextField.setVisible(true);
                 linkToIndividualButton.setVisible(false);
                 mRelationModified = true;
@@ -209,31 +216,38 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
-    void set(PropertyAssociation association) {
-        changeListner.mute();
-        mAssociation = association;
-        Entity targetEntity = association.getTargetEntity();
-        if (targetEntity != null) {
-            linkToIndividualButton.setVisible(false);
-            referenceIndividualTextField.setText(((Indi) targetEntity).getName());
-            referenceIndividualTextField.setVisible(true);
-        } else {
-            referenceIndividualTextField.setVisible(false);
+    void set(Entity individual, PropertyAssociation association) {
+        mIndividual = individual;
+        relationChoiceWidget.setValues(mIndividual.getGedcom().getReferenceSet("RELA").getKeys());
+
+        if (association != null) {
+            changeListner.mute();
+            mAssociation = association;
+            Entity targetEntity = association.getTargetEntity();
+            if (targetEntity != null) {
+                linkToIndividualButton.setVisible(false);
+                referenceIndividualTextField.setText(((Indi) targetEntity).getName());
+                referenceIndividualTextField.setVisible(true);
+            } else {
+                referenceIndividualTextField.setVisible(false);
+            }
+
+            Property property = association.getProperty("RELA", false);
+            if (property != null) {
+                relationChoiceWidget.setText(property.getValue());
+            }
+
+            noteCitationsTablePanel.set(association, Arrays.asList(association.getProperties("NOTE")));
+
+            sourceCitationsTablePanel.set(association, Arrays.asList(association.getProperties("SOUR")));
+            changeListner.unmute();
         }
-
-        Property property = association.getProperty("RELA", false);
-        if (property != null) {
-            relationChoiceWidget.setText(property.getValue());
-        }
-        relationChoiceWidget.setValues(mAssociation.getGedcom().getReferenceSet("RELA").getKeys());
-
-        noteCitationsTablePanel.set(association, Arrays.asList(association.getProperties("NOTE")));
-
-        sourceCitationsTablePanel.set(association, Arrays.asList(association.getProperties("SOUR")));
-        changeListner.unmute();
     }
 
     PropertyAssociation commit() {
+        if (mAssociation == null) {
+            mAssociation = (PropertyAssociation) mIndividual.addProperty("ASSO", "@@");
+        }
         if (mRelationModified) {
             Property property = mAssociation.getProperty("RELA", false);
             if (property == null) {
