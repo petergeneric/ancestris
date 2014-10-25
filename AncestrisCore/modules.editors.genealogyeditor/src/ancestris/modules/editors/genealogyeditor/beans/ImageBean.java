@@ -5,6 +5,7 @@ import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -19,7 +20,7 @@ import org.openide.util.Exceptions;
  */
 public class ImageBean extends javax.swing.JPanel {
 
-    private BufferedImage loadImage = null;
+    private Image loadImage = null;
 
     /**
      * Creates new form ImageBean
@@ -105,29 +106,13 @@ public class ImageBean extends javax.swing.JPanel {
         repaint();
     }
 
-    private float scaleFactor() {
-        if (loadImage == null) {
-            return 1;
-        }
-        int newW = getWidth();
-        int newH = getHeight();
-        int w = loadImage.getWidth();
-        int h = loadImage.getHeight();
-        float percentW = (float) newW / (float) w;
-        float percentH = (float) newH / (float) h;
-        return (h * percentW < newH) ? percentW : percentH;
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (loadImage != null) {
+            Image scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
             Graphics2D g2 = (Graphics2D) g;
-            int newW = (int) (loadImage.getWidth() * scaleFactor());
-            int newH = (int) (loadImage.getHeight() * scaleFactor());
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.drawImage(loadImage, 0, 0, newW, newH, null);
+            g2.drawImage(scaledImage, 0 +((getWidth() -scaledImage.getWidth(this))/2), ((getHeight()-scaledImage.getHeight(this))/2), null);
         }
     }
 }
