@@ -117,35 +117,35 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
     private void addAssociationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAssociationButtonActionPerformed
         Gedcom gedcom = mRootEntity.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
+        final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
+        associationEditorPanel.set(mRootEntity, mAssociation);
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    mAssociation = (PropertyAssociation) mRootEntity.addProperty("ASSO", "@@");
-                }
-            }); // end of doUnitOfWork
-            AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-            associationEditorPanel.set(mAssociation);
+        DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
+                NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
+                associationEditorPanel);
+        associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
-            DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
-                    associationEditorPanel);
-            associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
+        if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
 
-            if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mAssociationsTableModel.add(associationEditorPanel.commit());
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mAssociationsTableModel.add(associationEditorPanel.commit());
+                    }
+                }); // end of doUnitOfWork
                 deleteAssociationButton.setEnabled(true);
                 editAssociationButton.setEnabled(true);
                 changeListner.stateChanged(null);
-            } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
-                }
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
             }
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
         }
+
     }//GEN-LAST:event_addAssociationButtonActionPerformed
 
     private void editAssociationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editAssociationButtonActionPerformed
@@ -155,7 +155,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
             int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
             int undoNb = gedcom.getUndoNb();
             final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-            associationEditorPanel.set(mAssociationsTableModel.getValueAt(rowIndex));
+            associationEditorPanel.set(mRootEntity, mAssociationsTableModel.getValueAt(rowIndex));
 
             DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
@@ -191,7 +191,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
                 int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
                 int undoNb = gedcom.getUndoNb();
                 final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-                associationEditorPanel.set(mAssociationsTableModel.getValueAt(rowIndex));
+                associationEditorPanel.set(mRootEntity, mAssociationsTableModel.getValueAt(rowIndex));
 
                 DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
