@@ -67,7 +67,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                                     try {
                                         image = ImageIO.read(multimediaFile);
                                         if (image != null) {
-                                            image = image.getScaledInstance(-1, 32, image.SCALE_DEFAULT);
+                                            image = image.getScaledInstance(-1, 16, image.SCALE_DEFAULT);
                                         }
                                     } catch (IOException ex) {
                                         image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
@@ -128,7 +128,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                                     try {
                                         image = ImageIO.read(multimediaFile);
                                         if (image != null) {
-                                            image = image.getScaledInstance(-1, 32, image.SCALE_DEFAULT);
+                                            image = image.getScaledInstance(-1, 32, Image.SCALE_DEFAULT);
                                         }
                                     } catch (IOException ex) {
                                         image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
