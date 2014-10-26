@@ -8,6 +8,7 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import genj.view.ViewContext;
 import java.awt.Component;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -494,7 +495,7 @@ public final class IndividualEditor extends EntityEditor {
                     if (mMultiMediaObject instanceof Media) {
                         mIndividual.addMedia((Media) mMultiMediaObject);
                     }
-                    imageBean.setImage(mMultiMediaObject);
+                    imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null);
                     repaint();
                     changes.fireChangeEvent();
                 }
@@ -539,7 +540,7 @@ public final class IndividualEditor extends EntityEditor {
                         if (mMultiMediaObject instanceof Media) {
                             mIndividual.addMedia((Media) mMultiMediaObject);
                         }
-                        imageBean.setImage(mMultiMediaObject);
+                        imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile());
                         repaint();
                         changes.fireChangeEvent();
                     }
@@ -861,28 +862,46 @@ public final class IndividualEditor extends EntityEditor {
              * +1 <<MULTIMEDIA_LINK>>
              */
             Property[] multiMediaObjects = mIndividual.getProperties("OBJE");
-            Property selectedMultiMediaObject = null;
+            String objetFormat = null;
+            File selectedFile = null;
             for (Property multiMediaObject : multiMediaObjects) {
-                String objetFormat = null;
+                File file = null;
                 if (gedcomVersion.equals("5.5.1")) {
                     if (multiMediaObject instanceof PropertyMedia) {
-                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
+                        Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                            Property propertyFormat = propertyFile.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
                         }
                     } else {
-                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
+                        Property propertyFile = multiMediaObject.getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                            Property propertyFormat = propertyFile.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
                         }
                     }
                 } else {
                     if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                        }
                         Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                         if (propertyFormat != null) {
                             objetFormat = propertyFormat.getValue();
                         }
                     } else {
+                        Property propertyFile = multiMediaObject.getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                        }
+
                         Property propertyFormat = multiMediaObject.getProperty("FORM");
                         if (propertyFormat != null) {
                             objetFormat = propertyFormat.getValue();
@@ -892,16 +911,12 @@ public final class IndividualEditor extends EntityEditor {
 
                 // bmp | gif | jpeg
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                    selectedMultiMediaObject = multiMediaObject;
+                    selectedFile = file;
                     break;
                 }
             }
 
-            if (selectedMultiMediaObject != null) {
-                imageBean.setImage(selectedMultiMediaObject);
-            } else {
-                imageBean.setImage(null);
-            }
+            imageBean.setImage(selectedFile);
 
             multimediaObjectCitationsTablePanel.set(mIndividual, Arrays.asList(multiMediaObjects));
         }

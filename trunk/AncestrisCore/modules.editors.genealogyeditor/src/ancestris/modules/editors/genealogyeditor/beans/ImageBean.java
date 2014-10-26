@@ -6,6 +6,7 @@ import genj.gedcom.PropertyMedia;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,23 +75,15 @@ public class ImageBean extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public void setImage(Property multimediaObject) {
-        Property file;
+    public void setImage(File file) {
         InputStream imageInputStream;
 
-        if (multimediaObject != null) {
-            if (multimediaObject instanceof PropertyMedia) {
-                file = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
-            } else {
-                file = multimediaObject.getProperty("FILE", true);
-            }
-            if (file != null && file instanceof PropertyFile && ((PropertyFile) file).getFile().exists()) {
-                try {
-                    imageInputStream = new FileInputStream(((PropertyFile) file).getFile());
-                    loadImage = ImageIO.read(imageInputStream);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        if (file != null && file.exists()) {
+            try {
+                imageInputStream = new FileInputStream(file);
+                loadImage = ImageIO.read(imageInputStream);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         } else {
             imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");

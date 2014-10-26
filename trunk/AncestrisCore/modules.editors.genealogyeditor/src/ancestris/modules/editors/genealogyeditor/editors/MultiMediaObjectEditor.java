@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.editors;
 
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
-import ancestris.modules.editors.genealogyeditor.models.MultimediaFilesTableModel;
 import genj.gedcom.*;
 import genj.util.Registry;
 import genj.view.ViewContext;
@@ -12,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -24,6 +22,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
     private Context context;
     private Property mRoot;
     private Property mMultiMediaObject;
+    private File mFile;
 
     /**
      * Creates new form MultiMediaObjectEditor
@@ -190,21 +189,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             registry.put("rootPath", fileChooser.getSelectedFile());
 
-            try {
-                final File imageFile = fileChooser.getSelectedFile();
-
-                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mMultiMediaObject.addFile(imageFile, multiMediaObjectTitleTextField.getText().isEmpty() ? imageFile.getName() : multiMediaObjectTitleTextField.getText());
-                    }
-                }); // end of doUnitOfWork
-                imageBean.setImage(mMultiMediaObject);
-                changes.fireChangeEvent();
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            mFile = fileChooser.getSelectedFile();
+            imageBean.setImage(mFile);
+            changes.fireChangeEvent();
         }
     }//GEN-LAST:event_imageBeanMouseClicked
 
@@ -300,7 +287,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
 
             Property multimediaFile = mMultiMediaObject.getProperty("FILE", true);
             if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                imageBean.setImage(mMultiMediaObject);
+                imageBean.setImage(((PropertyFile) multimediaFile).getFile());
             }
 
             /*
@@ -314,13 +301,15 @@ public class MultiMediaObjectEditor extends EntityEditor {
     public void commit() {
         if (changes.hasChanged()) {
             if (mMultiMediaObject instanceof Media) {
-                ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText());
+                ((Media) mMultiMediaObject).addFile(mFile);
+                ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText().isEmpty() ? mFile.getName() : multiMediaObjectTitleTextField.getText());
             } else {
+                mMultiMediaObject.addFile(mFile);
                 Property propertyTitle = mMultiMediaObject.getProperty("TITL");
                 if (propertyTitle == null) {
-                    mMultiMediaObject.addProperty("TITL", multiMediaObjectTitleTextField.getText());
+                    mMultiMediaObject.addProperty("TITL", multiMediaObjectTitleTextField.getText().isEmpty() ? mFile.getName() : multiMediaObjectTitleTextField.getText());
                 } else {
-                    propertyTitle.setValue(multiMediaObjectTitleTextField.getText());
+                    propertyTitle.setValue(multiMediaObjectTitleTextField.getText().isEmpty() ? mFile.getName() : multiMediaObjectTitleTextField.getText());
                 }
             }
         }

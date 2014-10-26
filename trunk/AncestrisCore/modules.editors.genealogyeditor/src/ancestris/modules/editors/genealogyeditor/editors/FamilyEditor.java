@@ -7,6 +7,7 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import genj.view.ViewContext;
 import java.awt.Component;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -676,25 +677,43 @@ public class FamilyEditor extends EntityEditor {
                 husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
+                    File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
-                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         } else {
-                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         }
                     } else {
                         if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
                             }
                         } else {
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
+
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -704,7 +723,7 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        husbandImageBean.setImage(multiMediaObject);
+                        husbandImageBean.setImage(file);
                         break;
                     }
                 }
@@ -760,27 +779,45 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText(mWife.getName());
                 wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
-                for (Property multiMediaObject : mWife.getProperties("OBJE")) {
+                for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
+                    File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
-                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         } else {
-                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         }
                     } else {
                         if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
                             }
                         } else {
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
+
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -790,7 +827,7 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        wifeImageBean.setImage(multiMediaObject);
+                        wifeImageBean.setImage(file);
                         break;
                     }
                 }
@@ -837,25 +874,43 @@ public class FamilyEditor extends EntityEditor {
                 husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
+                    File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
-                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         } else {
-                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         }
                     } else {
                         if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
                             }
                         } else {
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
+
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -865,10 +920,11 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        husbandImageBean.setImage(multiMediaObject);
+                        husbandImageBean.setImage(file);
                         break;
                     }
                 }
+
                 addHusbandButton.setVisible(false);
                 linkToHusbandButton.setVisible(false);
                 removeHusbandButton.setVisible(true);
@@ -910,27 +966,45 @@ public class FamilyEditor extends EntityEditor {
                 wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
 
-                for (Property multiMediaObject : mWife.getProperties("OBJE")) {
+                for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
+                    File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
-                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         } else {
-                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         }
                     } else {
                         if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
                             }
                         } else {
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
+
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -940,7 +1014,7 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        wifeImageBean.setImage(multiMediaObject);
+                        wifeImageBean.setImage(file);
                         break;
                     }
                 }
@@ -966,25 +1040,43 @@ public class FamilyEditor extends EntityEditor {
             husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
             for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                 String objetFormat = null;
+                File file = null;
                 if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     if (multiMediaObject instanceof PropertyMedia) {
-                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
+                        Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                            Property propertyFormat = propertyFile.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
                         }
                     } else {
-                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
+                        Property propertyFile = multiMediaObject.getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                            Property propertyFormat = propertyFile.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
                         }
                     }
                 } else {
                     if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                        }
                         Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                         if (propertyFormat != null) {
                             objetFormat = propertyFormat.getValue();
                         }
                     } else {
+                        Property propertyFile = multiMediaObject.getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                        }
+
                         Property propertyFormat = multiMediaObject.getProperty("FORM");
                         if (propertyFormat != null) {
                             objetFormat = propertyFormat.getValue();
@@ -994,7 +1086,7 @@ public class FamilyEditor extends EntityEditor {
 
                 // bmp | gif | jpeg
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                    husbandImageBean.setImage(multiMediaObject);
+                    husbandImageBean.setImage(file);
                     break;
                 }
             }
@@ -1011,27 +1103,45 @@ public class FamilyEditor extends EntityEditor {
             wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
             wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
 
-            for (Property multiMediaObject : mWife.getProperties("OBJE")) {
+            for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                 String objetFormat = null;
+                File file = null;
                 if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     if (multiMediaObject instanceof PropertyMedia) {
-                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
+                        Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                            Property propertyFormat = propertyFile.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
                         }
                     } else {
-                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
+                        Property propertyFile = multiMediaObject.getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                            Property propertyFormat = propertyFile.getProperty("FORM");
+                            if (propertyFormat != null) {
+                                objetFormat = propertyFormat.getValue();
+                            }
                         }
                     }
                 } else {
                     if (multiMediaObject instanceof PropertyMedia) {
+                        Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                        }
                         Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                         if (propertyFormat != null) {
                             objetFormat = propertyFormat.getValue();
                         }
                     } else {
+                        Property propertyFile = multiMediaObject.getProperty("FILE");
+                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                            file = ((PropertyFile) propertyFile).getFile();
+                        }
+
                         Property propertyFormat = multiMediaObject.getProperty("FORM");
                         if (propertyFormat != null) {
                             objetFormat = propertyFormat.getValue();
@@ -1041,7 +1151,7 @@ public class FamilyEditor extends EntityEditor {
 
                 // bmp | gif | jpeg
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                    wifeImageBean.setImage(multiMediaObject);
+                    wifeImageBean.setImage(file);
                     break;
                 }
             }
@@ -1318,29 +1428,47 @@ public class FamilyEditor extends EntityEditor {
                 husbandNameTextField.setText(mHusband.getName());
                 husbandBirthDateLabelDate.setText(mHusband.getBirthAsString());
                 husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
-                Property selectedMultiMediaObject = null;
+                File selectedFile = null;
 
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
+                    File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
-                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         } else {
-                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         }
                     } else {
                         if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
                             }
                         } else {
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
+
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -1350,11 +1478,11 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        selectedMultiMediaObject = multiMediaObject;
+                        selectedFile = file;
                         break;
                     }
                 }
-                husbandImageBean.setImage(selectedMultiMediaObject);
+                husbandImageBean.setImage(selectedFile);
 
                 addHusbandButton.setVisible(false);
                 linkToHusbandButton.setVisible(false);
@@ -1376,29 +1504,47 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText(mWife.getName());
                 wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
-                Property selectedMultiMediaObject = null;
+                File selectedFile = null;
 
-                for (Property multiMediaObject : mWife.getProperties("OBJE")) {
+                for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
+                    File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
-                            Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         } else {
-                            Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                                Property propertyFormat = propertyFile.getProperty("FORM");
+                                if (propertyFormat != null) {
+                                    objetFormat = propertyFormat.getValue();
+                                }
                             }
                         }
                     } else {
                         if (multiMediaObject instanceof PropertyMedia) {
+                            Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
                             }
                         } else {
+                            Property propertyFile = multiMediaObject.getProperty("FILE");
+                            if (propertyFile != null && propertyFile instanceof PropertyFile) {
+                                file = ((PropertyFile) propertyFile).getFile();
+                            }
+
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -1408,11 +1554,12 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        selectedMultiMediaObject = multiMediaObject;
+                        selectedFile = file;
                         break;
                     }
                 }
-                wifeImageBean.setImage(selectedMultiMediaObject);
+
+                wifeImageBean.setImage(selectedFile);
                 addWifeButton.setVisible(false);
                 linkToWifeButton.setVisible(false);
                 removeWifeButton.setVisible(true);
