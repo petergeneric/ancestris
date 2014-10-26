@@ -779,7 +779,7 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText(mWife.getName());
                 wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
-                for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
+                for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
                     File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -966,7 +966,7 @@ public class FamilyEditor extends EntityEditor {
                 wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
 
-                for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
+                for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
                     File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -1103,7 +1103,7 @@ public class FamilyEditor extends EntityEditor {
             wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
             wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
 
-            for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
+            for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                 String objetFormat = null;
                 File file = null;
                 if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -1179,7 +1179,7 @@ public class FamilyEditor extends EntityEditor {
                 husbandNameTextField.setText("");
                 husbandBirthDateLabelDate.setText("");
                 husbandDeathDateLabelDate.setText("");
-                husbandImageBean.setImage(null);
+                husbandImageBean.setImage((File)null);
 
                 addHusbandButton.setVisible(true);
                 linkToHusbandButton.setVisible(true);
@@ -1212,7 +1212,7 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText("");
                 wifeBirthDateLabelDate.setText("");
                 wifeDeathDateLabelDate.setText("");
-                wifeImageBean.setImage(null);
+                wifeImageBean.setImage((File)null);
 
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
@@ -1493,7 +1493,7 @@ public class FamilyEditor extends EntityEditor {
                 linkToHusbandButton.setVisible(true);
                 removeHusbandButton.setVisible(false);
                 editHusbandButton.setVisible(false);
-                husbandImageBean.setImage(null);
+                husbandImageBean.setImage((File)null);
             }
 
             /*
@@ -1506,7 +1506,7 @@ public class FamilyEditor extends EntityEditor {
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
                 File selectedFile = null;
 
-                for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
+                for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
                     File file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -1565,7 +1565,7 @@ public class FamilyEditor extends EntityEditor {
                 removeWifeButton.setVisible(true);
                 editWifeButton.setVisible(true);
             } else {
-                wifeImageBean.setImage(null);
+                wifeImageBean.setImage((File)null);
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
                 removeWifeButton.setVisible(false);
