@@ -98,7 +98,7 @@ public class Media extends Entity {
   void addNotify(Gedcom ged) {
     super.addNotify(ged);
     
-    if (getMetaProperty().allows("TITLE"))
+    if (getMetaProperty().allows("TITL"))
       titlepath = TITLE55;
     else
       titlepath = TITLE551;
