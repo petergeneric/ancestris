@@ -45,10 +45,15 @@ public abstract class AncestrisEditor {
         }
     };
 
+    /**
+     * return null if no editor can be found.
+     * @param property
+     * @return 
+     */
     public static AncestrisEditor findEditor(Property property) {
         AncestrisEditor editor = null;
         if (property == null) {
-            return NoOpEditor.instance;
+            return null;
         }
         for (AncestrisEditor edt : Lookup.getDefault().lookupAll(AncestrisEditor.class)) {
             if (edt.canEdit(property)) {
@@ -58,7 +63,7 @@ public abstract class AncestrisEditor {
                 editor = edt;
             }
         }
-        return editor == null ? NoOpEditor.instance : editor;
+        return editor;
     }
 
     public abstract boolean canEdit(Property property);
@@ -87,7 +92,7 @@ public abstract class AncestrisEditor {
 
         @Override
         public boolean canEdit(Property property) {
-            return true;
+            return false;
         }
 
         @Override
@@ -142,15 +147,24 @@ public final static class OpenEditorAction
 
     public @Override
     Action createContextAwareInstance(Lookup context) {
-        return new OpenEditor(context.lookup(Entity.class));
+        Action action = null;
+        Entity entity = context.lookup(Entity.class);
+        AncestrisEditor editor = AncestrisEditor.findEditor(entity);
+
+        if (editor != null){
+            action = new OpenEditor(entity, editor);
+        }
+        return action;
     }
 
     private static final class OpenEditor extends AbstractAncestrisAction {
 
-        Entity entity;
-
-        public OpenEditor(Entity context) {
+        private final Entity entity;
+        private final AncestrisEditor editor;
+        
+        public OpenEditor(Entity context, AncestrisEditor editor) {
             this.entity = context;
+            this.editor = editor;
             setText(OpenInEditor_title());  // NOI18N
             setImage(editorIcon);
         }
@@ -158,7 +172,6 @@ public final static class OpenEditorAction
         @Override
         public void actionPerformed(ActionEvent e) {
             SelectionDispatcher.muteSelection(true);
-            AncestrisEditor editor = AncestrisEditor.findEditor(entity);
             if (editor != null) {
                 editor.edit(entity);
             }

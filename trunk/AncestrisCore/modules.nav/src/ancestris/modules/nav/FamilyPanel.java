@@ -669,7 +669,12 @@ public final class FamilyPanel extends JPanel {
             if (otherBean != null) {
                 indi = (Indi) otherBean.getProperty();
             }
-            return AncestrisEditor.findEditor(indi).getCreateSpouseAction(indi);
+            AncestrisEditor editor = AncestrisEditor.findEditor(indi);
+            if (editor == null){
+                // get NoOp editro
+                editor = AncestrisEditor.findEditor(null);
+            }
+            return editor.getCreateSpouseAction(indi);
         }
     }
 
@@ -690,7 +695,13 @@ public final class FamilyPanel extends JPanel {
             if (childBean != null) {
                 child = (Indi) childBean.getProperty();
             }
-            return AncestrisEditor.findEditor(child).getCreateParentAction(child, sex);
+            AncestrisEditor editor = AncestrisEditor.findEditor(child);
+            if (editor == null){
+                // get NoOp editro
+                editor = AncestrisEditor.findEditor(null);
+            }
+
+            return editor.getCreateParentAction(child, sex);
         }
     }
 
