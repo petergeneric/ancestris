@@ -1,11 +1,10 @@
 package ancestris.modules.editors.genealogyeditor.beans;
 
-import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
-import genj.gedcom.PropertyMedia;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -94,6 +93,26 @@ public class ImageBean extends javax.swing.JPanel {
             }
         }
 
+        repaint();
+    }
+
+    public void setImage(byte[] imageData) {
+        if (imageData != null) {
+            ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+
+            try {
+                loadImage = ImageIO.read(bais);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            InputStream imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
+            try {
+                loadImage = ImageIO.read(imageInputStream);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
         repaint();
     }
 
