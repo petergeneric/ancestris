@@ -551,7 +551,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
             if (mName == null) {
                 logger.log(Level.INFO, "Add property mName");
 
-                mName = (PropertyName) mRoot.addProperty("mName", "");
+                mName = (PropertyName) mRoot.addProperty("NAME", "");
             }
 
             if (version.equals("5.5.1") && nameTypeModified == true) {
