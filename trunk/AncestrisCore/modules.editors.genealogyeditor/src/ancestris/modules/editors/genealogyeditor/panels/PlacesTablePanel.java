@@ -63,15 +63,23 @@ public class PlacesTablePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        searchPlaceToolBar = new javax.swing.JToolBar();
         searchPlaceLabel = new javax.swing.JLabel();
-        filterGedcomPlaceTextField = new javax.swing.JTextField();
         searchPlaceComboBox = new javax.swing.JComboBox<String>();
+        filterGedcomPlaceTextField = new javax.swing.JTextField();
         filterGedcomPlaceButton = new javax.swing.JButton();
         clearFilterGedcomPlaceButton = new javax.swing.JButton();
         placesListTableScrollPane = new javax.swing.JScrollPane();
         placesListTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
+        searchPlaceToolBar.setFloatable(false);
+        searchPlaceToolBar.setRollover(true);
+
         searchPlaceLabel.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.searchPlaceLabel.text")); // NOI18N
+        searchPlaceToolBar.add(searchPlaceLabel);
+
+        searchPlaceComboBox.setModel(new DefaultComboBoxModel<String>(mPlaceFormat));
+        searchPlaceToolBar.add(searchPlaceComboBox);
 
         filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.filterGedcomPlaceTextField.text")); // NOI18N
         filterGedcomPlaceTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -84,8 +92,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
                 filterGedcomPlaceTextFieldKeyTyped(evt);
             }
         });
-
-        searchPlaceComboBox.setModel(new DefaultComboBoxModel<String>(mPlaceFormat));
+        searchPlaceToolBar.add(filterGedcomPlaceTextField);
 
         filterGedcomPlaceButton.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.filterGedcomPlaceButton.text")); // NOI18N
         filterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -93,6 +100,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
                 filterGedcomPlaceButtonActionPerformed(evt);
             }
         });
+        searchPlaceToolBar.add(filterGedcomPlaceButton);
 
         clearFilterGedcomPlaceButton.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.clearFilterGedcomPlaceButton.text")); // NOI18N
         clearFilterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -100,6 +108,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
                 clearFilterGedcomPlaceButtonActionPerformed(evt);
             }
         });
+        searchPlaceToolBar.add(clearFilterGedcomPlaceButton);
 
         placesListTable.setModel(mPlacesListTableModel);
         placesListTableScrollPane.setViewportView(placesListTable);
@@ -110,32 +119,16 @@ public class PlacesTablePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(searchPlaceLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchPlaceComboBox, 0, 153, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(filterGedcomPlaceButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clearFilterGedcomPlaceButton))
-                    .addComponent(placesListTableScrollPane))
+                .addComponent(placesListTableScrollPane)
                 .addContainerGap())
+            .addComponent(searchPlaceToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(searchPlaceLabel)
-                    .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterGedcomPlaceButton)
-                    .addComponent(clearFilterGedcomPlaceButton)
-                    .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(searchPlaceToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(placesListTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                .addComponent(placesListTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -162,6 +155,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane placesListTableScrollPane;
     private javax.swing.JComboBox<String> searchPlaceComboBox;
     private javax.swing.JLabel searchPlaceLabel;
+    private javax.swing.JToolBar searchPlaceToolBar;
     // End of variables declaration//GEN-END:variables
 
     private void newFilter(String filter) {
