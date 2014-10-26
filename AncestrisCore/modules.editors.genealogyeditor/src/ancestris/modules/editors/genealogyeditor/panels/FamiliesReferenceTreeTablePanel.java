@@ -206,7 +206,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                 }
             }); // end of doUnitOfWork
 
-            FamilyEditor familyEditor = new FamilyEditor();
+            FamilyEditor familyEditor = new FamilyEditor(true);
             familyEditor.setContext(new Context(mCreateFamily));
 
             familyEditor.addChangeListener(changeListner);
