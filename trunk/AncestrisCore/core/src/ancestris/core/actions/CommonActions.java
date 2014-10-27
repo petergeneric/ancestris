@@ -28,6 +28,9 @@ import org.openide.util.actions.Presenter;
  */
 public class CommonActions {
 
+    /**
+     * Special action that does nothing and is hidden in submenu.
+     */
     public static final Action NOOP = new NoOpAction();
 
     private static class NoOpAction extends AbstractAction {
