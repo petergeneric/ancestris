@@ -451,12 +451,17 @@ public class PropertyTableWidget extends JPanel {
             }
         }
 
+        /**
+         * return model row index for Property
+         * @param prop
+         * @return 
+         */
         int getRow(Property prop) {
 
             PropertyTableModel model = getPropertyTableModel();
             for (int i = 0; i < model.getNumRows(); i++) {
                 if (model.getRowRoot(i).contains(prop)) {
-                    return convertRowIndexToView(i);
+                    return i;
                 }
             }
             return -1;
