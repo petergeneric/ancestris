@@ -27,6 +27,7 @@ import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import static ancestris.api.editor.Bundle.*;
+import ancestris.core.actions.CommonActions;
 import javax.swing.ImageIcon;
 
 /**
@@ -147,7 +148,7 @@ public final static class OpenEditorAction
 
     public @Override
     Action createContextAwareInstance(Lookup context) {
-        Action action = null;
+        Action action = CommonActions.NOOP;
         Entity entity = context.lookup(Entity.class);
         AncestrisEditor editor = AncestrisEditor.findEditor(entity);
 

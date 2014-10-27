@@ -109,7 +109,7 @@ public class AUtilities {
     }
 
     private static void addActions(List<Action> actions, Object instanceObj) {
-        if (!CommonActions.NOOP.equals(instanceObj)) {
+        if (instanceObj!= null && !CommonActions.NOOP.equals(instanceObj)) {
             if (instanceObj instanceof JSeparator) {
                 actions.add(null);
             } else if (instanceObj instanceof Action) {
