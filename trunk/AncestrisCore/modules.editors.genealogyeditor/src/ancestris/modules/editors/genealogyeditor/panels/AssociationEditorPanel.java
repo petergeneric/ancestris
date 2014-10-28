@@ -2,12 +2,11 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
-import genj.gedcom.UnitOfWork;
+import genj.gedcom.PropertyRelationship;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -180,25 +179,10 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
         if (individualsTableDialog.show() == DialogDescriptor.OK_OPTION) {
             mAssociatedIndividual = individualsTablePanel.getSelectedIndividual();
-            try {
-                if (mAssociation == null) {
-                    mAssociation = (PropertyAssociation) mIndividual.addProperty("ASSO", "@@");
-                }
-                mAssociation.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mAssociation.setValue('@' + mAssociatedIndividual.getId() + '@');
-                        mAssociation.link();
-                    }
-                }); // end of doUnitOfWork
-                referenceIndividualTextField.setText(mAssociatedIndividual.getName());
-                referenceIndividualTextField.setVisible(true);
-                linkToIndividualButton.setVisible(false);
-                mRelationModified = true;
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            referenceIndividualTextField.setText(mAssociatedIndividual.getName());
+            referenceIndividualTextField.setVisible(true);
+            linkToIndividualButton.setVisible(false);
+            mRelationModified = true;
         }
     }//GEN-LAST:event_linkToIndividualButtonActionPerformed
 
@@ -232,9 +216,9 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                 referenceIndividualTextField.setVisible(false);
             }
 
-            Property property = association.getProperty("RELA", false);
-            if (property != null) {
-                relationChoiceWidget.setText(property.getValue());
+            PropertyRelationship propertyRelationship = (PropertyRelationship)association.getProperty("RELA", false);
+            if (propertyRelationship != null) {
+                relationChoiceWidget.setText(propertyRelationship.getDisplayValue());
             }
 
             noteCitationsTablePanel.set(association, Arrays.asList(association.getProperties("NOTE")));
@@ -245,17 +229,27 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     }
 
     PropertyAssociation commit() {
-        if (mAssociation == null) {
-            mAssociation = (PropertyAssociation) mIndividual.addProperty("ASSO", "@@");
-        }
         if (mRelationModified) {
-            Property property = mAssociation.getProperty("RELA", false);
-            if (property == null) {
+            if (mAssociation == null) {
+                mAssociation = (PropertyAssociation) mIndividual.addProperty("ASSO", "@@");
+            }
+            if (mAssociatedIndividual != null) {
+                mAssociation.setValue('@' + mAssociatedIndividual.getId() + '@');
+                try {
+                    mAssociation.link();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            
+            PropertyRelationship propertyRelationship = (PropertyRelationship) mAssociation.getProperty("RELA", false);
+            if (propertyRelationship == null) {
                 mAssociation.addProperty("RELA", relationChoiceWidget.getText());
             } else {
-                property.setValue(relationChoiceWidget.getText());
+                propertyRelationship.setValue(relationChoiceWidget.getText() + "@");
             }
         }
+
         return mAssociation;
     }
 

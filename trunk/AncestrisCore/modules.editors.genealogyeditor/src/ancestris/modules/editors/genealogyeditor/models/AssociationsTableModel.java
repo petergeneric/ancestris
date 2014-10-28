@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
-import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyRelationship;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class AssociationsTableModel extends AbstractTableModel {
                 case 1: {
                     PropertyRelationship relation = (PropertyRelationship)propertyAssociation.getProperty("RELA");
                     if (relation != null) {
-                        return relation.getValue();
+                        return relation.getDisplayValue();
                     }
                 }
                 case 2: {
