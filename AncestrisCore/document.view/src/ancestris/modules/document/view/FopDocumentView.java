@@ -127,7 +127,15 @@ public class FopDocumentView extends AbstractDocumentView {
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 } else {
                     String description = e.getDescription();
-                    if (description.contains("#INDI_") || description.contains("#FAM_")) {
+                    if (description.contains("#INDI_") 
+                            || description.contains("#FAM_")
+                            || description.contains("#SOUR_")
+                            || description.contains("#NOTE_")
+                            || description.contains("#REPO_")
+                            || description.contains("#OBJE_")
+                            || description.contains("#SUBM_")
+                            ) {
+//                    if (description.contains("#INDI_") || description.contains("#FAM_")) {
                         Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                         if (context != null) {
                             Gedcom myGedcom = context.getGedcom();
