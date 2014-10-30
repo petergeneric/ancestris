@@ -26,7 +26,10 @@ import org.openide.util.NbPreferences;
  * @author dominique
  */
 @ActionID(category = "Tree", id = "genj.tree.actions.sosa")
-@ActionRegistration(displayName = "SosaNumbering")
+@ActionRegistration(
+        displayName = "SosaNumbering",
+        lazy = false
+)
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", position = 1010)})
 public class TreeViewSosaAction
@@ -51,10 +54,10 @@ public class TreeViewSosaAction
         if (e == null || !(e instanceof Indi)) {
             return CommonActions.NOOP;
         } else {
-            putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
-            putValue(Action.NAME, NbBundle.getMessage(this.getClass(), "CTL_GenerateSosaAction"));
-            putValue(Action.SMALL_ICON, new ImageIcon("ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png"));
             indiDeCujus = (Indi) e;
+            putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
+            putValue(Action.NAME, NbBundle.getMessage(this.getClass(), "CTL_GenerateSosaAction", indiDeCujus.getName()));
+            putValue(Action.SMALL_ICON, new ImageIcon("ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png"));
             myGedcom = e.getGedcom();
             return this;
         }
