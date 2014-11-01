@@ -1,7 +1,10 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
+import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
+import genj.gedcom.Indi;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyRelationship;
+import genj.gedcom.PropertyXRef;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -16,6 +19,7 @@ public class AssociationsTableModel extends AbstractTableModel {
     List<PropertyAssociation> mPropertyAssociationList = new ArrayList<PropertyAssociation>();
     final String[] columnsName = {
         NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.associatedIndi.title"),
+        NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.event.title"),
         NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.relation.title"),
         NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.source.title"),
         NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.note.title")
@@ -40,29 +44,45 @@ public class AssociationsTableModel extends AbstractTableModel {
         if (propertyAssociation != null) {
             switch (column) {
                 case 0: {
-                    return propertyAssociation.getDisplayValue();
+                    PropertyXRef target = propertyAssociation.getTarget();
+                    if (target.getEntity() != null && target.getEntity() instanceof Indi) {
+                        return "(" + target.getEntity().getId() + ")" + ((Indi) target.getEntity()).getName();
+                    } else {
+                        return target.getValue();
+                    }
                 }
                 case 1: {
-                    PropertyRelationship relation = (PropertyRelationship)propertyAssociation.getProperty("RELA");
+                    PropertyRelationship relation = (PropertyRelationship) propertyAssociation.getProperty("RELA");
+                    if (relation != null) {
+                        String value = relation.getValue();
+                        int index = value.indexOf(":");
+                        if (index >= 0) {
+                            return PropertyTag2Name.getTagName(value.substring(index+1));
+                        }
+                        else return "";
+                    }
+                }
+                case 2: {
+                    PropertyRelationship relation = (PropertyRelationship) propertyAssociation.getProperty("RELA");
                     if (relation != null) {
                         return relation.getDisplayValue();
                     }
                 }
-                case 2: {
+                case 3: {
                     if (propertyAssociation.getProperty("SOUR") != null) {
                         return NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.source.value.yes");
                     } else {
                         return NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.source.value.no");
                     }
                 }
-                case 3: {
+                case 4: {
                     if (propertyAssociation.getProperty("NOTE") != null) {
                         return NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.note.value.yes");
                     } else {
                         return NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.note.value.no");
                     }
                 }
-                 default:
+                default:
                     return "";
             }
         } else {
