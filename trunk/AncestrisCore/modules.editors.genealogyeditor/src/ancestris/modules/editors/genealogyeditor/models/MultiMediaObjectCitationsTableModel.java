@@ -2,9 +2,11 @@ package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.Media;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyBlob;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import java.awt.Image;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -83,6 +85,22 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                                 return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
                             }
                         } else {
+                            if (multimediaObject.getGedcom().getGrammar().getVersion().equals("5.5")) {
+                                PropertyBlob propertyBlob = (PropertyBlob) ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("BLOB", true);
+                                if (propertyBlob != null) {
+                                    ByteArrayInputStream bais = new ByteArrayInputStream(propertyBlob.getBlobData());
+
+                                    try {
+                                        Image image = ImageIO.read(bais);
+                                        image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
+                                        return new ImageIcon(image);
+                                    } catch (IOException ex) {
+                                        return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                                    }
+                                } else {
+                                    return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                                }
+                            }
                             return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
                         }
                     }
@@ -118,33 +136,49 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
             } else {
                 switch (column) {
                     case 0: {
-                        Property propertyfile = multimediaObject.getProperty("FILE", true);
-                        if (propertyfile != null && propertyfile instanceof PropertyFile) {
-                            File multimediaFile = ((PropertyFile) propertyfile).getFile();
-                            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
-                            if (multimediaFile != null && multimediaFile.exists()) {
+                        if (multimediaObject.getGedcom().getGrammar().getVersion().equals("5.5")) {
+                            PropertyBlob propertyBlob = (PropertyBlob) multimediaObject.getProperty("BLOB", true);
+                            if (propertyBlob != null) {
+                                ByteArrayInputStream bais = new ByteArrayInputStream(propertyBlob.getBlobData());
                                 try {
-                                    Image image;
-                                    try {
-                                        image = ImageIO.read(multimediaFile);
-                                        if (image != null) {
-                                            image = image.getScaledInstance(-1, 32, Image.SCALE_DEFAULT);
-                                        }
-                                    } catch (IOException ex) {
-                                        image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
-                                    }
-                                    if (image != null) {
-                                        imageIcon = new ImageIcon(image);
-                                    }
-                                } catch (FileNotFoundException ex) {
-                                    Exceptions.printStackTrace(ex);
+                                    Image image = ImageIO.read(bais);
+                                    image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
+                                    return new ImageIcon(image);
+                                } catch (IOException ex) {
+                                    return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
                                 }
-                                return imageIcon;
+                            } else {
+                                return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                            }
+                        } else {
+                            Property propertyfile = multimediaObject.getProperty("FILE", true);
+                            if (propertyfile != null && propertyfile instanceof PropertyFile) {
+                                File multimediaFile = ((PropertyFile) propertyfile).getFile();
+                                ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                                if (multimediaFile != null && multimediaFile.exists()) {
+                                    try {
+                                        Image image;
+                                        try {
+                                            image = ImageIO.read(multimediaFile);
+                                            if (image != null) {
+                                                image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
+                                            }
+                                        } catch (IOException ex) {
+                                            image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
+                                        }
+                                        if (image != null) {
+                                            imageIcon = new ImageIcon(image);
+                                        }
+                                    } catch (FileNotFoundException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                    return imageIcon;
+                                } else {
+                                    return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
+                                }
                             } else {
                                 return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
                             }
-                        } else {
-                            return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
                         }
                     }
 
@@ -162,7 +196,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                         Property propertyFile = multimediaObject.getProperty("FILE", true);
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
                             File file = ((PropertyFile) propertyFile).getFile();
-                            if ( file != null) {
+                            if (file != null) {
                                 return file.getAbsolutePath();
                             } else {
                                 return "";
