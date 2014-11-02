@@ -783,7 +783,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             }
         }
         int choice = JOptionPane.showConfirmDialog(this,
-                String.format(NbBundle.getMessage(ReleveTopComponent.class, "message.saveFile"), fileName),
+                NbBundle.getMessage(ReleveTopComponent.class, "message.saveFile", fileName),
                 title,
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE
