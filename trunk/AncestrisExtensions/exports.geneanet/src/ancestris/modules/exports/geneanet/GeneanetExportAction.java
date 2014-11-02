@@ -38,7 +38,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
@@ -89,54 +88,47 @@ public final class GeneanetExportAction implements ActionListener {
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             myGedcom = context.getGedcom();
             Preferences modulePreferences = NbPreferences.forModule(GeneanetExport.class);
-            if (modulePreferences.getInt("RestricitionDuration", -1) == -1) {
-                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
+            String gedcomName = removeExtension(myGedcom.getName());
+
+            exportDirName = modulePreferences.get("Dossier-Export-" + gedcomName, "");
+            exportFileName = modulePreferences.get("Fichier-Export-" + gedcomName, gedcomName + ".gw");
+
+            ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
+            for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
+                if (f.canApplyTo(context.getGedcom())) {
+                    theFilters.add(f);
+                }
+            }
+            for (Filter f : Lookup.getDefault().lookupAll(Filter.class)) {
+                if (f.canApplyTo(context.getGedcom())) {
+                    theFilters.add(f);
+                }
+            }
+
+            SaveOptionsWidget options = new SaveOptionsWidget(theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
+
+            fc.setAccessory(options);
+            if (exportDirName.length() > 0) {
+                // Set the current directory
+                fc.setCurrentDirectory(new File(exportDirName));
+            }
+
+            fc.setFileFilter(filter);
+            fc.setAcceptAllFileFilterUsed(false);
+            fc.setSelectedFile(new File(exportFileName));
+
+            if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File exportFile = fc.getSelectedFile();
+                modulePreferences.put("Dossier-Export-" + gedcomName, exportFile.getPath());
+                modulePreferences.put("Fichier-Export-" + gedcomName, exportFile.getName());
+
+                GeneanetExport exportGeneanet = new GeneanetExport(myGedcom, exportFile);
+                exportGeneanet.setFilters(options.getFilters());
+                showWaitCursor();
+                exportGeneanet.start();
+                hideWaitCursor();
+                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.End"), NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
-                OptionsDisplayer.getDefault().open("Extensions/GeneanetExport");
-            } else {
-
-                String gedcomName = removeExtension(myGedcom.getName());
-
-                exportDirName = modulePreferences.get("Dossier-Export-" + gedcomName, "");
-                exportFileName = modulePreferences.get("Fichier-Export-" + gedcomName, gedcomName + ".gw");
-
-        ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
-        for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
-            if (f.canApplyTo(context.getGedcom())) {
-                theFilters.add(f);
-            }
-        }
-        for (Filter f : Lookup.getDefault().lookupAll(Filter.class)) {
-            if (f.canApplyTo(context.getGedcom())) {
-                theFilters.add(f);
-            }
-        }
-
-        SaveOptionsWidget options = new SaveOptionsWidget(theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-
-        fc.setAccessory(options);
-                if (exportDirName.length() > 0) {
-                    // Set the current directory
-                    fc.setCurrentDirectory(new File(exportDirName));
-                }
-
-                fc.setFileFilter(filter);
-                fc.setAcceptAllFileFilterUsed(false);
-                fc.setSelectedFile(new File(exportFileName));
-
-                if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    File exportFile = fc.getSelectedFile();
-                    modulePreferences.put("Dossier-Export-" + gedcomName, exportFile.getPath());
-                    modulePreferences.put("Fichier-Export-" + gedcomName, exportFile.getName());
-
-                    GeneanetExport exportGeneanet = new GeneanetExport(myGedcom, exportFile);
-                    exportGeneanet.setFilters(theFilters);
-                    showWaitCursor();
-                    exportGeneanet.start();
-                    hideWaitCursor();
-                    NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.End"), NotifyDescriptor.INFORMATION_MESSAGE);
-                    DialogDisplayer.getDefault().notify(nd);
-                }
             }
         }
     }
@@ -185,4 +177,4 @@ public final class GeneanetExportAction implements ActionListener {
             }
         });
     }
-        }
+}
