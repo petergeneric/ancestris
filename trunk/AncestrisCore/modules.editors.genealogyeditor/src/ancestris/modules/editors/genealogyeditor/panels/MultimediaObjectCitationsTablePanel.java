@@ -193,6 +193,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
                             mRoot));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
+                    multiMediaObjectCitationsTableModel.remove(rowIndex);
                     gedcom.doUnitOfWork(new UnitOfWork() {
 
                         @Override
@@ -201,7 +202,6 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
                         }
                     }); // end of doUnitOfWork
 
-                    multiMediaObjectCitationsTableModel.remove(rowIndex);
                     if (multiMediaObjectCitationsTableModel.getRowCount() <= 0) {
                         editMMObjecButton.setEnabled(false);
                         deleteMMObjectButton.setEnabled(false);
