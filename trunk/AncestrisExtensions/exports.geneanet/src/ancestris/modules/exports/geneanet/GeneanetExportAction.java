@@ -122,8 +122,7 @@ public final class GeneanetExportAction implements ActionListener {
                 modulePreferences.put("Dossier-Export-" + gedcomName, exportFile.getPath());
                 modulePreferences.put("Fichier-Export-" + gedcomName, exportFile.getName());
 
-                GeneanetExport exportGeneanet = new GeneanetExport(myGedcom, exportFile);
-                exportGeneanet.setFilters(options.getFilters());
+                GeneanetExport exportGeneanet = new GeneanetExport(myGedcom, exportFile, options.getFilters());
                 showWaitCursor();
                 exportGeneanet.start();
                 hideWaitCursor();

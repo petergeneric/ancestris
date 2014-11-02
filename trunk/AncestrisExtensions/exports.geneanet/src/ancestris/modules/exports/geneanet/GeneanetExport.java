@@ -53,10 +53,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -64,130 +62,20 @@ import org.openide.util.NbPreferences;
  */
 public class GeneanetExport {
 
-    private class GwIndi {
-
-        private boolean alreadyDescribed = false;
-        private String firstName = null;
-        private String lastName = null;
-        private int occurence = 0;
-        private String description = null;
-        private String notes = null;
-        private String relations = null;
-        private boolean canBeExported = false;
-
-        public GwIndi() {
-        }
-
-        private GwIndi(String lastName, String firstName, int occurence) {
-            this.lastName = lastName;
-            this.firstName = firstName;
-            this.occurence = occurence;
-        }
-
-        public String getName() {
-            return lastName + " " + firstName;
-        }
-
-        public String getNameOccurenced() {
-            if (occurence > 0) {
-                return lastName + " " + firstName + "." + occurence;
-            } else {
-                return lastName + " " + firstName;
-            }
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public String getFirstNameOccurenced() {
-            if (occurence > 0) {
-                return firstName + "." + occurence;
-            } else {
-                return firstName;
-            }
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setNotes(String notes) {
-            this.notes = notes;
-        }
-
-        public String getNotes() {
-            return notes;
-        }
-
-        public void setRelations(String relations) {
-            this.relations = relations;
-        }
-
-        public String getRelations() {
-            return relations;
-        }
-
-        void setAlreadyDescribed() {
-            alreadyDescribed = true;
-        }
-
-        public boolean isDescribed() {
-            return alreadyDescribed;
-        }
-
-        public boolean canBeExported() {
-            return canBeExported;
-        }
-
-        public void setCanBeExported(boolean canBeExported) {
-            this.canBeExported = canBeExported;
-        }
-    }
     private Map<String, Integer> indiNameOccurence = new HashMap<String, Integer>();
     private Map<String, GwIndi> indiMap = new HashMap<String, GwIndi>();
     private final static Logger LOG = Logger.getLogger("genj.app", null);
     private Console console = null;
-    private boolean notesExported = true;
-    private boolean sourcesExported = true;
-    private boolean exportedRestricted = true;
-    private boolean logEnabled = false;
-    private boolean aliveExported = false;
-    private boolean divorceExported = false;
-    private boolean relationsExported = false;
-    private boolean weddingDetailExported = false;
-    private boolean eventsExported = false;
-    private int ExportRestriction = 100;
     private Gedcom myGedcom = null;
     private File exportFile = null;
-    
+
     private Filter filter;
 
-    GeneanetExport(Gedcom gedcom, File exportFile) {
-        Preferences modulePreferences = NbPreferences.forModule(GeneanetExport.class);
+    GeneanetExport(Gedcom gedcom, File exportFile, Collection<Filter> fs) {
 
         this.myGedcom = gedcom;
-        this.filter = new Filter.Union(gedcom, Collections.<Filter>emptyList());
+        this.filter = new Filter.Union(myGedcom, fs);
         this.exportFile = exportFile;
-        this.exportedRestricted = modulePreferences.getBoolean("ExportRestricited", true);
-        this.ExportRestriction = modulePreferences.getInt("RestricitionDuration", 100);
-        this.notesExported = modulePreferences.getBoolean("ExportNotes", true);
-        this.logEnabled = modulePreferences.getBoolean("LogEnable", false);
-
-        this.sourcesExported = modulePreferences.getBoolean("ExportSources", true);
-        this.aliveExported = modulePreferences.getBoolean("ExportAlive", false);
-        this.eventsExported = modulePreferences.getBoolean("ExportEvents", true);
-        this.relationsExported = modulePreferences.getBoolean("ExportRelations", false);
-        this.weddingDetailExported = modulePreferences.getBoolean("ExportWeddingDetails", true);
-        this.divorceExported = modulePreferences.getBoolean("ExportDivorce", false);
     }
 
     public void start() {
@@ -220,99 +108,43 @@ public class GeneanetExport {
     }
 
     /**
-     * Sets filters to use for checking whether to write
-     * entities/properties or not
+     * Sets filters to use for checking whether to write entities/properties or
+     * not
      */
-    public void setFilters(Collection<Filter> fs) {
-        filter = new Filter.Union(myGedcom, fs);
+    public void setFilters() {
     }
 
-    private boolean vetoedProperty(Property property){
-        if (property == null)
+    private boolean vetoedProperty(Property property) {
+        if (property == null) {
             return true;
+        }
 
-        if (property instanceof Entity){
-            return filter.veto((Entity)property);
+        if (property instanceof Entity) {
+            return filter.veto((Entity) property);
         }
         return filter.veto(property);
     }
-    
-    private Property[] vetoedProperties(Property[] properties){
+
+    private Property[] vetoedProperties(Property[] properties) {
         List<Property> props = new ArrayList<Property>();
-        for (Property prop:properties){
-            if (vetoedProperty(prop))
+        for (Property prop : properties) {
+            if (vetoedProperty(prop)) {
                 continue;
+            }
             props.add(prop);
         }
         return Property.toArray(props);
     }
 
-    private Indi[] vetoedProperties(Indi[] indis){
+    private Indi[] vetoedProperties(Indi[] indis) {
         List<Indi> props = new ArrayList<Indi>();
-        for (Indi indi:indis){
-            if (vetoedProperty(indi))
+        for (Indi indi : indis) {
+            if (vetoedProperty(indi)) {
                 continue;
+            }
             props.add(indi);
         }
         return props.toArray(new Indi[props.size()]);
-    }
-
-    private boolean canbeExported(Indi indi) {
-        if (vetoedProperty(indi))
-            return false;
-        PointInTime CurrentDate = PointInTime.getNow();
-        PropertyDate birthDate = indi != null ? indi.getBirthDate() : null;
-        PointInTime date = birthDate != null ? birthDate.getStart() : null;
-
-        if (date != null) {
-            if (exportedRestricted == true) {
-                if (CurrentDate.getYear() - date.getYear() > ExportRestriction) {
-                    if (aliveExported == true) {
-                        return true;
-                    } else {
-                        if (indi.isDeceased()) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        } else {
-            // dans le doute on s'abstient
-            if (exportedRestricted == true) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    private boolean canbeExported(Fam family) {
-        if (vetoedProperty(family))
-            return false;
-        PointInTime CurrentDate = PointInTime.getNow();
-        PropertyDate marriageDate = family != null ? family.getMarriageDate() : null;
-        PointInTime date = marriageDate != null ? marriageDate.getStart() : null;
-
-        if (date != null) {
-            if (exportedRestricted == true) {
-                return CurrentDate.getYear() - date.getYear() > ExportRestriction;
-            } else {
-                return true;
-            }
-        } else {
-            // dans le doute on s'abstient
-            if (exportedRestricted == true) {
-                return false;
-            } else {
-                return true;
-            }
-        }
     }
 
     private void exportFamilys(Collection<Fam> familys, File file) {
@@ -330,11 +162,9 @@ public class GeneanetExport {
                 Indi husband = family.getHusband();
                 Indi wife = family.getWife();
 
-                if (canbeExported(family)) {
+                if (!vetoedProperty(family)) {
                     nbExportedFamilys += 1;
-                    if (logEnabled == true) {
-                        LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportFamilleText"), family.toString(true));
-                    }
+                    LOG.log(Level.FINE, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportFamilleText"), family.toString(true));
 
                     /*
                      * fam HusbandLastName FirstName[.Number]
@@ -350,9 +180,7 @@ public class GeneanetExport {
                             GwIndi gwIndi = indiMap.get(husband.getId());
 
                             if (gwIndi.isDescribed() == false) {
-                                if (logEnabled == true) {
-                                    LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), husband.toString(true));
-                                }
+                                LOG.log(Level.FINE, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), husband.toString(true));
                                 gwIndi.setAlreadyDescribed();
                                 nbExportedindis += 1;
                                 indiMap.put(husband.getId(), gwIndi);
@@ -392,26 +220,22 @@ public class GeneanetExport {
                             }
                         }
 
-                        if (sourcesExported == true) {
-                            Property marriageSource = marriage.getProperty("SOUR");
-                            if (!vetoedProperty(marriageSource)) {
-                                out.write("#ms " + source2String(marriageSource) + " ");
-                            }
+                        Property marriageSource = marriage.getProperty("SOUR");
+                        if (!vetoedProperty(marriageSource)) {
+                            out.write("#ms " + source2String(marriageSource) + " ");
                         }
 
                         /*
                          * [#sep | - DivorceDate]
                          *
                          */
-                        if (divorceExported == true) {
-                            Property divorce = family.getProperty("DIV");
-                            if (!vetoedProperty(divorce)) {
-                                PropertyDate divorceDate = (PropertyDate) divorce.getProperty("DATE");
-                                if (!vetoedProperty(divorceDate)) {
-                                    out.write("-" + analyzeDate(divorceDate) + " ");
-                                } else {
-                                    out.write("-0 ");
-                                }
+                        Property divorce = family.getProperty("DIV");
+                        if (!vetoedProperty(divorce)) {
+                            PropertyDate divorceDate = (PropertyDate) divorce.getProperty("DATE");
+                            if (!vetoedProperty(divorceDate)) {
+                                out.write("-" + analyzeDate(divorceDate) + " ");
+                            } else {
+                                out.write("-0 ");
                             }
                         }
                     } else {
@@ -436,9 +260,7 @@ public class GeneanetExport {
                             GwIndi gwIndi = indiMap.get(wife.getId());
 
                             if (gwIndi.isDescribed() == false) {
-                                if (logEnabled == true) {
-                                    LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), wife.toString(true));
-                                }
+                                LOG.log(Level.FINE, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), wife.toString(true));
                                 gwIndi.setAlreadyDescribed();
                                 nbExportedindis += 1;
                                 indiMap.put(wife.getId(), gwIndi);
@@ -460,42 +282,38 @@ public class GeneanetExport {
                     /*
                      * [src Family source]
                      */
-                    if (sourcesExported == true) {
-                        Property familySource = family.getProperty("SOUR");
-                        if (!vetoedProperty(familySource)) {
-                            out.write("src " + source2String(familySource) + "\n");
-                        }
+                    Property familySource = family.getProperty("SOUR");
+                    if (!vetoedProperty(familySource)) {
+                        out.write("src " + source2String(familySource) + "\n");
                     }
 
                     /*
                      * [comm Family comments in free format]
                      */
-                    if (notesExported == true) {
-                        Property[] familyNotes = vetoedProperties(family.getProperties("NOTE"));
-                        if (familyNotes.length > 0) {
-                            // PropertyNote|PropertyMultilineValue
-                            out.write("comm ");
-                            for (Property note : familyNotes) {
-                                boolean first = true;
-                                if (note instanceof PropertyNote) {
-                                    note = ((PropertyNote) note).getTargetEntity();
-                                }
-                                if (first == true) {
-                                    first = false;
-                                    out.write(note.getValue().replaceAll("\n", " "));
-                                } else {
-                                    out.write("<br>" + note.getValue().replaceAll("\n", " "));
-                                }
+                    Property[] familyNotes = vetoedProperties(family.getProperties("NOTE"));
+                    if (familyNotes.length > 0) {
+                        // PropertyNote|PropertyMultilineValue
+                        out.write("comm ");
+                        for (Property note : familyNotes) {
+                            boolean first = true;
+                            if (note instanceof PropertyNote) {
+                                note = ((PropertyNote) note).getTargetEntity();
                             }
-                            out.write("\n");
+                            if (first == true) {
+                                first = false;
+                                out.write(note.getValue().replaceAll("\n", " "));
+                            } else {
+                                out.write("<br>" + note.getValue().replaceAll("\n", " "));
+                            }
                         }
+                        out.write("\n");
                     }
 
                     /*
                      * [wit: Witness (use Person format, see Person Information
                      * section) ]
                      */
-                    if (marriage != null && weddingDetailExported == true) {
+                    if (marriage != null) {
                         Property[] propertiesXRef = vetoedProperties(marriage.getProperties("XREF"));
                         if (propertiesXRef.length > 0) {
                             for (Property xrefProperty : propertiesXRef) {
@@ -521,11 +339,9 @@ public class GeneanetExport {
                     if (childrens.length > 0) {
                         out.write("beg\n");
                         for (Indi children : childrens) {
-                            if (canbeExported(children) == true) {
+                            if (!vetoedProperty(children)) {
                                 nbExportedindis += 1;
-                                if (logEnabled == true) {
-                                    LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), children.toString(true));
-                                }
+                                LOG.log(Level.FINE, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), children.toString(true));
 
                                 switch (children.getSex()) {
                                     case PropertySex.FEMALE:
@@ -583,23 +399,19 @@ public class GeneanetExport {
                      * indi Notes notes LastName FirstName[.Number] beg Notes go
                      * here in a free format end notes
                      */
-                    if (notesExported == true) {
-                        if (indi.getNotes() != null) {
-                            out.write("notes " + indi.getNameOccurenced() + "\n");
-                            out.write(indi.getNotes());
-                        }
+                    if (indi.getNotes() != null) {
+                        out.write("notes " + indi.getNameOccurenced() + "\n");
+                        out.write(indi.getNotes());
                     }
 
                     /*
                      * indi Relations rel LastName FirstName[.Number]
                      */
-                    if (relationsExported == true) {
-                        if (indi.getRelations() != null) {
-                            out.write("rel " + indi.getNameOccurenced() + "\n");
-                            out.write("beg\n");
-                            out.write(indi.getRelations());
-                            out.write("end\n");
-                        }
+                    if (indi.getRelations() != null) {
+                        out.write("rel " + indi.getNameOccurenced() + "\n");
+                        out.write("beg\n");
+                        out.write(indi.getRelations());
+                        out.write("end\n");
                     }
                 }
             }
@@ -651,11 +463,8 @@ public class GeneanetExport {
 
         console.println("Nombre de familles exportées " + nbExportedFamilys);
         console.println("Nombre d'individus exportés " + nbExportedindis);
-        if (logEnabled == true) {
-            LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NbFamillesExportText"), nbExportedFamilys);
-            LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NbIndividusExportText"), nbExportedindis);
-        }
-
+        LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NbFamillesExportText"), nbExportedFamilys);
+        LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NbIndividusExportText"), nbExportedindis);
     }
 
     /*
@@ -706,33 +515,31 @@ public class GeneanetExport {
                 gwIndi = new GwIndi(lastName, firstName, NameOccurence);
             }
 
-            gwIndi.setCanBeExported(canbeExported(indi));
+            gwIndi.setCanBeExported(!vetoedProperty(indi));
             gwIndi.setDescription(analyzeIndi(indi));
 
             /*
              * indi Notes
              */
-            if (notesExported == true) {
-                Property[] indiNotes = indi.getProperties("NOTE");
-                if (indiNotes.length > 0) {
-                    String stringNotes = "";
-                    stringNotes = "beg\n";
-                    // PropertyNote | PropertyMultilineValue
-                    for (Property note : indiNotes) {
-                        boolean first = true;
-                        if (note instanceof PropertyNote) {
-                            note = ((PropertyNote) note).getTargetEntity();
-                        }
-                        if (first == true) {
-                            first = false;
-                            stringNotes += note.getValue().replaceAll("\n", " ");
-                        } else {
-                            stringNotes += "<br>" + note.getValue().replaceAll("\n", " ");
-                        }
+            Property[] indiNotes = vetoedProperties(indi.getProperties("NOTE"));
+            if (indiNotes.length > 0) {
+                String stringNotes = "";
+                stringNotes = "beg\n";
+                // PropertyNote | PropertyMultilineValue
+                for (Property note : indiNotes) {
+                    boolean first = true;
+                    if (note instanceof PropertyNote) {
+                        note = ((PropertyNote) note).getTargetEntity();
                     }
-                    stringNotes += "\nend notes\n";
-                    gwIndi.setNotes(stringNotes);
+                    if (first == true) {
+                        first = false;
+                        stringNotes += note.getValue().replaceAll("\n", " ");
+                    } else {
+                        stringNotes += "<br>" + note.getValue().replaceAll("\n", " ");
+                    }
                 }
+                stringNotes += "\nend notes\n";
+                gwIndi.setNotes(stringNotes);
             }
 
             indiMap.put(indi.getId(), gwIndi);
@@ -741,7 +548,6 @@ public class GeneanetExport {
 
     private String analyzeIndi(Indi indi) {
         String indiDescription = "";
-
 
         Property[] indiNames = indi.getProperties("NAME");
         if (indiNames.length > 0) {
@@ -795,11 +601,9 @@ public class GeneanetExport {
         /*
          * [#src PersonSource]
          */
-        if (sourcesExported == true) {
-            Property indiSource = indi.getProperty("SOUR");
-            if (indiSource != null) {
-                indiDescription += "#src " + source2String(indiSource) + " ";
-            }
+        Property indiSource = indi.getProperty("SOUR");
+        if (indiSource != null && !vetoedProperty(indiSource)) {
+            indiDescription += "#src " + source2String(indiSource) + " ";
         }
 
         /*
@@ -864,7 +668,7 @@ public class GeneanetExport {
                                 relations += "- godp moth: " + indiMap.get(((Indi) targetEntity).getId()).getNameOccurenced() + "\n";
                             }
                         }
-                    } else if(property.getTag().equals("ADOP")) {
+                    } else if (property.getTag().equals("ADOP")) {
                         Property[] propertiesXRef = property.getProperties("XREF");
                         for (Property propertyXRef : propertiesXRef) {
                             Entity targetEntity = ((PropertyXRef) propertyXRef).getTargetEntity();
@@ -873,11 +677,11 @@ public class GeneanetExport {
                             } else {
                                 relations += "- adop moth: " + indiMap.get(((Indi) targetEntity).getId()).getNameOccurenced() + "\n";
                             }
-                        }                        
+                        }
                     }
                 }
             }
-            
+
             if (relations.length() > 0) {
                 GwIndi gwIndi = indiMap.get(indi.getId());
                 gwIndi.setRelations(relations);
@@ -972,19 +776,14 @@ public class GeneanetExport {
         }
 
         // [#bs BirthSource]
-        if (sourcesExported == true) {
-            Property birthSource = birth.getProperty("SOUR");
-            if (birthSource != null) {
-                birthString += "#bs " + source2String(birthSource);
-            }
+        Property birthSource = birth.getProperty("SOUR");
+        if (birthSource != null && !vetoedProperty(birthSource)) {
+            birthString += "#bs " + source2String(birthSource);
         }
 
         //  [!BaptizeDate]
-
         //  [#pp BaptizePlace]
-
         //  [#ps BaptizeSource]
-
         return (birthString);
     }
 
@@ -1013,11 +812,9 @@ public class GeneanetExport {
         }
 
         // [#ds DeathSource]
-        if (sourcesExported == true) {
-            Property deathSource = death.getProperty("SOUR");
-            if (deathSource != null) {
-                deathString += "#ds " + source2String(deathSource) + " ";
-            }
+        Property deathSource = death.getProperty("SOUR");
+        if (deathSource != null && !vetoedProperty(deathSource)) {
+            deathString += "#ds " + source2String(deathSource) + " ";
         }
 
         // [#buri | #crem [BurialDate]] [#rp BurialPlace] [#rs BurialSource]
@@ -1025,8 +822,8 @@ public class GeneanetExport {
     }
 
     private String date2String(PointInTime date) {
-        String stringDate =
-                new String();
+        String stringDate
+                = new String();
         if (date.isValid()) {
             if (!date.getCalendar().equals(PointInTime.GREGORIAN)) {
                 try {
@@ -1106,17 +903,106 @@ public class GeneanetExport {
             srcString += "_" + source.getProperty("PAGE").getValue().replaceAll(" |\n", "_");
         }
 
-        if (notesExported == true) {
-            Property sourceNote = source.getProperty("NOTE");
-            if (sourceNote != null) {
-                if (sourceNote instanceof PropertyNote) {
-                    sourceNote = ((PropertyNote) sourceNote).getTargetEntity();
+        Property[] sourceNotes = vetoedProperties(source.getProperties("NOTE"));
+        if (sourceNotes.length > 0) {
+            for (Property note : sourceNotes) {
+                if (note instanceof PropertyNote) {
+                    note = ((PropertyNote) note).getTargetEntity();
                 }
-                String stringNote = source.getProperty("NOTE").getValue();
+                String stringNote = note.getValue();
                 srcString += "_" + stringNote.replaceAll(" |\n", "_");
             }
         }
 
         return srcString;
+    }
+
+    private class GwIndi {
+
+        private boolean alreadyDescribed = false;
+        private String firstName = null;
+        private String lastName = null;
+        private int occurence = 0;
+        private String description = null;
+        private String notes = null;
+        private String relations = null;
+        private boolean canBeExported = false;
+
+        public GwIndi() {
+        }
+
+        private GwIndi(String lastName, String firstName, int occurence) {
+            this.lastName = lastName;
+            this.firstName = firstName;
+            this.occurence = occurence;
+        }
+
+        public String getName() {
+            return lastName + " " + firstName;
+        }
+
+        public String getNameOccurenced() {
+            if (occurence > 0) {
+                return lastName + " " + firstName + "." + occurence;
+            } else {
+                return lastName + " " + firstName;
+            }
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getFirstNameOccurenced() {
+            if (occurence > 0) {
+                return firstName + "." + occurence;
+            } else {
+                return firstName;
+            }
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setNotes(String notes) {
+            this.notes = notes;
+        }
+
+        public String getNotes() {
+            return notes;
+        }
+
+        public void setRelations(String relations) {
+            this.relations = relations;
+        }
+
+        public String getRelations() {
+            return relations;
+        }
+
+        void setAlreadyDescribed() {
+            alreadyDescribed = true;
+        }
+
+        public boolean isDescribed() {
+            return alreadyDescribed;
+        }
+
+        public boolean canBeExported() {
+            return canBeExported;
+        }
+
+        public void setCanBeExported(boolean canBeExported) {
+            this.canBeExported = canBeExported;
+        }
     }
 }
