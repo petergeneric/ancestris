@@ -56,7 +56,7 @@ public class TreeViewSosaAction
         } else {
             indiDeCujus = (Indi) e;
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
-            putValue(Action.NAME, NbBundle.getMessage(this.getClass(), "CTL_GenerateSosaAction", indiDeCujus.getName()));
+            putValue(Action.NAME, NbBundle.getMessage(this.getClass(), "ContextSosaAction", indiDeCujus.getName()));
             putValue(Action.SMALL_ICON, new ImageIcon("ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png"));
             myGedcom = e.getGedcom();
             return this;

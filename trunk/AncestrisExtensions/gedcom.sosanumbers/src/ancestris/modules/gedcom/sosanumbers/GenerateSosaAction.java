@@ -20,15 +20,14 @@ import genj.gedcom.Indi;
 import genj.util.Registry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.prefs.Preferences;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
+import static ancestris.modules.gedcom.sosanumbers.Bundle.*;
 
 @ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction",
         category = "Tools")
@@ -36,6 +35,7 @@ import org.openide.util.Utilities;
         iconInMenu = true,
         displayName = "#CTL_GenerateSosaAction")
 @ActionReference(path = "Menu/Tools/Gedcom")
+@NbBundle.Messages("ok.label=Generate SOSA Numbering")
 public final class GenerateSosaAction implements ActionListener {
 
     Gedcom myGedcom = null;
@@ -58,18 +58,19 @@ public final class GenerateSosaAction implements ActionListener {
                 }
             }
 
-            String clearChoice = new String(NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.clear"));
+            String clearChoice = NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.clear");
+            String okText = ok_label();
             Object choice = DialogManager.create(
                     NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"),
                     selectEntityPanel)
                     .setMessageType(DialogManager.QUESTION_MESSAGE)
-                    .setOptions(new Object[]{DialogManager.OK_OPTION, DialogManager.CANCEL_OPTION})
+                    .setOptions(new Object[]{okText, DialogManager.CANCEL_OPTION})
                     .setAdditionalOptions(new Object[]{clearChoice})
                     .show();
 
             if (choice != DialogManager.CANCEL_OPTION) {
                 Indi indiDeCujus = null;
-                if (choice == DialogManager.OK_OPTION) {
+                if (choice == okText) {
                     indiDeCujus = (Indi) selectEntityPanel.getSelection();
                 }
                 // else null means clear sosa
