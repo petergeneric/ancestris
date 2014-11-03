@@ -55,7 +55,7 @@ public class AssociationsTableModel extends AbstractTableModel {
                     PropertyRelationship relation = (PropertyRelationship) propertyAssociation.getProperty("RELA");
                     if (relation != null) {
                         String value = relation.getValue();
-                        int index = value.indexOf(":");
+                        int index = value.lastIndexOf(":");
                         if (index >= 0) {
                             return PropertyTag2Name.getTagName(value.substring(index+1));
                         }
