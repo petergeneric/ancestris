@@ -39,6 +39,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
     private PropertyAssociation mAssociation;
     private Entity mIndividual;
+    private Property mEvent;
     private Indi mAssociatedIndividual;
     private boolean mRelationModified = false;
     private final ChangeListner changeListner = new ChangeListner();
@@ -200,10 +201,10 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel sourcesPanel;
     // End of variables declaration//GEN-END:variables
 
-    void set(Entity individual, PropertyAssociation association) {
+    void set(Entity individual, PropertyAssociation association, Property event) {
         mIndividual = individual;
+        mEvent = event;
         relationChoiceWidget.setValues(mIndividual.getGedcom().getReferenceSet("RELA").getKeys());
-
         if (association != null) {
             changeListner.mute();
             mAssociation = association;
@@ -216,7 +217,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                 referenceIndividualTextField.setVisible(false);
             }
 
-            PropertyRelationship propertyRelationship = (PropertyRelationship)association.getProperty("RELA", false);
+            PropertyRelationship propertyRelationship = (PropertyRelationship) association.getProperty("RELA", false);
             if (propertyRelationship != null) {
                 relationChoiceWidget.setText(propertyRelationship.getDisplayValue());
             }
@@ -233,6 +234,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             if (mAssociation == null) {
                 mAssociation = (PropertyAssociation) mIndividual.addProperty("ASSO", "@@");
             }
+
             if (mAssociatedIndividual != null) {
                 mAssociation.setValue('@' + mAssociatedIndividual.getId() + '@');
                 try {
@@ -241,12 +243,12 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                     Exceptions.printStackTrace(ex);
                 }
             }
-            
+
             PropertyRelationship propertyRelationship = (PropertyRelationship) mAssociation.getProperty("RELA", false);
             if (propertyRelationship == null) {
-                mAssociation.addProperty("RELA", relationChoiceWidget.getText());
+                mAssociation.addProperty("RELA", relationChoiceWidget.getText() + (mEvent != null ? "@" + mEvent.getPath().toString() : ""));
             } else {
-                propertyRelationship.setValue(relationChoiceWidget.getText() + "@");
+                propertyRelationship.setValue(relationChoiceWidget.getText());
             }
         }
 

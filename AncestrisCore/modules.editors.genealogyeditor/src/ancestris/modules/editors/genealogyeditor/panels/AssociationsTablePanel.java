@@ -118,7 +118,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
         Gedcom gedcom = mRootEntity.getGedcom();
         int undoNb = gedcom.getUndoNb();
         final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-        associationEditorPanel.set(mRootEntity, mAssociation);
+        associationEditorPanel.set(mRootEntity, mAssociation, null);
 
         DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
@@ -155,7 +155,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
             int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
             int undoNb = gedcom.getUndoNb();
             final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-            associationEditorPanel.set(mRootEntity, mAssociationsTableModel.getValueAt(rowIndex));
+            associationEditorPanel.set(mRootEntity, mAssociationsTableModel.getValueAt(rowIndex), null);
 
             DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
@@ -191,7 +191,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
                 int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
                 int undoNb = gedcom.getUndoNb();
                 final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-                associationEditorPanel.set(mRootEntity, mAssociationsTableModel.getValueAt(rowIndex));
+                associationEditorPanel.set(mRootEntity, mAssociationsTableModel.getValueAt(rowIndex), null);
 
                 DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
                         NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
