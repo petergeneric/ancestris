@@ -601,10 +601,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     private void associateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_associateButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
-        final Entity entity = mRoot.getEntity();
         int undoNb = gedcom.getUndoNb();
         AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-        associationEditorPanel.set((Indi) mRoot, mAssociation);
+        associationEditorPanel.set((Indi) mRoot, mAssociation, mEvent);
 
         DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
