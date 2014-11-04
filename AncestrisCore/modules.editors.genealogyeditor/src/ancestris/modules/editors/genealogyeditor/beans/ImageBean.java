@@ -3,7 +3,6 @@ package ancestris.modules.editors.genealogyeditor.beans;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +18,7 @@ import org.openide.util.Exceptions;
 public class ImageBean extends javax.swing.JPanel {
 
     private Image loadImage = null;
+    private Image scaledImage = null;
 
     /**
      * Creates new form ImageBean
@@ -68,6 +68,12 @@ public class ImageBean extends javax.swing.JPanel {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         if (loadImage != null) {
+            if (getWidth() < getHeight()) {
+                scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+            } else {
+                scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
+            }
+
             repaint();
         }
     }//GEN-LAST:event_formComponentResized
@@ -119,16 +125,8 @@ public class ImageBean extends javax.swing.JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (loadImage != null) {
-            Image scaledImage;
-            if (getWidth() < getHeight()) {
-                scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
-            } else {
-                scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
-            }
-
-            Graphics2D g2 = (Graphics2D) g;
-            g2.drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);
+        if (scaledImage != null) {
+            ((Graphics2D) g).drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);
         }
     }
 }
