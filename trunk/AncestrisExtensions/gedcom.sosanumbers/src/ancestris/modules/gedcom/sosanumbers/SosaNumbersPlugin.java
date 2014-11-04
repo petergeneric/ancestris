@@ -16,8 +16,6 @@ import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import java.util.prefs.Preferences;
-import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -42,8 +40,7 @@ public class SosaNumbersPlugin extends AncestrisPlugin implements GedcomFileList
 
     @Override
     public void gedcomOpened(Gedcom gedcom) {
-        Preferences modulePreferences = NbPreferences.forModule(SosaNumbers.class);
-        String selectedEntityID = modulePreferences.get("SelectEntityDialog." + gedcom.getName(), "");
+        String selectedEntityID = gedcom.getRegistry().get("INDI.decujus.id", "");
         Indi indiDeCujus = null;
         if (!selectedEntityID.isEmpty()) {
             indiDeCujus = (Indi) gedcom.getEntity(Gedcom.INDI, selectedEntityID);
