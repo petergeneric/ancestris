@@ -22,7 +22,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
     private Context context;
     private Property mRoot;
     private Property mMultiMediaObject;
-    private File mFile;
+    private File mFile = null;
 
     /**
      * Creates new form MultiMediaObjectEditor
@@ -290,7 +290,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 imageBean.setImage(((PropertyFile) multimediaFile).getFile());
             } else {
                 PropertyBlob propertyBlob = (PropertyBlob) mMultiMediaObject.getProperty("BLOB", true);
-                imageBean.setImage(propertyBlob != null?propertyBlob.getBlobData():(byte [])null);
+                imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null);
             }
 
             /*
@@ -304,15 +304,19 @@ public class MultiMediaObjectEditor extends EntityEditor {
     public void commit() {
         if (changes.hasChanged()) {
             if (mMultiMediaObject instanceof Media) {
-                ((Media) mMultiMediaObject).addFile(mFile);
-                ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText().isEmpty() ? mFile.getName() : multiMediaObjectTitleTextField.getText());
+                if (mFile != null) {
+                    ((Media) mMultiMediaObject).addFile(mFile);
+                }
+                ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText().isEmpty() ? ((mFile != null) ? mFile.getName() : "") : multiMediaObjectTitleTextField.getText());
             } else {
-                mMultiMediaObject.addFile(mFile);
+                if (mFile != null) {
+                    mMultiMediaObject.addFile(mFile);
+                }
                 Property propertyTitle = mMultiMediaObject.getProperty("TITL");
                 if (propertyTitle == null) {
-                    mMultiMediaObject.addProperty("TITL", multiMediaObjectTitleTextField.getText().isEmpty() ? mFile.getName() : multiMediaObjectTitleTextField.getText());
+                    mMultiMediaObject.addProperty("TITL", multiMediaObjectTitleTextField.getText().isEmpty() ? ((mFile != null) ? mFile.getName() : "") : multiMediaObjectTitleTextField.getText());
                 } else {
-                    propertyTitle.setValue(multiMediaObjectTitleTextField.getText().isEmpty() ? mFile.getName() : multiMediaObjectTitleTextField.getText());
+                    propertyTitle.setValue(multiMediaObjectTitleTextField.getText().isEmpty() ? ((mFile != null) ? mFile.getName() : "") : multiMediaObjectTitleTextField.getText());
                 }
             }
         }
