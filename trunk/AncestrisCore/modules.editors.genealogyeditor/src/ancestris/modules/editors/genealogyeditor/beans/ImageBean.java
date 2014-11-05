@@ -25,9 +25,8 @@ public class ImageBean extends javax.swing.JPanel {
      */
     public ImageBean() {
         super();
-        InputStream imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
         try {
-            loadImage = ImageIO.read(imageInputStream);
+            loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png"));
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -87,6 +86,11 @@ public class ImageBean extends javax.swing.JPanel {
             try {
                 imageInputStream = new FileInputStream(file);
                 loadImage = ImageIO.read(imageInputStream);
+                if (getWidth() > 0 && getWidth() < getHeight()) {
+                    scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+                } else if (getHeight() > 0) {
+                    scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
+                }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -94,6 +98,11 @@ public class ImageBean extends javax.swing.JPanel {
             imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
             try {
                 loadImage = ImageIO.read(imageInputStream);
+                if (getWidth() > 0 && getWidth() < getHeight()) {
+                    scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+                } else if (getHeight() > 0) {
+                    scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
+                }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -108,13 +117,22 @@ public class ImageBean extends javax.swing.JPanel {
 
             try {
                 loadImage = ImageIO.read(bais);
+                if (getWidth() > 0 && getWidth() < getHeight()) {
+                    scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+                } else if (getHeight() > 0) {
+                    scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
+                }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         } else {
-            InputStream imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
             try {
-                loadImage = ImageIO.read(imageInputStream);
+                loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png"));
+                if (getWidth() > 0 && getWidth() < getHeight()) {
+                    scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+                } else if (getHeight() > 0) {
+                    scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
+                }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
