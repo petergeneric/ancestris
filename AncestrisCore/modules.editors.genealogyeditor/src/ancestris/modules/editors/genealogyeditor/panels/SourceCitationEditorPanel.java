@@ -701,9 +701,18 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             }
         }
 
-        Property dataQuality = sourceCitation.getProperty("QUAY");
-        if (dataQuality != null) {
-            dataQualityComboBox.setSelectedIndex(Integer.parseInt(dataQuality.getValue()) + 1);
+        Property propertyQuality = sourceCitation.getProperty("QUAY");
+        int qualityIndex = 0;
+        if (propertyQuality != null) {
+            try {
+            qualityIndex = Integer.parseInt(propertyQuality.getValue()) + 1;
+            } catch (NumberFormatException ex) {
+                qualityIndex = 0;
+            }
+        }
+
+        if (qualityIndex < dataQualityComboBox.getItemCount()) {
+            dataQualityComboBox.setSelectedIndex(qualityIndex);
         } else {
             dataQualityComboBox.setSelectedIndex(0);
         }
