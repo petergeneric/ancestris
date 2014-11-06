@@ -14,7 +14,7 @@ import org.openide.util.NbBundle;
 public class MultiMediaObjectsTableModel extends AbstractTableModel {
 
     List<Media> multimediaObjectsRefList = new ArrayList<Media>();
-    private String[] columnsName = {
+    private final String[] columnsName = {
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectsTableModel.column.ID.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectsTableModel.column.fileName.title")
     };
