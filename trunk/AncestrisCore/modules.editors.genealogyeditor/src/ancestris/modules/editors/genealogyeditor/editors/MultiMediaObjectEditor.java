@@ -321,28 +321,4 @@ public class MultiMediaObjectEditor extends EntityEditor {
             }
         }
     }
-
-    /*
-     private void editFileButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
-     int selectedRow = multimediaFilesTable.getSelectedRow();
-     if (selectedRow != -1) {
-     int rowIndex = multimediaFilesTable.convertRowIndexToModel(selectedRow);
-     File multiMediafile = mMultimediaFilesTableModel.getValueAt(rowIndex).getFile();
-     if (multiMediafile.exists()) {
-     try {
-     Desktop.getDesktop().edit(multiMediafile);
-     } catch (UnsupportedOperationException ex) {
-     try {
-     Desktop.getDesktop().open(multiMediafile);
-     } catch (IOException ex1) {
-     Exceptions.printStackTrace(ex1);
-     }
-     } catch (IOException ex) {
-     Exceptions.printStackTrace(ex);
-     }
-     }
-     }
-     }                                              
-    
-     */
 }
