@@ -56,10 +56,28 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < multimediaObjectsRefList.size()) {
             Property multimediaObject = multimediaObjectsRefList.get(row);
-            if (multimediaObject instanceof PropertyMedia) {
-                switch (column) {
-                    case 0: {
-                        Property propertyfile = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
+            switch (column) {
+                case 0: {
+                    if (multimediaObject instanceof PropertyMedia) {
+                        multimediaObject = ((PropertyMedia) multimediaObject).getTargetEntity();
+                    }
+                    if (multimediaObject instanceof Media && multimediaObject.getGedcom().getGrammar().getVersion().equals("5.5")) {
+                        PropertyBlob propertyBlob = (PropertyBlob) multimediaObject.getProperty("BLOB", true);
+                        if (propertyBlob != null) {
+                            ByteArrayInputStream bais = new ByteArrayInputStream(propertyBlob.getBlobData());
+
+                            try {
+                                Image image = ImageIO.read(bais);
+                                image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
+                                return new ImageIcon(image);
+                            } catch (IOException ex) {
+                                return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                            }
+                        } else {
+                            return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                        }
+                    } else {
+                        Property propertyfile = multimediaObject.getProperty("FILE", true);
                         if (propertyfile != null && propertyfile instanceof PropertyFile) {
                             File multimediaFile = ((PropertyFile) propertyfile).getFile();
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
@@ -85,32 +103,30 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                                 return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
                             }
                         } else {
-                            if (multimediaObject.getGedcom().getGrammar().getVersion().equals("5.5")) {
-                                PropertyBlob propertyBlob = (PropertyBlob) ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("BLOB", true);
-                                if (propertyBlob != null) {
-                                    ByteArrayInputStream bais = new ByteArrayInputStream(propertyBlob.getBlobData());
-
-                                    try {
-                                        Image image = ImageIO.read(bais);
-                                        image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
-                                        return new ImageIcon(image);
-                                    } catch (IOException ex) {
-                                        return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
-                                    }
-                                } else {
-                                    return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
-                                }
-                            }
                             return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
                         }
                     }
-                    case 1:
+                }
+                case 1:
+                    if (multimediaObject instanceof PropertyMedia) {
                         return ((Media) ((PropertyMedia) multimediaObject).getTargetEntity()).getId();
-
-                    case 2: {
-                        return ((Media) ((PropertyMedia) multimediaObject).getTargetEntity()).getTitle();
+                    } else {
+                        return "";
                     }
-                    case 3: {
+                case 2: {
+                    if (multimediaObject instanceof PropertyMedia) {
+                        return ((Media) ((PropertyMedia) multimediaObject).getTargetEntity()).getTitle();
+                    } else {
+                        Property title = multimediaObject.getProperty("TITL", true);
+                        if (title != null) {
+                            return title.getValue();
+                        } else {
+                            return "";
+                        }
+                    }
+                }
+                case 3: {
+                    if (multimediaObject instanceof PropertyMedia) {
                         Property propertyFile = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
                             File file = ((PropertyFile) propertyFile).getFile();
@@ -122,77 +138,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                         } else {
                             return "";
                         }
-                    }
-                    case 4: {
-                        if (((PropertyMedia) multimediaObject).getTargetEntity().getProperty("NOTE") != null) {
-                            return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
-                        } else {
-                            return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
-                        }
-                    }
-                    default:
-                        return "";
-                }
-            } else {
-                switch (column) {
-                    case 0: {
-                        if (multimediaObject.getGedcom().getGrammar().getVersion().equals("5.5")) {
-                            PropertyBlob propertyBlob = (PropertyBlob) multimediaObject.getProperty("BLOB", true);
-                            if (propertyBlob != null) {
-                                ByteArrayInputStream bais = new ByteArrayInputStream(propertyBlob.getBlobData());
-                                try {
-                                    Image image = ImageIO.read(bais);
-                                    image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
-                                    return new ImageIcon(image);
-                                } catch (IOException ex) {
-                                    return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
-                                }
-                            } else {
-                                return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
-                            }
-                        } else {
-                            Property propertyfile = multimediaObject.getProperty("FILE", true);
-                            if (propertyfile != null && propertyfile instanceof PropertyFile) {
-                                File multimediaFile = ((PropertyFile) propertyfile).getFile();
-                                ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
-                                if (multimediaFile != null && multimediaFile.exists()) {
-                                    try {
-                                        Image image;
-                                        try {
-                                            image = ImageIO.read(multimediaFile);
-                                            if (image != null) {
-                                                image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
-                                            }
-                                        } catch (IOException ex) {
-                                            image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
-                                        }
-                                        if (image != null) {
-                                            imageIcon = new ImageIcon(image);
-                                        }
-                                    } catch (FileNotFoundException ex) {
-                                        Exceptions.printStackTrace(ex);
-                                    }
-                                    return imageIcon;
-                                } else {
-                                    return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
-                                }
-                            } else {
-                                return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
-                            }
-                        }
-                    }
-
-                    case 1:
-                        return "";
-                    case 2: {
-                        Property title = multimediaObject.getProperty("TITL", true);
-                        if (title != null) {
-                            return title.getValue();
-                        } else {
-                            return "";
-                        }
-                    }
-                    case 3: {
+                    } else {
                         Property propertyFile = multimediaObject.getProperty("FILE", true);
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
                             File file = ((PropertyFile) propertyFile).getFile();
@@ -205,16 +151,24 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             return "";
                         }
                     }
-                    case 4: {
+                }
+                case 4: {
+                    if (multimediaObject instanceof PropertyMedia) {
+                        if (((PropertyMedia) multimediaObject).getTargetEntity().getProperty("NOTE") != null) {
+                            return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
+                        } else {
+                            return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
+                        }
+                    } else {
                         if (multimediaObject.getProperty("NOTE") != null) {
                             return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.yes");
                         } else {
                             return NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.note.value.no");
                         }
                     }
-                    default:
-                        return "";
                 }
+                default:
+                    return "";
             }
         } else {
             return "";
