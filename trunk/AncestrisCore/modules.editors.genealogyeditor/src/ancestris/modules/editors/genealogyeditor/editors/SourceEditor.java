@@ -395,19 +395,9 @@ public class SourceEditor extends EntityEditor {
             final Property sourceData = mSource.getProperty("DATA");
             if (sourceData != null) {
                 Property[] sourceDataEvents = sourceData.getProperties("EVEN");
-                eventTypePanel.setEventTypesList(sourceData, Arrays.asList(sourceDataEvents));
+                eventTypePanel.setEventTypesList(mSource, sourceData, Arrays.asList(sourceDataEvents));
             } else {
-                try {
-                    mSource.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            eventTypePanel.setEventTypesList(mSource.addProperty("DATA", ""), null);
-                        }
-                    }); // end of doUnitOfWork
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                eventTypePanel.setEventTypesList(mSource, null, null);
             }
 
             /*
@@ -447,7 +437,7 @@ public class SourceEditor extends EntityEditor {
             /*
              * +1 <<SOURCE_REPOSITORY_CITATION>>
              */
-            repositoryCitationPanel.set(mSource, (PropertyRepository)mSource.getProperty("REPO"));
+            repositoryCitationPanel.set(mSource, (PropertyRepository) mSource.getProperty("REPO"));
 
             /*
              * +1 REFN <USER_REFERENCE_NUMBER>
