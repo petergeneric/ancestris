@@ -2,6 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.SourceRecordedEventsTableModel;
 import ancestris.util.swing.DialogManager;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
@@ -28,7 +29,8 @@ import org.openide.util.NbBundle;
  */
 public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
 
-    private Property mRoot;
+    private Property mParent;
+    private Entity mEntity;
     private Property mRegisteredEvent;
     private SourceRecordedEventsTableModel mSourceEventTypesTableModel = new SourceRecordedEventsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
@@ -107,14 +109,17 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addSourceEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceEventButtonActionPerformed
-        Gedcom gedcom = mRoot.getGedcom();
+        Gedcom gedcom = mEntity.getGedcom();
         int undoNb = gedcom.getUndoNb();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    mRegisteredEvent = mRoot.addProperty("EVEN", "");
+                    if (mParent == null) {
+                        mParent = mEntity.addProperty("DATA", "");
+                    }
+                    mRegisteredEvent = mParent.addProperty("EVEN", "");
                 }
             }); // end of doUnitOfWork
 
@@ -156,7 +161,7 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = sourceEventsTable.convertRowIndexToModel(selectedRow);
 
-            Gedcom gedcom = mRoot.getGedcom();
+            Gedcom gedcom = mEntity.getGedcom();
             int undoNb = gedcom.getUndoNb();
 
             final RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
@@ -193,7 +198,7 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
         if (evt.getClickCount() >= 2 && selectedRow != -1) {
             int rowIndex = sourceEventsTable.convertRowIndexToModel(selectedRow);
 
-            Gedcom gedcom = mRoot.getGedcom();
+            Gedcom gedcom = mEntity.getGedcom();
             int undoNb = gedcom.getUndoNb();
 
             final RecordedEventEditorPanel recordedEventPanel = new RecordedEventEditorPanel();
@@ -254,8 +259,9 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
         }
     }
 
-    public void setEventTypesList(Property root, List<Property> eventsTypeList) {
-        this.mRoot = root;
+    public void setEventTypesList(Entity entity, Property parent, List<Property> eventsTypeList) {
+        this.mEntity = entity;
+        this.mParent = parent;
         mSourceEventTypesTableModel.clear();
         if (eventsTypeList != null) {
             mSourceEventTypesTableModel.addAll(eventsTypeList);
