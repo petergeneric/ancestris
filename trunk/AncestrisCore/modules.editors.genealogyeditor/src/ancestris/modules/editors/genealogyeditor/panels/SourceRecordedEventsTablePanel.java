@@ -137,10 +137,10 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
 
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
+                            mSourceEventTypesTableModel.add(mRegisteredEvent);
                             recordedEventPanel.commit();
                         }
                     });
-                    mSourceEventTypesTableModel.add(mRegisteredEvent);
                     editSourceEventButton.setEnabled(true);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
