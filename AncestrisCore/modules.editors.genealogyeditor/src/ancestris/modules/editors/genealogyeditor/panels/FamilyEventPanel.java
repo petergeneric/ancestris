@@ -288,7 +288,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
-                        .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1)
@@ -363,7 +363,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         GroupLayout sourcesPanelLayout = new GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -376,7 +376,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         GroupLayout notesPanelLayout = new GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -389,7 +389,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         GroupLayout galleryPanelLayout = new GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -415,9 +415,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         placeEditorPanel.set(mEvent, mPlace, mAddress);
 
         ADialog eventEditorDialog = new ADialog(
-            NbBundle.getMessage(
-                PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
-            placeEditorPanel);
+                NbBundle.getMessage(
+                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+                placeEditorPanel);
         eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -458,9 +458,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         placeEditorPanel.set(mEvent, mPlace, mAddress);
 
         ADialog eventEditorDialog = new ADialog(
-            NbBundle.getMessage(
-                PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
-            placeEditorPanel);
+                NbBundle.getMessage(
+                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+                placeEditorPanel);
         eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
 
         if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -489,8 +489,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private void linkToPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
         PlacesTablePanel placesTablePanel = new PlacesTablePanel(mRoot.getGedcom());
         DialogManager.ADialog placesTableDialog = new DialogManager.ADialog(
-            NbBundle.getMessage(PlacesTablePanel.class, "PlacesTableDialog.title.link"),
-            placesTablePanel);
+                NbBundle.getMessage(PlacesTablePanel.class, "PlacesTableDialog.title.link"),
+                placesTablePanel);
         placesTableDialog.setDialogId(PlacesTablePanel.class.getName());
 
         if (placesTableDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -663,6 +663,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             // Event Name
             eventNameLabel.setVisible(false);
             eventNameChoiceWidget.setVisible(false);
+            eventNameChoiceWidget.setText("");
+
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
                 eventTypeTextArea.setText(eventType.getValue());
@@ -780,6 +782,14 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             responsibleAgencyTextField.setText("");
         }
 
+        mEventModified = false;
+        mEventCauseModified = false;
+        mHusbandAgeModified = false;
+        mWifeAgeModified = false;
+        mEventNameModified = false;
+        mEventTypeModified = false;
+        mResponsibleAgencyModified = false;
+
         changeListner.unmute();
 
     }
@@ -868,7 +878,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         addProperty.addProperty("AGE", wifeAgeTextField.getText() + " y");
                     }
                 }
-                
+
                 if (mResponsibleAgencyModified) {
                     mResponsibleAgencyModified = false;
                     Property responsibleAgency = mEvent.getProperty("AGNC", false);
