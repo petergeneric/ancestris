@@ -329,8 +329,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane2, GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1)
                     .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
-                        .addComponent(individualAgeTextField, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                        .addGap(251, 251, 251))
+                        .addComponent(individualAgeTextField)
+                        .addGap(96, 96, 96))
                     .addComponent(responsibleAgencyTextField)
                     .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -377,7 +377,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
         EventDetailPanel.setLayout(EventDetailPanelLayout);
         EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(EventDetailPanelLayout.createSequentialGroup()
+                .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -725,6 +727,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             // Event Name
             eventNameLabel.setVisible(false);
             eventNameChoiceWidget.setVisible(false);
+            eventNameChoiceWidget.setText("");
+
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
                 eventDescriptorTextArea.setText(eventType.getValue());
@@ -831,6 +835,13 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         } else {
             responsibleAgencyTextField.setText("");
         }
+
+        mEventModified = false;
+        mEventCauseModified = false;
+        mIndividualAgeModified = false;
+        mEventNameModified = false;
+        mEventTypeModified = false;
+        mResponsibleAgencyModified = false;
 
         changeListner.unmute();
     }
