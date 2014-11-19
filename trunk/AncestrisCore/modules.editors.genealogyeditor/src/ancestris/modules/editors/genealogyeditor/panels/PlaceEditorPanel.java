@@ -5,7 +5,6 @@ import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.*;
 import java.util.Arrays;
-import java.util.logging.Logger;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.*;
@@ -16,7 +15,6 @@ import org.openide.util.*;
  */
 public class PlaceEditorPanel extends javax.swing.JPanel {
 
-    private final static Logger logger = Logger.getLogger(PlaceEditorPanel.class.getName(), null);
     private PropertyPlace mPlace;
     private final GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
     private Property mAddress;
@@ -328,9 +326,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
              * +1 <<SOURCE_CITATION>>
              */
             sourceCitationsTablePanel.set(mPlace, Arrays.asList(mPlace.getProperties("SOUR")));
-            
         } else if (mAddress != null) {
-            editorsTabbedPane.setSelectedComponent(addressEditorPanel);
+            editorsTabbedPane.setSelectedComponent(addressEditorTabPanel);
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
         } else {
             editorsTabbedPane.setSelectedComponent(placeEditorTabPanel);
