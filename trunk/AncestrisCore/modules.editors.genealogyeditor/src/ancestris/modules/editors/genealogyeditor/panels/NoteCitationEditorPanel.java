@@ -13,7 +13,7 @@ import org.openide.util.NbBundle;
  * @author dominique
  */
 public class NoteCitationEditorPanel extends javax.swing.JPanel {
-
+    
     private Property mNote;
     private boolean mNoteModified = false;
     private Gedcom mGedcom;
@@ -221,10 +221,10 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
     public void set(Gedcom gedcom, Property parent, Property note) {
         mGedcom = gedcom;
         mParent = parent;
-
+        
         if (note != null) {
             inlineNoteCheckBox.setVisible(false);
-
+            
             if (note instanceof PropertyNote) {
                 this.mNote = ((PropertyNote) note).getTargetEntity();
             } else {
@@ -244,40 +244,47 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
                 changeDateLabeldate.setVisible(false);
                 noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.noteReferencesPanel.TabConstraints.tabTitle")));
             }
-
+            
             noteTextTextArea.setText(mNote.getValue() != null ? mNote.getValue() : "");
-
+            
             Property changeDate = mNote.getProperty("CHAN");
             if (changeDate != null) {
                 changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
             }
+        } else {
+            inlineNoteCheckBox.setSelected(true);
+            noteIDLabel.setVisible(false);
+            noteIDTextField.setVisible(false);
+            changeDateLabel.setVisible(false);
+            changeDateLabeldate.setVisible(false);
+            noteInformationTabbedPane.removeTabAt(noteInformationTabbedPane.indexOfTab(NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.noteReferencesPanel.TabConstraints.tabTitle")));            
         }
-
+        
         noteTextTextArea.getDocument().addDocumentListener(new DocumentListener() {
-
+            
             @Override
             public void changedUpdate(DocumentEvent e) {
                 mNoteModified = true;
             }
-
+            
             @Override
             public void removeUpdate(DocumentEvent e) {
                 mNoteModified = true;
             }
-
+            
             @Override
             public void insertUpdate(DocumentEvent e) {
                 mNoteModified = true;
             }
         });
     }
-
+    
     public Property get() {
         return mNote;
     }
-
+    
     public void commit() {
-
+        
         if (mNoteModified) {
             if (mNote == null) {
                 if (inlineNoteCheckBox.isSelected()) {
