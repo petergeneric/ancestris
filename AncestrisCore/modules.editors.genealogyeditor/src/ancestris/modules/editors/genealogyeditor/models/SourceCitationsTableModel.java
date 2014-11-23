@@ -122,7 +122,9 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                     ArrayList<Property> notes = new ArrayList<Property>(Arrays.asList(source.getProperties("NOTE")));
                     if (source instanceof PropertySource) {
                         Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
-                        notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
+                        if (targetEntity != null) {
+                            notes.addAll(Arrays.asList(targetEntity.getProperties("NOTE")));
+                        }
                     }
                     if (notes.size() > 0) {
                         return NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.note.value.yes");
