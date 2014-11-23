@@ -170,4 +170,8 @@ public class SourceCitationsTableModel extends AbstractTableModel {
         fireTableDataChanged();
         return source;
     }
+
+    public int indexOf(Object o) {
+        return this.mSourcesList.indexOf(o);
+    }
 }
