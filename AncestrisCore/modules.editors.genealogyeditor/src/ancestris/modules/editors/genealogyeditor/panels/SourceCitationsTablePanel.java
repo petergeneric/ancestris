@@ -149,7 +149,9 @@ public class SourceCitationsTablePanel extends javax.swing.JPanel {
                             sourceCitationEditor.commit();
                         }
                     });
-                    mSourceCitationsTableModel.add(mSourceCitation);
+                    if (mSourceCitationsTableModel.indexOf(mSourceCitation) == -1) {
+                        mSourceCitationsTableModel.add(mSourceCitation);
+                    }
                     editSourceCitationButton.setEnabled(true);
                     deleteSourceCitationButton.setEnabled(true);
                     changeSupport.fireChange();
