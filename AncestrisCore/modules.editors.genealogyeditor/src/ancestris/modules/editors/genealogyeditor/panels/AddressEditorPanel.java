@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import genj.gedcom.Property;
-import java.awt.CardLayout;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeListener;
