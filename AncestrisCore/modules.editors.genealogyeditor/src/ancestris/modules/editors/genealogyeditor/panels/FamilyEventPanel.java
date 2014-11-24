@@ -284,9 +284,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -768,8 +768,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             editPlaceButton.setVisible(false);
         }
 
-        Property[] sourcesList = mEvent.getProperties("SOUR");
-        sourceCitationsTablePanel.set(mEvent, Arrays.asList(sourcesList));
+        sourceCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("SOUR")));
 
         noteCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
 

@@ -27,15 +27,15 @@
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="aDateBean" pref="601" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Component id="aDateBean" pref="604" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
                               <Component id="placeTextField" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="addPlaceButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="editPlaceButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="linkToPlaceButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="editPlaceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
