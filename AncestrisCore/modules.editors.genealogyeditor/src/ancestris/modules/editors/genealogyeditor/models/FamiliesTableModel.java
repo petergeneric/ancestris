@@ -17,28 +17,28 @@ public class FamiliesTableModel extends AbstractTableModel {
     public static int FAMILY_CHILD = 1;
     public static int FAMILY_SPOUSE = 2;
     private int mFamilyTableType = FAMILY_CHILD;
-    private List<Fam> familiesList = new ArrayList<Fam>();
-    private static String[] familyListColumnsName = {
+    private final List<Fam> familiesList = new ArrayList<Fam>();
+    private static final String[] familyListColumnsName = {
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.ID.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.husband.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.wife.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.weddingDate.title"),
     };
-    private static String[] familyChildColumnsName = {
+    private static final String[] familyChildColumnsName = {
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.ID.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.husband.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.wife.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.weddingDate.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.children.title")
     };
-    private static String[] familySpouseColumnsName = {
+    private static final String[] familySpouseColumnsName = {
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.ID.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.husband.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.wife.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.weddingDate.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.children.title")
     };
-    private String[] columnsName;
+    private final String[] columnsName;
 
     public FamiliesTableModel(int familyType) {
         mFamilyTableType = familyType;
