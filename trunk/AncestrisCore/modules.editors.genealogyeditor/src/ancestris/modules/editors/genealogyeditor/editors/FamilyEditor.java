@@ -144,8 +144,6 @@ public class FamilyEditor extends EntityEditor {
         wifeBirthDateLabelDate = new javax.swing.JLabel();
         wifeDeathDateLabelDate = new javax.swing.JLabel();
         familyTabbedPane = new javax.swing.JTabbedPane();
-        childrenPanel = new javax.swing.JPanel();
-        childrenTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenTreeTablePanel();
         eventsPanel = new javax.swing.JPanel();
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
@@ -158,6 +156,8 @@ public class FamilyEditor extends EntityEditor {
         eventsList = new javax.swing.JList();
         jPanel2 = new javax.swing.JPanel();
         familyEventPanel = new ancestris.modules.editors.genealogyeditor.panels.FamilyEventPanel();
+        childrenPanel = new javax.swing.JPanel();
+        childrenTreeTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ChildrenTreeTablePanel();
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel();
         notesPanel = new javax.swing.JPanel();
@@ -185,7 +185,7 @@ public class FamilyEditor extends EntityEditor {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(679, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(familyIDLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(familyIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -467,19 +467,6 @@ public class FamilyEditor extends EntityEditor {
                     .addComponent(wifeImageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)))
         );
 
-        javax.swing.GroupLayout childrenPanelLayout = new javax.swing.GroupLayout(childrenPanel);
-        childrenPanel.setLayout(childrenPanelLayout);
-        childrenPanelLayout.setHorizontalGroup(
-            childrenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrenTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        childrenPanelLayout.setVerticalGroup(
-            childrenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(childrenTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.childrenPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrenPanel); // NOI18N
-
         eventsSplitPane.setBorder(null);
         eventsSplitPane.setDividerSize(1);
 
@@ -550,6 +537,19 @@ public class FamilyEditor extends EntityEditor {
 
         familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
 
+        javax.swing.GroupLayout childrenPanelLayout = new javax.swing.GroupLayout(childrenPanel);
+        childrenPanel.setLayout(childrenPanelLayout);
+        childrenPanelLayout.setHorizontalGroup(
+            childrenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(childrenTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        childrenPanelLayout.setVerticalGroup(
+            childrenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(childrenTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        familyTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.childrenPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), childrenPanel); // NOI18N
+
         sourceCitationsTablePanel.setPreferredSize(null);
 
         javax.swing.GroupLayout sourcesPanelLayout = new javax.swing.GroupLayout(sourcesPanel);
@@ -611,9 +611,9 @@ public class FamilyEditor extends EntityEditor {
                                 .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(familyTabbedPane)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)))
                         .addGap(3, 3, 3)))
                 .addContainerGap())
         );
