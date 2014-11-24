@@ -112,6 +112,10 @@ public class EventsTableModel extends AbstractTableModel {
         this.eventsList.add(event);
         fireTableDataChanged();
     }
+    
+    public int indexOf(Property event) {
+        return this.eventsList.indexOf(event);
+    }
 
     public Property getValueAt(int row) {
         return eventsList.get(row);

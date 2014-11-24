@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.Property;
+import genj.gedcom.PropertyRepository;
 import genj.gedcom.Source;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +38,9 @@ public class SourcesTableModel extends AbstractTableModel {
         NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.ID.title"),
         NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.description.title"),
         NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.events.title"),
-        NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.date.title")
+        NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.date.title"),
+        NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.repository.title"),
+        NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.repository_caln.title")
     };
 
     public SourcesTableModel() {
@@ -72,6 +75,25 @@ public class SourcesTableModel extends AbstractTableModel {
                 Property propertyByPath = source.getPropertyByPath(".:DATA:EVEN:DATE");
                 if (propertyByPath != null) {
                     return propertyByPath.getDisplayValue();
+                } else {
+                    return "";
+                }
+            } else if (column == 4) {
+                PropertyRepository repositoryXref = (PropertyRepository) source.getProperty("REPO");
+                if (repositoryXref != null) {
+                    return repositoryXref.getDisplayValue();
+                } else {
+                    return "";
+                }
+            } else if (column == 5) {
+                PropertyRepository repositoryXref = (PropertyRepository) source.getProperty("REPO");
+                if (repositoryXref != null) {
+                    Property caln = repositoryXref.getProperty("CALN");
+                    if (caln != null) {
+                        return caln.getDisplayValue();
+                    } else {
+                        return "";
+                    }
                 } else {
                     return "";
                 }
