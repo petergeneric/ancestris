@@ -477,8 +477,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         SourcesTablePanel sourcesTablePanel = new SourcesTablePanel(mRoot.getGedcom());
         sourcesTablePanel.setToolBarVisible(false);
 
-        ADialog sourcesTableDialog = new ADialog(NbBundle.getMessage(PlacesTablePanel.class,
-                "sourcesTableDialog.linkTo.title"), sourcesTablePanel);
+        ADialog sourcesTableDialog = new ADialog(NbBundle.getMessage(SourceCitationEditorPanel.class,
+                "SourceCitationEditorPanel.linkTo.title"), sourcesTablePanel);
         sourcesTableDialog.setDialogId(SourcesTablePanel.class.getName());
 
         if (sourcesTableDialog.show() == DialogDescriptor.OK_OPTION) {
