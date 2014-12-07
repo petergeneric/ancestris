@@ -483,7 +483,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         if (sourcesTableDialog.show() == DialogDescriptor.OK_OPTION) {
             if (sourcesTablePanel.getSelectedSource() != null) {
-                if (mReferencedSource != null) {
+                if (mReferencedSource != null && mReferencedSource.isConnected()) {
                     ((PropertySource) mSourceCitation).unlink();
                 }
                 mReferencedSource = sourcesTablePanel.getSelectedSource();
