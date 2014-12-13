@@ -2,7 +2,11 @@ package ancestris.modules.editors.genealogyeditor.beans;
 
 import ancestris.modules.editors.genealogyeditor.models.SexComboBoxModel;
 import genj.gedcom.*;
-import org.openide.util.Exceptions;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import org.openide.util.ChangeSupport;
 
 /**
  *
@@ -10,16 +14,19 @@ import org.openide.util.Exceptions;
  */
 public class SexBean extends javax.swing.JPanel {
 
-    private SexComboBoxModel sexComboBoxModel = new SexComboBoxModel();
+    private final SexComboBoxModel sexComboBoxModel = new SexComboBoxModel();
     private Property root;
     private PropertySex sex;
     private boolean sexModified = false;
+    private final ChangeListner changeListner = new ChangeListner();
+    private final ChangeSupport changeSupport = new ChangeSupport(SexComboBoxModel.class);
 
     /**
      * Creates new form SexBean
      */
     public SexBean() {
         initComponents();
+        sexComboBox.addActionListener(changeListner);
     }
 
     /**
@@ -38,11 +45,6 @@ public class SexBean extends javax.swing.JPanel {
 
         sexComboBox.setModel(sexComboBoxModel);
         sexComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/beans/Bundle").getString("SexBean.sexComboBox.toolTipText"), new Object[] {})); // NOI18N
-        sexComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sexComboBoxActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -61,19 +63,32 @@ public class SexBean extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sexComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sexComboBoxActionPerformed
-        sexModified = true;
-    }//GEN-LAST:event_sexComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> sexComboBox;
     private javax.swing.JLabel sexLabel;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
     public void set(Property root, PropertySex sex) {
+        changeListner.mute();
         this.root = root;
         this.sex = sex;
         sexComboBox.setSelectedIndex(sex.getSex());
         sexModified = false;
+        changeListner.unmute();
     }
 
     public void commit() {
@@ -82,6 +97,27 @@ public class SexBean extends javax.swing.JPanel {
                 sex = (PropertySex) root.addProperty("SEX", "");
             }
             sex.setSex(sexComboBox.getSelectedIndex());
+        }
+    }
+
+    private class ChangeListner implements ActionListener {
+
+        private boolean mute = false;
+
+        public void mute() {
+            mute = true;
+        }
+
+        public void unmute() {
+            mute = false;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            if (!mute) {
+                sexModified = true;
+                changeSupport.fireChange();
+            }
         }
     }
 }
