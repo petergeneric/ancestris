@@ -1236,6 +1236,7 @@ public class FamilyEditor extends EntityEditor {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             mEvent = mFamily.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
+                            mEvent.setValue("y");
                         }
                     }); // end of doUnitOfWork
 

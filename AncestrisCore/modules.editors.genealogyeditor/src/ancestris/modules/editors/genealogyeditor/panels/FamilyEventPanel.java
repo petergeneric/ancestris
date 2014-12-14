@@ -119,6 +119,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         sourceCitationsTablePanel.addChangeListener(changeListner);
         noteCitationsTablePanel.addChangeListener(changeListner);
         multimediaObjectCitationsTablePanel.addChangeListener(changeListner);
+        privateRecordToggleButton.addActionListener(changeListner);
     }
 
     /**
@@ -846,6 +847,13 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     }
                 }
 
+                PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
+                if (date != null && date.isValid()) {
+                    mEvent.setValue("");
+                } else {
+                    mEvent.setValue("y");
+                }
+
                 Property restrictionNotice = mEvent.getProperty("RESN", true);
                 if (privateRecordToggleButton.isSelected()) {
                     if (restrictionNotice == null) {
@@ -893,7 +901,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         }
     }
 
-    public class ChangeListner implements DocumentListener, ChangeListener {
+    public class ChangeListner implements DocumentListener, ChangeListener, ActionListener {
 
         private boolean mute = false;
 
@@ -1002,6 +1010,15 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         public void unmute() {
             mute = false;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            if (!mute) {
+                mEventModified = true;
+                mEventNameModified = true;
+                changeSupport.fireChange();
+            }
         }
     }
 }
