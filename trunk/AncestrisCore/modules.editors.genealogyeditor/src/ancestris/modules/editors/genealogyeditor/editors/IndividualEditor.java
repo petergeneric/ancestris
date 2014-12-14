@@ -603,6 +603,7 @@ public final class IndividualEditor extends EntityEditor {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             mEvent = mIndividual.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
+                            mEvent.setValue("y");
                         }
                     }); // end of doUnitOfWork
 
