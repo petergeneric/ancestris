@@ -799,6 +799,14 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             if (mEventModified == true || aDateBean.hasChanged()) {
                 mEventModified = false;
 
+                if (aDateBean.hasChanged()) {
+                    try {
+                        aDateBean.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+
                 if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
                     if (mEventNameModified) {
                         mEventNameModified = false;
@@ -837,21 +845,13 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                             mRoot.delProperty(eventCause);
                         }
                     }
-                }
 
-                if (aDateBean.hasChanged()) {
-                    try {
-                        aDateBean.commit();
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
+                    PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
+                    if (date != null && date.isValid()) {
+                        mEvent.setValue("");
+                    } else {
+                        mEvent.setValue("y");
                     }
-                }
-
-                PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
-                if (date != null && date.isValid()) {
-                    mEvent.setValue("");
-                } else {
-                    mEvent.setValue("y");
                 }
 
                 Property restrictionNotice = mEvent.getProperty("RESN", true);
