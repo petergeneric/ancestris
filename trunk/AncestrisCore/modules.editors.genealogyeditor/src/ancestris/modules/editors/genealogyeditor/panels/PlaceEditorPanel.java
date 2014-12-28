@@ -214,17 +214,19 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void replacePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replacePlaceButtonActionPerformed
-        Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
-        gedcomPlaceEditorPanel.modify(place, false);
-        jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
-        // TODO add your handling code here:
+        if (geonamesPlacesList.getSelectedIndex() != -1) {
+            Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
+            gedcomPlaceEditorPanel.modify(place, false);
+            jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
+        }
     }//GEN-LAST:event_replacePlaceButtonActionPerformed
 
     private void completePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completePlaceButtonActionPerformed
-        Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
-        gedcomPlaceEditorPanel.modify(place, true);
-        jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
-        // TODO add your handling code here:
+        if (geonamesPlacesList.getSelectedIndex() != -1) {
+            Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesList.getSelectedIndex());
+            gedcomPlaceEditorPanel.modify(place, true);
+            jXMapKit1.setAddressLocation(new GeoPosition(place.getLatitude(), place.getLongitude()));
+        }
     }//GEN-LAST:event_completePlaceButtonActionPerformed
 
     private void geonamesPlacesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListValueChanged
@@ -321,7 +323,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
              * +1 <<NOTE_STRUCTURE>>
              */
             noteCitationsTablePanel.set(mPlace, Arrays.asList(mPlace.getProperties("NOTE")));
-            
+
             /*
              * +1 <<SOURCE_CITATION>>
              */
