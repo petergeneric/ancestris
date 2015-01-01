@@ -713,7 +713,7 @@ public final class IndividualEditor extends EntityEditor {
             Property SOSANumber = mIndividual.getProperty("_SOSA", true);
             if (SOSANumber != null) {
                 SOSALabel.setVisible(true);
-                SOSATextField.setVerifyInputWhenFocusTarget(true);
+                SOSATextField.setVisible(true);
                 SOSATextField.setText(SOSANumber.getValue());
             } else {
                 SOSALabel.setVisible(false);
