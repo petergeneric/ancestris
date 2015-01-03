@@ -205,36 +205,30 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         mIndividual = individual;
         mEvent = event;
         relationChoiceWidget.setValues(mIndividual.getGedcom().getReferenceSet("RELA").getKeys());
-        if (association != null) {
-            changeListner.mute();
-            mAssociation = association;
-            Entity targetEntity = association.getTargetEntity();
-            if (targetEntity != null) {
-                linkToIndividualButton.setVisible(false);
-                referenceIndividualTextField.setText(((Indi) targetEntity).getName());
-                referenceIndividualTextField.setVisible(true);
-            } else {
-                referenceIndividualTextField.setVisible(false);
-            }
-
-            PropertyRelationship propertyRelationship = (PropertyRelationship) association.getProperty("RELA", false);
-            if (propertyRelationship != null) {
-                relationChoiceWidget.setText(propertyRelationship.getDisplayValue());
-            }
-
-            noteCitationsTablePanel.set(association, Arrays.asList(association.getProperties("NOTE")));
-
-            sourceCitationsTablePanel.set(association, Arrays.asList(association.getProperties("SOUR")));
-            changeListner.unmute();
+        changeListner.mute();
+        mAssociation = association;
+        Entity targetEntity = association.getTargetEntity();
+        if (targetEntity != null) {
+            linkToIndividualButton.setVisible(false);
+            referenceIndividualTextField.setText(((Indi) targetEntity).getName());
+            referenceIndividualTextField.setVisible(true);
+        } else {
+            referenceIndividualTextField.setVisible(false);
         }
+
+        PropertyRelationship propertyRelationship = (PropertyRelationship) association.getProperty("RELA", false);
+        if (propertyRelationship != null) {
+            relationChoiceWidget.setText(propertyRelationship.getDisplayValue());
+        }
+
+        noteCitationsTablePanel.set(association, Arrays.asList(association.getProperties("NOTE")));
+
+        sourceCitationsTablePanel.set(association, Arrays.asList(association.getProperties("SOUR")));
+        changeListner.unmute();
     }
 
     PropertyAssociation commit() {
         if (mRelationModified) {
-            if (mAssociation == null) {
-                mAssociation = (PropertyAssociation) mIndividual.addProperty("ASSO", "@@");
-            }
-
             if (mAssociatedIndividual != null) {
                 mAssociation.setValue('@' + mAssociatedIndividual.getId() + '@');
                 try {

@@ -605,7 +605,21 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private void associateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_associateButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
         int undoNb = gedcom.getUndoNb();
-        AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
+        final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
+        if (mAssociation == null) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        mAssociation = (PropertyAssociation) mRoot.addProperty("ASSO", "@@");
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
         associationEditorPanel.set((Indi) mRoot, mAssociation, mEvent);
 
         DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
@@ -614,7 +628,17 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
         if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            associationEditorPanel.commit();
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        associationEditorPanel.commit();
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
             changeListner.stateChanged(null);
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
