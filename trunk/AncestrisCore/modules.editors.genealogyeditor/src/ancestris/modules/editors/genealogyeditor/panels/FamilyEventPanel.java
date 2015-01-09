@@ -715,14 +715,21 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             if (mDate.isValid() && ((Fam) mRoot).getHusband().getBirthDate().isValid()) {
                 husbandAgeTextField.setEditable(false);
             } else {
+                husbandAgeTextField.setText("");
                 husbandAgeTextField.setEditable(true);
             }
         } else {
             if (mDate != null && mDate.isValid()) {
-                Delta age = ((Fam) mRoot).getHusband().getAge(mDate.getStart());
-                if (age != null) {
-                    husbandAgeTextField.setText(age.toString());
-                    husbandAgeTextField.setEditable(false);
+                Indi husband = ((Fam) mRoot).getHusband();
+                if (husband != null) {
+                    Delta age = husband.getAge(mDate.getStart());
+                    if (age != null) {
+                        husbandAgeTextField.setText(age.toString());
+                        husbandAgeTextField.setEditable(false);
+                    } else {
+                        husbandAgeTextField.setText("");
+                        husbandAgeTextField.setEditable(true);
+                    }
                 } else {
                     husbandAgeTextField.setText("");
                     husbandAgeTextField.setEditable(true);
@@ -739,14 +746,21 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             if (mDate.isValid() && ((Fam) mRoot).getWife().getBirthDate().isValid()) {
                 wifeAgeTextField.setEditable(false);
             } else {
+                wifeAgeTextField.setText("");
                 wifeAgeTextField.setEditable(true);
             }
         } else {
             if (mDate != null && mDate.isValid()) {
-                Delta age = ((Fam) mRoot).getWife().getAge(mDate.getStart());
-                if (age != null) {
-                    wifeAgeTextField.setText(age.toString());
-                    wifeAgeTextField.setEditable(false);
+                Indi wife = ((Fam) mRoot).getWife();
+                if (wife != null) {
+                    Delta age = wife.getAge(mDate.getStart());
+                    if (age != null) {
+                        wifeAgeTextField.setText(age.toString());
+                        wifeAgeTextField.setEditable(false);
+                    } else {
+                        wifeAgeTextField.setText("");
+                        wifeAgeTextField.setEditable(true);
+                    }
                 } else {
                     wifeAgeTextField.setText("");
                     wifeAgeTextField.setEditable(true);
