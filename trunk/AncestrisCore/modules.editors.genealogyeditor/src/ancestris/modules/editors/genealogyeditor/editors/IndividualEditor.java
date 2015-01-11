@@ -536,12 +536,22 @@ public final class IndividualEditor extends EntityEditor {
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
 
                     MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
-                    multiMediaObjectEditor.setContext(new Context(mMultiMediaObject));
+                    multiMediaObjectEditor.setContext(new Context(multiMediaObject));
                     if (multiMediaObjectEditor.showPanel()) {
-                        if (mMultiMediaObject instanceof Media) {
-                            mIndividual.addMedia((Media) mMultiMediaObject);
+                        if (multiMediaObject instanceof Media) {
+                            mIndividual.addMedia((Media) multiMediaObject);
                         }
-                        imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile());
+                        if (multiMediaObject instanceof PropertyMedia) {
+                            multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
+                        }
+
+                        Property multimediaFile = multiMediaObject.getProperty("FILE", true);
+                        if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
+                            imageBean.setImage(((PropertyFile) multimediaFile).getFile());
+                        } else {
+                            PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
+                            imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null);
+                        }
                         repaint();
                         changes.fireChangeEvent();
                     }
@@ -864,46 +874,28 @@ public final class IndividualEditor extends EntityEditor {
              * +1 <<MULTIMEDIA_LINK>>
              */
             Property[] multiMediaObjects = mIndividual.getProperties("OBJE");
-            String objetFormat = null;
-            File selectedFile = null;
-            for (Property multiMediaObject : multiMediaObjects) {
-                File file = null;
-                if (gedcomVersion.equals("5.5.1")) {
+
+            for (Property multiMediaObject : mIndividual.getProperties("OBJE")) {
+                String objetFormat = null;
+                if (mIndividual.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     if (multiMediaObject instanceof PropertyMedia) {
-                        Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
-                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
-                            Property propertyFormat = propertyFile.getProperty("FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
-                            }
+                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
                         }
                     } else {
-                        Property propertyFile = multiMediaObject.getProperty("FILE");
-                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
-                            Property propertyFormat = propertyFile.getProperty("FORM");
-                            if (propertyFormat != null) {
-                                objetFormat = propertyFormat.getValue();
-                            }
+                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+                        if (propertyFormat != null) {
+                            objetFormat = propertyFormat.getValue();
                         }
                     }
                 } else {
                     if (multiMediaObject instanceof PropertyMedia) {
-                        Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
-                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
-                        }
                         Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                         if (propertyFormat != null) {
                             objetFormat = propertyFormat.getValue();
                         }
                     } else {
-                        Property propertyFile = multiMediaObject.getProperty("FILE");
-                        if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
-                        }
-
                         Property propertyFormat = multiMediaObject.getProperty("FORM");
                         if (propertyFormat != null) {
                             objetFormat = propertyFormat.getValue();
@@ -913,12 +905,20 @@ public final class IndividualEditor extends EntityEditor {
 
                 // bmp | gif | jpeg
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                    selectedFile = file;
-                    break;
-                }
-            }
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
+                    }
 
-            imageBean.setImage(selectedFile);
+                    Property multimediaFile = multiMediaObject.getProperty("FILE", true);
+                    if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
+                        imageBean.setImage(((PropertyFile) multimediaFile).getFile());
+                    } else {
+                        PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
+                        imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null);
+                    }
+                }
+                break;
+            }
 
             multimediaObjectCitationsTablePanel.set(mIndividual, Arrays.asList(multiMediaObjects));
         }
