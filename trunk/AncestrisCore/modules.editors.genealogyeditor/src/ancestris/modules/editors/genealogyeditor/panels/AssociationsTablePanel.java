@@ -118,34 +118,44 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
         Gedcom gedcom = mRootEntity.getGedcom();
         int undoNb = gedcom.getUndoNb();
         final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-        associationEditorPanel.set(mRootEntity, mAssociation, null);
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
 
-        DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
-                associationEditorPanel);
-        associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    mAssociation = (PropertyAssociation) mRootEntity.addProperty("ASSO", "@@");
+                }
+            });
+            associationEditorPanel.set(mRootEntity, mAssociation, null);
 
-        if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+            DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
+                    associationEditorPanel);
+            associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        mAssociationsTableModel.add(associationEditorPanel.commit());
-                    }
-                }); // end of doUnitOfWork
-                deleteAssociationButton.setEnabled(true);
-                editAssociationButton.setEnabled(true);
-                changeListner.stateChanged(null);
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+            if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mAssociationsTableModel.add(associationEditorPanel.commit());
+                        }
+                    }); // end of doUnitOfWork
+                    deleteAssociationButton.setEnabled(true);
+                    editAssociationButton.setEnabled(true);
+                    changeListner.stateChanged(null);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
             }
-        } else {
-            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
         }
-
     }//GEN-LAST:event_addAssociationButtonActionPerformed
 
     private void editAssociationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editAssociationButtonActionPerformed
