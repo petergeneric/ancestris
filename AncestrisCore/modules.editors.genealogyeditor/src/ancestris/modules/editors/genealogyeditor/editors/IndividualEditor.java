@@ -874,7 +874,7 @@ public final class IndividualEditor extends EntityEditor {
              * +1 <<MULTIMEDIA_LINK>>
              */
             Property[] multiMediaObjects = mIndividual.getProperties("OBJE");
-
+            boolean found = false;
             for (Property multiMediaObject : mIndividual.getProperties("OBJE")) {
                 String objetFormat = null;
                 if (mIndividual.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
@@ -916,10 +916,14 @@ public final class IndividualEditor extends EntityEditor {
                         PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
                         imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null);
                     }
+                    found = true;
+                    break;
                 }
-                break;
             }
-
+            if (found == false) {
+                imageBean.setImage((File) null);
+            }
+            
             multimediaObjectCitationsTablePanel.set(mIndividual, Arrays.asList(multiMediaObjects));
         }
     }
