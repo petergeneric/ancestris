@@ -45,10 +45,12 @@ public class AssociationsTableModel extends AbstractTableModel {
             switch (column) {
                 case 0: {
                     PropertyXRef target = propertyAssociation.getTarget();
-                    if (target.getEntity() != null && target.getEntity() instanceof Indi) {
-                        return "(" + target.getEntity().getId() + ")" + ((Indi) target.getEntity()).getName();
-                    } else {
-                        return target.getValue();
+                    if (target != null) {
+                        if (target.getEntity() != null && target.getEntity() instanceof Indi) {
+                            return "(" + target.getEntity().getId() + ")" + ((Indi) target.getEntity()).getName();
+                        } else {
+                            return target.getValue();
+                        }
                     }
                 }
                 case 1: {
@@ -57,9 +59,10 @@ public class AssociationsTableModel extends AbstractTableModel {
                         String value = relation.getValue();
                         int index = value.lastIndexOf(":");
                         if (index >= 0) {
-                            return PropertyTag2Name.getTagName(value.substring(index+1));
+                            return PropertyTag2Name.getTagName(value.substring(index + 1));
+                        } else {
+                            return "";
                         }
-                        else return "";
                     }
                 }
                 case 2: {
