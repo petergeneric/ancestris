@@ -532,10 +532,12 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             for (int index = 0; index < mPlaceOrder.length; index++) {
                 if (mPlaceOrder[index] != -1) {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
-                    ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
-                    List<String> jurisdictions = Arrays.asList(mPlace.getAllJurisdictions(mPlaceOrder[index], true));
-                    if (jurisdictions != null) {
-                        AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
+                    if (mPlace != null) {
+                        ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
+                        List<String> jurisdictions = Arrays.asList(mPlace.getAllJurisdictions(mPlaceOrder[index], true));
+                        if (jurisdictions != null) {
+                            AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
+                        }
                     }
                 } else {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
