@@ -439,12 +439,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                 placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
                 addPlaceButton.setVisible(false);
                 editPlaceButton.setVisible(true);
-            } else {
-                placeTextField.setText("");
-                addPlaceButton.setVisible(true);
-                editPlaceButton.setVisible(false);
+                changeSupport.fireChange();
             }
-            changeSupport.fireChange();
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
