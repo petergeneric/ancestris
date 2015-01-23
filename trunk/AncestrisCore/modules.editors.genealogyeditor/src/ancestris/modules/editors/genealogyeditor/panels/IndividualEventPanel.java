@@ -591,10 +591,12 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             }
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
             mAddress = mEvent.getProperty("ADDR", false);
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
-            addPlaceButton.setVisible(false);
-            editPlaceButton.setVisible(true);
-            changeSupport.fireChange();
+            if (mPlace != null || mAddress != null) {
+                placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress != null ? mAddress.getDisplayValue() : "");
+                addPlaceButton.setVisible(false);
+                editPlaceButton.setVisible(true);
+                changeSupport.fireChange();
+            }
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
