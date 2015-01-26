@@ -677,11 +677,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (mapToDisplay == 0) {
             jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         } else if (mapToDisplay == 1) {
-            NotifyDescriptor d = new NotifyDescriptor.Confirmation("Les fonds de carte Google ne sont pas encore disponibles dans cette version", "Cartes à utiliser", NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
+            NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(GeoMapTopComponent.class, "maps.googlenotavailable"), NbBundle.getMessage(GeoMapTopComponent.class, "maps.mapstobeused"), NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(d);
             jComboBox1.setSelectedIndex(0);
         } else if (mapToDisplay == 2) {
-            NotifyDescriptor d = new NotifyDescriptor.Confirmation("Les cartes de Cassini ne sont pas encore disponible dans cette version", "Cartes à utiliser", NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
+            NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(GeoMapTopComponent.class, "maps.cassininotavailable"), NbBundle.getMessage(GeoMapTopComponent.class, "maps.mapstobeused"), NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(d);
             jComboBox1.setSelectedIndex(0);
         }
