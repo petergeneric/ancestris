@@ -250,8 +250,15 @@ public class GedcomReaderFactory {
             long linking = System.currentTimeMillis();
 
             long total = System.currentTimeMillis();
-            LOG.log(Level.INFO, "{0}: {1} loaded in {2}s (header {3}s, records {4}s, linking {5}s)",
-                    new Object[]{TimingUtility.geInstance().getTime(), gedcom.getName(), (total - start) / 1000, (header - start) / 1000, (records - header) / 1000, (linking - records) / 1000});
+            LOG.log(Level.INFO, "{0}: {1} loaded in {2}s (header {3}s, records {4}s, linking {5}s ({6}))",
+                    new Object[]{
+                        TimingUtility.geInstance().getTime(), 
+                        gedcom.getName(), 
+                        (total - start) / 1000, 
+                        (header - start) / 1000, 
+                        (records - header) / 1000, (linking - records) / 1000,
+                        lazyLinks.size()
+                    });
 
             // Done
         }
@@ -262,8 +269,11 @@ public class GedcomReaderFactory {
         private void linkReferences() throws GedcomIOException {
 
             // loop over kept references
-            for (int i = 0, n = lazyLinks.size(); i < n; i++) {
-                LazyLink lazyLink = lazyLinks.get(i);
+//            for (int i = 0, n = lazyLinks.size(); i < n; i++) {
+//                LazyLink lazyLink = lazyLinks.get(i);
+            int n = lazyLinks.size();
+            int i = 0;
+            for (LazyLink lazyLink:lazyLinks){
                 try {
                     if (lazyLink.xref.getParent() != null && lazyLink.xref.getTarget() == null) {
                         lazyLink.xref.link();
@@ -274,6 +284,7 @@ public class GedcomReaderFactory {
                 } catch (Throwable t) {
                     throw new GedcomIOException(RESOURCES.getString("read.error.xref", new Object[]{lazyLink.xref.getTag(), lazyLink.xref.getValue()}), lazyLink.line);
                 }
+                i++;
             }
 
             // done

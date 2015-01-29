@@ -376,7 +376,6 @@ public class EditorTopComponent extends AncestrisTopComponent
 
     private class UndoRedoListener implements ChangeListener {
 
-        ancestris.modules.editors.genealogyeditor.editors.EntityEditor entityEditor;
 
         @Override
         public void stateChanged(ChangeEvent e) {
