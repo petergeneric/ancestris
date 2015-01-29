@@ -20,7 +20,8 @@
 package genj.renderer;
 
 /**
- * Encapsulating name and html for rendering an entity */
+ * Encapsulating name and html for rendering an entity
+ */
 public class Blueprint {
   
   /** the entity tag this bp is for */
@@ -28,7 +29,7 @@ public class Blueprint {
   
   /** the name of this scheme */
   private String name;
-  
+
   /** the html of this scheme */
   private String html;
   
@@ -95,6 +96,13 @@ public class Blueprint {
    * Accessor - name
    */
   public String getName() {
+    return name;
+  }
+  
+  /**
+   * Accessor - display name
+   */
+  public String getDisplayName() {
     return name;
   }
   

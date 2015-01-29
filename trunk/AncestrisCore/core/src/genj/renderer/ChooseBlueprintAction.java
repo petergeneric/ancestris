@@ -165,7 +165,7 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
       Blueprint selection = (Blueprint)blueprints.getSelectedValue();
       if (selection==null||selection.isReadOnly())
         return;
-      if (DialogManager.create((String)null, RESOURCES.getString("blueprint.del.confirm", selection.getName()))
+      if (DialogManager.create((String)null, RESOURCES.getString("blueprint.del.confirm", selection.getDisplayName()))
               .setMessageType(DialogManager.WARNING_MESSAGE)
               .setOptionType(DialogManager.OK_CANCEL_OPTION)
               .show() != DialogManager.OK_OPTION)
