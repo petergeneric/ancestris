@@ -4,6 +4,9 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.modules.editors.standard.EditorTopComponent;
+import ancestris.view.AncestrisTopComponent;
+import genj.gedcom.Context;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,11 +24,11 @@ import org.openide.nodes.Children;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -63,7 +66,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
     @SuppressWarnings("deprecation")
     public Image getIcon(int type) {
         GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
-        return (obj != null) ? obj.getIcon() : Utilities.loadImage("ancestris/modules/geo/geo.png");
+        return (obj != null) ? obj.getIcon() : ImageUtilities.loadImage("ancestris/modules/geo/geo.png");
     }
 
     @Override
@@ -155,7 +158,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 // display place details
                 String info = obj.displayToponym(obj.getToponymFromPlace(obj.getPlace(), false));
                 JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), info, NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"), JOptionPane.INFORMATION_MESSAGE,
-                        new ImageIcon(Utilities.loadImage("ancestris/modules/geo/geoicon.png")));
+                        new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
 
             } else if (actionName.equals("ACTION_EditPlace")) {
                 // popup editor
@@ -175,22 +178,19 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
 
             } else if (actionName.equals("ACTION_EditEvent")) {
-                //XXX: 0.8 we must find editor using lookup
-//                EditTopComponent etc = getEditTopComponent(obj);
-//                if (etc != null) {
-//                    etc.requestActive();
-//                    etc.setContext(new Context(obj.getProperty()),true);
-//                }
+                AncestrisTopComponent win = new EditorTopComponent().create(new Context(obj.getProperty()));
+                win.open();
+                win.requestActive();        
             } else if (actionName.equals("ACTION_HelpPlace")) {
                 String id = "ancestris.app.view.geo.menuplace";
                 Help help = Lookup.getDefault().lookup(Help.class);
-                if (help != null && help.isValidID(id, true).booleanValue()) {
+                if (help != null && help.isValidID(id, true)) {
                     help.showHelp(new HelpCtx(id));
                 }
             } else if (actionName.equals("ACTION_HelpEvent")) {
                 String id = "ancestris.app.view.geo.menuevent";
                 Help help = Lookup.getDefault().lookup(Help.class);
-                if (help != null && help.isValidID(id, true).booleanValue()) {
+                if (help != null && help.isValidID(id, true)) {
                     help.showHelp(new HelpCtx(id));
                 }
             }
@@ -214,23 +214,4 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
         }
         return theList;
     }
-
-    //XXX: 0.8 we must find editor using lookup
-//    private EditTopComponent getEditTopComponent(GeoNodeObject obj) {
-//        EditTopComponent theEditor = null;
-//        if (obj == null) {
-//            return theEditor;
-//        }
-//        // get map top component
-//        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
-//            if (tc instanceof EditTopComponent) {
-//                EditTopComponent gmtc = (EditTopComponent) tc;
-//                if (gmtc.getGedcom() == obj.getGedcom()) {
-//                    theEditor = gmtc;
-//                    break;
-//                }
-//            }
-//        }
-//        return theEditor;
-//    }
 }
