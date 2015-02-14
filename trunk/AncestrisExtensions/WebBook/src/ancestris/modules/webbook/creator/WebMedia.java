@@ -324,6 +324,7 @@ public class WebMedia extends WebSection {
      */
     public String getEntityName(Entity ent) {
         String name = "";
+        if (ent == null) return "";
         if (ent instanceof Indi) {
             name = ((Indi) ent).getLastName() + ((Indi) ent).getFirstName();
         } else if (ent instanceof Fam) {
@@ -332,7 +333,7 @@ public class WebMedia extends WebSection {
                 mainIndi = ((Fam) ent).getWife();
             }
             if (mainIndi == null) {
-                name = "";
+                return "";
             }
             name = mainIndi.getLastName() + mainIndi.getFirstName();
         } else {
