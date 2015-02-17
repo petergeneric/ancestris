@@ -4,9 +4,14 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.modules.editors.standard.EditorTopComponent;
-import ancestris.view.AncestrisTopComponent;
+import ancestris.api.editor.AncestrisEditor;
+import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
+import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -81,7 +86,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
     @Override
     public Action getPreferredAction() {
         if (isLeaf()) {
-            return new GeoAction("ACTION_EditEvent");
+            return new GeoAction("ACTION_SelectEvent");
         } else {
             return new GeoAction("ACTION_ShowPlace");
         }
@@ -178,9 +183,21 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
 
             } else if (actionName.equals("ACTION_EditEvent")) {
-                AncestrisTopComponent win = new EditorTopComponent().create(new Context(obj.getProperty()));
-                win.open();
-                win.requestActive();        
+                // Pop up editor
+                Entity entity = obj.getProperty().getEntity();
+                if (entity instanceof Fam) {
+                    Fam family = (Fam) entity;
+                    FamilyEditor familyEditor = new FamilyEditor();
+                    familyEditor.setContext(new Context(family));
+                    familyEditor.showPanel();
+                } else if (entity instanceof Indi) {
+                    Indi child = (Indi) entity;
+                    IndividualEditor individualEditor = new IndividualEditor();
+                    individualEditor.setContext(new Context(child));
+                    individualEditor.showPanel();
+                }
+            } else if (actionName.equals("ACTION_SelectEvent")) {
+                SelectionDispatcher.fireSelection(new Context(obj.getProperty()));
             } else if (actionName.equals("ACTION_HelpPlace")) {
                 String id = "ancestris.app.view.geo.menuplace";
                 Help help = Lookup.getDefault().lookup(Help.class);
