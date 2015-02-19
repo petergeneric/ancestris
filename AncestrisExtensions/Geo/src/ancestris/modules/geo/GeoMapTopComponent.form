@@ -104,16 +104,16 @@
                           <Component id="jPanel4" min="-2" pref="286" max="-2" attributes="1"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel2" min="-2" max="-2" attributes="1"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="jButton6" pref="129" max="32767" attributes="0"/>
+                                  <Component id="jButton6" pref="132" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jButton1" pref="108" max="32767" attributes="0"/>
+                                  <Component id="jButton1" pref="111" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButton3" min="-2" pref="104" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jPanel3" pref="353" max="32767" attributes="1"/>
+                              <Component id="jPanel3" pref="359" max="32767" attributes="1"/>
                           </Group>
                       </Group>
                   </Group>
@@ -172,7 +172,7 @@
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="jRadioButton2" min="-2" pref="22" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jButton5" min="-2" pref="23" max="-2" attributes="0"/>
+                                              <Component id="jButton5" min="-2" pref="31" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="jRadioButton4" min="-2" pref="22" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
@@ -618,7 +618,7 @@
                                           <Component id="jCheckBox8" min="-2" max="-2" attributes="0"/>
                                           <Component id="jCheckBox9" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jCheckBox11" min="-2" max="-2" attributes="0"/>
                                           <Component id="jCheckBox10" min="-2" max="-2" attributes="0"/>
@@ -626,7 +626,7 @@
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jTextField2" min="-2" pref="70" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
