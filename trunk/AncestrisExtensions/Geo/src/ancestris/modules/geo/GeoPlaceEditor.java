@@ -760,14 +760,15 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             show = genj.gedcom.GedcomOptions.getInstance().getShowJuridictions();
         }
         int MAX = show.length;
-        jTextField6.setText(MAX > 0 && show[0] ? tmpPlace.getJurisdiction(0) : "");
-        jTextField7.setText(MAX > 1 && show[1] ? tmpPlace.getJurisdiction(1) : "");
-        jTextField8.setText(MAX > 2 && show[2] ? tmpPlace.getJurisdiction(2) : "");
-        jTextField9.setText(MAX > 3 && show[3] ? tmpPlace.getJurisdiction(3) : "");
-        jTextField2.setText(MAX > 4 && show[4] ? tmpPlace.getJurisdiction(4) : "");
-        jTextField3.setText(MAX > 5 && show[5] ? tmpPlace.getJurisdiction(5) : "");
-        jTextField4.setText(MAX > 6 && show[6] ? tmpPlace.getJurisdiction(6) : "");
-
+        int i = 0;
+        jTextField6.setText(MAX > 0 && show[0] ? tmpPlace.getJurisdiction(i++) : "");
+        jTextField7.setText(MAX > 1 && show[1] ? tmpPlace.getJurisdiction(i++) : "");
+        jTextField8.setText(MAX > 2 && show[2] ? tmpPlace.getJurisdiction(i++) : "");
+        jTextField9.setText(MAX > 3 && show[3] ? tmpPlace.getJurisdiction(i++) : "");
+        jTextField2.setText(MAX > 4 && show[4] ? tmpPlace.getJurisdiction(i++) : "");
+        jTextField3.setText(MAX > 5 && show[5] ? tmpPlace.getJurisdiction(i++) : "");
+        jTextField4.setText(MAX > 6 && show[6] ? tmpPlace.getJurisdiction(i++) : "");
+        
         jTextField5.setText(Double.toString(geoObj.getLatitude()));
         jTextField10.setText(Double.toString(geoObj.getLongitude()));
     }
@@ -822,7 +823,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlaceAsLongString(), geoObj.Toponym2Code(topo));
             GeoPlacesList.getInstance(gedcom).refreshPlaceCoord();
         }
-
 
     }
 
@@ -900,9 +900,10 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         String placeOrder = gedcom.getPlaceSortOrder();
         if (placeOrder == null) {
             placeOrder = genj.gedcom.GedcomOptions.getInstance().getPlaceSortOrder();
-            if (placeOrder == null)
-                // TODO: workraround for bug from Jean-Marie BARBAULT
+            if (placeOrder == null) // TODO: workraround for bug from Jean-Marie BARBAULT
+            {
                 placeOrder = "0,1,2,3,4,5,6";
+            }
         }
         String order[] = placeOrder.split(",");
         for (int i = 0; i < order.length; i++) {
