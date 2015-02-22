@@ -474,7 +474,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             }
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
             mAddress = mEvent.getProperty("ADDR", false);
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress != null ? mAddress.getDisplayValue() : "");
             changeSupport.fireChange();
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
