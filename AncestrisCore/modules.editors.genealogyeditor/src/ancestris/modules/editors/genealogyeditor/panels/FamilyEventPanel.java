@@ -436,7 +436,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
             mAddress = mEvent.getProperty("ADDR", false);
             if (mPlace != null || mAddress != null) {
-                placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
+                placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : displayAddressValue(mAddress));
                 addPlaceButton.setVisible(false);
                 editPlaceButton.setVisible(true);
                 changeSupport.fireChange();
@@ -474,7 +474,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             }
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
             mAddress = mEvent.getProperty("ADDR", false);
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress != null ? mAddress.getDisplayValue() : "");
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress != null ? displayAddressValue(mAddress) : "");
             changeSupport.fireChange();
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -770,7 +770,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         mAddress = mEvent.getProperty("ADDR", false);
         if (mPlace != null || mAddress != null) {
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress.getDisplayValue());
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : displayAddressValue(mAddress));
             addPlaceButton.setVisible(false);
             editPlaceButton.setVisible(true);
         } else {
@@ -909,6 +909,35 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 //        gedcomPlacePanel.commit();
 //        addressPanel.commit();
         }
+    }
+
+    private String displayAddressValue(Property address) {
+        String addressValue = "";
+        addressValue = address.getDisplayValue();
+        if (addressValue.length() == 0) {
+            Property propertyAdr1 = address.getProperty("ADR1");
+            addressValue = (propertyAdr1 != null ? propertyAdr1.getValue() : "") + ", ";
+
+            Property propertyAdr2 = address.getProperty("ADR2");
+            addressValue += (propertyAdr2 != null ? propertyAdr2.getValue() : "") + ", ";
+
+            Property propertyAdr3 = address.getProperty("ADR3");
+            addressValue += (propertyAdr3 != null ? propertyAdr3.getValue() : "") + ", ";
+
+            Property propertyCity = address.getProperty("CITY");
+            addressValue += (propertyCity != null ? propertyCity.getValue() : "") + ", ";
+
+            Property propertyState = address.getProperty("STAE");
+            addressValue += (propertyState != null ? propertyState.getValue() : "") + ", ";
+
+            Property propertyPostalCode = address.getProperty("POST");
+            addressValue += (propertyPostalCode != null ? propertyPostalCode.getValue() : "") + ", ";
+
+            Property propertyCountry = address.getProperty("CTRY");
+            addressValue += (propertyCountry != null ? propertyCountry.getValue() : "");
+        }
+        
+        return addressValue;
     }
 
     public class ChangeListner implements DocumentListener, ChangeListener, ActionListener {
