@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
@@ -10,6 +11,7 @@ import genj.gedcom.PropertyRelationship;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
@@ -39,10 +41,56 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
     private PropertyAssociation mAssociation;
     private Entity mIndividual;
-    private Property mEvent;
+    private String mEventTag = "";
     private Indi mAssociatedIndividual;
     private boolean mRelationModified = false;
     private final ChangeListner changeListner = new ChangeListner();
+    private static final String[] mIndividualEventsTags = {
+        "",
+        /*
+         * INDIVIDUAL_EVENT
+         */
+        PropertyTag2Name.getTagName("BIRT"),
+        PropertyTag2Name.getTagName("CHR"),
+        PropertyTag2Name.getTagName("DEAT"),
+        PropertyTag2Name.getTagName("BURI"),
+        PropertyTag2Name.getTagName("CREM"),
+        PropertyTag2Name.getTagName("ADOP"),
+        PropertyTag2Name.getTagName("BAPM"),
+        PropertyTag2Name.getTagName("BARM"),
+        PropertyTag2Name.getTagName("BASM"),
+        PropertyTag2Name.getTagName("BLES"),
+        PropertyTag2Name.getTagName("CHRA"),
+        PropertyTag2Name.getTagName("CONF"),
+        PropertyTag2Name.getTagName("FCOM"),
+        PropertyTag2Name.getTagName("ORDN"),
+        PropertyTag2Name.getTagName("NATU"),
+        PropertyTag2Name.getTagName("EMIG"),
+        PropertyTag2Name.getTagName("IMMI"),
+        PropertyTag2Name.getTagName("CENS"),
+        PropertyTag2Name.getTagName("PROB"),
+        PropertyTag2Name.getTagName("WILL"),
+        PropertyTag2Name.getTagName("GRAD"),
+        PropertyTag2Name.getTagName("RETI"),
+        PropertyTag2Name.getTagName("EVEN"),
+        /*
+         * INDIVIDUAL_ATTRIBUTE
+         */
+        PropertyTag2Name.getTagName("CAST"),
+        PropertyTag2Name.getTagName("DSCR"),
+        PropertyTag2Name.getTagName("EDUC"),
+        PropertyTag2Name.getTagName("IDNO"),
+        PropertyTag2Name.getTagName("NATI"),
+        PropertyTag2Name.getTagName("NCHI"),
+        PropertyTag2Name.getTagName("NMR"),
+        PropertyTag2Name.getTagName("OCCU"),
+        PropertyTag2Name.getTagName("PROP"),
+        PropertyTag2Name.getTagName("RELI"),
+        PropertyTag2Name.getTagName("RESI"),
+        PropertyTag2Name.getTagName("SSN"),
+        PropertyTag2Name.getTagName("TITL")
+    };
+    private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(mIndividualEventsTags);
 
     /**
      * Creates new form AssociationEditorPanel
@@ -71,6 +119,8 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         sourcesPanel = new javax.swing.JPanel();
         sourceCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel();
         relationChoiceWidget = new genj.util.swing.ChoiceWidget();
+        eventTypeComboBox = new javax.swing.JComboBox<String>();
+        jLabel1 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(referenceIndividualLabel, org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.referenceIndividualLabel.text")); // NOI18N
 
@@ -106,7 +156,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             notesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
         );
 
         associationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
@@ -123,10 +173,21 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             sourcesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sourcesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(sourceCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                .addComponent(sourceCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
         );
 
         associationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.sourcesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
+
+        eventTypeComboBox.setModel(mEventsModel);
+        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("AssociationEditorPanel.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
+        eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventTypeComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -139,20 +200,26 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(referenceIndividualLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(relationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(relationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(linkToIndividualButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(referenceIndividualTextField))
-                            .addComponent(relationChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(relationChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(eventTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(referenceIndividualLabel)
                     .addComponent(linkToIndividualButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -187,9 +254,16 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_linkToIndividualButtonActionPerformed
 
+    private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
+        final String eventName = eventTypeComboBox.getSelectedItem().toString();
+        mEventTag = PropertyTag2Name.getPropertyTag(eventName);
+    }//GEN-LAST:event_eventTypeComboBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane associationTabbedPane;
+    private javax.swing.JComboBox<String> eventTypeComboBox;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton linkToIndividualButton;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel notesPanel;
@@ -203,7 +277,11 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
     void set(Entity individual, PropertyAssociation association, Property event) {
         mIndividual = individual;
-        mEvent = event;
+        if (event != null) {
+            mEventTag = event.getTag();
+            eventTypeComboBox.setEnabled(false);
+        }
+        eventTypeComboBox.setSelectedItem(PropertyTag2Name.getTagName(mEventTag));
         relationChoiceWidget.setValues(mIndividual.getGedcom().getReferenceSet("RELA").getKeys());
         changeListner.mute();
         mAssociation = association;
@@ -240,7 +318,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
             PropertyRelationship propertyRelationship = (PropertyRelationship) mAssociation.getProperty("RELA", false);
             if (propertyRelationship == null) {
-                mAssociation.addProperty("RELA", relationChoiceWidget.getText() + (mEvent != null ? "@" + mEvent.getPath().toString() : ""));
+                mAssociation.addProperty("RELA", relationChoiceWidget.getText() + (mEventTag.isEmpty() == false ? "@" + "INDI" + mEventTag : ""));
             } else {
                 propertyRelationship.setValue(relationChoiceWidget.getText());
             }
