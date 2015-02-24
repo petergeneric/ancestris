@@ -439,6 +439,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     private void linkToPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
         PlacesTablePanel placesTablePanel = new PlacesTablePanel(mRoot.getGedcom());
+        placesTablePanel.setFilter(mPlace.getCity());
         DialogManager.ADialog placesTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(PlacesTablePanel.class, "PlacesTableDialog.title.link"),
                 placesTablePanel);

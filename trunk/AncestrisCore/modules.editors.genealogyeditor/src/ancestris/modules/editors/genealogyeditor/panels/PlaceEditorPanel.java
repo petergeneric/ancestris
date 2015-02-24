@@ -4,8 +4,16 @@ import ancestris.api.place.Place;
 import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.*;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import javax.swing.AbstractAction;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import javax.swing.event.MouseInputListener;
 import org.jdesktop.swingx.JXMapKit;
+import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.*;
 
@@ -18,6 +26,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private PropertyPlace mPlace;
     private final GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
     private Property mAddress;
+    private MapPopupMenu popupMenu;
 
     /**
      * Creates new form GedcomPlacesEditorPanel
@@ -29,6 +38,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         jXMapKit1.setMiniMapVisible(false);
         jXMapKit1.getZoomSlider().setValue(5);
+        setMouseListener();
+        setPopuMenu();
     }
 
     /**
@@ -63,6 +74,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         setMinimumSize(new java.awt.Dimension(537, 414));
 
+        gedcomPlaceEditorPanel.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.gedcomPlaceEditorPanel.toolTipText")); // NOI18N
+
         placeEditorTabbedPane.setMinimumSize(new java.awt.Dimension(513, 263));
 
         MapScrollPane.setViewportView(jXMapKit1);
@@ -88,6 +101,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(searchPlaceButton, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.searchPlaceButton.text_1"), new Object[] {})); // NOI18N
+        searchPlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.searchPlaceButton.toolTipText")); // NOI18N
         searchPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchPlaceButtonActionPerformed(evt);
@@ -239,19 +253,19 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
         String searchedPlace = searchPlaceTextField.getText();
 
-        if (searchedPlace.isEmpty() == false) {
-            searchPlaceButton.setEnabled(false);
-            geonamePlacesListModel.clear();
-            GeonamesPlacesList geonamesPlacesList1 = new GeonamesPlacesList();
-            geonamesPlacesList1.searchPlace(searchedPlace, geonamePlacesListModel);
-            geonamesPlacesList1.getTask().addTaskListener(new TaskListener() {
+            if (searchedPlace.isEmpty() == false) {
+                searchPlaceButton.setEnabled(false);
+                geonamePlacesListModel.clear();
+                GeonamesPlacesList geonamesPlacesList1 = new GeonamesPlacesList();
+                geonamesPlacesList1.searchPlace(searchedPlace, geonamePlacesListModel);
+                geonamesPlacesList1.getTask().addTaskListener(new TaskListener() {
 
-                @Override
-                public void taskFinished(Task task) {
-                    searchPlaceButton.setEnabled(true);
-                }
-            });
-        }
+                    @Override
+                    public void taskFinished(Task task) {
+                        searchPlaceButton.setEnabled(true);
+                    }
+                });
+            }
     }//GEN-LAST:event_searchPlaceButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -314,10 +328,17 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
 
             if (latitude != null && longitude != null) {
+                // Center map on existing geo coordinates
                 jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
-            } else {
-                placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
+                // Set search field in case user may want to search another location similar to the one existing, but srtay on map tab
                 searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.CITY).replaceAll(",", " ").replaceAll("\\s+", " "));
+            } else {
+                // Center map on a clearly non found place
+                jXMapKit1.setAddressLocation(new GeoPosition(45, -4)); // same default as in Geo module, i.e. in the middle of the sea
+                // Be ready for the search
+                searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.CITY).replaceAll(",", " ").replaceAll("\\s+", " "));
+                // And display search tab
+                placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
             }
             /*
              * +1 <<NOTE_STRUCTURE>>
@@ -341,4 +362,99 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         addressEditorPanel.commit();
         gedcomPlaceEditorPanel.commit();
     }
+
+    public void hideAddressPanel() {
+        int index = editorsTabbedPane.indexOfComponent(addressEditorTabPanel);
+        editorsTabbedPane.removeTabAt(index);
+    }
+
+    public void runSearch() {
+        searchPlaceButton.doClick();
+    }
+
+    private void setPopuMenu() {
+        popupMenu = new MapPopupMenu(jXMapKit1.getMainMap());
+        popupMenu.add(new MapPopupAction("ACTION_MapCopyPoint", null, popupMenu));
+    }
+
+    private class MapPopupMenu extends JPopupMenu {
+
+        private JMenu submenu = null;
+        private JXMapViewer map = null;
+        private Point point = new Point(0, 0);
+
+        public MapPopupMenu(JXMapViewer map) {
+            super();
+            this.map = map;
+        }
+
+        public void setPoint(Point point) {
+            this.point = point;
+        }
+
+        
+        public GeoPosition getGeoPoint() {
+            return map.convertPointToGeoPosition(point);
+        }
+    }
+
+    private class MapPopupAction extends AbstractAction {
+
+        private String actionName = "";
+        private MapPopupMenu mpm = null;
+
+        public MapPopupAction(String name, Object o, MapPopupMenu mpm) {
+            this.actionName = name;
+            this.mpm = mpm;
+            putValue(NAME, NbBundle.getMessage(PlaceEditorPanel.class, name, o));
+        }
+
+        @Override
+        @SuppressWarnings("deprecation")
+        public void actionPerformed(ActionEvent e) {
+            if (actionName.equals("ACTION_MapCopyPoint")) {
+                // rounds to 5 decimal places
+                Double dLat = (double)Math.round(mpm.getGeoPoint().getLatitude() * 100000) / 100000;
+                Double dLon = (double)Math.round(mpm.getGeoPoint().getLongitude() * 100000) / 100000;
+                gedcomPlaceEditorPanel.modifyCoordinates(String.valueOf(dLat), String.valueOf(dLon), false);
+            }
+        }
+    }
+    
+    private void setMouseListener() {
+        MouseInputListener mia = new PlaceMouseInputListener();
+        jXMapKit1.getMainMap().addMouseListener(mia);
+        jXMapKit1.getMainMap().addMouseMotionListener(mia);
+    }
+
+
+
+    private class PlaceMouseInputListener implements MouseInputListener {
+
+        public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                popupMenu.setPoint(e.getPoint());
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+
+        public void mousePressed(MouseEvent e) {
+        }
+
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        public void mouseExited(MouseEvent e) {
+        }
+
+        public void mouseDragged(MouseEvent e) {
+        }
+
+        public void mouseMoved(MouseEvent e) {
+        }
+    }
+
 }

@@ -96,6 +96,11 @@
                   </Layout>
                   <SubComponents>
                     <Component class="ancestris.modules.editors.genealogyeditor.panels.GedcomPlaceEditorPanel" name="gedcomPlaceEditorPanel">
+                      <Properties>
+                        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.gedcomPlaceEditorPanel.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                        </Property>
+                      </Properties>
                     </Component>
                     <Container class="javax.swing.JTabbedPane" name="placeEditorTabbedPane">
                       <Properties>
@@ -215,6 +220,9 @@
                               <Properties>
                                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.searchPlaceButton.text_1" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+                                </Property>
+                                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                                  <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="PlaceEditorPanel.searchPlaceButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                                 </Property>
                               </Properties>
                               <Events>
