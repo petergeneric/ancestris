@@ -114,6 +114,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         initComponents();
         jXMapKit1.setDataProviderCreditShown(true);
         jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
+        jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         hoverPanel = new HoverPanel(this);
         hoverPanel.setVisible(false);
         jXMapKit1.getMainMap().add(hoverPanel);

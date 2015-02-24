@@ -4,28 +4,33 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.api.editor.AncestrisEditor;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
+import ancestris.modules.editors.genealogyeditor.panels.PlaceEditorPanel;
+import ancestris.util.swing.DialogManager.ADialog;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertyPlace;
+import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.netbeans.api.javahelp.Help;
 import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -166,19 +171,71 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                         new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
 
             } else if (actionName.equals("ACTION_EditPlace")) {
-                // popup editor
-                final GeoPlaceEditor editorPanel = new GeoPlaceEditor(obj);
-                DialogDescriptor dd = new DialogDescriptor(editorPanel, "Edition d'un lieu", false, new ActionListener() {
+                // *** 2015-20-22 - the GeoPlaceEditor is no longer called
+                //                  Call the Ancestris place editor instead
+                //
+                //final GeoPlaceEditor editorPanel = new GeoPlaceEditor(obj);
+                //DialogDescriptor dd = new DialogDescriptor(editorPanel, "Edition d'un lieu", false, new ActionListener() {
+                //
+                //    public void actionPerformed(ActionEvent ae) {
+                //        if (ae.getSource().equals(DialogDescriptor.OK_OPTION)) {
+                //            editorPanel.updateGedcom();
+                //        }
+                //    }
+                //});
+                //editorPanel.requestFocus();
+                //DialogDisplayer.getDefault().createDialog(dd).show();
+                //
+                
+                
+                // Popup editor
+                Gedcom gedcom = obj.getPlace().getGedcom();
+                int undoNb = gedcom.getUndoNb();
+                final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+                placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null);
+                placeEditorPanel.hideAddressPanel();
+                placeEditorPanel.runSearch();
+                ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"), placeEditorPanel);
+                eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
 
-                    public void actionPerformed(ActionEvent ae) {
-                        if (ae.getSource().equals(DialogDescriptor.OK_OPTION)) {
-                            editorPanel.updateGedcom();
+                if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                    try {
+                        GeoPlacesList.getInstance(gedcom).stopListening();
+                        gedcom.doUnitOfWork(new UnitOfWork() {
+
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                placeEditorPanel.commit();  // writes place edited and also writes geocoordinates into gedcom file
+                                
+                            }
+                        });
+                        
+                        // update all places in gedcom
+                        String place = obj.getPlace().getDisplayValue();
+                        List<PropertyPlace> propPlaces = obj.getEventsPlaces();
+                        for (PropertyPlace pp : propPlaces) {
+                            pp.setValue(place);
                         }
-                    }
-                });
-                editorPanel.requestFocus();
-                DialogDisplayer.getDefault().createDialog(dd).show();
 
+                        // *** 2015-02-23 - geocoordinates are no longer stored locally
+                        //                  Risk of loosing data when changing computer or upgrading system, ancestris, etc....
+                        // remember for next time
+                        //Toponym topo = obj.getToponym();
+                        //updateTopoFromDialog(topo);
+                        //obj.setToponym(topo);
+                        //NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlaceAsLongString(), geoObj.Toponym2Code(topo));
+
+                        GeoPlacesList.getInstance(gedcom).refreshPlaceName();
+                        
+                        GeoPlacesList.getInstance(gedcom).startListening();    
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
             } else if (actionName.equals("ACTION_UpdateList")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
 

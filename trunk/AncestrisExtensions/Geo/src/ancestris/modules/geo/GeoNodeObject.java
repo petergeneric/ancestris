@@ -60,6 +60,7 @@ public class GeoNodeObject {
 
     public GeoNodeObject(PropertyPlace place, boolean localOnly) {
         this.place = place;
+        this.property = place.getParent();
         this.isEvent = false;
         this.toBeDisplayed = false;
         this.toponym = getToponymFromPlace(place, localOnly);

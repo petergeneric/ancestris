@@ -45,6 +45,10 @@ import org.openide.windows.WindowManager;
 /**
  *
  * @author frederic
+ * 
+ * 2015-02-22 -  Ce module n'est plus utilisé pour l'instant. Un seul éditeur de lieu est suffisant.
+ *               Celui de l'éditeur généalogique existe maintenant. L'appeler au lieu de celui-ci.
+ * 
  */
 public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChangeListener, FlavorListener {
 
@@ -301,9 +305,9 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                     .addComponent(jLabel10)
                     .addComponent(jLabel15))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel16))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -343,7 +347,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+            .addComponent(jSplitPane2)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
