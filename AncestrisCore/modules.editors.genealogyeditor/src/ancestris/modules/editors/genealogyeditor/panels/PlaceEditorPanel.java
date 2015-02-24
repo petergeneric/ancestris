@@ -417,6 +417,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 Double dLat = (double)Math.round(mpm.getGeoPoint().getLatitude() * 100000) / 100000;
                 Double dLon = (double)Math.round(mpm.getGeoPoint().getLongitude() * 100000) / 100000;
                 gedcomPlaceEditorPanel.modifyCoordinates(String.valueOf(dLat), String.valueOf(dLon), false);
+                jXMapKit1.setAddressLocation(mpm.getGeoPoint());
             }
         }
     }
