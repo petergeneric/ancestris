@@ -9,6 +9,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.util.Exceptions;
@@ -42,6 +44,14 @@ public class PlacesTablePanel extends javax.swing.JPanel {
         placesListTable.setRowSorter(mPlaceTableSorter);
         placesListTable.setID(PlacesTablePanel.class.getName());
 
+        List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+        if (mPlaceTableSorter.getModelRowCount() > 0) {
+            sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        }
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        mPlaceTableSorter.setSortKeys(sortKeys);
+        mPlaceTableSorter.sort();
+
         try {
             if (!modulePreferences.nodeExists(gedcom.getName())) {
                 searchPlaceComboBox.setSelectedIndex(0);
@@ -64,6 +74,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         searchPlaceToolBar = new javax.swing.JToolBar();
+        jLabel1 = new javax.swing.JLabel();
         searchPlaceLabel = new javax.swing.JLabel();
         searchPlaceComboBox = new javax.swing.JComboBox<String>();
         filterGedcomPlaceTextField = new javax.swing.JTextField();
@@ -75,13 +86,20 @@ public class PlacesTablePanel extends javax.swing.JPanel {
         searchPlaceToolBar.setFloatable(false);
         searchPlaceToolBar.setRollover(true);
 
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.jLabel1.text")); // NOI18N
+        searchPlaceToolBar.add(jLabel1);
+
         searchPlaceLabel.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.searchPlaceLabel.text")); // NOI18N
         searchPlaceToolBar.add(searchPlaceLabel);
 
         searchPlaceComboBox.setModel(new DefaultComboBoxModel<String>(mPlaceFormat));
+        searchPlaceComboBox.setMinimumSize(new java.awt.Dimension(20, 28));
+        searchPlaceComboBox.setPreferredSize(new java.awt.Dimension(120, 28));
         searchPlaceToolBar.add(searchPlaceComboBox);
 
         filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.filterGedcomPlaceTextField.text")); // NOI18N
+        filterGedcomPlaceTextField.setMinimumSize(new java.awt.Dimension(50, 28));
+        filterGedcomPlaceTextField.setPreferredSize(new java.awt.Dimension(120, 28));
         filterGedcomPlaceTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filterGedcomPlaceButtonActionPerformed(evt);
@@ -119,7 +137,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(placesListTableScrollPane)
+                .addComponent(placesListTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
                 .addContainerGap())
             .addComponent(searchPlaceToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -128,7 +146,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(searchPlaceToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(placesListTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                .addComponent(placesListTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -151,6 +169,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
     private javax.swing.JButton clearFilterGedcomPlaceButton;
     private javax.swing.JButton filterGedcomPlaceButton;
     private javax.swing.JTextField filterGedcomPlaceTextField;
+    private javax.swing.JLabel jLabel1;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable placesListTable;
     private javax.swing.JScrollPane placesListTableScrollPane;
     private javax.swing.JComboBox<String> searchPlaceComboBox;
@@ -182,5 +201,9 @@ public class PlacesTablePanel extends javax.swing.JPanel {
         } else {
             return null;
         }
+    }
+
+    public void setFilter(String strFilter) {
+        filterGedcomPlaceTextField.setText(strFilter);
     }
 }

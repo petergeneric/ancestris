@@ -671,6 +671,15 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         }
     }
 
+    public void modifyCoordinates(String lat, String lon, boolean completePlace) {
+        if (!completePlace || gedcomLatitudeTextField.getText().isEmpty()) {
+            gedcomLatitudeTextField.setText(lat);
+        }
+        if (!completePlace || gedcomLongitudeTextField.getText().isEmpty()) {
+            gedcomLongitudeTextField.setText(lon);
+        }
+    }
+
     private void updatePlace(PropertyPlace place, int startIndex) {
 
         updateOnGoing = true;
