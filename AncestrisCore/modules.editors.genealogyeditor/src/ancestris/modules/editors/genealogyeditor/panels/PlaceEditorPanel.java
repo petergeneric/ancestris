@@ -299,7 +299,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }
 
     /**
+     * @param root
      * @param place the place to set
+     * @param address
      */
     public void set(Property root, PropertyPlace place, Property address) {
 
@@ -432,6 +434,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private class PlaceMouseInputListener implements MouseInputListener {
 
+        @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON3) {
                 popupMenu.setPoint(e.getPoint());
@@ -439,21 +442,27 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
         }
 
+        @Override
         public void mouseEntered(MouseEvent e) {
         }
 
+        @Override
         public void mouseExited(MouseEvent e) {
         }
 
+        @Override
         public void mouseDragged(MouseEvent e) {
         }
 
+        @Override
         public void mouseMoved(MouseEvent e) {
         }
     }
