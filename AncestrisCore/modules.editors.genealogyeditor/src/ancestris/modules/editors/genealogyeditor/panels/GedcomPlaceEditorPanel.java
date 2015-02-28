@@ -3,13 +3,11 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.api.place.Place;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
-import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
@@ -19,7 +17,6 @@ import javax.swing.text.DefaultEditorKit;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.DialogDescriptor;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -27,29 +24,12 @@ import org.openide.util.NbPreferences;
  */
 public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
-    public final static int BEGINNING = 0;
-    public final static int HAMLET = 0;
-    public final static int PARISH = 1;
-    public final static int CITY = 2;
-    public final static int ZIP_CODE = 3;
-    public final static int GEO_ID = 4;
-    public final static int COUNTY = 5;
-    public final static int STATE = 6;
-    public final static int COUNTRY = 7;
+    private final static int BEGINNING = 0;
     private final static Logger logger = Logger.getLogger(GedcomPlaceEditorPanel.class.getName(), null);
     private Property mRoot;
     private PropertyPlace mPlace;
+    private int mPlaceOrder[];
     private String mPlaceFormat[];
-    private int mPlaceOrder[] = {
-        0, // hamlet
-        -1, // parish
-        1, // city,
-        3, // zip Code
-        2, // geo ID,
-        4, // county,
-        5, // state
-        6 // country
-    };
     JComponent mGedcomFields[][];
     boolean mPlaceModified = false;
     boolean updateOnGoing = false;
@@ -510,7 +490,9 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void parametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parametersButtonActionPerformed
-        PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
+        PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mRoot.getGedcom());
+        mPlaceFormat = gedcomPlaceFormatEditorPanel.getPlaceFormat();
+        mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceSortOrder();
 
         DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
@@ -518,16 +500,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
 
         if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
-            Registry registry = mRoot.getGedcom().getRegistry();
-            registry.put("PLAC.hamlet.index", mPlaceOrder[0]);
-            registry.put("PLAC.parish.index", mPlaceOrder[1]);
-            registry.put("PLAC.city.index", mPlaceOrder[2]);
-            registry.put("PLAC.zipCode.index", mPlaceOrder[3]);
-            registry.put("PLAC.geoID.index", mPlaceOrder[4]);
-            registry.put("PLAC.county.index", mPlaceOrder[5]);
-            registry.put("PLAC.state.index", mPlaceOrder[6]);
-            registry.put("PLAC.country.index", mPlaceOrder[7]);
+            gedcomPlaceFormatEditorPanel.registerPlaceSortOrder();
+            mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceSortOrder();
 
             for (int index = 0; index < mPlaceOrder.length; index++) {
                 if (mPlaceOrder[index] != -1) {
@@ -574,48 +548,27 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     /**
+     * @param root
      * @param place the place to set
      */
     public void set(Property root, PropertyPlace place) {
-        Preferences modulePreferences = NbPreferences.forModule(PlaceEditorPanel.class);
-        Preferences node;
-
         this.mPlace = place;
         this.mRoot = root;
-        mPlaceFormat = PropertyPlace.getFormat(mRoot.getGedcom());
-        Registry registry = mRoot.getGedcom().getRegistry();
+        PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mRoot.getGedcom());
+        mPlaceFormat = gedcomPlaceFormatEditorPanel.getPlaceFormat();
+        mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceSortOrder();
 
-        if (registry.get("PLAC.hamlet.index", -2) == -2) {
-
-            PlaceFormatEditorOptionsPanel gedcomPlaceFormatEditorPanel = new PlaceFormatEditorOptionsPanel(mPlaceFormat, mPlaceOrder);
-
+        if (!gedcomPlaceFormatEditorPanel.isRegisteredPlaceSortOrder()) {
             DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
                     gedcomPlaceFormatEditorPanel);
             gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
-            node = modulePreferences.node(mRoot.getGedcom().getName());
             if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceOrder();
-                registry.put("PLAC.hamlet.index", mPlaceOrder[0]);
-                registry.put("PLAC.parish.index", mPlaceOrder[1]);
-                registry.put("PLAC.city.index", mPlaceOrder[2]);
-                registry.put("PLAC.zipCode.index", mPlaceOrder[3]);
-                registry.put("PLAC.geoID.index", mPlaceOrder[4]);
-                registry.put("PLAC.county.index", mPlaceOrder[5]);
-                registry.put("PLAC.state.index", mPlaceOrder[6]);
-                registry.put("PLAC.country.index", mPlaceOrder[7]);
+                gedcomPlaceFormatEditorPanel.registerPlaceSortOrder();
+                mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceSortOrder();
             }
-        } else {
-            mPlaceOrder[0] = registry.get("PLAC.hamlet.index", mPlaceOrder[0]);
-            mPlaceOrder[1] = registry.get("PLAC.parish.index", mPlaceOrder[1]);
-            mPlaceOrder[2] = registry.get("PLAC.city.index", mPlaceOrder[2]);
-            mPlaceOrder[3] = registry.get("PLAC.zipCode.index", mPlaceOrder[3]);
-            mPlaceOrder[4] = registry.get("PLAC.geoID.index", mPlaceOrder[4]);
-            mPlaceOrder[5] = registry.get("PLAC.county.index", mPlaceOrder[5]);
-            mPlaceOrder[6] = registry.get("PLAC.state.index", mPlaceOrder[6]);
-            mPlaceOrder[7] = registry.get("PLAC.country.index", mPlaceOrder[7]);
-        }
-
+        } 
+        
         for (int index = 0; index < mPlaceOrder.length; index++) {
             if (mPlaceOrder[index] != -1) {
                 if (mPlaceOrder[index] < mPlaceFormat.length) {
@@ -736,6 +689,10 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             gedcomLongitudeTextField.setText("");
         }
         updateOnGoing = false;
+    }
+
+    public String getPlaceString() {
+        return getPlaceString(PlaceFormatEditorOptionsPanel.CITY);
     }
 
     public String getPlaceString(int startingFrom) {
