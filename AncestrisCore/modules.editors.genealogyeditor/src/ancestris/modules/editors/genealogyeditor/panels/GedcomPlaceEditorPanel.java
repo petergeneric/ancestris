@@ -500,8 +500,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
 
         if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            gedcomPlaceFormatEditorPanel.registerPlaceSortOrder();
             mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceSortOrder();
+            gedcomPlaceFormatEditorPanel.registerPlaceSortOrder();
 
             for (int index = 0; index < mPlaceOrder.length; index++) {
                 if (mPlaceOrder[index] != -1) {
@@ -564,8 +564,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                     gedcomPlaceFormatEditorPanel);
             gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
             if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                gedcomPlaceFormatEditorPanel.registerPlaceSortOrder();
                 mPlaceOrder = gedcomPlaceFormatEditorPanel.getPlaceSortOrder();
+                gedcomPlaceFormatEditorPanel.registerPlaceSortOrder();
             }
         } 
         
