@@ -318,7 +318,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
             PropertyRelationship propertyRelationship = (PropertyRelationship) mAssociation.getProperty("RELA", false);
             if (propertyRelationship == null) {
-                mAssociation.addProperty("RELA", relationChoiceWidget.getText() + (mEventTag.isEmpty() == false ? "@" + "INDI" + mEventTag : ""));
+                mAssociation.addProperty("RELA", relationChoiceWidget.getText() + (mEventTag.isEmpty() == false ? "@" + "INDI:" + mEventTag : ""));
             } else {
                 propertyRelationship.setValue(relationChoiceWidget.getText());
             }
