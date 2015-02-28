@@ -1,28 +1,82 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import genj.gedcom.Gedcom;
+import genj.gedcom.PropertyPlace;
+import genj.util.Registry;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import javax.swing.JComponent;
+import org.openide.util.NbBundle;
 
 /**
+ * 
+ * Logic for setting place format and place order : 
+ * 1/ Place format 
+ *      a/ taken from current gedcom header 
+ *      b/ else from Ancestris User Preferences (GedcomOptions) 
+ *      c/ else from Ancestris gedcom module bundle properties 
+ * 2/ Sort Order 
+ *      a/ taken from local previously stored preference (using this module) 
+ *      b/ else from Ancestris User Preferences (GedcomOptions) 
+ *      c/ else from this module bundle
  *
- * @author dominique
+ * Default jurisdictions format in Ancestris options (option.placeFormat) :
+ *          Hamlet,City,,Zip_Code,County,State,Country 
+ * Predefined fields in panel :
+ *          Hamlet,Parish,City,zipCode,geoID,County,State,Country 
+ * => Default sortorder if none found : 
+ *          0     ,-1    ,1   ,3      ,2    ,4     ,5    ,6
+ *
+ *
+ * @author dominique & frederic
  */
 public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
 
-    private final String[] mPlaceFormat;
-    private final int mPlaceOrder[];
+    public final static int HAMLET = 0;
+    public final static int PARISH = 1;
+    public final static int CITY = 2;
+    public final static int ZIP_CODE = 3;
+    public final static int GEO_ID = 4;
+    public final static int COUNTY = 5;
+    public final static int STATE = 6;
+    public final static int COUNTRY = 7;
+    public final static int MAX_JURISDICTIONS = 8;
+    
+    private Gedcom gedcom = null;
+    private Registry registry = null;
+    private String[] mComboPlaceFormat, mPlaceFormat;
+    private int[] mPlaceSortOrder;
 
     /**
      * Creates new form PlaceFormatEditorOptionsPanel
+     * 
+     * @param gedcom
      */
-    public PlaceFormatEditorOptionsPanel(String placeFormat[], int placeOrder[]) {
-        mPlaceOrder = placeOrder;
-        mPlaceFormat = new String [Math.min(8, placeFormat.length) + 1];
+    public PlaceFormatEditorOptionsPanel(Gedcom gedcom) {
+
+        this.gedcom = gedcom;
+        this.registry = gedcom.getRegistry();
+    
+        // Read place format from Gedcom, else Ancestris user preferences, else from gedcom bundle
+        mPlaceFormat = PropertyPlace.getFormat(gedcom);
+        if (mPlaceFormat != null && mPlaceFormat.length != 0) {
+        } else {
+            mPlaceFormat = toJurisdictions(genj.gedcom.GedcomOptions.getInstance().getPlaceFormat());
+        }
         
-        mPlaceFormat[0] = "";
-        System.arraycopy(placeFormat, 0, mPlaceFormat, 1, placeFormat.length);
+        // Build the list used for all combo boxes
+        mComboPlaceFormat = new String[Math.min(MAX_JURISDICTIONS, mPlaceFormat.length) + 1];
+        mComboPlaceFormat[0] = "";
+        System.arraycopy(mPlaceFormat, 0, mComboPlaceFormat, 1, mPlaceFormat.length);
 
+        // Read place sort order to intiate the mapping between known juridictions and those in the gedcom format
+        mPlaceSortOrder = initPlaceSortOrder();
+        if (isRegisteredPlaceSortOrder()) {
+            mPlaceSortOrder = getRegisteredPlaceSortOrder();
+        } 
+                
+        // Init panel
         initComponents();
-
         JComponent gedcomFields[] = {
             hamletComboBox,
             parishComboBox,
@@ -34,9 +88,9 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
             countryComboBox
         };
 
-        for (int index = 0; index < mPlaceOrder.length; index++) {
-            if (mPlaceOrder[index] > -1 && mPlaceOrder[index] + 1 < mPlaceFormat.length) {
-                ((javax.swing.JComboBox) gedcomFields[index]).setSelectedIndex(mPlaceOrder[index] + 1);
+        for (int index = 0; index < mPlaceSortOrder.length; index++) {
+            if (mPlaceSortOrder[index] > -1 && mPlaceSortOrder[index] + 1 < mComboPlaceFormat.length) {
+                ((javax.swing.JComboBox) gedcomFields[index]).setSelectedIndex(mPlaceSortOrder[index] + 1);
             } else {
                 ((javax.swing.JComboBox) gedcomFields[index]).setSelectedIndex(0);
             }
@@ -93,21 +147,26 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         countryLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(countryLabel, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.countryLabel.text")); // NOI18N
 
-        hamletComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
+        hamletComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
+        hamletComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hamletComboBoxActionPerformed(evt);
+            }
+        });
 
-        cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
+        cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
 
-        geoIDComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
+        geoIDComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
 
-        stateComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
+        stateComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
 
-        parishComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
+        parishComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
 
-        zipCodeComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
+        zipCodeComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
 
-        countyComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
+        countyComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
 
-        countryComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mPlaceFormat));
+        countryComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -174,6 +233,11 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void hamletComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hamletComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_hamletComboBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JLabel cityLabel;
@@ -193,17 +257,90 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel zipCodeLabel;
     // End of variables declaration//GEN-END:variables
 
-    public int[] getPlaceOrder() {
-        int placeOrder[] = {
-            (Integer) hamletComboBox.getSelectedIndex() - 1,
-            (Integer) parishComboBox.getSelectedIndex() - 1,
-            (Integer) cityComboBox.getSelectedIndex() - 1,
-            (Integer) zipCodeComboBox.getSelectedIndex() - 1,
-            (Integer) geoIDComboBox.getSelectedIndex() - 1,
-            (Integer) countyComboBox.getSelectedIndex() - 1,
-            (Integer) stateComboBox.getSelectedIndex() - 1,
-            (Integer) countryComboBox.getSelectedIndex() - 1
-        };
-        return placeOrder;
+    public int[] getPlaceSortOrder() {
+        mPlaceSortOrder[0] = (Integer) hamletComboBox.getSelectedIndex() - 1;
+        mPlaceSortOrder[1] = (Integer) parishComboBox.getSelectedIndex() - 1;
+        mPlaceSortOrder[2] = (Integer) cityComboBox.getSelectedIndex() - 1;
+        mPlaceSortOrder[3] = (Integer) zipCodeComboBox.getSelectedIndex() - 1;
+        mPlaceSortOrder[4] = (Integer) geoIDComboBox.getSelectedIndex() - 1;
+        mPlaceSortOrder[5] = (Integer) countyComboBox.getSelectedIndex() - 1;
+        mPlaceSortOrder[6] = (Integer) stateComboBox.getSelectedIndex() - 1;
+        mPlaceSortOrder[7] = (Integer) countryComboBox.getSelectedIndex() - 1;
+        return mPlaceSortOrder;
+    }
+
+    public String[] getPlaceFormat() {
+        return mPlaceFormat;
+    }
+    
+    public void registerPlaceSortOrder() {
+        registry.put("PLAC.hamlet.index", mPlaceSortOrder[0]);
+        registry.put("PLAC.parish.index", mPlaceSortOrder[1]);
+        registry.put("PLAC.city.index", mPlaceSortOrder[2]);
+        registry.put("PLAC.zipCode.index", mPlaceSortOrder[3]);
+        registry.put("PLAC.geoID.index", mPlaceSortOrder[4]);
+        registry.put("PLAC.county.index", mPlaceSortOrder[5]);
+        registry.put("PLAC.state.index", mPlaceSortOrder[6]);
+        registry.put("PLAC.country.index", mPlaceSortOrder[7]);
+    }
+    
+    public boolean isRegisteredPlaceSortOrder() {
+        return registry.get("PLAC.hamlet.index", -2) != -2;
+    }
+
+    public int[] getRegisteredPlaceSortOrder() {
+        mPlaceSortOrder[0] = registry.get("PLAC.hamlet.index", mPlaceSortOrder[0]);
+        mPlaceSortOrder[1] = registry.get("PLAC.parish.index", mPlaceSortOrder[1]);
+        mPlaceSortOrder[2] = registry.get("PLAC.city.index", mPlaceSortOrder[2]);
+        mPlaceSortOrder[3] = registry.get("PLAC.zipCode.index", mPlaceSortOrder[3]);
+        mPlaceSortOrder[4] = registry.get("PLAC.geoID.index", mPlaceSortOrder[4]);
+        mPlaceSortOrder[5] = registry.get("PLAC.county.index", mPlaceSortOrder[5]);
+        mPlaceSortOrder[6] = registry.get("PLAC.state.index", mPlaceSortOrder[6]);
+        mPlaceSortOrder[7] = registry.get("PLAC.country.index", mPlaceSortOrder[7]);
+        return mPlaceSortOrder;
+    }
+    
+    private static String[] toJurisdictions(String value) {
+        ArrayList<String> result = new ArrayList<String>(10);
+        String lastToken = PropertyPlace.JURISDICTION_SEPARATOR;
+        for (StringTokenizer tokens = new StringTokenizer(value, ",", true); tokens.hasMoreTokens();) {
+            String token = tokens.nextToken();
+            if (!PropertyPlace.JURISDICTION_SEPARATOR.equals(token)) {
+                result.add(token);
+            } else if (PropertyPlace.JURISDICTION_SEPARATOR.equals(lastToken)) {
+                result.add("");
+            }
+            lastToken = token;
+        }
+        if (PropertyPlace.JURISDICTION_SEPARATOR.equals(lastToken)) {
+            result.add("");
+        }
+        return result.toArray(new String[result.size()]);
+    }
+
+    private int[] initPlaceSortOrder() {
+        String placeOrderString = gedcom.getPlaceSortOrder();
+        if (placeOrderString == null || placeOrderString.trim().isEmpty()) {
+            placeOrderString = NbBundle.getMessage(PlaceEditorPanel.class, "PlaceFormatEditorOptionsPanel.defaultSortOrder");
+        }
+        String[] placeOrderArray = toJurisdictions(placeOrderString);
+        int[] results = new int[MAX_JURISDICTIONS];
+        for (int i = 0; i < MAX_JURISDICTIONS; i++) {
+            try {
+                if (i < placeOrderArray.length) {
+                    results[i] = Integer.parseInt(placeOrderArray[i]);
+                } else {
+                    results[i] = -1;
+                }
+                if (results[i] < -1) {
+                    results[i] = -1;
+                }
+                if (results[i] >= MAX_JURISDICTIONS) {
+                    results[i] = MAX_JURISDICTIONS - 1;
+                }
+            } catch (NumberFormatException nfe) {
+            };
+        }
+        return results;
     }
 }

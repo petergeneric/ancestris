@@ -23,6 +23,8 @@ import org.openide.util.*;
  */
 public class PlaceEditorPanel extends javax.swing.JPanel {
 
+    private final static int DEFAULT_LAT = 45; // same default as in Geo module, i.e. in the middle of the sea
+    private final static int DEFAULT_LON = -4; // same default as in Geo module, i.e. in the middle of the sea
     private PropertyPlace mPlace;
     private final GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
     private Property mAddress;
@@ -333,12 +335,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 // Center map on existing geo coordinates
                 jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
                 // Set search field in case user may want to search another location similar to the one existing, but srtay on map tab
-                searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.CITY).replaceAll(",", " ").replaceAll("\\s+", " "));
+                searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " "));
             } else {
                 // Center map on a clearly non found place
-                jXMapKit1.setAddressLocation(new GeoPosition(45, -4)); // same default as in Geo module, i.e. in the middle of the sea
+                jXMapKit1.setAddressLocation(new GeoPosition(DEFAULT_LAT, DEFAULT_LON)); 
                 // Be ready for the search
-                searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.CITY).replaceAll(",", " ").replaceAll("\\s+", " "));
+                searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " "));
                 // And display search tab
                 placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
             }
