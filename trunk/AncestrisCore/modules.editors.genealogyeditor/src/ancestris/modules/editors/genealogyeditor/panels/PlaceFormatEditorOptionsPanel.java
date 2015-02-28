@@ -59,8 +59,7 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
     
         // Read place format from Gedcom, else Ancestris user preferences, else from gedcom bundle
         mPlaceFormat = PropertyPlace.getFormat(gedcom);
-        if (mPlaceFormat != null && mPlaceFormat.length != 0) {
-        } else {
+        if (mPlaceFormat == null || mPlaceFormat.length == 0) {
             mPlaceFormat = toJurisdictions(genj.gedcom.GedcomOptions.getInstance().getPlaceFormat());
         }
         
