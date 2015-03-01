@@ -38,30 +38,31 @@ class GeoInternetSearch {
     private static Set<Gedcom> gedcomSearchingList = new HashSet<Gedcom>();
     private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
 
-    private GeoPlacesList owner;
+    private GeoPlacesList gplOwner;
     private List<PropertyPlace> placesProps;
     private GeoNodeObject[] result;
     private RequestProcessor.Task theTask = null;
-
-    public GeoInternetSearch(GeoPlacesList owner, List<PropertyPlace> placesProps) {
-        this.owner = owner;
+    
+    public GeoInternetSearch(GeoPlacesList gplOwner, List<PropertyPlace> placesProps) {
+        this.gplOwner = gplOwner;
         this.placesProps = placesProps;
     }
 
     @SuppressWarnings("unchecked")
     public synchronized void executeSearch(Gedcom gedcom) {
-        //public void executeSearch() {
+        // return if busy with this gedcom already
         if (isBusy) {
-            for (Iterator<Gedcom> it = gedcomSearchingList.iterator(); it.hasNext();) {
-                Gedcom gedcomObject = it.next();
-            }
             if (gedcomSearchingList.contains(gedcom))  {
                 return;
             }
         }
         isBusy = true;
         gedcomSearchingList.add(gedcom);
+        
+        // Define the key component of data, the nodeobject holding the locations and the events, sorted on string displayed
         final SortedSet<GeoNodeObject> ret = new TreeSet<GeoNodeObject>(sortPlaces);
+        
+        // the progress bar
         final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlaces"), new Cancellable() {
 
             public boolean cancel() {
@@ -69,6 +70,7 @@ class GeoInternetSearch {
             }
         });
 
+        // Define task to be launched
         Runnable runnable = new Runnable() {
 
             private final int NUM = placesProps.size();
@@ -76,23 +78,21 @@ class GeoInternetSearch {
             public synchronized void run() {
                 try {
                     StatusDisplayer.getDefault().setStatusText("");
-                    SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<String, GeoNodeObject>();
+                    SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<String, GeoNodeObject>(); // pointer from propertyplace to objects, to group events by location
                     ph.start(); //we must start the PH before we switch to determinate
                     ph.switchToDeterminate(NUM);
                     int i = 0;
-                    boolean localOnly = false;
                     for (Iterator<PropertyPlace> it = placesProps.iterator(); it.hasNext();) {
                         i++;
                         PropertyPlace propertyPlace = it.next();
-                        String str = propertyPlace.toString().trim();
-                        GeoNodeObject obj = listOfCities.get(str);
-                        // if place not in the list, add it (it will search for it at construction)
+                        String key = gplOwner.getPlaceKey(propertyPlace);
+                        GeoNodeObject obj = listOfCities.get(key);
+                        // if place not in the list, "create object" or else, add the events
                         if (obj == null) {
-                            GeoNodeObject newObj = new GeoNodeObject(propertyPlace, localOnly);
-                            if (newObj.getToponym() == null && newObj.isInError) {
-                                localOnly = true;
+                            // City is not in the list : create object, find geocoordinates, add events (all done at construction)
+                            GeoNodeObject newObj = new GeoNodeObject(gplOwner, propertyPlace, true);
+                            if (newObj.isInError) {
                                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-
                                     public void run() {
                                         String msg = NbBundle.getMessage(GeoInternetSearch.class, "ERROR_cannotFindPlace");
                                         JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), msg, NbBundle.getMessage(GeoInternetSearch.class, "ERROR_Title"), JOptionPane.ERROR_MESSAGE);
@@ -101,18 +101,19 @@ class GeoInternetSearch {
                                     }
                                 });
                             }
+                            // Add object to list of objects, and add new city to the list
                             ret.add(newObj);
-                            listOfCities.put(str, newObj);
+                            listOfCities.put(key, newObj);
                         } else {
-                            // else add the event
+                            // City is already in the list, just add the events
                             obj.addEvent(propertyPlace.getParent(), propertyPlace);
                         }
+                        // Increment progress bar
                         ph.progress(i);
                         if (Thread.currentThread().isInterrupted()) {
                             throw new InterruptedException("");
                         }
                     }
-
                 } catch (InterruptedException ex) {
                     isBusy = false;
                     String msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchCancelled");
@@ -130,7 +131,7 @@ class GeoInternetSearch {
             public void taskFinished(Task task) {
                 ph.finish();
                 result = ret.toArray(new GeoNodeObject[ret.size()]);
-                owner.setPlaces(result);
+                gplOwner.setPlaces(result);
                 gedcomSearchingList.remove(placesProps.get(0).getGedcom());
                 isBusy = false;
             }
@@ -148,6 +149,7 @@ class GeoInternetSearch {
         }
         return theTask.cancel();
     }
+    
     /**
      * Comparator to sort places
      */
@@ -163,7 +165,8 @@ class GeoInternetSearch {
             Collator myCollator = Collator.getInstance();
             myCollator.setStrength(Collator.PRIMARY);
             myCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
-            return myCollator.compare(o1.getPlaceAsLongString().toLowerCase(), o2.getPlaceAsLongString().toLowerCase());
+            return myCollator.compare(o1.toString(), o2.toString());
         }
     };
+
 }
