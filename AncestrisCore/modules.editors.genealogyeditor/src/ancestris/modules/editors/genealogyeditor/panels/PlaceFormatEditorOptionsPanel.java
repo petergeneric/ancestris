@@ -41,7 +41,7 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
     public final static int STATE = 6;
     public final static int COUNTRY = 7;
     public final static int MAX_JURISDICTIONS = 8;
-    
+
     private Gedcom gedcom = null;
     private Registry registry = null;
     private String[] mComboPlaceFormat, mPlaceFormat;

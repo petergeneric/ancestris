@@ -334,7 +334,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             if (latitude != null && longitude != null) {
                 // Center map on existing geo coordinates
                 jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
-                // Set search field in case user may want to search another location similar to the one existing, but srtay on map tab
+                // Set search field in case user may want to search another location similar to the one existing, but stay on map tab
                 searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " "));
             } else {
                 // Center map on a clearly non found place
@@ -357,6 +357,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             editorsTabbedPane.setSelectedComponent(addressEditorTabPanel);
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
         } else {
+            // Center map on a clearly non found place
+            jXMapKit1.setAddressLocation(new GeoPosition(DEFAULT_LAT, DEFAULT_LON)); 
             editorsTabbedPane.setSelectedComponent(placeEditorTabPanel);
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
         }

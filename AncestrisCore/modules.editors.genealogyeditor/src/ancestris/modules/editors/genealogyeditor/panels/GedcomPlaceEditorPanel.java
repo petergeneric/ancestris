@@ -753,7 +753,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                     }
                     longitude = map.getProperty(longitudeTAG);
                     if (longitude == null) {
-                        map.addProperty(latitudeTAG, gedcomLongitudeTextField.getText());
+                        map.addProperty(longitudeTAG, gedcomLongitudeTextField.getText());
                     } else {
                         longitude.setValue(gedcomLongitudeTextField.getText());
                     }
