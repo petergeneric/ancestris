@@ -64,7 +64,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         this.geoObj = geoObj;
         initComponents();
         enableAddressFields();
-        jTextField1.setText(geoObj.getCity());
+//        jTextField1.setText(geoObj.getCity());
         fillPlaceFromGeoNode();
         jLabel14.setText("");
         jLabel15.setText("");
@@ -572,7 +572,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         isBusy = true;
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        list = geoObj.getToponymsFromPlace(jTextField1.getText(), 30);
+//        list = geoObj.getToponymsFromPlace(jTextField1.getText(), 30);
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         if (list == null) {
             String msg = NbBundle.getMessage(GeoInternetSearch.class, "ERROR_cannotFindPlace");
@@ -633,13 +633,13 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         if (geoObj == null) {
             return;
         }
-        JTextField placeFormat = new JTextField(geoObj.getGedcom().getPlaceFormat());
-        String title = NbBundle.getMessage(GeoInternetSearch.class, "TXT_placeFormat") + " " + geoObj.getGedcom().getName();
-        placeFormat.setPreferredSize(new Dimension(500, 30));
-        NotifyDescriptor d = new NotifyDescriptor.Confirmation(placeFormat, title, NotifyDescriptor.OK_CANCEL_OPTION);
-        if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION) {
-            updateGedcomPlaceFormat(geoObj.getGedcom(), geoObj.getPlace(), placeFormat.getText());
-        }
+//        JTextField placeFormat = new JTextField(geoObj.getGedcom().getPlaceFormat());
+//        String title = NbBundle.getMessage(GeoInternetSearch.class, "TXT_placeFormat") + " " + geoObj.getGedcom().getName();
+//        placeFormat.setPreferredSize(new Dimension(500, 30));
+//        NotifyDescriptor d = new NotifyDescriptor.Confirmation(placeFormat, title, NotifyDescriptor.OK_CANCEL_OPTION);
+//        if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION) {
+//            updateGedcomPlaceFormat(geoObj.getGedcom(), geoObj.getPlace(), placeFormat.getText());
+//        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -805,10 +805,10 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                         }
 
                         // remember for next time
-                        Toponym topo = geoObj.getToponym();
-                        updateTopoFromDialog(topo);
-                        geoObj.setToponym(topo);
-                        NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlaceAsLongString(), geoObj.Toponym2Code(topo));
+//                        Toponym topo = geoObj.getToponym();
+//                        updateTopoFromDialog(topo);
+//                        geoObj.setToponym(topo);
+                        //NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlaceAsLongString(), geoObj.Toponym2Code(topo));
 
                         GeoPlacesList.getInstance(gedcom).refreshPlaceName();
                     }
@@ -821,10 +821,10 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             }
             // else update only place locally: after a refresh, all places will be relocalised
         } else {
-            Toponym topo = geoObj.getToponym();
-            updateTopoFromDialog(topo);
-            geoObj.setToponym(topo);
-            NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlaceAsLongString(), geoObj.Toponym2Code(topo));
+//            Toponym topo = geoObj.getToponym();
+//            updateTopoFromDialog(topo);
+//            geoObj.setToponym(topo);
+            //NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlaceAsLongString(), geoObj.Toponym2Code(topo));
             GeoPlacesList.getInstance(gedcom).refreshPlaceCoord();
         }
 
@@ -853,7 +853,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     }
 
     private void updateTopoFromDialog(Toponym topo) {
-
         try {
             topo.setName(jTextField7.getText());
             topo.setLatitude(Double.parseDouble(jTextField5.getText().trim().isEmpty() ? "45" : jTextField5.getText()));
@@ -862,7 +861,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             topo.setAdminName2(jTextField2.getText());
             topo.setAdminName3(jTextField3.getText());
             topo.setAdminCode4(jTextField8.getText());
-            //topo.setPostcode(jTextField9.getText()); //XXX: no postcode in new lib            
         } catch (Throwable t) {
         }
         return;

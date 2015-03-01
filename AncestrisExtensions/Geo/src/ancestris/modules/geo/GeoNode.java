@@ -63,13 +63,13 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
     public String getHtmlDisplayName() {
         GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
         if (obj != null) {
-            String color = obj.isUnknown ? "color='#ff2300'" : "color='#03a60d'"; // color='!textText'"; "color='!controlShadow'"
-            return obj.isEvent ? "<font color='!textText'>" + obj.toString() + " </font>&nbsp;"
-                    : "<font color='!textText'>" + obj.toString() + "</font><font " + color + "> [" + obj.getCoordinates() + "]"
+            String text = obj.toDisplayString();
+            String color = obj.getColor();
+            return obj.isEvent ? "<font color='!textText'>" + text + " </font>&nbsp;"
+                    : "<font color='!textText'>" + text + "</font><font " + color + "> [" + obj.getTextCoordinates() + "]"
                     + " <i></font><font color='!textText'>(" + obj.getNbOfEvents() + ")" + "</i></font>&nbsp;";
-        } else {
-            return null;
         }
+        return "";
     }
 
     @Override
@@ -114,7 +114,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
             if (obj == null) {
                 return null;
             }
-            if (obj.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {
+            if (obj.toDisplayString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {
                 return new Action[]{
                             new GeoAction("ACTION_None")};
 
@@ -124,6 +124,9 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                             new GeoAction("ACTION_FindPlace"),
                             null,
                             new GeoAction("ACTION_EditPlace"),
+                            null,
+                            new GeoAction("ACTION_CopyPlace"),
+                            new GeoAction("ACTION_PastePlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).getCopiedPlace() != null),
                             null,
                             new GeoAction("ACTION_UpdateList"),
                             null,
@@ -147,9 +150,15 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
             putValue(NAME, NbBundle.getMessage(GeoNode.class, name));
         }
 
+        public GeoAction(String name, boolean enabled) {
+            this.actionName = name;
+            putValue(NAME, NbBundle.getMessage(GeoNode.class, name));
+            setEnabled(enabled);
+        }
+
         @SuppressWarnings("deprecation")
         public void actionPerformed(ActionEvent e) {
-            GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
+            final GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
             if (obj == null) {
                 return;
             }
@@ -171,23 +180,6 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                         new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
 
             } else if (actionName.equals("ACTION_EditPlace")) {
-                // *** 2015-20-22 - the GeoPlaceEditor is no longer called
-                //                  Call the Ancestris place editor instead
-                //
-                //final GeoPlaceEditor editorPanel = new GeoPlaceEditor(obj);
-                //DialogDescriptor dd = new DialogDescriptor(editorPanel, "Edition d'un lieu", false, new ActionListener() {
-                //
-                //    public void actionPerformed(ActionEvent ae) {
-                //        if (ae.getSource().equals(DialogDescriptor.OK_OPTION)) {
-                //            editorPanel.updateGedcom();
-                //        }
-                //    }
-                //});
-                //editorPanel.requestFocus();
-                //DialogDisplayer.getDefault().createDialog(dd).show();
-                //
-                
-                
                 // Popup editor
                 Gedcom gedcom = obj.getPlace().getGedcom();
                 int undoNb = gedcom.getUndoNb();
@@ -206,27 +198,11 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                             @Override
                             public void perform(Gedcom gedcom) throws GedcomException {
                                 placeEditorPanel.commit();  // writes place edited and also writes geocoordinates into gedcom file
-                                
+                                // update all other places in gedcom and refresh list
+                                obj.updateAllEventsPlaces(obj.getPlace());
                             }
                         });
-                        
-                        // update all places in gedcom
-                        String place = obj.getPlace().getDisplayValue();
-                        List<PropertyPlace> propPlaces = obj.getEventsPlaces();
-                        for (PropertyPlace pp : propPlaces) {
-                            pp.setValue(place);
-                        }
-
-                        // *** 2015-02-23 - geocoordinates are no longer stored locally
-                        //                  Risk of loosing data when changing computer or upgrading system, ancestris, etc....
-                        // remember for next time
-                        //Toponym topo = obj.getToponym();
-                        //updateTopoFromDialog(topo);
-                        //obj.setToponym(topo);
-                        //NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlaceAsLongString(), geoObj.Toponym2Code(topo));
-
                         GeoPlacesList.getInstance(gedcom).refreshPlaceName();
-                        
                         GeoPlacesList.getInstance(gedcom).startListening();    
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
@@ -235,6 +211,25 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                         gedcom.undoUnitOfWork(false);
                     }
+                }
+            } else if (actionName.equals("ACTION_CopyPlace")) {
+                GeoPlacesList.getInstance(obj.getPlace().getGedcom()).setCopiedPlace(obj.getPlace());
+            } else if (actionName.equals("ACTION_PastePlace")) {
+                Gedcom gedcom = obj.getPlace().getGedcom();
+                try {
+                    GeoPlacesList.getInstance(gedcom).stopListening();
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            obj.updateAllEventsPlaces(GeoPlacesList.getInstance(gedcom).getCopiedPlace());
+                            GeoPlacesList.getInstance(gedcom).setCopiedPlace(null);
+                        }
+                    });
+                    GeoPlacesList.getInstance(gedcom).refreshPlaceName();
+                    GeoPlacesList.getInstance(gedcom).startListening();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             } else if (actionName.equals("ACTION_UpdateList")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();

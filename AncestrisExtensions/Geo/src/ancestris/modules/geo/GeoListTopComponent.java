@@ -76,7 +76,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
 
         // Set mono selection and allow substring quick search (requires nodes to have a valid getName())
         ((BeanTreeView) jScrollPane1).setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        ((MyBeanTreeView) jScrollPane1).setUseSubstringInQuickSearch(true);
+        ((MyBeanTreeView) jScrollPane1).setQuickSearchAllowed(true);
 
         // Initialise tree of locations
         initTree();
@@ -85,7 +85,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
     }
 
     /**
-     * initTree.
+     * InitTree.
      *
      * For each given Gedcom, a list object of locations is retrieved or built
      * when it is the first time
@@ -136,7 +136,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
             return "";
         }
         GeoNodeObject obj = geonodes[0].getLookup().lookup(GeoNodeObject.class);
-        return (obj != null) ? obj.getPlaceAsLongString() : "";
+        return (obj != null) ? obj.toString() : "";
     }
 
     private void selectNode(String selectedNode) {
@@ -148,7 +148,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         for (int i = 0; i < scannedNodes.length; i++) {
             Node node = scannedNodes[i];
             GeoNodeObject obj = node.getLookup().lookup(GeoNodeObject.class);
-            if (obj.getPlaceAsLongString().equals(selectedNode)) {
+            if (obj.toString().equals(selectedNode)) {
                 try {
                     mgr.setSelectedNodes(new Node[]{node});
                 } catch (PropertyVetoException ex) {
@@ -237,7 +237,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         if (true) {
             return;
         }
-        // TODO : how do >I get here then ???
+        // TODO : how do I get here then ???
         if (mgr != null) {
             Node[] geonodes = mgr.getSelectedNodes();
             if (geonodes.length > 0) {
