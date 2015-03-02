@@ -76,7 +76,7 @@ class GeoPlacesList implements GedcomListener {
         }
 
         // Check that display format of places is set
-        initPlaceDisplayFormat();
+        initPlaceDisplayFormat(false);
         
         // search the geo objects locally and else on internet
         new GeoInternetSearch(this, placesProps).executeSearch(gedcom);
@@ -184,11 +184,12 @@ class GeoPlacesList implements GedcomListener {
      *    For that, I need PlaceFormatEditorOptionsPanel to collect placesortorder preferences for this gedcom
      * 
      */
-    private void initPlaceDisplayFormat() {
+    public boolean initPlaceDisplayFormat(boolean forceEdit) {
+        boolean ret = false;
         PlaceFormatEditorOptionsPanel pfeop = new PlaceFormatEditorOptionsPanel(gedcom);
         placeSortOrder = pfeop.getPlaceSortOrder();
 
-        if (!pfeop.isRegisteredPlaceSortOrder()) {
+        if (!pfeop.isRegisteredPlaceSortOrder() || forceEdit) {
             DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
                     NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
                     pfeop);
@@ -196,16 +197,28 @@ class GeoPlacesList implements GedcomListener {
             if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
                 placeSortOrder = pfeop.getPlaceSortOrder();
                 pfeop.registerPlaceSortOrder();
+                ret = true;
             }
         } 
         // Format like : "Place of 1 (4), located in county of 5, 7" 
-        // TODO : get from pfeop (user preferences), default to the following string in the mean time
-        placeDisplayFormat =  ((placeSortOrder[2] == -1) ? "" : placeSortOrder[2] + ",") // city
-                            + ((placeSortOrder[0] == -1) ? "" : placeSortOrder[0] + ",") // hamlet
-                            + ((placeSortOrder[4] == -1) ? "" : placeSortOrder[4] + ",") // geocode
-                            + ((placeSortOrder[5] == -1) ? "" : placeSortOrder[5] + ",") // dept
-                            + ((placeSortOrder[6] == -1) ? "" : placeSortOrder[6] + ",") // region
-                            + ((placeSortOrder[7] == -1) ? "" : placeSortOrder[7]);      // country
+        //            or "Ville de 2, 0 (4), dept de 5 en région 5 -- 7"
+        //              where 0 is hamlet, 1 is parish, 2 is city, etc.
+        placeDisplayFormat = pfeop.getPlaceDisplayFormat();
+        for (int i = 0; i < placeSortOrder.length; i++) {
+            String trans = (placeSortOrder[i] == -1) ? "" : "" + placeSortOrder[i];
+            placeDisplayFormat = placeDisplayFormat.replaceAll("\\b" + i + "{1}\\b", trans);
+        }
+        
+        // Default to the following string if empty
+        if (placeDisplayFormat == null || placeDisplayFormat.trim().isEmpty()) {
+            placeDisplayFormat =  ((placeSortOrder[2] == -1) ? "" : placeSortOrder[2] + ",") // city
+                                + ((placeSortOrder[0] == -1) ? "" : placeSortOrder[0] + ",") // hamlet
+                                + ((placeSortOrder[4] == -1) ? "" : placeSortOrder[4] + ",") // geocode
+                                + ((placeSortOrder[5] == -1) ? "" : placeSortOrder[5] + ",") // dept
+                                + ((placeSortOrder[6] == -1) ? "" : placeSortOrder[6] + ",") // region
+                                + ((placeSortOrder[7] == -1) ? "" : placeSortOrder[7]);      // country
+        }
+        return ret;
     }
 
     public String getPlaceDisplayFormat(PropertyPlace place) {

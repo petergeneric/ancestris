@@ -15,13 +15,11 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -129,6 +127,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                             new GeoAction("ACTION_PastePlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).getCopiedPlace() != null),
                             null,
                             new GeoAction("ACTION_UpdateList"),
+                            new GeoAction("ACTION_UpdatePlaceOptions"),
                             null,
                             new GeoAction("ACTION_HelpPlace")};
             }
@@ -181,7 +180,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
 
             } else if (actionName.equals("ACTION_EditPlace")) {
                 // Popup editor
-                Gedcom gedcom = obj.getPlace().getGedcom();
+                Gedcom gedcom = obj.getGedcom();
                 int undoNb = gedcom.getUndoNb();
                 final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
                 placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null);
@@ -213,7 +212,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     }
                 }
             } else if (actionName.equals("ACTION_CopyPlace")) {
-                GeoPlacesList.getInstance(obj.getPlace().getGedcom()).setCopiedPlace(obj.getPlace());
+                GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace());
             } else if (actionName.equals("ACTION_PastePlace")) {
                 Gedcom gedcom = obj.getPlace().getGedcom();
                 try {
@@ -233,7 +232,10 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 }
             } else if (actionName.equals("ACTION_UpdateList")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
-
+            } else if (actionName.equals("ACTION_UpdatePlaceOptions")) {
+                if (GeoPlacesList.getInstance(obj.getGedcom()).initPlaceDisplayFormat(true)) {
+                    GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
+                }
             } else if (actionName.equals("ACTION_EditEvent")) {
                 // Pop up editor
                 Entity entity = obj.getProperty().getEntity();
