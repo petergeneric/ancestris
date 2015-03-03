@@ -343,7 +343,7 @@ public class HoverPanel extends javax.swing.JPanel {
     }
 
     private void displayInfo() {
-        jLabel2.setText(currentGno.toString());
+        jLabel2.setText(currentGno.toDisplayString());
         jLabel6.setText("(" + currentGno.getTextCoordinates() + ")");
         jLabel4.setText(currentGno.getPopulation().toString());
         String[] info = currentGno.getEventsInfo();
