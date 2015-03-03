@@ -381,7 +381,9 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
     }
     
     public boolean isRegisteredPlaceSortOrder() {
-        return registry.get("PLAC.hamlet.index", -2) != -2;
+        Boolean sortOrderRegistered = (registry.get("PLAC.hamlet.index", -2) != -2);
+        Boolean PlaceFormatExists = !registry.get("PLAC.display.format", "").trim().isEmpty();
+        return sortOrderRegistered && PlaceFormatExists;
     }
 
     public int[] getRegisteredPlaceSortOrder() {
