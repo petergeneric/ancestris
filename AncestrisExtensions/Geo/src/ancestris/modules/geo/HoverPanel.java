@@ -44,7 +44,8 @@ public class HoverPanel extends javax.swing.JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(backgroundColor);
-        g.fillRoundRect(10, 0, this.getWidth() - 10, this.getHeight(), 20, 20);
+        // g.fillRoundRect(10, 0, this.getWidth() - 10, this.getHeight(), 20, 20);
+        g.fill3DRect(10, 0, this.getWidth() - 10, this.getHeight(), true);
         Polygon triangle = new Polygon();
         triangle.addPoint(0, 35);
         triangle.addPoint(10, 20);

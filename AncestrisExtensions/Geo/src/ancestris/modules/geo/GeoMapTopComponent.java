@@ -37,6 +37,7 @@ import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -76,7 +77,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private boolean displayMiniMap = true;
     private boolean displayMarkers = true;
     private int markersSize = 10;
-    private Color markersColor = Color.BLUE;
+    private Color markersColor;
     private boolean useNames = false;
     private GeoFilter geoFilter = new GeoFilter();
     //
@@ -106,6 +107,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         super.init(context);
         geoFilter.setGedcom(context.getGedcom());
         ToolTipManager.sharedInstance().setDismissDelay(10000);
+        markersColor = context.getGedcom().getRegistry().get("GEO.markers.color", Color.BLUE);
     }
 
     @Override
@@ -802,6 +804,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             if (newColor != null) {
                 markersColor = newColor;
                 jButton4.repaint();
+               getGedcom().getRegistry().put("GEO.markers.color", newColor);
             }
         }
         displayMarkers();

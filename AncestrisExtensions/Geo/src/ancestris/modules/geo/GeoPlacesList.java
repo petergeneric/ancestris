@@ -7,9 +7,17 @@ package ancestris.modules.geo;
 import ancestris.modules.editors.genealogyeditor.panels.PlaceFormatEditorOptionsPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.prefs.BackingStoreException;
+import javax.swing.JOptionPane;
 import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -78,6 +86,25 @@ class GeoPlacesList implements GedcomListener {
         // Check that display format of places is set
         initPlaceDisplayFormat(false);
         
+        // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"); 
+        Date versionDate = null;
+        Date fromValidDate = null;
+        try {
+            versionDate = (Date)formatter.parse(NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", "01-01-1900"));
+            fromValidDate = (Date)formatter.parse("01-03-2015");
+            if (versionDate.before(fromValidDate) && JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(), 
+                    NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesQuestion"), 
+                    NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesTitle"), JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+                NbPreferences.forModule(GeoPlacesList.class).clear();
+                NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", "01-03-2015");
+            }
+        } catch (ParseException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (BackingStoreException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
         // search the geo objects locally and else on internet
         new GeoInternetSearch(this, placesProps).executeSearch(gedcom);
     }
