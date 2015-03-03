@@ -145,7 +145,7 @@ public class GeoNodeObject {
         if (avoidInternetSearch && placeDisplayFormat.equals(EMPTY_PLACE)) {
             return topo;
         }
-
+        
         // Search locally first (trimming spaces)
         if (avoidInternetSearch) {
             topo = Code2Toponym(NbPreferences.forModule(GeoPlacesList.class).get(searchedPlace.replaceAll(",", "").replaceAll(" +", ""), null));
@@ -243,6 +243,9 @@ public class GeoNodeObject {
             if (tokens.hasMoreTokens()) {
                 topo.setLongitude(Double.parseDouble(tokens.nextToken()));
             }
+            if (tokens.hasMoreTokens()) {
+                topo.setPopulation(Long.parseLong(tokens.nextToken()));
+            }
         } catch (Throwable t) {
         }
         return topo;
@@ -258,7 +261,12 @@ public class GeoNodeObject {
         if (topo == null) {
             return "";
         }
-        return topo.getLatitude() + ";" + topo.getLongitude();
+        try {
+            return topo.getLatitude() + ";" + topo.getLongitude() + ";" + topo.getPopulation();
+        } catch (InsufficientStyleException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return null;
     }
 
     /**
