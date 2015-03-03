@@ -275,6 +275,7 @@ class GeoPlacesList implements GedcomListener {
         Property latitude;
         Property longitude;
         for (PropertyPlace pp : propPlaces) {
+            pp.setValue(placeSource.getDisplayValue());
             map = pp.getProperty(MAPTAG);
             if (map != null) {
                 latitude = map.getProperty(LATITAG);
