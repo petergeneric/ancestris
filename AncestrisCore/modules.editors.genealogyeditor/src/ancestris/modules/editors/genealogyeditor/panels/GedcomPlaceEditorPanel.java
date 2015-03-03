@@ -82,6 +82,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         gedcomParishTextField = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        jLabel1 = new javax.swing.JLabel();
         parametersButton = new javax.swing.JButton();
 
         gedcomLatitudeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -396,6 +397,9 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         jToolBar1.setRollover(true);
         jToolBar1.add(filler1);
 
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(GedcomPlaceEditorPanel.class, "GedcomPlaceEditorPanel.jLabel1.text")); // NOI18N
+        jToolBar1.add(jLabel1);
+
         parametersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/parameters.png"))); // NOI18N
         parametersButton.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlaceEditorPanel.parametersButton.text"), new Object[] {})); // NOI18N
         parametersButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("GedcomPlaceEditorPanel.parametersButton.toolTipText"), new Object[] {})); // NOI18N
@@ -543,6 +547,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField gedcomStateTextField;
     private javax.swing.JLabel gedcomZipCodeLabel;
     private javax.swing.JTextField gedcomZipCodeTextField;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton parametersButton;
     // End of variables declaration//GEN-END:variables
