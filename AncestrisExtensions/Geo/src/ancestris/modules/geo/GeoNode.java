@@ -185,7 +185,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
                 placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null);
                 placeEditorPanel.hideAddressPanel();
-                placeEditorPanel.runSearch();
+                //placeEditorPanel.runSearch();
                 ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"), placeEditorPanel);
                 eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
 
