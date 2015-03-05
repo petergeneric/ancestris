@@ -510,7 +510,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             for (int index = 0; index < mPlaceOrder.length; index++) {
                 if (mPlaceOrder[index] != -1) {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
-                    if (mPlace != null) {
+                    if (mPlace != null && mPlace.getJurisdiction(mPlaceOrder[index]) != null) {
                         ((javax.swing.JTextField) (mGedcomFields[index][1])).setText(mPlace.getJurisdiction(mPlaceOrder[index]));
                         List<String> jurisdictions = Arrays.asList(mPlace.getAllJurisdictions(mPlaceOrder[index], true));
                         if (jurisdictions != null) {
@@ -576,7 +576,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         
         for (int index = 0; index < mPlaceOrder.length; index++) {
             if (mPlaceOrder[index] != -1) {
-                if (mPlaceOrder[index] < mPlaceFormat.length) {
+                if (mPlaceOrder[index] < mPlaceFormat.length && mPlaceFormat[mPlaceOrder[index]] != null) {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText(mPlaceFormat[mPlaceOrder[index]]);
                     List<String> jurisdictions = Arrays.asList(PropertyPlace.getAllJurisdictions(mRoot.getGedcom(), mPlaceOrder[index], true));
                     if (jurisdictions != null) {
