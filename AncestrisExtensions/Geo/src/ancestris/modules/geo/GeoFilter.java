@@ -323,7 +323,7 @@ public class GeoFilter {
         }
         int sosaNb = 0;
 
-        int start = 0, end = 0;
+        int start = 0, end = str.length();
         while (start <= end && !Character.isDigit(str.charAt(start))) {
             start++;
         }
