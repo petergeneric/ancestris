@@ -227,24 +227,7 @@ class GeoPlacesList implements GedcomListener {
                 ret = true;
             }
         } 
-        // Format like : "Place of 1 (4), located in county of 5, 7" 
-        //            or "Ville de 2, 0 (4), dept de 5 en région 5 -- 7"
-        //              where 0 is hamlet, 1 is parish, 2 is city, etc.
         placeDisplayFormat = pfeop.getPlaceDisplayFormat();
-        for (int i = 0; i < placeSortOrder.length; i++) {
-            String trans = (placeSortOrder[i] == -1) ? "" : "" + placeSortOrder[i];
-            placeDisplayFormat = placeDisplayFormat.replaceAll("\\b" + i + "{1}\\b", trans);
-        }
-        
-        // Default to the following string if empty
-        if (placeDisplayFormat == null || placeDisplayFormat.trim().isEmpty()) {
-            placeDisplayFormat =  ((placeSortOrder[2] == -1) ? "" : placeSortOrder[2] + ",") // city
-                                + ((placeSortOrder[0] == -1) ? "" : placeSortOrder[0] + ",") // hamlet
-                                + ((placeSortOrder[4] == -1) ? "" : placeSortOrder[4] + ",") // geocode
-                                + ((placeSortOrder[5] == -1) ? "" : placeSortOrder[5] + ",") // dept
-                                + ((placeSortOrder[6] == -1) ? "" : placeSortOrder[6] + ",") // region
-                                + ((placeSortOrder[7] == -1) ? "" : placeSortOrder[7]);      // country
-        }
         return ret;
     }
 
@@ -257,8 +240,12 @@ class GeoPlacesList implements GedcomListener {
         String str = placeDisplayFormat;
         String[] jurisdictions = place.getJurisdictions();
         
-        for (int i = 0; i < jurisdictions.length; i++) {
-            String juri = (jurisdictions[i].trim().length() == 0) ? "" : jurisdictions[i];
+        
+        for (int i = 0; i < Math.max(jurisdictions.length, PropertyPlace.getFormat(gedcom).length); i++) {
+            String juri = "";
+            if (i < jurisdictions.length) {
+                juri = (jurisdictions[i].trim().length() == 0) ? "" : jurisdictions[i];
+            }
             str = str.replaceAll("\\b" + i + "{1}\\b", juri);    // replace only digit not surrounded by other digits (ex: zip code is not to be replaced)
         }
         return str;
