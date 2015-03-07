@@ -1151,8 +1151,12 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public void CenterMarker(GeoNodeObject geoNodeObject) {
         if (geoNodeObject != null) {
             jXMapKit1.getMainMap().setCenterPosition(geoNodeObject.getGeoPosition());
-            jXMapKit1.getMainMap().setZoom(8);
         }
+    }
+
+    public void setZoom(int zoom) {
+        jXMapKit1.getMainMap().setZoomEnabled(true);
+        jXMapKit1.getMainMap().setZoom(zoom);
     }
 
     private void setPopuMenu() {

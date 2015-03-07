@@ -168,6 +168,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 GeoMapTopComponent theMap = getMapTopComponent(obj);
                 if (theMap != null) {
                     theMap.requestActive();
+                    theMap.setZoom(4);
                     theMap.CenterMarker(obj);
                     theMap.ShowMarker(obj);
                 }
