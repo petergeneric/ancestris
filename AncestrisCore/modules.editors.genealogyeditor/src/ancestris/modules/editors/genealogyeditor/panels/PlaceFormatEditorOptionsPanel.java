@@ -19,8 +19,7 @@ import org.openide.util.NbBundle;
  *      c/ else from Ancestris gedcom module bundle properties 
  * 2/ Sort Order 
  *      a/ taken from local previously stored preference (using this module) 
- *      b/ else from Ancestris User Preferences (GedcomOptions) 
- *      c/ else from this module bundle
+ *      b/ else from this module bundle, but not from ancestris options
  *
  * Default jurisdictions format in Ancestris options (option.placeFormat) :
  *          Hamlet,City,,Zip_Code,County,State,Country 
@@ -31,7 +30,7 @@ import org.openide.util.NbBundle;
  *
  * 3/ Display Format
  *      a/ Taken from local previously stored preference (using this module)
- *      b/ else from Ancestris User Preferences (GedcomOptions) 
+ *      b/ else from place format string
  * 
  * @author dominique & frederic
  */
@@ -91,13 +90,25 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
             stateComboBox,
             countryComboBox
         };
+        JComponent formatFields[] = {
+            jLabel2,
+            jLabel3,
+            jLabel4,
+            jLabel5,
+            jLabel6,
+            jLabel7,
+            jLabel8,
+            jLabel9
+        };
 
         // Set gedcom fields
         for (int index = 0; index < mPlaceSortOrder.length; index++) {
             if (mPlaceSortOrder[index] > -1 && mPlaceSortOrder[index] + 1 < mComboPlaceFormat.length) {
                 ((javax.swing.JComboBox) gedcomFields[index]).setSelectedIndex(mPlaceSortOrder[index] + 1);
+                ((javax.swing.JLabel) formatFields[index]).setText("" + mPlaceSortOrder[index]);
             } else {
                 ((javax.swing.JComboBox) gedcomFields[index]).setSelectedIndex(0);
+                ((javax.swing.JLabel) formatFields[index]).setText("");
             }
         }
 
@@ -185,18 +196,53 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
         });
 
         cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
+        cityComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cityComboBoxActionPerformed(evt);
+            }
+        });
 
         geoIDComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
+        geoIDComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                geoIDComboBoxActionPerformed(evt);
+            }
+        });
 
         stateComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
+        stateComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stateComboBoxActionPerformed(evt);
+            }
+        });
 
         parishComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
+        parishComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                parishComboBoxActionPerformed(evt);
+            }
+        });
 
         zipCodeComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
+        zipCodeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zipCodeComboBoxActionPerformed(evt);
+            }
+        });
 
         countyComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
+        countyComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                countyComboBoxActionPerformed(evt);
+            }
+        });
 
         countryComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(mComboPlaceFormat));
+        countryComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                countryComboBoxActionPerformed(evt);
+            }
+        });
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.jLabel1.text")); // NOI18N
@@ -347,8 +393,36 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void hamletComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hamletComboBoxActionPerformed
-        // TODO add your handling code here:
+        jLabel2.setText("" + (hamletComboBox.getSelectedIndex() == 0 ? "" : hamletComboBox.getSelectedIndex() - 1));
     }//GEN-LAST:event_hamletComboBoxActionPerformed
+
+    private void parishComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parishComboBoxActionPerformed
+        jLabel3.setText("" + (parishComboBox.getSelectedIndex() == 0 ? "" : parishComboBox.getSelectedIndex() - 1));
+    }//GEN-LAST:event_parishComboBoxActionPerformed
+
+    private void cityComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cityComboBoxActionPerformed
+        jLabel4.setText("" + (cityComboBox.getSelectedIndex() == 0 ? "" : cityComboBox.getSelectedIndex() - 1));
+    }//GEN-LAST:event_cityComboBoxActionPerformed
+
+    private void zipCodeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zipCodeComboBoxActionPerformed
+        jLabel5.setText("" + (zipCodeComboBox.getSelectedIndex() == 0 ? "" : zipCodeComboBox.getSelectedIndex() - 1));
+    }//GEN-LAST:event_zipCodeComboBoxActionPerformed
+
+    private void geoIDComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geoIDComboBoxActionPerformed
+        jLabel6.setText("" + (geoIDComboBox.getSelectedIndex() == 0 ? "" : geoIDComboBox.getSelectedIndex() - 1));
+    }//GEN-LAST:event_geoIDComboBoxActionPerformed
+
+    private void countyComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_countyComboBoxActionPerformed
+        jLabel7.setText("" + (countyComboBox.getSelectedIndex() == 0 ? "" : countyComboBox.getSelectedIndex() - 1));
+    }//GEN-LAST:event_countyComboBoxActionPerformed
+
+    private void stateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stateComboBoxActionPerformed
+        jLabel8.setText("" + (stateComboBox.getSelectedIndex() == 0 ? "" : stateComboBox.getSelectedIndex() - 1));
+    }//GEN-LAST:event_stateComboBoxActionPerformed
+
+    private void countryComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_countryComboBoxActionPerformed
+        jLabel9.setText("" + (countryComboBox.getSelectedIndex() == 0 ? "" : countryComboBox.getSelectedIndex() - 1));
+    }//GEN-LAST:event_countryComboBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cityComboBox;
@@ -449,18 +523,28 @@ public class PlaceFormatEditorOptionsPanel extends javax.swing.JPanel {
     }
 
     private int[] initPlaceSortOrder() {
-        int[] results = new int[MAX_JURISDICTIONS];
-        for (int i = 0; i < MAX_JURISDICTIONS; i++) {
-            results[i] = i;
-        }
+        int[] results = new int[] { 0, -1, 1, -1, 2, 3, 4, 5 }; // defaults as if gedcom format was "hamlet, city, geocode, dept, region, country" (most frequent)
         return results;
     }
 
     private String getRegisteredPlaceDisplayFormat() {
-        return registry.get("PLAC.display.format", "2,0,1,3,4,5,6,7"); 
+        return registry.get("PLAC.display.format", getDefaultPlaceDisplayFormat());
+    }
+
+    private String getDefaultPlaceDisplayFormat() {
+        String defaultPlaceFormat = "0";
+        for (int i = 1; i < mPlaceFormat.length; i++) {
+            defaultPlaceFormat += PropertyPlace.JURISDICTION_SEPARATOR + i ;
+        }
+        return defaultPlaceFormat; // defaults to 0,1,2... up to the number of juridictions in the gedcomformat of the gedcom
     }
 
     public String getPlaceDisplayFormat() {
-        return jTextField1.getText();
+        String text = jTextField1.getText();
+        if (text == null || text.trim().isEmpty()) {
+            text = getDefaultPlaceDisplayFormat();
+            jTextField1.setText(text);
+        }
+        return text;
     }
 }

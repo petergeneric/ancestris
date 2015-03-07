@@ -315,7 +315,7 @@ public class FamilyEditor extends EntityEditor {
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fatherPanelLayout.createSequentialGroup()
                 .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(husbandImageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                    .addComponent(husbandImageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                     .addGroup(fatherPanelLayout.createSequentialGroup()
                         .addComponent(husbandNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -464,7 +464,7 @@ public class FamilyEditor extends EntityEditor {
                             .addComponent(wifeDeathDateLabelDate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(motherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(wifeImageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)))
+                    .addComponent(wifeImageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)))
         );
 
         eventsSplitPane.setBorder(null);
@@ -505,6 +505,11 @@ public class FamilyEditor extends EntityEditor {
 
         eventsList.setModel(mEventsListModel);
         eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        eventsList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                eventsListValueChanged(evt);
+            }
+        });
         eventsListScrollPane.setViewportView(eventsList);
 
         eventsListPanel.add(eventsListScrollPane, java.awt.BorderLayout.CENTER);
@@ -611,9 +616,9 @@ public class FamilyEditor extends EntityEditor {
                                 .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(familyTabbedPane)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                                .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)))
+                                .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)))
                         .addGap(3, 3, 3)))
                 .addContainerGap())
         );
@@ -1301,6 +1306,14 @@ public class FamilyEditor extends EntityEditor {
         }
     }//GEN-LAST:event_deleteEventButtonActionPerformed
 
+    private void eventsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventsListValueChanged
+        int index = eventsList.getSelectedIndex();
+        if (index != -1 && index < mEventsListModel.getSize()) {
+            Property prop = mEventsListModel.getValueAt(index);
+            context = new Context(prop);
+        }
+    }//GEN-LAST:event_eventsListValueChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addHusbandButton;
     private javax.swing.JButton addWifeButton;
@@ -1419,7 +1432,17 @@ public class FamilyEditor extends EntityEditor {
             mEventsListModel.clear();
             mEventsListModel.addAll(familyEvents);
             seteventTypeComboBox(familyEvents);
-            eventsList.setSelectedIndex(0);
+            
+            // Select context event from property 
+            int index = 0;
+            Property prop = context.getProperty();
+            if (prop != null) {
+                index = mEventsListModel.indexOf(prop);
+                if (index == -1) {
+                    index = 0;
+                }
+            } 
+            eventsList.setSelectedIndex(index);
 
             /*
              * +1 HUSB @<XREF:INDI>@

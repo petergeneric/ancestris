@@ -517,9 +517,12 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                             AutoCompleteDecorator.decorate((javax.swing.JTextField) mGedcomFields[index][1], jurisdictions, false);
                         }
                     }
+                    mGedcomFields[index][0].setVisible(true);
+                    mGedcomFields[index][1].setVisible(true);
                 } else {
                     ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
                     ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
+                    mGedcomFields[index][0].setVisible(false);
                     mGedcomFields[index][1].setVisible(false);
                 }
             }
@@ -588,10 +591,13 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                         InputMap map = ((javax.swing.JTextField) mGedcomFields[index][1]).getInputMap();
                         map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
                     }
+                mGedcomFields[index][0].setVisible(true);
+                mGedcomFields[index][1].setVisible(true);
                 }
             } else {
                 ((javax.swing.JLabel) (mGedcomFields[index][0])).setText("");
                 ((javax.swing.JTextField) (mGedcomFields[index][1])).setText("");
+                mGedcomFields[index][0].setVisible(false);
                 mGedcomFields[index][1].setVisible(false);
             }
         }
