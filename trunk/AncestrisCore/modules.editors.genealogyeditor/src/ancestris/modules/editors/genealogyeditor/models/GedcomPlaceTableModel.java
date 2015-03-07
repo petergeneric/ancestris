@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.models;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.ReferenceSet;
+import java.util.List;
 import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
@@ -13,7 +14,7 @@ import org.openide.util.NbBundle;
  */
 public class GedcomPlaceTableModel extends AbstractTableModel {
 
-    ReferenceSet<String, Property> gedcomPlacesMap = new ReferenceSet<String, Property>();
+    ReferenceSet<String, Property> mGedcomPlacesMap = new ReferenceSet<String, Property>();
     String[] placeFormat;
 
     public GedcomPlaceTableModel(String[] placeFormat) {
@@ -22,7 +23,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return gedcomPlacesMap.getKeys().size();
+        return mGedcomPlacesMap.getKeys().size();
     }
 
     @Override
@@ -32,7 +33,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-        Object[] toArray = gedcomPlacesMap.getKeys().toArray();
+        Object[] toArray = mGedcomPlacesMap.getKeys().toArray();
         String key = (String) toArray[row];
         if (column < placeFormat.length) {
             if (key.split(PropertyPlace.JURISDICTION_SEPARATOR).length > column) {
@@ -41,7 +42,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
                 return "";
             }
         } else {
-            Set<Property> references = gedcomPlacesMap.getReferences(key);
+            Set<Property> references = mGedcomPlacesMap.getReferences(key);
             String MAPTag = "";
             String LATITag = "";
             String LONGTag = "";
@@ -91,14 +92,48 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
     }
 
     public void update(ReferenceSet<String, Property> gedcomPlacesMap) {
-        this.gedcomPlacesMap = gedcomPlacesMap;
+        List<String> refSetKeys = gedcomPlacesMap.getKeys();
+
+        for (String refSetKey : refSetKeys) {
+            Set<Property> references = gedcomPlacesMap.getReferences(refSetKey);
+
+            for (Property reference : references) {
+                String key = refSetKey;
+                String MAPTag = "";
+                String LATITag = "";
+                String LONGTag = "";
+                if (((Property) references.toArray()[0]).getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
+                    MAPTag = "MAP";
+                    LATITag = "LATI";
+                    LONGTag = "LONG";
+                } else {
+                    MAPTag = "_MAP";
+                    LATITag = "_LATI";
+                    LONGTag = "_LONG";
+                }
+
+                Property placeMap = reference.getProperty(MAPTag);
+                if (placeMap != null) {
+                    Property latitude = placeMap.getProperty(LATITag);
+                    if (latitude != null) {
+                        key += latitude.getValue();
+                    }
+                    Property longitude = placeMap.getProperty(LONGTag);
+                    if (longitude != null) {
+                        key += longitude.getValue();
+                    }
+                }
+
+                mGedcomPlacesMap.add(key, reference);
+            }
+        }
 
         fireTableDataChanged();
     }
 
     public Set<Property> getValueAt(int row) {
-        Object[] toArray = gedcomPlacesMap.getKeys().toArray();
+        Object[] toArray = mGedcomPlacesMap.getKeys().toArray();
         String key = (String) toArray[row];
-        return gedcomPlacesMap.getReferences(key);
+        return mGedcomPlacesMap.getReferences(key);
     }
 }
