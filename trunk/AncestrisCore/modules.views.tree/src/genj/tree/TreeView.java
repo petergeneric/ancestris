@@ -42,8 +42,6 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
-import genj.print.PrintAction;
-import genj.print.PrintRenderer;
 import genj.renderer.Blueprint;
 import genj.renderer.BlueprintManager;
 import genj.renderer.BlueprintRenderer;
@@ -718,7 +716,6 @@ public class TreeView extends View implements Filter {
 
         // settings
         toolbar.add(new ScreenshotAction(content));
-        toolbar.add(new Print());
 
         rootTitle = new JLabel();
         rootTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1747,19 +1744,6 @@ public class TreeView extends View implements Filter {
         }
     }
 
-    private class Print extends PrintAction {
-
-        public boolean yes;
-
-        protected Print() {
-            super(TITLE);
-        }
-
-        @Override
-        protected PrintRenderer getRenderer() {
-            return new TreeViewPrinter(TreeView.this);
-        }
-    }
 // Filter interface
 
     @Override
