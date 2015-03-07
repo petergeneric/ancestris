@@ -952,7 +952,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                                 eventCause.setValue(causeText);
                             }
                         } else if (eventCause != null) {
-                            mRoot.delProperty(eventCause);
+                            mEvent.delProperty(eventCause);
                         }
                     }
 

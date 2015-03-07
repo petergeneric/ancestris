@@ -9,8 +9,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.util.Exceptions;
@@ -40,17 +38,18 @@ public class PlacesTablePanel extends javax.swing.JPanel {
 
         this.mGedcom = gedcom;
         mPlacesListTableModel.update(gedcom.getReferenceSet("PLAC"));
-        mPlaceTableSorter = new TableRowSorter<TableModel>(placesListTable.getModel());
-        placesListTable.setRowSorter(mPlaceTableSorter);
         placesListTable.setID(PlacesTablePanel.class.getName());
 
-        List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
-        if (mPlaceTableSorter.getModelRowCount() > 0) {
-            sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
-        }
-        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-        mPlaceTableSorter.setSortKeys(sortKeys);
-        mPlaceTableSorter.sort();
+        mPlaceTableSorter = new TableRowSorter<TableModel>(placesListTable.getModel());
+        placesListTable.setRowSorter(mPlaceTableSorter);
+
+//        List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+//        if (mPlaceTableSorter.getModelRowCount() > 0) {
+//            sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+//        }
+//        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+//        mPlaceTableSorter.setSortKeys(sortKeys);
+//        mPlaceTableSorter.sort();
 
         try {
             if (!modulePreferences.nodeExists(gedcom.getName())) {
@@ -98,8 +97,8 @@ public class PlacesTablePanel extends javax.swing.JPanel {
         searchPlaceToolBar.add(searchPlaceComboBox);
 
         filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(PlacesTablePanel.class, "PlacesTablePanel.filterGedcomPlaceTextField.text")); // NOI18N
-        filterGedcomPlaceTextField.setMinimumSize(new java.awt.Dimension(50, 28));
-        filterGedcomPlaceTextField.setPreferredSize(new java.awt.Dimension(120, 28));
+        filterGedcomPlaceTextField.setMinimumSize(new java.awt.Dimension(80, 28));
+        filterGedcomPlaceTextField.setPreferredSize(new java.awt.Dimension(220, 28));
         filterGedcomPlaceTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filterGedcomPlaceButtonActionPerformed(evt);

@@ -319,6 +319,11 @@ public final class IndividualEditor extends EntityEditor {
 
         eventsList.setModel(mEventsListModel);
         eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        eventsList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                eventsListValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(eventsList);
 
         eventsListPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -337,7 +342,7 @@ public final class IndividualEditor extends EntityEditor {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+                .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
         );
 
         eventsSplitPane.setRightComponent(jPanel1);
@@ -451,19 +456,16 @@ public final class IndividualEditor extends EntityEditor {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(12, 12, 12))))
+                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 182, Short.MAX_VALUE)
+                .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -638,6 +640,14 @@ public final class IndividualEditor extends EntityEditor {
         }
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
 
+    private void eventsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventsListValueChanged
+        int index = eventsList.getSelectedIndex();
+        if (index != -1 && index < mEventsListModel.getSize()) {
+            Property prop = mEventsListModel.getValueAt(index);
+            context = new Context(prop);
+        }
+    }//GEN-LAST:event_eventsListValueChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel SOSALabel;
     private javax.swing.JTextField SOSATextField;
@@ -797,7 +807,16 @@ public final class IndividualEditor extends EntityEditor {
             mEventsListModel.addAll(individualEvents);
             seteventTypeComboBox(individualEvents);
 
-            eventsList.setSelectedIndex(0);
+            // Select context event from property 
+            int index = 0;
+            Property prop = context.getProperty();
+            if (prop != null) {
+                index = mEventsListModel.indexOf(prop);
+                if (index == -1) {
+                    index = 0;
+                }
+            } 
+            eventsList.setSelectedIndex(index);
 
             /*
              * +1 <<LDS_INDIVIDUAL_ORDINANCE>>

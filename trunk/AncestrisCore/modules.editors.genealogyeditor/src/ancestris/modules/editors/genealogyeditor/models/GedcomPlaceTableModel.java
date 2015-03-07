@@ -116,11 +116,11 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
                 if (placeMap != null) {
                     Property latitude = placeMap.getProperty(LATITag);
                     if (latitude != null) {
-                        key += latitude.getValue();
+                        key += PropertyPlace.JURISDICTION_SEPARATOR + latitude.getValue();
                     }
                     Property longitude = placeMap.getProperty(LONGTag);
                     if (longitude != null) {
-                        key += longitude.getValue();
+                        key += PropertyPlace.JURISDICTION_SEPARATOR + longitude.getValue();
                     }
                 }
 
