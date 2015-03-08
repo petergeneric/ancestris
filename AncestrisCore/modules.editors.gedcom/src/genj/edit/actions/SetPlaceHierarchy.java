@@ -30,10 +30,15 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
+import genj.util.swing.TextAreaWidget;
 import genj.util.swing.TextFieldWidget;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -55,7 +60,7 @@ public class SetPlaceHierarchy extends AbstractChange {
     private PropertyPlace place;
     /** textfield for hierarchy */
     private TextFieldWidget hierarchy;
-
+    
     public SetPlaceHierarchy() {
         super();
         setImageText(IMG, resources.getString("place.hierarchy"));
@@ -95,12 +100,21 @@ public class SetPlaceHierarchy extends AbstractChange {
         }
     }
 
+    protected JComponent getComponent(String msg, int lines, Color color) {
+        TextAreaWidget result = new TextAreaWidget(msg, lines, 40);
+        result.setWrapStyleWord(true);
+        result.setLineWrap(true);
+        result.setEditable(false);
+        result.setBackground(color);
+        return new JScrollPane(result);
+    }
+
     /**
      * no confirmation message needed
      */
     @Override
     protected String getConfirmMessage() {
-        return resources.getString("place.hierarchy.msg", place.getGedcom().getName());
+        return "";
     }
 
     /**
@@ -109,13 +123,24 @@ public class SetPlaceHierarchy extends AbstractChange {
     @Override
     protected JPanel getDialogContent() {
 
-        JPanel result = new JPanel(new NestedBlockLayout("<col><confirm wx=\"1\" wy=\"1\"/><enter wx=\"1\"/></col>"));
+        JPanel result = new JPanel(new NestedBlockLayout("<col><row><text wx=\"1\" wy=\"1\" pad=\"5\"/></row><table><row><label pad=\"5\"/><label/><text/></row><row><label pad=\"5\"/><label/><text/></row></table><row><text wx=\"1\" wy=\"1\" pad=\"5\"/></row></col>"));
 
-        // prepare textfield for formar
+        // prepare textfield for format
+        TextFieldWidget file = new TextFieldWidget(place.getGedcom().getName());
+        file.setEditable(false);
         hierarchy = new TextFieldWidget(place.getFormatAsString());
+        hierarchy.setBackground(Color.WHITE);
+        Color defaultColor = new Color(240,240,240);
 
-        result.add(getConfirmComponent());
+        // Add panel components
+        result.add(getComponent(resources.getString("place.hierarchy.msg1", ""), 4, defaultColor));
+        result.add(new JLabel(resources.getString("place.hierarchy.label1", "")));
+        result.add(new JLabel("   "));
+        result.add(file);
+        result.add(new JLabel(resources.getString("place.hierarchy.label2", "")));
+        result.add(new JLabel("   "));
         result.add(hierarchy);
+        result.add(getComponent(resources.getString("place.hierarchy.msg2", ""), 9, defaultColor));
 
         // done
         return result;
