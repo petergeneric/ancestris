@@ -248,6 +248,9 @@ class GeoPlacesList implements GedcomListener {
             }
             str = str.replaceAll("\\b" + i + "{1}\\b", juri);    // replace only digit not surrounded by other digits (ex: zip code is not to be replaced)
         }
+        str = str.replaceAll("\\(\\)", ""); // aestethic cleanning of empty jurisdictions in case there are between ()
+        str = str.replaceAll("\\[\\]", ""); // aestethic cleanning of empty jurisdictions in case there are between []
+        str = str.replaceAll("\\{\\}", ""); // aestethic cleanning of empty jurisdictions in case there are between {}
         return str;
     }
     
