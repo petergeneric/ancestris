@@ -19,7 +19,6 @@
  */
 package genj.edit.actions;
 
-import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.resources.Images;
 import ancestris.util.swing.DialogManager;
@@ -33,7 +32,6 @@ import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -69,7 +67,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
 
     protected JComponent getConfirmComponent() {
         if (confirm == null) {
-            confirm = new TextAreaWidget(getConfirmMessage(), 6, 40);
+            confirm = new TextAreaWidget(getConfirmMessage(), 7, 40);
             confirm.setWrapStyleWord(true);
             confirm.setLineWrap(true);
             confirm.setEditable(false);
