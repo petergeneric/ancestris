@@ -1263,7 +1263,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 lon = -lon;
                 we = 'W';
             }
-            DecimalFormat format = new DecimalFormat("0.00");
+            DecimalFormat format = new DecimalFormat("0.00000");
             return ns + format.format(lat) + " " + we + format.format(lon);
         }
 
