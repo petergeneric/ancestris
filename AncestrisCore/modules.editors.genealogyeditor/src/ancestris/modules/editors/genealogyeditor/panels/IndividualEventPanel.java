@@ -901,7 +901,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     }
                     if (mEventCauseModified) {
                         mEventCauseModified = false;
-                        mEvent.setValue(eventCauseTextArea.getText());
+                        mEvent.setValue(eventCauseTextArea.getText().replaceAll("\n", " "));
                     }
                 } else if (mIndividualAttributesTags.contains(mEvent.getTag())) {
                     if (mEventNameModified) {
@@ -919,7 +919,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     }
                     if (mEventCauseModified) {
                         mEventCauseModified = false;
-                        String causeText = eventCauseTextArea.getText();
+                        String causeText = eventCauseTextArea.getText().replaceAll("\n", " ");
                         Property eventCause = mEvent.getProperty("CAUS", false);
                         if (causeText.length() > 0) {
                             if (eventCause == null) {
@@ -943,7 +943,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     }
                     if (mEventCauseModified) {
                         mEventCauseModified = false;
-                        String causeText = eventCauseTextArea.getText();
+                        String causeText = eventCauseTextArea.getText().replaceAll("\n", " ");
                         Property eventCause = mEvent.getProperty("CAUS", false);
                         if (causeText.length() > 0) {
                             if (eventCause == null) {
