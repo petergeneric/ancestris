@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -615,7 +616,12 @@ public final class IndividualEditor extends EntityEditor {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             mEvent = mIndividual.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
-                            mEvent.setValue("y");
+                            //FIXME: use Grammar for that?
+                            Logger.getLogger("ancestris").info(mEvent.getTag());
+                            if (mEvent.getTag().matches(
+                                    "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")){
+                                mEvent.setValue("y");
+                            }                        
                         }
                     }); // end of doUnitOfWork
 
