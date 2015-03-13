@@ -102,4 +102,12 @@
             </file>
         </folder>
     </folder>
+    <folder name="OptionsExport">
+        <folder name="templates">
+            <file name="templates">
+                <attr name="displayName" bundlevalue="ancestris.core.Bundle#OptionsExport/velocity"/>
+                <attr name="include" stringvalue="ancestris/templates/[^/]*/([^/]*)\.vm"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>
