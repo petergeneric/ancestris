@@ -860,7 +860,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     if (date != null && date.isValid()) {
                         mEvent.setValue("");
                     } else {
-                        mEvent.setValue("y");
+                        if (!mEvent.getTag().equals("EVEN")) {
+                            mEvent.setValue("y");
+                        }
                     }
                 }
 
@@ -936,7 +938,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             Property propertyCountry = address.getProperty("CTRY");
             addressValue += (propertyCountry != null ? propertyCountry.getValue() : "");
         }
-        
+
         return addressValue;
     }
 

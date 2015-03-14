@@ -14,6 +14,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -960,7 +961,12 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (date != null && date.isValid()) {
                         mEvent.setValue("");
                     } else {
-                        mEvent.setValue("y");
+                        //FIXME: use Grammar for that?
+                        Logger.getLogger("ancestris").info(mEvent.getTag());
+                        if (mEvent.getTag().matches(
+                                "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")) {
+                            mEvent.setValue("y");
+                        }
                     }
                 }
 
