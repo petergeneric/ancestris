@@ -182,7 +182,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="husbandImageBean" pref="115" max="32767" attributes="0"/>
+                      <Component id="husbandImageBean" pref="113" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="husbandNameTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -433,7 +433,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="motherToolBar" min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="wifeImageBean" pref="115" max="32767" attributes="0"/>
+                      <Component id="wifeImageBean" pref="113" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>

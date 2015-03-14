@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -1184,7 +1185,7 @@ public class FamilyEditor extends EntityEditor {
                 husbandNameTextField.setText("");
                 husbandBirthDateLabelDate.setText("");
                 husbandDeathDateLabelDate.setText("");
-                husbandImageBean.setImage((File)null);
+                husbandImageBean.setImage((File) null);
 
                 addHusbandButton.setVisible(true);
                 linkToHusbandButton.setVisible(true);
@@ -1217,7 +1218,7 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText("");
                 wifeBirthDateLabelDate.setText("");
                 wifeDeathDateLabelDate.setText("");
-                wifeImageBean.setImage((File)null);
+                wifeImageBean.setImage((File) null);
 
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
@@ -1241,7 +1242,11 @@ public class FamilyEditor extends EntityEditor {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             mEvent = mFamily.addProperty(PropertyTag2Name.getPropertyTag(eventType), "");
-                            mEvent.setValue("y");
+                            //FIXME: use Grammar for that?
+                            Logger.getLogger("ancestris").info(mEvent.getTag());
+                            if (!mEvent.getTag().equals("EVEN")) {
+                                mEvent.setValue("y");
+                            }
                         }
                     }); // end of doUnitOfWork
 
@@ -1432,7 +1437,7 @@ public class FamilyEditor extends EntityEditor {
             mEventsListModel.clear();
             mEventsListModel.addAll(familyEvents);
             seteventTypeComboBox(familyEvents);
-            
+
             // Select context event from property 
             int index = 0;
             Property prop = context.getProperty();
@@ -1441,7 +1446,7 @@ public class FamilyEditor extends EntityEditor {
                 if (index == -1) {
                     index = 0;
                 }
-            } 
+            }
             eventsList.setSelectedIndex(index);
 
             /*
@@ -1517,7 +1522,7 @@ public class FamilyEditor extends EntityEditor {
                 linkToHusbandButton.setVisible(true);
                 removeHusbandButton.setVisible(false);
                 editHusbandButton.setVisible(false);
-                husbandImageBean.setImage((File)null);
+                husbandImageBean.setImage((File) null);
             }
 
             /*
@@ -1589,7 +1594,7 @@ public class FamilyEditor extends EntityEditor {
                 removeWifeButton.setVisible(true);
                 editWifeButton.setVisible(true);
             } else {
-                wifeImageBean.setImage((File)null);
+                wifeImageBean.setImage((File) null);
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
                 removeWifeButton.setVisible(false);
