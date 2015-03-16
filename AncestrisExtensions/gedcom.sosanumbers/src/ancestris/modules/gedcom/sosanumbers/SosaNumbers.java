@@ -20,6 +20,7 @@ package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.*;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class SosaNumbers implements GedcomListener {
             Indi wife;
             Indi husband;
             Property sosaProperty = null;
-            long sosaCounter = 1;
+            BigInteger sosaCounter = BigInteger.ONE;
             Fam famc;
 
             // Put de-cujus first in list and update its sosa tag
@@ -79,7 +80,7 @@ public class SosaNumbers implements GedcomListener {
             ListIterator<Pair> listIter = sosaList.listIterator();
             while (listIter.hasNext()) {
                 Pair pair = listIter.next();
-                sosaCounter = Long.parseLong(pair.value);
+                sosaCounter = new BigInteger(pair.value);
                 // Sosa d'Aboville generation
                 if (pair.indi.equals(indiDeCujus) || (sosaAboNumbering && pair.indi.getSex() == PropertySex.MALE)) {
                     dabovilleNumbering(pair.indi, pair.value);
@@ -88,27 +89,30 @@ public class SosaNumbers implements GedcomListener {
                 famc = pair.indi.getFamilyWhereBiologicalChild();
                 if (famc != null) {
                     wife = famc.getWife();
+                    BigInteger sosa = sosaCounter.shiftLeft(1).add(BigInteger.ONE);
                     if (wife != null) {
                         if ((sosaProperty = wife.getProperty(SOSA_TAG)) == null) {
-                            sosaProperty = wife.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaCounter + 1) + " " + computeGene(2 * sosaCounter + 1), setPropertyPosition(wife));
+                            sosaProperty = wife.addProperty(SOSA_TAG, 
+                                    sosa + " " + computeGene(sosa), setPropertyPosition(wife));
                             sosaProperty.setGuessed(true);
                         } else {
-                            sosaProperty.setValue(sosaProperty.getValue() + ";" + formatNbrs.format(2 * sosaCounter + 1) + " " + computeGene(2 * sosaCounter + 1));
+                            sosaProperty.setValue(sosaProperty.getValue() + ";" + sosa + " " + computeGene(sosa));
                         }
-                        LOG.log(Level.INFO, "{0} -> {1}", new Object[]{wife.toString(), formatNbrs.format(2 * sosaCounter + 1)});
-                        listIter.add(new Pair(wife, formatNbrs.format(2 * sosaCounter + 1)));
+                        LOG.log(Level.INFO, "{0} -> {1}", new Object[]{wife.toString(), sosa});
+                        listIter.add(new Pair(wife, sosa.toString()));
                         listIter.previous();
                     }
                     husband = famc.getHusband();
+                    sosa = sosaCounter.shiftLeft(1);
                     if (husband != null) {
                         if ((sosaProperty = husband.getProperty(SOSA_TAG)) == null) {
-                            sosaProperty = husband.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaCounter) + " " + computeGene(2 * sosaCounter + 1), setPropertyPosition(husband));
+                            sosaProperty = husband.addProperty(SOSA_TAG, sosa + " " + computeGene(sosa), setPropertyPosition(husband));
                             sosaProperty.setGuessed(true);
                         } else {
-                            sosaProperty.setValue(sosaProperty.getValue() + ";" + formatNbrs.format(2 * sosaCounter) + " " + computeGene(2 * sosaCounter + 1));
+                            sosaProperty.setValue(sosaProperty.getValue() + ";" + sosa + " " + computeGene(sosa));
                         }
-                        LOG.log(Level.INFO, "{0} -> {1}", new Object[]{husband.toString(), formatNbrs.format(2 * sosaCounter)});
-                        listIter.add(new Pair(husband, formatNbrs.format(2 * sosaCounter)));
+                        LOG.log(Level.INFO, "{0} -> {1}", new Object[]{husband.toString(), sosa});
+                        listIter.add(new Pair(husband, sosa.toString()));
                         listIter.previous();
                     }
                 }
@@ -142,13 +146,9 @@ public class SosaNumbers implements GedcomListener {
      *
      * @return String
      */
-    String computeGene(long sosa) {
-        Integer generation = 0;
-        while ((sosa = sosa >> 1) != 0) {
-            generation++;
-        }
+    String computeGene(BigInteger sosa) {
+        Integer generation = sosa.bitLength();
         // Sosa number = 1 generation 1; Sosa number = 2 or 3 generation 2 and so on
-        generation++;
         return "(Gen " + generation.toString() + ")";
     }
 
