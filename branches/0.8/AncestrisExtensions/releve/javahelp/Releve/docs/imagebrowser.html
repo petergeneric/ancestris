@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr-fr">
+<head>
+  <title>Visionneuse des photos des actes</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <link href="nbdocs:/ancestris/app/docs/ancestris.css" rel="stylesheet">
+</head>
+<body>
+<h1>Visionneuse des photos des actes</h1>
+<p>La visionneuse des photos des actes permet d'afficher les photos des
+actes à partir d'un relevé ou à partir d'une vue d'Ancestris. </p>
+<p> Il suffit d'indiquer le nom de la commune et le nom de la photo, et
+le répertoire contenant l'ensemble des photos des actes. <br>
+</p>
+<p>Il n'est pas nécessaire d'indiquer le chemin absolu de chaque
+photos. Cela offre l'avantage de ne pas avoir à modifier les relevés ou
+le gedcom si l'ont déplace les fichiers sur le disque. <br>
+</p>
+<br>
+<h2>Exemples de dossiers contenant les photos des actes</h2>
+<p>Plusieurs organisations de dossiers sont possibles. La visionneuse a
+simplement besoin qu'il existe un dossier portant le nom de chaque
+commune quelque part dans l'arborescence </p>
+<table style="vertical-align: top;" border="1">
+  <thead> <tr>
+    <th> Exemple avec un sous-dossier<br>
+par département, par commune, et par cote </th>
+    <th> Exemple avec un sous-dossier<br>
+par commune </th>
+  </tr>
+  </thead> <tbody>
+    <tr>
+      <td>
+      <pre>/mesdocuments/Genealogie/Actes<br>      /Yvelines <br>         /Versailles <br>            /5MI_123<br>               /DSC00117.jpg<br>               /DSC00118.jpg <br>            /5MI_222<br>               /DSC00200.jpg<br>               /DSC00201.jpg <br>            /photos_a_trier<br>               /DSC00251.jpg<br>               /DSC00252.jpg <br>         /Saint-Germain-en-Laye <br>            /5MI_333 <br>               /DSC00300.jpg<br>               /DSC00301.jpg<br>      /Essonne <br>         /Palaiseau <br>            /5MI_108 <br>               /SAM00400.jpg<br>               /SAM00401.jpg<br></pre>
+      </td>
+      <td>
+      <pre>/mesdocuments/Genealogie/Actes<br>      /Versailles <br>         /DSC00117.jpg<br>         /DSC00118.jpg <br>         /DSC00200.jpg<br>         /DSC00201.jpg <br>         /photo_a _trier<br>            /DSC00251.jpg<br>            /DSC00252.jpg <br>      /Saint-Germain-en-Laye <br>         /DSC00300.jpg<br>         /DSC00301.jpg<br>      /Palaiseau <br>         /SAM00400.jpg<br>         /SAM00401.jpg<br></pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h2>Visionner un acte à partir d'un relevé</h2>
+<p>Prérequis : configuration du plugin Relevé</p>
+  <p>1. Cocher l'option "Afficher la photo de l'acte dans l'éditeur volant"</p>
+  <p>2. Ajouter le dossier contenant les photos. Exemple : /mesdocuments/Genealogie/Actes</p>
+
+
+  <p><img src="images/imagebrowser3.jpg" alt="image browser"></p>
+  <p>Remarque: si des photos sont aussi sur un autre disque ou une clé
+mémoire , ajouter le dossier correspondant dans la liste.
+  </p>  
+<p>3. Renseigner la commune, la cote (facultatif) et le numéro de la photo dans le relevé</p>
+<p>4. Ouvrir le second éditeur dans une fenêtre volante.</p>
+<p><img src="images/imagebrowser1.jpg" alt="imagebrowser1"></p>
+  
+<p>et la photo est affichée avec le second éditeur</p>
+<p>  <img alt="image browser 4" src="images/imagebrowser4.jpg"
+ height="258" width="660"></p>
+
+<h2>Visionner un acte à partir d'une vue d'Ancestris</h2>
+<p>Prérequis : configuration du plugin Relevé</p>
+<p>1. Cocher l'option Afficher le menu dans les vues</p>
+<p>2. Ajouter le dossier contenant les photos. Exemple : /mesdocuments/Genealogie/Actes </p>
+<p>Dans l'éditeur d'Ancestris :</p>
+<p>3. renseigner le tag PLAC avec le nom de la commune et le
+tag SOUR:PAGE avec la cote et le nom de la photo séparés
+par une virgule</p>
+<p>4. La photo de l'acte est affichée en cliquant sur le menu additionnel
+"Photo de l'acte: Décès".</p>
+
+<img src="images/imagebrowser2.jpg" alt="imagebrowser2"
+ style="margin-left: 40px;" height="614" width="435">
+
+<h2>Différentes manières de renseigner la commune, la cote et la photo<br>
+</h2>
+<p>Exemple 1 : la rubrique Photo peut ne contenir que le numéro de la
+photo , c'est à dire les derniers chiffres du nom de la photo</p>
+<ul>
+  <li>Commune=Versailles </li>
+  <li>Cote=5MI_123</li>
+  <li>Photo=117</li>
+</ul>
+<p style="margin-left: 40px;">Remarque : Dans cet exemple la
+visionneuse recherche une photo dont le nom se termine par "117" dans
+le dossier "Versailles" dans le
+dossier "5MI_123" qui est un sous-dossier de "Versailles" et sous
+dossier de /mesdocuments/Genealogie/Actes</p>
+<br>
+<p>Exemple 2<br>
+</p>
+<ul>
+  <li>Commune=Versailles </li>
+  <li>Cote=5MI_123</li>
+  <li>Photo=DSC00117</li>
+</ul>
+<p style="margin-left: 40px;"> Remarque : Dans cet exemple la
+visionneuse recherche la photo dont le nom contient "DSC00117" dans le
+dossier "5MI_123" qui est un sous-dossier de "Versailles" et sous
+dossier de /mesdocuments/Genealogie/Actes</p>
+<br>
+<p>Exemple 3 : la cote est facultative.</p>
+<ul>
+  <li>Commune=Versailles</li>
+  <li>Cote=</li>
+  <li>Photo=DSC00200</li>
+</ul>
+<p style="margin-left: 40px;">Remarque : Dans cet exemple la
+visionneuse recherche une photo dont le nom contient "DSC00200" dans
+tout le dossier de la commune "Versailles".</p>
+<br>
+<p>Exemple 4 : la commune est obligatoire</p>
+<ul>
+  <li>Commune=</li>
+  <li>Cote= </li>
+  <li>Photo=DSC00117</li>
+</ul>
+<p style="margin-left: 40px;">Remarque: Dans cet exemple la visionneuse
+ne trouve pas la photo car le nom de la commune est obligatoire</p>
+<br>
+<p>Exemple 5 : la photo peut être dans un sous dossier quelconque de la
+commune, par exemple le sous-dossier "photos_a_trier" </p>
+<ul>
+  <li>Commune=Versailles</li>
+  <li>Cote=2E_456</li>
+  <li>Photo=DSC00251</li>
+</ul>
+<p style="margin-left: 40px;">Remarque: Dans cet exemple la visionneuse
+recherche la photo d'abord dans le sous-dossier de la commune de
+Versailles contenant le nom de la cote 2E_456 . Si le dossier
+correspondant à cette cote n'existe pas, ou s'il ne contient pas la
+photo, elle recherche ensuite la photo dans les autres sous-dossiers de
+la commune.</p>
+<br>
+<p>Exemple 6 <br>
+</p>
+<ul>
+  <li>PLAC=Versailles,78,Yvelines,,, </li>
+  <li>SOUR:PAGE=5MI_123, DSC00117</li>
+</ul>
+<p style="margin-left: 40px;">Remarque : Dans cet exemple la
+visionneuse recherche la photo de l'acte dans le dossier "5MI_123" qui
+est un sous-dossier de "Versailles" et sous dossier de
+/mesdocuments/Genealogie/Actes</p>
+<br>
+<p>Exemple 7 : la cote est facultative dans le tag SOUR:PAGE</p>
+<ul>
+  <li>PLAC=Versailles,78,Yvelines,,, </li>
+  <li>SOUR:PAGE=DSC00200</li>
+</ul>
+<p style="margin-left: 40px;">Remarque : Dans cet exemple la
+visionneuse recherche une photo dont le nom contient "DSC00200" dans
+tout le dossier de la commune "Versailles".</p>
+<br>
+<p>Exemple 8 : le tag SOUR:PAGE peut ne contenir que le numéro de la
+photo , c'est à dire les derniers chiffres du nom de la photo</p>
+<ul>
+  <li>PLAC=Versailles,78,Yvelines,,, </li>
+  <li>SOUR:PAGE=117</li>
+</ul>
+<p style="margin-left: 40px;">Remarque : Dans cet exemple la
+visionneuse recherche une photo dont le nom se termine par "117" dans
+le dossier "Versailles" </p>
+</body>
+</html>

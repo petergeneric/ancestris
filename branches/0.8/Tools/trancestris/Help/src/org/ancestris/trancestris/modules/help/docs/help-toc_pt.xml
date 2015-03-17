@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+    <tocitem text="Trancestris" target="org.ancestris.trancestris.modules.help.title">
+        <tocitem text="Resumo" target="org.ancestris.trancestris.modules.help.about"/>
+        <tocitem expand="true" text="Primeiros passos" target="org.ancestris.trancestris.modules.help.first-steps">
+            <tocitem text="Começar com o Trancestris" target="org.ancestris.trancestris.modules.help.first-steps-1"/>
+            <tocitem text="As minhas primeiras palavras, frases, enfim, traduções!" target="org.ancestris.trancestris.modules.help.first-steps-2"/>
+            <tocitem text="A funcionalidade procurar" target="org.ancestris.trancestris.modules.help.first-steps-3"/>
+        </tocitem>
+        <tocitem expand="false" text="Configuração" target="org.ancestris.trancestris.modules.help.configuration">
+            <tocitem text="Correio" target="org.ancestris.trancestris.modules.help.configuration.mail"/>
+        </tocitem>
+        <tocitem text="Pacote de atualizações" target="org.ancestris.trancestris.modules.help.bundles.updates"/>
+        <tocitem text="Atualizações do Trancestris" target="org.ancestris.trancestris.modules.help.updates"/>
+    </tocitem>
+</toc>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
+<map version="2.0">
+    <mapID target="genjreports.rdf.title" url="rdf-title.html"/>
+    <mapID target="genjreports.rdf.about" url="rdf-about.html"/>
+    <mapID target="genjreports.rdf.examples" url="rdf-examples.html"/>
+    <mapID target="genjreports.rdf.todo" url="rdf-todo.html"/>
+    <mapID target="genjreports.rdf.releaseNotes" url="rdf-releaseNotes.html"/>
+</map>

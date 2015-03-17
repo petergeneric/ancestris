@@ -1,0 +1,16 @@
+###############################################
+#
+# Count first names (if GIVN and SURN are not stored seperately)
+#
+# no rules required (but they don't harm)
+#
+###############################################
+SELECT
+  count(?indi)
+  ?first
+{
+  ?indi a t:INDI ; 
+        p:NAME [p:first ?first] . 
+}
+GROUP BY ?first 
+ORDER BY ?first

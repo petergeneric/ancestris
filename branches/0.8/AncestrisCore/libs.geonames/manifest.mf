@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.libs.geonames/1
+OpenIDE-Module-Localizing-Bundle: ancestris/libs/geonames/Bundle.properties
+OpenIDE-Module-Provides: ancestris.libs.geonames
+OpenIDE-Module-Specification-Version: 1.1.9
+

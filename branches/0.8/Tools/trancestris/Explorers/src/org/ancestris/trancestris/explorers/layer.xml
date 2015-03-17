@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <attr name="Toolbars\File\org-openide-actions-SaveAllAction.shadow_hidden\position" intvalue="500"/>
+    <folder name="Actions">
+        <folder name="Window"/>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window"/>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="ZipExplorerTopComponent.settings" url="ZipExplorerTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="explorer">
+                <file name="ZipExplorerTopComponent.wstcref" url="ZipExplorerTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

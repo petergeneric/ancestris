@@ -1,0 +1,96 @@
+#macro(testaff $v)
+	#set($isShown = 0)
+	#if ($v )
+		#set($isShown = 1)
+	#end
+#end 
+
+<html>
+
+<head>
+<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 10px;
+line-height: 1.0em;
+text-align: left;
+}
+.title {
+border-style: dotted;
+border-width: 1px;
+border-color: black;
+background-color: #CEECF5;
+font-size: 12px;
+text-align: center;
+text-decoration: underline;
+}
+.underline_shadow {
+text-shadow: 2px 2px 8px orange;
+text-decoration: underline;
+}
+.italic {
+font-style: italic;
+font-size: 9px;
+}
+.version {
+font-style: italic;
+font-size: 6px;
+text-align: left;
+}
+</style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
+</head>
+
+<body>
+
+#set ($version="DD_FM_2013/11/03")
+#set($fam=$fams)
+#set($child=$children)
+#set($mariage=$FAM.getProperty("MARR"))
+#set($contrat_de_mariage=$FAM.getProperty("MARC"))
+#set($divorce=$FAM.getProperty("DIV"))
+
+<!-- ----------------- Titre de la page------------ -->
+<center>
+<span class="title"> $!FAM.Husband.getProperty("NAME:GIVN") $!FAM.Husband.getProperty("NAME:SURN") 
+   x
+   $!FAM.Wife.getProperty("NAME:GIVN") $!FAM.Wife.getProperty("NAME:SURN") </span>
+</center>
+<br>
+<!-- ----------------- le mariage----------------------------------------- -->
+
+#if ($mariage)
+ Date du Mariage : <span class="italic">$!FAM.getProperty("MARR:DATE")</span><br>
+ Lieu du Mariage : <span class="italic">$!FAM.getProperty("MARR:PLAC")</span>
+#end
+#if ($contrat_de_mariage)
+ <br>Contrat de Mariage le : <span class="italic">$FAM.getProperty("MARC:DATE") chez $FAM.getProperty("MARC:AGNC")</span>
+#end
+#if ($divorce)
+ <br>Divorce : $divorce.Date - Lieu : $divorce.Place - 
+#end
+
+<br>
+<br>
+<!-- ----------------- les enfants ----------------------------------------- -->
+<span class="underline_shadow">ENFANTS</span> :<br>
+
+#foreach ($child in $FAM.Children)
+ <li>$!child.getProperty("NAME") ($!child.Id)<br>
+ Naissance : <span class="italic">$!child.getProperty("BIRT:DATE")</span> &agrave; <span class="italic">$!child.getProperty("BIRT:PLAC")</span> 
+ // 
+ D&eacute;c&egrave;s : <span class="italic">$!child.getProperty("DEAT:DATE")</span> &agrave; <span class="italic">$!child.getProperty("DEAT:PLAC")</span>
+ </li>
+ #testaff($child.getProperty("BAPM")) 
+  #if ($isShown!=0)
+  Bapt&ecirc;me : <span class="italic">$!child.getProperty("BAPM:DATE")</span> &agrave; <span class="italic">$!child.getProperty("BAPM:PLAC")</span>
+  #end
+#end
+
+
+<p align="right"><span class="version">
+$version
+</span></p>
+
+</body>
+
+</html>
