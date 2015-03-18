@@ -306,7 +306,7 @@ public class TreeView extends View implements Filter {
     }
 
     public static boolean showPopup() {
-        return REGISTRY.get("show.popup", true);
+        return REGISTRY.get("show.popup", false);
     }
 
     public static void setShowPopup(boolean showPopup) {
