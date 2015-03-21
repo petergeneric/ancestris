@@ -127,6 +127,9 @@
     <Component class="javax.swing.JTextField" name="gedcomLongitudeTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="RightClicOnMap" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomLongitudeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
@@ -205,6 +208,9 @@
     <Component class="javax.swing.JTextField" name="gedcomLatitudeTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="RightClicOnMap" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomLatitudeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mPlaceModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    mPlaceModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
