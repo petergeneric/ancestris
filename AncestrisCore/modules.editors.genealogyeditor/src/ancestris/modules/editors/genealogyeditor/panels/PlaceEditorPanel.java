@@ -76,10 +76,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         setMinimumSize(new java.awt.Dimension(537, 414));
 
-        gedcomPlaceEditorPanel.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.gedcomPlaceEditorPanel.toolTipText")); // NOI18N
-
+        placeEditorTabbedPane.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
         placeEditorTabbedPane.setMinimumSize(new java.awt.Dimension(513, 263));
 
+        jXMapKit1.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
         MapScrollPane.setViewportView(jXMapKit1);
 
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
@@ -90,7 +90,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
         );
 
         placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.mapPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/map.png")), mapPanel); // NOI18N

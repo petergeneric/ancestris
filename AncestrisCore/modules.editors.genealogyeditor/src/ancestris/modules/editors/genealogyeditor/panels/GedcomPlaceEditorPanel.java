@@ -92,6 +92,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         gedcomParishLabel.setText("Parish"); // NOI18N
 
         gedcomLongitudeTextField.setColumns(16);
+        gedcomLongitudeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
         gedcomLongitudeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -249,6 +250,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         });
 
         gedcomLatitudeTextField.setColumns(16);
+        gedcomLatitudeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
         gedcomLatitudeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
