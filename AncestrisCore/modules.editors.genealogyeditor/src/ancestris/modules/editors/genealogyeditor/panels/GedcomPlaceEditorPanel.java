@@ -168,12 +168,12 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[0], gedcomHamletTextField.getText());
-                    if (sameChoices.length > 0) {
-                        updatePlace(sameChoices[0], 1);
-                    } else {
-                        updatePlace(null, 1);
-                    }
+                    //PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[0], gedcomHamletTextField.getText());
+                    //if (sameChoices.length > 0) {
+                        //    updatePlace(sameChoices[0], 1);
+                        //} else {
+                        //    updatePlace(null, 1);
+                        //}
                 }
             }
 
@@ -186,12 +186,12 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             public void insertUpdate(DocumentEvent e) {
                 if (!updateOnGoing) {
                     mPlaceModified = true;
-                    PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[0], gedcomHamletTextField.getText());
-                    if (sameChoices.length > 0) {
-                        updatePlace(sameChoices[0], 1);
-                    } else {
-                        updatePlace(null, 1);
-                    }
+                    //PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(mRoot.getGedcom(), mPlaceOrder[0], gedcomHamletTextField.getText());
+                    //if (sameChoices.length > 0) {
+                        //    updatePlace(sameChoices[0], 1);
+                        //} else {
+                        //    updatePlace(null, 1);
+                        //}
                 }
             }
         });
