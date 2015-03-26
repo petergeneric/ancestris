@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.api.place.Place;
 import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
+import ancestris.util.LatLonParser;
 import genj.gedcom.*;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -331,9 +332,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 }
             }
 
-            if (latitude != null && longitude != null) {
+            double longValue = longitude == null?Double.NaN:LatLonParser.ParseLatLonValue(longitude.getValue());
+            double latValue = latitude == null?Double.NaN:LatLonParser.ParseLatLonValue(latitude.getValue());
+            if (longValue != Double.NaN && latValue != Double.NaN) {
                 // Center map on existing geo coordinates
-                jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
+                jXMapKit1.setAddressLocation(new GeoPosition(latValue, longValue));
                 // Set search field in case user may want to search another location similar to the one existing, but stay on map tab
                 searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " "));
             } else {
