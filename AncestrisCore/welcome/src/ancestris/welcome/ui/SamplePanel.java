@@ -57,6 +57,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.openide.filesystems.FileUtil;
@@ -64,7 +65,7 @@ import org.openide.filesystems.FileUtil;
 /**
  * Panel showing all recent files as clickable buttons.
  * 
- * @author S. Aubrecht
+ * @author S. Aubrecht & Frederic Lapeyre
  */
 public class SamplePanel extends JPanel implements Constants {
 
@@ -119,11 +120,10 @@ public class SamplePanel extends JPanel implements Constants {
         ActionButton b = new ActionButton( action, sample.getSampleGedcomURL().toString(), false, "RecentFile" ); //NOI18N
         b.setFont( BUTTON_FONT );
         b.getAccessibleContext().setAccessibleName( b.getText() );
-        b.getAccessibleContext().setAccessibleDescription(
-                BundleSupport.getAccessibilityDescription( "RecentFile", b.getText() ) ); //NOI18N
-        b.setIcon(Gedcom.getImage());
-        panel.add( b, new GridBagConstraints( 0,row,1,1,1.0,0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(2,2,2,2), 0, 0 ) );
+        b.getAccessibleContext().setAccessibleDescription(BundleSupport.getAccessibilityDescription( "RecentFile", b.getText() ) ); //NOI18N
+        ImageIcon gedcomIcon = sample.getIcon();
+        b.setIcon(gedcomIcon != null ? gedcomIcon : Gedcom.getImage());
+        panel.add( b, new GridBagConstraints( 0,row,1,1,1.0,0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(2,2,2,2), 0, 0 ) );
     }
 
     private static class OpenGedcomFileAction extends ActionOpen {

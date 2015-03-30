@@ -20,9 +20,7 @@
 
 package ancestris.welcome.ui;
 
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
@@ -31,14 +29,20 @@ import ancestris.welcome.content.BundleSupport;
 import ancestris.welcome.content.Constants;
 import ancestris.welcome.content.LinkButton;
 import ancestris.welcome.content.Utils;
+import java.awt.Image;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import org.netbeans.api.options.OptionsDisplayer;
+import org.openide.util.ImageUtilities;
 
 /**
  *
- * @author S. Aubrecht
+ * @author S. Aubrecht & Frederic Lapeyre
  */
 class PreferencesPanel extends JPanel implements Constants {
 
+    private final Image ICON = ImageUtilities.loadImage("ancestris/welcome/resources/ico_settings.png"); //NOI18N
+    
     public PreferencesPanel() {
         super( new GridBagLayout() );
         setOpaque(false);
@@ -55,13 +59,15 @@ class PreferencesPanel extends JPanel implements Constants {
             }
         };
         b.setFont(GET_STARTED_FONT);
-        add( b, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0,0,5,5), 0, 0));
-        add( new JLabel(description), new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(20,9,5,5), 0, 0));
-        add( new JLabel(), new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0,0,0,0), 0, 0));
+        b.setIcon(new ImageIcon(ICON));
+        add(b);
+        JLabel jDesc = new JLabel(description);
+        jDesc.setBorder( BorderFactory.createEmptyBorder(0,9,2,0) );
+        add(jDesc);
     }
 
     private static class ShowPreferencesAction extends AbstractAction {
-//TODO: voir pour ouvrir le bon tab dans les options
+        //TODO: voir pour ouvrir le bon tab dans les options
         private final String initialTab;
         public ShowPreferencesAction(String initialTab) {
             super( BundleSupport.getLabel( "GoPreferences" ) ); //NOI18N

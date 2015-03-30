@@ -49,11 +49,13 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 import ancestris.welcome.content.BundleSupport;
 import ancestris.welcome.content.ContentSection;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 
 /**
  * 'Learn & Discover' tab of the Start Page
  * 
- * @author S. Aubrecht
+ * @author S. Aubrecht & Frederic Lapeyre
  */
 class LearnAndDiscoverTab extends AbstractTab {
 
@@ -63,19 +65,27 @@ class LearnAndDiscoverTab extends AbstractTab {
 
     @Override
     protected void buildContent() {
-        JPanel panel = new JPanel(new GridLayout(1,0));
-        panel.setOpaque(false);
-        panel.add(new ContentSection( new GetStarted(), false, false ));
+        JPanel main = new JPanel( new GridLayout(1,0) );
+        main.setOpaque(false);
+        main.setBorder(BorderFactory.createEmptyBorder());
+        add( main, BorderLayout.CENTER );
 
-        panel.add( new ContentSection( BundleSupport.getLabel("SectionDemosAndTutorials"), new Tutorials(), true, false )); //NOI18N
+        JPanel leftPanel = new JPanel() ;
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        leftPanel.setOpaque(false);
+        leftPanel.setBorder(BorderFactory.createEmptyBorder());
+        main.add(new ContentSection( leftPanel,false));
+        leftPanel.add( new ContentSection( BundleSupport.getLabel("SectionGetStarted"), new GetStarted("WelcomePage/GettingStartedLinks")) ); // NOI18N
+        leftPanel.add( new ContentSection( BundleSupport.getLabel("SectionSample"), new SamplePanel() ) );
 
-        panel.add( new ContentSection( BundleSupport.getLabel( "SectionSample" ), //NOI18N
-                new SamplePanel(), true, false ) );
-//        panel.add( new ContentSection( BundleSupport.getLabel( "SectionDemo" ), //NOI18N
-//                new DemoPanel(), true, false ));
-
-        add( panel, BorderLayout.CENTER );
-
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.setOpaque(false);
+        rightPanel.setBorder(BorderFactory.createEmptyBorder());
+        main.add(new ContentSection( rightPanel,true));
+        rightPanel.add( new ContentSection( BundleSupport.getLabel("SectionDemosAndTutorials"), new GetStarted("WelcomePage/TutorialsLinks") ) ); // NOI18N
+        rightPanel.add( new ContentSection( BundleSupport.getLabel("SectionContribute"), new GetStarted("WelcomePage/ContributeLinks")) ); // NOI18N
+        
         add( new BottomBar(), BorderLayout.SOUTH );
     }
 }

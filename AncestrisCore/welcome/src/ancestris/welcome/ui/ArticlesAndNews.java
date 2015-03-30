@@ -61,7 +61,7 @@ import org.openide.util.NbPreferences;
 
 /**
  *
- * @author S. Aubrecht
+ * @author S. Aubrecht & Frederic Lapeyre
  */
 class ArticlesAndNews extends RSSFeedReaderPanel {
 
@@ -71,7 +71,7 @@ class ArticlesAndNews extends RSSFeedReaderPanel {
 
     public ArticlesAndNews() {
         super( "ArticlesAndNews", true ); // NOI18N
-        add( buildBottomContent(), BorderLayout.SOUTH );
+        //add( buildBottomContent(), BorderLayout.SOUTH );
     }
 
 //    @Override
@@ -97,8 +97,8 @@ class ArticlesAndNews extends RSSFeedReaderPanel {
         WebLink news = new WebLink("ForumLists", true); // NOI18N
         BundleSupport.setAccessibilityProperties( news, "ForumLists" ); //NOI18N
         
-        WebLink articles = new WebLink( "AllArticles", true); // NOI18N
-        BundleSupport.setAccessibilityProperties( articles, "AllArticles" ); //NOI18N
+//        WebLink articles = new WebLink( "AllArticles", true); // NOI18N
+//        BundleSupport.setAccessibilityProperties( articles, "AllArticles" ); //NOI18N
 
         JPanel panel = new JPanel( new GridBagLayout() );
         panel.setOpaque(false);
@@ -109,9 +109,9 @@ class ArticlesAndNews extends RSSFeedReaderPanel {
         panel.add( new JLabel(), new GridBagConstraints(1,1,1,1,1.0,0.0,
                 GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,
                 new Insets(5,5,0,0),0,0) );
-        panel.add( articles, new GridBagConstraints(2,1,1,1,0.0,0.0,
-                GridBagConstraints.SOUTHEAST,GridBagConstraints.HORIZONTAL,
-                new Insets(5,5,0,0),0,0) );
+//        panel.add( articles, new GridBagConstraints(2,1,1,1,0.0,0.0,
+//                GridBagConstraints.SOUTHEAST,GridBagConstraints.HORIZONTAL,
+//                new Insets(5,5,0,0),0,0) );
 
         return panel;
     }

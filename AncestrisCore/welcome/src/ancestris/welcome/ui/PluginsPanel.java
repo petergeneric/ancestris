@@ -50,10 +50,13 @@ import ancestris.welcome.content.LinkButton;
 import ancestris.welcome.content.Utils;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.openide.cookies.InstanceCookie;
@@ -61,13 +64,16 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 
 /**
  *
- * @author S. Aubrecht
+ * @author S. Aubrecht & Frederic Lapeyre
  */
 class PluginsPanel extends JPanel implements Constants {
 
+    private final Image ICON = ImageUtilities.loadImage("ancestris/welcome/resources/ico_extension.png"); //NOI18N
+    
     public PluginsPanel( boolean showInstallPlugins ) {
         super( new GridBagLayout() );
         setOpaque(false);
@@ -89,8 +95,8 @@ class PluginsPanel extends JPanel implements Constants {
         };
         b.setFont(GET_STARTED_FONT);
         add( b, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0,0,5,5), 0, 0));
-        add( new JLabel(description), new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(20,9,5,5), 0, 0));
-        add( new JLabel(), new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0,0,0,0), 0, 0));
+        add( new JLabel(description), new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0,9,5,5), 0, 0));
+        //add( new JLabel(), new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0,0,0,0), 0, 0));
     }
 
     private void addInstallPlugins( String label, String description ) {
@@ -103,9 +109,11 @@ class PluginsPanel extends JPanel implements Constants {
             }
         };
         b.setFont(GET_STARTED_FONT);
-        add( b, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0,0,5,5), 0, 0));
-        add( new JLabel(description), new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(20,9,5,5), 0, 0));
-        add( new JLabel(), new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0,0,0,0), 0, 0));
+        b.setIcon(new ImageIcon(ICON));
+        add(b);
+        JLabel jDesc = new JLabel(description);
+        jDesc.setBorder( BorderFactory.createEmptyBorder(0,9,2,0) );
+        add(jDesc);
     }
 
     private static class ShowPluginManagerAction extends AbstractAction {
