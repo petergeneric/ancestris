@@ -71,7 +71,7 @@ import static ancestris.welcome.ui.Bundle.*;
  *
  * Modified to support Gedcom Files
  *
- * @author S. Aubrecht
+ * @author S. Aubrecht & Frederic Lapeyre
  */
 public class RecentFilesPanel extends JPanel implements Constants {
 
@@ -130,9 +130,9 @@ public class RecentFilesPanel extends JPanel implements Constants {
         }
         if (0 == row) {
             panel.add(new JLabel(BundleSupport.getLabel("NoRecentFile")), //NOI18N
-                    new GridBagConstraints(0, row, 1, 1, 1.0, 1.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                    new Insets(10, 10, 10, 10), 0, 0));
+                    new GridBagConstraints(0, row, 1, 1, 1.0, 0.0,
+                    GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                    new Insets(0, 10, 10, 10), 0, 0));
         } else {
             panel.add(new JLabel(), new GridBagConstraints(0, row, 1, 1, 0.0, 1.0,
                     GridBagConstraints.CENTER, GridBagConstraints.NONE,

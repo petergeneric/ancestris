@@ -41,16 +41,13 @@
  * Version 2 license, then the option applies only if the new code is
  * made subject to such option by the copyright holder.
  */
-
 package ancestris.welcome.ui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -58,113 +55,120 @@ import ancestris.welcome.content.BundleSupport;
 import ancestris.welcome.content.ActionButton;
 import ancestris.welcome.content.Constants;
 import ancestris.welcome.content.Utils;
+import java.awt.Dimension;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
 import org.openide.cookies.InstanceCookie;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.util.ImageUtilities;
 
 /**
  *
- * @author S. Aubrecht
+ * @author S. Aubrecht & Frederic Lapeyre
  */
 class GetStarted extends JPanel implements Constants {
 
     private int row;
 
-    public GetStarted() {
-        super( new GridBagLayout() );
+    public GetStarted(String rootName) {
+        super(new GridBagLayout());
         setOpaque(false);
-        buildContent();
+        buildContent(rootName);
     }
-    
-    private void buildContent() {
-        String rootName = "WelcomePage/GettingStartedLinks"; // NOI18N
-        FileObject root = FileUtil.getConfigFile( rootName );
-        if( null == root ) {
+
+    private void buildContent(String str) {
+        String rootName = str;
+        FileObject root = FileUtil.getConfigFile(rootName);
+        if (null == root) {
             Logger.getLogger(GetStarted.class.getName()).log(Level.INFO,
-                    "Start page content not found: " + "FileObject: " + rootName ); //NOI18N
+                    "Start page content not found: " + "FileObject: " + rootName); //NOI18N
             return;
         }
-        DataFolder folder = DataFolder.findFolder( root );
-        if( null == folder ) {
+        DataFolder folder = DataFolder.findFolder(root);
+        if (null == folder) {
             Logger.getLogger(GetStarted.class.getName()).log(Level.INFO,
-                    "Start page content not found: " + "DataFolder: " + rootName ); //NOI18N
+                    "Start page content not found: " + "DataFolder: " + rootName); //NOI18N
             return;
         }
         DataObject[] children = folder.getChildren();
-        if( null == children ) {
+        if (null == children) {
             Logger.getLogger(GetStarted.class.getName()).log(Level.INFO,
-                    "Start page content not found: " + "DataObject: " + rootName ); //NOI18N
+                    "Start page content not found: " + "DataObject: " + rootName); //NOI18N
             return;
         }
-        for( int i=0; i<children.length; i++ ) {
-            if( children[i].getPrimaryFile().isFolder() ) {
+        for (int i = 0; i < children.length; i++) {
+            if (children[i].getPrimaryFile().isFolder()) {
                 String headerText = children[i].getNodeDelegate().getDisplayName();
-                JLabel lblTitle = new JLabel( headerText );
-                lblTitle.setFont( BUTTON_FONT );
-                lblTitle.setHorizontalAlignment( JLabel.LEFT );
-                lblTitle.setOpaque( true );
-                lblTitle.setBorder( HEADER_TEXT_BORDER );
-                add( lblTitle, new GridBagConstraints( 0,row++,1,1,1.0,0.0,
-                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                    new Insets(0,0,0,0), 0, 0 ) );
+                JLabel lblTitle = new JLabel(headerText);
+                lblTitle.setFont(BUTTON_FONT);
+                lblTitle.setHorizontalAlignment(JLabel.LEFT);
+                lblTitle.setOpaque(true);
+                lblTitle.setBorder(HEADER_TEXT_BORDER);
+                add(lblTitle, new GridBagConstraints(0, row++, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        new Insets(0, 0, 0, 0), 0, 0));
 
-                DataFolder subFolder = DataFolder.findFolder( children[i].getPrimaryFile() );
+                DataFolder subFolder = DataFolder.findFolder(children[i].getPrimaryFile());
                 DataObject[] subFolderChildren = subFolder.getChildren();
-                for( int j=0; j<subFolderChildren.length; j++ ) {
-                    row = addLink( row, subFolderChildren[j] );
+                for (int j = 0; j < subFolderChildren.length; j++) {
+                    row = addLink(row, subFolderChildren[j]);
                 }
-                    
+
             } else {
-                row = addLink( row, children[i] );
+                row = addLink(row, children[i]);
             }
         }
-
-        add( new JLabel(), new GridBagConstraints(0, row++, 1, 1, 0.0, 1.0,
-                GridBagConstraints.NORTHWEST, GridBagConstraints.VERTICAL, new Insets(0,0,0,0), 0, 0 ) );
     }
 
-    private int addLink( int row, DataObject dob ) {
-        Action action = extractAction( dob );
-        if( null != action ) {
-            JPanel panel = new JPanel( new GridBagLayout() );
-            panel.setOpaque(false);
-            ActionButton lb = new ActionButton( action, Utils.getUrlString( dob ),
-                    Utils.getColor( COLOR_HEADER ), true, dob.getPrimaryFile().getPath() );
-            Object gap = dob.getPrimaryFile().getAttribute("gap");
-            boolean isGap = (gap != null && gap instanceof Boolean && ((Boolean)gap).booleanValue());
-            panel.add( lb, new GridBagConstraints(1,0,1,3,1.0,0.0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0) );
-            lb.setFont( GET_STARTED_FONT );
-            
-            lb.getAccessibleContext().setAccessibleName( lb.getText() );
-            lb.getAccessibleContext().setAccessibleDescription( 
-                    BundleSupport.getAccessibilityDescription( "GettingStarted", lb.getText() ) ); //NOI18N
-            add( panel, new GridBagConstraints( 0,row++,1,1,1.0,0.0,
-                GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                new Insets(isGap?64:0,0,7,0), 0, 0 ) );
-        } 
+    private int addLink(int row, DataObject dob) {
+        Action action = extractAction(dob);
+        if (null != action) {
+            ActionButton lb = new ActionButton(action, Utils.getUrlString(dob), Utils.getColor(COLOR_HEADER), true, dob.getPrimaryFile().getPath());
+            lb.setFont(GET_STARTED_FONT);
+            lb.getAccessibleContext().setAccessibleName(lb.getText());
+            lb.getAccessibleContext().setAccessibleDescription(BundleSupport.getAccessibilityDescription("GettingStarted", lb.getText())); //NOI18N
+            ImageIcon icon = extractIcon(dob);
+            if (icon != null) {
+                lb.setIcon(icon);
+            }
+            add(lb);
+            add(Box.createRigidArea(new Dimension(0, 5)));
+
+        }
         return row;
     }
 
-    private Action extractAction( DataObject dob ) {
-        OpenCookie oc = dob.getCookie( OpenCookie.class );
-        if( null != oc )
-            return new LinkAction( dob );
+    private Action extractAction(DataObject dob) {
+        OpenCookie oc = dob.getCookie(OpenCookie.class);
+        if (null != oc) {
+            return new LinkAction(dob);
+        }
 
         InstanceCookie.Of instCookie = dob.getCookie(InstanceCookie.Of.class);
-        if( null != instCookie && instCookie.instanceOf( Action.class ) ) {
+        if (null != instCookie && instCookie.instanceOf(Action.class)) {
             try {
                 Action res = (Action) instCookie.instanceCreate();
-                if( null != res ) {
-                    res.putValue(Action.NAME, dob.getNodeDelegate().getDisplayName() );
+                if (null != res) {
+                    res.putValue(Action.NAME, dob.getNodeDelegate().getDisplayName());
                 }
                 return res;
-            } catch( Exception e ) {
-                Logger.getLogger(GetStarted.class.getName()).log( Level.INFO, null, e );
+            } catch (Exception e) {
+                Logger.getLogger(GetStarted.class.getName()).log(Level.INFO, null, e);
             }
         }
         return null;
     }
+
+    private ImageIcon extractIcon(DataObject dob) {
+        String str = (String) dob.getPrimaryFile().getAttribute("iconBase");
+        if (str != null && !str.isEmpty()) {
+            return new ImageIcon(ImageUtilities.loadImage(str));
+        }
+        return null;
+    }
+
 }

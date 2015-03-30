@@ -45,7 +45,6 @@
 package ancestris.welcome.ui;
 
 import java.awt.Color;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -54,45 +53,36 @@ import java.awt.Image;
 import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import ancestris.welcome.content.Constants;
+import java.util.Random;
+import javax.swing.BoxLayout;
 import org.openide.util.ImageUtilities;
 
 /**
  *
- * @author S. Aubrecht
+ * @author S. Aubrecht & Frederic Lapeyre
  */
 public class StartPageContent extends JPanel implements Constants {
 
-    private final static Color COLOR_TOP = new Color(178,165,133);
-    private final static Color COLOR_BOTTOM = new Color(235, 235, 235);
+//    private final static Color COLOR_TOP = new Color(90,136,242); // Sky Blue rather than brown (178,165,133)
+//    private final static Color COLOR_BOTTOM = new Color(212,225,255); // Light blue rather than light brown (235, 235, 235);
 
     private Image imgCenter;
-    private Image imgLeft;
-    private Image imgRight;
 
 
     public StartPageContent() {
         super( new GridBagLayout() );
 
-        imgCenter = ImageUtilities.loadImage(IMAGE_TOPBAR_CENTER, true);
-        imgLeft = ImageUtilities.loadImage(IMAGE_TOPBAR_LEFT, true);
-        imgRight = ImageUtilities.loadImage(IMAGE_TOPBAR_RIGHT, true);
-
-//        setPreferredSize( new Dimension( imgCenter.getWidth(null), imgCenter.getHeight(null)) );
-
-        JComponent tabs = new TabbedPane( new LearnAndDiscoverTab(),
-                new MyAncestrisTab(),
-                new WhatsNewTab());
+        int nn = new Random().nextInt(11) + 1;                   // random.nextInt(max - min + 1) + min
+        imgCenter = ImageUtilities.loadImage(IMAGE_TOPBAR_CENTER + String.valueOf(nn) + ".jpg", true); 
+        
+        JComponent tabs = new TabbedPane( new LearnAndDiscoverTab(), new MyAncestrisTab(), new WhatsNewTab());
         tabs.setBorder(BorderFactory.createEmptyBorder(10,15,15,15));
         tabs.setOpaque(false);
-
-        add( new TopBar(), new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(7,0,0,0), 0, 0) );
         
-        add( tabs, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,0,0,0), 0, 0) );
-
-        add( new JLabel(), new GridBagConstraints(0, 2, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0,0,0,0), 0, 0) );
+        add(new TopBar(), new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(7,0,0,0), 0, 0) );
+        add(tabs, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,0,0,0), 0, 0) );
     }
 
     @Override
@@ -101,21 +91,25 @@ public class StartPageContent extends JPanel implements Constants {
         int width = getWidth();
         int height = getHeight();
 
-        int centerImageWidth = imgCenter.getWidth(null);
-        int centerImageHeight = imgCenter.getHeight(null);
-
-        int x = (width - centerImageWidth) / 2;
-        int y = 0;
-
-        g.drawImage(imgCenter, x, y, null);
-        if( x > 0 ) {
-            for( int i=0; i<=x; i++ ) {
-                g.drawImage(imgLeft, i, y, null);
-                g.drawImage(imgRight, width-i-1, y, null);
-            }
-        }
+        g.drawImage(imgCenter, 0, 0, width, height, null);
         
-        g2d.setPaint(new GradientPaint(0, centerImageHeight, COLOR_TOP, 0, height, COLOR_BOTTOM));
-        g2d.fillRect(0, centerImageHeight, width, height);
+//        // Add background image to the panel, from the top border
+//        int centerImageWidth = imgCenter.getWidth(null);
+//        int centerImageHeight = imgCenter.getHeight(null);
+//        int x = (width - centerImageWidth) / 2;
+//        int y = 0;
+//        g.drawImage(imgCenter, x, y, null);
+//
+//        // Add left and right top bar
+//        if( x > 0 ) {
+//            for( int i=0; i<=x; i++ ) {
+//                g.drawImage(imgLeft, i, y, null);
+//                g.drawImage(imgRight, width-i-1, y, null);
+//            }
+//        }
+//        
+//        // Add gradient
+//        g2d.setPaint(new GradientPaint(0, centerImageHeight, COLOR_TOP, 0, height, COLOR_BOTTOM));
+//        g2d.fillRect(0, centerImageHeight, width, height);
     }
 }
