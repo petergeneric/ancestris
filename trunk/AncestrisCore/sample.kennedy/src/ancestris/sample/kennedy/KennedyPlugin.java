@@ -19,8 +19,10 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.swing.ImageIcon;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -61,5 +63,9 @@ public class KennedyPlugin extends AncestrisPlugin implements SampleProvider {
     @Override
     public String getDescription() {
         return getPluginShortDescription();
+    }
+
+    public ImageIcon getIcon() {
+        return new ImageIcon(ImageUtilities.loadImage("ancestris/sample/kennedy/ico_kennedy.png"));
     }
 }
