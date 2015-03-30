@@ -14,6 +14,7 @@ package ancestris.api.sample;
 
 import java.io.File;
 import java.net.URL;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -35,4 +36,10 @@ public interface SampleProvider {
      * @return
      */
     public String getDescription();
+
+    /**
+     * Get Icon. 
+     * @return
+     */
+    public ImageIcon getIcon();
 }
