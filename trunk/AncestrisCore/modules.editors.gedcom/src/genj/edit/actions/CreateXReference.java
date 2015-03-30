@@ -45,6 +45,10 @@ public class CreateXReference extends CreateRelationship {
 
     /** figure out target type for given source+tag */
     private static String getTargetType(Property source, String sourceTag) {
+        //XXX: we should double check this null return. I think it is ok as action 
+        // is updated on context change but we probably need to write some docs about it
+        if (source == null)
+            return null;
         // ask a sample
         try {
             Property sample = source.getMetaProperty().getNested(sourceTag, false).create("@@");
