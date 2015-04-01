@@ -29,6 +29,9 @@
         <autoupdate installdir="${nbplatform.active.dir}" updatecenter="${certified.plugin.url}">
             <modules includes="org[.]netbeans[.]libs[.]junit4" clusters="platform"/>
         </autoupdate>
+        <autoupdate installdir="${nbplatform.active.dir}" updatecenter="${dist.plugin.url}">
+            <modules includes="org[.]netbeans[.]modules[.]nbjunit" clusters="harness"/>
+        </autoupdate>
         <autoupdate installdir="${nbplatform.active.dir}" updatecenter="${autoupdate.catalog.url}">
             <modules includes="${module.includes}.*" clusters="${download.clusters}"/>
             <modules includes="org[.]netbeans[.]modules[.]apisupport[.]harness" clusters="harness"/>
