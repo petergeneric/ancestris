@@ -31,6 +31,7 @@
         </autoupdate>
         <autoupdate installdir="${nbplatform.active.dir}" updatecenter="${dist.plugin.url}">
             <modules includes="org[.]netbeans[.]modules[.]nbjunit" clusters="harness"/>
+            <modules includes="org[.]netbeans[.]insane" clusters="harness"/>
         </autoupdate>
         <autoupdate installdir="${nbplatform.active.dir}" updatecenter="${autoupdate.catalog.url}">
             <modules includes="${module.includes}.*" clusters="${download.clusters}"/>
