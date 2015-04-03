@@ -62,6 +62,10 @@
     <FORM type="PropertySimpleValue" img="Format"/>
     <SOUR super="INDI:NAME:SOUR"/>
     <NOTE super="INDI:NAME:NOTE"/>
+    <_MAP default="0" cardinality="0:1" type="PropertyMap" img="Place">
+     <_LATI default="1" cardinality="1:1" type="PropertyLatitude" img="Place"/>
+     <_LONG default="1" cardinality="1:1" type="PropertyLongitude" img="Place"/>
+    </_MAP>
    </PLAC>
    <ADDR type="PropertyMultilineValue" img="Addr">
     <ADR1 hide="1" type="PropertySimpleValue" img="Addr"/>
@@ -79,6 +83,11 @@
    <SOUR super="INDI:NAME:SOUR"/>
    <OBJE super="INDI:NAME:SOUR:OBJE"/>
    <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam"/>
+<!-- TODO: experimental   <ASSO hide="0" type="PropertyAssociation" img="Association">
+   <RELA default="1" cardinality="0:1" type="PropertyRelationship" img="Type"/>
+   <SOUR super="INDI:SOUR"/>
+   <NOTE super="INDI:NAME:NOTE"/>
+  </ASSO>-->
   </BIRT>
   <ADOP cardinality="0:M" super="INDI:BIRT" img="Adoption">
    <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam">

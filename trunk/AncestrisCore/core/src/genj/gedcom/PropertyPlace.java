@@ -314,6 +314,19 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
+     * Return PropertyMap for this Place.
+     * Resolve aginst gedcom version
+     * @return 
+     */
+    public PropertyMap getMap(){
+        if (isVersion55()){
+            return (PropertyMap)getProperty("_MAP");
+        } else {
+            return (PropertyMap)getProperty("MAP");
+        }
+    }
+
+    /**
      * Display value for a place where format is one of
      * <pre>
      *  null      1st available
