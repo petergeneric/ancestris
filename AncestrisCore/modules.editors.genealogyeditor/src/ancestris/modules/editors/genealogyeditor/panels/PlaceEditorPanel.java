@@ -3,7 +3,6 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.api.place.Place;
 import ancestris.modules.editors.genealogyeditor.models.GeonamePlacesListModel;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
-import ancestris.util.LatLonParser;
 import genj.gedcom.*;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -313,30 +312,20 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         gedcomPlaceEditorPanel.set(root, mPlace);
         addressEditorPanel.set(root, mAddress);
         if (mPlace != null) {
-            Property latitude = null;
-            Property longitude = null;
-
             editorsTabbedPane.setSelectedComponent(placeEditorTabPanel);
+            PropertyMap propMap = mPlace.getMap();
+            double longitude = Double.NaN;
+            double latitude = Double.NaN;
 
-            if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                Property map = place.getProperty("MAP");
-                if (map != null) {
-                    latitude = map.getProperty("LATI");
-                    longitude = map.getProperty("LONG");
-                }
-            } else {
-                Property map = place.getProperty("_MAP");
-                if (map != null) {
-                    latitude = map.getProperty("_LATI");
-                    longitude = map.getProperty("_LONG");
-                }
+            
+            if (propMap != null){
+                longitude = propMap.getLongitude()==null?Double.NaN:propMap.getLongitude().getDoubleValue();
+                latitude = propMap.getLatitude()==null?Double.NaN:propMap.getLatitude().getDoubleValue();
             }
 
-            double longValue = longitude == null?Double.NaN:LatLonParser.ParseLatLonValue(longitude.getValue());
-            double latValue = latitude == null?Double.NaN:LatLonParser.ParseLatLonValue(latitude.getValue());
-            if (longValue != Double.NaN && latValue != Double.NaN) {
+            if (longitude != Double.NaN && latitude != Double.NaN) {
                 // Center map on existing geo coordinates
-                jXMapKit1.setAddressLocation(new GeoPosition(latValue, longValue));
+                jXMapKit1.setAddressLocation(new GeoPosition(latitude, longitude));
                 // Set search field in case user may want to search another location similar to the one existing, but stay on map tab
                 searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " "));
             } else {
