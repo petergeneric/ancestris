@@ -325,6 +325,38 @@ public class PropertyPlace extends PropertyChoiceValue {
             return (PropertyMap)getProperty("MAP");
         }
     }
+    
+    /**
+     * Shortcut for PropertyPlace.getMap.getLatitude().
+     * returns null if not available. If strict is true,
+     * return null if Longitude is not available
+     * @param strict
+     * @return 
+     */
+    public PropertyLatitude getLatitude(boolean strict){
+        PropertyMap map = getMap();
+        if (map == null) return null;
+        PropertyLatitude lat = map.getLatitude();
+        if (lat == null) return null;
+        if (strict && map.getLongitude() == null) return null;
+        return lat;
+    }
+
+    /**
+     * Shortcut for PropertyPlace.getMap.getLongitude().
+     * returns null if not available. If strict is true,
+     * return null if Latitude is not available
+     * @param strict
+     * @return 
+     */
+    public PropertyLongitude getLongitude(boolean strict){
+        PropertyMap map = getMap();
+        if (map == null) return null;
+        PropertyLongitude longitude = map.getLongitude();
+        if (longitude == null) return null;
+        if (strict && map.getLatitude() == null) return null;
+        return longitude;
+    }
 
     /**
      * Display value for a place where format is one of
