@@ -26,8 +26,11 @@ import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyFamilyChild;
 import genj.gedcom.PropertyFamilySpouse;
 import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyLatitude;
+import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyNote;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertyRepository;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
@@ -1904,21 +1907,10 @@ public class ReportWebsite extends Report{
             return null;
         }
         // Check if there are LATI/LONG and use in first case
-        Property map = place.getProperty("MAP");
-        if (map != null) {
-            String latitude = map.getProperty("LATI").getDisplayValue();
-            String longitude = map.getProperty("LONG").getDisplayValue();
-            if (latitude.startsWith("S") || latitude.startsWith("s")) {
-                latitude = "-" + latitude.substring(1);
-            } else {
-                latitude = latitude.substring(1);
-            }
-            if (longitude.startsWith("W") || longitude.startsWith("w")) {
-                longitude = "-" + longitude.substring(1);
-            } else {
-                longitude = longitude.substring(1);
-            }
-            return latitude + "," + longitude;
+        PropertyLatitude latitude = ((PropertyPlace)place).getLatitude(true);
+        if (latitude != null) {
+            PropertyLongitude longitude = ((PropertyPlace)place).getLongitude(true);
+            return latitude.getDoubleValue().toString() + "," + longitude.getDoubleValue().toString();
         }
 
         String value = place.getValue();

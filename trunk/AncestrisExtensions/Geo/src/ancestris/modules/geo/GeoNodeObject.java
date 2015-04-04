@@ -12,6 +12,8 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyLatitude;
+import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
 import java.awt.Image;
@@ -280,25 +282,11 @@ public class GeoNodeObject {
         this.latitude = null;
         this.longitude = null;
         
-        String strPrefix = "";
-        if (this.place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-            strPrefix = "";
-        } else {
-            strPrefix = "_";
-        }
-        
         // Set to coordinates found in Gedcom if they exist
-        Property map = this.place.getProperty(strPrefix + "MAP");
-        if (map != null) {
-            Property prop = map.getProperty(strPrefix + "LATI");
-            if (prop != null) {
-                this.latitude = Double.valueOf(prop.getDisplayValue());
-            }
-            prop = map.getProperty(strPrefix + "LONG");
-            if (prop != null) {
-                this.longitude = Double.valueOf(prop.getDisplayValue());
-            }
-        } 
+        PropertyLatitude lat = this.place.getLatitude(true);
+        if (lat != null) latitude = lat.getDoubleValue();
+        PropertyLongitude lon = this.place.getLongitude(true);
+        if (lon != null) longitude = lon.getDoubleValue();
         
         // Set to toponym coordinates otherwise, and default if null
         if (this.latitude == null || this.longitude == null) {
