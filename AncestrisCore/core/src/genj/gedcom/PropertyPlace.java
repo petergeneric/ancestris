@@ -357,6 +357,35 @@ public class PropertyPlace extends PropertyChoiceValue {
         if (strict && map.getLatitude() == null) return null;
         return longitude;
     }
+    
+    /**
+     * Set PLAC::MAP::LATI value, adding properties if necessary.
+     * @param latitude 
+     * @param longitude  
+     */
+    public void setCoordinates(String latitude,String longitude){
+        PropertyMap map = getMap();
+        boolean is55 = isVersion55();
+        if (map == null){
+            //add map property
+            map = new PropertyMap(is55);
+            addProperty(map);
+        }
+        PropertyLatitude lat = map.getLatitude();
+        if (lat == null){
+            // Add latitude
+            lat = new PropertyLatitude(is55);
+            map.addProperty(lat);
+        }
+        lat.setValue(latitude);
+        PropertyLongitude lon = map.getLongitude();
+        if (lon == null){
+            // Add latitude
+            lon = new PropertyLongitude(is55);
+            map.addProperty(lon);
+        }
+        lon.setValue(longitude);
+    }
 
     /**
      * Display value for a place where format is one of
