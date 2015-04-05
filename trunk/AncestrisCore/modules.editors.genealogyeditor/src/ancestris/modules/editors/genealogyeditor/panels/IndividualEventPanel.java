@@ -465,60 +465,15 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                                 mPlace.setValue(selectedPlace.format("all"));
                             }
 
-                            Property map;
-                            Property selectedPlaceMap;
-                            if (mPlace.getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
-                                selectedPlaceMap = selectedPlace.getProperty("MAP");
-                                if (selectedPlaceMap != null) {
-                                    map = mPlace.getProperty("MAP");
-                                    if (map == null) {
-                                        map = mPlace.addProperty("MAP", "");
-                                        map.addProperty("LATI", selectedPlaceMap.getProperty("LATI").getValue());
-                                        map.addProperty("LONG", selectedPlaceMap.getProperty("LONG").getValue());
-                                    } else {
-                                        Property latitude = map.getProperty("LATI");
-                                        if (latitude == null) {
-                                            map.addProperty("LATI", selectedPlaceMap.getProperty("LATI").getValue());
-                                        } else {
-                                            latitude.setValue(selectedPlaceMap.getProperty("LATI").getValue());
-                                        }
-                                        Property longitude = map.getProperty("LONG");
-                                        if (longitude == null) {
-                                            map.addProperty("LONG", selectedPlaceMap.getProperty("LONG").getValue());
-                                        } else {
-                                            longitude.setValue(selectedPlaceMap.getProperty("LONG").getValue());
-                                        }
-                                    }
-                                } else {
-                                    map = mPlace.getProperty("MAP");
-                                    if (map != null) {
-                                        mPlace.delProperty(map);
-                                    }
+                            if (selectedPlace.getMap() != null) {
+                                PropertyLatitude latitude = selectedPlace.getLatitude(true);
+                                PropertyLongitude longitude = selectedPlace.getLongitude(true);
+                                if (latitude != null) {
+                                    mPlace.setCoordinates(latitude.getValue(), longitude.getValue());
                                 }
                             } else {
-                                selectedPlaceMap = selectedPlace.getProperty("_MAP");
-                                if (selectedPlaceMap != null) {
-                                    map = mPlace.getProperty("_MAP");
-                                    if (map == null) {
-                                        map = mPlace.addProperty("_MAP", "");
-                                    }
-                                    Property latitude = map.getProperty("_LATI");
-                                    if (latitude == null) {
-                                        map.addProperty("_LATI", selectedPlaceMap.getProperty("_LATI").getValue());
-                                    } else {
-                                        latitude.setValue(selectedPlaceMap.getProperty("_LATI").getValue());
-                                    }
-                                    Property longitude = map.getProperty("_LONG");
-                                    if (longitude == null) {
-                                        map.addProperty("_LONG", selectedPlaceMap.getProperty("_LONG").getValue());
-                                    } else {
-                                        longitude.setValue(selectedPlaceMap.getProperty("_LONG").getValue());
-                                    }
-                                } else {
-                                    map = mPlace.getProperty("_MAP");
-                                    if (map != null) {
-                                        mPlace.delProperty(map);
-                                    }
+                                if (mPlace.getMap() != null) {
+                                    mPlace.delProperty(mPlace.getMap());
                                 }
                             }
                         }
