@@ -52,7 +52,7 @@ public class PropertyLatitude extends PropertyCoordinate {
 
     @Override
     char getDirection(double coordinate) {
-        return coordinate < 0 ? 'W' : 'E';
+        return coordinate < 0 ? 'S' : 'N';
     }
 
 }
