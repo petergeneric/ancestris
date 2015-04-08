@@ -49,7 +49,7 @@ public class PropertyLongitude extends PropertyCoordinate {
 
     @Override
     char getDirection(double coordinate) {
-        return coordinate < 0 ? 'S' : 'N';
+        return coordinate < 0 ? 'W' : 'E';
     }
 
 }
