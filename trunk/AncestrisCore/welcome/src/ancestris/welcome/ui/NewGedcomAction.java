@@ -41,11 +41,10 @@
  */
 package ancestris.welcome.ui;
 
-import ancestris.api.newgedcom.NewGedcom;
+import ancestris.api.newgedcom.ModifyGedcom;
 import ancestris.app.ActionNew;
+import ancestris.app.ActionSaveAs;
 import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.openide.util.Lookup;
@@ -55,14 +54,16 @@ import org.openide.util.Lookup;
  * @author S. Aubrecht
  */
 public class NewGedcomAction extends AbstractAction {
+    
+    // Mettre le contenu de cette méthode dans l'action ActionNew. Et supprimer cette méthode. Appeleer directement ActionNew.
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        NewGedcom wiz = Lookup.getDefault().lookup(NewGedcom.class);
-        //XXX: use dao wizards
-        wiz = null;
+        ModifyGedcom wiz = Lookup.getDefault().lookup(ModifyGedcom.class);
         if (wiz != null){
-//            Context context = wiz.create();
+            Context context = wiz.create();
+            // TODO - Mettre ce qui suit dans la méthode Create de l'interface ou bien à la fin du wizard, car est toujours à faire.
+//            new ActionSaveAs().actionPerformed(e);
 //            if ( context != null){
 //                Context firstIndiContext = new Context(context.getGedcom().getFirstEntity(Gedcom.INDI));
 //                GedcomDirectory.getInstance().registerGedcom(context);
