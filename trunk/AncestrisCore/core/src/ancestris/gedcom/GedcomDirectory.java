@@ -127,7 +127,7 @@ public abstract class GedcomDirectory {
         //FIXME: use dao.createfromtemplate?
         //FIXME: use DataObject template/wizard. the file is created from data
         // in setGedcom
-
+        
         // let user choose a file
         File file = chooseFile(create_title(), create_action(), null);
         if (file == null) {
