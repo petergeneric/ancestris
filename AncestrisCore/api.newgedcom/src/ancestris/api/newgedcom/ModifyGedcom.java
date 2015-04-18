@@ -18,7 +18,8 @@ import genj.gedcom.Context;
  *
  * @author daniel
  */
-public interface NewGedcom {
+public interface ModifyGedcom {
     public Context create();
+    public Context update();
 
 }
