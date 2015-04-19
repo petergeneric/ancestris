@@ -79,7 +79,7 @@ public class CreateNewGedcom implements INewGedcomProvider,ModifyGedcom {
     }
 
     public Context update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     public boolean isReady() {
