@@ -43,9 +43,9 @@ package ancestris.welcome.ui;
 
 import ancestris.api.newgedcom.ModifyGedcom;
 import ancestris.app.ActionNew;
-import ancestris.app.ActionSaveAs;
-import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
+import java.util.Iterator;
 import javax.swing.AbstractAction;
 import org.openide.util.Lookup;
 
@@ -59,20 +59,14 @@ public class NewGedcomAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ModifyGedcom wiz = Lookup.getDefault().lookup(ModifyGedcom.class);
-        if (wiz != null){
-            Context context = wiz.create();
-            // TODO - Mettre ce qui suit dans la méthode Create de l'interface ou bien à la fin du wizard, car est toujours à faire.
-//            new ActionSaveAs().actionPerformed(e);
-//            if ( context != null){
-//                Context firstIndiContext = new Context(context.getGedcom().getFirstEntity(Gedcom.INDI));
-//                GedcomDirectory.getInstance().registerGedcom(context);
-//                GedcomDirectory.getInstance().updateModified(context.getGedcom());
-//                Workbench.openDefaultViews(firstIndiContext);
-//                SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
-//            }
-        } else {
-            new ActionNew().actionPerformed(e); //NOI18N
+        Collection list = Lookup.getDefault().lookupAll(ModifyGedcom.class);
+        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+            ModifyGedcom wiz = (ModifyGedcom) iterator.next();
+            if (wiz.isReady()) {
+                wiz.create();
+                return;
+            }
         }
+        new ActionNew().actionPerformed(e); //NOI18N
     }
 }
