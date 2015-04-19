@@ -7,8 +7,9 @@ package ancestris.app;
 import ancestris.api.newgedcom.ModifyGedcom;
 import ancestris.view.Images;
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.gedcom.GedcomDirectory;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
+import java.util.Iterator;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
@@ -22,15 +23,20 @@ public final class ActionNew extends AbstractAncestrisAction {
         setImage(Images.imgNew);
     }
 
-    /** execute callback */
+    /** execute callback
+     * @param event */
     @Override
     public void actionPerformed(ActionEvent event) {
 //        GedcomDirectory.getDefault().newGedcom();
-        
+
         // TODO_FL : 2015-04-15 : peut-être ne pas appeler d'ici...
-        ModifyGedcom wiz = Lookup.getDefault().lookup(ModifyGedcom.class);
-        if (wiz != null){
-            wiz.update();  // FIXME: ne pas oublier de remettre create une fois les tests terminés
+        Collection list = Lookup.getDefault().lookupAll(ModifyGedcom.class);
+        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+            ModifyGedcom wiz = (ModifyGedcom) iterator.next();
+            if (wiz.isReady()) {
+                wiz.update();   // ne pas oublier de mettre create() après les test, une fois le bouton modify créé
+                return;
+            }
         }
     }
 } //ActionNew
