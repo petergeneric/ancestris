@@ -19,7 +19,7 @@ import genj.gedcom.Context;
  * @author daniel
  */
 public interface ModifyGedcom {
+    public boolean isReady();
     public Context create();
     public Context update();
-
 }
