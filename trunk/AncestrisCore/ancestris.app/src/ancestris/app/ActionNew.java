@@ -25,13 +25,13 @@ public final class ActionNew extends AbstractAncestrisAction {
     /** execute callback */
     @Override
     public void actionPerformed(ActionEvent event) {
-        GedcomDirectory.getDefault().newGedcom();
+//        GedcomDirectory.getDefault().newGedcom();
         
-//        // TODO_FL : 2015-04-15 : peut-être ne pas appeler d'ici...
-//        ModifyGedcom wiz = Lookup.getDefault().lookup(ModifyGedcom.class);
-//        if (wiz != null){
-//            wiz.update();  // FIXME: ne pas oublier de remettre create une fois les tests terminés
-//        }
+        // TODO_FL : 2015-04-15 : peut-être ne pas appeler d'ici...
+        ModifyGedcom wiz = Lookup.getDefault().lookup(ModifyGedcom.class);
+        if (wiz != null){
+            wiz.update();  // FIXME: ne pas oublier de remettre create une fois les tests terminés
+        }
     }
 } //ActionNew
 
