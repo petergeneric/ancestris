@@ -81,4 +81,8 @@ public class CreateNewGedcom implements INewGedcomProvider,ModifyGedcom {
     public Context update() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public boolean isReady() {
+        return false; // module not ready 
+    }
 }
