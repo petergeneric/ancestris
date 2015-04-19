@@ -119,7 +119,7 @@ public abstract class GedcomDirectory {
         "# {0} - file path",
         "file.exists=File {0} already exists. Proceed?"
     })
-    public Context newGedcom() {
+    public Context newGedcom(Gedcom gedcomProvided, String title, String defaultFilename) {
         /*
          * when creating a new gedcom, the new file is always created on disk ATM
          * TODO: should we change this behaviour?
@@ -129,24 +129,33 @@ public abstract class GedcomDirectory {
         // in setGedcom
         
         // let user choose a file
-        File file = chooseFile(create_title(), create_action(), null);
-        if (file == null) {
-            return null;
-        }
-        if (!file.getName().endsWith(".ged")) {
-            file = new File(file.getAbsolutePath() + ".ged");
-        }
-        if (file.exists()) {
-            if (DialogManager.YES_OPTION
-                    != DialogManager.createYesNo(create_title(), file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+        File file = null;
+        boolean fileOK = false;
+        while (!fileOK) {            
+            file = chooseFile(title == null ? create_title() : title, create_action(), null, defaultFilename);
+            if (file == null) {
                 return null;
+            }
+            if (!file.getName().endsWith(".ged")) {
+                file = new File(file.getAbsolutePath() + ".ged");
+            }
+            if (file.exists()) {
+                if (DialogManager.YES_OPTION == DialogManager.createYesNo(title == null ? create_title() : title, file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+                    fileOK = true;
+                }
+            } else {
+                fileOK = true;
             }
         }
 
         // form the origin
-        Gedcom gedcom;
+        Gedcom gedcom = gedcomProvided;
         try {
-            gedcom = new Gedcom(Origin.create(file.toURI().toURL()));
+            if (gedcomProvided == null) {
+                gedcom = new Gedcom(Origin.create(file.toURI().toURL()));
+            } else {
+                gedcom.setOrigin(Origin.create(file.toURI().toURL()));
+            }
         } catch (MalformedURLException e) {
             LOG.log(Level.WARNING, "unexpected exception creating new gedcom", e);
             return null;
