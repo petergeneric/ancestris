@@ -11,7 +11,6 @@
  */
 package modules.editors.gedcomproperties;
 
-import genj.gedcom.Gedcom;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
@@ -24,6 +23,9 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel {
      */
     public GedcomPropertiesVisualPanel1() {
         initComponents();
+        if (mode == GedcomPropertiesWizardIterator.UPDATE_MODE) {
+            jTextField1.setEditable(false);
+        }
     }
 
     @Override

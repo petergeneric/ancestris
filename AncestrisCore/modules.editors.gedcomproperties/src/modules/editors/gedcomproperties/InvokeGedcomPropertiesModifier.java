@@ -15,6 +15,7 @@ package modules.editors.gedcomproperties;
 import ancestris.api.newgedcom.ModifyGedcom;
 import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
@@ -54,6 +55,16 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create"));
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
+            // create temporary Adam // TODO : remove once panel 5 is done
+            try {
+                Entity adam = gedcom.createEntity(Gedcom.INDI);
+                adam.addProperty("NAME", "Adam");
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            
+            // save gedcom as new gedcom. NewGedcom in defaultDirectory will reopen it with default views, automatically
+            GedcomDirectory.getDefault().newGedcom(gedcom, "title", "defaultname");
         }
         return null;
     }
@@ -102,5 +113,10 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
             GedcomDirectory.getDefault().saveGedcom(context);
         }
         return null;
+    }
+
+    @Override
+    public boolean isReady() {
+        return true; // module is ready to be used
     }
 }
