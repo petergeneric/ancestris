@@ -25,11 +25,13 @@ package genj.gedcom;
 public class Submitter extends Entity {
   
   private final static TagPath PATH_NAME =new TagPath("SUBM:NAME");
+  private final static TagPath PATH_ADDR =new TagPath("SUBM:ADDR");
   private final static TagPath PATH_CITY =new TagPath("SUBM:ADDR:CITY");
-  private final static TagPath PATH_PHON =new TagPath("SUBM:PHON");
+  private final static TagPath PATH_STAE =new TagPath("SUBM:ADDR:STAE");
   private final static TagPath PATH_POST =new TagPath("SUBM:ADDR:POST");
-  private final static TagPath PATH_EMAI =new TagPath("SUBM:_EMAIL");
   private final static TagPath PATH_CTRY =new TagPath("SUBM:ADDR:CTRY");
+  private final static TagPath PATH_PHON =new TagPath("SUBM:PHON");
+  private final static TagPath PATH_EMAI =new TagPath("SUBM:_EMAIL");
   private final static TagPath PATH_WEB  =new TagPath("SUBM:_WWW");
 
   /**
@@ -63,6 +65,17 @@ public class Submitter extends Entity {
   }
 
   /**
+   * Address of Submitter
+   */
+  public String getAddress() {
+    return getValue(PATH_ADDR, "");
+  }
+
+  public void setAddress(String name) {
+    setValue(PATH_ADDR, name);
+  }
+
+  /**
    * City of Submitter
    */
   public String getCity() {
@@ -74,14 +87,14 @@ public class Submitter extends Entity {
   }
 
   /**
-   * Phone of Submitter
+   * State of Submitter
    */
-  public String getPhone() {
-    return getValue(PATH_PHON, "");
+  public String getState() {
+    return getValue(PATH_STAE, "");
   }
 
-  public void setPhone(String name) {
-    setValue(PATH_PHON, name);
+  public void setState(String name) {
+    setValue(PATH_STAE, name);
   }
 
   /**
@@ -96,17 +109,6 @@ public class Submitter extends Entity {
   }
 
   /**
-   * Email of Submitter
-   */
-  public String getEmail() {
-    return getValue(PATH_EMAI, "");
-  }
-
-  public void setEmail(String name) {
-    setValue(PATH_EMAI, name);
-  }
-
-  /**
    * Country of Submitter
    */
   public String getCountry() {
@@ -115,6 +117,28 @@ public class Submitter extends Entity {
 
   public void setCountry(String name) {
     setValue(PATH_CTRY, name);
+  }
+
+  /**
+   * Phone of Submitter
+   */
+  public String getPhone() {
+    return getValue(PATH_PHON, "");
+  }
+
+  public void setPhone(String name) {
+    setValue(PATH_PHON, name);
+  }
+
+  /**
+   * Email of Submitter
+   */
+  public String getEmail() {
+    return getValue(PATH_EMAI, "");
+  }
+
+  public void setEmail(String name) {
+    setValue(PATH_EMAI, name);
   }
 
   /**
