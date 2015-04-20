@@ -119,7 +119,7 @@ public abstract class GedcomDirectory {
         "# {0} - file path",
         "file.exists=File {0} already exists. Proceed?"
     })
-    public Context newGedcom(Gedcom gedcomProvided, String title, String defaultFilename) {
+    public Context newGedcom(Gedcom gedcomProvided, String title, String defaultFilename, boolean setDefaults) {
         /*
          * when creating a new gedcom, the new file is always created on disk ATM
          * TODO: should we change this behaviour?
@@ -165,7 +165,9 @@ public abstract class GedcomDirectory {
         //FIXME: changer le nouveau gedcom cree par defaut!
         Context context = GedcomMgr.getDefault().setGedcom(gedcom);
         try {
-            setDefault(gedcom);
+            if (setDefaults) {
+                setDefault(gedcom);
+            }
             Indi firstIndi = (Indi) context.getGedcom().getFirstEntity(Gedcom.INDI);
             if (firstIndi == null) {
                 firstIndi = (Indi) context.getGedcom().createEntity(Gedcom.INDI);
