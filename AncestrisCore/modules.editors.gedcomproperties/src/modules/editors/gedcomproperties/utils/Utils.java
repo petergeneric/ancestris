@@ -27,11 +27,6 @@ import org.openide.NotifyDescriptor;
  */
 public class Utils {
     
-    public static void DisplayMessage(String msg) {
-        NotifyDescriptor nd = new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE);
-        DialogDisplayer.getDefault().notify(nd);
-    }
-    
     public static void CopyProperty(Property propertyFrom, Property propertyTo) {
         if (propertyFrom == null || propertyTo == null) {
             return;

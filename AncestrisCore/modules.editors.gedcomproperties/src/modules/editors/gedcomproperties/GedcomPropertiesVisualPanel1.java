@@ -126,18 +126,21 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
-    public String getFILE() {
-        return jTextField1.getText();
-    }
     public void setFILE(String str) {
         jTextField1.setText(str);
     }
-
-    public String getNOTE() {
-        return jTextArea1.getText();
-    }
+    
     public void setNOTE(String str) {
         jTextArea1.setText(str);
     }
 
+    public String getFILE() {
+        return jTextField1.getText();
+    }
+    
+    public String getNOTE() {
+        return jTextArea1.getText();
+    }
+
+    
 }

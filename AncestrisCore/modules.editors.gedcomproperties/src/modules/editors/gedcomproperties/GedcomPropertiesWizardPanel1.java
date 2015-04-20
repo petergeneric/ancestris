@@ -14,10 +14,11 @@ package modules.editors.gedcomproperties;
 import genj.gedcom.Property;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor> {
+public class GedcomPropertiesWizardPanel1 implements WizardDescriptor.ValidatingPanel {
 
     private final int mode = GedcomPropertiesWizardIterator.getMode();
     private final Property prop_HEAD = GedcomPropertiesWizardIterator.getHead();
@@ -70,10 +71,8 @@ public class GedcomPropertiesWizardPanel1 implements WizardDescriptor.Panel<Wiza
     }
 
     @Override
-    public void readSettings(WizardDescriptor wiz) {
-        // use wiz.getProperty to retrieve previous panel state
-        
-        // read gedcom head properties and ccreate them if they do not exist
+    public void readSettings(Object data) {
+        // read gedcom head properties and create them if they do not exist
         prop_FILE = prop_HEAD.getProperty("FILE");
         if (prop_FILE == null) {
             prop_FILE = prop_HEAD.addProperty("FILE", NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "Panel1.jTextField1.create"));
@@ -90,12 +89,17 @@ public class GedcomPropertiesWizardPanel1 implements WizardDescriptor.Panel<Wiza
     }
 
     @Override
-    public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
-        
+    public void storeSettings(Object data) {
         // read panel fields into properties directly
         prop_FILE.setValue(((GedcomPropertiesVisualPanel1) getComponent()).getFILE());
         prop_NOTE.setValue(((GedcomPropertiesVisualPanel1) getComponent()).getNOTE());
+    }
+
+    @Override
+    public void validate() throws WizardValidationException {
+        if (((GedcomPropertiesVisualPanel1) getComponent()).getFILE().isEmpty()){
+            throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_NameIsMandatory"), null);
+        }
     }
 
 }

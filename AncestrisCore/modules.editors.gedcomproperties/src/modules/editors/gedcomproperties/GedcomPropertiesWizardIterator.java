@@ -14,6 +14,7 @@ package modules.editors.gedcomproperties;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.gedcom.Submitter;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public final class GedcomPropertiesWizardIterator implements WizardDescriptor.It
 
     static private int mode;
     static private Property prop_HEAD;
+    static private Submitter prop_SUBM;
     
 
     static public int getMode(){
@@ -42,15 +44,20 @@ public final class GedcomPropertiesWizardIterator implements WizardDescriptor.It
         return prop_HEAD;
     }
 
+    static Submitter getSubmitter() {
+        return prop_SUBM;
+    }
+
     private int index;
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
 
     /**
      * Constructor
      */
-    public GedcomPropertiesWizardIterator(int mode, Property propEditedHeader) {
+    public GedcomPropertiesWizardIterator(int mode, Property propEditedHeader, Submitter propEditedSubmitter) {
         this.mode = mode;
         this.prop_HEAD = propEditedHeader;
+        this.prop_SUBM = propEditedSubmitter;
     }
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
