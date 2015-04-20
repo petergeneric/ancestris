@@ -14,11 +14,13 @@ package modules.editors.gedcomproperties;
 
 import ancestris.api.newgedcom.ModifyGedcom;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.gedcom.Submitter;
 import java.text.MessageFormat;
 import java.util.List;
 import modules.editors.gedcomproperties.utils.Utils;
@@ -36,22 +38,23 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=ModifyGedcom.class)
 public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
     
-    private Gedcom gedcom;
-
     @Override
     public Context create() {
         // Create brand new gedcom and head property
-        gedcom = new Gedcom();
+        Gedcom gedcom = new Gedcom();
         Property prop_HEAD;
+        Submitter prop_SUBM;
         try {
             prop_HEAD = gedcom.createEntity("HEAD");
+            gedcom.createEntity(Gedcom.SUBM);
+            prop_SUBM = gedcom.getSubmitter();
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
             return null;
         }
         
         // Call wizard
-        WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.CREATION_MODE, prop_HEAD));
+        WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.CREATION_MODE, prop_HEAD, prop_SUBM));
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create"));
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
@@ -63,8 +66,9 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
                 Exceptions.printStackTrace(ex);
             }
             
-            // save gedcom as new gedcom. NewGedcom in defaultDirectory will reopen it with default views, automatically
-            GedcomDirectory.getDefault().newGedcom(gedcom, "title", "defaultname");
+            // save gedcom as new gedcom. NewGedcom in GedcomDirectory will reopen it with default views, automatically
+            String filename = prop_HEAD.getProperty("FILE").getDisplayValue();
+            GedcomDirectory.getDefault().newGedcom(gedcom, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create") + " '" + filename + "'", filename);
         }
         return null;
     }
@@ -76,40 +80,58 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         if (context == null) {
             List<Context> cs = GedcomDirectory.getDefault().getContexts();
             if (cs == null || cs.isEmpty()) {
-                Utils.DisplayMessage(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_NoGedcomFound"));
+                DialogManager.createError(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_NoGedcomFound")).show();
                 return null;
             }
             context = cs.get(0);
         }
-        gedcom = context.getGedcom();
+        Gedcom originamlGedcom = context.getGedcom();
         
-        // Copy header to a working copy for the wizard. This avoids unwanted changes. Changes will only be applied if user clicks finish.
-        Property prop_OriginalHeader = gedcom.getFirstEntity("HEAD");
+        // Copy header and submitter to a working copy for the wizard. This avoids unwanted changes. Changes will only be applied if user clicks finish.
+        Property prop_OriginalHeader = originamlGedcom.getFirstEntity("HEAD");
         if (prop_OriginalHeader == null) {
             try {
-                prop_OriginalHeader = gedcom.createEntity("HEAD");
+                prop_OriginalHeader = originamlGedcom.createEntity("HEAD");
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+                return null;
+            }
+        }
+        Submitter prop_OriginalSubmitter = originamlGedcom.getSubmitter();
+        if (prop_OriginalSubmitter == null) {
+            try {
+                originamlGedcom.createEntity(Gedcom.SUBM);
+                prop_OriginalSubmitter = originamlGedcom.getSubmitter();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
                 return null;
             }
         }
         
+        Gedcom tmpGedcom ;
         Property prop_HEAD;
+        Submitter prop_SUBM;
         try {
-            prop_HEAD = new Gedcom().createEntity("HEAD");
+            tmpGedcom = new Gedcom();
+            prop_HEAD = tmpGedcom.createEntity("HEAD");
+            tmpGedcom.createEntity(Gedcom.SUBM);
+            prop_SUBM = tmpGedcom.getSubmitter();
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
             return null;
         }
         Utils.CopyProperty(prop_OriginalHeader, prop_HEAD);
+        Utils.CopyProperty(prop_OriginalSubmitter, prop_SUBM);
         
         // Call wizard
-        WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.UPDATE_MODE, prop_HEAD));
+        WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.UPDATE_MODE, prop_HEAD, prop_SUBM));
         wiz.setTitleFormat(new MessageFormat("{0}"));
-        wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", gedcom.getName().replaceFirst("[.][^.]+$", "")));   // remove extension to filename
+        wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", originamlGedcom.getName().replaceFirst("[.][^.]+$", "")));   // remove extension to filename
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
             prop_OriginalHeader.delProperties();
+            prop_OriginalSubmitter.delProperties();
             Utils.CopyProperty(prop_HEAD, prop_OriginalHeader);
+            Utils.CopyProperty(prop_SUBM, prop_OriginalSubmitter);
             GedcomDirectory.getDefault().saveGedcom(context);
         }
         return null;

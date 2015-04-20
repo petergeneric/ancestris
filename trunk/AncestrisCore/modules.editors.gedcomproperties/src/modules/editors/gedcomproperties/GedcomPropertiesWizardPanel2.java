@@ -11,11 +11,37 @@
  */
 package modules.editors.gedcomproperties;
 
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.Property;
+import genj.gedcom.Submitter;
+import genj.util.AncestrisPreferences;
+import genj.util.Registry;
+import java.util.Calendar;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.Panel<WizardDescriptor> {
+public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.ValidatingPanel {
+
+    private final static String SUBM_NAME = "submName";
+    private final static String SUBM_ADDR = "submAddress";
+    private final static String SUBM_POST = "submPostcode";
+    private final static String SUBM_CITY = "submCity";
+    private final static String SUBM_STAE = "submState";
+    private final static String SUBM_CTRY = "submCountry";
+    private final static String SUBM_PHON = "submPhone";
+    private final static String SUBM_EMAI = "submEmail";
+    private final static String SUBM_WWW  = "submWeb";
+    
+    private final int mode = GedcomPropertiesWizardIterator.getMode();
+    private final Property prop_HEAD = GedcomPropertiesWizardIterator.getHead();
+    private final Submitter prop_SUBM = GedcomPropertiesWizardIterator.getSubmitter();
+
+    private Property prop_COPR;
+    
+    private boolean doNotRepeatQuestion = false;
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -45,8 +71,8 @@ public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.Panel<Wiza
 
     @Override
     public boolean isValid() {
-        // If it is always OK to press Next or Finish, then:
-        return true;
+        // If it is always OK to press Next or Finish, then return true.
+        return true; 
         // If it depends on some condition (form filled out...) and
         // this condition changes (last form field filled in...) then
         // use ChangeSupport to implement add/removeChangeListener below.
@@ -62,13 +88,103 @@ public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.Panel<Wiza
     }
 
     @Override
-    public void readSettings(WizardDescriptor wiz) {
+    public void readSettings(Object data) {
         // use wiz.getProperty to retrieve previous panel state
+        
+        // read gedcom head properties and create them if they do not exist
+        prop_COPR = prop_HEAD.getProperty("COPR");
+        if (prop_COPR == null) {
+            prop_COPR = prop_HEAD.addProperty("COPR", NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "DFT_Copyright") + " " + Calendar.getInstance().get(Calendar.YEAR));
+        }
+        
+        // set panel fields
+        if (mode == GedcomPropertiesWizardIterator.CREATION_MODE) {
+            setSubmitterFromDefault(prop_SUBM);
+        }
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMName(prop_SUBM.getName());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMAddress(prop_SUBM.getAddress());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMPostcode(prop_SUBM.getPostcode());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMCity(prop_SUBM.getCity());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMState(prop_SUBM.getState());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMCountry(prop_SUBM.getCountry());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMPhone(prop_SUBM.getPhone());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMEmail(prop_SUBM.getEmail());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMWeb(prop_SUBM.getWeb());
+        ((GedcomPropertiesVisualPanel2) getComponent()).setCOPR(prop_COPR.getDisplayValue());
     }
 
     @Override
-    public void storeSettings(WizardDescriptor wiz) {
+    public void storeSettings(Object data) {
         // use wiz.putProperty to remember current panel state
+        
+        // read panel fields into properties directly
+        prop_SUBM.setName(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMName());
+        prop_SUBM.setAddress(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMAddress());
+        prop_SUBM.setPostcode(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMPostcode());
+        prop_SUBM.setCity(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMCity());
+        prop_SUBM.setState(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMState());
+        prop_SUBM.setCountry(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMCountry());
+        prop_SUBM.setPhone(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMPhone());
+        prop_SUBM.setEmail(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMEmail());
+        prop_SUBM.setWeb(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMWeb());
+        prop_COPR.setValue(((GedcomPropertiesVisualPanel2) getComponent()).getCOPR());
+        
+        // if submitter has changed, ask used if it needs to be saved as the new defaut
+        if (!doNotRepeatQuestion && hasChangedSubmitter(prop_SUBM) && UserConfirmsToSaveAsDefault()) {
+            saveSubmitterAsDefault(prop_SUBM);
+        }
+    }
+
+    private boolean hasChangedSubmitter(Submitter submitter) {
+        AncestrisPreferences submPref = Registry.get(GedcomPropertiesWizardIterator.class);
+        return !submitter.getName().equals(submPref.get(SUBM_NAME, ""))
+            || !submitter.getAddress().equals(submPref.get(SUBM_ADDR, ""))
+            || !submitter.getPostcode().equals(submPref.get(SUBM_POST, ""))
+            || !submitter.getCity().equals(submPref.get(SUBM_CITY, ""))
+            || !submitter.getState().equals(submPref.get(SUBM_STAE, ""))
+            || !submitter.getCountry().equals(submPref.get(SUBM_CTRY, ""))
+            || !submitter.getPhone().equals(submPref.get(SUBM_PHON, ""))
+            || !submitter.getEmail().equals(submPref.get(SUBM_EMAI, ""))
+            || !submitter.getWeb().equals(submPref.get(SUBM_WWW, ""));
+    }
+
+    private void setSubmitterFromDefault(Submitter submitter) {
+        AncestrisPreferences submPref = Registry.get(GedcomPropertiesWizardIterator.class);
+        submitter.setName(submPref.get(SUBM_NAME, ""));            // NAME
+        submitter.setAddress(submPref.get(SUBM_ADDR, ""));         // ADDR : POST, CITY, STAE, CTRY
+        submitter.setPostcode(submPref.get(SUBM_POST, ""));
+        submitter.setCity(submPref.get(SUBM_CITY, ""));   
+        submitter.setState(submPref.get(SUBM_STAE, ""));   
+        submitter.setCountry(submPref.get(SUBM_CTRY, ""));
+        submitter.setPhone(submPref.get(SUBM_PHON, ""));          // PHON
+        submitter.setEmail(submPref.get(SUBM_EMAI, ""));          // _EMAIL
+        submitter.setWeb(submPref.get(SUBM_WWW, ""));              // _WWW
+    }
+
+    private void saveSubmitterAsDefault(Submitter submitter) {
+        AncestrisPreferences submPref = Registry.get(GedcomPropertiesWizardIterator.class);
+        submPref.put(SUBM_NAME, submitter.getName());
+        submPref.put(SUBM_ADDR, submitter.getAddress());
+        submPref.put(SUBM_POST, submitter.getPostcode());
+        submPref.put(SUBM_CITY, submitter.getCity());
+        submPref.put(SUBM_STAE, submitter.getState());
+        submPref.put(SUBM_CTRY, submitter.getCountry());
+        submPref.put(SUBM_PHON, submitter.getPhone());
+        submPref.put(SUBM_EMAI, submitter.getEmail());
+        submPref.put(SUBM_WWW, submitter.getWeb());
+    }
+
+    private boolean UserConfirmsToSaveAsDefault() {
+        boolean ret = DialogManager.YES_OPTION == DialogManager.createYesNo(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "QST_SaveNewSubmitter")).show();
+        doNotRepeatQuestion = true;
+        return ret;
+    }
+
+    @Override
+    public void validate() throws WizardValidationException {
+        if (((GedcomPropertiesVisualPanel2) getComponent()).getSUBMName().isEmpty()){
+            throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_AuthorIsMandatory"), null);
+        }
     }
 
 }

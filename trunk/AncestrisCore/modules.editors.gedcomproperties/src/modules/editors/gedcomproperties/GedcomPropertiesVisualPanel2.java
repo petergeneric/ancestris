@@ -16,6 +16,8 @@ import org.openide.util.NbBundle;
 
 public final class GedcomPropertiesVisualPanel2 extends JPanel {
 
+    private final int mode = GedcomPropertiesWizardIterator.getMode();
+    
     /**
      * Creates new form GedcomPropertiesVisualPanel2
      */
@@ -36,18 +38,268 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea4 = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField5 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jTextField6 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jTextField7 = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jTextField8 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField9 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jTextField10 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jTextField11 = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel10 = new javax.swing.JLabel();
+        jTextField12 = new javax.swing.JTextField();
+
+        jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel1.create" : "Panel2.jLabel1.update"));
+
+        jTextField3.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField3.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel2.create" : "Panel2.jLabel2.update"));
+
+        jTextArea4.setColumns(20);
+        jTextArea4.setRows(3);
+        jScrollPane1.setViewportView(jTextArea4);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel3.create" : "Panel2.jLabel3.update"));
+
+        jTextField5.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField5.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel4.create" : "Panel2.jLabel4.update"));
+
+        jTextField6.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField6.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel5.create" : "Panel2.jLabel5.update"));
+
+        jTextField7.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField7.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel7.create" : "Panel2.jLabel7.update"));
+
+        jTextField8.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField8.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel8.create" : "Panel2.jLabel8.update"));
+
+        jTextField9.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField9.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel9.create" : "Panel2.jLabel9.update"));
+
+        jTextField10.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField10.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel11.create" : "Panel2.jLabel11.update"));
+
+        jTextField11.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField11.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel12.create" : "Panel2.jLabel12.update"));
+
+        jTextField12.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField12.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField12))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField3)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jTextField7)
+                            .addComponent(jTextField8)
+                            .addComponent(jTextField11)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField6))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField10)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextArea jTextArea4;
+    private javax.swing.JTextField jTextField10;
+    private javax.swing.JTextField jTextField11;
+    private javax.swing.JTextField jTextField12;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
+
+    public void setSUBMName(String str) {
+        jTextField3.setText(str);
+    }
+
+    public void setSUBMAddress(String str) {
+        jTextArea4.setText(str);
+    }
+
+    public void setSUBMPostcode(String str) {
+        jTextField5.setText(str);
+    }
+
+    public void setSUBMCity(String str) {
+        jTextField6.setText(str);
+    }
+
+    public void setSUBMState(String str) {
+        jTextField7.setText(str);
+    }
+
+    public void setSUBMCountry(String str) {
+        jTextField8.setText(str);
+    }
+
+    public void setSUBMPhone(String str) {
+        jTextField9.setText(str);
+    }
+
+    public void setSUBMEmail(String str) {
+        jTextField10.setText(str);
+    }
+
+    public void setSUBMWeb(String str) {
+        jTextField11.setText(str);
+    }
+
+    public void setCOPR(String str) {
+        jTextField12.setText(str);
+    }
+
+    
+    
+    
+    public String getSUBMName() {
+        return jTextField3.getText();
+    }
+
+    public String getSUBMAddress() {
+        return jTextArea4.getText();
+    }
+
+    public String getSUBMPostcode() {
+        return jTextField5.getText();
+    }
+
+    public String getSUBMCity() {
+        return jTextField6.getText();
+    }
+
+    public String getSUBMState() {
+        return jTextField7.getText();
+    }
+
+    public String getSUBMCountry() {
+        return jTextField8.getText();
+    }
+
+    public String getSUBMPhone() {
+        return jTextField9.getText();
+    }
+
+    public String getSUBMEmail() {
+        return jTextField10.getText();
+    }
+
+    public String getSUBMWeb() {
+        return jTextField11.getText();
+    }
+
+    public String getCOPR() {
+        return jTextField12.getText();
+    }
+
 }
