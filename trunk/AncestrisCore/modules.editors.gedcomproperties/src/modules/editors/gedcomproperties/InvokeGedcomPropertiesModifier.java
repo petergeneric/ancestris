@@ -45,7 +45,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         Property prop_HEAD;
         Submitter prop_SUBM;
         try {
-            prop_HEAD = gedcom.createEntity("HEAD");
+            prop_HEAD = gedcom.createEntity("HEAD", "");
             gedcom.createEntity(Gedcom.SUBM);
             prop_SUBM = gedcom.getSubmitter();
         } catch (GedcomException ex) {
@@ -68,7 +68,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
             
             // save gedcom as new gedcom. NewGedcom in GedcomDirectory will reopen it with default views, automatically
             String filename = prop_HEAD.getProperty("FILE").getDisplayValue();
-            GedcomDirectory.getDefault().newGedcom(gedcom, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create") + " '" + filename + "'", filename);
+            GedcomDirectory.getDefault().newGedcom(gedcom, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create") + " '" + filename + "'", filename, false);
         }
         return null;
     }
@@ -113,7 +113,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         Submitter prop_SUBM;
         try {
             tmpGedcom = new Gedcom();
-            prop_HEAD = tmpGedcom.createEntity("HEAD");
+            prop_HEAD = tmpGedcom.createEntity("HEAD", "");
             tmpGedcom.createEntity(Gedcom.SUBM);
             prop_SUBM = tmpGedcom.getSubmitter();
         } catch (GedcomException ex) {
