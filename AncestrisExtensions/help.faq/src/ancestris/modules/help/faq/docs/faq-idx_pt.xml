@@ -2,7 +2,7 @@
 <!--
 Ancestris - http://www.ancestris.org
 
-Copyright 2014 Ancestris
+Copyright 2015 Ancestris
 
 Author: Daniel Andre (daniel@ancestris.org).
 
@@ -16,5 +16,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <indexitem text="Resumo" target="ancestris.modules.help.faq.about"/>
     <indexitem text="Utilizar o Ancestris" target="ancestris.modules.help.faq.using.ancestris">
         <indexitem text="Como fechar uma genealogia" target="ancestris.modules.help.faq.using.ancestris-1"/>
+        <indexitem text="Files xxxxx_20150233-082532" target="ancestris.modules.help.faq.using.ancestris-2"/>        
     </indexitem>
 </index>
