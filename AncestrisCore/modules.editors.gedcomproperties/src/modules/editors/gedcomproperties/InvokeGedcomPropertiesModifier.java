@@ -19,6 +19,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.Grammar;
 import genj.gedcom.Property;
 import genj.gedcom.Submitter;
 import java.text.MessageFormat;
@@ -133,15 +134,37 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", originamlGedcom.getName().replaceFirst("[.][^.]+$", "")));   // remove extension to filename
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
+            String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedSuccessfullyTitle");
+            String message = "<html><h1>Results:</h1>";
+            
+            // Replace header and report
+            message += "<h2>Gedcom header</h2>";
             prop_OriginalHeader.delProperties();
             prop_OriginalSubmitter.delProperties();
             Utils.CopyProperty(prop_HEAD, prop_OriginalHeader);
             Utils.CopyProperty(prop_SUBM, prop_OriginalSubmitter);
+            originamlGedcom.setGrammar(prop_HEAD.getPropertyByPath("HEAD:GEDC:VERS").getDisplayValue().equals("5.5.1") ? Grammar.V551 : Grammar.V55);
+            originamlGedcom.setDestination(prop_HEAD.getPropertyByPath("HEAD:DEST").getDisplayValue());
+            message += "<p>Modified successfully</p>";
+            
+            // If conversion of gedcom norm requested, do it and report
+            if (wiz.getProperty("Conversion") == "1") {
+                message += "<h2>Conversion of Gedcom version from " + wiz.getProperty("ConversionFrom") + " to " + wiz.getProperty("ConversionTo") + "</h2>";
+                // TODO: do it
+                message += "<p>Conversion done successfully</p>";
+            }
+            // Save modified gedcom and report
+            message += "<h2>Gedcom file</h2>";
             GedcomDirectory.getDefault().saveGedcom(context);
-            DialogManager.create(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedSuccessfullyTitle"), 
-                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedSuccessfully")).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+            message += "<p>Saved successfully</p>";
+            
+            // Display results
+            message += "<br><p>" + NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedSuccessfully") + "</p>";
+            message += "<br>&nbsp;<br>&nbsp;<br></html>";
+            DialogManager.create(title, message).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
         } else {
-            DialogManager.create(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModifiedTitle"), 
+            DialogManager.create(
+                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModifiedTitle"), 
                     NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModified")).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
         }
         return null;

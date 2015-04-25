@@ -11,8 +11,6 @@
  */
 package modules.editors.gedcomproperties;
 
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.Submitter;
 import java.awt.Component;
@@ -22,7 +20,6 @@ import java.util.NoSuchElementException;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 

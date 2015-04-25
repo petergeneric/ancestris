@@ -67,6 +67,7 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel1.jLabel6.create" : "Panel1.jLabel6.update"));
 
         jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 

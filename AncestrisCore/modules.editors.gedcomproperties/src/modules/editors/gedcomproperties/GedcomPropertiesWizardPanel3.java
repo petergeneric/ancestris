@@ -11,12 +11,37 @@
  */
 package modules.editors.gedcomproperties;
 
+import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
+import java.util.Locale;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel3 implements WizardDescriptor.Panel<WizardDescriptor> {
+public class GedcomPropertiesWizardPanel3 implements WizardDescriptor.ValidatingPanel {
 
+    private WizardDescriptor wiz = null;
+    private final int mode = GedcomPropertiesWizardIterator.getMode();
+    private final Property prop_HEAD = GedcomPropertiesWizardIterator.getHead();
+
+    // Language
+    private Property prop_LANG;
+    
+    // Encoding
+    private Property prop_CHAR;
+    
+    // Gedcom version
+    private Property prop_GEDC;
+    private Property prop_VERS;
+    private Property prop_FORM;
+    private String originalVersion = "";
+    
+    // Destination
+    private Property prop_DEST;
+    
+    
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
@@ -30,7 +55,7 @@ public class GedcomPropertiesWizardPanel3 implements WizardDescriptor.Panel<Wiza
     @Override
     public GedcomPropertiesVisualPanel3 getComponent() {
         if (component == null) {
-            component = new GedcomPropertiesVisualPanel3();
+            component = new GedcomPropertiesVisualPanel3(this);
         }
         return component;
     }
@@ -62,13 +87,73 @@ public class GedcomPropertiesWizardPanel3 implements WizardDescriptor.Panel<Wiza
     }
 
     @Override
-    public void readSettings(WizardDescriptor wiz) {
-        // use wiz.getProperty to retrieve previous panel state
+    public void readSettings(Object data) {
+        // read gedcom head properties and create them if they do not exist
+        wiz = (WizardDescriptor) data;
+        
+        prop_LANG = prop_HEAD.getProperty("LANG");
+        if (prop_LANG == null) {
+            prop_LANG = prop_HEAD.addProperty("LANG", Locale.getDefault().getDisplayLanguage(new Locale("en", "EN")));
+        }
+        prop_CHAR = prop_HEAD.getProperty("CHAR");
+        if (prop_CHAR == null) {
+            prop_CHAR = prop_HEAD.addProperty("CHAR", Gedcom.UTF8);
+        }
+        prop_GEDC = prop_HEAD.getProperty("GEDC");
+        if (prop_GEDC == null) {
+            prop_GEDC = prop_HEAD.addProperty("GEDC", "");
+        }
+        prop_VERS = prop_GEDC.getProperty("VERS");
+        if (prop_VERS == null) {
+            prop_VERS = prop_GEDC.addProperty("VERS", "5.5.1");
+        }
+        prop_FORM = prop_GEDC.getProperty("FORM");
+        if (prop_FORM == null) {
+            prop_FORM = prop_GEDC.addProperty("FORM", "Lineage-Linked");
+        }
+        prop_DEST = prop_HEAD.getProperty("DEST");
+        if (prop_DEST == null) {
+            prop_DEST = prop_HEAD.addProperty("DEST", "ANY");
+        }
+
+        // Remember original version
+        if (originalVersion.isEmpty()) {
+            originalVersion = prop_VERS.getValue();
+        }
+
+        // set fields to read values
+        ((GedcomPropertiesVisualPanel3) getComponent()).setLANG(prop_LANG.getDisplayValue());
+        ((GedcomPropertiesVisualPanel3) getComponent()).setCHAR(prop_CHAR.getDisplayValue());
+        ((GedcomPropertiesVisualPanel3) getComponent()).setVERS(prop_VERS.getDisplayValue());
+        ((GedcomPropertiesVisualPanel3) getComponent()).setDEST(prop_DEST.getDisplayValue());
+
     }
 
     @Override
-    public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
+    public void storeSettings(Object data) {
+        // read panel fields into properties directly
+        prop_LANG.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getLANG());
+        prop_CHAR.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getCHAR());
+        prop_VERS.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getVERS());
+        prop_DEST.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getDEST());
+        wiz.putProperty("Conversion", ((GedcomPropertiesVisualPanel3) getComponent()).getConversionToBeDone() ? "1" : "0");
+        wiz.putProperty("ConversionFrom", originalVersion);
+        wiz.putProperty("ConversionTo", prop_VERS.getValue());
+    }
+
+    @Override
+    public void validate() throws WizardValidationException {
+    }
+    
+    public boolean warnVersionChange() {
+        prop_VERS.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getVERS());
+        if (!prop_VERS.getValue().equals(originalVersion)) {
+           wiz.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_GedcomChanged", originalVersion, prop_VERS.getValue()));    
+           return true;
+        } else {
+           wiz.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE, null);     
+           return false;
+        }
     }
 
 }
