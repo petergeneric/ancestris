@@ -87,20 +87,32 @@ public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.Validating
     public void removeChangeListener(ChangeListener l) {
     }
 
+    /**
+     * FIXME:
+     * Copyright par défaut : "(C) Copyright - Ancestris 201X"
+     * Précédé du prénom et nom de l'auteur au fur et à mesure que
+     * l'utilisateur tape son nom :
+     *          "Frédéric Lapeyre (C) Copyright - Ancestris 2015"
+     * 
+     * @param data 
+     */
     @Override
     public void readSettings(Object data) {
-        // use wiz.getProperty to retrieve previous panel state
-        
         // read gedcom head properties and create them if they do not exist
-        prop_COPR = prop_HEAD.getProperty("COPR");
-        if (prop_COPR == null) {
-            prop_COPR = prop_HEAD.addProperty("COPR", NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "DFT_Copyright") + " " + Calendar.getInstance().get(Calendar.YEAR));
-        }
         
         // set panel fields
+        String defaultName = "";
         if (mode == GedcomPropertiesWizardIterator.CREATION_MODE) {
             setSubmitterFromDefault(prop_SUBM);
+            defaultName = prop_SUBM.getName();
         }
+        prop_COPR = prop_HEAD.getProperty("COPR");
+        if (prop_COPR == null) {
+            String defaultCopr = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "DFT_Copyright") + " " + Calendar.getInstance().get(Calendar.YEAR);
+            prop_COPR = prop_HEAD.addProperty("COPR", defaultName + " " + defaultCopr);
+        }
+        
+        // display fields
         ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMName(prop_SUBM.getName());
         ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMAddress(prop_SUBM.getAddress());
         ((GedcomPropertiesVisualPanel2) getComponent()).setSUBMPostcode(prop_SUBM.getPostcode());
@@ -115,8 +127,6 @@ public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.Validating
 
     @Override
     public void storeSettings(Object data) {
-        // use wiz.putProperty to remember current panel state
-        
         // read panel fields into properties directly
         prop_SUBM.setName(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMName());
         prop_SUBM.setAddress(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMAddress());

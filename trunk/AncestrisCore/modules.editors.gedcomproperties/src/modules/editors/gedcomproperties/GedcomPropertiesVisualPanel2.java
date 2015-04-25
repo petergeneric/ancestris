@@ -11,6 +11,7 @@
  */
 package modules.editors.gedcomproperties;
 
+import java.util.Calendar;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
@@ -64,45 +65,34 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
         jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel1.create" : "Panel2.jLabel1.update"));
 
-        jTextField3.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField3.text")); // NOI18N
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField3KeyReleased(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel2.create" : "Panel2.jLabel2.update"));
 
         jTextArea4.setColumns(20);
+        jTextArea4.setLineWrap(true);
         jTextArea4.setRows(3);
         jScrollPane1.setViewportView(jTextArea4);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel3.create" : "Panel2.jLabel3.update"));
 
-        jTextField5.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField5.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel4.create" : "Panel2.jLabel4.update"));
-
-        jTextField6.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField6.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel5.create" : "Panel2.jLabel5.update"));
 
-        jTextField7.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField7.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel7.create" : "Panel2.jLabel7.update"));
-
-        jTextField8.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField8.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel8.create" : "Panel2.jLabel8.update"));
 
-        jTextField9.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField9.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel9.create" : "Panel2.jLabel9.update"));
-
-        jTextField10.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField10.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel11.create" : "Panel2.jLabel11.update"));
 
-        jTextField11.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField11.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel12.create" : "Panel2.jLabel12.update"));
-
-        jTextField12.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jTextField12.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -132,7 +122,7 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField3)
-                            .addComponent(jScrollPane1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
                             .addComponent(jTextField7)
                             .addComponent(jTextField8)
                             .addComponent(jTextField11)
@@ -193,6 +183,16 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyReleased
+        String name = getSUBMName();
+        String defaultCopr = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "DFT_Copyright") + " " + Calendar.getInstance().get(Calendar.YEAR);
+        String copr = getCOPR();
+        int i = copr.lastIndexOf(defaultCopr);
+        if (i != -1) {
+            setCOPR(name + " " + defaultCopr);
+        }
+    }//GEN-LAST:event_jTextField3KeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
