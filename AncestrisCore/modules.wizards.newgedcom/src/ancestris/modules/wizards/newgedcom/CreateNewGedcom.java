@@ -82,7 +82,12 @@ public class CreateNewGedcom implements INewGedcomProvider,ModifyGedcom {
         return null;
     }
 
+    public Context update(Context context) {
+        return null;
+    }
+
     public boolean isReady() {
         return false; // module not ready 
     }
+
 }
