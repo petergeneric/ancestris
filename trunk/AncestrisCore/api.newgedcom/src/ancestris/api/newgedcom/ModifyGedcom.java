@@ -22,4 +22,5 @@ public interface ModifyGedcom {
     public boolean isReady();
     public Context create();
     public Context update();
+    public Context update(Context context);
 }
