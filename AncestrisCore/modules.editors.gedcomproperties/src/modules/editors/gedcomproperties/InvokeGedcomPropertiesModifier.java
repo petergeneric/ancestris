@@ -81,7 +81,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
 
     @Override
     public Context update() {
-        // Get selected gedcom
+        // Get first selected context
         Context context = Utilities.actionsGlobalContext().lookup(Context.class);
         if (context == null) {
             List<Context> cs = GedcomDirectory.getDefault().getContexts();
@@ -91,6 +91,13 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
             }
             context = cs.get(0);
         }
+        update(context);
+        return context;
+    }
+    
+    @Override
+    public Context update(Context context) {
+        // Get selected gedcom
         Gedcom originamlGedcom = context.getGedcom();
         
         // Copy header and submitter to a working copy for the wizard. This avoids unwanted changes. Changes will only be applied if user clicks finish.
@@ -174,4 +181,5 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
     public boolean isReady() {
         return true; // module is ready to be used
     }
+
 }
