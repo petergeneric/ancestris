@@ -136,7 +136,7 @@
             </file>
             <file name="ancestris-app-ActionClose.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionClose.instance"/>
-                <attr name="position" intvalue="800"/>
+                <attr name="position" intvalue="2600"/>
             </file>
              <!--<file name="ancestris-app-ActionSave.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSave.instance"/>
@@ -157,6 +157,10 @@
                 <attr name="position" intvalue="2000"/>
             </file>
             <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
+            <file name="ancestris-app-ActionProperties.shadow-separatorAfter.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2060"/>
+            </file>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
         <file name="GoTo_hidden"/>
@@ -411,8 +415,8 @@
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-tools-calc-SendAction.instance"/>
                 <attr name="position" intvalue="300"/>
             </file>
-            <file name="org-netbeans-modules-javahelp-HelpAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/org-netbeans-modules-javahelp-HelpAction.instance"/>
+            <file name="ancestris-app-ActionHelp.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionHelp.instance"/>
                 <attr name="position" intvalue="400"/>
             </file>
         </folder>
@@ -433,7 +437,7 @@
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionClose.instance"/>
                 <attr name="position" intvalue="10"/>
             </file>
-             <!--<file name="ancestris-app-ActionSave.shadow">
+            <!--<file name="ancestris-app-ActionSave.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSave.instance"/>
                 <attr name="position" intvalue="20"/>
             </file>-->

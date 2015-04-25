@@ -5,6 +5,7 @@
 package ancestris.explorer;
 
 import ancestris.app.ActionClose;
+import ancestris.app.ActionProperties;
 import ancestris.app.ActionSave;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
@@ -33,15 +34,17 @@ import org.openide.util.lookup.Lookups;
 class GedcomFileNode extends AbstractNode implements ExplorerNode {
 
     Context context;
-    Action closeAction = null;
     Action saveAction = null;
+    Action propertiesAction = null;
+    Action closeAction = null;
 
     /** Creates a new instance of GedcomFileNode */
     public GedcomFileNode(Gedcom gedcom) {
         super(new EntitiesChildren(gedcom), Lookups.singleton(gedcom));
         context = new Context(gedcom);
-        closeAction = new ActionClose(context);
         saveAction = new ActionSave(context);
+        propertiesAction = new ActionProperties(context);
+        closeAction = new ActionClose(context);
         setDisplayName(gedcom.getName());
     }
 
@@ -92,6 +95,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
 //        }
         List<Action> nodeactions = new ArrayList<Action>(8);
         nodeactions.add(saveAction);
+        nodeactions.add(propertiesAction);
         nodeactions.add(closeAction);
 //        nodeactions.addAll(vcontext.getPopupActions());
         nodeactions.addAll(AUtilities.actionsForPath("Ancestris/Actions/GedcomProperty"));
