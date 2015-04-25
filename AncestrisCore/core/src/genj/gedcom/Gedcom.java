@@ -58,18 +58,29 @@ public class Gedcom implements Comparable {
     public final static String PASSWORD_UNKNOWN = "unknown";
 
     //XXX: replace this by enum?
-    public static final String // standard Gedcom encodings 
-            UNICODE = "UNICODE",
-            ASCII = "ASCII", // we're using ISO-8859-1 actually to make extended characters possible - the spec is grayish on that one
-            ANSEL = "ANSEL",
-            UTF8 = "UTF-8", // since 5.5.1
-            // non-standard encodings
-            LATIN1 = "LATIN1", // a.k.a ISO-8859-1
-            ANSI = "ANSI";       // a.k.a. Windows-1252 (@see http://www.hclrss.demon.co.uk/demos/ansi.html)
+    public static final String 
+        // standard Gedcom encodings 
+        UTF8 = "UTF-8",         // Since 5.5.1. (recommanded) Multiple international languages at the same time. Optimised space. Diacritic characters appear clearly in raw gedcom file.
+                                // Unicode character encoding over 1 character per byte. With WriteBOM, corresponds to UTF-8.
+                                // Accentuation displayed properly ; accentuation in gedcom file are properly readable directly from gedcom
+        UNICODE = "UNICODE",    // Multiple international languages at the same time. Larger space. Diacritic characters appear clearly in raw gedcom file.
+                                // ***International character set enabling more than 110,000 characters covering 100 scripts
+                                //    With WriteBOM, corresponds to UTF-16
+        ANSEL = "ANSEL",        // Obsolete since 14-feb-2013, remplaced by unicode - extension of latin alphabet. Only one international alphabet at a time. 
+                                // ***American National Standard for Extended Latin Alphabet Coded Character Set for Bibliographic Use
+                                // => enable accentuation being displayed correctly, but accentuation characters are stored over two bytes. 
+                                //    Gedcom file not displaying accentuation properly
+                                // 63 characters used with ASCII characters
+        // non-standard encodings
+        ANSI = "ANSI",          // Obsolete - American National Standard Institute
+                                // a.k.a. Windows-1252 (@see http://www.hclrss.demon.co.uk/demos/ansi.html)
+        LATIN1 = "LATIN1",      // Obsolete - Western Europe languages (a.k.a ISO-8859-1)
+        ASCII = "ASCII";        // No diacritic characters possible / Aucun caractère accentué (ASCII). Converted to ISO-8859-1 in Ancestris
+                                // we're using ISO-8859-1 actually to make extended characters possible - the spec is grayish on that one
 
     /** encodings including the non Gedcom-standard encodings LATIN1 and ANSI */
     public static final String[] ENCODINGS = {
-        ANSEL, UNICODE, ASCII, LATIN1, ANSI, UTF8
+        UTF8, UNICODE, ANSEL, LATIN1, ANSI, ASCII
     };
 
     /** languages as defined by the Gedcom standard */
@@ -99,6 +110,11 @@ public class Gedcom implements Comparable {
         "Yiddish"
     };
 
+    /** Destinations as defined by the Gedcom standard */
+    public static final String DEST_ANY = "ANY";
+    public static final String DEST_ANSTFILE = "ANSTFILE";
+    public static final String DEST_TEMPLEREADY = "TempleReady";
+            
     /** record tags */
     public final static String INDI = "INDI",
             FAM = "FAM",
@@ -145,6 +161,9 @@ public class Gedcom implements Comparable {
     /** grammar version */
 //  private Grammar grammar = Grammar.V551;
     private Grammar grammar = Grammar.V55;
+
+    /** destination */
+    private String destination = DEST_ANY;
 
     /** origin of this Gedcom */
     private Origin origin;
@@ -245,6 +264,20 @@ public class Gedcom implements Comparable {
      */
     public Grammar getGrammar() {
         return grammar;
+    }
+
+    /**
+     * Set destination
+     */
+    public void setDestination(String dest) {
+        this.destination = dest;
+    }
+
+    /**
+     * Return grammar
+     */
+    public String getDestination() {
+        return destination;
     }
 
     /**
