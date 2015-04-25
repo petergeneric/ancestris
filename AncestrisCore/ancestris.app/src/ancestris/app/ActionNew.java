@@ -27,14 +27,11 @@ public final class ActionNew extends AbstractAncestrisAction {
      * @param event */
     @Override
     public void actionPerformed(ActionEvent event) {
-//        GedcomDirectory.getDefault().newGedcom();
-
-        // TODO_FL : 2015-04-15 : peut-être ne pas appeler d'ici...
         Collection list = Lookup.getDefault().lookupAll(ModifyGedcom.class);
         for (Iterator iterator = list.iterator(); iterator.hasNext();) {
             ModifyGedcom wiz = (ModifyGedcom) iterator.next();
             if (wiz.isReady()) {
-                wiz.update();   // ne pas oublier de mettre create() après les test, une fois le bouton modify créé
+                wiz.create();
                 return;
             }
         }
