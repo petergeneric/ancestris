@@ -57,8 +57,12 @@
             <file name="ancestris-app-ActionClose.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionClose"/>
             </file>
+            <file name="org-openide-actions-SaveAction.instance">
+                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
+            </file>
              <!--<file name="ancestris-app-ActionSave.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionSave"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
             </file>-->
             <file name="ancestris-app-ActionSaveAs.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionSaveAs"/>
@@ -145,6 +149,7 @@
             </file>-->
             <file name="org-openide-actions-SaveAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
                 <attr name="position" intvalue="1850"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -443,6 +448,7 @@
             </file>-->
             <file name="org-openide-actions-SaveAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
                 <attr name="position" intvalue="100"/>
             </file>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
