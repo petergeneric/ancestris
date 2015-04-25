@@ -65,6 +65,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         jCheckBox1 = new javax.swing.JCheckBox();
         jRadioButton5 = new javax.swing.JRadioButton();
 
+        setAutoscrolls(true);
         setPreferredSize(new java.awt.Dimension(500, 339));
 
         jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
