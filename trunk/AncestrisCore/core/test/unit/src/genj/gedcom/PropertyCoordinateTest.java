@@ -62,11 +62,11 @@ public class PropertyCoordinateTest {
         instance.setValue("S12.345");
         assertEquals("S12.345 form", "S12.345", instance.getValue());
         instance.setValue("12°23'54\"");
-        assertEquals("12°23'54\" form", "N12.3983", instance.getValue());
+        assertEquals("12°23'54\" form", "N12.39833333", instance.getValue());
         instance.setValue("12°23'54\"N");
-        assertEquals("12°23'54\"N form", "N12.3983", instance.getValue());
+        assertEquals("12°23'54\"N form", "N12.39833333", instance.getValue());
         instance.setValue("12°23'54\"S");
-        assertEquals("12°23'54\"S form", "S12.3983", instance.getValue());
+        assertEquals("12°23'54\"S form", "S12.39833333", instance.getValue());
     }
 
     /**
