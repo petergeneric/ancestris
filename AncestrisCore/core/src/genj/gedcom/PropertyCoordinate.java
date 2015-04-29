@@ -97,7 +97,11 @@ public abstract class PropertyCoordinate extends Property{
     public String getValue() {
         if (isValid()){
             String res = getDirection(coordinate)+String.valueOf(Math.abs(coordinate));
-            return res.length()>8?res.substring(0, 8):res;
+            // We consider that the 5:8 for coordinate size does not apply to
+            // the whole string (as in grammar definition) but only to the 
+            // fractionnal part as in examples
+            int offset = res.indexOf('.')+1;
+            return res.length()-offset>8?res.substring(0, offset+8):res;
         }
         return value;
     }
