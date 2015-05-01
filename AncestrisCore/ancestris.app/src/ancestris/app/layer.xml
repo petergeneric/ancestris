@@ -300,6 +300,11 @@
         <folder name="Advanced">
             <file name="org-netbeans-core-ui-options-filetypes-FileAssociationsOptionsPanelController.instance_hidden"/>
     </folder>
+        <folder name="Appearance">
+            <file name="DocumentTabs.instance_hidden"/>
+            <file name="Windows.instance_hidden"/>
+            <file name="org-netbeans-core-windows-options-LafOptionsPanelController.instance_hidden"/>
+        </folder>
     </folder>
     <folder name="QuickSearch">
         <file name="Actions_hidden"/>
