@@ -5,6 +5,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
 
@@ -13,6 +14,7 @@ version   = 1.0 - 23 Jan 2010
 
 
 */
+@ServiceProvider(service=Report.class)
 public class ReportPedigree extends Report {
 	 
 
