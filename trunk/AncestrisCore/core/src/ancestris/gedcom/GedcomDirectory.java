@@ -359,7 +359,9 @@ public abstract class GedcomDirectory {
         // Need confirmation if File exists?
         if (file.exists()) {
             if (DialogManager.YES_OPTION
-                    != DialogManager.createYesNo(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.open.file_exists")).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+                    != DialogManager.createYesNo(
+                            RES.getString("cc.save.title", context.getGedcom().toString()),
+                            file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
                 return false;
             }
         } else {
