@@ -16,6 +16,9 @@ import ancestris.util.swing.DialogManager;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -117,7 +120,9 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 + Lookup.getDefault().lookup(Version.class).getVersionString();
         text += "<br><br><br><b>" + NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_VersionTitle") + "&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</b><br>";
         text += "<table border='0'>";
-        for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+        List<PluginInterface> plugins = new ArrayList(Lookup.getDefault().lookupAll(PluginInterface.class));
+        Collections.sort(plugins);
+        for (PluginInterface sInterface : plugins) {
             try {
                 if (sInterface.getPluginDisplayName() != null) {
                     text += "<tr><td><b>&nbsp;&middot;&nbsp;" + sInterface.getPluginDisplayName() + " :</b></td>";

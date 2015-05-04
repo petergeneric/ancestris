@@ -4,10 +4,12 @@
  */
 package ancestris.core.pluginservice;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import org.openide.modules.ModuleInfo;
 import org.openide.modules.Modules;
 import org.openide.util.Lookup;
@@ -22,8 +24,8 @@ import org.openide.windows.TopComponent;
 public abstract class AncestrisPlugin implements PluginInterface {
 
     private final static InstanceContent ic = new InstanceContent();
-    private static AbstractLookup abstractLookup = new AbstractLookup(ic);
-    private ModuleInfo info;
+    private static final AbstractLookup abstractLookup = new AbstractLookup(ic);
+    private final ModuleInfo info;
 
     public AncestrisPlugin() {
         info = Modules.getDefault().ownerOf(getClass());
@@ -70,10 +72,12 @@ public abstract class AncestrisPlugin implements PluginInterface {
         return openedViews;
     }
 
+    @Override
     public String getPluginName() {
         return info.getCodeNameBase();
     }
 
+    @Override
     public String getPluginDisplayName() {
         return info.getDisplayName();
     }
@@ -90,23 +94,47 @@ public abstract class AncestrisPlugin implements PluginInterface {
      *
      * @return AncestrisPlugin version string
      */
+    @Override
     public String getPluginVersion() {
         return info.getSpecificationVersion().toString();
     }
 
+    @Override
     public String getPluginShortDescription() {
         return info.getLocalizedAttribute("OpenIDE-Module-Short-Description").toString();
     }
 
+    @Override
     public String getPluginDescription() {
         return info.getLocalizedAttribute("OpenIDE-Module-Long-Description").toString();
     }
 
+    @Override
     public boolean launchModule(Object o) {
         return true;
     }
 
+    @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
         return new ArrayList<Class<? extends TopComponent>>();
+    }
+
+    @Override
+    public int compareTo(PluginInterface o) {
+        if (o == null){
+            return 1;
+        }
+        return safeCompare(this.getPluginDisplayName(),o.getPluginDisplayName());
+    }
+    
+    private int safeCompare(String s1, String s2){
+        //FIXME: share collator somewhere?
+        Collator coll = Collator.getInstance(Locale.getDefault());
+        coll.setStrength(Collator.PRIMARY);
+        if (s1 == null){
+            return s2 == null?0:-1;
+        } else {
+            return s2 == null?1:coll.compare(s1, s2);
+        }
     }
 }
