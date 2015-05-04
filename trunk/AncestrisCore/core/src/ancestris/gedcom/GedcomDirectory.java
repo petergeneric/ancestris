@@ -119,6 +119,9 @@ public abstract class GedcomDirectory {
         "# {0} - file path",
         "file.exists=File {0} already exists. Proceed?"
     })
+    public Context newGedcom() {
+        return newGedcom(null, null, null, true);
+    }
     public Context newGedcom(Gedcom gedcomProvided, String title, String defaultFilename, boolean setDefaults) {
         /*
          * when creating a new gedcom, the new file is always created on disk ATM
