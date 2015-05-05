@@ -36,16 +36,20 @@ public final class ImportWizardAction extends CallableSystemAction {
         dialog.setVisible(true);
         dialog.toFront();
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
-        if (!cancelled) {
-            importMethod = ((ImportVisualImport) (panels[1].getComponent())).getImportClass();
-                File inputFile = ((ImportVisualImport) (panels[1].getComponent())).getInputFile();
-                File outFile = new File (System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
-                if (importMethod.run(inputFile, outFile, NAME) == true) {
-                    Context context = GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(outFile));
-                    Gedcom importedGedcom = context.getGedcom();
-                    importedGedcom.setName(inputFile.getName());
-                    outFile.delete();
-                }
+        ImportVisualImport importPanel = null;
+        try{
+            importPanel = ((ImportVisualImport) (panels[1].getComponent()));
+        } catch (Exception e){}
+        if (!cancelled && importPanel != null && importPanel.getInputFile()!= null) {
+            importMethod = importPanel.getImportClass();
+            File inputFile = importPanel.getInputFile();
+            File outFile = new File (System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
+            if (importMethod.run(inputFile, outFile, NAME) == true) {
+                Context context = GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(outFile));
+                Gedcom importedGedcom = context.getGedcom();
+                importedGedcom.setName(inputFile.getName());
+                outFile.delete();
+            }
         }
     }
 
