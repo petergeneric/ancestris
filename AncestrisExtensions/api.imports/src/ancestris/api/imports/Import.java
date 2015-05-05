@@ -1,12 +1,12 @@
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
- * sur une base de gedrepohr.pl (Patrick TEXIER) pour la correction des REPO
- * Le reste des traitements par Daniel ANDRE 
+ * This report is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.
+ *
+ * sur une base de gedrepohr.pl (Patrick TEXIER) pour la correction des REPO Le
+ * reste des traitements par Daniel ANDRE
  */
 package ancestris.api.imports;
 
@@ -25,13 +25,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -64,12 +64,11 @@ public abstract class Import {
     protected static Pattern gedcom_line = Pattern.compile("^(\\d) (_*\\w+)(.*)");
     private static Hashtable<String, ImportIndi> hashIndis;
     private static Hashtable<String, ImportFam> hashFams;
-    /** our files */
-    private File fileIn = null;
-    private File fileOut = null;
+    /**
+     * our files
+     */
     protected GedcomFileReader input;
     protected GedcomFileWriter output;
-    protected Charset charset = null;
     protected Console console;
 
     // protected boolean handleYesTag = true;
@@ -84,39 +83,16 @@ public abstract class Import {
     /**
      * Gives back output file name
      */
-    public String getOutputName() {
-        return fileOut == null ? "none" : fileOut.getName();
-    }
-
-    private GedcomFileReader getReader() throws Exception {
-        return new GedcomFileReader(fileIn, charset);
-    }
-
-    private GedcomFileWriter getWriter() throws Exception {
-        GedcomFileWriter output = new GedcomFileWriter(fileOut, charset, getEOL(fileIn));
-        return output;
-    }
-
     protected abstract String getImportComment();
 
     public boolean run(File fileIn, File fileOut, String tabName) {
-        this.fileIn = fileIn;
-        this.fileOut = fileOut;
         this.console = new Console(tabName);
         hashIndis = new Hashtable<String, ImportIndi>();
         hashFams = new Hashtable<String, ImportFam>();
-        try {
-            GedcomEncodingSniffer encodingSniffer = new GedcomEncodingSniffer(new BufferedInputStream(new FileInputStream(fileIn)));
-            charset = encodingSniffer.getCharset();
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-            charset = Charset.forName("UTF-8");
-        }
-
         // on fait une premiere passe sur le fichier pour creer les repos
         try {
             EOL = getEOL(fileIn);
-            input = getReader();
+            input = GedcomFileReader.create(fileIn);
             try {
                 /*
                  * readLine is a bit quirky : it returns the content of a line
@@ -144,18 +120,16 @@ public abstract class Import {
 
         // maintenant on effectue toutes les transformations
         try {
-            output = getWriter();
+            output = new GedcomFileWriter(fileOut, input.getCharset(), getEOL(fileIn));
         } catch (IOException e1) {
-            e1.printStackTrace();
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.create.error", fileOut.getName()));
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
         try {
-            input = getReader();
+            input = GedcomFileReader.create(fileIn);
             try {
                 while (input.getNextLine(true) != null) {
                     if ((input.getLevel() == 0) && (input.getTag().equals("HEAD"))) {
@@ -317,17 +291,40 @@ public abstract class Import {
         return eolMark;
     }
 
-    protected class GedcomFileReader extends PropertyReader {
+    protected static class GedcomFileReader extends PropertyReader {
 
         private String theLine = "";
         private TagPath path = null;
+        private Charset charset = null;
 
         public TagPath getPath() {
             return path;
         }
 
-        public GedcomFileReader(File filein, Charset charset) throws UnsupportedEncodingException, FileNotFoundException {
-            super(new InputStreamReader(new FileInputStream(fileIn), charset), null, false);
+        static GedcomFileReader create(File fileIn) {
+            GedcomEncodingSniffer sniffer = null;
+            Charset charset;
+            try {
+                sniffer = new GedcomEncodingSniffer(new BufferedInputStream(new FileInputStream(fileIn)));
+                charset = sniffer.getCharset();
+            } catch (IOException ex) {
+                return null;
+            }
+            GedcomFileReader reader = new GedcomFileReader(new InputStreamReader(sniffer, charset));
+            reader.setCharset(charset);
+            return reader;
+        }
+
+        private GedcomFileReader(Reader in) {
+            super(in, null, false);
+        }
+
+        public Charset getCharset() {
+            return charset;
+        }
+
+        public void setCharset(Charset charset) {
+            this.charset = charset;
         }
 
         public String getValue() {
@@ -375,7 +372,7 @@ public abstract class Import {
         private int levelShift = 0;
         private int shiftedLevel = -1;
 
-        public GedcomFileWriter(File filein, Charset charset, String eol) throws UnsupportedEncodingException, FileNotFoundException {
+        public GedcomFileWriter(File fileOut, Charset charset, String eol) throws UnsupportedEncodingException, FileNotFoundException {
             super(new OutputStreamWriter(new FileOutputStream(fileOut), charset));
             EOL = eol;
         }
