@@ -40,7 +40,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,7 +111,35 @@ public class Gedcom implements Comparable {
         "Wendic",
         "Yiddish"
     };
+    
+    public static final SortedMap<String, String> TRANSLATED_LANGUAGES = new TreeMap<String, String>(); 
 
+    private static final String[] LOCALES = { 
+        "af", "sq", "am", "en", "ar", "hy", "as",
+        "be", "bn", "?", "bg", "my",
+        "zh", "ca", "?", "cu", "cs",
+        "da", "?", "nl",
+        "en", "eo", "et",
+        "fo", "fi", "fr",
+        "ka", "de", "el", "gu",
+        "?", "he", "hi", "hu",
+        "is", "id", "it",
+        "ja",
+        "kn", "km", "kok", "ko",
+        "lah", "lo", "lv", "lt",
+        "mk", "mai", "ml", "?", "mni", "mr", "?",
+        "nv", "ne", "no",
+        "or",
+        "him", "pi", "pa", "fa", "pl", "pra", "ps", "pt",
+        "raj", "ro", "ru",
+        "sa", "sr", "sr", "sk", "sl", "es", "sv",
+        "tl", "ta", "te", "th", "bo", "tr",
+        "uk", "ur",
+        "vi",
+        "?",
+        "yi"
+    };
+    
     /** Destinations as defined by the Gedcom standard */
     public static final String DEST_ANY = "ANY";
     public static final String DEST_ANSTFILE = "ANSTFILE";
@@ -227,6 +257,7 @@ public class Gedcom implements Comparable {
      */
     public Gedcom() {
         this(null);
+        initLanguages();
     }
 
     /**
@@ -1581,6 +1612,24 @@ public class Gedcom implements Comparable {
     }
 
     ;
+
+    private void initLanguages() {
+        // Define key map of english name of language (String to store in Gedcom) pointing to language name of language with default language name (String to display)
+        String language;
+        for (int i = 0; i < Gedcom.LANGUAGES.length; i++) {
+            if (LOCALES[i].equals("?")) {
+                language = Gedcom.LANGUAGES[i];
+            } else {
+                Locale loc = new Locale(LOCALES[i]);
+                language = loc.getDisplayLanguage(loc);
+                if (!loc.getDisplayLanguage(loc).equals(loc.getDisplayLanguage(Locale.getDefault()))) {
+                    language += " (" + loc.getDisplayLanguage(Locale.getDefault()) + ")";
+                }
+            }
+            TRANSLATED_LANGUAGES.put(Gedcom.LANGUAGES[i], language);
+        }
+
+    }
 
   /**
    * Undo
