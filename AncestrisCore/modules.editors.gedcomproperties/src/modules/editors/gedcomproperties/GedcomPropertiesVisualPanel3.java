@@ -12,24 +12,17 @@
 package modules.editors.gedcomproperties;
 
 import genj.gedcom.Gedcom;
-import java.util.Locale;
+import genj.gedcom.Grammar;
 import javax.swing.JPanel;
-import org.apache.commons.lang.ArrayUtils;
 import org.openide.util.NbBundle;
 
 public final class GedcomPropertiesVisualPanel3 extends JPanel {
 
     private final int mode = GedcomPropertiesWizardIterator.getMode();
-    
-    private final GedcomPropertiesWizardPanel3 parent;
 
-    // Values
-    String defaultLanguage = Locale.getDefault().getDisplayLanguage(new Locale("en", "EN"));
-    String[] languages = (String[]) ArrayUtils.addAll(new String[] { defaultLanguage }, Gedcom.LANGUAGES);  // concatenate two arrays
+    private final GedcomPropertiesWizardPanel3 parent;
     
-    /**
-     * Creates new form GedcomPropertiesVisualPanel3
-     */
+
     public GedcomPropertiesVisualPanel3(GedcomPropertiesWizardPanel3 parent) {
         this.parent = parent;
         initComponents();
@@ -52,7 +45,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox(languages);
+        jComboBox1 = new javax.swing.JComboBox(Gedcom.TRANSLATED_LANGUAGES.values().toArray (new String[Gedcom.TRANSLATED_LANGUAGES.values().size()]));
         jLabel2 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox(Gedcom.ENCODINGS);
         jLabel3 = new javax.swing.JLabel();
@@ -145,8 +138,8 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
                                 .addComponent(jRadioButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jRadioButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -213,33 +206,31 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
     private javax.swing.JRadioButton jRadioButton5;
     // End of variables declaration//GEN-END:variables
 
-    
     private void updateLabel() {
         jLabel5.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, jComboBox2.getSelectedItem().toString() + "_label"));
         jCheckBox1.setVisible(mode == GedcomPropertiesWizardIterator.UPDATE_MODE);
     }
-    
+
     public boolean getConversionToBeDone() {
         return jCheckBox1.isSelected();
     }
 
-
     public void setLANG(String str) {
-        jComboBox1.setSelectedItem(str);
+        jComboBox1.setSelectedItem(Gedcom.TRANSLATED_LANGUAGES.get(str));
     }
-    
+
     public void setCHAR(String str) {
         jComboBox2.setSelectedItem(str);
     }
-    
+
     public void setVERS(String str) {
-        if (str.equals("5.5.1")) {
+        if (str.equals(Grammar.GRAMMAR551)) {
             jRadioButton1.setSelected(true);
         } else {
             jRadioButton2.setSelected(true);
         }
     }
-    
+
     public void setDEST(String str) {
         if (str.equals(Gedcom.DEST_ANSTFILE)) {
             jRadioButton4.setSelected(true);
@@ -250,12 +241,9 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         }
     }
 
-
-    
-    
-    
     public String getLANG() {
-        return jComboBox1.getSelectedItem().toString();
+        String[] tab = Gedcom.TRANSLATED_LANGUAGES.keySet().toArray(new String [Gedcom.TRANSLATED_LANGUAGES.keySet().size()]);
+        return tab[jComboBox1.getSelectedIndex()]; 
     }
 
     public String getCHAR() {
@@ -263,12 +251,11 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
     }
 
     public String getVERS() {
-        return (jRadioButton1.isSelected() ? "5.5.1" : "5.5");
+        return (jRadioButton1.isSelected() ? Grammar.GRAMMAR551 : Grammar.GRAMMAR55);
     }
 
     public String getDEST() {
         return (jRadioButton4.isSelected() ? Gedcom.DEST_ANSTFILE : jRadioButton5.isSelected() ? Gedcom.DEST_TEMPLEREADY : Gedcom.DEST_ANY);
     }
-
 
 }

@@ -88,12 +88,6 @@ public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.Validating
     }
 
     /**
-     * FIXME:
-     * Copyright par défaut : "(C) Copyright - Ancestris 201X"
-     * Précédé du prénom et nom de l'auteur au fur et à mesure que
-     * l'utilisateur tape son nom :
-     *          "Frédéric Lapeyre (C) Copyright - Ancestris 2015"
-     * 
      * @param data 
      */
     @Override
