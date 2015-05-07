@@ -98,23 +98,23 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
     @Override
     public Context update(Context context) {
         // Get selected gedcom
-        Gedcom originamlGedcom = context.getGedcom();
+        Gedcom originalGedcom = context.getGedcom();
         
         // Copy header and submitter to a working copy for the wizard. This avoids unwanted changes. Changes will only be applied if user clicks finish.
-        Property prop_OriginalHeader = originamlGedcom.getFirstEntity("HEAD");
+        Property prop_OriginalHeader = originalGedcom.getFirstEntity("HEAD");
         if (prop_OriginalHeader == null) {
             try {
-                prop_OriginalHeader = originamlGedcom.createEntity("HEAD");
+                prop_OriginalHeader = originalGedcom.createEntity("HEAD");
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
                 return null;
             }
         }
-        Submitter prop_OriginalSubmitter = originamlGedcom.getSubmitter();
+        Submitter prop_OriginalSubmitter = originalGedcom.getSubmitter();
         if (prop_OriginalSubmitter == null) {
             try {
-                originamlGedcom.createEntity(Gedcom.SUBM);
-                prop_OriginalSubmitter = originamlGedcom.getSubmitter();
+                originalGedcom.createEntity(Gedcom.SUBM);
+                prop_OriginalSubmitter = originalGedcom.getSubmitter();
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
                 return null;
@@ -139,7 +139,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         // Call wizard
         WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.UPDATE_MODE, prop_HEAD, prop_SUBM));
         wiz.setTitleFormat(new MessageFormat("{0}"));
-        wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", originamlGedcom.getName().replaceFirst("[.][^.]+$", "")));   // remove extension to filename
+        wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", originalGedcom.getName().replaceFirst("[.][^.]+$", "")));   // remove extension to filename
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
             String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedSuccessfullyTitle");
             String message = "<html><h1>Results:</h1>";
@@ -149,9 +149,11 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
             prop_OriginalHeader.delProperties();
             prop_OriginalSubmitter.delProperties();
             Utils.CopyProperty(prop_HEAD, prop_OriginalHeader);
+            originalGedcom.setGrammar(prop_HEAD.getPropertyByPath("HEAD:GEDC:VERS").getDisplayValue().equals("5.5.1") ? Grammar.V551 : Grammar.V55);
+            originalGedcom.setDestination(prop_HEAD.getPropertyByPath("HEAD:DEST").getDisplayValue());
+            originalGedcom.setLanguage(prop_HEAD.getPropertyByPath("HEAD:LANG").getDisplayValue());
+            originalGedcom.setEncoding(prop_HEAD.getPropertyByPath("HEAD:CHAR").getDisplayValue());
             Utils.CopyProperty(prop_SUBM, prop_OriginalSubmitter);
-            originamlGedcom.setGrammar(prop_HEAD.getPropertyByPath("HEAD:GEDC:VERS").getDisplayValue().equals("5.5.1") ? Grammar.V551 : Grammar.V55);
-            originamlGedcom.setDestination(prop_HEAD.getPropertyByPath("HEAD:DEST").getDisplayValue());
             message += "<p>Modified successfully</p>";
             
             // If conversion of gedcom norm requested, do it and report
