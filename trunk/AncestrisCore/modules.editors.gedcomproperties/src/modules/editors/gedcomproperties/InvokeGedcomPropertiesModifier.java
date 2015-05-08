@@ -59,7 +59,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create"));
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
-            // create temporary Adam // TODO : remove once panel 5 is done
+            // create temporary Adam // TODO : remove once panel 6 is done
             try {
                 Entity adam = gedcom.createEntity(Gedcom.INDI);
                 adam.addProperty("NAME", "Adam");
