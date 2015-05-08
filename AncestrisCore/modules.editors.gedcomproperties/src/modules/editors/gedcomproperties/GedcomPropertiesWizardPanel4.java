@@ -30,7 +30,7 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Panel<Wiza
     @Override
     public GedcomPropertiesVisualPanel4 getComponent() {
         if (component == null) {
-            component = new GedcomPropertiesVisualPanel4();
+            component = new GedcomPropertiesVisualPanel4(this);
         }
         return component;
     }

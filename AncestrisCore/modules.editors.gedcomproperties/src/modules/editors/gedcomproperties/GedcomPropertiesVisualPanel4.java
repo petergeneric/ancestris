@@ -16,10 +16,15 @@ import org.openide.util.NbBundle;
 
 public final class GedcomPropertiesVisualPanel4 extends JPanel {
 
+    private final int mode = GedcomPropertiesWizardIterator.getMode();
+
+    private final GedcomPropertiesWizardPanel4 parent;
+    
     /**
      * Creates new form GedcomPropertiesVisualPanel4
      */
-    public GedcomPropertiesVisualPanel4() {
+    public GedcomPropertiesVisualPanel4(GedcomPropertiesWizardPanel4 parent) {
+        this.parent = parent;
         initComponents();
     }
 
@@ -36,18 +41,55 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+
+        setBorder(null);
+        setPreferredSize(new java.awt.Dimension(500, 453));
+
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setViewportBorder(null);
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(516, 340));
+
+        jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel4.jLabel1.create" : "Panel4.jLabel1.update"));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(315, Short.MAX_VALUE))
+        );
+
+        jScrollPane1.setViewportView(jPanel1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
