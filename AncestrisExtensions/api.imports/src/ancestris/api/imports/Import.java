@@ -11,6 +11,7 @@
 package ancestris.api.imports;
 
 import ancestris.modules.console.Console;
+import genj.gedcom.Gedcom;
 import genj.gedcom.TagPath;
 import genj.io.GedcomEncodingSniffer;
 import genj.io.PropertyReader;
@@ -28,14 +29,27 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.openide.util.NbBundle;
 
 /**
- * The import function for Heredis originated Gedcom files
+ * The import function foreign gedcom. This abstract class must be used to
+ * create a gecdcom importer whic can then be proposed in the Inport wizard.
+ * <p>
+ * The import process has two main steps:
+ * <ul><li/>First step is some sot of filter which process the input file and
+ * produce another text file in a tmp directory. This filter process is done in
+ * two passes: analyzing and writing.
+ * <li/>Then this file is opened as an ordinary gedcom file in ancestris memory
+ * and corrected to make the whole gedcom data as compliant as possible.
+ * </ul>
+ * <p/>
+ * Note: The file produced in filter step is deleted by the caller to force the
+ * user to save the new gedcom as a new file.
+ *
  */
 public abstract class Import {
 
@@ -62,8 +76,8 @@ public abstract class Import {
             + ")");
     protected static Pattern tag_valid = Pattern.compile("(" + GEDCOM_TAG + ")");
     protected static Pattern gedcom_line = Pattern.compile("^(\\d) (_*\\w+)(.*)");
-    private static Hashtable<String, ImportIndi> hashIndis;
-    private static Hashtable<String, ImportFam> hashFams;
+    private static HashMap<String, ImportIndi> hashIndis;
+    private static HashMap<String, ImportFam> hashFams;
     /**
      * our files
      */
@@ -85,10 +99,20 @@ public abstract class Import {
      */
     protected abstract String getImportComment();
 
-    public boolean run(File fileIn, File fileOut, String tabName) {
-        this.console = new Console(tabName);
-        hashIndis = new Hashtable<String, ImportIndi>();
-        hashFams = new Hashtable<String, ImportFam>();
+    public void setTabName(String tabName) {
+        console = new Console(tabName);
+    }
+
+    /**
+     * First import step as a file filter.
+     *
+     * @param fileIn Gedcom to import
+     * @param fileOut Temporary Gedcom fle created
+     * @return true if conversion is successful
+     */
+    public boolean run(File fileIn, File fileOut) {
+        hashIndis = new HashMap<String, ImportIndi>();
+        hashFams = new HashMap<String, ImportFam>();
         // on fait une premiere passe sur le fichier pour creer les repos
         try {
             EOL = getEOL(fileIn);
@@ -113,7 +137,6 @@ public abstract class Import {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
@@ -123,9 +146,6 @@ public abstract class Import {
             output = new GedcomFileWriter(fileOut, input.getCharset(), getEOL(fileIn));
         } catch (IOException e1) {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.create.error", fileOut.getName()));
-            return false;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
         try {
@@ -160,11 +180,22 @@ public abstract class Import {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * This is the second step of import process. The gedcom file generated in
+     * step one as been loaded in memory and can be manipulated using all
+     * ancestris core functionnalities.
+     *
+     * @param gedcom
+     * @return
+     */
+    public boolean fixGedcom(Gedcom gedcom) {
         return true;
     }
 
@@ -285,7 +316,6 @@ public abstract class Import {
                 eolMark = "\r";
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return eolMark;
@@ -302,7 +332,7 @@ public abstract class Import {
         }
 
         static GedcomFileReader create(File fileIn) {
-            GedcomEncodingSniffer sniffer = null;
+            GedcomEncodingSniffer sniffer;
             Charset charset;
             try {
                 sniffer = new GedcomEncodingSniffer(new BufferedInputStream(new FileInputStream(fileIn)));

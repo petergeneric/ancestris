@@ -1,22 +1,22 @@
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
- * sur une base de gedrepohr.pl (Patrick TEXIER) pour la correction des REPO
- * Le reste des traitements par Daniel ANDRE 
+ * This report is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.
+ *
+ * sur une base de gedrepohr.pl (Patrick TEXIER) pour la correction des REPO Le
+ * reste des traitements par Daniel ANDRE
  */
 package ancestris.modules.imports.heredis;
 
 import ancestris.api.imports.Import;
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
+import java.util.HashMap;
 
 /**
  * The import function for Heredis originated Gedcom files
@@ -25,13 +25,14 @@ import org.openide.util.lookup.ServiceProvider;
 public class HeredisImport extends Import {
 
     private static int clerepo = 0;
-    private static Hashtable<String, Integer> hashrepo = new Hashtable<String, Integer>();
-    private static StringBuilder sb = new StringBuilder();
+    private static final HashMap<String, Integer> hashrepo = new HashMap<String, Integer>();
+    private static final StringBuilder sb = new StringBuilder();
 
     /**
      * Constructor
      */
-    public void HeredisImport() {
+    public HeredisImport() {
+        super();
     }
 
     @Override
@@ -68,8 +69,8 @@ public class HeredisImport extends Import {
             if (!hashrepo.containsKey(input.getValue())) {
                 clerepo++;
                 hashrepo.put(input.getValue(), clerepo);
-                sb.append("0 @" + typerepo + clerepo + "@ REPO" + EOL);
-                sb.append("1 NAME " + input.getValue() + EOL);
+                sb.append("0 @" + typerepo).append(clerepo).append("@ REPO").append(EOL);
+                sb.append("1 NAME ").append(input.getValue()).append(EOL);
             }
         }
 
@@ -162,7 +163,7 @@ public class HeredisImport extends Import {
 
     @SuppressWarnings("serial")
     static private String convDateFormat(String from) {
-        final Hashtable<String, String> repmonconvtable = new Hashtable<String, String>() {
+        final HashMap<String, String> repmonconvtable = new HashMap<String, String>() {
 
             {
                 put("I", "1");
