@@ -2,7 +2,6 @@ package ancestris.modules.imports.wizard;
 
 import ancestris.api.imports.Import;
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.Component;
@@ -13,8 +12,6 @@ import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileUtil;
-import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CallableSystemAction;
@@ -37,32 +34,35 @@ public final class ImportWizardAction extends CallableSystemAction {
         dialog.toFront();
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         ImportVisualImport importPanel = null;
-        try{
+        try {
             importPanel = ((ImportVisualImport) (panels[1].getComponent()));
-        } catch (Exception e){}
-        if (!cancelled && importPanel != null && importPanel.getInputFile()!= null) {
+        } catch (Exception e) {
+        }
+        if (!cancelled && importPanel != null && importPanel.getInputFile() != null) {
             importMethod = importPanel.getImportClass();
+            importMethod.setTabName(NAME);
             File inputFile = importPanel.getInputFile();
-            File outFile = new File (System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
-            if (importMethod.run(inputFile, outFile, NAME) == true) {
+            File outFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
+            if (importMethod.run(inputFile, outFile) == true) {
                 Context context = GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(outFile));
                 Gedcom importedGedcom = context.getGedcom();
                 importedGedcom.setName(inputFile.getName());
+                importMethod.fixGedcom(importedGedcom);
                 outFile.delete();
             }
         }
     }
 
     /**
-     * Initialize panels representing individual wizard's steps and sets
-     * various properties for them influencing wizard appearance.
+     * Initialize panels representing individual wizard's steps and sets various
+     * properties for them influencing wizard appearance.
      */
     private WizardDescriptor.Panel<WizardDescriptor>[] getPanels() {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
-                        new ImportWizardWarning(),
-                        new ImportWizardImport()
-                    };
+                new ImportWizardWarning(),
+                new ImportWizardImport()
+            };
             String[] steps = new String[panels.length];
             for (int i = 0; i < panels.length; i++) {
                 Component c = panels[i].getComponent();
@@ -74,7 +74,7 @@ public final class ImportWizardAction extends CallableSystemAction {
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
                     // TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_*:
-                    jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(i));
+                    jc.putClientProperty("WizardPanel_contentSelectedIndex", i);
                     // Sets steps names for a panel
                     jc.putClientProperty("WizardPanel_contentData", steps);
                     // Turn on subtitle creation on each step
