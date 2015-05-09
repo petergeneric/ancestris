@@ -132,7 +132,7 @@ public class Gedcom implements Comparable {
         "or",
         "him", "pi", "pa", "fa", "pl", "pra", "ps", "pt",
         "raj", "ro", "ru",
-        "sa", "sr", "sr", "sk", "sl", "es", "sv",
+        "sa", "sr", "?", "sk", "sl", "es", "sv",
         "tl", "ta", "te", "th", "bo", "tr",
         "uk", "ur",
         "vi",

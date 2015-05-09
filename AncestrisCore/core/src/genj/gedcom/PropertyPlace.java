@@ -133,6 +133,10 @@ public class PropertyPlace extends PropertyChoiceValue {
         return toJurisdictions(gedcom.getPlaceFormat());
     }
 
+    public static String[] getFormat(String str) {
+        return toJurisdictions(str);
+    }
+
     private static String[] toJurisdictions(String value) {
         ArrayList<String> result = new ArrayList<String>(10);
         String lastToken = JURISDICTION_SEPARATOR;
