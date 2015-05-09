@@ -133,7 +133,7 @@ public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.Validating
         prop_SUBM.setWeb(((GedcomPropertiesVisualPanel2) getComponent()).getSUBMWeb());
         prop_COPR.setValue(((GedcomPropertiesVisualPanel2) getComponent()).getCOPR());
         
-        // if submitter has changed, ask used if it needs to be saved as the new defaut
+        // if submitter has changed, ask user if it needs to be saved as the new defaut
         if (!doNotRepeatQuestion && hasChangedSubmitter(prop_SUBM) && UserConfirmsToSaveAsDefault()) {
             saveSubmitterAsDefault(prop_SUBM);
         }
