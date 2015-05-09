@@ -15,9 +15,12 @@ import ancestris.api.imports.Import;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import static ancestris.modules.imports.generic.Bundle.*;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyFamilyChild;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -41,7 +44,103 @@ public class GenboxImport extends Import {
     }
 
     @Override
+    protected boolean process() throws IOException{
+        if (processAGE()) {
+            return true;
+        }
+        if (super.process()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Convert most of exotic age format to gedcom format.
+     * @return
+     * @throws IOException 
+     */
+    private boolean processAGE() throws IOException {
+        if (input.getTag().equals("AGE")) {
+            String old = input.getValue();
+            String newValue = old;
+            if (old.matches("\\d+")){
+                newValue = old+"y";
+            }
+            newValue = newValue.replace(" day", "d");
+            newValue = newValue.replace("ds", "d");
+
+            newValue = newValue.replace(" month", "m");
+            newValue = newValue.replace(" mth", "m");
+            newValue = newValue.replace("ms", "m");
+
+            newValue = newValue.replace(" yr", "y");
+            newValue = newValue.replace("ys", "y");
+
+            // Allaws replace
+            if (newValue != null) {
+                output.writeLine(input.getLevel(), input.getTag(), newValue);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean fixGedcom(Gedcom gedcom) {
+        fixFAMC(gedcom);
+        fixCONC(gedcom);
+        return super.fixGedcom(gedcom); //To change body of generated methods, choose Tools | Templates.
+
+    }
+    
+    /**
+     * Fix CONC tag where thez are inappropriate.
+     * ATM remove TITLE:CONC and PAGE:CONC only if there 
+     * is no CONT tag where user assistance must be done 
+     * using Vidate Gedcom expension
+     * @param gedcom
+     * @return true
+     */
+    private boolean fixCONC(Gedcom gedcom){
+        // Loop through entities
+        for (Entity e : gedcom.getEntities()) {
+            fixCONCrecurse(e);
+        }
+        return true;
+    }
+    /**
+     * Test a property (recursively)
+     */
+    private void fixCONCrecurse(Property prop) {
+        if (prop.getTag().equals("TITL") || prop.getTag().equals("PAGE")){
+            Property propConc [] = prop.getProperties ("CONC");
+            if (propConc.length==0){
+                return;
+            }
+            if (prop.getProperty("CONT")!= null){
+                return;
+            }
+            StringBuilder sb = new StringBuilder(prop.getValue());
+            for (Property p:propConc){
+                sb.append(p.getValue());
+            }
+            prop.delProperties("CONC");
+            prop.setValue(sb.toString());
+            return;
+        }
+        for (Property child:prop.getProperties()){
+            fixCONCrecurse(child);
+        }
+        // done
+    }
+    /**
+     * Fix Famc duplicates. 
+     * Loop over all INDIs and if a INDI:FAMC is the same family than INDI:BIRT:FAMC, then removes
+     * the later
+     * @param gedcom
+     * @return always true
+     */
+    private boolean fixFAMC(Gedcom gedcom){
         for (Indi indi : gedcom.getIndis()) {
             // loop over all famc
             List<PropertyFamilyChild> famcs = indi.getProperties(PropertyFamilyChild.class);
@@ -63,6 +162,7 @@ public class GenboxImport extends Import {
                 }
             }
         }
-        return super.fixGedcom(gedcom); //To change body of generated methods, choose Tools | Templates.
+        // Allways succeed
+        return true;
     }
 }
