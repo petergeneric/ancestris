@@ -26,7 +26,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
     public GedcomPropertiesVisualPanel3(GedcomPropertiesWizardPanel3 parent) {
         this.parent = parent;
         initComponents();
-        updateLabel();
+        updateDisplay();
     }
 
     @Override
@@ -61,11 +61,12 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         jRadioButton5 = new javax.swing.JRadioButton();
 
         setAutoscrolls(true);
-        setPreferredSize(new java.awt.Dimension(520, 339));
+        setPreferredSize(new java.awt.Dimension(520, 360));
 
         jScrollPane1.setViewportBorder(null);
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(520, 360));
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(515, 350));
+        jPanel1.setPreferredSize(new java.awt.Dimension(520, 360));
 
         jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel3.jLabel1.create" : "Panel3.jLabel1.update"));
@@ -99,7 +100,6 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         buttonGroup1.add(jRadioButton2);
         org.openide.awt.Mnemonics.setLocalizedText(jRadioButton2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, "Panel3.jRadioButton2.No"));
 
-        buttonGroup1.add(jCheckBox1);
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel3.jCheckBox1.create" : "Panel3.jCheckBox1.update"));
         jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, "Panel3.jCheckBox1.toolTipText"));
 
@@ -128,25 +128,22 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jRadioButton1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jRadioButton2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jCheckBox1)
-                                    .addGap(58, 58, 58))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jRadioButton3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jRadioButton4)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jRadioButton5)
-                                    .addGap(46, 46, 46))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jRadioButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jRadioButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBox1))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jRadioButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jRadioButton4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jRadioButton5))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -190,26 +187,20 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jRadioButton1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jRadioButton1StateChanged
-        if (mode == GedcomPropertiesWizardIterator.UPDATE_MODE) {
-            boolean visible = parent.warnVersionChange();
-            jCheckBox1.setVisible(visible);
-            if (!visible) {
-                jCheckBox1.setSelected(false);
-            }
-        }
+        updateDisplay();
     }//GEN-LAST:event_jRadioButton1StateChanged
 
     private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox2ItemStateChanged
-        updateLabel();
+        updateDisplay();
     }//GEN-LAST:event_jComboBox2ItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -232,11 +223,6 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    private void updateLabel() {
-        jLabel5.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, jComboBox2.getSelectedItem().toString() + "_label"));
-        jCheckBox1.setVisible(mode == GedcomPropertiesWizardIterator.UPDATE_MODE);
-    }
-
     public boolean getConversionToBeDone() {
         return jCheckBox1.isSelected();
     }
@@ -247,6 +233,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
 
     public void setCHAR(String str) {
         jComboBox2.setSelectedItem(str);
+        updateDisplay();
     }
 
     public void setVERS(String str) {
@@ -255,6 +242,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         } else {
             jRadioButton2.setSelected(true);
         }
+        updateDisplay();
     }
 
     public void setDEST(String str) {
@@ -284,4 +272,11 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         return (jRadioButton4.isSelected() ? Gedcom.DEST_ANSTFILE : jRadioButton5.isSelected() ? Gedcom.DEST_TEMPLEREADY : Gedcom.DEST_ANY);
     }
 
+    private void updateDisplay() {
+        jLabel5.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, jComboBox2.getSelectedItem().toString() + "_label"));
+        boolean canBeConverted = (mode == GedcomPropertiesWizardIterator.UPDATE_MODE) && !getVERS().equals(parent.getOriginalVersion());
+        jCheckBox1.setVisible(canBeConverted);
+        parent.warnVersionChange(canBeConverted);
+    }
+    
 }

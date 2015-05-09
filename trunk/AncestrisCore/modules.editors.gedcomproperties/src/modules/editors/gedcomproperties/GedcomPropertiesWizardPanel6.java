@@ -11,12 +11,24 @@
  */
 package modules.editors.gedcomproperties;
 
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertySex;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.Panel<WizardDescriptor> {
+public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.ValidatingPanel {
 
+    private final Indi firstIndi = GedcomPropertiesWizardIterator.getFirstIndi();
+
+    // Place format
+    private Property prop_NAME;
+    private Property prop_BIRT;
+
+    
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
@@ -62,13 +74,25 @@ public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.Panel<Wiza
     }
 
     @Override
-    public void readSettings(WizardDescriptor wiz) {
-        // use wiz.getProperty to retrieve previous panel state
+    public void validate() throws WizardValidationException {
+        if (((GedcomPropertiesVisualPanel6) getComponent()).getFirstName().isEmpty()){
+            ((GedcomPropertiesVisualPanel6) getComponent()).setFirstNameFocus();
+            throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_FirstNameIsMandatory"), null);
+        }
+        if (((GedcomPropertiesVisualPanel6) getComponent()).getLastName().isEmpty()){
+            ((GedcomPropertiesVisualPanel6) getComponent()).setLastNameFocus();
+            throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_LastNameIsMandatory"), null);
+        }
     }
 
     @Override
-    public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
+    public void readSettings(Object data) {
+    }
+
+    @Override
+    public void storeSettings(Object data) {
+        firstIndi.setName((((GedcomPropertiesVisualPanel6) getComponent()).getFirstName()), (((GedcomPropertiesVisualPanel6) getComponent()).getLastName()));
+        firstIndi.setSex((((GedcomPropertiesVisualPanel6) getComponent()).getSex()) ? PropertySex.MALE : PropertySex.FEMALE);
     }
 
 }

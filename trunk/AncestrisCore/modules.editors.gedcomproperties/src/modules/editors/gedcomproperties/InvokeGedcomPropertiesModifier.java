@@ -16,10 +16,10 @@ import ancestris.api.newgedcom.ModifyGedcom;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
-import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Grammar;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.Submitter;
 import java.text.MessageFormat;
@@ -45,28 +45,27 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         Gedcom gedcom = new Gedcom();
         Property prop_HEAD;
         Submitter prop_SUBM;
+        Indi firstIndi;
         try {
             prop_HEAD = gedcom.createEntity("HEAD", "");
             gedcom.createEntity(Gedcom.SUBM);
             prop_SUBM = gedcom.getSubmitter();
+            firstIndi = (Indi) gedcom.createEntity(Gedcom.INDI);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
             return null;
         }
         
         // Call wizard
-        WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.CREATION_MODE, prop_HEAD, prop_SUBM));
+        WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.CREATION_MODE, prop_HEAD, prop_SUBM, firstIndi));
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create"));
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
-            // create temporary Adam // TODO : remove once panel 6 is done
-            try {
-                Entity adam = gedcom.createEntity(Gedcom.INDI);
-                adam.addProperty("NAME", "Adam");
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            
+            gedcom.setGrammar(prop_HEAD.getPropertyByPath("HEAD:GEDC:VERS").getDisplayValue().equals(Grammar.GRAMMAR551) ? Grammar.V551 : Grammar.V55);
+            gedcom.setDestination(prop_HEAD.getPropertyByPath("HEAD:DEST").getDisplayValue());
+            gedcom.setLanguage(prop_HEAD.getPropertyByPath("HEAD:LANG").getDisplayValue());
+            gedcom.setEncoding(prop_HEAD.getPropertyByPath("HEAD:CHAR").getDisplayValue());
+            gedcom.setPlaceFormat(prop_HEAD.getPropertyByPath("HEAD:PLAC:FORM").getDisplayValue());
             // save gedcom as new gedcom. User will be asked to name a filename and to save.
             // Function NewGedcom in GedcomDirectory will reopen it with default views, automatically
             String filename = prop_HEAD.getProperty("FILE").getDisplayValue();
@@ -137,7 +136,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
         Utils.CopyProperty(prop_OriginalSubmitter, prop_SUBM);
         
         // Call wizard
-        WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.UPDATE_MODE, prop_HEAD, prop_SUBM));
+        WizardDescriptor wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(GedcomPropertiesWizardIterator.UPDATE_MODE, prop_HEAD, prop_SUBM, null));
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", originalGedcom.getName().replaceFirst("[.][^.]+$", "")));   // remove extension to filename
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
@@ -149,19 +148,28 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom{
             prop_OriginalHeader.delProperties();
             prop_OriginalSubmitter.delProperties();
             Utils.CopyProperty(prop_HEAD, prop_OriginalHeader);
-            originalGedcom.setGrammar(prop_HEAD.getPropertyByPath("HEAD:GEDC:VERS").getDisplayValue().equals("5.5.1") ? Grammar.V551 : Grammar.V55);
+            originalGedcom.setGrammar(prop_HEAD.getPropertyByPath("HEAD:GEDC:VERS").getDisplayValue().equals(Grammar.GRAMMAR551) ? Grammar.V551 : Grammar.V55);
             originalGedcom.setDestination(prop_HEAD.getPropertyByPath("HEAD:DEST").getDisplayValue());
             originalGedcom.setLanguage(prop_HEAD.getPropertyByPath("HEAD:LANG").getDisplayValue());
             originalGedcom.setEncoding(prop_HEAD.getPropertyByPath("HEAD:CHAR").getDisplayValue());
+            originalGedcom.setPlaceFormat(prop_HEAD.getPropertyByPath("HEAD:PLAC:FORM").getDisplayValue());
             Utils.CopyProperty(prop_SUBM, prop_OriginalSubmitter);
             message += "<p>Modified successfully</p>";
             
             // If conversion of gedcom norm requested, do it and report
-            if (wiz.getProperty("Conversion") == "1") {
-                message += "<h2>Conversion of Gedcom version from " + wiz.getProperty("ConversionFrom") + " to " + wiz.getProperty("ConversionTo") + "</h2>";
+            if (wiz.getProperty("ConversionVersion") == "1") {
+                message += "<h2>Conversion of Gedcom version from " + wiz.getProperty("ConversionVersionFrom") + " to " + wiz.getProperty("ConversionVersionTo") + "</h2>";
                 // TODO: do it
-                message += "<p>Conversion done successfully</p>";
+                message += "<p>Conversion of version done successfully</p>";
             }
+
+            // If conversion of place format requested, do it and report
+            if (wiz.getProperty("ConversionPlaceFormat") == "1") {
+                message += "<h2>Conversion of Gedcom Place Format from " + wiz.getProperty("ConversionPlaceFormatFrom") + " to " + wiz.getProperty("ConversionPlaceFormatTo") + "</h2>";
+                // TODO: do it
+                message += "<p>Conversion of place format done successfully</p>";
+            }
+
             // Save modified gedcom and report
             message += "<h2>Gedcom file</h2>";
             GedcomDirectory.getDefault().saveGedcom(context);

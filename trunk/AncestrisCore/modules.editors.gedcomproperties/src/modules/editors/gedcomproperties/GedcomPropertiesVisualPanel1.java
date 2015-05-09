@@ -54,9 +54,12 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
-        jScrollPane2.setViewportBorder(null);
+        setPreferredSize(new java.awt.Dimension(520, 400));
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(520, 321));
+        jScrollPane2.setViewportBorder(null);
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(520, 400));
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
 
         jLabel6.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel1.jLabel6.create" : "Panel1.jLabel6.update"));
@@ -125,11 +128,11 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

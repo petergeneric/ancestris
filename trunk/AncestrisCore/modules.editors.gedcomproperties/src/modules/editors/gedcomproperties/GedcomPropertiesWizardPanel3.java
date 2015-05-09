@@ -12,6 +12,7 @@
 package modules.editors.gedcomproperties;
 
 import genj.gedcom.Gedcom;
+import genj.gedcom.Grammar;
 import genj.gedcom.Property;
 import java.util.Locale;
 import javax.swing.event.ChangeListener;
@@ -105,7 +106,7 @@ public class GedcomPropertiesWizardPanel3 implements WizardDescriptor.Validating
         }
         prop_VERS = prop_GEDC.getProperty("VERS");
         if (prop_VERS == null) {
-            prop_VERS = prop_GEDC.addProperty("VERS", "5.5.1");
+            prop_VERS = prop_GEDC.addProperty("VERS", Grammar.GRAMMAR551);
         }
         prop_FORM = prop_GEDC.getProperty("FORM");
         if (prop_FORM == null) {
@@ -136,24 +137,25 @@ public class GedcomPropertiesWizardPanel3 implements WizardDescriptor.Validating
         prop_CHAR.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getCHAR());
         prop_VERS.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getVERS());
         prop_DEST.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getDEST());
-        wiz.putProperty("Conversion", ((GedcomPropertiesVisualPanel3) getComponent()).getConversionToBeDone() ? "1" : "0");
-        wiz.putProperty("ConversionFrom", originalVersion);
-        wiz.putProperty("ConversionTo", prop_VERS.getValue());
+        wiz.putProperty("ConversionVersion", ((GedcomPropertiesVisualPanel3) getComponent()).getConversionToBeDone() ? "1" : "0");
+        wiz.putProperty("ConversionVersionFrom", originalVersion);
+        wiz.putProperty("ConversionVersionTo", prop_VERS.getValue());
     }
 
     @Override
     public void validate() throws WizardValidationException {
     }
     
-    public boolean warnVersionChange() {
-        prop_VERS.setValue(((GedcomPropertiesVisualPanel3) getComponent()).getVERS());
-        if (!prop_VERS.getValue().equals(originalVersion)) {
-           wiz.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_GedcomChanged", originalVersion, prop_VERS.getValue()));    
-           return true;
+    public void warnVersionChange(boolean canBeConverted) {
+        if (wiz == null) return;
+        if (canBeConverted) {
+           wiz.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_GedcomChanged", originalVersion, ((GedcomPropertiesVisualPanel3) getComponent()).getVERS()));    
         } else {
            wiz.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE, null);     
-           return false;
         }
     }
 
+    public String getOriginalVersion() {
+        return originalVersion;
+    }
 }
