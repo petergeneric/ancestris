@@ -11,6 +11,7 @@
  */
 package modules.editors.gedcomproperties;
 
+import genj.gedcom.Property;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
@@ -126,8 +127,13 @@ public final class GedcomPropertiesVisualPanel5 extends JPanel {
         updateDisplay();
     }
 
-    void setADDR(String displayValue) {
-        strAddress = displayValue;
+    void setADDR(Property pCorp) {
+        Property[] pFullAddress = pCorp.getProperties();
+        strAddress = "";
+        for (int i = 0; i < pFullAddress.length; i++) {
+            Property pAddressElement = pFullAddress[i];
+            strAddress += pAddressElement.getDisplayValue() + "<br>";
+        }
         updateDisplay();
     }
 
