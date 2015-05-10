@@ -24,14 +24,33 @@ public class GedcomPropertiesWizardPanel5 implements WizardDescriptor.Panel<Wiza
     private final int mode = GedcomPropertiesWizardIterator.getMode();
     private final Property prop_HEAD = GedcomPropertiesWizardIterator.getHead();
 
-    // Place format
-    private Property prop_SOUR;
-    private Property prop_VERS;
-    private Property prop_NAME;
-    private Property prop_CORP;
-    private Property prop_ADDR;
-    private Property prop_DATE;
-    private Property prop_TIME;
+    // Source format
+    private Property prop_SOUR; //+1 SOUR <APPROVED_SYSTEM_ID>  {1:1}
+    private Property prop_VERS; //+2 VERS <VERSION_NUMBER>  {0:1}
+    private Property prop_NAME; //+2 NAME <NAME_OF_PRODUCT>  {0:1} (rarely used by others software but used by Ancestris)
+    private Property prop_CORP; //+2 CORP <NAME_OF_BUSINESS>  {0:1}
+    private Property prop_ADDR; //+3 <<ADDRESS_STRUCTURE>>  {0:1}
+    
+    private Property prop_DATE; //+1 DATE <TRANSMISSION_DATE>  {0:1}
+    private Property prop_TIME; //+2 TIME <TIME_VALUE>  {0:1}
+
+// unused:
+//          +2 DATA <NAME_OF_SOURCE_DATA>  {0:1}
+//        +3 DATE <PUBLICATION_DATE>  {0:1}
+//        +3 COPR <COPYRIGHT_SOURCE_DATA>  {0:1}
+    
+//<<ADDRESS_STRUCTURE>>
+//  n  ADDR <ADDRESS_LINE>  {0:1}
+//    +1 CONT <ADDRESS_LINE>  {0:M}
+//    +1 ADR1 <ADDRESS_LINE1>  {0:1}
+//    +1 ADR2 <ADDRESS_LINE2>  {0:1}
+//    +1 CITY <ADDRESS_CITY>  {0:1}
+//    +1 STAE <ADDRESS_STATE>  {0:1}
+//    +1 POST <ADDRESS_POSTAL_CODE>  {0:1}
+//    +1 CTRY <ADDRESS_COUNTRY>  {0:1}
+//  n  PHON <PHONE_NUMBER>  {0:3}    
+//     (WEB, _WEB, ou _ADDR pour le site web)
+//     (EMAIL pour email)
 
     
     /**
@@ -120,7 +139,7 @@ public class GedcomPropertiesWizardPanel5 implements WizardDescriptor.Panel<Wiza
         ((GedcomPropertiesVisualPanel5) getComponent()).setVERS(prop_VERS.getDisplayValue());
         ((GedcomPropertiesVisualPanel5) getComponent()).setNAME(prop_NAME.getDisplayValue());
         ((GedcomPropertiesVisualPanel5) getComponent()).setCORP(prop_CORP.getDisplayValue());
-        ((GedcomPropertiesVisualPanel5) getComponent()).setADDR(prop_ADDR.getDisplayValue());
+        ((GedcomPropertiesVisualPanel5) getComponent()).setADDR(prop_CORP);
         ((GedcomPropertiesVisualPanel5) getComponent()).setDATE(prop_DATE.getDisplayValue());
         ((GedcomPropertiesVisualPanel5) getComponent()).setTIME(prop_TIME.getDisplayValue());
         
