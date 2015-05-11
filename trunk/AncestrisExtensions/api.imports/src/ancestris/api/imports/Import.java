@@ -259,23 +259,44 @@ public abstract class Import {
 
     }
 
+    /**
+     * Normallize YES_TAGS.
+     * Convert all "YES_TAGS" (eg BIRT, EVEN, ...) where value is not null 
+     * and different from "Y" from
+     * <pre>
+     * n TAG value</pre>
+     * to 
+     * <pre>
+     * n TAG
+     * n+1 NOTE value</pre>
+     * @return
+     * @throws IOException 
+     */
     public boolean processYesTag() throws IOException {
         Matcher matcher = tag_y.matcher(input.getTag());
         if (matcher.matches()) {
+            String result = null;
+            String tag = input.getTag();
+            int level = input.getLevel();
+            String line = input.getLine();
             if (input.getValue().length() != 0) {
-                output.writeLine(input);
+                if (input.getValue().equalsIgnoreCase("y")){
+                    output.writeLine(input);
+                } else {
+                    result = output.writeLine(level, tag, null);
+                    result += "\n"+output.writeLine(level+1, "NOTE", input.getValue());
+                }
             } else {
-                String tag = input.getTag();
-                int level = input.getLevel();
-                String line = input.getLine();
                 String temp = input.getNextLine(false);
                 if ((temp != null) && (input.getLevel() == level + 1)) {
                     output.writeLine(level, tag, null);
                 } else {
-                    String result = output.writeLine(level, tag, "Y");
-                    console.println(line);
-                    console.println("==> " + result);
+                    result = output.writeLine(level, tag, "Y");
                 }
+            }
+            if (result != null){
+                console.println(line);
+                console.println("==> " + result);
             }
             return true;
         } else {
