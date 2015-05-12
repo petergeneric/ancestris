@@ -11,6 +11,7 @@
 package ancestris.modules.imports.heredis;
 
 import ancestris.api.imports.Import;
+import genj.gedcom.TagPath;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,6 +60,9 @@ public class HeredisImport extends Import {
             return true;
         }
         if (processFrenchRepHeredis()) {
+            return true;
+        }
+        if (processTagNotAllowed()) {
             return true;
         }
         return false;
@@ -112,8 +116,30 @@ public class HeredisImport extends Import {
         }
         return false;
     }
-    // calendrier repub
 
+    /**
+     * fix *:OBJE:DATE errors.
+     * Remove DATE tag if no value, rename tag to _DATE otherwise
+     * @return 
+     */
+    private boolean processTagNotAllowed() throws IOException {
+        // C'est un tag DATE: on transforme les dates rep
+        String tag = input.getTag();
+        TagPath path = input.getPath();
+        if (("DATE".equalsIgnoreCase(tag) && "OBJE".equalsIgnoreCase(input.getPath().get(-2))) ||
+                ("TYPE".equalsIgnoreCase(tag) && "SOUR:TYPE".equalsIgnoreCase(path.toString())) ||
+                ("QUAY".equalsIgnoreCase(tag) && "SOUR:QUAY".equalsIgnoreCase(path.toString()))){
+            if (input.getValue()!=null){
+                String result = output.writeLine(input.getLevel(), "_"+tag, input.getValue());
+                console.println(input.getLine());
+                console.println("==> " + result);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    // calendrier repub
     private boolean processFrenchRepHeredis() throws IOException {
         // C'est un tag DATE: on transforme les dates rep
         if (input.getTag().equals("DATE")) {
