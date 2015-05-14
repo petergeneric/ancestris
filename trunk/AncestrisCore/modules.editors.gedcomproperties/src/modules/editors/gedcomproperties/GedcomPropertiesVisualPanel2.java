@@ -11,11 +11,24 @@
  */
 package modules.editors.gedcomproperties;
 
+import genj.util.AncestrisPreferences;
+import genj.util.Registry;
 import java.util.Calendar;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import static modules.editors.gedcomproperties.Constants.SUBM_ADDR;
+import static modules.editors.gedcomproperties.Constants.SUBM_CITY;
+import static modules.editors.gedcomproperties.Constants.SUBM_CTRY;
+import static modules.editors.gedcomproperties.Constants.SUBM_EMAI;
+import static modules.editors.gedcomproperties.Constants.SUBM_NAME;
+import static modules.editors.gedcomproperties.Constants.SUBM_PHON;
+import static modules.editors.gedcomproperties.Constants.SUBM_POST;
+import static modules.editors.gedcomproperties.Constants.SUBM_STAE;
+import static modules.editors.gedcomproperties.Constants.SUBM_WWW;
 import org.openide.util.NbBundle;
 
-public final class GedcomPropertiesVisualPanel2 extends JPanel {
+public final class GedcomPropertiesVisualPanel2 extends JPanel implements Constants, DocumentListener {
 
     private final int mode = GedcomPropertiesWizardIterator.getMode();
     
@@ -24,7 +37,17 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
      */
     public GedcomPropertiesVisualPanel2() {
         initComponents();
-    }
+        updateButtons();
+        jTextField3.getDocument().addDocumentListener(this);
+        jTextArea4.getDocument().addDocumentListener(this);
+        jTextField5.getDocument().addDocumentListener(this);
+        jTextField6.getDocument().addDocumentListener(this);
+        jTextField7.getDocument().addDocumentListener(this);
+        jTextField8.getDocument().addDocumentListener(this);
+        jTextField9.getDocument().addDocumentListener(this);
+        jTextField10.getDocument().addDocumentListener(this);
+        jTextField11.getDocument().addDocumentListener(this);
+        }
 
     @Override
     public String getName() {
@@ -63,30 +86,37 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
         jTextField8 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        setPreferredSize(new java.awt.Dimension(522, 400));
 
         jScrollPane2.setViewportBorder(null);
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(520, 400));
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
 
         jTextArea4.setColumns(20);
         jTextArea4.setLineWrap(true);
         jTextArea4.setRows(3);
         jScrollPane1.setViewportView(jTextArea4);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel9.create" : "Panel2.jLabel9.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel9.create" : "Panel2.jLabel9.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel3.create" : "Panel2.jLabel3.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel3.create" : "Panel2.jLabel3.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel11.create" : "Panel2.jLabel11.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel11.create" : "Panel2.jLabel11.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel4.create" : "Panel2.jLabel4.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel4.create" : "Panel2.jLabel4.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel5.create" : "Panel2.jLabel5.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel5.create" : "Panel2.jLabel5.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel12.create" : "Panel2.jLabel12.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel12.create" : "Panel2.jLabel12.update"));
 
         jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel1.create" : "Panel2.jLabel1.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel1.create" : "Panel2.jLabel1.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel7.create" : "Panel2.jLabel7.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel7.create" : "Panel2.jLabel7.update"));
 
         jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -94,9 +124,27 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel2.create" : "Panel2.jLabel2.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel2.create" : "Panel2.jLabel2.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel2.jLabel8.create" : "Panel2.jLabel8.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel8.create" : "Panel2.jLabel8.update"));
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/GetDefault.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jButton1.text")); // NOI18N
+        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jButton1.toolTipText")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/SaveAsDefault.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jButton2.text")); // NOI18N
+        jButton2.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, "GedcomPropertiesVisualPanel2.jButton2.toolTipText")); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -105,8 +153,6 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel10)
@@ -137,16 +183,28 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField10)))))
+                                .addComponent(jTextField10))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -178,13 +236,13 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9))))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jScrollPane2.setViewportView(jPanel1);
@@ -193,16 +251,16 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyReleased
-        String name = getSUBMName();
+        String name = getNAME();
         String defaultCopr = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "DFT_Copyright") + " " + Calendar.getInstance().get(Calendar.YEAR);
         String copr = getCOPR();
         int i = copr.lastIndexOf(defaultCopr);
@@ -211,7 +269,19 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
         }
     }//GEN-LAST:event_jTextField3KeyReleased
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        reloadSubmitter();
+        updateButtons();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        saveSubmitterAsDefault();
+        updateButtons();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -238,39 +308,39 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 
-    public void setSUBMName(String str) {
+    public void setNAME(String str) {
         jTextField3.setText(str);
     }
 
-    public void setSUBMAddress(String str) {
+    public void setADDR(String str) {
         jTextArea4.setText(str);
     }
 
-    public void setSUBMPostcode(String str) {
+    public void setPOST(String str) {
         jTextField5.setText(str);
     }
 
-    public void setSUBMCity(String str) {
+    public void setCITY(String str) {
         jTextField6.setText(str);
     }
 
-    public void setSUBMState(String str) {
+    public void setSTAE(String str) {
         jTextField7.setText(str);
     }
 
-    public void setSUBMCountry(String str) {
+    public void setCTRY(String str) {
         jTextField8.setText(str);
     }
 
-    public void setSUBMPhone(String str) {
+    public void setPHON(String str) {
         jTextField9.setText(str);
     }
 
-    public void setSUBMEmail(String str) {
+    public void setEMAI(String str) {
         jTextField10.setText(str);
     }
 
-    public void setSUBMWeb(String str) {
+    public void setWWW(String str) {
         jTextField11.setText(str);
     }
 
@@ -281,39 +351,39 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
     
     
     
-    public String getSUBMName() {
+    public String getNAME() {
         return jTextField3.getText();
     }
 
-    public String getSUBMAddress() {
+    public String getADDR() {
         return jTextArea4.getText();
     }
 
-    public String getSUBMPostcode() {
+    public String getPOST() {
         return jTextField5.getText();
     }
 
-    public String getSUBMCity() {
+    public String getCITY() {
         return jTextField6.getText();
     }
 
-    public String getSUBMState() {
+    public String getSTAE() {
         return jTextField7.getText();
     }
 
-    public String getSUBMCountry() {
+    public String getCTRY() {
         return jTextField8.getText();
     }
 
-    public String getSUBMPhone() {
+    public String getPHON() {
         return jTextField9.getText();
     }
 
-    public String getSUBMEmail() {
+    public String getEMAI() {
         return jTextField10.getText();
     }
 
-    public String getSUBMWeb() {
+    public String getWWW() {
         return jTextField11.getText();
     }
 
@@ -321,4 +391,66 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel {
         return jTextField12.getText();
     }
 
+    private boolean isSubmitterDifferent() {
+        AncestrisPreferences submPref = Registry.get(GedcomPropertiesWizardIterator.class);
+        return !getNAME().equals(submPref.get(SUBM_NAME, ""))
+            || !getADDR().equals(submPref.get(SUBM_ADDR, ""))
+            || !getPOST().equals(submPref.get(SUBM_POST, ""))
+            || !getCITY().equals(submPref.get(SUBM_CITY, ""))
+            || !getSTAE().equals(submPref.get(SUBM_STAE, ""))
+            || !getCTRY().equals(submPref.get(SUBM_CTRY, ""))
+            || !getPHON().equals(submPref.get(SUBM_PHON, ""))
+            || !getEMAI().equals(submPref.get(SUBM_EMAI, ""))
+            || !getWWW().equals(submPref.get(SUBM_WWW, ""));
+    }
+
+    private void reloadSubmitter() {
+        AncestrisPreferences submPref = Registry.get(GedcomPropertiesWizardIterator.class);
+        setNAME(submPref.get(SUBM_NAME, ""));
+        setADDR(submPref.get(SUBM_ADDR, ""));
+        setPOST(submPref.get(SUBM_POST, ""));
+        setCITY(submPref.get(SUBM_CITY, ""));
+        setSTAE(submPref.get(SUBM_STAE, ""));
+        setCTRY(submPref.get(SUBM_CTRY, ""));
+        setPHON(submPref.get(SUBM_PHON, ""));
+        setEMAI(submPref.get(SUBM_EMAI, ""));
+        setWWW(submPref.get(SUBM_WWW, ""));
+        setCOPR(submPref.get(SUBM_NAME, "") + " " + NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "DFT_Copyright") + " " + Calendar.getInstance().get(Calendar.YEAR));
+    }
+
+    
+    private void saveSubmitterAsDefault() {
+        AncestrisPreferences submPref = Registry.get(GedcomPropertiesWizardIterator.class);
+        submPref.put(SUBM_NAME, getNAME());
+        submPref.put(SUBM_ADDR, getADDR());
+        submPref.put(SUBM_POST, getPOST());
+        submPref.put(SUBM_CITY, getCITY());
+        submPref.put(SUBM_STAE, getSTAE());
+        submPref.put(SUBM_CTRY, getCTRY());
+        submPref.put(SUBM_PHON, getPHON());
+        submPref.put(SUBM_EMAI, getEMAI());
+        submPref.put(SUBM_WWW, getWWW());
+    }
+
+    private void updateButtons() {
+        jButton1.setEnabled(isSubmitterDifferent());
+        jButton2.setEnabled(isSubmitterDifferent());
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        updateButtons();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        updateButtons();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        updateButtons();
+    }
+
+    
 }

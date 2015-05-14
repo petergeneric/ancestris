@@ -180,7 +180,7 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel {
         return jTextField2.getText();
     }
 
-    public boolean getSex() {
+    public Boolean getSex() {
         return jRadioButton1.isSelected(); // true if male
     }
     

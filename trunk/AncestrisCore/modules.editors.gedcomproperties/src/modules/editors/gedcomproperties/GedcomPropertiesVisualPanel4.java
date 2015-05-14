@@ -11,12 +11,14 @@
  */
 package modules.editors.gedcomproperties;
 
+import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertyPlace;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
-public final class GedcomPropertiesVisualPanel4 extends JPanel {
+public final class GedcomPropertiesVisualPanel4 extends JPanel implements Constants {
 
     private final int mode = GedcomPropertiesWizardIterator.getMode();
 
@@ -67,6 +69,7 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jButton5 = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(500, 375));
 
@@ -171,7 +174,7 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(168, Short.MAX_VALUE))
+                        .addContainerGap(163, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -197,25 +200,41 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
         );
 
         jLabel2.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel4.jLabel2.create" : "Panel4.jLabel2.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == CREATION ? "Panel4.jLabel2.create" : "Panel4.jLabel2.update"));
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jCheckBox1.text")); // NOI18N
         jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jCheckBox1.toolTipText")); // NOI18N
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jLabel4.text")); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel4.jLabel1.create" : "Panel4.jLabel1.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == CREATION ? "Panel4.jLabel1.create" : "Panel4.jLabel1.update"));
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jScrollPane3.setViewportView(jTextArea1);
 
+        jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
         jScrollPane4.setViewportView(jTextArea2);
+
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/Mapping.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton5.text")); // NOI18N
+        jButton5.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton5.toolTipText")); // NOI18N
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -224,14 +243,16 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
                     .addComponent(jScrollPane3)
                     .addComponent(jScrollPane4)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox1))
+                        .addComponent(jCheckBox1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5))
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -249,7 +270,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jCheckBox1))
+                    .addComponent(jCheckBox1)
+                    .addComponent(jButton5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -306,12 +328,25 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
         updateDisplay(jList1.getSelectedIndex());
     }//GEN-LAST:event_jList1ValueChanged
 
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        jButton5.setEnabled(jCheckBox1.isSelected());
+        if (jCheckBox1.isSelected() && parent.getPlaceFormatConverter() == null) {
+            parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(parent.getOriginalPlaceFormat(), getPLAC()));
+            DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JCheckBox jCheckBox1;
@@ -404,6 +439,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
         boolean listIsEmpty = listModel.isEmpty();
         boolean indexIsFirst = (index == 0);
         boolean indexIsLast = (index == listModel.getSize() - 1);
+        
+        // regular fields
         jButton2.setEnabled(!listIsEmpty);
         jButton3.setEnabled(!listIsEmpty && !indexIsFirst);
         jButton4.setEnabled(!listIsEmpty && !indexIsLast);
@@ -411,16 +448,36 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel {
             jList1.setSelectedIndex(index);
             jList1.ensureIndexIsVisible(index);
         }
-        //jLabel3.setText(getPLAC());
         jTextArea1.setText(getPLAC());
-        boolean canBeConverted = (mode == GedcomPropertiesWizardIterator.UPDATE_MODE) && !getPLAC().equals(parent.getOriginalPlaceFormat());
+        jTextArea2.setText(parent.getOriginalPlaceFormat());
+        
+        // fields related to conversion
+        boolean canBeConverted = (mode == UPDATE) && !getPLAC().equals(parent.getOriginalPlaceFormat());
         jCheckBox1.setVisible(canBeConverted);
+        jButton5.setVisible(canBeConverted);
+        jButton5.setEnabled(jCheckBox1.isSelected());
         jLabel4.setVisible(canBeConverted);
-        if (canBeConverted) {
-            jTextArea2.setText(parent.getOriginalPlaceFormat());
-        }
         jScrollPane4.setVisible(canBeConverted);
         parent.warnVersionChange(canBeConverted);
+        if (canBeConverted && parent.getPlaceFormatConverter() != null) {
+            String str = getPLAC();
+            parent.getPlaceFormatConverter().setValidatedMap(false, getPLAC());
+        }
     }
+
+    public boolean getConversionSelection() {
+        return jCheckBox1.isSelected();
+    }
+
+    private void DisplayPlaceFormatConverter(PlaceFormatConverterPanel placeFormatConverter) {
+        parent.getPlaceFormatConverter().initToFields(getPLAC());
+        Object o = DialogManager.create(NbBundle.getMessage(PlaceFormatConverterPanel.class, "TITL_PlaceFormatConversionSettings"), placeFormatConverter).setMessageType(DialogManager.PLAIN_MESSAGE).show();
+        if (o == DialogManager.OK_OPTION) {
+            placeFormatConverter.setValidatedMap(true, null);
+        } else {
+            placeFormatConverter.setValidatedMap(false, null);
+        }
+    }
+
 
 }

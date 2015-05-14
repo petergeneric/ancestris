@@ -11,24 +11,16 @@
  */
 package modules.editors.gedcomproperties;
 
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertySex;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.ValidatingPanel {
+public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.ValidatingPanel, Constants {
 
-    private final Indi firstIndi = GedcomPropertiesWizardIterator.getFirstIndi();
+    private WizardDescriptor wiz = null;
 
-    // Place format
-    private Property prop_NAME;
-    private Property prop_BIRT;
-
-    
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
@@ -75,12 +67,12 @@ public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.Validating
 
     @Override
     public void validate() throws WizardValidationException {
-        if (((GedcomPropertiesVisualPanel6) getComponent()).getFirstName().isEmpty()){
-            ((GedcomPropertiesVisualPanel6) getComponent()).setFirstNameFocus();
+        if (getComponent().getFirstName().isEmpty()){
+            getComponent().setFirstNameFocus();
             throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_FirstNameIsMandatory"), null);
         }
-        if (((GedcomPropertiesVisualPanel6) getComponent()).getLastName().isEmpty()){
-            ((GedcomPropertiesVisualPanel6) getComponent()).setLastNameFocus();
+        if (getComponent().getLastName().isEmpty()){
+            getComponent().setLastNameFocus();
             throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_LastNameIsMandatory"), null);
         }
     }
@@ -91,8 +83,11 @@ public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.Validating
 
     @Override
     public void storeSettings(Object data) {
-        firstIndi.setName((((GedcomPropertiesVisualPanel6) getComponent()).getFirstName()), (((GedcomPropertiesVisualPanel6) getComponent()).getLastName()));
-        firstIndi.setSex((((GedcomPropertiesVisualPanel6) getComponent()).getSex()) ? PropertySex.MALE : PropertySex.FEMALE);
+        wiz = (WizardDescriptor) data;
+        
+        wiz.putProperty(INDI + ":" + FIRSTNAME, getComponent().getFirstName());
+        wiz.putProperty(INDI + ":" + LASTNAME, getComponent().getLastName());
+        wiz.putProperty(INDI + ":" + SEX, getComponent().getSex());
     }
 
 }

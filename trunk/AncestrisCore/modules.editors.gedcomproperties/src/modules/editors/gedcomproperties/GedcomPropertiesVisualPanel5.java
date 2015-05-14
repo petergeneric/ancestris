@@ -15,7 +15,7 @@ import genj.gedcom.Property;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
-public final class GedcomPropertiesVisualPanel5 extends JPanel {
+public final class GedcomPropertiesVisualPanel5 extends JPanel implements Constants {
     
     private final int mode = GedcomPropertiesWizardIterator.getMode();
 
@@ -127,13 +127,8 @@ public final class GedcomPropertiesVisualPanel5 extends JPanel {
         updateDisplay();
     }
 
-    void setADDR(Property pCorp) {
-        Property[] pFullAddress = pCorp.getProperties();
-        strAddress = "";
-        for (int i = 0; i < pFullAddress.length; i++) {
-            Property pAddressElement = pFullAddress[i];
-            strAddress += pAddressElement.getDisplayValue() + "<br>";
-        }
+    void setADDR(String displayValue) {
+        strAddress = displayValue;
         updateDisplay();
     }
 
@@ -148,7 +143,7 @@ public final class GedcomPropertiesVisualPanel5 extends JPanel {
     }
 
     private void updateDisplay() {
-        String strMode = mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "create" : "update";
+        String strMode = mode == CREATION ? "create" : "update";
         jLabel1.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "Panel5.jLabel1."+strMode, strSour, strName, strVersion, strCorporation, strAddress));
         jLabel2.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "Panel5.jLabel2."+strMode, strDate, strTime));
     }

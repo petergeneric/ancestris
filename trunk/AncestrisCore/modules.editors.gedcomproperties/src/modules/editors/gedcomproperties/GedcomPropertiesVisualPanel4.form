@@ -59,7 +59,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jPanel2" pref="469" max="32767" attributes="0"/>
+                          <Component id="jPanel2" pref="464" max="32767" attributes="0"/>
                           <Component id="jScrollPane3" alignment="1" max="32767" attributes="0"/>
                           <Component id="jScrollPane4" alignment="1" max="32767" attributes="0"/>
                           <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
@@ -67,6 +67,8 @@
                               <Component id="jLabel2" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jCheckBox1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButton5" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jLabel4" alignment="1" max="32767" attributes="0"/>
                       </Group>
@@ -90,6 +92,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jCheckBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButton5" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane3" min="-2" pref="34" max="-2" attributes="0"/>
@@ -128,7 +131,7 @@
                                       </Group>
                                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace pref="168" max="32767" attributes="0"/>
+                                  <EmptySpace pref="163" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="jButton1" min="-2" max="-2" attributes="0"/>
@@ -313,7 +316,7 @@
                   <Font name="Cantarell" size="15" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? &quot;Panel4.jLabel2.create&quot; : &quot;Panel4.jLabel2.update&quot;)" type="code"/>
+                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == CREATION ? &quot;Panel4.jLabel2.create&quot; : &quot;Panel4.jLabel2.update&quot;)" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -326,6 +329,9 @@
                   <ResourceString bundle="modules/editors/gedcomproperties/Bundle.properties" key="GedcomPropertiesVisualPanel4.jCheckBox1.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox1ActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
@@ -359,7 +365,7 @@
                   <Font name="Cantarell" size="15" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? &quot;Panel4.jLabel1.create&quot; : &quot;Panel4.jLabel1.update&quot;)" type="code"/>
+                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == CREATION ? &quot;Panel4.jLabel1.create&quot; : &quot;Panel4.jLabel1.update&quot;)" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -372,6 +378,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextArea" name="jTextArea1">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
@@ -388,12 +395,29 @@
               <SubComponents>
                 <Component class="javax.swing.JTextArea" name="jTextArea2">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JButton" name="jButton5">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/modules/editors/gedcomproperties/ressources/Mapping.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="modules/editors/gedcomproperties/Bundle.properties" key="GedcomPropertiesVisualPanel4.jButton5.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="modules/editors/gedcomproperties/Bundle.properties" key="GedcomPropertiesVisualPanel4.jButton5.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

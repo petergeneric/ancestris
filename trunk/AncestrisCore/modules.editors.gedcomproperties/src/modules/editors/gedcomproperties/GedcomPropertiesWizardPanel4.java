@@ -11,24 +11,24 @@
  */
 package modules.editors.gedcomproperties;
 
-import genj.gedcom.GedcomOptions;
-import genj.gedcom.Property;
+import ancestris.util.swing.DialogManager;
 import javax.swing.event.ChangeListener;
+import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.ValidatingPanel {
+public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.ValidatingPanel, Constants {
 
     private WizardDescriptor wiz = null;
     private final int mode = GedcomPropertiesWizardIterator.getMode();
-    private final Property prop_HEAD = GedcomPropertiesWizardIterator.getHead();
 
     // Place format
-    private Property prop_PLAC;
-    private Property prop_FORM;
     private String originalPlaceformat = "";
+    
+    // Place Format Converter
+    PlaceFormatConverterPanel pfc;
 
     
     /**
@@ -77,39 +77,50 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
 
     @Override
     public void readSettings(Object data) {
-        // read gedcom head properties and create them if they do not exist
         wiz = (WizardDescriptor) data;
-        
-        prop_PLAC = prop_HEAD.getProperty("PLAC");
-        if (prop_PLAC == null) {
-            prop_PLAC = prop_HEAD.addProperty("PLAC", "");
-        }
-        
-        prop_FORM = prop_PLAC.getProperty("FORM");
-        if (prop_FORM == null) {
-            prop_FORM = prop_PLAC.addProperty("FORM", GedcomOptions.getInstance().getPlaceFormat());
-        }
         
         // Remember original version
         if (originalPlaceformat.isEmpty()) {
-            originalPlaceformat = prop_FORM.getValue();
+            originalPlaceformat = (String) wiz.getProperty(HEADER + ":" + PLAC + ":" + FORM);
         }
 
-        // set fields to read values
-        ((GedcomPropertiesVisualPanel4) getComponent()).setPLAC(prop_FORM.getDisplayValue());
-        
+        getComponent().setPLAC((String) wiz.getProperty(HEADER + ":" + PLAC + ":" + FORM));
     }
 
     @Override
     public void storeSettings(Object data) {
-        prop_FORM.setValue(((GedcomPropertiesVisualPanel4) getComponent()).getPLAC());
-        wiz.putProperty("ConversionPlaceFormat", ((GedcomPropertiesVisualPanel4) getComponent()).getConversionToBeDone() ? "1" : "0");
-        wiz.putProperty("ConversionPlaceFormatFrom", originalPlaceformat);
-        wiz.putProperty("ConversionPlaceFormatTo", prop_FORM.getValue());
+        wiz = (WizardDescriptor) data;
+        
+        wiz.putProperty(HEADER + ":" + PLAC + ":" + FORM, getComponent().getPLAC());
+
+        if (getComponent().getConversionToBeDone()) {
+            wiz.putProperty(CONV_PLACE, CONVERSION);
+            wiz.putProperty(CONV_PLACE_FROM, originalPlaceformat); // from format
+            wiz.putProperty(CONV_PLACE_TO, getComponent().getPLAC());  // to format
+            wiz.putProperty(CONV_PLACE_MAP,pfc.getConversionMapAsString());    // list to-fields0:from-fieldi,to-fields1:from-fieldj,etc
+        } else {
+            wiz.putProperty(CONV_PLACE, NO_CONVERSION);
+        }
     }
 
     @Override
     public void validate() throws WizardValidationException {
+        Boolean canBeConverted = (mode == UPDATE) && !((GedcomPropertiesVisualPanel4) getComponent()).getPLAC().equals(originalPlaceformat);
+        Boolean isConversionRequired = ((GedcomPropertiesVisualPanel4) getComponent()).getConversionSelection();
+        if (canBeConverted && isConversionRequired) {
+            if ((pfc == null) || !pfc.isValidatedMap()) {
+                throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_ConversionMapMandatory"), null);
+            }
+            if ((pfc != null) & !pfc.isMapComplete()) {
+                Object o = DialogManager.createYesNo(
+                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.jCheckBox1.text"), 
+                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_IncompletMapToConfirm")).setMessageType(DialogManager.YES_NO_OPTION).show();
+                if (o != DialogManager.YES_OPTION) {
+                    throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_ConversionMapMandatory"), null);
+                }
+            }
+            
+        }
     }
 
     public void warnVersionChange(boolean canBeConverted) {
@@ -121,8 +132,16 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
         }
     }
 
-    
     public String getOriginalPlaceFormat() {
         return originalPlaceformat;
     }
+
+    public void setPlaceFormatConverter(PlaceFormatConverterPanel pfc) {
+        this.pfc = pfc;
+    }
+
+    public PlaceFormatConverterPanel getPlaceFormatConverter() {
+        return this.pfc;
+    }
+
 }

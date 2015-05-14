@@ -144,7 +144,7 @@
                   <Font name="Cantarell" size="15" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? &quot;Panel3.jLabel1.create&quot; : &quot;Panel3.jLabel1.update&quot;)" type="code"/>
+                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? &quot;Panel3.jLabel1.create&quot; : &quot;Panel3.jLabel1.update&quot;)" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -159,7 +159,7 @@
                   <Font name="Cantarell" size="15" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? &quot;Panel3.jLabel2.create&quot; : &quot;Panel3.jLabel2.update&quot;)" type="code"/>
+                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? &quot;Panel3.jLabel2.create&quot; : &quot;Panel3.jLabel2.update&quot;)" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -189,7 +189,7 @@
                   <Font name="Cantarell" size="15" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? &quot;Panel3.jLabel3.create&quot; : &quot;Panel3.jLabel3.update&quot;)" type="code"/>
+                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? &quot;Panel3.jLabel3.create&quot; : &quot;Panel3.jLabel3.update&quot;)" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -220,7 +220,7 @@
             <Component class="javax.swing.JCheckBox" name="jCheckBox1">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? &quot;Panel3.jCheckBox1.create&quot; : &quot;Panel3.jCheckBox1.update&quot;)" type="code"/>
+                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? &quot;Panel3.jCheckBox1.create&quot; : &quot;Panel3.jCheckBox1.update&quot;)" type="code"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, &quot;Panel3.jCheckBox1.toolTipText&quot;)" type="code"/>
@@ -233,7 +233,7 @@
                   <Font name="Cantarell" size="15" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? &quot;Panel3.jLabel4.create&quot; : &quot;Panel3.jLabel4.update&quot;)" type="code"/>
+                  <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? &quot;Panel3.jLabel4.create&quot; : &quot;Panel3.jLabel4.update&quot;)" type="code"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, &quot;Panel3.jLabel4.toolTipText&quot;)" type="code"/>
