@@ -14,7 +14,7 @@ package modules.editors.gedcomproperties;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
-public final class GedcomPropertiesVisualPanel1 extends JPanel {
+public final class GedcomPropertiesVisualPanel1 extends JPanel implements Constants {
 
     private final int mode = GedcomPropertiesWizardIterator.getMode();
     
@@ -23,7 +23,7 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel {
      */
     public GedcomPropertiesVisualPanel1() {
         initComponents();
-        if (mode == GedcomPropertiesWizardIterator.UPDATE_MODE) {
+        if (mode == UPDATE) {
             jTextField1.setEditable(false);
         }
     }
@@ -62,23 +62,23 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel {
         jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
 
         jLabel6.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel1.jLabel6.create" : "Panel1.jLabel6.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == CREATION ? "Panel1.jLabel6.create" : "Panel1.jLabel6.update"));
 
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel1.jLabel1.create" : "Panel1.jLabel1.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == CREATION ? "Panel1.jLabel1.create" : "Panel1.jLabel1.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel1.jLabel2.create" : "Panel1.jLabel2.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == CREATION ? "Panel1.jLabel2.create" : "Panel1.jLabel2.update"));
 
         jLabel3.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel1.jLabel3.create" : "Panel1.jLabel3.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == CREATION ? "Panel1.jLabel3.create" : "Panel1.jLabel3.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel1.jLabel4.create" : "Panel1.jLabel4.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == CREATION ? "Panel1.jLabel4.create" : "Panel1.jLabel4.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel1.jLabel5.create" : "Panel1.jLabel5.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel1.class, mode == CREATION ? "Panel1.jLabel5.create" : "Panel1.jLabel5.update"));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

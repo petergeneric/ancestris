@@ -11,9 +11,6 @@
  */
 package modules.editors.gedcomproperties;
 
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.Submitter;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,44 +21,22 @@ import org.openide.WizardDescriptor;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
-public final class GedcomPropertiesWizardIterator implements WizardDescriptor.Iterator<WizardDescriptor> {
-
-    static public final int CREATION_MODE = 0; 
-    static public final int UPDATE_MODE = 1;
+public final class GedcomPropertiesWizardIterator implements WizardDescriptor.Iterator<WizardDescriptor>, Constants {
 
     static private int mode;
-    static private Property prop_HEAD;
-    static private Submitter prop_SUBM;
-    static private Indi firstIndi;
-    
 
     static public int getMode(){
         return mode;
     }
     
-    static Property getHead() {
-        return prop_HEAD;
-    }
-
-    static Submitter getSubmitter() {
-        return prop_SUBM;
-    }
-
-    static Indi getFirstIndi() {
-        return firstIndi;
-    }
-
     private int index;
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
 
     /**
      * Constructor
      */
-    public GedcomPropertiesWizardIterator(int mode, Property propEditedHeader, Submitter propEditedSubmitter, Indi firstIndi) {
+    public GedcomPropertiesWizardIterator(int mode) {
         this.mode = mode;
-        this.prop_HEAD = propEditedHeader;
-        this.prop_SUBM = propEditedSubmitter;
-        this.firstIndi = firstIndi;
     }
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
@@ -72,7 +47,7 @@ public final class GedcomPropertiesWizardIterator implements WizardDescriptor.It
             panels.add(new GedcomPropertiesWizardPanel3());
             panels.add(new GedcomPropertiesWizardPanel4());
             panels.add(new GedcomPropertiesWizardPanel5());
-            if (mode == CREATION_MODE) {
+            if (mode == CREATION) {
                 panels.add(new GedcomPropertiesWizardPanel6());
             }
             String[] steps = new String[panels.size()];
@@ -87,11 +62,11 @@ public final class GedcomPropertiesWizardIterator implements WizardDescriptor.It
                     jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, true);
                     jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, true);
                     jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
-                    if (mode == CREATION_MODE) {
+                    if (mode == CREATION) {
                         jc.putClientProperty(WizardDescriptor.PROP_IMAGE, ImageUtilities.loadImage(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "CreateImage")));
                         //jc.putClientProperty("WizardPanel_helpDisplayed", Boolean.TRUE); // Turn on an help tab
                     }
-                    if (mode == UPDATE_MODE) {
+                    if (mode == UPDATE) {
                         jc.putClientProperty(WizardDescriptor.PROP_IMAGE, ImageUtilities.loadImage(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "UpdateImage")));
                         //jc.putClientProperty("WizardPanel_helpDisplayed", Boolean.TRUE); // Turn on an help tab
                     }

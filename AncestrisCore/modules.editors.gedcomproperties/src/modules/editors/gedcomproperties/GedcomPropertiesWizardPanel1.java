@@ -11,21 +11,17 @@
  */
 package modules.editors.gedcomproperties;
 
-import genj.gedcom.Property;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel1 implements WizardDescriptor.ValidatingPanel {
+public class GedcomPropertiesWizardPanel1 implements WizardDescriptor.ValidatingPanel, Constants {
 
+    private WizardDescriptor wiz = null;
     private final int mode = GedcomPropertiesWizardIterator.getMode();
-    private final Property prop_HEAD = GedcomPropertiesWizardIterator.getHead();
-
-    private Property prop_FILE;
-    private Property prop_NOTE;
-
+    
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
@@ -72,32 +68,23 @@ public class GedcomPropertiesWizardPanel1 implements WizardDescriptor.Validating
 
     @Override
     public void readSettings(Object data) {
-        // read gedcom head properties and create them if they do not exist
-        prop_FILE = prop_HEAD.getProperty("FILE");
-        if (prop_FILE == null) {
-            prop_FILE = prop_HEAD.addProperty("FILE", NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "Panel1.jTextField1.create"));
-        }
+        wiz = (WizardDescriptor) data;
         
-        prop_NOTE = prop_HEAD.getProperty("NOTE");
-        if (prop_NOTE == null) {
-            prop_NOTE = prop_HEAD.addProperty("NOTE", "");
-        }
-        
-        // set panel fields
-        ((GedcomPropertiesVisualPanel1) getComponent()).setFILE(prop_FILE.getDisplayValue());
-        ((GedcomPropertiesVisualPanel1) getComponent()).setNOTE(prop_NOTE.getDisplayValue());
+        getComponent().setFILE((String) wiz.getProperty(HEADER + ":" + FILE));
+        getComponent().setNOTE((String) wiz.getProperty(HEADER + ":" + NOTE));
     }
 
     @Override
     public void storeSettings(Object data) {
-        // read panel fields into properties directly
-        prop_FILE.setValue(((GedcomPropertiesVisualPanel1) getComponent()).getFILE());
-        prop_NOTE.setValue(((GedcomPropertiesVisualPanel1) getComponent()).getNOTE());
+        wiz = (WizardDescriptor) data;
+        
+        wiz.putProperty(HEADER + ":" + FILE, getComponent().getFILE());
+        wiz.putProperty(HEADER + ":" + NOTE, getComponent().getNOTE());
     }
 
     @Override
     public void validate() throws WizardValidationException {
-        if (((GedcomPropertiesVisualPanel1) getComponent()).getFILE().isEmpty()){
+        if (getComponent().getFILE().isEmpty()){
             throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_NameIsMandatory"), null);
         }
     }

@@ -16,7 +16,7 @@ import genj.gedcom.Grammar;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
-public final class GedcomPropertiesVisualPanel3 extends JPanel {
+public final class GedcomPropertiesVisualPanel3 extends JPanel implements Constants {
 
     private final int mode = GedcomPropertiesWizardIterator.getMode();
 
@@ -69,10 +69,10 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         jPanel1.setPreferredSize(new java.awt.Dimension(520, 360));
 
         jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel3.jLabel1.create" : "Panel3.jLabel1.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? "Panel3.jLabel1.create" : "Panel3.jLabel1.update"));
 
         jLabel2.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel3.jLabel2.create" : "Panel3.jLabel2.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? "Panel3.jLabel2.create" : "Panel3.jLabel2.update"));
 
         jComboBox2.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -86,7 +86,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         jLabel5.setAutoscrolls(true);
 
         jLabel3.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel3.jLabel3.create" : "Panel3.jLabel3.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? "Panel3.jLabel3.create" : "Panel3.jLabel3.update"));
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setSelected(true);
@@ -100,11 +100,11 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
         buttonGroup1.add(jRadioButton2);
         org.openide.awt.Mnemonics.setLocalizedText(jRadioButton2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, "Panel3.jRadioButton2.No"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel3.jCheckBox1.create" : "Panel3.jCheckBox1.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? "Panel3.jCheckBox1.create" : "Panel3.jCheckBox1.update"));
         jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, "Panel3.jCheckBox1.toolTipText"));
 
         jLabel4.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == GedcomPropertiesWizardIterator.CREATION_MODE ? "Panel3.jLabel4.create" : "Panel3.jLabel4.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? "Panel3.jLabel4.create" : "Panel3.jLabel4.update"));
         jLabel4.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, "Panel3.jLabel4.toolTipText"));
 
         buttonGroup2.add(jRadioButton3);
@@ -274,7 +274,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel {
 
     private void updateDisplay() {
         jLabel5.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, jComboBox2.getSelectedItem().toString() + "_label"));
-        boolean canBeConverted = (mode == GedcomPropertiesWizardIterator.UPDATE_MODE) && !getVERS().equals(parent.getOriginalVersion());
+        boolean canBeConverted = (mode == UPDATE) && !getVERS().equals(parent.getOriginalVersion());
         jCheckBox1.setVisible(canBeConverted);
         parent.warnVersionChange(canBeConverted);
     }

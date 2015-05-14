@@ -12,14 +12,11 @@
 
 package modules.editors.gedcomproperties.utils;
 
-import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 
 /**
  *
@@ -44,6 +41,9 @@ public class Utils {
         while (listProp.size() > 0) {
             // manages list
             propItemA = (Property) ((LinkedList) listProp).removeFirst();
+            if (propItemA == null) {
+                return;
+            }
             Property[] subProps = propItemA.getProperties();
             listProp.addAll(0, Arrays.asList(subProps));
             // workout if we have changed level or tag
