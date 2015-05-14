@@ -13,6 +13,7 @@ package modules.editors.gedcomproperties;
 
 import genj.gedcom.Gedcom;
 import genj.gedcom.Grammar;
+import java.util.Locale;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
@@ -229,6 +230,9 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
 
     public void setLANG(String str) {
         jComboBox1.setSelectedItem(Gedcom.TRANSLATED_LANGUAGES.get(str));
+        if (jComboBox1.getSelectedIndex() == -1) {
+            jComboBox1.setSelectedItem(Gedcom.TRANSLATED_LANGUAGES.get(Locale.getDefault().getDisplayLanguage(new Locale("en", "EN"))));
+        }
     }
 
     public void setCHAR(String str) {

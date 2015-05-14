@@ -27,17 +27,12 @@ import genj.gedcom.Submitter;
 import genj.gedcom.UnitOfWork;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
-import java.awt.Dimension;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import modules.editors.gedcomproperties.utils.GedcomPlacesConverter;
 import org.openide.DialogDisplayer;
@@ -361,20 +356,29 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
     }
 
     private void copyGedPropertiesToWizProp(String tagPath, int modeForDefault, String defaultvalue) {
-        Property[] props = getProperties(tagPath, false);
         String value = "", str = "";
 
-        if (props != null) {
-            for (Property prop : props) {
-                value += prop.getDisplayValue() + "<br>";
+        // Find property corresponding to tag if any
+        Property[] props = getProperties(tagPath, false);
+        
+        // If not null, get all tags recursively below parent and concatenate them
+        if (props != null) {  
+            Property parent = props[0].getParent();
+            if (parent != null) {
+                List<Property> properties = new ArrayList<Property>();
+                getPropertiesRecursively(parent, properties);
+                for (Property prop : properties) {
+                    value += prop.getDisplayValue() + "<br>";
+                }
             }
         }
-
+        
         if (modeForDefault == CREATION_OR_UPDATE) {
             str = defaultvalue;
         } else {
             str = mode == modeForDefault ? defaultvalue : "";
         }
+        
         wiz.putProperty(tagPath, props != null ? value : str);
     }
 
@@ -412,6 +416,14 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             return parent.getProperties(tagPath);
         }
         return null;
+    }
+
+    public void getPropertiesRecursively(Property parent, List props) {
+        Property[] children = parent.getProperties();
+        for (Property child : children) {
+            props.add(child);
+            getPropertiesRecursively(child, props);
+        }
     }
 
 }
