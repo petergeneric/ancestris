@@ -362,7 +362,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         Property[] props = getProperties(tagPath, false);
         
         // If not null, get all tags recursively below parent and concatenate them
-        if (props != null) {  
+        if (props != null && props.length != 0) {  
             Property parent = props[0].getParent();
             if (parent != null) {
                 List<Property> properties = new ArrayList<Property>();
