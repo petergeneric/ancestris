@@ -257,7 +257,6 @@ public class Gedcom implements Comparable {
      */
     public Gedcom() {
         this(null);
-        initLanguages();
     }
 
     /**
@@ -1613,7 +1612,7 @@ public class Gedcom implements Comparable {
 
     ;
 
-    private void initLanguages() {
+    public void initLanguages() {
         // Define key map of english name of language (String to store in Gedcom) pointing to language name of language with default language name (String to display)
         String language;
         for (int i = 0; i < Gedcom.LANGUAGES.length; i++) {
