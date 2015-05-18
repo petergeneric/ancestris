@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.report.svgtree
+OpenIDE-Module-Localizing-Bundle: ancestris/report/svgtree/Bundle.properties
+OpenIDE-Module-Specification-Version: 0.8.0
+

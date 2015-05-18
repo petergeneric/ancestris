@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Examples of SPARQL queries</title>
+        <link rel="stylesheet" href="./ancestris.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="./ancestris.css">
+    </head>
+    <body>
+        <a name="_Top_"></a>
+        <center>
+            <h2 class="ancestris_help_title">Examples of SPARQL queries</h2>
+        </center>
+        <br>
+        <table border="0" width="100%">
+            <tr>
+                <td width="65%">
+                    &nbsp;
+                </td>
+                <td width="35%">
+                    <p style="font-style: italic; text-align: justify;
+                    text-justify: newspaper; font-size: 10px;">
+                        <font color="#0b7700"><u>Author</u></font>: Jo Pol.<br>
+                        <font color="#0b7700"><u>Maintenance</u></font>: Jo Pol, You.
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <h3>File name prefixes</h3>
+        <dl>
+            <dt>q / s</dt><dd>The type of rules that at least should have been applied with the last conversion.</dd>
+            <dt>FAM / INDI / ...</dt><dd>Launch the report from the type of entity.<br/>
+                <i>Known bug: you may first have to execute another type of query.</i>
+            </dd>
+            <dt>SOSA / TREETOP</dt><dd>Custom properties generated with the report "tool box".
+                <!-- TODO add link to the tools that generate these properties -->
+            </dd>
+        </dl>
+        <h3>Files</h3>
+        <p>
+            Copy the examples on your local file system. 
+            For details on customisation see comment inside and the general description of
+            <a href="rdf-about.html#queries">queries</a> and
+            <a href="rdf-about.html#rules">rules</a>.
+            Files with rules can't have comment.
+        </p>
+        <dl>
+            <dt>rules</dt><dd>
+              <p class="justify">
+                Applied to the converted gedcom to provide shortcuts for the queries.
+              </p>
+              <ul>
+                <li><a href="./reports/NoRules.txt">NoRules.txt</a> just an empty file</li>
+                <li><a href="./reports/QuickRules.txt">QuickRules.txt</a></li>
+                <li><a href="./reports/SlowRules.txt">SlowRules.txt</a> QuickRules + ancestor/descendant relations.</li>
+                <li><a href="./rdf-submit.html">your set of rules?</a></li>
+              </ul>
+            </dd></dt><dt>GUI queries</dt><dd>
+              <p class="justify">
+                These queries won't work with the batch tool as the follwing list will do.
+                See the prefix explanations above.
+              </p>
+              <ul>
+                <li><a href="./reports/AgeDiffBetweenSpouses.txt">AgeDiffBetweenSpouses.txt</a></li>
+                <li><a href="./reports/CountEventsPerPlace.txt">CountEventsPerPlace.txt</a></li>
+                <li><a href="./reports/CountFirstNames.txt">CountFirstNames.txt</a></li>
+                <li><a href="./reports/CountGivnNames.txt">CountGivnNames.txt</a></li>
+                <li><a href="./reports/FAM-PatchworkFamily.txt">FAM-PatchworkFamily.txt</a></li>
+                <li><a href="./reports/qINDI-TimeLineWithCloseRelatives.txt">qINDI-TimeLineWithCloseRelatives.txt</a></li>
+                <li><a href="./reports/sINDI-RootAncestors.txt">sINDI-RootAncestors.txt</a></li>
+                <li><a href="./reports/SOSA-MultiMedia.txt">SOSA-MultiMedia.txt</a></li>
+                <li><a href="./reports/SOSA-InbredStatistics.txt">SOSA-InbredStatistics.txt</a></li>
+                <li><a href="./rdf-submit.html">your SPARQL query?</a></li>
+              </ul>
+            </dd></dt><dt>mashup queries</dt><dd>
+              <p class="justify">
+                These queries require the command line tools,
+                see the <a href="./rdf-mashup.html#batches">explanations</a>.
+                Queries marked with an astrix (*)
+                run also with the GUI but some columns will remain empty.
+                Also chek the comment headers in the files.
+              </p>
+              <ul>
+                <li><a href="./mashup/mashup.arq">mashup.arq</a> *</li>
+                <li><a href="./mashup/classmates.arq">classmates.arq</a></li>
+                <li><a href="./mashup/MigrationLines.txt">MigrationLines.txt</a> *</li>
+                <li><a href="./mashup/dbpediaLanguages.arq">dbpediaLanguages.arq</a></li>
+                <li><a href="./mashup/dbpediaProperties.arq">dbpediaProperties.arq</a></li>
+                <li><a href="./mashup/dbpediaRelatedEntities.arq">dbpediaRelatedEntities.arq</a></li>
+                <li><a href="./mashup/geonamesProperties.arq">geonamesProperties.arq</a></li>
+                <li><a href="./mashup/geonamesRelatedEntities.arq">geonamesRelatedEntities.arq</a></li>
+                <li><a href="./rdf-submit.html">your SPARQL query?</a></li>
+              </ul>
+            </dd>
+        </dl>
+    <br>
+    <a href="rdf-examples.html#_Top_">Top</a>
+    <br>
+    <br>
+    </body>
+</html>
+<!--
+Tip: to create a link which will open in an external web browser, try on the end of a line/paragraph:
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+    <param name="content" value="http://www.netbeans.org/">
+    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
+    <param name="textFontSize" value="medium">
+    <param name="textColor" value="blue">
+</object>
+To create a link to a help set from another module, you need to know the code name base and path, e.g.:
+<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
+(This link will behave sanely if that module is disabled or missing.)
+-->

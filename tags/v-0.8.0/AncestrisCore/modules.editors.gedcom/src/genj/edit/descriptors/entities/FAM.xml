@@ -1,0 +1,23 @@
+<col>
+ <row>
+  <col pad="8">
+   <label path="FAM"/>
+   <label path="FAM:MARR"/>
+   <col pad="1,8,1,1">
+    <bean path="FAM:MARR:DATE"/>
+    <bean path="FAM:MARR:PLAC" gx="1"/>
+   </col>
+  </col>
+  <col gx="1" pad="8">
+   <bean path="." type="genj.edit.beans.MediaBean" gx="1" gy="1"/>
+  </col>
+ </row>
+ <col>
+  <fold key="relationships"/>
+  <bean path="." type="genj.edit.beans.RelationshipsBean" gy="1" gx="1" wy="1" pad="8"/>
+ </col>
+ <col>
+  <fold key="events"/>
+  <bean path="." type="genj.edit.beans.EventsBean" gy="1" gx="1" wy="1" pad="8"/>
+ </col>
+</col> 

@@ -1,0 +1,318 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="../ancestris.css">
+</head>
+<body>
+  <center>
+  <h2 class="ancestris_help_title">Gest&atilde;o de locais</h2>
+  </center>
+  <br>
+  <p>Resumo<br>
+    - <a href="first_steps_place_management.html#first_steps_place_management_1">Ordena&ccedil;&atilde;o das jurisdi&ccedil;&otilde;es</a><br>
+    - <a href="first_steps_place_management.html#first_steps_place_management_2">Introdu&ccedil;&atilde;o das jurisdi&ccedil;&otilde;es</a><br>
+    - <a href="first_steps_place_management.html#first_steps_place_management_3">Registo da ordem das jurisdi&ccedil;&otilde;es no ficheiro Gedcom</a><br>
+    - <a href="first_steps_place_management.html#first_steps_place_management_4">Modifica&ccedil;&atilde;o global da formula&ccedil;&atilde;o das jurisdi&ccedil;&otilde;es</a><br>
+  </p>
+  <br>
+  <p class="justify">
+    &Eacute; um cap&iacute;tulo importante. Uma leitura atenta 
+    evita-lhe de ter, um dia, de repetir todo o seu trabalho. 
+    A ado&ccedil;&atilde;o de uma ordem de jurisdi&ccedil;&otilde;es 
+    universal e homog&eacute;nea, conforme &agrave; norma Gedcom, &eacute; 
+    indispens&aacute;vel para facilitar as suas trocas  e tornar mais precisa a 
+    geo-localiza&ccedil;&atilde;o dos eventos.
+  </p>
+  <br>
+  <br>
+  <center>
+  <b>CAUTELA&nbsp;: antes de qualquer modifica&ccedil;&atilde;o, fa&ccedil;a 
+  uma c&oacute;pia de seguran&ccedil;a do seu ficheiro Gedcom.
+  </b>
+  </center>
+  <br>
+  <a name="first_steps_place_management_1"></a>
+  <h3 class="ancestris_help_title">Ordena&ccedil;&atilde;o das jurisdi&ccedil;&otilde;es</h3>
+  <p class="justify">
+    Para introduzir um local, conv&eacute;m classificar as diferentes 
+    jurisdi&ccedil;&otilde;es por ordem crescente de import&acirc;ncia, separando  
+    cada n&iacute;vel por uma v&iacute;rgula. Se um n&iacute;vel estiver vazio,  
+    mantenha a v&iacute;rgula.<br>
+  </p>
+  <p class="marge40">
+    <i><u>Conselho do Ancestris</u>:&nbsp;contrariamente a certas 
+    pr&aacute;ticas, n&atilde;o deixe espa&ccedil;os entre as jurisdi&ccedil;&otilde;es.</i><br>
+  </p>
+    S&atilde;o poss&iacute;veis sete n&iacute;veis de jurisdi&ccedil;&atilde;o:<br>
+    <center><i>Vila,Cidade,C&oacute;digo INSEE,C&oacute;digo postal,Concelho,Distrito,Pa&iacute;s</i></center>
+  <p class="justify">
+    N&atilde;o &eacute; obrigat&oacute;rio introduzir todos mas deve 
+    <b>respeitar a hierarquia desta ordem</b>.
+  </p>
+  <table border="1" width="100%" class="ancestris_stop_tip">
+    <tr>
+      <td>
+        <table border="0" width="100%">
+          <tr>
+            <td width="15%">
+              <center><img src="../images/idea.png" width="60" height="64"></center>
+            </td>
+            <td>
+              <p class="justify">
+                Se bem que o Ancestris  permita introduzir tamb&eacute;m o <b>c&oacute;digo
+                postal</b>, &eacute; prefer&iacute;vel utilizar o
+                <b>c&oacute;digo INSEE</b>. Com efeito, um c&oacute;digo postal pode
+                reagrupar mais cidades enquanto o c&oacute;digo INSEE
+                (sistema de c&oacute;digo geogr&aacute;fico
+                criado em 1943), &eacute; &uacute;nico para cada cidade (s&oacute; v&aacute;lido para Fran&ccedil;a).
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <a name="first_steps_place_management_2"></a>
+  <h3 class="ancestris_help_title">Introdu&ccedil;&atilde;o das jurisdi&ccedil;&otilde;es</h3>
+  <p class="justify">
+    Se optou pela apresenta&ccedil;&atilde;o ''Distinguir 
+    jurisdi&ccedil;&otilde;es de locais'' (cf <a href="../first_steps/first_steps_basic_ancestris_pt.html"> 
+    Primeiras defini&ccedil;&otilde;es</a>) n&atilde;o necessita das explica&ccedil;&otilde;es seguintes, uma vez que introduzir&aacute; 
+    as jurisdi&ccedil;&otilde;es n&iacute;vel por n&iacute;vel.<br>
+    Para aqueles que n&atilde;o escolheram esta op&ccedil;&atilde;o, o mais simples, 
+    &eacute; um exemplo:<br>
+    Para um evento localizado na vila 
+    "M&eacute;zin", em Allanche (c&oacute;digo INSEE 15160), 
+    d&eacute;partamento do Cantal, em Auvergne, Fran&ccedil;a. Conv&eacute;m 
+    introduzir:
+  </p>
+  <center>
+  <img src="../images/screenshots/screenshots_first_steps_place_management_saisie_lieux_pt.png" alt="Ecran de saisie des juridictions." width="280" height="67">
+  </center>
+  <ul>
+    <li><i>N&atilde;o pomos nada a seguir &agrave; palavra Fran&ccedil;a.</i></li>
+    <li><i>Se a vila for desconhecida, pomos uma v&iacute;rgula no princ&iacute;pio  
+    da linha.</i></li>
+    <li><i>Para um evento em que s&oacute; conhecemos a  
+    cidade, escrevemos: ,Allanche,,,,  (1 v&iacute;rgula &agrave; frente e 
+    4 v&iacute;rgulas no final da linha).</i></li>
+  </ul>
+  <br>
+  <center>
+  &Eacute; simples, a reter: ''Do mais pequeno para o maior e cada termo 
+  separado por uma v&iacute;rgula''.
+  </center>
+  <br>
+  <b>Completar campo automaticamente</b><br>
+  <p class="justify">
+    Dependendo dos dados introduzidos, tem um menu contextual que lhe prop&otilde;e
+    os <u>locais j&aacute; conhecidos</u> come&ccedil;ando pela 
+    mesma cadeia de caracteres. → Um clique esquerdo sobre
+    a linha proposta e <b>Aceitar</b> para validar.<br>
+    Se escolheu para a introdu&ccedil;&atilde;o
+    "<a href="../advanced/advanced_menu_options_1.html">Prefer&ecirc;ncias</a> -
+    Distinguir jurisdi&ccedil;&otilde;es...", esta fun&ccedil;&atilde;o existe
+    igualmente, mas linha a linha.<br>
+  </p>
+  <br>
+  <table border="1" width="100%">
+    <tr>
+      <td>
+        <font size="-1">
+        <center>
+        <img src="../images/warn.gif" width="18" height="17"> <b>N&atilde;o 
+        confundir o registo no ficheiro Gedcom 
+        com a exibi&ccedil;&atilde;o dos locais nas vistas</b>
+        </center>
+        <br>
+        <u>Registo no ficheiro Gedcom</u>, &eacute; aqui  
+        que a norma de organiza&ccedil;&atilde;o das jurisdi&ccedil;&otilde;es deve ser 
+        respeitada.<br>
+        <u>A exibi&ccedil;&atilde;o dos locais nas vistas</u>, &eacute; a forma 
+        como quer ver as jurisdi&ccedil;&otilde;es nas vistas  
+        (por exemplo, escolher s&oacute; ver a vila e o  
+        pa&iacute;s na &aacute;rvore - cf 
+        <a href="../advanced/advanced_menu_options_1.html">Prefer&ecirc;ncias</a>).
+        </font>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <a name="first_steps_place_management_3"></a>
+  <h3 class="ancestris_help_title">Registo da ordem das jurisdi&ccedil;&otilde;es no ficheiro  Gedcom</h3>
+  <p class="justify">
+    &Eacute; importante que esta hierarquia de locais (ou ordem 
+    das jurisdi&ccedil;&otilde;es) seja descrita no cabe&ccedil;alho  
+    do seu Gedcom. &Eacute; a regra interna fixada pelo  
+    ficheiro Gedcom que permite ao Ancestris e aos outros 
+    utilizadores lerem as jurisdi&ccedil;&otilde;es. Este registo 
+    determina o formato de todas as suas etiquetas "PLAC".<br>
+    <u>Este registo deve ser feito logo na cria&ccedil;&atilde;o 
+    duma genealogia ou a seguir &agrave; importa&ccedil;&atilde;o duma 
+    genealogia criada com outro programa</u> 
+    (muitos n&atilde;o respeitam a norma).
+  </p>
+  <ul>
+    <li>1ª solu&ccedil;&atilde;o:
+      <ul>
+        <li>Abrir o editor Gedcom. Apontar para uma linha PLAC (&agrave;  
+        escolha)<br>
+        - clique esquerdo (para a real&ccedil;ar) e depois clique direito 
+        para abrir o menu contextual .<br>
+        - descer at&eacute; &agrave; linha  ''Definir 
+        a hierarquia para locais''<br>
+        <img src="../images/screenshots/screenshots_first_steps_place_management_ordonnancement_des_juridictions_pt.png" alt="Ecran de l'ordonnancement juridictionnel dans le fichier Gedcom." width="480" height="178"><br>
+        A linha de baixo serve para controlar, modificar ou 
+        introduzir as diferentes jurisdi&ccedil;&otilde;es que tem 
+        definidas para toda a sua genealogia.<br> 
+        Para validar a sua escolha: clique em "Continuar 
+        e Definir a hierarquia para  
+        locais".<br> 
+        Est&aacute; feito! Pense em fazer uma c&oacute;pia de seguran&ccedil;a do seu trabalho.<br>
+        </li>
+      </ul>
+    </li>
+    <br>
+    <li>2ª solu&ccedil;&atilde;o:
+      <ul>
+        <li>Abrir o seu ficheiro Gedcom com um editor de texto. 
+        Para Linux, utilize o Gedit, ou o Nedit ou o Jedit. Em Windows, 
+        utilize o Notepad (nunca o Word).  Em MacOs, utilize o 
+        TextEdit.<br>
+        </li>
+        <pre>
+        0 HEAD
+        1 SOUR ANCESTRIS
+        2 VERS 0.5.0.1291
+        2 NAME Ancestris
+        2 CORP Ancestris Team
+        3 ADDR http://www.ancestris.org
+        1 DEST ANY
+        1 DATE 21 MAR 2011      &lt;---- a data ser&aacute; diferente
+        2 TIME 18:44:12         &lt;---- a hora ser&aacute; diferente
+        1 SUBM @B1@             &lt;---- pode n&atilde;o ter esta linha
+        1 FILE pedro.ged        &lt;---- ter&aacute; aqui o nome do seu ficheiro
+        1 GEDC
+        2 VERS 5.5
+        2 FORM Lineage-Linked
+        1 CHAR UTF-8
+        1 LANG Portuguese-Pt
+        </pre>
+        <p class="justify">
+          Ser&aacute; suficiente juntar, logo ap&oacute;s a linha
+          ''1 LANG Portuguese-Pt'', as duas linhas seguintes:
+        </p>
+        <pre>
+        1 PLAC
+        2 FORM Vila,Cidade,C&oacute;digo postal,Concelho,Distrito,Pa&iacute;s
+        </pre>
+        <b>Grave</b> o seu trabalho, e j&aacute; est&aacute;, est&aacute; feito!
+        <p class="justify">
+          <img src="../images/warn.gif" width="18" height="17"> Se j&aacute;
+          introduziu centenas de locais no seu
+          ficheiro, o simples fato de juntar ao cabe&ccedil;alho do
+          ficheiro Gedcom as duas linhas descritas no par&aacute;grafo 
+          anterior n&atilde;o altera nada nestes locais
+          j&aacute; registados. A &uacute;nica outra solu&ccedil;&atilde;o ser&aacute; 
+          correr todos os locais da sua genealogia, 
+          um por um.
+        </p>
+      </ul>
+    </li>
+    <br>
+    <li>
+    <b>uma outra solu&ccedil;&atilde;o</b> para gerar a ordena&ccedil;&atilde;o 
+    das jurisdi&ccedil;&otilde;es (se hesita em fazer a modifica&ccedil;&atilde;o com o  
+    editor de texto) &eacute; ir a "Ver/Listas 
+    e relat&oacute;rios/Caixa de ferramentas/5&nbsp;- Gest&atilde;o das 
+    etiquetas de endere&ccedil;os PLAC".
+    </li>
+    <table border="1" width="100%" class="ancestris_stop_tip">
+      <tr>
+        <td>
+          <table border="0" width="100%">
+            <tr>
+              <td width="15%">
+                <center><img src="../images/idea.png" width="60" height="64"></center>
+              </td>
+              <td>
+                <p class="justify">
+                  O formato dos locais do seu ficheiro Gedcom assim como
+                  as suas prefer&ecirc;ncias de exibi&ccedil;&atilde;o podem
+                  igualmente ser modificadas a
+                  partir da extens&atilde;o "Lista de locais".
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </ul>
+  <br>
+  <a name="first_steps_place_management_4"></a>
+  <h3 class="ancestris_help_title">Modifica&ccedil;&atilde;o global da formula&ccedil;&atilde;o das jurisdi&ccedil;&otilde;es</h3>
+  <p class="justify">
+    Apercebe-se, depois de terminar,que fez 
+    um erro dactilogr&aacute;fico numa localidade. Outra hip&oacute;tese, 
+    uma mesma localiza&ccedil;&atilde;o foi inserida  
+    duas vezes, de forma diferente.<br>
+    Bastam alguns cliques para modificar de uma s&oacute; vez  
+    todos os locais envolvidos:
+    <ul>
+      <ul>
+        <li> realce uma das linhas PLAC que quer modificar (1)</li>
+        <li>fa&ccedil;a a modifica&ccedil;&atilde;o na &aacute;rea de introdu&ccedil;&atilde;o (2)<i>- 
+        neste exemplo acrescent&aacute;mos "ee" -</i> o que far&aacute; 
+        aparecer uma caixa no fim da linha (3)</li> 
+        <li>marque esta caixa e depois "Sim" na janela de 
+        confirma&ccedil;&atilde;o (4)</li>
+        <li>S&oacute; lhe resta clicar em <b>Aceitar</b> na zona 
+        inferior do editor para validar a altera&ccedil;&atilde;o.</li>
+        <br>
+        <img src="../images/screenshots/screenshots_first_steps_place_management_global_change_pt.png" alt="Ecran de changement global du libell&eacute; des juridictions." width="480" height="192">
+        <br>
+        Esta modifica&ccedil;&atilde;o &eacute; id&ecirc;ntica a partir de um ou 
+        outro dos dois editores.<br>
+      </ul>
+    </ul>
+  </p>
+  <!-- Debut des boutons Precedent - Suivant -->
+  <br>
+  <br>
+  <table border="0" width="100%">
+    <tr>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+                <font size="-1"><a href="../first_steps/first_steps_fenetrage.html">P&aacute;gina&nbsp;anterior</a></font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="80%">
+        &nbsp;
+      </td>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+                <font size="-1"><a href="../first_steps/first_steps_gedcoms_manager.html">P&aacute;gina&nbsp;seguinte</a></font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!-- Fin des boutons Precedent - Suivant -->
+  <!-- Portuguese help files - updated on 08/15/2014 -->
+</body>
+</html>
