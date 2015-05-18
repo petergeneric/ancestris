@@ -28,11 +28,10 @@ final public class Images {
 
   public final static ImageIcon
     imgClose        = new ImageIcon(Images.class,"images/Close"),
-    imgNew          = new ImageIcon(Images.class,"images/New"),
+    imgNew         = new ImageIcon(Images.class,"images/New"),
     imgOpen         = new ImageIcon(Images.class,"images/Open"),
     imgExit         = new ImageIcon(Images.class,"images/Exit"),
     imgSave         = new ImageIcon(Images.class,"images/Save"),
     imgAbout        = new ImageIcon(Images.class,"images/About"),
-    imgHelp         = new ImageIcon(Images.class,"images/Help"),
-    imgProperties   = new ImageIcon(Images.class,"images/Properties");
+    imgHelp        = new ImageIcon(Images.class,"images/Help");
 }

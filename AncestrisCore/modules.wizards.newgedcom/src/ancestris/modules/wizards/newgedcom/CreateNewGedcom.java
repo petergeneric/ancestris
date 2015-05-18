@@ -11,7 +11,8 @@
  */
 package ancestris.modules.wizards.newgedcom;
 
-import ancestris.api.newgedcom.ModifyGedcom;
+import ancestris.api.newgedcom.NewGedcom;
+import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -27,8 +28,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author daniel
  */
-@ServiceProvider(service=ModifyGedcom.class)
-public class CreateNewGedcom implements INewGedcomProvider,ModifyGedcom {
+@ServiceProvider(service=NewGedcom.class)
+public class CreateNewGedcom implements INewGedcomProvider,NewGedcom {
     
     private static final genj.gedcom.GedcomOptions gedcomOptions = genj.gedcom.GedcomOptions.getInstance();
     private Context context = null;
@@ -77,17 +78,4 @@ public class CreateNewGedcom implements INewGedcomProvider,ModifyGedcom {
             }
         return (Indi)getContext().getGedcom().getFirstEntity(Gedcom.INDI);
     }
-
-    public Context update() {
-        return null;
-    }
-
-    public Context update(Context context) {
-        return null;
-    }
-
-    public boolean isReady() {
-        return false; // module not ready 
-    }
-
 }

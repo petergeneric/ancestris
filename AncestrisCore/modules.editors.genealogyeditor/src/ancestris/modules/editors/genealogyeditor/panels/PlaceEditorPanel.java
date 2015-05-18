@@ -76,10 +76,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         setMinimumSize(new java.awt.Dimension(537, 414));
 
-        placeEditorTabbedPane.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
+        gedcomPlaceEditorPanel.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.gedcomPlaceEditorPanel.toolTipText")); // NOI18N
+
         placeEditorTabbedPane.setMinimumSize(new java.awt.Dimension(513, 263));
 
-        jXMapKit1.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
         MapScrollPane.setViewportView(jXMapKit1);
 
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
@@ -90,7 +90,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
         );
 
         placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("PlaceEditorPanel.mapPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/map.png")), mapPanel); // NOI18N
@@ -312,20 +312,28 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         gedcomPlaceEditorPanel.set(root, mPlace);
         addressEditorPanel.set(root, mAddress);
         if (mPlace != null) {
-            editorsTabbedPane.setSelectedComponent(placeEditorTabPanel);
-            PropertyMap propMap = mPlace.getMap();
-            double longitude = Double.NaN;
-            double latitude = Double.NaN;
+            Property latitude = null;
+            Property longitude = null;
 
-            
-            if (propMap != null){
-                longitude = propMap.getLongitude()==null?Double.NaN:propMap.getLongitude().getDoubleValue();
-                latitude = propMap.getLatitude()==null?Double.NaN:propMap.getLatitude().getDoubleValue();
+            editorsTabbedPane.setSelectedComponent(placeEditorTabPanel);
+
+            if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+                Property map = place.getProperty("MAP");
+                if (map != null) {
+                    latitude = map.getProperty("LATI");
+                    longitude = map.getProperty("LONG");
+                }
+            } else {
+                Property map = place.getProperty("_MAP");
+                if (map != null) {
+                    latitude = map.getProperty("_LATI");
+                    longitude = map.getProperty("_LONG");
+                }
             }
 
-            if (longitude != Double.NaN && latitude != Double.NaN) {
+            if (latitude != null && longitude != null) {
                 // Center map on existing geo coordinates
-                jXMapKit1.setAddressLocation(new GeoPosition(latitude, longitude));
+                jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
                 // Set search field in case user may want to search another location similar to the one existing, but stay on map tab
                 searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " "));
             } else {

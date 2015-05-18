@@ -245,17 +245,11 @@ public class TagPath implements Comparable{
   }
   
   /**
-   * Returns the n-th tag of this path.
-   * @param which 0-based number. If negative starts from the end. 
-   * get(-1) returns the las element (equivalent to getLast)
+   * Returns the n-th tag of this path 
+   * @param which 0-based number
    * @return tag as <code>String</code>
    */
   public String get(int which) {
-      if (which<0)
-          which += len;
-      
-      if (which<0)
-          return null;
     return tags[which];
   }
 

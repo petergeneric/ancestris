@@ -50,13 +50,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import ancestris.welcome.content.BundleSupport;
 import ancestris.welcome.content.ContentSection;
-import java.awt.Dimension;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 
 /**
  *
- * @author S. Aubrecht & Frederic Lapeyre
+ * @author S. Aubrecht
  */
 class MyAncestrisTab extends AbstractTab {
     
@@ -71,23 +68,28 @@ class MyAncestrisTab extends AbstractTab {
         main.setBorder(BorderFactory.createEmptyBorder());
         add( main, BorderLayout.CENTER );
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        JPanel leftPanel = new JPanel( new GridLayout(0,1) );
         leftPanel.setOpaque(false);
         leftPanel.setBorder(BorderFactory.createEmptyBorder());
-        main.add(new ContentSection( leftPanel,false));
-        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionCreateOpen"), new NewGedcomPanel() ) );
-        leftPanel.add( new ContentSection( new OpenGedcomPanel()) );
-        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionRecentFiles" ), new RecentFilesPanel() ) );   //NOI18N
-        leftPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        main.add(new ContentSection( leftPanel,false,false));
 
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+//        ContentSection.addTitleToPanel(leftPanel, BundleSupport.getLabel( "SectionRecentFiles" ));
+//        leftPanel.add(new RecentFilesPanel() );
+        leftPanel.add( new ContentSection( new NewGedcomPanel(), false, false, false ) );
+        leftPanel.add( new ContentSection( new OpenGedcomPanel(), false, false, false ) );
+        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionRecentFiles" ), //NOI18N
+                new RecentFilesPanel(), false, false, false ) );
+//        leftPanel.add( new NewGedcomPanel() );
+
+        JPanel rightPanel = new JPanel( new GridLayout(0,1) );
         rightPanel.setOpaque(false);
         rightPanel.setBorder(BorderFactory.createEmptyBorder());
-        main.add(new ContentSection( rightPanel,true));
-        rightPanel.add( new ContentSection( BundleSupport.getLabel( "SectionPersonalise"), new PluginsPanel(true) ) );   //NOI18N
-        rightPanel.add( new ContentSection( new PreferencesPanel()) );
+        main.add(new ContentSection( rightPanel,true,false));
+
+//        rightPanel.add( new PluginsPanel(true) );
+//        rightPanel.add( new PreferencesPanel() );
+        rightPanel.add( new ContentSection( new PluginsPanel(true), false, false, false ) );
+        rightPanel.add( new ContentSection( new PreferencesPanel(), false, false, false ) );
 
         add( new BottomBar(), BorderLayout.SOUTH );
     }

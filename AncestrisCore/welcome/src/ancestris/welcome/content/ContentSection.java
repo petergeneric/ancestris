@@ -45,8 +45,6 @@
 package ancestris.welcome.content;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -56,8 +54,6 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -74,64 +70,50 @@ public class ContentSection extends JPanel implements Constants {
     private final static Stroke SEPARATOR_STROKE = new BasicStroke(1,
             BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1, new float[] {1.0f, 1.0f}, 0.0f);
 
-    // Full version
-    public ContentSection( String title, JComponent content, boolean createBorder, boolean showSeparator, boolean maxSize ) {
+    public ContentSection( String title, JComponent content, boolean showSeparator, boolean maxSize ) {
+        this(title, content, true, showSeparator, maxSize );
+    }
+
+    public ContentSection( String title, JComponent content, boolean isTopLevel, boolean showSeparator, boolean maxSize ) {
+        this( content, isTopLevel, showSeparator, maxSize, 0 );
+        JLabel lblTitle = new JLabel( title );
+        lblTitle.setFont( SECTION_HEADER_FONT );
+
+        lblTitle.setBorder( BorderFactory.createEmptyBorder(0, 0, 20, 0) );
+        lblTitle.setForeground( Utils.getColor( COLOR_SECTION_HEADER ) );
+        add( lblTitle, new GridBagConstraints(0,0,1,1,0.0,0.0,
+                GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(6,0,0,0),0,0) );
+    }
+
+    public ContentSection( JComponent titleComponent, JComponent content, boolean showSeparator, boolean maxSize ) {
+        this( content, showSeparator, maxSize, 8 );
+        if( null != titleComponent ) {
+            add( titleComponent, new GridBagConstraints(0,0,1,1,1.0,0.0,
+                    GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,15,0),0,0) );
+        }
+    }
+
+    public ContentSection( JComponent content, boolean showSeparator, boolean maxSize ) {
+        this( content, true, showSeparator, maxSize);
+    }
+
+    public ContentSection( JComponent content, boolean isTopLevel, boolean showSeparator, boolean maxSize ) {
+        this( content, isTopLevel, showSeparator, maxSize, 0 );
+    }
+
+    private ContentSection( JComponent content, boolean showSeparator, boolean maxSize, int leftInsets ) {
+        this( content, true, showSeparator, maxSize, leftInsets);
+    }
+    private ContentSection( JComponent content, boolean isTopLevel,boolean showSeparator, boolean maxSize, int leftInsets ) {
+        super( new GridBagLayout() );
         setOpaque(false);
         this.maxSize = maxSize;
         this.showSeparator = showSeparator;
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        if (createBorder)
-            setBorder( BorderFactory.createEmptyBorder(20,25,6,25) );   // top, left, bottom, right
-        if (title != null) {
-            JLabel lblTitle = new JLabel( title );
-            lblTitle.setFont(SECTION_HEADER_FONT);
-            lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 6, 0));
-            lblTitle.setForeground(Utils.getColor(COLOR_SECTION_HEADER));
-            lblTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-            lblTitle.setAlignmentY(Component.TOP_ALIGNMENT);
-            add(lblTitle);
-        }
-        add(content); 
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.setAlignmentX(Component.LEFT_ALIGNMENT);
-        content.setAlignmentY(Component.TOP_ALIGNMENT);
+        add( content, new GridBagConstraints(0,1,2,1,1.0,1.0,
+                GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,leftInsets,0,0),0,0) );
+        if (isTopLevel)
+            setBorder( BorderFactory.createEmptyBorder(35,35,15,35) );
     }
-
-    public ContentSection( JComponent content, boolean showSeparator ) {
-        this( null, content, false, showSeparator, false);
-    }
-
-    public ContentSection( String title, JComponent content ) {
-        this(title, content, true, false, false);
-    }
-
-    public ContentSection( JComponent content ) {
-        this( null, content, true, false, false);
-    }
-
-    public ContentSection( String title, JComponent content, boolean isTopLevel, boolean showSeparator) {
-        this(title, content, isTopLevel, showSeparator, false);
-    }
-
-//    public ContentSection( JComponent titleComponent, JComponent content, boolean showSeparator, boolean maxSize ) {
-//        this( content, showSeparator, maxSize, 8 );
-//        if( null != titleComponent ) {
-//            add( titleComponent, new GridBagConstraints(0,0,1,1,1.0,0.0, GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,6,0),0,0) );
-//        }
-//    }
-//
-//    public ContentSection( JComponent content, boolean isTopLevel, boolean showSeparator, boolean maxSize ) {
-//        this( content, isTopLevel, showSeparator, maxSize, 0 );
-//    }
-//
-//    private ContentSection( JComponent content, boolean showSeparator, boolean maxSize, int leftInsets ) {
-//        this( content, true, showSeparator, maxSize, leftInsets);
-//    }
-//    private ContentSection( JComponent content, boolean isTopLevel,boolean showSeparator, boolean maxSize, int leftInsets ) {
-//        add( content, new GridBagConstraints(0,1,1,1,1.0,1.0, GridBagConstraints.CENTER,GridBagConstraints.BOTH, new Insets(0,leftInsets,0,0),0,0) );
-//        if (isTopLevel)
-//            setBorder( BorderFactory.createEmptyBorder(30,35,6,35) );
-//    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -146,14 +128,14 @@ public class ContentSection extends JPanel implements Constants {
         }
     }
 
-//    @Override
-//    public void setSize(Dimension d) {
-//        if( maxSize && d.width > PANEL_MAX_WIDTH ) {
-//            d = new Dimension( d );
-//            d.width = PANEL_MAX_WIDTH;
-//        }
-//        super.setSize(d);
-//    }
+    @Override
+    public void setSize(Dimension d) {
+        if( maxSize && d.width > PANEL_MAX_WIDTH ) {
+            d = new Dimension( d );
+            d.width = PANEL_MAX_WIDTH;
+        }
+        super.setSize(d);
+    }
 
     @Override
     public void setBounds(Rectangle r) {

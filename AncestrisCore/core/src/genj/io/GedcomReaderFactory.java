@@ -366,27 +366,6 @@ public class GedcomReaderFactory {
                 LOG.info("Found LANG " + lang + " - Locale is " + gedcom.getLocale());
             }
 
-            // check 1 DEST
-            String dest = header.getPropertyValue("DEST");
-            if (dest == null || dest.isEmpty()) {
-                context.handleWarning(0, RESOURCES.getString("read.warn.baddest"), new Context(gedcom));
-            } else {
-                if ("ANY".equals(dest)) {
-                    gedcom.setDestination(Gedcom.DEST_ANY);
-                    LOG.info("Found DEST " + dest + " - Any");
-                } else if ("ANSTFILE".equals(dest)) {
-                    gedcom.setDestination(Gedcom.DEST_ANSTFILE);
-                    LOG.info("Found DEST " + dest + " - Ancestral File");
-                } else if ("TempleReady".equals(dest)) {
-                    gedcom.setDestination(Gedcom.DEST_TEMPLEREADY);
-                    LOG.info("Found DEST " + dest + " - Temple ordinance clearance");
-                } else {
-                    String s = RESOURCES.getString("read.warn.baddestination", dest, gedcom.getDestination());
-                    context.handleWarning(0, RESOURCES.getString("read.warn.baddestination", dest, gedcom.getDestination()), new Context(gedcom));
-                    LOG.warning(s);
-                }
-            }
-
             // check 1 CHAR
             String encoding = header.getPropertyValue("CHAR");
             if (encoding.length() > 0) {

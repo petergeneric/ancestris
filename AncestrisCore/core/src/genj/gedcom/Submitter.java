@@ -25,13 +25,11 @@ package genj.gedcom;
 public class Submitter extends Entity {
   
   private final static TagPath PATH_NAME =new TagPath("SUBM:NAME");
-  private final static TagPath PATH_ADDR =new TagPath("SUBM:ADDR");
   private final static TagPath PATH_CITY =new TagPath("SUBM:ADDR:CITY");
-  private final static TagPath PATH_STAE =new TagPath("SUBM:ADDR:STAE");
-  private final static TagPath PATH_POST =new TagPath("SUBM:ADDR:POST");
-  private final static TagPath PATH_CTRY =new TagPath("SUBM:ADDR:CTRY");
   private final static TagPath PATH_PHON =new TagPath("SUBM:PHON");
+  private final static TagPath PATH_POST =new TagPath("SUBM:ADDR:POST");
   private final static TagPath PATH_EMAI =new TagPath("SUBM:_EMAIL");
+  private final static TagPath PATH_CTRY =new TagPath("SUBM:ADDR:CTRY");
   private final static TagPath PATH_WEB  =new TagPath("SUBM:_WWW");
 
   /**
@@ -65,17 +63,6 @@ public class Submitter extends Entity {
   }
 
   /**
-   * Address of Submitter
-   */
-  public String getAddress() {
-    return getValue(PATH_ADDR, "");
-  }
-
-  public void setAddress(String name) {
-    setValue(PATH_ADDR, name);
-  }
-
-  /**
    * City of Submitter
    */
   public String getCity() {
@@ -84,39 +71,6 @@ public class Submitter extends Entity {
 
   public void setCity(String name) {
     setValue(PATH_CITY, name);
-  }
-
-  /**
-   * State of Submitter
-   */
-  public String getState() {
-    return getValue(PATH_STAE, "");
-  }
-
-  public void setState(String name) {
-    setValue(PATH_STAE, name);
-  }
-
-  /**
-   * Postcode of Submitter
-   */
-  public String getPostcode() {
-    return getValue(PATH_POST, "");
-  }
-
-  public void setPostcode(String name) {
-    setValue(PATH_POST, name);
-  }
-
-  /**
-   * Country of Submitter
-   */
-  public String getCountry() {
-    return getValue(PATH_CTRY, "");
-  }
-
-  public void setCountry(String name) {
-    setValue(PATH_CTRY, name);
   }
 
   /**
@@ -131,6 +85,17 @@ public class Submitter extends Entity {
   }
 
   /**
+   * Postcode of Submitter
+   */
+  public String getPostcode() {
+    return getValue(PATH_POST, "");
+  }
+
+  public void setPostcode(String name) {
+    setValue(PATH_POST, name);
+  }
+
+  /**
    * Email of Submitter
    */
   public String getEmail() {
@@ -139,6 +104,17 @@ public class Submitter extends Entity {
 
   public void setEmail(String name) {
     setValue(PATH_EMAI, name);
+  }
+
+  /**
+   * Country of Submitter
+   */
+  public String getCountry() {
+    return getValue(PATH_CTRY, "");
+  }
+
+  public void setCountry(String name) {
+    setValue(PATH_CTRY, name);
   }
 
   /**

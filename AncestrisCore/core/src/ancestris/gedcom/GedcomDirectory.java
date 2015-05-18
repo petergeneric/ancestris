@@ -120,9 +120,6 @@ public abstract class GedcomDirectory {
         "file.exists=File {0} already exists. Proceed?"
     })
     public Context newGedcom() {
-        return newGedcom(null, null, null, true);
-    }
-    public Context newGedcom(Gedcom gedcomProvided, String title, String defaultFilename, boolean setDefaults) {
         /*
          * when creating a new gedcom, the new file is always created on disk ATM
          * TODO: should we change this behaviour?
@@ -130,35 +127,26 @@ public abstract class GedcomDirectory {
         //FIXME: use dao.createfromtemplate?
         //FIXME: use DataObject template/wizard. the file is created from data
         // in setGedcom
-        
+
         // let user choose a file
-        File file = null;
-        boolean fileOK = false;
-        while (!fileOK) {            
-            file = chooseFile(title == null ? create_title() : title, create_action(), null, defaultFilename);
-            if (file == null) {
+        File file = chooseFile(create_title(), create_action(), null);
+        if (file == null) {
+            return null;
+        }
+        if (!file.getName().endsWith(".ged")) {
+            file = new File(file.getAbsolutePath() + ".ged");
+        }
+        if (file.exists()) {
+            if (DialogManager.YES_OPTION
+                    != DialogManager.createYesNo(create_title(), file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
                 return null;
-            }
-            if (!file.getName().endsWith(".ged")) {
-                file = new File(file.getAbsolutePath() + ".ged");
-            }
-            if (file.exists()) {
-                if (DialogManager.YES_OPTION == DialogManager.createYesNo(title == null ? create_title() : title, file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
-                    fileOK = true;
-                }
-            } else {
-                fileOK = true;
             }
         }
 
         // form the origin
-        Gedcom gedcom = gedcomProvided;
+        Gedcom gedcom;
         try {
-            if (gedcomProvided == null) {
-                gedcom = new Gedcom(Origin.create(file.toURI().toURL()));
-            } else {
-                gedcom.setOrigin(Origin.create(file.toURI().toURL()));
-            }
+            gedcom = new Gedcom(Origin.create(file.toURI().toURL()));
         } catch (MalformedURLException e) {
             LOG.log(Level.WARNING, "unexpected exception creating new gedcom", e);
             return null;
@@ -168,9 +156,7 @@ public abstract class GedcomDirectory {
         //FIXME: changer le nouveau gedcom cree par defaut!
         Context context = GedcomMgr.getDefault().setGedcom(gedcom);
         try {
-            if (setDefaults) {
-                setDefault(gedcom);
-            }
+            setDefault(gedcom);
             Indi firstIndi = (Indi) context.getGedcom().getFirstEntity(Gedcom.INDI);
             if (firstIndi == null) {
                 firstIndi = (Indi) context.getGedcom().createEntity(Gedcom.INDI);
@@ -359,9 +345,7 @@ public abstract class GedcomDirectory {
         // Need confirmation if File exists?
         if (file.exists()) {
             if (DialogManager.YES_OPTION
-                    != DialogManager.createYesNo(
-                            RES.getString("cc.save.title", context.getGedcom().toString()),
-                            file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+                    != DialogManager.createYesNo(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.open.file_exists")).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
                 return false;
             }
         } else {

@@ -1,23 +1,22 @@
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.
- *
- * sur une base de gedrepohr.pl (Patrick TEXIER) pour la correction des REPO Le
- * reste des traitements par Daniel ANDRE
+ * This report is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * sur une base de gedrepohr.pl (Patrick TEXIER) pour la correction des REPO
+ * Le reste des traitements par Daniel ANDRE 
  */
 package ancestris.modules.imports.heredis;
 
 import ancestris.api.imports.Import;
-import genj.gedcom.TagPath;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
-import java.util.HashMap;
 
 /**
  * The import function for Heredis originated Gedcom files
@@ -26,14 +25,13 @@ import java.util.HashMap;
 public class HeredisImport extends Import {
 
     private static int clerepo = 0;
-    private static final HashMap<String, Integer> hashrepo = new HashMap<String, Integer>();
-    private static final StringBuilder sb = new StringBuilder();
+    private static Hashtable<String, Integer> hashrepo = new Hashtable<String, Integer>();
+    private static StringBuilder sb = new StringBuilder();
 
     /**
      * Constructor
      */
-    public HeredisImport() {
-        super();
+    public void HeredisImport() {
     }
 
     @Override
@@ -62,9 +60,6 @@ public class HeredisImport extends Import {
         if (processFrenchRepHeredis()) {
             return true;
         }
-        if (processTagNotAllowed()) {
-            return true;
-        }
         return false;
     }
 
@@ -73,8 +68,8 @@ public class HeredisImport extends Import {
             if (!hashrepo.containsKey(input.getValue())) {
                 clerepo++;
                 hashrepo.put(input.getValue(), clerepo);
-                sb.append("0 @" + typerepo).append(clerepo).append("@ REPO").append(EOL);
-                sb.append("1 NAME ").append(input.getValue()).append(EOL);
+                sb.append("0 @" + typerepo + clerepo + "@ REPO" + EOL);
+                sb.append("1 NAME " + input.getValue() + EOL);
             }
         }
 
@@ -116,30 +111,8 @@ public class HeredisImport extends Import {
         }
         return false;
     }
-
-    /**
-     * fix *:OBJE:DATE errors.
-     * Remove DATE tag if no value, rename tag to _DATE otherwise
-     * @return 
-     */
-    private boolean processTagNotAllowed() throws IOException {
-        // C'est un tag DATE: on transforme les dates rep
-        String tag = input.getTag();
-        TagPath path = input.getPath();
-        if (("DATE".equalsIgnoreCase(tag) && "OBJE".equalsIgnoreCase(input.getPath().get(-2))) ||
-                ("TYPE".equalsIgnoreCase(tag) && "SOUR:TYPE".equalsIgnoreCase(path.toString())) ||
-                ("QUAY".equalsIgnoreCase(tag) && "SOUR:QUAY".equalsIgnoreCase(path.toString()))){
-            if (input.getValue()!=null){
-                String result = output.writeLine(input.getLevel(), "_"+tag, input.getValue());
-                console.println(input.getLine());
-                console.println("==> " + result);
-            }
-            return true;
-        }
-        return false;
-    }
-
     // calendrier repub
+
     private boolean processFrenchRepHeredis() throws IOException {
         // C'est un tag DATE: on transforme les dates rep
         if (input.getTag().equals("DATE")) {
@@ -189,7 +162,7 @@ public class HeredisImport extends Import {
 
     @SuppressWarnings("serial")
     static private String convDateFormat(String from) {
-        final HashMap<String, String> repmonconvtable = new HashMap<String, String>() {
+        final Hashtable<String, String> repmonconvtable = new Hashtable<String, String>() {
 
             {
                 put("I", "1");

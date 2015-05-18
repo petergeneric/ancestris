@@ -35,14 +35,11 @@ import org.openide.awt.MouseUtils;
  * @author daniel
  */
 public class FilteredMouseAdapter extends MouseAdapter implements ActionListener {
-    private static final int CLICK_INTERVAL = click_interval();
+
+    private static final int CLICK_INTERVAL = (Integer) Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
     private Timer timer;
     private MouseEvent lastEvent;
 
-    private static int click_interval(){
-        Integer result =(Integer) Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
-        return result == null?400:result;
-    }
     public FilteredMouseAdapter() {
         super();
         Logger.getLogger("ancestris.util").log(Level.FINER, "doubleclic interval: {0}", CLICK_INTERVAL);

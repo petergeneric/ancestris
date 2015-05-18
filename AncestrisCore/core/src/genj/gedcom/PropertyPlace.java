@@ -133,10 +133,6 @@ public class PropertyPlace extends PropertyChoiceValue {
         return toJurisdictions(gedcom.getPlaceFormat());
     }
 
-    public static String[] getFormat(String str) {
-        return toJurisdictions(str);
-    }
-
     private static String[] toJurisdictions(String value) {
         ArrayList<String> result = new ArrayList<String>(10);
         String lastToken = JURISDICTION_SEPARATOR;
@@ -315,80 +311,6 @@ public class PropertyPlace extends PropertyChoiceValue {
 
         // don't know
         return -1;
-    }
-
-    /**
-     * Return PropertyMap for this Place.
-     * Resolve aginst gedcom version
-     * @return 
-     */
-    public PropertyMap getMap(){
-        if (isVersion55()){
-            return (PropertyMap)getProperty("_MAP");
-        } else {
-            return (PropertyMap)getProperty("MAP");
-        }
-    }
-    
-    /**
-     * Shortcut for PropertyPlace.getMap.getLatitude().
-     * returns null if not available. If strict is true,
-     * return null if Longitude is not available
-     * @param strict
-     * @return 
-     */
-    public PropertyLatitude getLatitude(boolean strict){
-        PropertyMap map = getMap();
-        if (map == null) return null;
-        PropertyLatitude lat = map.getLatitude();
-        if (lat == null) return null;
-        if (strict && map.getLongitude() == null) return null;
-        return lat;
-    }
-
-    /**
-     * Shortcut for PropertyPlace.getMap.getLongitude().
-     * returns null if not available. If strict is true,
-     * return null if Latitude is not available
-     * @param strict
-     * @return 
-     */
-    public PropertyLongitude getLongitude(boolean strict){
-        PropertyMap map = getMap();
-        if (map == null) return null;
-        PropertyLongitude longitude = map.getLongitude();
-        if (longitude == null) return null;
-        if (strict && map.getLatitude() == null) return null;
-        return longitude;
-    }
-    
-    /**
-     * Set PLAC::MAP::LATI value, adding properties if necessary.
-     * @param latitude 
-     * @param longitude  
-     */
-    public void setCoordinates(String latitude,String longitude){
-        PropertyMap map = getMap();
-        boolean is55 = isVersion55();
-        if (map == null){
-            //add map property
-            map = new PropertyMap(is55);
-            addProperty(map);
-        }
-        PropertyLatitude lat = map.getLatitude();
-        if (lat == null){
-            // Add latitude
-            lat = new PropertyLatitude(is55);
-            map.addProperty(lat);
-        }
-        lat.setValue(latitude);
-        PropertyLongitude lon = map.getLongitude();
-        if (lon == null){
-            // Add latitude
-            lon = new PropertyLongitude(is55);
-            map.addProperty(lon);
-        }
-        lon.setValue(longitude);
     }
 
     /**

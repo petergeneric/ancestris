@@ -4,12 +4,10 @@
  */
 package ancestris.app;
 
-import ancestris.api.newgedcom.ModifyGedcom;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.gedcom.GedcomDirectory;
 import java.awt.event.ActionEvent;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 public final class ActionNew extends AbstractAncestrisAction {
@@ -22,19 +20,10 @@ public final class ActionNew extends AbstractAncestrisAction {
         setImage(Images.imgNew);
     }
 
-    /** execute callback
-     * @param event */
+    /** execute callback */
     @Override
     public void actionPerformed(ActionEvent event) {
-        for (ModifyGedcom wiz:Lookup.getDefault().lookupAll(ModifyGedcom.class)){
-            if (wiz.isReady()) {
-                wiz.create();
-                return;
-            }
-        }
-        // Fallback to newGedcom
         GedcomDirectory.getDefault().newGedcom();
-
     }
 } //ActionNew
 

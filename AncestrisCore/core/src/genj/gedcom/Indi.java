@@ -694,7 +694,7 @@ public class Indi extends Entity {
             if (r == Integer.MAX_VALUE) {
                 Property n1 = i1.getProperty("NAME", false);
                 Property n2 = i2.getProperty("NAME", false);
-                r = compareNull(n1, n2);
+                r = compareNull(i1, i2);
                 if (r == Integer.MAX_VALUE) {
                     r = n1.getComparator().compare(n1, n2);
                 }

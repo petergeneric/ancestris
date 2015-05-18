@@ -240,11 +240,13 @@ public class GedcomWriter implements IGedcomWriter {
         prop = replaceProperties(header, "SOUR", "ANCESTRIS");
         prop.addProperty("VERS", Lookup.getDefault().lookup(ancestris.api.core.Version.class).getVersionString());
         prop.addProperty("NAME", "Ancestris");
-        prop.addProperty("CORP", RESOURCES.getString("header.corp", "Ancestris")).addProperty("ADDR", "http://www.ancestris.org");
-        replaceProperties(header, "DEST", gedcom.getDestination());
+        prop.addProperty("CORP", RESOURCES.getString("header.corp", "Ancestris")).
+                addProperty("ADDR", "http://www.ancestris.org");
+        replaceProperties(header, "DEST", "ANY");
 
         // Replace HEAD:DATE
-        replaceProperties(header, "DATE", date).addProperty("TIME", time);
+        replaceProperties(header, "DATE", date).
+                addProperty("TIME", time);
         if (gedcom.getSubmitter() != null) {
             replaceProperties(header, "SUBM", "@" + gedcom.getSubmitter().getId() + '@');
         }
@@ -260,7 +262,8 @@ public class GedcomWriter implements IGedcomWriter {
             replaceProperties(header, "LANG", gedcom.getLanguage());
         }
         if (gedcom.getPlaceFormat().length() > 0) {
-            replaceProperties(header, "PLAC", "").addProperty("FORM", gedcom.getPlaceFormat());
+            replaceProperties(header, "PLAC", "").
+                    addProperty("FORM", gedcom.getPlaceFormat());
         }
 
         new EntityWriter().write(0, header);

@@ -11,7 +11,7 @@ import org.openide.windows.TopComponent;
  *
  * @author frederic
  */
-public interface PluginInterface extends Comparable<PluginInterface>{
+public interface PluginInterface {
 
     public String getPluginName();
     public String getPluginDisplayName();

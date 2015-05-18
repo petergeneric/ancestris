@@ -25,12 +25,11 @@ public class GenericImport extends Import {
     /**
      * Constructor
      */
-    public GenericImport() {
-        super();
+    public void GenericImport() {
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "Generic";
     }
 

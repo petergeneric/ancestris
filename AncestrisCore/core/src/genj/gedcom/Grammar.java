@@ -54,10 +54,7 @@ public class Grammar {
     V55 = new Grammar("contrib/LDS/gedcom-5-5.xml"),
     V551 = new Grammar("contrib/LDS/gedcom-5-5-1.xml");
   
-  public static final String GRAMMAR55 = "5.5"; 
-  public static final String GRAMMAR551 = "5.5.1";
-
-    /** gedcom version */
+  /** gedcom version */
   private String version;
   
   /** meta roots */

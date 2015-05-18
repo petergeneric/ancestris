@@ -1,17 +1,16 @@
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.
- *
- * sur une base de gedrepohr.pl (Patrick TEXIER) pour la correction des REPO Le
- * reste des traitements par Daniel ANDRE
+ * This report is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * sur une base de gedrepohr.pl (Patrick TEXIER) pour la correction des REPO
+ * Le reste des traitements par Daniel ANDRE 
  */
 package ancestris.api.imports;
 
 import ancestris.modules.console.Console;
-import genj.gedcom.Gedcom;
 import genj.gedcom.TagPath;
 import genj.io.GedcomEncodingSniffer;
 import genj.io.PropertyReader;
@@ -26,30 +25,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
- * The import function foreign gedcom. This abstract class must be used to
- * create a gecdcom importer whic can then be proposed in the Inport wizard.
- * <p>
- * The import process has two main steps:
- * <ul><li/>First step is some sot of filter which process the input file and
- * produce another text file in a tmp directory. This filter process is done in
- * two passes: analyzing and writing.
- * <li/>Then this file is opened as an ordinary gedcom file in ancestris memory
- * and corrected to make the whole gedcom data as compliant as possible.
- * </ul>
- * <p/>
- * Note: The file produced in filter step is deleted by the caller to force the
- * user to save the new gedcom as a new file.
- *
+ * The import function for Heredis originated Gedcom files
  */
 public abstract class Import {
 
@@ -76,13 +62,14 @@ public abstract class Import {
             + ")");
     protected static Pattern tag_valid = Pattern.compile("(" + GEDCOM_TAG + ")");
     protected static Pattern gedcom_line = Pattern.compile("^(\\d) (_*\\w+)(.*)");
-    private static HashMap<String, ImportIndi> hashIndis;
-    private static HashMap<String, ImportFam> hashFams;
-    /**
-     * our files
-     */
+    private static Hashtable<String, ImportIndi> hashIndis;
+    private static Hashtable<String, ImportFam> hashFams;
+    /** our files */
+    private File fileIn = null;
+    private File fileOut = null;
     protected GedcomFileReader input;
     protected GedcomFileWriter output;
+    protected Charset charset = null;
     protected Console console;
 
     // protected boolean handleYesTag = true;
@@ -97,26 +84,39 @@ public abstract class Import {
     /**
      * Gives back output file name
      */
-    protected abstract String getImportComment();
-
-    public void setTabName(String tabName) {
-        console = new Console(tabName);
+    public String getOutputName() {
+        return fileOut == null ? "none" : fileOut.getName();
     }
 
-    /**
-     * First import step as a file filter.
-     *
-     * @param fileIn Gedcom to import
-     * @param fileOut Temporary Gedcom fle created
-     * @return true if conversion is successful
-     */
-    public boolean run(File fileIn, File fileOut) {
-        hashIndis = new HashMap<String, ImportIndi>();
-        hashFams = new HashMap<String, ImportFam>();
+    private GedcomFileReader getReader() throws Exception {
+        return new GedcomFileReader(fileIn, charset);
+    }
+
+    private GedcomFileWriter getWriter() throws Exception {
+        GedcomFileWriter output = new GedcomFileWriter(fileOut, charset, getEOL(fileIn));
+        return output;
+    }
+
+    protected abstract String getImportComment();
+
+    public boolean run(File fileIn, File fileOut, String tabName) {
+        this.fileIn = fileIn;
+        this.fileOut = fileOut;
+        this.console = new Console(tabName);
+        hashIndis = new Hashtable<String, ImportIndi>();
+        hashFams = new Hashtable<String, ImportFam>();
+        try {
+            GedcomEncodingSniffer encodingSniffer = new GedcomEncodingSniffer(new BufferedInputStream(new FileInputStream(fileIn)));
+            charset = encodingSniffer.getCharset();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            charset = Charset.forName("UTF-8");
+        }
+
         // on fait une premiere passe sur le fichier pour creer les repos
         try {
             EOL = getEOL(fileIn);
-            input = GedcomFileReader.create(fileIn);
+            input = getReader();
             try {
                 /*
                  * readLine is a bit quirky : it returns the content of a line
@@ -137,19 +137,25 @@ public abstract class Import {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
             return false;
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
 
         // maintenant on effectue toutes les transformations
         try {
-            output = new GedcomFileWriter(fileOut, input.getCharset(), getEOL(fileIn));
+            output = getWriter();
         } catch (IOException e1) {
+            e1.printStackTrace();
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.create.error", fileOut.getName()));
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
         try {
-            input = GedcomFileReader.create(fileIn);
+            input = getReader();
             try {
                 while (input.getNextLine(true) != null) {
                     if ((input.getLevel() == 0) && (input.getTag().equals("HEAD"))) {
@@ -180,22 +186,11 @@ public abstract class Import {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
             return false;
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
 
-        return true;
-    }
-
-    /**
-     * This is the second step of import process. The gedcom file generated in
-     * step one as been loaded in memory and can be manipulated using all
-     * ancestris core functionnalities.
-     *
-     * @param gedcom
-     * @return
-     */
-    public boolean fixGedcom(Gedcom gedcom) {
         return true;
     }
 
@@ -259,44 +254,23 @@ public abstract class Import {
 
     }
 
-    /**
-     * Normallize YES_TAGS.
-     * Convert all "YES_TAGS" (eg BIRT, EVEN, ...) where value is not null 
-     * and different from "Y" from
-     * <pre>
-     * n TAG value</pre>
-     * to 
-     * <pre>
-     * n TAG
-     * n+1 NOTE value</pre>
-     * @return
-     * @throws IOException 
-     */
     public boolean processYesTag() throws IOException {
         Matcher matcher = tag_y.matcher(input.getTag());
         if (matcher.matches()) {
-            String result = null;
-            String tag = input.getTag();
-            int level = input.getLevel();
-            String line = input.getLine();
             if (input.getValue().length() != 0) {
-                if (input.getValue().equalsIgnoreCase("y")){
-                    output.writeLine(input);
-                } else {
-                    result = output.writeLine(level, tag, null);
-                    result += "\n"+output.writeLine(level+1, "NOTE", input.getValue());
-                }
+                output.writeLine(input);
             } else {
+                String tag = input.getTag();
+                int level = input.getLevel();
+                String line = input.getLine();
                 String temp = input.getNextLine(false);
                 if ((temp != null) && (input.getLevel() == level + 1)) {
                     output.writeLine(level, tag, null);
                 } else {
-                    result = output.writeLine(level, tag, "Y");
+                    String result = output.writeLine(level, tag, "Y");
+                    console.println(line);
+                    console.println("==> " + result);
                 }
-            }
-            if (result != null){
-                console.println(line);
-                console.println("==> " + result);
             }
             return true;
         } else {
@@ -337,45 +311,23 @@ public abstract class Import {
                 eolMark = "\r";
             }
         } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return eolMark;
     }
 
-    protected static class GedcomFileReader extends PropertyReader {
+    protected class GedcomFileReader extends PropertyReader {
 
         private String theLine = "";
         private TagPath path = null;
-        private Charset charset = null;
 
         public TagPath getPath() {
             return path;
         }
 
-        static GedcomFileReader create(File fileIn) {
-            GedcomEncodingSniffer sniffer;
-            Charset charset;
-            try {
-                sniffer = new GedcomEncodingSniffer(new BufferedInputStream(new FileInputStream(fileIn)));
-                charset = sniffer.getCharset();
-            } catch (IOException ex) {
-                return null;
-            }
-            GedcomFileReader reader = new GedcomFileReader(new InputStreamReader(sniffer, charset));
-            reader.setCharset(charset);
-            return reader;
-        }
-
-        private GedcomFileReader(Reader in) {
-            super(in, null, false);
-        }
-
-        public Charset getCharset() {
-            return charset;
-        }
-
-        public void setCharset(Charset charset) {
-            this.charset = charset;
+        public GedcomFileReader(File filein, Charset charset) throws UnsupportedEncodingException, FileNotFoundException {
+            super(new InputStreamReader(new FileInputStream(fileIn), charset), null, false);
         }
 
         public String getValue() {
@@ -423,7 +375,7 @@ public abstract class Import {
         private int levelShift = 0;
         private int shiftedLevel = -1;
 
-        public GedcomFileWriter(File fileOut, Charset charset, String eol) throws UnsupportedEncodingException, FileNotFoundException {
+        public GedcomFileWriter(File filein, Charset charset, String eol) throws UnsupportedEncodingException, FileNotFoundException {
             super(new OutputStreamWriter(new FileOutputStream(fileOut), charset));
             EOL = eol;
         }

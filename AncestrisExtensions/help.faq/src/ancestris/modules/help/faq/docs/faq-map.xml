@@ -2,7 +2,7 @@
 <!--
 Ancestris - http://www.ancestris.org
 
-Copyright 2015 Ancestris
+Copyright 2014 Ancestris
 
 Author: Daniel Andre (daniel@ancestris.org).
 
@@ -16,5 +16,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <mapID target="ancestris.modules.help.faq.about" url="faq-about.html"/>
     <mapID target="ancestris.modules.help.faq.using.ancestris" url="ancestris-help-faq2.html"/>
     <mapID target="ancestris.modules.help.faq.using.ancestris-1" url="ancestris-help-faq2a.html"/>
-    <mapID target="ancestris.modules.help.faq.using.ancestris-2" url="ancestris-help-faq2b.html"/>
 </map>

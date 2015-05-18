@@ -77,7 +77,7 @@ import org.openide.util.ImageUtilities;
 
 /**
  *
- * @author S. Aubrecht & Frederic Lapeyre
+ * @author S. Aubrecht
  */
 class TabbedPane extends JPanel implements Constants {// , Scrollable {
 
@@ -284,8 +284,8 @@ class TabbedPane extends JPanel implements Constants {// , Scrollable {
         // 4               5                6
         // 0111111111111111211111111111111113
 
-//        private final Image[] sel;
-//        private final Image[] unsel;
+        private final Image[] sel;
+        private final Image[] unsel;
 
         private final TabButton[] buttons;
 
@@ -335,12 +335,12 @@ class TabbedPane extends JPanel implements Constants {// , Scrollable {
                 add( btn );
             }
 
-//            sel = new Image[13];
-//            unsel = new Image[13];
-//            for( int i=0; i<sel.length; i++ ) {
-//                sel[i] = ImageUtilities.loadImage("ancestris/welcome/resources/tab_sel_"+i+".png");
-//                unsel[i] = ImageUtilities.loadImage("ancestris/welcome/resources/tab_unsel_"+i+".png");
-//            }
+            sel = new Image[13];
+            unsel = new Image[13];
+            for( int i=0; i<sel.length; i++ ) {
+                sel[i] = ImageUtilities.loadImage("ancestris/welcome/resources/tab_sel_"+i+".png");
+                unsel[i] = ImageUtilities.loadImage("ancestris/welcome/resources/tab_unsel_"+i+".png");
+            }
         }
 
         private void paintTab( Graphics2D g, int tabIndex ) {

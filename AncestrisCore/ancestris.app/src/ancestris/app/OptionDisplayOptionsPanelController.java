@@ -11,17 +11,11 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-/*
- * DAN 20150501: I have not succeeded to completely hide Netbeans Appearance 
- * option category pannel so we use it and place display option
- * panel in a tab.
-*/
-@OptionsPanelController.SubRegistration(
-        location = "Appearance",
-        displayName = "#OptionsTab_Name_OptionDisplay",
-    keywords = "#OptionsCategory_Keywords_OptionDisplay",
-    keywordsCategory = "OptionDisplay"
-)
+@OptionsPanelController.TopLevelRegistration(categoryName = "#OptionsCategory_Name_OptionDisplay",
+iconBase = "ancestris/app/OptionDisplay.png",
+keywords = "#OptionsCategory_Keywords_OptionDisplay",
+keywordsCategory = "OptionDisplay",
+position=1)
 public final class OptionDisplayOptionsPanelController extends OptionsPanelController {
 
     private OptionDisplayPanel panel;

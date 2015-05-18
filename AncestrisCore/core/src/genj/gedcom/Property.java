@@ -445,20 +445,7 @@ public abstract class Property implements Comparable<Property> {
     public Gedcom getGedcom() {
         return parent != null ? parent.getGedcom() : null;
     }
-    
-    /**
-     * check for grammar version.
-     * 
-     * @return false if version is 5.5.1, true otherwise. This also means that
-     * if no grammar can be found, version is 5.5.
-     */
-    public boolean isVersion55(){
-        if (getGedcom() != null && getGedcom().getGrammar().equals(Grammar.V551)){
-            return false;
-        }
-        return true;
-    }
-    
+
     /**
      * Returns the image which is associated with this property.
      */

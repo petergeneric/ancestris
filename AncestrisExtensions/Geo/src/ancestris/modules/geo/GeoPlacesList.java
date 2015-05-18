@@ -25,6 +25,10 @@ import org.openide.windows.WindowManager;
  */
 class GeoPlacesList implements GedcomListener {
 
+    private String MAPTAG;
+    private String LATITAG;
+    private String LONGTAG;
+
     public static String TYPEOFCHANGE_GEDCOM = "gedcom";
     public static String TYPEOFCHANGE_COORDINATES = "coord";
     public static String TYPEOFCHANGE_NAME = "name";
@@ -41,6 +45,7 @@ class GeoPlacesList implements GedcomListener {
     public GeoPlacesList(Gedcom gedcom) {
         this.gedcom = gedcom;
         this.geoNodes = null;
+        initMapTags();
     }
 
     public static synchronized GeoPlacesList getInstance(Gedcom gedcom) {
@@ -256,32 +261,72 @@ class GeoPlacesList implements GedcomListener {
     // Need to distinguish locations where geocoordinates are in gedcom from those where they are not
     public String getMapString(PropertyPlace place) {
         String ret = "";
-        Property prop = place.getLatitude(true);
-        if (prop != null) {
-            ret += prop.getDisplayValue() + " ";
-        }
-        prop = place.getLongitude(true);
-        if (prop != null) {
-            ret += prop.getDisplayValue() + "]";
+        Property map = place.getProperty(MAPTAG);
+        if (map != null) {
+            Property prop = map.getProperty(LATITAG);
+            if (prop != null) {
+                ret += prop.getDisplayValue() + " ";
+            }
+            prop = map.getProperty(LONGTAG);
+            if (prop != null) {
+                ret += prop.getDisplayValue() + "]";
+            }
         }
         return ret;
     }
     
     public void setMapCoord(PropertyPlace placeSource, List<PropertyPlace> propPlaces) {
-        PropertyLatitude latitudeSource = placeSource.getLatitude(false);
-        PropertyLongitude longitudeSource = placeSource.getLongitude(false);
+        Property mapSource = placeSource.getProperty(MAPTAG);
+        if (mapSource == null) {
+            return;
+        }
+        Property latitudeSource = mapSource.getProperty(LATITAG);
+        Property longitudeSource = mapSource.getProperty(LONGTAG);
         if (latitudeSource == null || longitudeSource == null) {
             return;
         }
-        String latitudeSourceStr = latitudeSource.getValue();
-        String longitudeSourceStr = longitudeSource.getValue();
+        String latitudeSourceStr = latitudeSource.getDisplayValue();
+        String longitudeSourceStr = longitudeSource.getDisplayValue();
         
+        Property map;
+        Property latitude;
+        Property longitude;
         for (PropertyPlace pp : propPlaces) {
-            pp.setValue(placeSource.getValue());
-            pp.setCoordinates(latitudeSourceStr ,longitudeSourceStr);
+            pp.setValue(placeSource.getDisplayValue());
+            map = pp.getProperty(MAPTAG);
+            if (map != null) {
+                latitude = map.getProperty(LATITAG);
+                if (latitude == null) {
+                    map.addProperty(LATITAG, latitudeSourceStr);
+                } else {
+                    latitude.setValue(latitudeSourceStr);
+                }
+                longitude = map.getProperty(LONGTAG);
+                if (longitude == null) {
+                    map.addProperty(LONGTAG, longitudeSourceStr);
+                } else {
+                    longitude.setValue(longitudeSourceStr);
+                }
+            } else {
+                map = pp.addProperty(MAPTAG, "");
+                map.addProperty(LATITAG, latitudeSourceStr);
+                map.addProperty(LONGTAG, longitudeSourceStr);
+            }
         }
     }
     
+    private void initMapTags() {
+        if (getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+            MAPTAG = "MAP";
+            LATITAG = "LATI";
+            LONGTAG = "LONG";
+        } else {
+            MAPTAG = "_MAP";
+            LATITAG = "_LATI";
+            LONGTAG = "_LONG";
+        }
+    }
+
     void setCopiedPlace(PropertyPlace place) {
         this.copiedPlace = place;
     }

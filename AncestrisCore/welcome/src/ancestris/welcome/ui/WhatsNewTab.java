@@ -52,7 +52,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author S. Aubrecht & Frederic Lapeyre
+ * @author S. Aubrecht
  */
 class WhatsNewTab extends AbstractTab {
 
@@ -67,8 +67,11 @@ class WhatsNewTab extends AbstractTab {
         main.setBorder(BorderFactory.createEmptyBorder());
         add(main, BorderLayout.CENTER);
 
-        main.add(new ContentSection(BundleSupport.getLabel("SectionVersions"), new Versions(), true, true));   //NOI18N
-        main.add(new ContentSection(BundleSupport.getLabel("SectionNewsAndTutorials"), new ArticlesAndNews(), true, true));  //NOI18N
+        main.add(new ContentSection(BundleSupport.getLabel("SectionVersions"), //NOI18N
+                new Versions(), false, true));
+        main.add(new ContentSection(BundleSupport.getLabel("SectionNewsAndTutorials"), //NOI18N
+                new ArticlesAndNews(), true, true));
+
 
         add(new BottomBar(), BorderLayout.SOUTH);
     }

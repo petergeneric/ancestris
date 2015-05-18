@@ -7,5 +7,5 @@ OpenIDE-Module-Requires:
   ancestris.modules.optionspanel,
   org.netbeans.api.javahelp.Help,
   org.openide.windows.WindowManager
-OpenIDE-Module-Specification-Version: 0.9.0
+OpenIDE-Module-Specification-Version: 0.8.0
 

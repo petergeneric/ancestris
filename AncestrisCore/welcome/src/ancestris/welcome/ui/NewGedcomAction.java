@@ -41,11 +41,12 @@
  */
 package ancestris.welcome.ui;
 
-import ancestris.api.newgedcom.ModifyGedcom;
+import ancestris.api.newgedcom.NewGedcom;
 import ancestris.app.ActionNew;
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.util.Collection;
-import java.util.Iterator;
 import javax.swing.AbstractAction;
 import org.openide.util.Lookup;
 
@@ -54,19 +55,23 @@ import org.openide.util.Lookup;
  * @author S. Aubrecht
  */
 public class NewGedcomAction extends AbstractAction {
-    
-    // Mettre le contenu de cette méthode dans l'action ActionNew. Et supprimer cette méthode. Appeleer directement ActionNew.
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection list = Lookup.getDefault().lookupAll(ModifyGedcom.class);
-        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-            ModifyGedcom wiz = (ModifyGedcom) iterator.next();
-            if (wiz.isReady()) {
-                wiz.create();
-                return;
-            }
+        NewGedcom wiz = Lookup.getDefault().lookup(NewGedcom.class);
+        //XXX: use dao wizards
+        wiz = null;
+        if (wiz != null){
+//            Context context = wiz.create();
+//            if ( context != null){
+//                Context firstIndiContext = new Context(context.getGedcom().getFirstEntity(Gedcom.INDI));
+//                GedcomDirectory.getInstance().registerGedcom(context);
+//                GedcomDirectory.getInstance().updateModified(context.getGedcom());
+//                Workbench.openDefaultViews(firstIndiContext);
+//                SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
+//            }
+        } else {
+            new ActionNew().actionPerformed(e); //NOI18N
         }
-        new ActionNew().actionPerformed(e); //NOI18N
     }
 }

@@ -18,9 +18,7 @@ import genj.gedcom.Context;
  *
  * @author daniel
  */
-public interface ModifyGedcom {
-    public boolean isReady();
+public interface NewGedcom {
     public Context create();
-    public Context update();
-    public Context update(Context context);
+
 }

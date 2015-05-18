@@ -3,13 +3,11 @@
 <filesystem>
     <folder name="Menu">
         <folder name="File">
-            <folder name="Import">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.menus.Bundle"/>
-                <attr name="position" intvalue="500"/>
-            </folder>
             <folder name="Export">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.menus.Bundle"/>
-                <attr name="position" intvalue="1950"/>
+            </folder>
+            <folder name="Import">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.menus.Bundle"/>
             </folder>
         </folder>
         <folder name="Tools">

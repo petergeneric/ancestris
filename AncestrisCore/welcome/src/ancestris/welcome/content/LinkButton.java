@@ -200,13 +200,12 @@ public abstract class LinkButton extends JButton
         if( underline && isEnabled() && !showBorder) {
             Font f = getFont();
             FontMetrics fm = getFontMetrics(f);
-            int iconWidth = 0, iconHeight = 0;
+            int iconWidth = 0;
             if( null != getIcon() ) {
                 iconWidth = getIcon().getIconWidth()+getIconTextGap();
-                iconHeight = getIcon().getIconHeight();
             }
             int x1 = iconWidth;
-            int y1 = iconHeight == 0 ? fm.getHeight() : fm.getHeight() + ((iconHeight - fm.getHeight()) / 2);
+            int y1 = fm.getHeight();
             int x2 = fm.stringWidth(getText()) + iconWidth;
             if( getText().length() > 0 )
                 g.drawLine(x1, y1, x2, y1);

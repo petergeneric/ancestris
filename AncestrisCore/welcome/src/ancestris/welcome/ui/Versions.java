@@ -49,24 +49,17 @@ import ancestris.welcome.content.WebLink;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.openide.util.ImageUtilities;
 
 /**
  *
- * @author S. Aubrecht & Frederic Lapeyre
+ * @author S. Aubrecht
  */
 class Versions extends RSSFeedReaderPanel {
 
-    private final Image ICON_VERSION = ImageUtilities.loadImage("ancestris/welcome/resources/ico_versions.png"); //NOI18N
-    private final Image ICON_NEWS = ImageUtilities.loadImage("ancestris/welcome/resources/ico_forum.png"); //NOI18N
-    
-    
     public Versions() {
         super("Version", false); // NOI18N
 
@@ -76,17 +69,11 @@ class Versions extends RSSFeedReaderPanel {
     protected JComponent buildBottomContent() {
         WebLink allVersions = new WebLink("AllVersions", true); // NOI18N
         BundleSupport.setAccessibilityProperties(allVersions, "AllVersions"); //NOI18N
-        allVersions.setIcon(new ImageIcon(ICON_VERSION));
-
-        WebLink news = new WebLink("ForumLists", true); // NOI18N        
-        BundleSupport.setAccessibilityProperties( news, "ForumLists" ); //NOI18N
-        news.setIcon(new ImageIcon(ICON_NEWS));
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
-        panel.add(allVersions, new GridBagConstraints(1,0,1,1,0.0,0.0, GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 0), 0, 0));
-        panel.add(news,        new GridBagConstraints(1,1,1,1,0.0,0.0, GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 0), 0, 0));
-        panel.add(new JLabel(),new GridBagConstraints(0,0,1,1,1.0,0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+        panel.add(allVersions, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0));
+        panel.add(new JLabel(), new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
         return panel;
     }

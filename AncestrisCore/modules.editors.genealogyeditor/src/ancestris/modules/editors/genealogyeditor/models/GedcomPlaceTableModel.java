@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.Property;
-import genj.gedcom.PropertyMap;
 import genj.gedcom.PropertyPlace;
 import genj.util.ReferenceSet;
 import java.util.List;
@@ -44,14 +43,35 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
             }
         } else {
             Set<Property> references = mGedcomPlacesMap.getReferences(key);
+            String MAPTag = "";
+            String LATITag = "";
+            String LONGTag = "";
+            if (((Property) references.toArray()[0]).getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
+                MAPTag = "MAP";
+                LATITag = "LATI";
+                LONGTag = "LONG";
+            } else {
+                MAPTag = "_MAP";
+                LATITag = "_LATI";
+                LONGTag = "_LONG";
+            }
 
-            if (((PropertyPlace) references.toArray()[0]).getMap() != null) {
+            Property placeMap = ((Property) references.toArray()[0]).getProperty(MAPTag);
+            if (placeMap != null) {
                 if (column < placeFormat.length + 1) {
-                    Property latitude = ((PropertyPlace) references.toArray()[0]).getLatitude(true);
-                    return latitude != null ? latitude.getValue() : "";
+                    Property latitude = placeMap.getProperty(LATITag);
+                    if (latitude != null) {
+                        return latitude.getValue();
+                    } else {
+                        return "";
+                    }
                 } else {
-                    Property longitude = ((PropertyPlace) references.toArray()[0]).getLongitude(true);
-                    return longitude != null ? longitude.getValue() : "";
+                    Property longitude = placeMap.getProperty(LONGTag);
+                    if (longitude != null) {
+                        return longitude.getValue();
+                    } else {
+                        return "";
+                    }
                 }
             }
             return "";
@@ -79,13 +99,26 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
             for (Property reference : references) {
                 String key = refSetKey;
+                String MAPTag = "";
+                String LATITag = "";
+                String LONGTag = "";
+                if (((Property) references.toArray()[0]).getGedcom().getGrammar().getVersion().equals("5.5.1") == true) {
+                    MAPTag = "MAP";
+                    LATITag = "LATI";
+                    LONGTag = "LONG";
+                } else {
+                    MAPTag = "_MAP";
+                    LATITag = "_LATI";
+                    LONGTag = "_LONG";
+                }
 
-                if (((PropertyPlace)reference).getMap() != null) {
-                    Property latitude = ((PropertyPlace)reference).getLatitude(true);
+                Property placeMap = reference.getProperty(MAPTag);
+                if (placeMap != null) {
+                    Property latitude = placeMap.getProperty(LATITag);
                     if (latitude != null) {
                         key += PropertyPlace.JURISDICTION_SEPARATOR + latitude.getValue();
                     }
-                    Property longitude = ((PropertyPlace)reference).getLongitude(true);
+                    Property longitude = placeMap.getProperty(LONGTag);
                     if (longitude != null) {
                         key += PropertyPlace.JURISDICTION_SEPARATOR + longitude.getValue();
                     }
