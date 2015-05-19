@@ -1,9 +1,9 @@
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * This report is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
@@ -20,32 +20,52 @@ import java.util.List;
 import java.util.prefs.Preferences;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import static ancestris.modules.gedcom.gedcomvalidate.Bundle.*;
 
 /**
- * A report that validates a Gedcom file and displays
- * anomalies and 'standard' compliancy issues
+ * A report that validates a Gedcom file and displays anomalies and 'standard'
+ * compliancy issues
  */
-public class GedcomValidate {
+public class GedcomValidate implements Validator {
 
     Preferences modulePreferences = NbPreferences.forModule(GedcomValidate.class);
 
-    /** whether order of properties counts or not */
+    /**
+     * whether order of properties counts or not
+     */
     public boolean isOrderDiscretionary = modulePreferences.getBoolean("isOrderDiscretionary", true);
-    /** whether we consider an empty value to be valid */
+    /**
+     * whether we consider an empty value to be valid
+     */
     public boolean isEmptyValueValid = modulePreferences.getBoolean("isEmptyValueValid", true);
-    /** whether we consider 'private' information valid or not */
+    /**
+     * whether we consider 'private' information valid or not
+     */
     public boolean isPrivateValueValid = modulePreferences.getBoolean("isPrivateValueValid", true);
-    /** whether we consider missing files as valid or not */
+    /**
+     * whether we consider missing files as valid or not
+     */
     public boolean isFileNotFoundValid = modulePreferences.getBoolean("isFileNotFoundValid", true);
-    /** whether we consider underscore tags to be valid custom tags */
+    /**
+     * whether we consider underscore tags to be valid custom tags
+     */
     public boolean isUnderscoreValid = modulePreferences.getBoolean("isUnderscoreValid", true);
-    /** whether we consider extramarital children (before MARR after DIV) to be valid */
+    /**
+     * whether we consider extramarital children (before MARR after DIV) to be
+     * valid
+     */
     public boolean isExtramaritalValid = modulePreferences.getBoolean("isExtramaritalValid", true);
-    /** whether a place format is binding and has to be adhered to */
+    /**
+     * whether a place format is binding and has to be adhered to
+     */
     public boolean isRelaxedPlaceFormat = modulePreferences.getBoolean("isRelaxedPlaceFormat", false);
-    /** whether Same Sex families are allowed */
+    /**
+     * whether Same Sex families are allowed
+     */
     public boolean isSameSexFamValid = modulePreferences.getBoolean("isSameSexFamValid", false);
-    /** options of reports are picked up via field-introspection */
+    /**
+     * options of reports are picked up via field-introspection
+     */
     public int maxLife = modulePreferences.getInt("maxLife", 120);
     public int minAgeMARR = modulePreferences.getInt("minAgeMARR", 12);
     public int maxAgeBAPM = modulePreferences.getInt("maxAgeBAPM", 120);
@@ -55,14 +75,14 @@ public class GedcomValidate {
     public int maxAgeMother = modulePreferences.getInt("maxAgeMother", 48);
     public PointInTime minYear = new PointInTime(0, 0, GedcomValidateOptions.getInstance().getMinYear());
     public PointInTime maxYear = new PointInTime(0, 0, GedcomValidateOptions.getInstance().getMaxYear());
-    /** Jerome's checks that haven't made it yet
+    /* Jerome's checks that haven't made it yet
      *
      * [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die
      * [ ] families containing a man who has fathered a child (more than 9 months) after they have died
      * [ ] age difference between husband and wife is not greater than SOME_VALUE.
      * [ ] women who have given birth more than once within 9 months (discounting twins)
      *
-     * */
+     */
     private final static String[] LIFETIME_DATES = {
         "INDI:ADOP:DATE",
         "INDI:ADOP:DATE",
@@ -80,15 +100,23 @@ public class GedcomValidate {
         "INDI:CENS:DATE",
         "INDI:RETI:DATE"
     };
+    private boolean cancel;
+    private int entitiesNumber;
+    private int entitiesCounter;
+    private String entityType;
+    private Gedcom gedcom;
+
+    public GedcomValidate(Gedcom gedcom) {
+        this.gedcom = gedcom;
+    }
 
     /**
      * Start for argument gedcom
      */
-    public List<ViewContext> start(final Gedcom gedcom) {
-
+    public List<ViewContext> start() {
         // prepare tests
-        List<Test> tests = createTests(gedcom);
-        List<ViewContext> issues = new ArrayList<ViewContext>();
+        final List<Test> tests = createTests(gedcom);
+        final List<ViewContext> issues = new ArrayList<ViewContext>();
 
         // test if there's a submitter
         // XXX: removed as addActions is obsoleted
@@ -111,8 +139,18 @@ public class GedcomValidate {
 //            issues.add(ctx);
 //        }
         // Loop through entities and test 'em
-        for (int t = 0; t < Gedcom.ENTITIES.length; t++) {
-            for (Entity e : gedcom.getEntities(Gedcom.ENTITIES[t])) {
+        entitiesNumber = gedcom.getEntities().size();
+        entitiesCounter = 0;
+        entityType = "";
+
+        cancel:
+        for (String ENTITIES : Gedcom.ENTITIES) {
+            entityType = ENTITIES;
+            for (Entity e : gedcom.getEntities(ENTITIES)) {
+                entitiesCounter++;
+                if (cancel) {
+                    break cancel;
+                }
                 TagPath path = new TagPath(e.getTag());
                 test(e, path, gedcom.getGrammar().getMeta(path), tests, issues);
             }
@@ -305,6 +343,35 @@ public class GedcomValidate {
 
         // **********************************************************************
         return result;
+    }
+
+    @NbBundle.Messages({
+        "# {0} - entity type being checked",
+        "# {1} - entity number being checked",
+        "validate.progress=Checking {0}, Entity No {1}",
+        "# {0} - gedcom name",
+        "validate.title=Checking {0}"
+    })
+
+    @Override
+    public void cancelTrackable() {
+        cancel = true;
+    }
+
+    @Override
+    public int getProgress() {
+        return 100 * entitiesCounter / entitiesNumber;
+    }
+
+    @Override
+    public String getState() {
+        return validate_progress(entityType, entitiesNumber);
+    }
+
+    @Override
+    public String getTaskName() {
+        String name = gedcom == null ? "" : gedcom.getName();
+        return validate_title(name);
     }
 } //GedcomValidate
 
