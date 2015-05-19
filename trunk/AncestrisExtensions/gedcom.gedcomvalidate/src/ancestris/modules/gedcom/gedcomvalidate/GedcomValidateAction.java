@@ -1,6 +1,7 @@
 package ancestris.modules.gedcom.gedcomvalidate;
 
 import ancestris.modules.document.view.FopDocumentView;
+import ancestris.util.ProgressListener;
 import genj.gedcom.Context;
 import genj.view.ViewContext;
 import java.awt.event.ActionEvent;
@@ -18,12 +19,13 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
+import spin.Spin;
 
 @ActionID(id = "ancestris.modules.gedcom.gedcomvalidate.GedcomValidateAction",
-category = "Tools")
+        category = "Tools")
 @ActionRegistration(iconInMenu = true,
-displayName = "#CTL_GedcomValidateAction",
-iconBase = "ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png")
+        displayName = "#CTL_GedcomValidateAction",
+        iconBase = "ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png")
 @ActionReference(path = "Menu/Tools/Gedcom", position = 95)
 public final class GedcomValidateAction implements ActionListener {
 
@@ -42,7 +44,14 @@ public final class GedcomValidateAction implements ActionListener {
 
                 OptionsDisplayer.getDefault().open("Extensions/GedcomValidateOptions");
             } else {
-                result = new GedcomValidate().start(context.getGedcom());
+                Validator validator = (Validator) Spin.off(new GedcomValidate(context.getGedcom()));
+
+                try {
+                    ProgressListener.Dispatcher.processStarted(validator);
+                    result = validator.start();
+                } finally {
+                    ProgressListener.Dispatcher.processStopped(validator);
+                }
 
                 String title = NbBundle.getMessage(GedcomValidate.class, "name");
                 genj.fo.Document doc = new genj.fo.Document(title);
@@ -71,7 +80,7 @@ public final class GedcomValidateAction implements ActionListener {
                 }
 
                 FopDocumentView window = new FopDocumentView(
-                        context, 
+                        context,
                         NbBundle.getMessage(GedcomValidate.class, "name.short"),
                         NbBundle.getMessage(GedcomValidate.class, "name"));
 
