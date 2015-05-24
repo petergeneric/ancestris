@@ -766,7 +766,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
             if (age != null) {
                 individualAgeTextField.setText(age.getDisplayValue());
-                if (mDate.isValid() && ((Indi) mRoot).getBirthDate().isValid()) {
+                Indi indi = (Indi) mRoot;
+                if (mDate.isValid() && indi != null && indi.getBirthDate() != null && indi.getBirthDate().isValid()) {
                     individualAgeTextField.setEditable(false);
                     individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.inactiveBackground"));
                 } else {
