@@ -116,6 +116,24 @@ public class GedcomPlacesConverter {
         return true;
     }
 
+    
+    
+    
+    public boolean isWithError() {
+        return error != null;
+    }
+    
+    public String[] getIncorrectPlaces() {
+        if (listOfIncorrectPlaces == null) {
+            return null;
+        }
+        listOfIncorrectPlaces.sort(null);
+        return listOfIncorrectPlaces.toArray(new String[listOfIncorrectPlaces.size()]);
+    }
+    
+
+    
+    
     private String getDisplayOfPlace(String[] newPlace) {
         String ret = "";
         String sep = PropertyPlace.JURISDICTION_SEPARATOR;
@@ -150,11 +168,6 @@ public class GedcomPlacesConverter {
             error = new Exception(NbBundle.getMessage(PlaceFormatConverterPanel.class, "ERR_Unknown"));
         }
         return error;
-    }
-    
-    public String[] getIncorrectPlaces() {
-        listOfIncorrectPlaces.sort(null);
-        return listOfIncorrectPlaces.toArray(new String[listOfIncorrectPlaces.size()]);
     }
     
 }
