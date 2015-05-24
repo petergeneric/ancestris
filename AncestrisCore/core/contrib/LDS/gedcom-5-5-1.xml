@@ -52,6 +52,29 @@
    <NOTE type="PropertyNote|PropertyMultilineValue" img="Note">
     <SOUR super="INDI:NAME:SOUR"/>
    </NOTE>
+   <TYPE type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
+   <FONE type="PropertySimpleValue" img="Name" cardinality="0:M">
+       <TYPE type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
+       <NPFX super="INDI:NAME:NPFX"/>
+       <GIVN super="INDI:NAME:GIVN"/>
+       <NICK super="INDI:NAME:NICK"/>
+       <SPFX super="INDI:NAME:SPFX"/>
+       <SURN super="INDI:NAME:SURN"/>
+       <NSFX super="INDI:NAME:NSFX"/>
+       <SOUR super="INDI:NAME:SOUR"/>
+       <NOTE super="INDI:NAME:NOTE"/>
+   </FONE>    
+   <ROMN type="PropertySimpleValue" img="Name" cardinality="0:M">
+       <TYPE type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
+       <NPFX super="INDI:NAME:NPFX"/>
+       <GIVN super="INDI:NAME:GIVN"/>
+       <NICK super="INDI:NAME:NICK"/>
+       <SPFX super="INDI:NAME:SPFX"/>
+       <SURN super="INDI:NAME:SURN"/>
+       <NSFX super="INDI:NAME:NSFX"/>
+       <SOUR super="INDI:NAME:SOUR"/>
+       <NOTE super="INDI:NAME:NOTE"/>
+   </ROMN>    
   </NAME>
   <SEX default="1" cardinality="0:1" type="PropertySex" img="Sex" img.male="Male" img.female="Female"/>
   +++++++++++++ Events +++++++++++++
@@ -66,6 +89,8 @@
      <LATI default="1" cardinality="1:1" type="PropertyLatitude" img="Place"/>
      <LONG default="1" cardinality="1:1" type="PropertyLongitude" img="Place"/>
     </MAP>
+   <FONE super="INDI:NAME:FONE"/>
+   <ROMN super="INDI:NAME:ROMN"/>
    </PLAC>
    <ADDR type="PropertyMultilineValue" img="Addr">
     <ADR1 hide="1" type="PropertySimpleValue" img="Addr"/>
@@ -86,6 +111,8 @@
    <SOUR super="INDI:NAME:SOUR"/>
    <OBJE super="INDI:NAME:SOUR:OBJE"/>
    <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam"/>
+   <RELI type="PropertyChoiceValue" img="Religion" cardinality="0:M"/>
+  <RESN hide="1" type="PropertySimpleReadOnly" img="Description" cardinality="0:1"/>
   </BIRT>
   <ADOP cardinality="0:M" super="INDI:BIRT" img="Adoption">
    <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam">
@@ -97,6 +124,9 @@
   <RESI cardinality="0:M" type="PropertySimpleReadOnly" img="Residency" super="INDI:BIRT">
    <PLAC default="0"/>
    <ADDR default="1"/>
+   <EMAIL cardinality="0:3" type="PropertySimpleValue" img="Web"/>
+   <FAX cardinality="0:3" type="PropertySimpleValue" img="Phone" />
+   <WWW cardinality="0:3" type="PropertySimpleValue" img="Web"/>
   </RESI>
   <OCCU type="PropertyChoiceValue" img="Occupation" super="INDI:BIRT" cardinality="0:M"/>
   <RELI type="PropertyChoiceValue" img="Religion" super="INDI:BIRT" cardinality="0:M">
@@ -112,6 +142,7 @@
   <PROP type="PropertyChoiceValue" img="Property" super="INDI:RELI" />
   <SSN  type="PropertySimpleValue" img="SSN" super="INDI:RELI" />
   <TITL type="PropertyChoiceValue" img="Title" super="INDI:RELI"/>
+  <FACT type="PropertySimpleValue" img="Note" super="INDI:RELI" />
   <NMR  hide="1" type="PropertySimpleValue" img="Marriage" super="INDI:RELI" />
   +++++++++++++ More Events +++++++++++++
   <GRAD cardinality="0:M" img="Graduation" super="INDI:BIRT"/>
@@ -136,7 +167,7 @@
   <WILL img="Will" super="INDI:GRAD" cardinality="0:M"/>
   <RETI img="Retirement" super="INDI:GRAD" cardinality="0:M"/>
   <EVEN img="Event" super="INDI:GRAD">
-   <TYPE default="1"/>
+  <TYPE default="1"/>
   </EVEN>
   ++++++++++++++++ LDS ++++++++++++++++++
  <BAPL hide="1" img="Baptism" type="PropertySimpleReadOnly">
@@ -156,6 +187,7 @@
   <NOTE super="INDI:NAME:NOTE"/>
   <FAMC hide="1" type="PropertyFamilyChild" img="Fam">
    <PEDI type="PropertyChoiceValue" img="Type"/>
+   <STAT type="PropertyChoiceValue" img="Type"/>
    <NOTE super="INDI:NAME:NOTE"/>
   </FAMC>
   <FAMS hide="1" type="PropertyFamilySpouse" img="Fam">
@@ -167,6 +199,7 @@
   <DESI super="INDI:SUBM"/>
   <SOUR super="INDI:NAME:SOUR"/>
   <ASSO hide="1" type="PropertyAssociation" img="Association">
+   <TYPE default="1" cardinality="0:1" type="PropertySimpleValue" img="Type"/>   <!--  exception to Grammar to allow association with entities other than INDI -->
    <RELA default="1" cardinality="0:1" type="PropertyRelationship" img="Type"/>
    <SOUR super="INDI:SOUR"/>
    <NOTE super="INDI:NAME:NOTE"/>
@@ -217,6 +250,9 @@
   <RESI cardinality="0:M" type="PropertySimpleReadOnly" img="Residency" super="FAM:ENGA">
    <PLAC default="0"/>
    <ADDR default="1"/>
+   <EMAIL cardinality="0:3" type="PropertySimpleValue" img="Web"/>
+   <FAX cardinality="0:3" type="PropertySimpleValue" img="Phone" />
+   <WWW cardinality="0:3" type="PropertySimpleValue" img="Web"/>
   </RESI>
   <SLGS hide="1" img="Marriage" super="INDI:BAPL"/>
   <OBJE super="INDI:OBJE"/>
@@ -225,6 +261,7 @@
   <SOUR super="INDI:SOUR"/>
   <REFN super="INDI:REFN"/>
   <RIN super="INDI:RIN"/>
+  <RESN super="INDI:RESN"/>
   <CHAN hide="1" super="INDI:CHAN"/>
  </FAM>
  
@@ -266,6 +303,9 @@
   <NAME default="1" type="PropertySimpleValue" img="Attribute"/>
   <ADDR default="1" super="INDI:BIRT:ADDR"/>
   <PHON type="PropertySimpleValue" img="Phone"/>
+  <EMAIL cardinality="0:3" type="PropertySimpleValue" img="Web"/>
+  <FAX cardinality="0:3" type="PropertySimpleValue" img="Phone" />
+  <WWW cardinality="0:3" type="PropertySimpleValue" img="Web"/>
   <NOTE type="PropertyMultilineValue" img="Note"/>
   +++++++++++++ References +++++++++++++
   <REFN super="INDI:REFN"/>
@@ -313,6 +353,9 @@
   <NAME default="1" type="PropertySimpleValue" img="Name" cardinality="1:1"/>
   <ADDR super="INDI:BIRT:ADDR"/>
   <PHON type="PropertySimpleValue" img="Phone"/>
+  <EMAIL cardinality="0:3" type="PropertySimpleValue" img="Web"/>
+  <FAX cardinality="0:3" type="PropertySimpleValue" img="Phone" />
+  <WWW cardinality="0:3" type="PropertySimpleValue" img="Web"/>
   <LANG type="PropertySimpleValue" img="Place"/>
   +++++++++++++ References +++++++++++++
   <OBJE super="INDI:OBJE"/>

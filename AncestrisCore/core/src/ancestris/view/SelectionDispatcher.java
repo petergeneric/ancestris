@@ -70,7 +70,9 @@ public class SelectionDispatcher {
                     && context.getProperties().size() == 1) {
                 Property p = context.getProperty();
                 if (p instanceof PropertyXRef) {
-                    context = new Context(((PropertyXRef) p).getTarget());
+                    if (((PropertyXRef) p).getTarget() != null) {
+                       context = new Context(((PropertyXRef) p).getTarget());
+                    }
                     saEvent.setContext(context);
                     saEvent.setNotAction(true);
                 }

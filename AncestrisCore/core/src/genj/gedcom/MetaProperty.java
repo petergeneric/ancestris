@@ -490,6 +490,14 @@ public class MetaProperty implements Comparable<MetaProperty> {
   }
   
   /**
+   * Returns children tags 
+   * @return array of metaProperties
+   */
+  public MetaProperty[] getNestedChildren() {
+    return nested.toArray(new MetaProperty[nested.size()]);
+  }
+  
+  /**
    * Load image (once)
    */
   private static ImageIcon loadImage(String name) {
