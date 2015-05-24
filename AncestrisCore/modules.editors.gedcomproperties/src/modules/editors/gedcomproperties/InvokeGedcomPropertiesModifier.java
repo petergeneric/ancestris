@@ -24,6 +24,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Submitter;
+import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import javax.swing.JPanel;
 import modules.editors.gedcomproperties.utils.GedcomPlacesConverter;
+import modules.editors.gedcomproperties.utils.GedcomVersionConverter;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.util.Exceptions;
@@ -248,20 +250,21 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
 
         // Update gedcom header
         Property prop_HEAD = gedcom.getFirstEntity(HEADER);
+        boolean chg = false;
 
-        replaceOrCreateProperty(HEADER + ":" + FILE);
-        replaceOrCreateProperty(HEADER + ":" + NOTE);
-        replaceOrCreateProperty(HEADER + ":" + COPR);
-        replaceOrCreateProperty(HEADER + ":" + LANG);
-        replaceOrCreateProperty(HEADER + ":" + CHAR);
-        replaceOrCreateProperty(HEADER + ":" + GEDC + ":" + VERS);
-        replaceOrCreateProperty(HEADER + ":" + DEST);
-        replaceOrCreateProperty(HEADER + ":" + PLAC + ":" + FORM);
-        replaceOrCreateProperty(HEADER + ":" + SOUR);
-        replaceOrCreateProperty(HEADER + ":" + SOUR + ":" + VERS);
-        replaceOrCreateProperty(HEADER + ":" + SOUR + ":" + NAME);
-        replaceOrCreateProperty(HEADER + ":" + SOUR + ":" + CORP);
-        replaceOrCreateProperty(HEADER + ":" + SOUR + ":" + CORP + ":" + ADDR);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + FILE);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + NOTE);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + COPR);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + LANG);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + CHAR);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + GEDC + ":" + VERS);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + DEST);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + PLAC + ":" + FORM);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + SOUR);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + SOUR + ":" + VERS);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + SOUR + ":" + NAME);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + SOUR + ":" + CORP);
+        chg = chg || replaceOrCreateProperty(HEADER + ":" + SOUR + ":" + CORP + ":" + ADDR);
         
         gedcom.setLanguage((String) wiz.getProperty(HEADER + ":" + LANG));
         gedcom.setEncoding((String) wiz.getProperty(HEADER + ":" + CHAR));
@@ -273,15 +276,15 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         // Update gedcom submitter
         Submitter submitter = gedcom.getSubmitter();
         
-        submitter.setName((String) wiz.getProperty(SUBM + ":" + NAME));
-        submitter.setAddress((String) wiz.getProperty(SUBM + ":" + ADDR));
-        submitter.setPostcode((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + POST));
-        submitter.setCity((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + CITY));
-        submitter.setState((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + STAE));
-        submitter.setCountry((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + CTRY));
-        submitter.setPhone((String) wiz.getProperty(SUBM + ":" + PHON));
-        submitter.setEmail((String) wiz.getProperty(SUBM + ":" + EMAI));
-        submitter.setWeb((String) wiz.getProperty(SUBM + ":" + WWW));
+        if (!submitter.getName().equals((String) wiz.getProperty(SUBM + ":" + NAME))) { submitter.setName((String) wiz.getProperty(SUBM + ":" + NAME)); chg = true; }
+        if (!submitter.getAddress().equals((String) wiz.getProperty(SUBM + ":" + ADDR))) { submitter.setAddress((String) wiz.getProperty(SUBM + ":" + ADDR)); chg = true; }
+        if (!submitter.getPostcode().equals((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + POST))) { submitter.setPostcode((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + POST)); chg = true; }
+        if (!submitter.getCity().equals((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + CITY))) { submitter.setCity((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + CITY)); chg = true; }
+        if (!submitter.getState().equals((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + STAE))) { submitter.setState((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + STAE)); chg = true; }
+        if (!submitter.getCountry().equals((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + CTRY))) { submitter.setCountry((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + CTRY)); chg = true; }
+        if (!submitter.getPhone().equals((String) wiz.getProperty(SUBM + ":" + PHON))) { submitter.setPhone((String) wiz.getProperty(SUBM + ":" + PHON)); chg = true; }
+        if (!submitter.getEmail().equals((String) wiz.getProperty(SUBM + ":" + EMAI))) { submitter.setEmail((String) wiz.getProperty(SUBM + ":" + EMAI)); chg = true; }
+        if (!submitter.getWeb().equals((String) wiz.getProperty(SUBM + ":" + WWW))) { submitter.setWeb((String) wiz.getProperty(SUBM + ":" + WWW)); chg = true; }
         
         
         // Update gedcom first individual
@@ -296,15 +299,26 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         
         
         // Prepare report of changes
-        boolean withErrors = false;
+        String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModificationResults");
+        boolean withVersionErrors = false, withPlacesErrors = false;
         GedcomPlacesConverter placesConverter = null;
+        GedcomVersionConverter versionConverter = null;
         String message = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_Title");
-        message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_HeaderChanged"); 
+        if (chg) {
+            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_HeaderChanged");
+        } 
         
         // Convert gedcom version if requested
         if (wiz.getProperty(CONV_VERSION) == CONVERSION) {
-            // FIXME/TODO: do it
             message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionChanged", wiz.getProperty(CONV_VERSION_FROM), wiz.getProperty(CONV_VERSION_TO)); 
+            versionConverter = new GedcomVersionConverter(gedcom, wiz.getProperty(CONV_VERSION_FROM).toString(), wiz.getProperty(CONV_VERSION_TO).toString());
+            if (versionConverter.isConvertible() && versionConverter.convert()) {
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionSuccessChanged");
+                chg = true;
+            } else {
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionFailureChanged");
+                withVersionErrors = true;
+            }
         }
         
         // Convert place format if requested
@@ -313,24 +327,27 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             placesConverter = new GedcomPlacesConverter(gedcom, wiz.getProperty(CONV_PLACE_FROM).toString(), wiz.getProperty(CONV_PLACE_TO).toString(), wiz.getProperty(CONV_PLACE_MAP).toString());
             if (placesConverter.convert()) {
                 message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceSuccessChanged", placesConverter.getNbOfChangedPlaces(), placesConverter.getNbOfFoundPlaces(), placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                chg = true;
             } else {
                 message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceFailureChanged", placesConverter.getError().getMessage(), placesConverter.getNbOfChangedPlaces(), placesConverter.getNbOfFoundPlaces(), placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
-                withErrors = true;
+                withPlacesErrors = true;
             }
         }
 
         // Complete report message
-        if (!withErrors) {
-            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedSuccessfully");
-        } else {
-            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedPartiallySuccessfully");
+        if (chg && !withVersionErrors && !withPlacesErrors) {
+            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_GedcomModifiedSuccessfully");
+        } else if (chg && (withVersionErrors || withPlacesErrors)) {
+            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_GedcomModifiedPartiallySuccessfully");
+        } else {  // no change
+            title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModifiedTitle");
+            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModified");
         }
-        message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedEndOfMessage");
+        message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_EndOfMessage");
 
         // Display results
-        String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModifiedSuccessfullyTitle");
-        JPanel jPanel = new ResultPanel(message, withErrors, placesConverter != null ? placesConverter.getIncorrectPlaces() : null);
-        DialogManager.create(title, jPanel).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+        JPanel jPanel = new ResultPanel(message, versionConverter, placesConverter);
+        DialogManager.create(title, jPanel).setMessageType(DialogManager.INFORMATION_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
     }
 
     
@@ -356,7 +373,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
     }
 
     private void copyGedPropertiesToWizProp(String tagPath, int modeForDefault, String defaultvalue) {
-        String value = "", str = "";
+        String value = "", str = "", linebreak = "<br>";
 
         // Find property corresponding to tag if any
         Property[] props = getProperties(tagPath, false);
@@ -368,9 +385,12 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                 List<Property> properties = new ArrayList<Property>();
                 getPropertiesRecursively(parent, properties);
                 for (Property prop : properties) {
-                    value += prop.getDisplayValue() + "<br>";
+                    value += prop.getDisplayValue() + linebreak;
                 }
             }
+        }
+        if (value.endsWith(linebreak)) {
+            value = value.substring(0, value.length()-linebreak.length()); // remove last linebreak
         }
         
         if (modeForDefault == CREATION_OR_UPDATE) {
@@ -384,10 +404,58 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
 
     
     
-    private void replaceOrCreateProperty(String tagPath) {
-        Property[] props = getProperties(tagPath, true);
-        props[0].setValue((String) wiz.getProperty(tagPath));
+    /**
+     * Replace only if current value of property at tagPath has changed. 
+     * 
+     * @param tagPath
+     * @return true if replacement made, false otherwise
+     */
+    private boolean replaceOrCreateProperty(String tagPath) {
+        // Get current property value
+        String currentValue = null;
+        Property prop = getProperty(tagPath);
+        if (prop != null) {
+            currentValue = prop.getDisplayValue();
+        }
+        
+        // Get new value
+        String newValue = ((String) wiz.getProperty(tagPath)).trim();
+                
+        // Replace it if different
+        if ((currentValue == null && !newValue.isEmpty()) || (currentValue != null && !currentValue.equals(newValue))) {
+            Property[] props = getProperties(tagPath, true);
+            props[0].setValue((String) wiz.getProperty(tagPath));
+            return true;
+        }
+        return false;
     }
+
+    private Property getProperty(String path) {
+        TagPath tagPath = new TagPath(path);
+        Property property;
+        String tag;
+        
+        // Get root
+        tag = tagPath.get(0);
+        if (tag == null) {
+            return null;
+        }
+        property = gedcom.getFirstEntity(tag);
+        if (property == null) {
+            return null;
+        }
+        
+        // loop down to path
+        for (int i = 1; i < tagPath.length(); i++) {
+            tag = tagPath.get(i);
+            property = property.getProperty(tag);
+            if (property == null) {
+                return null;
+            }
+        }
+        return property;
+    }
+
     
     private Property[] getProperties(String tagPath, boolean createProperty) {
         return getProperties(null, tagPath, createProperty);

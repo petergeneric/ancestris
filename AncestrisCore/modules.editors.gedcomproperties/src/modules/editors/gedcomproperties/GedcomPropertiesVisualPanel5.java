@@ -11,7 +11,6 @@
  */
 package modules.editors.gedcomproperties;
 
-import genj.gedcom.Property;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
