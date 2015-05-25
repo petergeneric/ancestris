@@ -4,11 +4,13 @@ import ancestris.modules.editors.genealogyeditor.models.GedcomPlaceTableModel;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.event.MouseInputListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.util.Exceptions;
@@ -50,7 +52,7 @@ public class PlacesTablePanel extends javax.swing.JPanel {
 //        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
 //        mPlaceTableSorter.setSortKeys(sortKeys);
 //        mPlaceTableSorter.sort();
-
+        
         try {
             if (!modulePreferences.nodeExists(gedcom.getName())) {
                 searchPlaceComboBox.setSelectedIndex(0);
