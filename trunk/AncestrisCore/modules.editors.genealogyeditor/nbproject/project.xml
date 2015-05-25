@@ -179,6 +179,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>ancestris.modules.editors.genealogyeditor</package>
                 <package>ancestris.modules.editors.genealogyeditor.editors</package>
                 <package>ancestris.modules.editors.genealogyeditor.panels</package>
             </public-packages>
