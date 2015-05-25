@@ -4,6 +4,9 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.modules.editors.gedcom.EditTopComponent;
+import ancestris.modules.editors.gedcom.GedcomEditorPlugin;
+import ancestris.modules.editors.genealogyeditor.GenealogyEditorPlugin;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.panels.PlaceEditorPanel;
@@ -44,6 +47,9 @@ import org.openide.util.ImageUtilities;
  */
 class GeoNode extends AbstractNode implements PropertyChangeListener {
 
+    private final static String GEDCOM_EDITOR = NbBundle.getMessage(GedcomEditorPlugin.class, "OpenIDE-Module-Name");
+    private final static String ANCESTRIS_EDITOR = NbBundle.getMessage(GenealogyEditorPlugin.class, "OpenIDE-Module-Name");
+    
     public GeoNode(GeoPlacesList gpl) {
         super(new GeoChildrenNodes(gpl));
         setDisplayName(NbBundle.getMessage(GeoListTopComponent.class, "GeoListRoot") + " " + gpl.getGedcom().getName());
@@ -104,7 +110,10 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
     public Action[] getActions(boolean popup) {
         if (isLeaf()) {
             return new Action[]{
-                        new GeoAction("ACTION_EditEvent"),
+                        new GeoAction("ACTION_SelectEvent"),
+                        null,
+                        new GeoAction("ACTION_EditEvent", ANCESTRIS_EDITOR),
+                        new GeoAction("ACTION_EditEvent", GEDCOM_EDITOR),
                         null,
                         new GeoAction("ACTION_HelpEvent")};
         } else {
@@ -147,6 +156,11 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
         public GeoAction(String name) {
             this.actionName = name;
             putValue(NAME, NbBundle.getMessage(GeoNode.class, name));
+        }
+
+        public GeoAction(String name, String extension) {
+            this.actionName = name + extension;
+            putValue(NAME, NbBundle.getMessage(GeoNode.class, name, extension));
         }
 
         public GeoAction(String name, boolean enabled) {
@@ -237,18 +251,23 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 if (GeoPlacesList.getInstance(obj.getGedcom()).initPlaceDisplayFormat(true)) {
                     GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
                 }
-            } else if (actionName.equals("ACTION_EditEvent")) {
+            } else if (actionName.equals("ACTION_EditEvent"+GEDCOM_EDITOR)) {
+                EditTopComponent etc = new EditTopComponent();
+                etc.init(new Context( obj.getProperty()));
+                etc.open();
+                etc.requestActive();
+            } else if (actionName.equals("ACTION_EditEvent"+ANCESTRIS_EDITOR)) {
                 // Pop up editor
                 Entity entity = obj.getProperty().getEntity();
                 if (entity instanceof Fam) {
                     Fam family = (Fam) entity;
                     FamilyEditor familyEditor = new FamilyEditor();
-                    familyEditor.setContext(new Context(family));
+                    familyEditor.setContext(new Context(obj.getProperty()));
                     familyEditor.showPanel();
                 } else if (entity instanceof Indi) {
                     Indi child = (Indi) entity;
                     IndividualEditor individualEditor = new IndividualEditor();
-                    individualEditor.setContext(new Context(child));
+                    individualEditor.setContext(new Context(obj.getProperty()));
                     individualEditor.showPanel();
                 }
             } else if (actionName.equals("ACTION_SelectEvent")) {
