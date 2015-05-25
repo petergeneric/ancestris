@@ -242,16 +242,17 @@ public class GedcomVersionConverter {
             }
             if (MOVED_TAGS.contains(tag) && parentTag.equals("OBJE")) {
                 // if entity OBJE, create OBJE:FILE and move from OBJE:FORM to OBJE:FILE:FORM
+                Property p;
                 if (entityTag.equals(Gedcom.OBJE)) {
-                    Property p = parent.addProperty("FILE", "");
-                    p.addProperty("FORM", prop.getValue());
-                    parent.delProperty(prop);
-                } else {
-                    // if entity OBJE link, OBJE:FILE exists, just move from OBJE:FORM to OBJE:FILE:FORM
-                    Property f = parent.getProperty("FILE");
-                    f.addProperty("FORM", prop.getValue());
-                    parent.delProperty(prop);
+                    p = parent.addProperty("FILE", "");
+                } else { // if entity OBJE link, OBJE:FILE exists, just move from OBJE:FORM to OBJE:FILE:FORM
+                    p = parent.getProperty("FILE");
+                    if (p == null) {
+                        p = parent.addProperty("FILE", "");
+                    }
                 }
+                p.addProperty("FORM", prop.getValue());
+                parent.delProperty(prop);
                 continue;
             }
             if (REMOVED_TAGS.contains(tag)) {
