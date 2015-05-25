@@ -1,13 +1,14 @@
 package ancestris.modules.editors.genealogyeditor.table;
 
 import genj.util.Registry;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractButton;
 import javax.swing.JTable;
+import javax.swing.RootPaneContainer;
 import javax.swing.RowSorter;
-import javax.swing.SortOrder;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.RowSorterEvent;
@@ -85,6 +86,18 @@ public class EditorTable extends JTable {
 
     public EditorTable() {
         super();
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                JTable table = (JTable) evt.getSource();
+                if (evt.getClickCount() == 2) {
+                    RootPaneContainer c = (RootPaneContainer) SwingUtilities.getAncestorOfClass(RootPaneContainer.class, table);
+                    if (c != null) {
+                        c.getRootPane().getDefaultButton().doClick();
+                    }
+                }
+            }
+        });
     }
 
     public EditorTable(TableModel dm) {
