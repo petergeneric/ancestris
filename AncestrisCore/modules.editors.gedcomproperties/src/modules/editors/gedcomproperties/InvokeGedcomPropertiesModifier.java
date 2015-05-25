@@ -341,7 +341,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_GedcomModifiedPartiallySuccessfully");
         } else {  // no change
             title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModifiedTitle");
-            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModified");
+            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModifiedMessage");
         }
         message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_EndOfMessage");
 
@@ -354,7 +354,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
     
     private void notifyCancellation() { 
         DialogManager.create(
-                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModifiedTitle"),
+                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomCancelModificationTitle"),
                     NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModified")).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
     }
 
