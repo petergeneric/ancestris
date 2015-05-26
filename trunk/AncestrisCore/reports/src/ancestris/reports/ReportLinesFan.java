@@ -11,6 +11,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.report.Report;
 import ancestris.core.actions.AbstractAncestrisAction;
+import org.openide.util.lookup.ServiceProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,13 +25,14 @@ import java.nio.charset.Charset;
 import java.util.LinkedList;
 
 /**
- * GenJ - ReportPSCirc
+ * Ancestris - ReportPSCirc
  * adapted from LifeLines ps-fan report
  *
  * TODO Daniel
  * - multipages split (ne pas oublier gsave grestore )
  * - intergre la fenetre de choix de fichier
  */
+@ServiceProvider(service=Report.class)
 public class ReportLinesFan extends Report {
 
     private PrintWriter writer;
