@@ -19,7 +19,6 @@
  */
 package genj.edit.beans;
 
-import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.CoreOptions;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
@@ -137,6 +136,8 @@ public class NameBean extends PropertyBean {
     
     // we're done aside from declaring the default focus
     defaultFocus = cFirst;
+
+    this.setComponentPopupMenu(new CCPMenu(this));
 
   }
 

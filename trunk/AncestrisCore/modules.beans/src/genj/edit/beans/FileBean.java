@@ -91,6 +91,7 @@ public class FileBean extends PropertyBean implements AncestrisActionProvider{
     setLayout(new BorderLayout());
     
     // setup chooser
+    chooser.setComponentPopupMenu(new CCPMenu(chooser));
     chooser.setAccessory(updateMeta);
     chooser.addChangeListener(changeSupport);
     chooser.addActionListener(doPreview);

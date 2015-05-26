@@ -59,6 +59,7 @@ public class ChoiceBean extends PropertyBean {
     
     // prepare a choice for the user
     choices = new ChoiceWidget();
+    choices.setComponentPopupMenu(new CCPMenu(choices.getTextEditor()));
     choices.addChangeListener(changeSupport);
     choices.setIgnoreCase(true);
 

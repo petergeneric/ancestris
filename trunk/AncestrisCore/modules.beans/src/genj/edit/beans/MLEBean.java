@@ -41,7 +41,8 @@ public class MLEBean extends PropertyBean {
     tarea.addChangeListener(changeSupport);
     tarea.setLineWrap(true);
     tarea.setWrapStyleWord(true);
-
+    tarea.setComponentPopupMenu(new CCPMenu(tarea));
+    
     setLayout(new BorderLayout());
     add(BorderLayout.CENTER, new JScrollPane(tarea));
     

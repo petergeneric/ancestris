@@ -39,6 +39,7 @@ public class SimpleValueBean extends PropertyBean {
     public SimpleValueBean() {
 
         tfield = new TextFieldWidget("", 8);
+        tfield.setComponentPopupMenu(new CCPMenu(tfield));
         tfieldRO = new JLabel(""); // for RO properties
         tfield.addChangeListener(changeSupport);
 
