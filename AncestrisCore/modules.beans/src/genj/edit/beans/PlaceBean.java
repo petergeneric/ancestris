@@ -193,6 +193,7 @@ public class PlaceBean extends PropertyBean {
         }
         // and a textfield
         ChoiceWidget choice = new ChoiceWidget();
+        choice.setComponentPopupMenu(new CCPMenu(choice.getTextEditor()));
         choice.setIgnoreCase(true);
         choice.setEditable(true);
         if (values instanceof Updateable) {

@@ -55,6 +55,7 @@ public class AgeBean extends PropertyBean {
   public AgeBean() {
     
     choice = new ChoiceWidget(Arrays.asList(PropertyAge.PHRASES));
+    choice.setComponentPopupMenu(new CCPMenu(choice.getTextEditor()));
     choice.addChangeListener(changeSupport);
     
     setLayout(new NestedBlockLayout("<col><row><value/><template/></row><row><action/></row></col>"));

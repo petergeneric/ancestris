@@ -71,6 +71,7 @@ public class DateBean extends PropertyBean {
     
     // .. first date
     date1 = new DateWidget();
+    date1.setComponentPopupMenu(new CCPMenu(date1));
     date1.addChangeListener(changeSupport);
     add(date1);
 
@@ -80,10 +81,12 @@ public class DateBean extends PropertyBean {
     
     date2 = new DateWidget();
     date2.addChangeListener(changeSupport);
+    date2.setComponentPopupMenu(new CCPMenu(date2));
     add(date2);
     
     // phrase
     phrase = new TextFieldWidget("",10);
+    phrase.setComponentPopupMenu(new CCPMenu(phrase));
     phrase.addChangeListener(changeSupport);
     add(phrase);
     

@@ -52,6 +52,7 @@ public class EventBean extends PropertyBean {
     lAgeAt = new JLabel();
     
     tAge = new JTextField("", 16); 
+    tAge.setComponentPopupMenu(new CCPMenu(tAge));
     tAge.setEditable(false);
     tAge.setFocusable(false);
 
