@@ -83,6 +83,7 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 import ancestris.core.actions.AbstractAncestrisAction;
+import org.openide.util.lookup.ServiceProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -95,13 +96,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * GenJ - ReportPSCirc
+ * Ancestris - ReportPSCirc
  * from LifeLines
 todo:
 - majuscules
 - issuer
 - rapport a partir de la famille
  */
+@ServiceProvider(service=Report.class)
 public class ReportLinesCirc extends Report {
 
     private final static Charset CHARSET = Charset.forName("ISO-8859-1");
