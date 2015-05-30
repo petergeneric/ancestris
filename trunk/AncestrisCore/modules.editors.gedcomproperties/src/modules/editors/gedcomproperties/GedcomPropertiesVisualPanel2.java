@@ -89,11 +89,14 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel implements Consta
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
+        setBorder(null);
         setPreferredSize(new java.awt.Dimension(522, 400));
 
+        jScrollPane2.setBorder(null);
         jScrollPane2.setViewportBorder(null);
         jScrollPane2.setPreferredSize(new java.awt.Dimension(520, 400));
 
+        jPanel1.setBorder(null);
         jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
 
         jTextArea4.setColumns(20);
@@ -113,7 +116,7 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel implements Consta
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel12.create" : "Panel2.jLabel12.update"));
 
-        jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel1.create" : "Panel2.jLabel1.update"));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel2.class, mode == CREATION ? "Panel2.jLabel7.create" : "Panel2.jLabel7.update"));
@@ -172,7 +175,7 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel implements Consta
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField3)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
                             .addComponent(jTextField7)
                             .addComponent(jTextField8)
                             .addComponent(jTextField11)
@@ -242,7 +245,7 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel implements Consta
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         jScrollPane2.setViewportView(jPanel1);
