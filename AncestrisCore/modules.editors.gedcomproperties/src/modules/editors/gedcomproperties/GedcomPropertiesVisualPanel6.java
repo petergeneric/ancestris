@@ -50,25 +50,29 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
 
+        setBorder(null);
+
+        jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
         jScrollPane1.setPreferredSize(new java.awt.Dimension(520, 400));
 
+        jPanel1.setBorder(null);
         jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
 
         jLabel1.setFont(new java.awt.Font("Cantarell", 0, 15)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel6.class, "GedcomPropertiesVisualPanel6.jLabel1.text")); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel6.class, "GedcomPropertiesVisualPanel6.jLabel2.text")); // NOI18N
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel6.class, "GedcomPropertiesVisualPanel6.jTextField1.text")); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel6.class, "GedcomPropertiesVisualPanel6.jLabel3.text")); // NOI18N
 
         jTextField2.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel6.class, "GedcomPropertiesVisualPanel6.jTextField2.text")); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel6.class, "GedcomPropertiesVisualPanel6.jLabel4.text")); // NOI18N
 
         buttonGroup1.add(jRadioButton1);
@@ -91,7 +95,7 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -112,14 +116,14 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                                     .addComponent(jRadioButton2)
                                     .addComponent(jLabel6))))
-                        .addGap(0, 181, Short.MAX_VALUE)))
+                        .addGap(0, 174, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)

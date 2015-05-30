@@ -51,11 +51,14 @@ public final class GedcomPropertiesVisualPanel5 extends JPanel implements Consta
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
+        setBorder(null);
         setPreferredSize(new java.awt.Dimension(520, 400));
 
+        jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
         jScrollPane1.setPreferredSize(new java.awt.Dimension(520, 400));
 
+        jPanel1.setBorder(null);
         jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
