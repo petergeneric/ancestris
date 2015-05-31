@@ -9,7 +9,6 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 package modules.editors.gedcomproperties.utils;
 
 import genj.gedcom.Entity;
@@ -33,13 +32,13 @@ import org.openide.util.NbBundle;
  * @author frederic
  */
 public class GedcomVersionConverter {
-    
+
     private final Gedcom gedcom;
     private Exception error = null;
     Grammar fromGrammar = null, toGrammar = null;
     boolean isConvertible = false;
     boolean upgrade = false;
-    
+
     private List<Property> invalidPropsInvalidTags;           // Will store properties with invalid tags, and not starting with "_"
     private List<Property> invalidPropsMultipleTags;          // Will store properties which should be singleton and are not, and not starting with "_"
     private Map<Property, String[]> invalidPropsMissingTags;  // Will store properties where a child tag is missing. Map is list of missing tags for that parent property
@@ -63,36 +62,29 @@ public class GedcomVersionConverter {
 
     /**
      * Conversion of Grammar
-     * 
-     * Principle :      All invalid elements in current Gedcom file according to
-     *                  new Grammar (future Grammar mistakes) should be changed
-     *                  - If they can, change them according to grammar changes
-     *                    and ensure they are valid in the new grammar after 
-     *                    the change
-     *                    (ex : _MAP invalid and known to be changed to MAP)
-     *                  - If they can't, leave them as is and notify user
-     * 
-     *                  Grammar mistakes looked for:
-     *                  - invalid paths : 
-     *                      - isValid(TagPath) : tagPath should exist 
-     *                        (error is : Invalid tagpath structure)
-     *                  - invalid cardinality : 
-     *                      - isSingleton() : property should not have siblings 
-     *                        at same level 
-     *                        (error is : Tag should be unique for TagPath of parent)
-     *                      - isRequired() : parent should have this tag as a child 
-     *                        (error is : missing Tag for TagPath of parent)
-     * 
-     *                  For each mistakes that cannot be fixed in new grammar:
-     *                      - if Tag starts with "_" it is allowed
-     *                        (Warning : proprietary tag)
-     *                      - Otherwise, error remains
-     *                  
-     * 
-     * @return 
+     *
+     * Principle : All invalid elements in current Gedcom file according to new
+     * Grammar (future Grammar mistakes) should be changed - If they can, change
+     * them according to grammar changes and ensure they are valid in the new
+     * grammar after the change (ex : _MAP invalid and known to be changed to
+     * MAP) - If they can't, leave them as is and notify user
+     *
+     * Grammar mistakes looked for: - invalid paths : - isValid(TagPath) :
+     * tagPath should exist (error is : Invalid tagpath structure) - invalid
+     * cardinality : - isSingleton() : property should not have siblings at same
+     * level (error is : Tag should be unique for TagPath of parent) -
+     * isRequired() : parent should have this tag as a child (error is : missing
+     * Tag for TagPath of parent)
+     *
+     * For each mistakes that cannot be fixed in new grammar: - if Tag starts
+     * with "_" it is allowed (Warning : proprietary tag) - Otherwise, error
+     * remains
+     *
+     *
+     * @return
      */
     public boolean convert() {
-        
+
         // Let's define list of properties which will be invalid according to grammar
         invalidPropsInvalidTags = new LinkedList<Property>();
         invalidPropsMultipleTags = new LinkedList<Property>();
@@ -100,18 +92,17 @@ public class GedcomVersionConverter {
 
         // Collect anomalies
         getAnomalies();
-        
+
         // Process anomalies to try to fix them according to new norm
         if (upgrade) {
             upgradeGedcom();
         } else {
             downgradeGedcom();
         }
-        
+
         // Refresh anomalies
         getAnomalies();
-        
-        
+
         // Return
         if (!invalidPropsInvalidTags.isEmpty() || !invalidPropsMultipleTags.isEmpty() || !invalidPropsMissingTags.isEmpty()) {
             error = new Exception(NbBundle.getMessage(GedcomVersionConverter.class, "ERR_VersionErrors"));
@@ -121,11 +112,10 @@ public class GedcomVersionConverter {
         return true;
     }
 
-    
     private void getAnomalies() {
         // Let's define the list which will store all properties of the gedcom file
         List<Property> listOfProperties = new ArrayList<Property>();                  // Will store all properties except those of header entity
-        
+
         // Loop on all entities
         List<Entity> allEntities = gedcom.getEntities();
         for (Entity entity : allEntities) {
@@ -134,12 +124,12 @@ public class GedcomVersionConverter {
             }
             getPropertiesRecursively(entity, listOfProperties);
         }
-        
+
         // Loop on all properties to collect anomalies
         invalidPropsInvalidTags.clear();
         invalidPropsMultipleTags.clear();
         invalidPropsMissingTags.clear();
-        
+
         for (Property property : listOfProperties) {
             // detect invalid tagpath
             if (isInvalidTagPath(toGrammar, property)) {
@@ -158,51 +148,49 @@ public class GedcomVersionConverter {
         }
     }
 
-    
-    
-    
     /**
      * Upgrade from gedcom 5.5 to Gedcom 5.5.1
-     * 
-     * Tag to be replaced:
-     * -------------------
-     * convert _EMAIL, _FAX, _WWW to EMAIL, FAX, WWW                            if parent has an ADDR child (ADDR is mandatory). 5.5.1 grammar up-to-date
-     * convert _TYPE, _FONE, _ROMN to TYPE, FONE, ROMN, FONE:TYPE, ROMN:TYPE    if parent is INDI:NAME. 5.5.1 grammar up-to-date  
-     * convert _STAT to STAT                                                    if parent is FAMC. 5.5.1 grammar up-to-date  
-     * convert _MAP, _LATI, _LONG, _FONE, _ROMN to MAP, LATI, LONG, FONE, ROMN  if parent is PLAC. 5.5.1 grammar up-to-date  
-     * convert _FACT to FACT                                                    if parent is INDI. 5.5.1 grammar up-to-date    
-     * convert _RESN, _RELI to RESN, RELI                                       if parent is an event. 5.5.1 grammar up-to-date    
-     * 
-     * Tag to be moved:
-     * ----------------
-     * convert OBJE:FORM & OBJE:FILE(1) to OBJE:FILE(n):FORM                    for OBJE link and for OBJE record. 5.5.1 grammar up-to-date    
-     * 
-     * Tag to be deleted:
-     * ------------------
-     * Convert BLOB to _BLOB and subtags to _subtags    
-     * 
-     * Note: to change the tag of a property, it needs to be created and deleted (moved)
-     * When moving properties around, all descendant properties need to be moved as well otherwise will become orphans
-     * 
+     *
+     * Tag to be replaced: ------------------- convert _EMAIL, _FAX, _WWW to
+     * EMAIL, FAX, WWW if parent has an ADDR child (ADDR is mandatory). 5.5.1
+     * grammar up-to-date convert _TYPE, _FONE, _ROMN to TYPE, FONE, ROMN,
+     * FONE:TYPE, ROMN:TYPE if parent is INDI:NAME. 5.5.1 grammar up-to-date
+     * convert _STAT to STAT if parent is FAMC. 5.5.1 grammar up-to-date convert
+     * _MAP, _LATI, _LONG, _FONE, _ROMN to MAP, LATI, LONG, FONE, ROMN if parent
+     * is PLAC. 5.5.1 grammar up-to-date convert _FACT to FACT if parent is
+     * INDI. 5.5.1 grammar up-to-date convert _RESN, _RELI to RESN, RELI if
+     * parent is an event. 5.5.1 grammar up-to-date
+     *
+     * Tag to be moved: ---------------- convert OBJE:FORM & OBJE:FILE(1) to
+     * OBJE:FILE(n):FORM for OBJE link and for OBJE record. 5.5.1 grammar
+     * up-to-date
+     *
+     * Tag to be deleted: ------------------ Convert BLOB to _BLOB and subtags
+     * to _subtags
+     *
+     * Note: to change the tag of a property, it needs to be created and deleted
+     * (moved) When moving properties around, all descendant properties need to
+     * be moved as well otherwise will become orphans
+     *
      */
-    private final Set<String> REPLACED_TAGS_ADDR = new HashSet<String>(Arrays.asList("_EMAIL","_FAX","_WWW"));
-    private final Set<String> REPLACED_TAGS_NAME = new HashSet<String>(Arrays.asList("_TYPE","_FONE","_ROMN"));
+    private final Set<String> REPLACED_TAGS_ADDR = new HashSet<String>(Arrays.asList("_EMAIL", "_FAX", "_WWW"));
+    private final Set<String> REPLACED_TAGS_NAME = new HashSet<String>(Arrays.asList("_TYPE", "_FONE", "_ROMN"));
     private final Set<String> REPLACED_TAGS_FAMC = new HashSet<String>(Arrays.asList("_STAT"));
-    private final Set<String> REPLACED_TAGS_PLAC = new HashSet<String>(Arrays.asList("_MAP","_FONE","_ROMN"));
-    private final Set<String> REPLACED_TAGS_MAP = new HashSet<String>(Arrays.asList("_LATI","_LONG"));
+    private final Set<String> REPLACED_TAGS_PLAC = new HashSet<String>(Arrays.asList("_MAP", "_FONE", "_ROMN"));
+    private final Set<String> REPLACED_TAGS_MAP = new HashSet<String>(Arrays.asList("_LATI", "_LONG"));
     private final Set<String> REPLACED_TAGS_INDI = new HashSet<String>(Arrays.asList("_FACT"));
-    private final Set<String> REPLACED_TAGS_EVEN = new HashSet<String>(Arrays.asList("_RESN","_RELI"));
+    private final Set<String> REPLACED_TAGS_EVEN = new HashSet<String>(Arrays.asList("_RESN", "_RELI"));
     private final Set<String> MOVED_TAGS = new HashSet<String>(Arrays.asList("FORM"));
     private final Set<String> REMOVED_TAGS = new HashSet<String>(Arrays.asList("BLOB"));
-    
-    private final Set<String> EVENTS = new HashSet<String>(Arrays.asList( 
-        "ANUL","ADOP","BAPM","BARM","BASM","BIRT","BLES","BURI","CAST","CENS","CENS","CHR","CHRA","CONF","CREM",    
-        "DEAT","DIV","DIVF","DSCR","EDUC","EMIG","ENGA","EVEN","FCOM","GRAD","IDNO","IMMI","MARB","MARC","MARL", 
-        "MARR","MARS","NATI","NATU","NCHI","NMR","OCCU","ORDN","PROB","PROP","RELI","RESI","RETI","SSN","TITL","WILL"
+
+    private final Set<String> EVENTS = new HashSet<String>(Arrays.asList(
+            "ANUL", "ADOP", "BAPM", "BARM", "BASM", "BIRT", "BLES", "BURI", "CAST", "CENS", "CENS", "CHR", "CHRA", "CONF", "CREM",
+            "DEAT", "DIV", "DIVF", "DSCR", "EDUC", "EMIG", "ENGA", "EVEN", "FCOM", "GRAD", "IDNO", "IMMI", "MARB", "MARC", "MARL",
+            "MARR", "MARS", "NATI", "NATU", "NCHI", "NMR", "OCCU", "ORDN", "PROB", "PROP", "RELI", "RESI", "RETI", "SSN", "TITL", "WILL"
     ));
-    
+
     private void upgradeGedcom() {
-        
+
         // Go through invalid tags
         while (!invalidPropsInvalidTags.isEmpty()) {
             Property prop = (Property) ((LinkedList) invalidPropsInvalidTags).removeFirst();
@@ -211,7 +199,7 @@ public class GedcomVersionConverter {
             String newTag = tag.substring(1, tag.length());
             Property parent = prop.getParent();
             String parentTag = parent != null ? parent.getTag() : "";
-            
+
             if (REPLACED_TAGS_ADDR.contains(tag) && parent.getProperty("ADDR") != null) {
                 replaceProperty(prop, parent, newTag);
                 continue;
@@ -256,16 +244,14 @@ public class GedcomVersionConverter {
                 continue;
             }
             if (REMOVED_TAGS.contains(tag)) {
-                replaceProperty(prop, parent, "_"+tag);
-            } 
+                replaceProperty(prop, parent, "_" + tag);
+            }
         } // endfor
-        
-        
+
         // Go through incorrect multiple tags 
         // ==> NOTHING to be done in terms of Grammar changes between 5.5 and 5.5.1) so just comment out codes (futur use maybe!)
         //while (!invalidPropsMultipleTags.isEmpty()) {
         //}
-
         // Go through incorrect missing tags
         // ==> NOTHING to be done in terms of Grammar changes between 5.5 and 5.5.1) 
         // but create missing tags anyway, as empty fields, to make sure file will be compatible with grammar
@@ -280,17 +266,13 @@ public class GedcomVersionConverter {
                 }
             }
         }
-        
-        
+
     }
 
-    
-    
     /**
      * Downgrade from gedcom 5.5.1 to Gedcom 5.5
-     * 
-     * Reverse upgrade operations.
-     * Leave all remaining tags as "_xxx".
+     *
+     * Reverse upgrade operations. Leave all remaining tags as "_xxx".
      */
     private void downgradeGedcom() {
         // Go through invalid tags
@@ -298,10 +280,10 @@ public class GedcomVersionConverter {
             Property prop = (Property) ((LinkedList) invalidPropsInvalidTags).removeFirst();
             String entityTag = prop.getEntity().getTag();
             String tag = prop.getTag();
-            String newTag = "_"+tag;
+            String newTag = "_" + tag;
             Property parent = prop.getParent();
             String parentTag = parent != null ? parent.getTag() : "";
-            
+
             if (REPLACED_TAGS_ADDR.contains(newTag) && parent.getProperty("ADDR") != null) {
                 replaceProperty(prop, parent, newTag);
                 continue;
@@ -340,15 +322,13 @@ public class GedcomVersionConverter {
             }
             if (REMOVED_TAGS.contains(newTag)) {
                 replaceProperty(prop, parent, tag);
-            } 
+            }
         } // endfor
-        
-        
+
         // Go through incorrect multiple tags 
         // ==> NOTHING to be done in terms of Grammar changes between 5.5 and 5.5.1) so just comment out codes (futur use maybe!)
         //while (!invalidPropsMultipleTags.isEmpty()) {
         //}
-
         // Go through incorrect missing tags
         // ==> NOTHING to be done in terms of Grammar changes between 5.5 and 5.5.1) 
         // but create missing tags anyway, as empty fields, to make sure file will be compatible with grammar
@@ -363,29 +343,17 @@ public class GedcomVersionConverter {
                 }
             }
         }
-        
-        
-    }
-    
 
-    
-    
-    
-    
-    
+    }
+
     public boolean isConvertible() {
         return isConvertible;
     }
-    
+
     public boolean isWithError() {
         return error != null;
     }
-    
 
-    
-    
-    
-    
     public String[] getInvalidPropsInvalidTags() {
         if (invalidPropsInvalidTags == null) {
             return null;
@@ -394,10 +362,12 @@ public class GedcomVersionConverter {
         for (Property prop : invalidPropsInvalidTags) {
             list.add(prop.getPath().toString() + " (" + prop.getEntity().getId() + ") - " + prop.getDisplayValue());
         }
-        list.sort(null);
+        if (!list.isEmpty()) {
+            list.sort(null);
+        }
         return list.toArray(new String[list.size()]);
     }
-    
+
     public String[] getInvalidPropsMultipleTags() {
         if (invalidPropsMultipleTags == null) {
             return null;
@@ -421,7 +391,7 @@ public class GedcomVersionConverter {
             for (int i = 0; i < arr.length; i++) {
                 String s = arr[i];
                 builder.append(s);
-                if (i != arr.length-1) {
+                if (i != arr.length - 1) {
                     builder.append(", ");
                 }
             }
@@ -434,12 +404,6 @@ public class GedcomVersionConverter {
         list.sort(null);
         return list.toArray(new String[list.size()]);
     }
-    
-    
-    
-    
-    
-    
 
     private boolean isInvalidTagPath(Grammar toGrammar, Property property) {
         if (property instanceof PropertyXRef) {
@@ -449,9 +413,9 @@ public class GedcomVersionConverter {
     }
 
     private boolean isMultipleSingleton(Grammar toGrammar, Property property) {
-        return (toGrammar.getMeta(property.getPath()).isSingleton() && property.getParent().getProperties(property.getTag()).length > 1); 
+        return (toGrammar.getMeta(property.getPath()).isSingleton() && property.getParent().getProperties(property.getTag()).length > 1);
     }
-    
+
     private String[] getMissingKidTags(Grammar toGrammar, Property parent) {
         List<String> listOfTags = new ArrayList<String>();
         String tag;
@@ -465,12 +429,6 @@ public class GedcomVersionConverter {
         }
         return listOfTags.toArray(new String[listOfTags.size()]);
     }
-
-    
-    
-    
-    
-    
 
     public void getPropertiesRecursively(Property parent, List props) {
         Property[] children = parent.getProperties();
@@ -492,7 +450,7 @@ public class GedcomVersionConverter {
         List<Tab> subtree = new LinkedList<Tab>();
         subtree.add(new Tab(fromProp, null, toProp));
         storePropertiesRecursively(fromProp, subtree);
-        
+
         // Use it to create the duplicate tree while storing duplicated elements in front of their original ones
         Property fromParent;
         for (Tab tabElement : subtree) {
@@ -502,7 +460,7 @@ public class GedcomVersionConverter {
             fromParent = subtree.get(tabElement.parentIndex).toProp;
             tabElement.setToProp(fromParent.addProperty(tabElement.fromProp.getTag(), tabElement.fromProp.getValue()));
         }
-        
+
         // Delete original tree first from leaves 
         subtree.remove(0);
         boolean isLeaf;
@@ -517,8 +475,7 @@ public class GedcomVersionConverter {
                 }
             }
         }
-        
-        
+
     }
 
     private void storePropertiesRecursively(Property parent, List<Tab> tree) {
@@ -538,8 +495,8 @@ public class GedcomVersionConverter {
         return null;
     }
 
-    
     private class Tab {
+
         public Property fromProp;
         public Integer parentIndex;
         public Property toProp;
@@ -549,11 +506,10 @@ public class GedcomVersionConverter {
             this.parentIndex = parentIndex;
             this.toProp = toProp;
         }
-        
-        public void setToProp(Property prop) { this.toProp = prop; }
+
+        public void setToProp(Property prop) {
+            this.toProp = prop;
+        }
     }
-    
-    
-    
-    
+
 }
