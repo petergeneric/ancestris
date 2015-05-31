@@ -293,6 +293,21 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
+     * Accessor - all jurisdictions starting with city
+     */
+    public String getNumericalJurisdictions() {
+        String str = "";
+        String[] juris = toJurisdictions(getValue());
+        for (int i = 0; i < juris.length; i++) {
+            String juri = juris[i];
+            if (juri.matches("-?\\d+(\\.\\d+)?")) {         //match a number with optional '-' and decimal.
+                str += juri + JURISDICTION_SEPARATOR;
+            } 
+        }
+        return str;
+    }
+
+    /**
      * Derive index of city value in the list of jurisdictions in this place
      *
      * @return zero based index or -1 if not determined
