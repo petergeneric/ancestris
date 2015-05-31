@@ -194,38 +194,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                         new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
 
             } else if (actionName.equals("ACTION_EditPlace")) {
-                // Popup editor
-                Gedcom gedcom = obj.getGedcom();
-                int undoNb = gedcom.getUndoNb();
-                final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-                placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null);
-                placeEditorPanel.hideAddressPanel();
-                //placeEditorPanel.runSearch();
-                ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"), placeEditorPanel);
-                eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-                if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    try {
-                        GeoPlacesList.getInstance(gedcom).stopListening();
-                        gedcom.doUnitOfWork(new UnitOfWork() {
-
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                placeEditorPanel.commit();  // writes place edited and also writes geocoordinates into gedcom file
-                                // update all other places in gedcom and refresh list
-                                obj.updateAllEventsPlaces(obj.getPlace());
-                            }
-                        });
-                        GeoPlacesList.getInstance(gedcom).refreshPlaceName();
-                        GeoPlacesList.getInstance(gedcom).startListening();    
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                } else {
-                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                        gedcom.undoUnitOfWork(false);
-                    }
-                }
+                editPlace(obj);
             } else if (actionName.equals("ACTION_CopyPlace")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace());
             } else if (actionName.equals("ACTION_PastePlace")) {
@@ -286,8 +255,47 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 }
             }
         }
+
     }
 
+    // FIXME : should not be here nor static. Fix later.
+    public static void editPlace(GeoNodeObject gno) {
+        final GeoNodeObject obj = gno;
+        // Popup editor
+        Gedcom gedcom = obj.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+        placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null);
+        placeEditorPanel.hideAddressPanel();
+        //placeEditorPanel.runSearch();
+        ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"), placeEditorPanel);
+        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
+
+        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            try {
+                GeoPlacesList.getInstance(gedcom).stopListening();
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        placeEditorPanel.commit();  // writes place edited and also writes geocoordinates into gedcom file
+                        // update all other places in gedcom and refresh list
+                        obj.updateAllEventsPlaces(obj.getPlace());
+                    }
+                });
+                GeoPlacesList.getInstance(gedcom).refreshPlaceName();
+                GeoPlacesList.getInstance(gedcom).startListening();
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }
+    
+    
     private GeoMapTopComponent getMapTopComponent(GeoNodeObject obj) {
         GeoMapTopComponent theList = null;
         if (obj == null) {

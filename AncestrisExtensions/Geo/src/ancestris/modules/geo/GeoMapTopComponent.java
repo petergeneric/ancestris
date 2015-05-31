@@ -64,7 +64,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 //    private Gedcom gedcom = null;
     private GeoPlacesList gpl = null;
     private GeoNodeObject[] markers = null;
-    private Set<GeoPoint> geoPoints = new HashSet<GeoPoint>();
+    private List<GeoPoint> geoPoints = new LinkedList<GeoPoint>();
     private HoverPanel hoverPanel = null;
     private int markersSizeMax = 50;
     private MapPopupMenu popupMenu;
@@ -1027,16 +1027,18 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
-        if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES)) {
-        } else if (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) {
-        } else if (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM)) {
+        if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES) || (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) || (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM))) {
+            hoverPanel.setVisible(false); 
             markers = gpl.getPlaces();
             geoFilter.calculatesIndividuals(getGedcom(), true); // refresh lists from gedcom changes
+            applyFilters();
         }
-        applyFilters();
     }
 
     private void applyFilters() {
+        if (isBusyRecalc) {
+            return;
+        }
         isBusyRecalc = true;
         geoPoints.clear();
         if (markers != null) {
@@ -1057,7 +1059,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
             }
         }
-        hoverPanel.setVisible(false);
+        hoverPanel.setVisible(false); 
         jButton6.setEnabled(true);
         isBusyRecalc = false;
     }
@@ -1066,7 +1068,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private void displayMarkers() {
         WaypointPainter painter = new WaypointPainter();
         if (displayMarkers) {
-            painter.setWaypoints(geoPoints);
+            painter.setWaypoints(new HashSet(geoPoints));
             if (useNames) {
                 painter.setRenderer(new WaypointRenderer() {
 
@@ -1193,6 +1195,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             if (geoPoints == null || isBusyRecalc) {
                 return;
             }
+            // Warning : if map is moved too much to the right or to the left, points needs to be added +/-2kPi
+            // FIXME : find another way to get mouse on map coordinates because map display marker correctly
+            // It should be possible to get it right
             JXMapViewer map = jXMapKit1.getMainMap();
             GeoNodeObject geoNodeObject = null;
             Point converted_gp_pt = null;
@@ -1275,15 +1280,17 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
                 public void run() {
                     List<Toponym> topos = getToposNearbyPoint(localGeoPoint);
-                    SortedMap<String, Toponym> uniqueMap = new TreeMap<String, Toponym>(); // use sortedmap to sort locations
-                    for (Iterator<Toponym> it = topos.iterator(); it.hasNext();) {
-                        Toponym toponym = it.next();
-                        String name = toponym.getName() + " [" + getCoordinates(new GeoPosition(toponym.getLatitude(), toponym.getLongitude())) + "]";
-                        uniqueMap.put(name, toponym);
-                    }
-                    for (Iterator<String> it = uniqueMap.keySet().iterator(); it.hasNext();) {
-                        String name = it.next();
-                        localSubmenu.add(new MapPopupAction(name, localPopupMenu.getCoordinates(), localPopupMenu, uniqueMap.get(name)));
+                    if (topos != null) {
+                        SortedMap<String, Toponym> uniqueMap = new TreeMap<String, Toponym>(); // use sortedmap to sort locations
+                        for (Iterator<Toponym> it = topos.iterator(); it.hasNext();) {
+                            Toponym toponym = it.next();
+                            String name = toponym.getName() + " [" + getCoordinates(new GeoPosition(toponym.getLatitude(), toponym.getLongitude())) + "]";
+                            uniqueMap.put(name, toponym);
+                        }
+                        for (Iterator<String> it = uniqueMap.keySet().iterator(); it.hasNext();) {
+                            String name = it.next();
+                            localSubmenu.add(new MapPopupAction(name, localPopupMenu.getCoordinates(), localPopupMenu, uniqueMap.get(name)));
+                        }
                     }
                 }
 
