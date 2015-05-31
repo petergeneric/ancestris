@@ -107,11 +107,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
     }
 
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
-        if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES)) {
-            // nothing
-        } else if (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) {
-            // nothing
-        } else if (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM)) {
+        if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES) || (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) || (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM))) {
             String selectedNode = getSelectedNode();
             nodes = gpl.getPlaces();
             mgr.setRootContext(new GeoNode(gpl));

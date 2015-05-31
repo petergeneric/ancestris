@@ -25,6 +25,8 @@ import org.openide.windows.WindowManager;
  */
 class GeoPlacesList implements GedcomListener {
 
+    private static String FORCE_REFRESH_DATE = "03-05-2015";
+    
     public static String TYPEOFCHANGE_GEDCOM = "gedcom";
     public static String TYPEOFCHANGE_COORDINATES = "coord";
     public static String TYPEOFCHANGE_NAME = "name";
@@ -87,12 +89,12 @@ class GeoPlacesList implements GedcomListener {
         Date fromValidDate = null;
         try {
             versionDate = (Date)formatter.parse(NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", "01-01-1900"));
-            fromValidDate = (Date)formatter.parse("01-03-2015");
+            fromValidDate = (Date)formatter.parse(FORCE_REFRESH_DATE);
             if (versionDate.before(fromValidDate) && JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(), 
                     NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesQuestion"), 
                     NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesTitle"), JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
                 NbPreferences.forModule(GeoPlacesList.class).clear();
-                NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", "01-03-2015");
+                NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", FORCE_REFRESH_DATE);
             }
         } catch (ParseException ex) {
             Exceptions.printStackTrace(ex);

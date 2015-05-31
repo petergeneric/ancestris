@@ -85,92 +85,93 @@ public class HoverPanel extends javax.swing.JPanel {
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         jScrollBar1 = new javax.swing.JScrollBar();
+        jButton1 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(254, 254, 254));
         setAlignmentX(0.0F);
         setAlignmentY(0.0F);
         setOpaque(false);
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        jLabel2.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         jLabel2.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel2.text")); // NOI18N
         jLabel2.setAlignmentY(0.0F);
+        jLabel2.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel3.setForeground(new java.awt.Color(254, 254, 254));
         jLabel3.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel3.text")); // NOI18N
         jLabel3.setAlignmentY(0.0F);
+        jLabel3.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel4.setForeground(new java.awt.Color(254, 254, 254));
         jLabel4.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel4.text")); // NOI18N
         jLabel4.setAlignmentY(0.0F);
+        jLabel4.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 2, 12));
-        jLabel6.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 2, 12)); // NOI18N
         jLabel6.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel6.text")); // NOI18N
         jLabel6.setAlignmentY(0.0F);
+        jLabel6.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel5.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        jLabel5.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel5.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         jLabel5.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel5.text")); // NOI18N
         jLabel5.setAlignmentY(0.0F);
+        jLabel5.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel7.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        jLabel7.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel7.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         jLabel7.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel7.text")); // NOI18N
         jLabel7.setAlignmentY(0.0F);
+        jLabel7.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel8.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        jLabel8.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel8.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         jLabel8.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel8.text")); // NOI18N
         jLabel8.setAlignmentY(0.0F);
+        jLabel8.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        jLabel9.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         jLabel9.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel9.text")); // NOI18N
         jLabel9.setAlignmentY(0.0F);
+        jLabel9.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel10.setForeground(new java.awt.Color(254, 254, 254));
         jLabel10.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel10.text")); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel11.setForeground(new java.awt.Color(254, 254, 254));
         jLabel11.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel11.text")); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel12.setForeground(new java.awt.Color(254, 254, 254));
         jLabel12.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel12.text")); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel13.setForeground(new java.awt.Color(254, 254, 254));
         jLabel13.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel13.text")); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel14.setForeground(new java.awt.Color(254, 254, 254));
         jLabel14.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel14.text")); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel15.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        jLabel15.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel15.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         jLabel15.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel15.text")); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel16.setForeground(new java.awt.Color(254, 254, 254));
         jLabel16.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel16.text")); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel17.setForeground(new java.awt.Color(254, 254, 254));
         jLabel17.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel17.text")); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel18.setForeground(new java.awt.Color(254, 254, 254));
         jLabel18.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel18.text")); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel19.setForeground(new java.awt.Color(254, 254, 254));
         jLabel19.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel19.text")); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel20.setForeground(new java.awt.Color(254, 254, 254));
         jLabel20.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel20.text")); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel21.setForeground(new java.awt.Color(254, 254, 254));
         jLabel21.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel21.text")); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel22.setForeground(new java.awt.Color(254, 254, 254));
         jLabel22.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel22.text")); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(254, 254, 254));
 
-        jLabel23.setForeground(new java.awt.Color(254, 254, 254));
         jLabel23.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jLabel23.text")); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(254, 254, 254));
 
         jScrollBar1.setBackground(new java.awt.Color(254, 254, 254));
         jScrollBar1.setForeground(new java.awt.Color(255, 250, 250));
@@ -178,6 +179,18 @@ public class HoverPanel extends javax.swing.JPanel {
         jScrollBar1.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 jScrollBar1AdjustmentValueChanged(evt);
+            }
+        });
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/geo/edit.png"))); // NOI18N
+        jButton1.setText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jButton1.text")); // NOI18N
+        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(HoverPanel.class, "HoverPanel.jButton1.toolTipText")); // NOI18N
+        jButton1.setMaximumSize(new java.awt.Dimension(20, 20));
+        jButton1.setMinimumSize(new java.awt.Dimension(20, 20));
+        jButton1.setPreferredSize(new java.awt.Dimension(20, 20));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -191,50 +204,58 @@ public class HoverPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6))
-                    .addComponent(jLabel2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel17)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel19)
-                            .addComponent(jLabel18)
-                            .addComponent(jLabel13))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
+                                .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel15))
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
+                                .addComponent(jLabel4)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel6))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel21)
-                                    .addComponent(jLabel20)
-                                    .addComponent(jLabel23)
-                                    .addComponent(jLabel22))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel17)
+                                    .addComponent(jLabel16)
+                                    .addComponent(jLabel19)
+                                    .addComponent(jLabel18)
+                                    .addComponent(jLabel13))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel9)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel14)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel15))
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel21)
+                                            .addComponent(jLabel20)
+                                            .addComponent(jLabel23)
+                                            .addComponent(jLabel22))))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                    .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
                         .addGap(1, 1, 1)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
@@ -282,7 +303,13 @@ public class HoverPanel extends javax.swing.JPanel {
         currentGno = selectedMarkers[jScrollBar1.getValue()];
         displayInfo();
     }//GEN-LAST:event_jScrollBar1AdjustmentValueChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        GeoNode.editPlace(currentGno);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;

@@ -150,7 +150,7 @@ public class GeoNodeObject {
         
         // Search locally first (trimming spaces)
         if (avoidInternetSearch) {
-            topo = Code2Toponym(NbPreferences.forModule(GeoPlacesList.class).get(searchedPlace.replaceAll(",", "").replaceAll(" +", ""), null));
+            topo = Code2Toponym(NbPreferences.forModule(GeoPlacesList.class).get(searchedPlace.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, "").replaceAll(" +", ""), null));
             foundLocally = (topo != null);
         }
 
@@ -159,21 +159,30 @@ public class GeoNodeObject {
             topo = null;
             WebService.setUserName(GeonamesOptions.getInstance().getUserName());
             ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
+            searchCriteria.setNameStartsWith(place.getCity());
             searchCriteria.setMaxRows(1);
             searchCriteria.setLanguage(Locale.getDefault().toString());
             searchCriteria.setStyle(Style.FULL);
             ToponymSearchResult searchResult;
             //
             try {
-                // try search with full name to be more precise, separating the words
-                searchCriteria.setQ(searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
+                // try search with all elements of place name to be more precise, separating the words
+                searchCriteria.setQ(searchedPlace.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " "));
                 searchResult = WebService.search(searchCriteria);
                 for (Toponym iTopo : searchResult.getToponyms()) {
                     topo = iTopo; // take the first one
                     break;
                 }
-                if (topo == null) { // try with only city and country if not found
-                    searchCriteria.setQ(place.getCity());
+                if (topo == null) { // try with numbers only (i.e. Martinique is not in France according to 'geonames' so country fails the search)
+                    searchCriteria.setQ(place.getNumericalJurisdictions().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " "));
+                    searchResult = WebService.search(searchCriteria);
+                    for (Toponym iTopo : searchResult.getToponyms()) {
+                        topo = iTopo; // take the first one
+                        break;
+                    }
+                }
+                if (topo == null) { // try without "q" so only with namestartswith
+                    searchCriteria.setQ(null);
                     searchResult = WebService.search(searchCriteria);
                     for (Toponym iTopo : searchResult.getToponyms()) {
                         topo = iTopo; // take the first one
@@ -191,7 +200,7 @@ public class GeoNodeObject {
 
         // Remember for next time if found on the Internet and not locally
         if (!foundLocally && topo != null) {
-            NbPreferences.forModule(GeoPlacesList.class).put(searchedPlace.replaceAll(",", "").replaceAll(" +", ""), Toponym2Code(topo));
+            NbPreferences.forModule(GeoPlacesList.class).put(searchedPlace.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, "").replaceAll(" +", ""), Toponym2Code(topo));
         }
 
         return topo;
