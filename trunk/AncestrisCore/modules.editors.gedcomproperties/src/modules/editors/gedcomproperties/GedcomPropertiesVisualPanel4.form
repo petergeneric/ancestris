@@ -130,13 +130,11 @@
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jButton1" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jButton2" max="32767" attributes="0"/>
-                                  <Component id="jButton4" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jButton6" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jButton7" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jButton3" alignment="0" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="jButton2" alignment="1" max="32767" attributes="0"/>
+                              <Component id="jButton4" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jButton6" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jButton7" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jButton3" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jTextField1" pref="205" max="32767" attributes="0"/>
