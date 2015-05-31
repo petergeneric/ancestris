@@ -151,22 +151,17 @@ public class GedcomVersionConverter {
     /**
      * Upgrade from gedcom 5.5 to Gedcom 5.5.1
      *
-     * Tag to be replaced: ------------------- convert _EMAIL, _FAX, _WWW to
-     * EMAIL, FAX, WWW if parent has an ADDR child (ADDR is mandatory). 5.5.1
-     * grammar up-to-date convert _TYPE, _FONE, _ROMN to TYPE, FONE, ROMN,
-     * FONE:TYPE, ROMN:TYPE if parent is INDI:NAME. 5.5.1 grammar up-to-date
-     * convert _STAT to STAT if parent is FAMC. 5.5.1 grammar up-to-date convert
-     * _MAP, _LATI, _LONG, _FONE, _ROMN to MAP, LATI, LONG, FONE, ROMN if parent
-     * is PLAC. 5.5.1 grammar up-to-date convert _FACT to FACT if parent is
-     * INDI. 5.5.1 grammar up-to-date convert _RESN, _RELI to RESN, RELI if
-     * parent is an event. 5.5.1 grammar up-to-date
-     *
-     * Tag to be moved: ---------------- convert OBJE:FORM & OBJE:FILE(1) to
-     * OBJE:FILE(n):FORM for OBJE link and for OBJE record. 5.5.1 grammar
-     * up-to-date
-     *
-     * Tag to be deleted: ------------------ Convert BLOB to _BLOB and subtags
-     * to _subtags
+     * Tag to be replaced: ------------------- 
+     * convert _EMAIL, _FAX, _WWW to EMAIL, FAX, WWW if parent has an ADDR child (ADDR is mandatory) 
+     * Convert _TYPE, _FONE, _ROMN to TYPE, FONE, ROMN, FONE:TYPE, ROMN:TYPE if parent is INDI:NAME 
+     * Convert _STAT to STAT if parent is FAMC 
+     * Convert _MAP, _LATI, _LONG, _FONE, _ROMN to MAP, LATI, LONG, FONE, ROMN if parent is PLAC 
+     * Convert _FACT to FACT if parent is INDI 
+     * Convert _RESN, _RELI to RESN, RELI if parent is an event 
+     * Tag to be moved: ---------------- 
+     * Convert OBJE:FORM & OBJE:FILE(1) to OBJE:FILE(n):FORM for OBJE link and for OBJE record 
+     * Tag to be deleted: ------------------ 
+     * Convert BLOB to _BLOB and subtags to _subtags
      *
      * Note: to change the tag of a property, it needs to be created and deleted
      * (moved) When moving properties around, all descendant properties need to
@@ -239,7 +234,8 @@ public class GedcomVersionConverter {
                         p = parent.addProperty("FILE", "");
                     }
                 }
-                p.addProperty("FORM", prop.getValue());
+                Property newProp = p.addProperty("FORM", prop.getValue());
+                moveSubTree(prop, newProp);
                 parent.delProperty(prop);
                 continue;
             }
@@ -252,6 +248,7 @@ public class GedcomVersionConverter {
         // ==> NOTHING to be done in terms of Grammar changes between 5.5 and 5.5.1) so just comment out codes (futur use maybe!)
         //while (!invalidPropsMultipleTags.isEmpty()) {
         //}
+        
         // Go through incorrect missing tags
         // ==> NOTHING to be done in terms of Grammar changes between 5.5 and 5.5.1) 
         // but create missing tags anyway, as empty fields, to make sure file will be compatible with grammar
