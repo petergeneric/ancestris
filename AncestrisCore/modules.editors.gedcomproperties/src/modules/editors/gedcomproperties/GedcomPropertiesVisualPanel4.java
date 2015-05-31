@@ -306,7 +306,7 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        addNewJurisdiction("");
+        addNewJurisdiction(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.emptyField"));
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -370,19 +370,28 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         String[] placeFormatList = PropertyPlace.getFormat(str);
         listModel.clear();
         for (String p : placeFormatList) {
-            listModel.addElement(p);
+            if (p.isEmpty()) {
+                listModel.addElement(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.emptyField"));
+            } else {
+                listModel.addElement(p);
+            }
         }
         updateDisplay();
     }
 
     public String getPLAC() {
         String ret = "";
+        String tmpStr = "";
         String addStr = PropertyPlace.JURISDICTION_SEPARATOR;
         for (int i = 0; i < listModel.getSize(); i++) {
             if (i == listModel.getSize()-1) {
                 addStr = "";
             } 
-            ret += listModel.elementAt(i) + addStr;
+            tmpStr = listModel.elementAt(i);
+            if (tmpStr.equals(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.emptyField"))) {
+                tmpStr = "";
+            }
+            ret += tmpStr + addStr;
         }
         return ret;
     }
