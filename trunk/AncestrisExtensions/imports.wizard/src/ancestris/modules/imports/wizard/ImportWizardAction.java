@@ -45,9 +45,11 @@ public final class ImportWizardAction extends CallableSystemAction {
             File outFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
             if (importMethod.run(inputFile, outFile) == true) {
                 Context context = GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(outFile));
-                Gedcom importedGedcom = context.getGedcom();
-                importedGedcom.setName(inputFile.getName());
-                importMethod.fixGedcom(importedGedcom);
+                if (context != null){
+                    Gedcom importedGedcom = context.getGedcom();
+                    importedGedcom.setName(inputFile.getName());
+                    importMethod.fixGedcom(importedGedcom);
+                }
                 outFile.delete();
             }
         }
