@@ -249,7 +249,6 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
     public void commit() throws GedcomException {
 
         // Update gedcom header
-        Property prop_HEAD = gedcom.getFirstEntity(HEADER);
         boolean chg = false;
 
         chg = chg || replaceOrCreateProperty(HEADER + ":" + FILE);
@@ -275,6 +274,10 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         
         // Update gedcom submitter
         Submitter submitter = gedcom.getSubmitter();
+        if (submitter == null) {
+            gedcom.createEntity(Gedcom.SUBM);
+            submitter = gedcom.getSubmitter();
+        }
         
         if (!submitter.getName().equals((String) wiz.getProperty(SUBM + ":" + NAME))) { submitter.setName((String) wiz.getProperty(SUBM + ":" + NAME)); chg = true; }
         if (!submitter.getAddress().equals((String) wiz.getProperty(SUBM + ":" + ADDR))) { submitter.setAddress((String) wiz.getProperty(SUBM + ":" + ADDR)); chg = true; }
