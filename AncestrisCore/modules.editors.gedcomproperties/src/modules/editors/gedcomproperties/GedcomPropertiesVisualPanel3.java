@@ -84,7 +84,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Cantarell", 2, 15)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("DejaVu Sans", 2, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, "Panel3.jLabel5.text"));
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel5.setAutoscrolls(true);
