@@ -100,6 +100,7 @@ class GeoInternetSearch {
                                         System.out.println(msg);
                                     }
                                 });
+                                break;
                             }
                             // Add object to list of objects, and add new city to the list
                             ret.add(newObj);
