@@ -314,16 +314,23 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         if (mPlace != null) {
             editorsTabbedPane.setSelectedComponent(placeEditorTabPanel);
             PropertyMap propMap = mPlace.getMap();
+            boolean existCoordinatesX = false, existCoordinatesY = false;
             double longitude = Double.NaN;
             double latitude = Double.NaN;
 
             
             if (propMap != null){
-                longitude = propMap.getLongitude()==null?Double.NaN:propMap.getLongitude().getDoubleValue();
-                latitude = propMap.getLatitude()==null?Double.NaN:propMap.getLatitude().getDoubleValue();
+                if (propMap.getLongitude() != null) {
+                    longitude = propMap.getLongitude().getDoubleValue();
+                    existCoordinatesX = true;
+                }
+                if (propMap.getLatitude() == null) {
+                    latitude = propMap.getLatitude().getDoubleValue();
+                    existCoordinatesY = true;
+                }
             }
 
-            if (longitude != Double.NaN && latitude != Double.NaN) {
+            if (existCoordinatesX && existCoordinatesY) {
                 // Center map on existing geo coordinates
                 jXMapKit1.setAddressLocation(new GeoPosition(latitude, longitude));
                 // Set search field in case user may want to search another location similar to the one existing, but stay on map tab
