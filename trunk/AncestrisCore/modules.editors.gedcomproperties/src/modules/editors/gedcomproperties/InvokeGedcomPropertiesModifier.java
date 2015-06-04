@@ -229,7 +229,13 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         copyGedPropToWizProp(HEADER + ":" + GEDC + ":" + VERS, CREATION_OR_UPDATE, Grammar.GRAMMAR551);
         copyGedPropToWizProp(HEADER + ":" + DEST, CREATION_OR_UPDATE, "ANY");
         
-        copyGedPropToWizProp(HEADER + ":" + PLAC + ":" + FORM, CREATION_OR_UPDATE, GedcomOptions.getInstance().getPlaceFormat());
+        // Specific case of placeformat in case gedcom place format had just been changed and not saved (through gedcom editor for instance), wiz property needs to be overwritten with the one found
+        String tagPath = HEADER + ":" + PLAC + ":" + FORM;
+        String pf = gedcom.getPlaceFormat();
+        copyGedPropToWizProp(tagPath, CREATION_OR_UPDATE, GedcomOptions.getInstance().getPlaceFormat());
+        if (!wiz.getProperty(tagPath).equals(pf)) {
+            wiz.putProperty(tagPath, pf);
+        }
 
         copyGedPropToWizProp(HEADER + ":" + SOUR, CREATION, "ANCESTRIS");
         copyGedPropToWizProp(HEADER + ":" + SOUR + ":" + VERS, CREATION, Lookup.getDefault().lookup(ancestris.api.core.Version.class).getVersionString());
