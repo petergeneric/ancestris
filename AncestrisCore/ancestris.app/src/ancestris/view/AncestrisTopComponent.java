@@ -234,9 +234,11 @@ public class AncestrisTopComponent extends TopComponent
         }
 
         // already known?
-        if (this.context != null && this.context.equals(context)) {
-            return;
-        }
+        // FL : 04/06/2015 : Actually, remove the 3 lines above otherwise displayedd value do not change when modified
+        // Indeed : if one editor modifies a value, this value has to be displayed updated in all windows where it appears.
+//        if (this.context != null && this.context.equals(context)) {
+//            return;
+//        }
 
         LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context});
 
