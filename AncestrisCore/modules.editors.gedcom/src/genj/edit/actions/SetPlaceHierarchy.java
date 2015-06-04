@@ -21,6 +21,9 @@
  */
 package genj.edit.actions;
 
+import ancestris.util.swing.DialogManager;
+import genj.edit.beans.PlaceBean;
+import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -28,6 +31,7 @@ import genj.gedcom.Grammar;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
+import genj.util.ChangeSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
@@ -39,11 +43,14 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import modules.editors.gedcomproperties.utils.GedcomPlacesConverter;
+import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.LookupEvent;
+import org.openide.util.NbBundle;
 
 /**
  * Set the place hierarchy used in a gedcom file
@@ -151,8 +158,29 @@ public class SetPlaceHierarchy extends AbstractChange {
      */
     @Override
     protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
-        place.setFormatAsString(true, hierarchy.getText().trim());
-        return null;
+        String currentFormat = place.getGedcom().getPlaceFormat();
+        String newFormat = hierarchy.getText().trim();
+        String title = NbBundle.getMessage(SetPlaceHierarchy.class, "TITL_PlacesFormatModification");
+        String msg = "";
+        if (!currentFormat.equals(newFormat)) {
+            PlaceFormatConverterPanel pfc = new PlaceFormatConverterPanel(currentFormat, newFormat);
+            pfc.initToFields(newFormat);
+            Object o = DialogManager.create(NbBundle.getMessage(PlaceFormatConverterPanel.class, "TITL_PlaceFormatConversionSettings"), pfc).setMessageType(DialogManager.PLAIN_MESSAGE).show();
+            if (o == DialogManager.OK_OPTION) {
+                pfc.setValidatedMap(true, null);
+                final GedcomPlacesConverter placesConverter = new GedcomPlacesConverter(gedcom, currentFormat, newFormat, pfc.getConversionMapAsString());
+                if (placesConverter.convert()) {
+                    // ok
+                    msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                    place.getGedcom().setPlaceFormat(newFormat);
+                } else {
+                    //ko
+                    msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomNotModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                }
+                DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+            }
+        }
+        return new Context(place);
     }
 } //SetPlaceFormat
 
