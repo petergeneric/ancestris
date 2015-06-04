@@ -71,7 +71,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>modules.editors.gedcomproperties.utils</package>
+            </public-packages>
         </data>
     </configuration>
 </project>
