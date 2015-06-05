@@ -22,8 +22,6 @@
 package genj.edit.actions;
 
 import ancestris.util.swing.DialogManager;
-import genj.edit.beans.PlaceBean;
-import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -31,7 +29,6 @@ import genj.gedcom.Grammar;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
-import genj.util.ChangeSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
