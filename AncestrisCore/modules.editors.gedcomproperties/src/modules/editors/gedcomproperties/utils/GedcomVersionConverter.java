@@ -360,7 +360,10 @@ public class GedcomVersionConverter {
             list.add(prop.getPath().toString() + " (" + prop.getEntity().getId() + ") - " + prop.getDisplayValue());
         }
         if (!list.isEmpty()) {
-            list.sort(null);
+            try {
+                list.sort(null);            // somethimes users get java.lang.NoSuchMethodError: java.util.List.sort(Ljava/util/Comparator;)V
+            } catch (NoSuchMethodError e) { // so I disconsider the exceptions here.
+            }                     
         }
         return list.toArray(new String[list.size()]);
     }
