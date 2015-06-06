@@ -357,7 +357,9 @@ public class GedcomVersionConverter {
         }
         List<String> list = new ArrayList();
         for (Property prop : invalidPropsInvalidTags) {
-            list.add(prop.getPath().toString() + " (" + prop.getEntity().getId() + ") - " + prop.getDisplayValue());
+            if (!prop.getTag().startsWith("_")) {
+               list.add(prop.getPath().toString() + " (" + prop.getEntity().getId() + ") - " + prop.getDisplayValue());
+            }
         }
         if (!list.isEmpty()) {
             try {
