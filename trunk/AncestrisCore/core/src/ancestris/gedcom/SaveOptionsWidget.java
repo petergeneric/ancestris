@@ -1,4 +1,4 @@
-/**
+ /**
  * GenJ - GenealogyJ
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
@@ -24,6 +24,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyFile;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.io.Filter;
@@ -56,11 +57,10 @@ import javax.swing.JTextField;
   /** components */
   private JCheckBox[] checkEntities = new JCheckBox[Gedcom.ENTITIES.length];
   private JCheckBox[] checkFilters;
-  private JTextField  textTags, textValues;
+  private JTextField textTags, textValues;
   private TextFieldWidget textPassword;
-  private JComboBox   comboEncodings;
-  private JCheckBox checkFilterEmpties;
-   private JCheckBox checkFilterLiving;
+  private JComboBox comboEncodings;
+  private JCheckBox checkFilterEmpties, checkFilterLiving, checkMediaDirectory;
   private Resources resources = Resources.get(this);
   private DateWidget dateEventsAfter, dateBirthsAfter;
   
@@ -80,30 +80,30 @@ import javax.swing.JTextField;
       this (null, filters);
   }
   /*package*/ public SaveOptionsWidget(Gedcom gedcom, Filter[] filters) {
-    
-      // Hide options tab if gedcom is null (used for other types of file)
-        Box options = new Box(BoxLayout.Y_AXIS);
+     
+      // Allow for files moves to another directory
+      int nbFiles = 0;
+      Box directories = new Box(BoxLayout.Y_AXIS);
       if (gedcom != null) {
-        // Options
-        options.add(new JLabel(resources.getString("save.options.encoding")));
-        comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
-        comboEncodings.setEditable(false);
-        comboEncodings.setSelectedItem(gedcom.getEncoding());
-        options.add(comboEncodings);
-        options.add(new JLabel(resources.getString("save.options.password")));
-        textPassword = new TextFieldWidget(gedcom.hasPassword() ? gedcom.getPassword() : "", 10);
-        textPassword.setEditable(gedcom.getPassword()!=Gedcom.PASSWORD_UNKNOWN);
-        options.add(textPassword);
+          List<PropertyFile> files = (List<PropertyFile>) gedcom.getPropertiesByClass(PropertyFile.class);
+          nbFiles = files.size();
+          directories.add(new JLabel(" "));
+          checkMediaDirectory = new JCheckBox(resources.getString("save.options.files.check"));
+          directories.add(checkMediaDirectory);
+          directories.add(new JLabel(" "));
+          directories.add(new JLabel(resources.getString("save.options.files.label")));
+          directories.add(new JLabel(" "));
       }
+
     
-    // entities filter    
+    // Entity filter    
     Box types = new Box(BoxLayout.Y_AXIS);
     for (int t=0; t<Gedcom.ENTITIES.length; t++) {
       checkEntities[t] = new JCheckBox(Gedcom.getName(Gedcom.ENTITIES[t], true), true);
       types.add(checkEntities[t]);
     }
     
-    // property filter
+    // Property filter
     Box props = new Box(BoxLayout.Y_AXIS);
     props.add(new JLabel(resources.getString("save.options.exclude.tags")));
     textTags = new TextFieldWidget(resources.getString("save.options.exclude.tags.eg"), 10).setTemplate(true);
@@ -122,28 +122,56 @@ import javax.swing.JTextField;
     checkFilterEmpties = new JCheckBox(resources.getString("save.options.exclude.empties"));
     props.add(checkFilterEmpties);
        
-    // others filter
+    // View filter
     Box others = new Box(BoxLayout.Y_AXIS);
     this.filters = filters;
     if (filters!=null){
     this.checkFilters = new JCheckBox[filters.length];
-    for (int i=0; i<checkFilters.length; i++) {
-      checkFilters[i] = new JCheckBox(filters[i].getFilterName(), false);
-      others.add(checkFilters[i]);
+        for (int i = 0; i < checkFilters.length; i++) {
+            checkFilters[i] = new JCheckBox(filters[i].getFilterName(), false);
+            others.add(checkFilters[i]);
+        }
     }
+
+    // Hide options tab if gedcom is null (used for other types of file)
+    Box options = new Box(BoxLayout.Y_AXIS);
+    if (gedcom != null) {
+      // Options
+      options.add(new JLabel(" "));
+      options.add(new JLabel(resources.getString("save.options.encoding")));
+      comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
+      comboEncodings.setEditable(false);
+      comboEncodings.setSelectedItem(gedcom.getEncoding());
+      options.add(comboEncodings);
+      options.add(new JLabel(" "));
+      options.add(new JLabel(resources.getString("save.options.password")));
+      textPassword = new TextFieldWidget(gedcom.hasPassword() ? gedcom.getPassword() : "", 10);
+      textPassword.setEditable(gedcom.getPassword()!=Gedcom.PASSWORD_UNKNOWN);
+      options.add(textPassword);
     }
     
     // layout
-      if (gedcom != null) {
-        add(resources.getString("save.options"                  ), options);
-      }
+    if (gedcom != null && nbFiles > 0) {
+        add(resources.getString("save.options.files"), directories);
+    }
     add(resources.getString("save.options.filter.entities"  ), types);
     add(resources.getString("save.options.filter.properties"), props);
     add(resources.getString("save.options.filter.views"     ), new JScrollPane(others));
+    if (gedcom != null) {
+        add(resources.getString("save.options"                  ), options);
+      }
     
     // done
   }
 
+  /**
+   * The selected media and source directory
+   */
+  public boolean areMediaToBeCopied() {
+    return checkMediaDirectory.isSelected();
+  }
+
+  
   /**
    * The choosen password
    */

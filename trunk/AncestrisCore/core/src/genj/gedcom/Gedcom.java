@@ -884,6 +884,18 @@ public class Gedcom implements Comparable {
     }
 
     /**
+     * Returns all properties for given path
+     */
+    public List<? extends Property> getPropertiesByClass(Class<? extends Property> clazz) {
+        List<Property> props = new ArrayList();
+        Collection<Entity> entities = getEntities();
+        for (Entity ent : entities) {
+            props.addAll(((Property) ent).getProperties(clazz));
+        }
+        return props;
+    }
+    
+    /**
      * Count statistics for property tag
      */
     public int getPropertyCount(String tag) {
