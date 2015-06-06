@@ -21,6 +21,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.PropertyFile;
 import genj.gedcom.UnitOfWork;
 import genj.io.BackupFile;
 import genj.io.Filter;
@@ -38,6 +39,8 @@ import genj.view.ViewContext;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,6 +48,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
+import org.apache.commons.io.FileUtils;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -71,6 +75,8 @@ public abstract class GedcomMgr {
     final static Logger LOG = Logger.getLogger("ancestris.app");
     final static Resources RES = Resources.get(GedcomMgr.class);
     final static Registry REGISTRY = Registry.get(GedcomMgr.class);
+    
+    private boolean copyMediaInError = false;
 
     /**
      * Opens an existing gedcom file
@@ -165,6 +171,33 @@ public abstract class GedcomMgr {
             return null;
         }
 
+        // copy media files when necessary
+        if (options.areMediaToBeCopied()) {
+            int undoNb = gedcom.getUndoNb();
+            final Origin prevOriginUoW = prevOrigin;
+            final Origin newOriginUoW = newOrigin;
+            copyMediaInError = false;
+            final Filter filter = new Filter.Union(gedcom, options.getFilters());
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        copyMedia(gedcom, prevOriginUoW, newOriginUoW, filter);
+                    }
+                });
+            } catch (Exception ex) {
+            }
+            if (copyMediaInError) {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+                gedcom.setEncoding(prevEncoding);
+                gedcom.setPassword(prevPassword);
+                gedcom.setOrigin(prevOrigin);
+                return null;
+            }
+        }
+
         // save
         if (!saveGedcomImpl(gedcom, options.getFilters(), null)) {
             gedcom.setEncoding(prevEncoding);
@@ -172,6 +205,8 @@ public abstract class GedcomMgr {
             gedcom.setOrigin(prevOrigin);
             return null;
         }
+
+
 //FIXME: temporarily removed            if (writer.hasFiltersVetoed()) {
 //                gedcom.setEncoding(prevEncoding);
 //                gedcom.setPassword(prevPassword);
@@ -232,6 +267,55 @@ public abstract class GedcomMgr {
         return defaultInstance;
     }
 
+    private boolean copyMedia(Gedcom gedcom, Origin prevOrigin, Origin newOrigin, Filter filter) {
+
+        // Get all file properties
+        List<PropertyFile> files = (List<PropertyFile>) gedcom.getPropertiesByClass(PropertyFile.class);
+
+        // Initialize directories
+        String prevDir = null, newDir = null;
+        try {
+            prevDir = prevOrigin.getFile().getParentFile().getCanonicalPath();
+            newDir = newOrigin.getFile().getParentFile().getCanonicalPath();
+
+            // Loop on files to convert paths and copy them
+            for (PropertyFile mediaFile : files) {
+                if (filter.veto(mediaFile.getEntity()) || filter.veto(mediaFile)) {
+                    continue;
+                }
+                File prevMediafile, newMediafile;
+                String relPath = mediaFile.getValue();
+                Path p = Paths.get(relPath).normalize();
+                if (p.isAbsolute()) {
+                    relPath = p.subpath(0, p.getNameCount() - 1).toString() + File.separator + p.getFileName(); // make absolute path relative
+                    prevMediafile = mediaFile.getFile();
+                    mediaFile.setValue(relPath);
+                } else {
+                    prevMediafile = new File(prevDir + File.separator + relPath);
+                }
+                newMediafile = new File(newDir + File.separator + relPath);
+
+                // Now update mediafile value and copy file preserving file date
+                if (prevMediafile.exists()) {
+                    FileUtils.copyFile(prevMediafile, newMediafile, true);
+                } else {
+                    String fileErr = prevMediafile.getCanonicalPath();
+                    String msg = RES.getString("save.options.files.medianotfound", fileErr, mediaFile.getEntity());
+                    LOG.log(Level.FINER, "Failed to copy media : " + fileErr);
+                    if (DialogManager.YES_OPTION != DialogManager.createYesNo(RES.getString("save.options.files"), msg).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+                        copyMediaInError = true;
+                        return false;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+        return true;
+    }
+
+    
+    
     private static class DefaultGedcomMgrImpl extends GedcomMgr {
 
         @Override
