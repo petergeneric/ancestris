@@ -74,11 +74,7 @@ class GeoPlacesList implements GedcomListener {
      */
     @SuppressWarnings("unchecked")
     public synchronized void launchPlacesSearch() {
-        Collection<Entity> entities = gedcom.getEntities();
-        List<PropertyPlace> placesProps = new ArrayList<PropertyPlace>();
-        for (Entity ent : entities) {
-            getPropertiesRecursively(ent, placesProps, PropertyPlace.class);
-        }
+        List<PropertyPlace> placesProps = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
 
         // Check that display format of places is set
         initPlaceDisplayFormat(false);
@@ -110,15 +106,6 @@ class GeoPlacesList implements GedcomListener {
         geoNodes = result;
         notifyListeners(TYPEOFCHANGE_GEDCOM);
         startListening();
-    }
-
-    @SuppressWarnings("unchecked")
-    public void getPropertiesRecursively(Property parent, List props, Class<? extends Property> clazz) {
-        Property[] children = parent.getProperties();
-        for (Property child : children) {
-            props.addAll(child.getProperties(clazz));
-            getPropertiesRecursively(child, props, clazz);
-        }
     }
 
     /**
