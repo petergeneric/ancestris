@@ -234,8 +234,9 @@ public class AncestrisTopComponent extends TopComponent
         }
 
         // already known?
-        // FL : 04/06/2015 : Actually, remove the 3 lines above otherwise displayedd value do not change when modified
+        // FL : 04/06/2015 : Actually, remove the 3 lines below otherwise displayed value do not change when modified
         // Indeed : if one editor modifies a value, this value has to be displayed updated in all windows where it appears.
+        
 //        if (this.context != null && this.context.equals(context)) {
 //            return;
 //        }

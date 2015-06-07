@@ -6,7 +6,6 @@ package ancestris.app;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.logging.Level;
 import javax.swing.JComponent;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
@@ -16,7 +15,7 @@ import org.openide.util.Lookup;
 iconBase = "ancestris/app/OptionFiles.png",
 keywords = "#OptionsCategory_Keywords_OptionFiles",
 keywordsCategory = "OptionFiles",
-position=4)
+position=2)
 public final class OptionFilesOptionsPanelController extends OptionsPanelController {
 
     private OptionFilesPanel panel;

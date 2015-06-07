@@ -17,7 +17,7 @@ keywords = "#OptionsCategory_Keywords_OptionFormat",
 keywordsCategory = "r",
 location = "OptionsFormat",
 id="General",
-position = 1)
+position = 4)
 public final class OptionFormatOptionsPanelController extends OptionsPanelController {
 
     private OptionFormatPanel panel;
