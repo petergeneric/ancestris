@@ -72,6 +72,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>modules.editors.gedcomproperties</package>
                 <package>modules.editors.gedcomproperties.utils</package>
             </public-packages>
         </data>
