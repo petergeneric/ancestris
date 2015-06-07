@@ -14,12 +14,13 @@ package modules.editors.gedcomproperties;
 import ancestris.util.swing.DialogManager;
 import javax.swing.event.ChangeListener;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
+import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.ValidatingPanel, Constants {
+public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.ValidatingPanel, Constants, PlaceFormatInterface {
 
     private WizardDescriptor wiz = null;
     private final int mode = GedcomPropertiesWizardIterator.getMode();
@@ -35,16 +36,16 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private GedcomPropertiesVisualPanel4 component;
+    private GedcomPropertiesPlaceFormatPanel component;
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
     @Override
-    public GedcomPropertiesVisualPanel4 getComponent() {
+    public GedcomPropertiesPlaceFormatPanel getComponent() {
         if (component == null) {
-            component = new GedcomPropertiesVisualPanel4(this);
+            component = new GedcomPropertiesPlaceFormatPanel(this);
         }
         return component;
     }
@@ -105,15 +106,15 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
 
     @Override
     public void validate() throws WizardValidationException {
-        Boolean canBeConverted = (mode == UPDATE) && !((GedcomPropertiesVisualPanel4) getComponent()).getPLAC().equals(originalPlaceformat);
-        Boolean isConversionRequired = ((GedcomPropertiesVisualPanel4) getComponent()).getConversionSelection();
+        Boolean canBeConverted = (mode == UPDATE) && !((GedcomPropertiesPlaceFormatPanel) getComponent()).getPLAC().equals(originalPlaceformat);
+        Boolean isConversionRequired = ((GedcomPropertiesPlaceFormatPanel) getComponent()).getConversionSelection();
         if (canBeConverted && isConversionRequired) {
             if ((pfc == null) || !pfc.isValidatedMap()) {
                 throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_ConversionMapMandatory"), null);
             }
             if ((pfc != null) & !pfc.isMapComplete()) {
                 Object o = DialogManager.createYesNo(
-                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.jCheckBox1.text"), 
+                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox1.text"), 
                     NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_IncompletMapToConfirm")).setMessageType(DialogManager.YES_NO_OPTION).show();
                 if (o != DialogManager.YES_OPTION) {
                     throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_ConversionMapMandatory"), null);
@@ -123,6 +124,7 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
         }
     }
 
+    @Override
     public void warnVersionChange(boolean canBeConverted) {
         if (wiz == null) return;
         if (canBeConverted) {
@@ -132,16 +134,24 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
         }
     }
 
+    @Override
     public String getOriginalPlaceFormat() {
         return originalPlaceformat;
     }
 
+    @Override
     public void setPlaceFormatConverter(PlaceFormatConverterPanel pfc) {
         this.pfc = pfc;
     }
 
+    @Override
     public PlaceFormatConverterPanel getPlaceFormatConverter() {
         return this.pfc;
+    }
+
+    @Override
+    public int getMode() {
+        return mode;
     }
 
 }
