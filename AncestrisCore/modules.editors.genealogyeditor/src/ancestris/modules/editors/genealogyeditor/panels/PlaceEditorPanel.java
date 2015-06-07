@@ -306,7 +306,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @param address
      */
     public void set(Property root, PropertyPlace place, Property address) {
-
+        set(root, place, address, null);
+    }
+    
+    public void set(Property root, PropertyPlace place, Property address, GeoPosition alternateGeoposition) {
         this.mPlace = place;
         this.mAddress = address;
         gedcomPlaceEditorPanel.set(root, mPlace);
@@ -319,15 +322,22 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             double latitude = Double.NaN;
 
             
-            if (propMap != null){
+            if (propMap != null) {
                 if (propMap.getLongitude() != null) {
                     longitude = propMap.getLongitude().getDoubleValue();
                     existCoordinatesX = true;
                 }
-                if (propMap.getLatitude() == null) {
+                if (propMap.getLatitude() != null) {
                     latitude = propMap.getLatitude().getDoubleValue();
                     existCoordinatesY = true;
                 }
+            }
+
+            if (propMap == null && alternateGeoposition != null) {
+                longitude = alternateGeoposition.getLongitude();
+                existCoordinatesX = true;
+                latitude = alternateGeoposition.getLatitude();
+                existCoordinatesY = true;
             }
 
             if (existCoordinatesX && existCoordinatesY) {
