@@ -265,7 +265,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
         Gedcom gedcom = obj.getGedcom();
         int undoNb = gedcom.getUndoNb();
         final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null);
+        placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null, obj.getGeoPosition());
         placeEditorPanel.hideAddressPanel();
         //placeEditorPanel.runSearch();
         ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"), placeEditorPanel);
