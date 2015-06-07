@@ -19,9 +19,11 @@ import org.openide.util.Lookup;
 @OptionsPanelController.SubRegistration(
         location = "Appearance",
         displayName = "#OptionsTab_Name_OptionDisplay",
-    keywords = "#OptionsCategory_Keywords_OptionDisplay",
-    keywordsCategory = "OptionDisplay"
-)
+        //iconBase = "ancestris/app/OptionFormat.png",
+        keywords = "#OptionsCategory_Keywords_OptionDisplay",
+        keywordsCategory = "OptionDisplay",
+        id="General",
+        position = 1)
 public final class OptionDisplayOptionsPanelController extends OptionsPanelController {
 
     private OptionDisplayPanel panel;

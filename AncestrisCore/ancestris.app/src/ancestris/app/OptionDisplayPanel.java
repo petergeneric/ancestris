@@ -75,7 +75,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         jcbOutputLanguage = new javax.swing.JComboBox(initLanguages(NbBundle.getMessage(App.class, "options.lang.gui")));
 
-        setPreferredSize(new java.awt.Dimension(691, 503));
+        setPreferredSize(new java.awt.Dimension(582, 384));
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSplitJuridictions, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbSplitJuridictions.text")); // NOI18N
         cbSplitJuridictions.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbSplitJuridictions.toolTipText")); // NOI18N
@@ -165,8 +165,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel6))
-                            .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE))))
-                .addContainerGap())
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel9});
@@ -202,7 +201,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                             .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbSplitJuridictions)))
-                .addContainerGap(185, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
