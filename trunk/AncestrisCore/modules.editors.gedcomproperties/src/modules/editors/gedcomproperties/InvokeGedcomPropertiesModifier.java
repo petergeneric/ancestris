@@ -172,7 +172,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             }
             if (wiz.getProperty(CONV_PLACE) == CONVERSION) {
                 Object o = DialogManager.createYesNo(
-                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.jCheckBox1.text"),
+                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox1.text"),
                         NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmPlaceConversion")).setMessageType(DialogManager.YES_NO_OPTION).show();
                 if (o != DialogManager.YES_OPTION) {
                     notifyCancellation();

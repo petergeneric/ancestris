@@ -16,21 +16,25 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertyPlace;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
+import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
 import org.openide.util.NbBundle;
 
-public final class GedcomPropertiesVisualPanel4 extends JPanel implements Constants {
+public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Constants {
 
-    private final int mode = GedcomPropertiesWizardIterator.getMode();
+    public static final int DEFAULT_MODE = UPDATE;
 
-    private final GedcomPropertiesWizardPanel4 parent;
+    private int mode;
+
+    private final PlaceFormatInterface parent;
 
     private final DefaultListModel<String> listModel = new DefaultListModel<String>();
 
     /**
-     * Creates new form GedcomPropertiesVisualPanel4
+     * Creates new form GedcomPropertiesPlaceFormatPanel
      */
-    public GedcomPropertiesVisualPanel4(GedcomPropertiesWizardPanel4 parent) {
+    public GedcomPropertiesPlaceFormatPanel(PlaceFormatInterface parent) {
         this.parent = parent;
+        mode = parent.getMode();
         initComponents();
         updateDisplay();
     }
@@ -86,7 +90,7 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
 
         jList1.setModel(listModel);
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jList1.toolTipText")); // NOI18N
+        jList1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jList1.toolTipText")); // NOI18N
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList1ValueChanged(evt);
@@ -95,8 +99,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         jScrollPane2.setViewportView(jList1);
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/MoveDown.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton4.text")); // NOI18N
-        jButton4.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton4.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton4, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton4.text")); // NOI18N
+        jButton4.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton4.toolTipText")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -104,8 +108,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         });
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/Bank.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton6, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton6.text")); // NOI18N
-        jButton6.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton6.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton6, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton6.text")); // NOI18N
+        jButton6.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton6.toolTipText")); // NOI18N
         jButton6.setPreferredSize(new java.awt.Dimension(28, 28));
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,8 +118,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         });
 
         jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/Reset.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton7, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton7.text")); // NOI18N
-        jButton7.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton7.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton7, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton7.text")); // NOI18N
+        jButton7.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton7.toolTipText")); // NOI18N
         jButton7.setPreferredSize(new java.awt.Dimension(28, 28));
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,8 +127,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
             }
         });
 
-        jTextField1.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jTextField1.text")); // NOI18N
-        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jTextField1.toolTipText")); // NOI18N
+        jTextField1.setText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jTextField1.text")); // NOI18N
+        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jTextField1.toolTipText")); // NOI18N
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField1KeyReleased(evt);
@@ -132,8 +136,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         });
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/Add.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton1.text")); // NOI18N
-        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton1.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton1.text")); // NOI18N
+        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton1.toolTipText")); // NOI18N
         jButton1.setEnabled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,8 +146,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         });
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/Delete.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton2.text")); // NOI18N
-        jButton2.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton2.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton2.text")); // NOI18N
+        jButton2.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton2.toolTipText")); // NOI18N
         jButton2.setPreferredSize(new java.awt.Dimension(28, 28));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -152,8 +156,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         });
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/MoveUp.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton3, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton3.text")); // NOI18N
-        jButton3.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton3.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton3, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton3.text")); // NOI18N
+        jButton3.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton3.toolTipText")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -169,13 +173,12 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -201,10 +204,10 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         );
 
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == CREATION ? "Panel4.jLabel2.create" : "Panel4.jLabel2.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, mode == CREATION ? "Panel4.jLabel2.create" : "Panel4.jLabel2.update"));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jCheckBox1.text")); // NOI18N
-        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jCheckBox1.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox1.toolTipText")); // NOI18N
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox1ActionPerformed(evt);
@@ -212,10 +215,10 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         });
 
         jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jLabel4.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jLabel4.text")); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, mode == CREATION ? "Panel4.jLabel1.create" : "Panel4.jLabel1.update"));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, mode == CREATION ? "Panel4.jLabel1.create" : "Panel4.jLabel1.update"));
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
@@ -229,8 +232,8 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         jScrollPane4.setViewportView(jTextArea2);
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/modules/editors/gedcomproperties/ressources/Mapping.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton5.text")); // NOI18N
-        jButton5.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel4.class, "GedcomPropertiesVisualPanel4.jButton5.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton5, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton5.text")); // NOI18N
+        jButton5.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jButton5.toolTipText")); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -306,7 +309,7 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        addNewJurisdiction(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.emptyField"));
+        addNewJurisdiction(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.emptyField"));
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -371,7 +374,7 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
         listModel.clear();
         for (String p : placeFormatList) {
             if (p.isEmpty()) {
-                listModel.addElement(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.emptyField"));
+                listModel.addElement(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.emptyField"));
             } else {
                 listModel.addElement(p);
             }
@@ -388,7 +391,7 @@ public final class GedcomPropertiesVisualPanel4 extends JPanel implements Consta
                 addStr = "";
             } 
             tmpStr = listModel.elementAt(i);
-            if (tmpStr.equals(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesVisualPanel4.emptyField"))) {
+            if (tmpStr.equals(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.emptyField"))) {
                 tmpStr = "";
             }
             ret += tmpStr + addStr;
