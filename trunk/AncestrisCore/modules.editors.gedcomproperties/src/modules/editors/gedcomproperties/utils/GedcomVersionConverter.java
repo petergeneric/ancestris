@@ -91,7 +91,7 @@ public class GedcomVersionConverter {
         invalidPropsMissingTags = new LinkedHashMap<Property, String[]>();
 
         // Collect anomalies
-        getAnomalies();
+        getAnomalies(false);
 
         // Process anomalies to try to fix them according to new norm
         if (upgrade) {
@@ -101,7 +101,7 @@ public class GedcomVersionConverter {
         }
 
         // Refresh anomalies
-        getAnomalies();
+        getAnomalies(true);
 
         // Return
         if (!invalidPropsInvalidTags.isEmpty() || !invalidPropsMultipleTags.isEmpty() || !invalidPropsMissingTags.isEmpty()) {
@@ -112,7 +112,7 @@ public class GedcomVersionConverter {
         return true;
     }
 
-    private void getAnomalies() {
+    private void getAnomalies(boolean allowUndescore) {
         // Let's define the list which will store all properties of the gedcom file
         List<Property> listOfProperties = new ArrayList<Property>();                  // Will store all properties except those of header entity
 
@@ -132,7 +132,7 @@ public class GedcomVersionConverter {
 
         for (Property property : listOfProperties) {
             // detect invalid tagpath
-            if (isInvalidTagPath(toGrammar, property)) {
+            if (isInvalidTagPath(toGrammar, property, allowUndescore)) {
                 invalidPropsInvalidTags.add(property);
             }
             // detect multiple singleton
@@ -357,9 +357,7 @@ public class GedcomVersionConverter {
         }
         List<String> list = new ArrayList();
         for (Property prop : invalidPropsInvalidTags) {
-            if (!prop.getTag().startsWith("_")) {
-               list.add(prop.getPath().toString() + " (" + prop.getEntity().getId() + ") - " + prop.getDisplayValue());
-            }
+            list.add(prop.getPath().toString() + " (" + prop.getEntity().getId() + ") - " + prop.getDisplayValue());
         }
         if (!list.isEmpty()) {
             try {
@@ -407,13 +405,17 @@ public class GedcomVersionConverter {
         return list.toArray(new String[list.size()]);
     }
 
-    private boolean isInvalidTagPath(Grammar toGrammar, Property property) {
+    private boolean isInvalidTagPath(Grammar toGrammar, Property property, boolean allowUndescore) {
         if (property instanceof PropertyXRef) {
+            return false;
+        }
+        if (allowUndescore && property.getTag().startsWith("_")) {
             return false;
         }
         return !toGrammar.isValid(property.getPath());
     }
 
+    
     private boolean isMultipleSingleton(Grammar toGrammar, Property property) {
         return (toGrammar.getMeta(property.getPath()).isSingleton() && property.getParent().getProperties(property.getTag()).length > 1);
     }
