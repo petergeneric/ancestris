@@ -12,20 +12,28 @@
 
 package ancestris.modules.treesharing.communication;
 
-import java.net.URL;
-
 /**
  *
  * @author frederic
  */
-public class AncestrisFriend {
+public class AncestrisMember {
+    
+    private final boolean allowed;
+    private final String name;
+    private final String access;
 
-        String name;
-        URL access;
-        
-        public AncestrisFriend(String name, URL access) {
-            this.name = name;
-            this.access = access;
-        }
+    /**
+     * Constructor
+     */
+    public AncestrisMember(String name, String access) {
+        this.allowed = true;
+        this.name = name;
+        this.access = access;
+    }
+    
+
+    public String getName() {
+        return name;
+    }
     
 }
