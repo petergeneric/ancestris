@@ -12,6 +12,8 @@
 
 package ancestris.modules.treesharing.communication;
 
+import ancestris.modules.treesharing.panels.AncestrisFriend;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +21,13 @@ import java.util.List;
  * @author frederic
  */
 public class Comm {
+    
+    /**
+     * Constructor
+     */
+    public void Comm() {
+        
+    }
     
     /**
      * Register on Ancestris server that I am ready to share 
@@ -64,16 +73,33 @@ public class Comm {
      * 
      * @return all Ancestris friends sharing something
      */
-    public List<AncestrisFriend> getAncestrisFriends() {
+    public List<AncestrisMember> getAncestrisMembers() {
         // Connect to Ancestris server
         
         // Collect list of Ancestris friends (registered name and access)
+        List<AncestrisMember> ancestrisMembers = new ArrayList<AncestrisMember>();
+        ancestrisMembers.add(new AncestrisMember("François", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Daniel", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Yannick", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Dominique", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Valérie", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Jeannot", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("FrançoiS", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Ben", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Patrice", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Monique", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Frédéric", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Rodolphe", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Agnès", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Eric", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Mathilde", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Christophe", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Guillemette", "xxxx"));
         
         // Close connection with server
         
         // Return list
-        
-        return null;
+        return ancestrisMembers;
     }
     
     
@@ -118,7 +144,7 @@ public class Comm {
         
         return true;
     }
-    
+
     
     
 

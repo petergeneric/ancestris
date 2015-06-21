@@ -12,6 +12,7 @@
 
 package ancestris.modules.treesharing.communication;
 
+import ancestris.modules.treesharing.panels.AncestrisFriend;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;

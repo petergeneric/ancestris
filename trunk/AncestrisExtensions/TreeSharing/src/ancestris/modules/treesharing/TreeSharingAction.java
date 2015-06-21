@@ -22,7 +22,7 @@ import org.openide.awt.ActionRegistration;
         id = "ancestris.modules.treesharing.TreeSharingAction"
 )
 @ActionRegistration(
-        iconBase = "ancestris/modules/treesharing/resources/TreeSharing.png",
+        iconBase = "ancestris/modules/treesharing/resources/treesharing.png",
         displayName = "#CTL_TreeSharingAction"
 )
 @ActionReference(path = "Menu/Tools", position = 94) //, separatorBefore = 93, separatorAfter = 95)
@@ -30,7 +30,7 @@ public final class TreeSharingAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        TreeSharingTopComponent tc = new TreeSharingTopComponent();
+        TreeSharingTopComponent tc = TreeSharingTopComponent.getDefault();
         tc.open();
         tc.requestActive();
     }

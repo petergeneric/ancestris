@@ -13,7 +13,6 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.gedcom.GedcomFileListener;
-import ancestris.modules.treesharing.communication.AncestrisFriend;
 import ancestris.modules.treesharing.communication.Comm;
 import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import genj.gedcom.Context;
@@ -21,15 +20,12 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.openide.util.Exceptions;
 
 /**
  * Purpose of the whole sharing tree game : 
@@ -51,8 +47,8 @@ import org.openide.util.Exceptions;
  * - Notifies me of the existence of matches, but without revealing any data
  * - Notifies the identified members that I have identified common data with them
  * <pause>
- * - Requests authorisation to the identified friends to get in touch revealing their members names (pseudos)
- * - Once mutual agreement confirmed, asynchronously, provides each member (me and my matching mate) the others' pseudo and the matching entities list, the total number of entities
+ * - Requests authorisation to the identified friends 
+ * - Once mutual agreement confirmed, asynchronously, provides each member (me and my matching mate) the matching entities list, the total number of entities
  * <pause>
  * - Upon subsequent agreement, subtrees and related sources/media/repos/note could be shared among users (qualify size and direction (ancestors, descendants, siblings) before transmitting
  * <pause>
@@ -60,10 +56,10 @@ import org.openide.util.Exceptions;
  * 
  * Principle of security :
  *      1/ No data can be obtain without sharing one's own 
- *      2/ Data obtain can only be obtained from matching entities in my trees => users can only get as much as they share !
+ *      2/ Data can only be obtained from matching entities in my trees => users can only get as much as they share !
  *      3/ Data remains crypted across the Internet
- *      4/ No gedcom data is stored on the ancestris centralised server : server only has  members "access information" and public crypting key
- *      5/ Members do see connected members' pseudos (otherwise would not know when to run their search)
+ *      4/ No gedcom data is stored on the ancestris centralised server : server only has members "access information" and public crypting key
+ *      5/ Members do see connected members' pseudos (otherwise would not know when to run their search and would not be human!)
  *      5/ Ancestris friends do not get somebody else data without prior owner's authorisation
  *      6/ Only ancestris applications know who's who and manipulate the data until explicit authorisation from owners
  *      7/ Shared gedcom files have to be opened in Ancestris
@@ -151,27 +147,6 @@ public class TreeSharing implements GedcomFileListener {
         return true;
     }
     
-    
-    /**
-     * 
-     * GedcomFileListeners
-     * 
-     */
-    @Override
-    public void commitRequested(Context context) {
-        // do nothing
-    }
-    
-    @Override
-    public void gedcomClosed(Gedcom gedcom) {
-        stopSharingGedcom(gedcom);
-    }
-
-    @Override
-    public void gedcomOpened(Gedcom gedcom) {
-        // Asks user if he/she wants to share this gedcom
-    }
-
     
     
     
@@ -348,19 +323,11 @@ public class TreeSharing implements GedcomFileListener {
         
         // Check if friend is in allowed list
         
-        // Format my access information
-        URL urlAccess = null;
-        try {
-            urlAccess = new URL(myAccess);
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
         // Build return list
         List<FriendGedcomEntity> providedEntities = new LinkedList<FriendGedcomEntity>();
         List<Entity> sharedEntities = getSharedEntitiesFromSharedGedcoms();
         for (Entity entity : sharedEntities) {
-            providedEntities.add(new FriendGedcomEntity(new AncestrisFriend(myName, urlAccess), entity.getGedcom(), entity));
+            providedEntities.add(new FriendGedcomEntity(new AncestrisFriend(myName, myAccess), entity.getGedcom(), entity));
         }
         
         return providedEntities;
@@ -385,6 +352,43 @@ public class TreeSharing implements GedcomFileListener {
             return false;
         }
         return (myIndi.getBirthDate().compareTo(collectedIndi.getBirthDate()) == 0 && exactMatch);
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @Override
+    public void commitRequested(Context context) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void gedcomClosed(Gedcom gedcom) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void gedcomOpened(Gedcom gedcom) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

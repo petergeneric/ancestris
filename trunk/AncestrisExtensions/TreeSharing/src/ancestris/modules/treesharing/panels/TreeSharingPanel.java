@@ -11,6 +11,14 @@
  */
 package ancestris.modules.treesharing.panels;
 
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Point;
+import java.beans.PropertyVetoException;
+import java.util.List;
+import javax.swing.JInternalFrame;
+import org.openide.util.Exceptions;
+
 /**
  *
  * @author frederic
@@ -22,6 +30,7 @@ public class TreeSharingPanel extends javax.swing.JPanel {
      */
     public TreeSharingPanel() {
         initComponents();
+        jDesktopPane.setLayout(null);
     }
 
     /**
@@ -33,65 +42,84 @@ public class TreeSharingPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        javax.swing.JDesktopPane previousDesktopPane = new javax.swing.JDesktopPane();
+        jScrollPane = new DesktopScrollPane(previousDesktopPane);
+        jDesktopPane = previousDesktopPane;
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(TreeSharingPanel.class, "TreeSharingPanel.jLabel1.text")); // NOI18N
+        jDesktopPane.setToolTipText(org.openide.util.NbBundle.getMessage(TreeSharingPanel.class, "TreeSharingPanel.jDesktopPane.toolTipText")); // NOI18N
+        jDesktopPane.setAutoscrolls(true);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(TreeSharingPanel.class, "TreeSharingPanel.jButton1.text")); // NOI18N
-
-        jTextField1.setText(org.openide.util.NbBundle.getMessage(TreeSharingPanel.class, "TreeSharingPanel.jTextField1.text")); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(105, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
+        javax.swing.GroupLayout jDesktopPaneLayout = new javax.swing.GroupLayout(jDesktopPane);
+        jDesktopPane.setLayout(jDesktopPaneLayout);
+        jDesktopPaneLayout.setHorizontalGroup(
+            jDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 645, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
+        jDesktopPaneLayout.setVerticalGroup(
+            jDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 472, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(jPanel1);
+        jScrollPane.setViewportView(jDesktopPane);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPane)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JDesktopPane jDesktopPane;
+    private javax.swing.JScrollPane jScrollPane;
     // End of variables declaration//GEN-END:variables
+
+    
+    
+    
+    
+    public void setFrames(List<?> frames, int leftSpace, int topSpace, int verticalSpace, boolean add) {
+        int i = 0;
+        for (Object o : frames) {
+            JInternalFrame frame = (JInternalFrame) o;
+            Insets insets = jDesktopPane.getInsets();
+            Dimension size = frame.getPreferredSize();
+            if (add) {
+                jDesktopPane.add(frame);
+            }
+            frame.setBounds(insets.left + leftSpace, insets.top + topSpace + i * (size.height + verticalSpace), size.width, size.height);
+            i++;
+        }
+        jDesktopPane.revalidate();
+        jDesktopPane.repaint();
+    }
+    
+    public void addFrame(JInternalFrame frame, Point point) {
+        jDesktopPane.add(frame);
+        Insets insets = jDesktopPane.getInsets();
+        Dimension size = frame.getPreferredSize();
+        frame.setBounds(insets.left + point.x, insets.top + point.y, size.width, size.height);
+        frame.moveToFront();
+        try {
+            frame.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        jDesktopPane.setSelectedFrame(frame);
+        jDesktopPane.revalidate();
+        jDesktopPane.repaint();
+    }
+
+    public void removeFrame(Object o) {
+        jDesktopPane.remove((JInternalFrame) o);
+        jDesktopPane.revalidate();
+        jDesktopPane.repaint();
+    }
+    
 }
