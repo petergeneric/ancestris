@@ -78,7 +78,9 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>ancestris.gedcom.privacy.standard</package>
+            </public-packages>
         </data>
     </configuration>
 </project>
