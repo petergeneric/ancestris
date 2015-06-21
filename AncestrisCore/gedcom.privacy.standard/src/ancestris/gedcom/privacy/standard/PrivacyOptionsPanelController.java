@@ -11,6 +11,8 @@
  */
 package ancestris.gedcom.privacy.standard;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
@@ -28,6 +30,8 @@ position=200
 
 public final class PrivacyOptionsPanelController extends OptionsPanelController {
 
+    public static String PRIVACY_OPTIONS_CHANGED = "PrivacyOptionsChanged";
+    
     private PrivacyPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
@@ -77,11 +81,16 @@ public final class PrivacyOptionsPanelController extends OptionsPanelController 
         return panel;
     }
 
-    void changed() {
+    public void changed() {
         if (!changed) {
             changed = true;
             pcs.firePropertyChange(OptionsPanelController.PROP_CHANGED, false, true);
         }
         pcs.firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
+        
+        // Tell the others
+        for (PropertyChangeListener listener : AncestrisPlugin.lookupAll(PropertyChangeListener.class)) {
+            listener.propertyChange(new PropertyChangeEvent(this, PRIVACY_OPTIONS_CHANGED, null, null));
+        }
     }
 }

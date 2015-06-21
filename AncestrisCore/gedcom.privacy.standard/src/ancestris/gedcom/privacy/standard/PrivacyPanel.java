@@ -39,14 +39,16 @@ final class PrivacyPanel extends javax.swing.JPanel {
         jcbLivings = new javax.swing.JCheckBox();
         jcbDead = new javax.swing.JCheckBox();
         jsYears = new javax.swing.JSpinner();
+        jsLivingYears = new javax.swing.JSpinner();
         jtPrivTag = new javax.swing.JTextField();
         jtReplace = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel1.text")); // NOI18N
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel2.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel3.text")); // NOI18N
@@ -59,7 +61,7 @@ final class PrivacyPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel6.text")); // NOI18N
         jLabel6.setToolTipText(org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel6.toolTipText")); // NOI18N
 
-        titleReplace.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
+        titleReplace.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(titleReplace, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.titleReplace.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jcbLivings, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jcbLivings.text")); // NOI18N
@@ -68,9 +70,13 @@ final class PrivacyPanel extends javax.swing.JPanel {
 
         jsYears.setModel(new javax.swing.SpinnerNumberModel());
 
+        jsLivingYears.setModel(new javax.swing.SpinnerNumberModel());
+
         jtPrivTag.setText(org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jtPrivTag.text")); // NOI18N
 
         jtReplace.setText(org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jtReplace.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel7.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -79,7 +85,7 @@ final class PrivacyPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -87,20 +93,27 @@ final class PrivacyPanel extends javax.swing.JPanel {
                             .addComponent(titleReplace))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jtPrivTag, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jcbDead)
-                            .addComponent(jcbLivings)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jsYears, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel4))
-                            .addComponent(jtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)))
+                            .addComponent(jtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jcbLivings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jsLivingYears, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jtPrivTag, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel7)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,7 +127,10 @@ final class PrivacyPanel extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(jtPrivTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jcbLivings)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbLivings)
+                    .addComponent(jsLivingYears, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel5)
@@ -136,6 +152,7 @@ final class PrivacyPanel extends javax.swing.JPanel {
         Options privOpt = Options.getInstance();
         jcbLivings.setSelected(privOpt.aliveIsPrivate());
         jcbDead.setSelected(privOpt.deadIsPublic());
+        jsLivingYears.setValue(privOpt.getYearsIndiCanBeAlive());
 
 //        SpinnerModel model =new SpinnerNumberModel(privOpt.getPrivateYears(),0,1000,1);
 //        jsYears.setModel(model); //setValue(privOpt.getPrivateYears());
@@ -149,10 +166,12 @@ final class PrivacyPanel extends javax.swing.JPanel {
 
         privOpt.setAlivePrivate(jcbLivings.isSelected());
         privOpt.setDeadIsPublic(jcbDead.isSelected());
+        privOpt.setYearsIndiCanBeAlive(Integer.valueOf(jsLivingYears.getValue().toString()));
         privOpt.setPrivateYears(Integer.valueOf(jsYears.getValue().toString()));
         privOpt.setPrivateTag(jtPrivTag.getText());
         privOpt.setPrivateMask(jtReplace.getText());
 
+        controller.changed();
     }
 
     boolean valid() {
@@ -166,8 +185,10 @@ final class PrivacyPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JCheckBox jcbDead;
     private javax.swing.JCheckBox jcbLivings;
+    private javax.swing.JSpinner jsLivingYears;
     private javax.swing.JSpinner jsYears;
     private javax.swing.JTextField jtPrivTag;
     private javax.swing.JTextField jtReplace;

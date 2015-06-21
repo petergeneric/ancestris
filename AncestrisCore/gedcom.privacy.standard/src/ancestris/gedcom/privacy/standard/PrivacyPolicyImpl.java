@@ -96,7 +96,6 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
     private Set<Entity> privateYearsEntities = new HashSet<Entity>();
     private Set<Entity> aliveEntities = new HashSet<Entity>();
     //
-    private int yearsIndiCanBeAlive = 130; //TODO - le mettre en paramètre dans les préférences
     private static final PrivacyPolicy PUBLIC = new PrivacyPolicyImpl() {
 
         @Override
@@ -357,7 +356,7 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
             return false;
         }
         Delta anniversary = bdate.getAnniversary();
-        return (ddate == null) && (anniversary != null) && (anniversary.getYears() < yearsIndiCanBeAlive);
+        return (ddate == null) && (anniversary != null) && (anniversary.getYears() < Options.getInstance().getYearsIndiCanBeAlive());
     }
 
     @SuppressWarnings("unchecked")
@@ -410,4 +409,10 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
     public boolean canApplyTo(Gedcom gedcom) {
         return true;
     }
+
+    public void clear() {
+        privateYearsEntities.clear();
+        aliveEntities.clear();
+    }
+
 }

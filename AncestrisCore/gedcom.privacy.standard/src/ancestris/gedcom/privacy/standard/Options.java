@@ -78,7 +78,16 @@ public class Options {
     public boolean aliveIsPrivate() {
         return getPreferences().get(PRIVATE_ALIVE,true);
     }
+    
+    private static final String PRIVATE_YEARSALIVE = "private.yearsalive";         // NOI18N
+    public void setYearsIndiCanBeAlive(int years) {
+        getPreferences().put(PRIVATE_YEARSALIVE,years);
+    }
+    public int getYearsIndiCanBeAlive() {
+        return getPreferences().get(PRIVATE_YEARSALIVE,130);
+    }
 
+    
     //
     // EXCEPTION RULE (ER1) : All information of deceased is public, even though any of the above rules says it should be private
     private static final String PUBLIC_DEAD   = "public.dead";         // NOI18N
