@@ -141,24 +141,24 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // Add toolbar elements
         
-        // - Set Privacy ON/OFF
-        privacyToggle = new PrivacyToggle(this, getPreferredPrivacy());
-        toolbar.add(privacyToggle);
-        
-        // - Timer display
-        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
-        timerPanel = new TimerPanel(this);
-        toolbar.add(timerPanel);
-
         // - Dropbox on all connected friends
-        toolbar.add(new JLabel(TOOLBAR_SPACE));
         MembersPopup membersList = new MembersPopup(this, ancestrisMembers);
         JButton members = createDropDownButton(new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend24.png")), membersList);
         members.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersList"));
         toolbar.add(members);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
-        toolbar.addSeparator();
 
+        // - Timer display
+        timerPanel = new TimerPanel(this);
+        toolbar.add(timerPanel);
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+
+        // - Set Privacy ON/OFF
+        privacyToggle = new PrivacyToggle(this, getPreferredPrivacy());
+        toolbar.add(privacyToggle);
+        toolbar.add(new JLabel(TOOLBAR_SPACE));
+        toolbar.addSeparator();
+        
         // - General share button : ON/OFF
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
         startSharingToggle = new StartSharingAllToggle(this, shareAll);

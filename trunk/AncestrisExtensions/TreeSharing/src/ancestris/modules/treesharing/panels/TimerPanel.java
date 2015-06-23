@@ -30,6 +30,7 @@ public class TimerPanel extends javax.swing.JPanel {
         this.owner = tstc;
         initComponents();
         jSpinner1.setEditor(new JSpinner.DateEditor(jSpinner1, "d-MMM-yyyy HH:mm"));
+        ((JSpinner.DefaultEditor)jSpinner1.getEditor()).getTextField().setHorizontalAlignment(javax.swing.JTextField.CENTER);
     }
 
     /**
