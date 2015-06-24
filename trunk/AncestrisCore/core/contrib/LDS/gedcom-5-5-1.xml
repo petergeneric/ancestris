@@ -93,8 +93,8 @@
    <ROMN super="INDI:NAME:ROMN"/>
    </PLAC>
    <ADDR type="PropertyMultilineValue" img="Addr">
-    <ADR1 hide="1" type="PropertySimpleValue" img="Addr"/>
-    <ADR2 hide="1" type="PropertySimpleValue" img="Addr"/>
+    <ADR1 hide="2" type="PropertySimpleValue" img="Addr"/>
+    <ADR2 hide="2" type="PropertySimpleValue" img="Addr"/>
     <CITY default="1" cardinality="0:1" type="PropertyChoiceValue" img="Place"/>
     <POST default="1" cardinality="0:1" type="PropertyChoiceValue" img="Code"/>
     <STAE default="1" cardinality="0:1" type="PropertyChoiceValue" img="Place"/>
@@ -133,8 +133,8 @@
    <DATE default="0"/>
    <PLAC default="0"/>
   </RELI>
-  <CAST hide="1" type="PropertySimpleValue" img="Caste" super="INDI:RELI" />
-  <DSCR hide="1" type="PropertyChoiceValue" img="Description" super="INDI:RELI" />
+  <CAST hide="2" type="PropertySimpleValue" img="Caste" super="INDI:RELI" />
+  <DSCR hide="2" type="PropertyChoiceValue" img="Description" super="INDI:RELI" />
   <EDUC type="PropertyChoiceValue" img="Education" super="INDI:RELI" cardinality="0:M"/>
   <IDNO type="PropertySimpleValue" img="IDNumber" super="INDI:RELI"/>
   <NATI type="PropertyChoiceValue" img="Nationality" super="INDI:RELI" />
@@ -143,7 +143,7 @@
   <SSN  type="PropertySimpleValue" img="SSN" super="INDI:RELI" />
   <TITL type="PropertyChoiceValue" img="Title" super="INDI:RELI"/>
   <FACT type="PropertySimpleValue" img="Note" super="INDI:RELI" />
-  <NMR  hide="1" type="PropertySimpleValue" img="Marriage" super="INDI:RELI" />
+  <NMR  hide="2" type="PropertySimpleValue" img="Marriage" super="INDI:RELI" />
   +++++++++++++ More Events +++++++++++++
   <GRAD cardinality="0:M" img="Graduation" super="INDI:BIRT"/>
   <CHR  img="Baptism" super="INDI:GRAD">
@@ -155,7 +155,7 @@
   <BARM img="Bar" super="INDI:BIRT"/>
   <BASM img="Bas" super="INDI:BIRT"/>
   <BLES img="Blessing" super="INDI:BIRT"/>
-  <CHRA hide="1" img="AdultChristening" super="INDI:BIRT"/>
+  <CHRA hide="2" img="AdultChristening" super="INDI:BIRT"/>
   <CONF super="INDI:BIRT"/>
   <FCOM img="FirstCommunion" super="INDI:BIRT"/>
   <ORDN img="Ordination" super="INDI:BIRT"/>
@@ -170,7 +170,7 @@
   <TYPE default="1"/>
   </EVEN>
   ++++++++++++++++ LDS ++++++++++++++++++
- <BAPL hide="1" img="Baptism" type="PropertySimpleReadOnly">
+ <BAPL hide="2" img="Baptism" type="PropertySimpleReadOnly">
    <STAT type="PropertySimpleValue" img="Baptism"/>
    <DATE super="INDI:BIRT:DATE"/>
    <TEMP type="PropertySimpleValue" img="Baptism"/>
@@ -204,14 +204,14 @@
    <SOUR super="INDI:SOUR"/>
    <NOTE super="INDI:NAME:NOTE"/>
   </ASSO>
-  <ALIA hide="1" type="PropertyAlias" img="Indi"/>
+  <ALIA hide="2" type="PropertyAlias" img="Indi"/>
   +++++++++++++ numbers / processing +++++++++++++
-  <RFN hide="1" type="PropertySimpleValue" img="Code" cardinality="0:1"/>
-  <AFN hide="1" type="PropertyNumericValue" img="Code"/>
+  <RFN hide="2" type="PropertySimpleValue" img="Code" cardinality="0:1"/>
+  <AFN hide="2" type="PropertyNumericValue" img="Code"/>
   <REFN type="PropertySimpleValue" img="Code">
    <TYPE type="PropertySimpleValue" img="Type"/>
   </REFN>
-  <RIN hide="1" type="PropertySimpleValue" img="Blob" cardinality="0:1"/>
+  <RIN hide="2" type="PropertySimpleValue" img="Blob" cardinality="0:1"/>
   <RESN hide="1" type="PropertySimpleReadOnly" img="Description" cardinality="0:1"/>
   +++++++++++++ change  - it swallows subs DATE|TIME - no need to declare in grammar +++++++++++++
   <CHAN hide="1" type="PropertyChange" img="Time">
@@ -254,7 +254,7 @@
    <FAX cardinality="0:3" type="PropertySimpleValue" img="Phone" />
    <WWW cardinality="0:3" type="PropertySimpleValue" img="Web"/>
   </RESI>
-  <SLGS hide="1" img="Marriage" super="INDI:BAPL"/>
+  <SLGS hide="2" img="Marriage" super="INDI:BAPL"/>
   <OBJE super="INDI:OBJE"/>
   <NOTE super="INDI:NOTE"/>
   <SUBM hide="1" super="INDI:SUBM"/>

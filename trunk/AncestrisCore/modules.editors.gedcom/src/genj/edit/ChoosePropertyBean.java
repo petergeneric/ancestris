@@ -71,7 +71,8 @@ public class ChoosePropertyBean extends JComponent {
   public ChoosePropertyBean(Property parent) {
     
     // keep parent and calculate possible properties
-    MetaProperty[] defs = parent.getNestedMetaProperties(MetaProperty.WHERE_NOT_HIDDEN | MetaProperty.WHERE_CARDINALITY_ALLOWS);
+//    MetaProperty[] defs = parent.getNestedMetaProperties(MetaProperty.WHERE_NOT_HIDDEN | MetaProperty.WHERE_CARDINALITY_ALLOWS);
+    MetaProperty[] defs = parent.getNestedMetaProperties(MetaProperty.INCLUDE_ADVANCED | MetaProperty.WHERE_CARDINALITY_ALLOWS);
     init(defs, true);
   }    
   

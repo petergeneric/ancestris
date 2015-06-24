@@ -37,7 +37,8 @@ public class MetaProperty implements Comparable<MetaProperty> {
   public final static int
     WHERE_NOT_HIDDEN = 1, // only those that are not marked as hidden
     WHERE_DEFAULT    = 2, // only those that are marked default
-    WHERE_CARDINALITY_ALLOWS = 4; // only those that are still allowed by cardinality
+    WHERE_CARDINALITY_ALLOWS = 4, // only those that are still allowed by cardinality
+    INCLUDE_ADVANCED =8;        // show advanced properties
   
   /** static - loaded images */    
   private static Map<String,ImageIcon> name2images = new HashMap<String,ImageIcon>();
@@ -164,10 +165,21 @@ public class MetaProperty implements Comparable<MetaProperty> {
         if (!sub.isDefault())
           continue;
       }
-        
+      
+      // INCLUDE_ADVANCED is a 'soft' WHERE_NOT_HIDDEN that shows all
+      // properties but those that cannot be edited directly (FAMC, CHAN, ...)
       // hidden at all (a.k.a cardinality == 0)?
-      if ((filter&WHERE_NOT_HIDDEN)!=0&&sub.getAttribute("hide")!=null)
-        continue;
+      if ((filter&(WHERE_NOT_HIDDEN|INCLUDE_ADVANCED))!=0){
+          String hide = sub.getAttribute("hide");
+          if (hide != null){
+              if ((filter&WHERE_NOT_HIDDEN)!=0)
+                  continue;
+              // INCLUDE_ADVANCED
+              if (!hide.equals("2")){
+                  continue;
+              }
+          }
+      }
 
       // parent is xref or not?
       if ("0".equals(sub.getAttribute("xref")) && parent instanceof PropertyXRef ) continue;
