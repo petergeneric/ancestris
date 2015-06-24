@@ -16,6 +16,7 @@ import ancestris.modules.treesharing.communication.AncestrisMember;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -110,11 +111,12 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
     public void tableChanged(TableModelEvent e) {
         int row = e.getFirstRow();
         int column = e.getColumn();
-        TableModel model = (TableModel)e.getSource();
-        String columnName = model.getColumnName(column);
+        MyTableModel model = (MyTableModel)e.getSource();
         Object data = model.getValueAt(row, column);
-
-        // TODO something with the data... (in case members is changed to allowed or not allowed, current matching ancestris friend has to be started or stopped)
+        if (column == 0) {
+            model.getAncestrisMember(row).setAllowed((Boolean)data);
+            // Member is activated or desactivated. If something else needs to be done, do it here.
+        }
     }
 
 
@@ -124,14 +126,16 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
 
     class MyTableModel extends AbstractTableModel {
 
+        List<AncestrisMember> ancestrisMembers = null;
         String[] columnNames = { "", "" };
         Object[][] data;
         
         private MyTableModel(List<AncestrisMember> ancestrisMembers) {
+            this.ancestrisMembers = ancestrisMembers;
             data = new Object[ancestrisMembers.size()][2];
             int i = 0;
             for (AncestrisMember member : ancestrisMembers) {
-                data[i][0] = true;
+                data[i][0] = member.isAllowed();
                 data[i][1] = member.getName();
                 i++;
             }
@@ -170,6 +174,16 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         public void setValueAt(Object value, int row, int col) {
             data[row][col] = value;
             fireTableCellUpdated(row, col);
+        }
+
+        public AncestrisMember getAncestrisMember(int row) {
+            for (AncestrisMember member : ancestrisMembers) {
+                String name = (String) getValueAt(row, 1);
+                if (member.getName().equals(name)) {
+                    return member;
+                }
+            }
+            return null;
         }
 
     }

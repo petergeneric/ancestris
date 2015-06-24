@@ -12,8 +12,15 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.modules.treesharing.TreeSharingTopComponent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Date;
 import javax.swing.JSpinner;
+import javax.swing.JToolTip;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.Timer;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -22,6 +29,13 @@ import javax.swing.JSpinner;
 public class TimerPanel extends javax.swing.JPanel {
 
     private final TreeSharingTopComponent owner;
+    private boolean stateBeingChanged = false;
+    
+    // Popup things
+    private JToolTip jToolTip = null;
+    private ActionListener hider = null;
+    private Popup popup = null;
+    private Timer timer = null;
     
     /**
      * Creates new form TimerPanel
@@ -31,6 +45,7 @@ public class TimerPanel extends javax.swing.JPanel {
         initComponents();
         jSpinner1.setEditor(new JSpinner.DateEditor(jSpinner1, "d-MMM-yyyy HH:mm"));
         ((JSpinner.DefaultEditor)jSpinner1.getEditor()).getTextField().setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        initPopup();
     }
 
     /**
@@ -92,9 +107,14 @@ public class TimerPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
-        Date date = (Date) jSpinner1.getValue();
-        if (date.before(new java.util.Date())) {
-            jSpinner1.setValue(new java.util.Date());
+        if (!stateBeingChanged) {
+            stateBeingChanged = true;
+            Date date = (Date) jSpinner1.getValue();
+            if (date.before(new java.util.Date())) {
+                jSpinner1.setValue(new java.util.Date());
+            }
+            owner.resetTimer();
+            stateBeingChanged = false;
         }
     }//GEN-LAST:event_jSpinner1StateChanged
 
@@ -108,6 +128,31 @@ public class TimerPanel extends javax.swing.JPanel {
     public void setTimerEnabled(boolean b) {
         jButton1.setEnabled(b);
         jSpinner1.setEnabled(b);
+    }
+
+    public Date getTimerDate() {
+        return (Date) jSpinner1.getValue();
+    }
+
+    public final void initPopup() {
+        jToolTip = new JToolTip();
+        jToolTip.setTipText(NbBundle.getMessage(TimerPanel.class, "TIP_DelayTooShort"));
+        hider = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                popup.hide();
+            }
+        };
+        // Hide popup in 3 seconds
+        timer = new Timer(3000, hider);
+    }
+
+    public void setFocus() {
+        int x = (int)this.getLocationOnScreen().getX();
+        int y = (int)this.getLocationOnScreen().getY();
+        popup = PopupFactory.getSharedInstance().getPopup(this, jToolTip, x+60, y+30);
+        popup.show();
+        timer.start();
     }
 
 }
