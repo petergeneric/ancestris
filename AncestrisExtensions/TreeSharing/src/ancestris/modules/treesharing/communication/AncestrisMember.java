@@ -18,7 +18,7 @@ package ancestris.modules.treesharing.communication;
  */
 public class AncestrisMember {
     
-    private final boolean allowed;
+    private boolean allowed;
     private final String name;
     private final String access;
 
@@ -34,6 +34,14 @@ public class AncestrisMember {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isAllowed() {
+        return allowed;
+    }
+    
+    public void setAllowed(boolean b) {
+        allowed = b;
     }
     
 }

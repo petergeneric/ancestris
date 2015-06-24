@@ -89,53 +89,6 @@ public class TreeSharing implements GedcomFileListener {
     
     
     
-    /**
-     * 
-     * @param gedcoms
-     * @param allowedFriends
-     * @param delay
-     * @param respectPrivacy
-     * @return 
-     */
-    private boolean startSharingGedcoms(List<Gedcom> sharedGedcoms, boolean respectPrivacy, long delay, String[] allowedFriends) {
-        
-        // Remember list of shared gedcoms. Gedcom file has to be opened in Ancestris. 
-        this.sharedGedcoms = sharedGedcoms;
-        
-        // Set listeners so that if gedcom is closed, sharing the corresponding gedcom is stopped
-        // ==> This is done through the implemetation of GedcomFileListener and lookups inside GedcomMgr.
-        
-        // Remember privacy filter
-        this.respectPrivacy = respectPrivacy;
-        
-        // Create timer task to stop sharing after delay
-        TimerTask task;
-        if (delay != 0) {
-
-            task = new TimerTask() {
-
-                @Override
-                public void run() {
-                    stopSharingGedcoms();
-                    timer.cancel();
-                }
-            };
-            timer = new Timer();
-
-            // set delay in hours
-            timer.schedule(task, 36000 * delay);  
-        }
-        
-        // Remember list of allowed friends (all are friends if null)
-        this.allowedFriends = allowedFriends;
-        
-        // Open my ancestris communication in/out
-        commHandler.startListeningtoFriends();
-
-        // Register on the ancestris server that I am a sharing friend
-        return commHandler.registerMe(myName, myAccess);
-    }
-    
     
     /**
      * 
@@ -157,15 +110,6 @@ public class TreeSharing implements GedcomFileListener {
      * @return 
      */
     private boolean stopSharingGedcoms() {
-        
-        // Unregister from Ancestris server
-        commHandler.unregisterMe(myName);
-        
-        // Stop ancestris communication in/out
-        commHandler.stopListeningtoFriends();
-        
-        // Stop timer
-        timer.cancel();
         
         // Destroy sharing filters
         this.allowedFriends = new String[] { "" };  // nobody

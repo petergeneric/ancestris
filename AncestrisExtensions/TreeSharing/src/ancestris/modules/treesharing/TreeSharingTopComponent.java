@@ -32,8 +32,12 @@ import genj.gedcom.Gedcom;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -78,10 +82,12 @@ public class TreeSharingTopComponent extends TopComponent {
     
     // Sharing elements
     private boolean isBusy = false;
+    private String commPseudo = "";
     private Comm commHandler = null;
     private List<SharedGedcom> sharedGedcoms = null;
     private List<AncestrisMember> ancestrisMembers = null; // all connected members
     private List<AncestrisFriend> ancestrisFriends = null; // only members with entities in common
+    private Timer timer;
     
 
     
@@ -257,9 +263,9 @@ public class TreeSharingTopComponent extends TopComponent {
         desktopPanel.setFrames(sharedGedcoms, LEFT_OFFSET_GEDCOM, TOP_OFFSET, VERTICAL_SPACE, true);
     }
 
-    private void initAncestrisFriends() {
+    private void displayAncestrisFriends() {
 
-        // Init list
+        // Get list
         //TODO : ancestrisFriends = XXX();
 
         // Display shared Friends for the first time on the desktop
@@ -276,6 +282,17 @@ public class TreeSharingTopComponent extends TopComponent {
     }
     
 
+    // Connexion preferences
+    
+    private String getPreferredPseudo() {
+        return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Pseudo", "");
+    }
+
+    private String getPreferredAccess() {
+        return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Access", "");
+    }
+
+    
     // Privacy management
     
     private boolean getPreferredPrivacy() {
@@ -311,24 +328,81 @@ public class TreeSharingTopComponent extends TopComponent {
         return isBusy;
     }
     
-    public void startSharingAll() {
+    public boolean startSharingAll() {
+        
+        // Toggle the buttons to show it is set to sharing
+        toggleOn();
+
+        // We have list of shared gedcoms in "sharedGedcoms" with isShared selected
+
+        // We have list of allowed members in "ancestrisMembers" with isAllowed set to true
+        //        for (AncestrisMember member : ancestrisMembers) {
+        //            System.out.println(member.getName() + " - " + member.isAllowed());
+        //        }
+        
+        // Create timer task to stop sharing after delay cooresponding to indicated date
+        if (!setTimer()) {
+            toggleOff();
+            timerPanel.setFocus();
+            return false;
+        }
+        
+        // Open my ancestris communication in/out (I accept to receive communication requests)
+        commHandler.startListeningtoFriends();
+
+        // Register on the ancestris server that I am a sharing friend. Remember pseudo that is used
+        commPseudo = getPreferredPseudo();
+        commHandler.registerMe(commPseudo, getPreferredAccess());
+
+        // Open the sharing locally
         shareAll = true;
+        
+        return true;
+    }
+
+    public boolean stopSharingAll() {
+        // Stop timer
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        
+        // Unregister from Ancestris server
+        commHandler.unregisterMe(commPseudo);
+        
+        // Stop ancestris communication in/out
+        commHandler.stopListeningtoFriends();
+        
+        // Stop the sharing locally
+        shareAll = false;
+        
+        // Toggle the buttons to show it is no longer sharing
+        toggleOff();
+        
+        return true;
+    }
+
+    private void toggleOn() {
+        Toolkit.getDefaultToolkit().beep();
         isBusy = true;
-        stopSharingToggle.setSelected(!shareAll);
-        stopSharingToggle.setEnabled(shareAll);
-        stopSharingToggle.setToolTipText();
-        //timerPanel.setTimerEnabled(false);
+        startSharingToggle.setEnabled(false);
+        startSharingToggle.setToolTipText(true);
+        stopSharingToggle.setSelected(false);
+        stopSharingToggle.setEnabled(true);
+        stopSharingToggle.setToolTipText(true);
         dispatchShare(true);
         isBusy = false;
     }
 
-    public void stopSharingAll() {
-        shareAll = false;
+    private void toggleOff() {
+        Toolkit.getDefaultToolkit().beep();
+        Toolkit.getDefaultToolkit().beep();
         isBusy = true;
-        startSharingToggle.setSelected(shareAll);
-        startSharingToggle.setEnabled(!shareAll);
-        startSharingToggle.setToolTipText();
-        //timerPanel.setTimerEnabled(true);
+        stopSharingToggle.setEnabled(false);
+        stopSharingToggle.setToolTipText(false);
+        startSharingToggle.setSelected(false);
+        startSharingToggle.setEnabled(true);
+        startSharingToggle.setToolTipText(true);
         dispatchShare(false);
         isBusy = false;
     }
@@ -346,13 +420,13 @@ public class TreeSharingTopComponent extends TopComponent {
         if (!isComponentCreated) {
             return;
         }
-//        try {
-//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-//            //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//            //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
+        //        try {
+        //            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        //            //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        //            //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        //        } catch(Exception e) {
+        //            e.printStackTrace();
+        //        }
         SharedGedcom newSharedGedcom = new SharedGedcom(gedcom, privacyToggle.isSelected());
         desktopPanel.addFrame(newSharedGedcom, findLocation(sharedGedcoms.size(), newSharedGedcom.getPreferredSize().height));
         sharedGedcoms.add(newSharedGedcom);
@@ -379,4 +453,43 @@ public class TreeSharingTopComponent extends TopComponent {
         return new Point(LEFT_OFFSET_GEDCOM, TOP_OFFSET + nbElements * (height + VERTICAL_SPACE));
     }
 
+    private boolean setTimer() {
+        
+        // Calculte edelay between bow and limit date
+        Date limitDate = timerPanel.getTimerDate();
+        Date currentDate = new java.util.Date();
+        long delay = limitDate.getTime() - currentDate.getTime();
+        if (delay < 0) {
+            return false;
+        }
+
+        // Set timer
+        TimerTask task;
+        if (delay != 0) {
+
+            task = new TimerTask() {
+
+                @Override
+                public void run() {
+                    timer.cancel();
+                    stopSharingToggle.doClick();
+                }
+            };
+            timer = new Timer();
+
+            // set delay in hours
+            timer.schedule(task, delay);  
+        }
+        return true;
+    }
+
+    public void resetTimer() {
+        if (timer == null) {
+            return;
+        }
+        timer.cancel();
+        setTimer();
+    }
+
+    
 }
