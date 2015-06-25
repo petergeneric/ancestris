@@ -12,6 +12,7 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
+import ancestris.modules.treesharing.TreeSharingTopComponent;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;

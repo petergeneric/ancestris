@@ -75,6 +75,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private boolean shareAll = false;
     private StartSharingAllToggle startSharingToggle;
     private StopSharingAllToggle stopSharingToggle;
+    private JLabel rotating = null;
     private final int LEFT_OFFSET_GEDCOM = 10;
     private final int TOP_OFFSET = 10;
     private final int VERTICAL_SPACE = 10;
@@ -89,7 +90,8 @@ public class TreeSharingTopComponent extends TopComponent {
     private List<AncestrisFriend> ancestrisFriends = null; // only members with entities in common
     private Timer timer;
     
-
+    // Searching elements
+    private SearchSharedTrees searchThread;
     
     
     
@@ -173,6 +175,9 @@ public class TreeSharingTopComponent extends TopComponent {
         toolbar.add(stopSharingToggle);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
         toolbar.addSeparator();
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+        rotating = new JLabel(TOOLBAR_SPACE);
+        toolbar.add(rotating);
 
         toolbar.add(new Box.Filler(null, null, null), "growx, pushx, center");
 
@@ -261,6 +266,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // Display shared Gedcoms for the first time on the desktop
         desktopPanel.setFrames(sharedGedcoms, LEFT_OFFSET_GEDCOM, TOP_OFFSET, VERTICAL_SPACE, true);
+        
     }
 
     private void displayAncestrisFriends() {
@@ -357,10 +363,16 @@ public class TreeSharingTopComponent extends TopComponent {
         // Open the sharing locally
         shareAll = true;
         
+        // Launch search engine
+        launchSearchEngine();
+        
         return true;
     }
 
     public boolean stopSharingAll() {
+        // Launch search engine
+        stopSearchEngine();
+        
         // Stop timer
         if (timer != null) {
             timer.cancel();
@@ -489,6 +501,24 @@ public class TreeSharingTopComponent extends TopComponent {
         }
         timer.cancel();
         setTimer();
+    }
+
+    private void launchSearchEngine() {
+        // Init thread (because cannot be launched twice)
+        searchThread = new SearchSharedTrees(this);
+        
+        // Launch thread (cannot be launched twice)
+        searchThread.start();
+    }
+
+    private void stopSearchEngine() {
+        searchThread.stopGracefully();
+    }
+
+    void setRotatingIcon(ImageIcon icon, String toolTip) {
+        rotating.setIcon(icon);
+        rotating.setToolTipText(toolTip);
+        rotating.revalidate();
     }
 
     

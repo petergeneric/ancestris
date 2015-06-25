@@ -12,10 +12,8 @@
 
 package ancestris.modules.treesharing.panels;
 
-import ancestris.gedcom.GedcomFileListener;
 import ancestris.modules.treesharing.communication.Comm;
 import ancestris.modules.treesharing.communication.FriendGedcomEntity;
-import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -25,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Purpose of the whole sharing tree game : 
@@ -86,45 +83,6 @@ public class TreeSharing {
     private String myAccess = "URLxyz";
     
     private Comm commHandler;
-    
-    
-    
-    
-    /**
-     * 
-     * @param sharedGedcom
-     * @return 
-     */
-    private boolean startSharingGedcom(Gedcom sharedGedcom) {
-        this.sharedGedcoms.add(sharedGedcom);
-        return true;
-    }
-    
-      /**
-     * 
-     * @param gedcom
-     * @return 
-     */
-    private boolean stopSharingGedcom(Gedcom gedcom) {
-        
-        // If gedcom is not shared, return
-        if (!sharedGedcoms.contains(gedcom)) {
-           return true; 
-        }
-        
-        // If only one gedcom is shared, stop sharing all gedcoms
-        if (sharedGedcoms.size() == 1) {
-//            return stopSharingGedcoms();
-        }
-        
-        // Otherwise just remove this gedcom from shared list
-        sharedGedcoms.remove(gedcom);
-        
-        return true;
-    }
-    
-    
-    
     
     
     
