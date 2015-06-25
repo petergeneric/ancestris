@@ -73,7 +73,7 @@ import java.util.TimerTask;
  *
  * @author frederic
  */
-public class TreeSharing implements GedcomFileListener {
+public class TreeSharing {
     
     private final boolean EXACT_MATCH = true;
     private final boolean APPROXIMATE_MATCH = false;
@@ -100,28 +100,7 @@ public class TreeSharing implements GedcomFileListener {
         return true;
     }
     
-    
-    
-    
-    
-    
-    /**
-     * 
-     * @return 
-     */
-    private boolean stopSharingGedcoms() {
-        
-        // Destroy sharing filters
-        this.allowedFriends = new String[] { "" };  // nobody
-        this.respectPrivacy = true;                 // respect
-        
-        return true;
-    }
-
-    
-    
-
-    /**
+      /**
      * 
      * @param gedcom
      * @return 
@@ -135,7 +114,7 @@ public class TreeSharing implements GedcomFileListener {
         
         // If only one gedcom is shared, stop sharing all gedcoms
         if (sharedGedcoms.size() == 1) {
-            return stopSharingGedcoms();
+//            return stopSharingGedcoms();
         }
         
         // Otherwise just remove this gedcom from shared list
@@ -143,6 +122,13 @@ public class TreeSharing implements GedcomFileListener {
         
         return true;
     }
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -301,41 +287,7 @@ public class TreeSharing implements GedcomFileListener {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    @Override
-    public void commitRequested(Context context) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void gedcomClosed(Gedcom gedcom) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void gedcomOpened(Gedcom gedcom) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-    
+      
+  
 
 }
