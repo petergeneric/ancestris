@@ -12,7 +12,6 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
-import ancestris.modules.treesharing.TreeSharingTopComponent;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -21,16 +20,9 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
 import java.util.Collection;
-import javax.swing.BorderFactory;
 import javax.swing.JInternalFrame;
-import javax.swing.JToolTip;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -247,14 +239,19 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     }//GEN-LAST:event_jCheckBox2ActionPerformed
 
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        JToolTip toolTip = new JToolTip();
-        Border margin = new EmptyBorder(10,10,10,10);
-        toolTip.setTipText(getHtmlDesription());
-        toolTip.setBorder(new CompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), margin));
+        Entity entity = gedcom.getFirstEntity("HEAD");
+        String str = "";
+        if (entity != null) {
+            Property note = entity.getProperty("NOTE");
+            if (note != null) {
+                str = note.getValue();
+            }
+        }
+        GedcomDescriptionPanel descPanel = new GedcomDescriptionPanel(this, gedcom.getName(), gedcom.getOrigin().getFile().getAbsolutePath().replace(" ", "&nbsp;"), str);
         if (popup == null) {
-            popup = PopupFactory.getSharedInstance().getPopup(this, toolTip, x, y);
+            int x = evt.getXOnScreen();
+            int y = evt.getYOnScreen();
+            popup = PopupFactory.getSharedInstance().getPopup(this, descPanel, x, y);
             popup.show();
         } else {
             popup.hide();
@@ -263,6 +260,14 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         
     }//GEN-LAST:event_jLabel10MouseClicked
 
+    public void closeDescription() {
+        if (popup != null) {
+            jLabel10MouseClicked(null);
+        }
+    }
+
+
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -336,27 +341,6 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
             ret += (ppi.isPrivate(entity)) ? 0 : 1;
         }
         return ret;
-    }
-
-    
-    
-    
-    private String getHtmlDesription() {
-        if (gedcom == null) {
-            return "";
-        }
-        String str = "<html>";
-        str += NbBundle.getMessage(SharedGedcom.class, "TXT_Name") + ":<font color=blue>&#9;" + gedcom.getName() + "</font><br><br>";
-        str += NbBundle.getMessage(SharedGedcom.class, "TXT_Origin") + ":<font color=blue>&#9;" + gedcom.getOrigin().getFile().getAbsolutePath().replace(" ", "&nbsp;") + "</font><br><br>";
-        Entity entity = gedcom.getFirstEntity("HEAD");
-        if (entity != null) {
-            Property note = entity.getProperty("NOTE");
-            if (note != null) {
-                str += NbBundle.getMessage(SharedGedcom.class, "TXT_Description") + ":<br><font color=blue><i>" + note.getValue() + "</i></font><br>&nbsp;<br>";
-            }
-        }
-        str += "</html>";
-        return str;
     }
 
 
