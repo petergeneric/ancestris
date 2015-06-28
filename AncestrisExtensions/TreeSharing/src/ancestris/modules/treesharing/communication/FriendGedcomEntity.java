@@ -52,6 +52,10 @@ public class FriendGedcomEntity {
             return (Fam) entity;
         }
 
+        public AncestrisFriend getFriend() {
+            return friend;
+        }
+
         public String getName() {
             if (friend == null) {
                 return "";
@@ -59,5 +63,18 @@ public class FriendGedcomEntity {
             return friend.getFriendName();
         }
 
+        public String getGedcomName() {
+            if (gedcom == null) {
+                return "";
+            }
+            return gedcom.getName();
+        }
+
+        public String getEntityId() {
+            if (entity == null) {
+                return "";
+            }
+            return entity.getId();
+        }
     
 }

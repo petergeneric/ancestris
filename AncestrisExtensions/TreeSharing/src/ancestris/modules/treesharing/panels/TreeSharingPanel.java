@@ -102,6 +102,7 @@ public class TreeSharingPanel extends javax.swing.JPanel {
     
     public void addFrame(JInternalFrame frame, Point point) {
         jDesktopPane.add(frame);
+        frame.setVisible(true);
         Insets insets = jDesktopPane.getInsets();
         Dimension size = frame.getPreferredSize();
         frame.setBounds(insets.left + point.x, insets.top + point.y, size.width, size.height);
