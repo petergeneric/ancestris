@@ -20,6 +20,8 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JInternalFrame;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
@@ -253,6 +255,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
             int y = evt.getYOnScreen();
             popup = PopupFactory.getSharedInstance().getPopup(this, descPanel, x, y);
             popup.show();
+            
         } else {
             popup.hide();
             popup = null;
@@ -304,8 +307,8 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         if (recalculate || nbTotalIndis == 0) {
             nbTotalIndis = gedcom.getEntities(Gedcom.INDI).size();
             nbTotalFams = gedcom.getEntities(Gedcom.FAM).size();
-            nbPublicIndis = getPublicEntities(Gedcom.INDI);
-            nbPublicFams = getPublicEntities(Gedcom.FAM);
+            nbPublicIndis = getNbPublicEntities(Gedcom.INDI);
+            nbPublicFams = getNbPublicEntities(Gedcom.FAM);
             nbCommonIndis = 0; // TODO
             nbCommonFams = 0; // TODO
         }
@@ -333,7 +336,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         updateStats(false);
     }
 
-    private int getPublicEntities(String tag) {
+    private int getNbPublicEntities(String tag) {
         ppi.clear();
         int ret = 0;
         Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(tag);
@@ -344,6 +347,25 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     }
 
 
+    public List<Entity> getPublicEntities(String tag) {
+        ppi.clear();
+        List<Entity> ret = new LinkedList<Entity>();
+        Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(tag);
+        for (Entity entity : entities) {
+            if (!ppi.isPrivate(entity)) {
+                ret.add(entity);
+            }
+        }
+        return ret;
+    }
+
+    public List<Entity> getAllPublicEntities() {
+        List<Entity> ret = getPublicEntities(Gedcom.INDI);
+        ret.addAll(getPublicEntities(Gedcom.FAM));
+        return ret;
+    }
+
+    
     
     
     

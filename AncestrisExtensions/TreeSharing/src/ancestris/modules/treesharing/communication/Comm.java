@@ -12,7 +12,6 @@
 
 package ancestris.modules.treesharing.communication;
 
-import ancestris.modules.treesharing.panels.AncestrisFriend;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,7 +138,7 @@ public class Comm {
      * @return  true if connection established
      *          false if sharing criteria not matching request, or if connection is not working
      */
-    public boolean connectToAncestrisFriend(AncestrisFriend friend) {
+    public boolean connectToAncestrisFriend(AncestrisMember member) {
         // Connect to ancestris program of friend
         
         return true;

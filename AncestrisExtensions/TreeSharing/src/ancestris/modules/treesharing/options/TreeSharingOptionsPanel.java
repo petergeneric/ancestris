@@ -11,11 +11,17 @@
  */
 package ancestris.modules.treesharing.options;
 
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
-final class TreeSharingOptionsPanel extends javax.swing.JPanel {
+public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
     private final TreeSharingOptionsPanelController controller;
+    
+    public static final String[] MATCHING_TYPES = new String[] { 
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match1"), 
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match2")
+    };
 
     TreeSharingOptionsPanel(TreeSharingOptionsPanelController controller) {
         this.controller = controller;
@@ -36,6 +42,8 @@ final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jCheckBox1.text")); // NOI18N
 
@@ -46,6 +54,10 @@ final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         jTextField1.setText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jTextField1.text")); // NOI18N
 
         jTextField2.setText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jTextField2.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel3.text")); // NOI18N
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(MATCHING_TYPES));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -59,11 +71,15 @@ final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
+                        .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                            .addComponent(jTextField2)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -78,16 +94,26 @@ final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
         jCheckBox1.setSelected(NbPreferences.forModule(TreeSharingOptionsPanel.class).getBoolean("RespectPrivacy", true));
+        jTextField1.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", ""));
+        jTextField2.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Access", ""));
+        jComboBox1.setSelectedItem(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", MATCHING_TYPES[0]));
     }
 
     void store() {
         NbPreferences.forModule(TreeSharingOptionsPanel.class).putBoolean("RespectPrivacy", jCheckBox1.isSelected());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Pseudo", jTextField1.getText());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Access", jTextField2.getText());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", (String) jComboBox1.getSelectedItem());
     }
 
     boolean valid() {
@@ -97,8 +123,10 @@ final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
