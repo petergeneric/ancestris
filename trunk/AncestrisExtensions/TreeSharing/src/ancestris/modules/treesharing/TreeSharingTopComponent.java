@@ -15,6 +15,7 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.treesharing.communication.AncestrisMember;
 import ancestris.modules.treesharing.panels.SettingsAction;
 import ancestris.modules.treesharing.communication.Comm;
+import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanelController;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.MembersPopup;
@@ -28,6 +29,7 @@ import org.openide.util.ImageUtilities;
 import ancestris.modules.treesharing.panels.TreeSharingPanel;
 import ancestris.swing.ToolBar;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -51,6 +53,50 @@ import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
 
 /**
+ * 
+ * Purpose of the whole sharing tree game : 
+ * ---------------------------------------
+ * Get subtrees of other Ancestris friends which share common entities (INDI, FAM) with my own shared gedcom trees
+ * 
+ * Overall process, which might be split into visual steps from users:
+ * - Identify the list of currently sharing friends from the ancestris server (crypted communication)
+ * - Launch sequentially a 1-to-1 communications with each sharing Ancestris friend (crypted communication)
+ * - Ask each member ancestris running program for the list of shared [gedcom x entities(INDI, FAM)] 
+ *      / limited to owner's criteria (duration, selected members, privacy) 
+ *      / one gedcom at a time, crypted and zipped
+ *      / until all data collected on my ancestris
+ * - Once data collected within my ancestris, without me knowing, compares all entities to all of mines,
+ *      / on "Lastname" + "one firstname" + "birth or death date" for individuals and families 
+ * - Flags all my entities which are found as matching across all shared gedcoms, and which ancestris member/gedcom/entityID it is matched to (pseudos and the matching entities list)
+ * - Continue with each member
+ * - Store permanently matching elements (crypted) and skip members and entities already matched (from crypted storage) (useful for performance reason)
+ * - Notifies me of the existence of matches, but without revealing any data
+ * - Notifies the identified members that I have identified common data with them
+ * <pause>
+ * - Requests authorisation to the identified friends 
+ * - Once mutual agreement confirmed, asynchronously, provides each member (me and my matching mate) the matching entities list, the total number of entities
+ * <pause>
+ * - Upon subsequent agreement, subtrees and related sources/media/repos/note could be shared among users (qualify size and direction (ancestors, descendants, siblings) before transmitting
+ * <pause>
+ * - Upon agreement, communicate members one human contact detail (eg: email or tel)
+ * 
+ * Principle of security :
+ *      1/ No data can be obtain without sharing one's own 
+ *      2/ Data can only be obtained from matching entities in my trees => users can only get as much as they share !
+ *      3/ Data remains crypted across the Internet
+ *      4/ No gedcom data is stored on the ancestris centralised server : server only has members "access information" and public crypting key
+ *      5/ Members do see connected members' pseudos (otherwise would not know when to run their search and would not be human!)
+ *      5/ Ancestris friends do not get somebody else data without prior owner's authorisation
+ *      6/ Only ancestris applications know who's who and manipulate the data until explicit authorisation from owners
+ *      7/ Shared gedcom files have to be opened in Ancestris
+ *             
+ * Principle of usage :
+ *      1/ Make interaction as simple as possible : do not explicit all steps and unecessary ones, make it as automated as possible
+ *      2/ At every new entering member or tree shared, previous requests run again on added data (do no implement this yet)
+ * 
+ * 
+ * Note : depending on number of shared gedcoms across the Ancestris community, performance might justify to optimise/change the concept and the architecture
+ *
  *
  * @author frederic
  */
@@ -370,6 +416,7 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     public boolean stopSharingAll() {
+
         // Launch search engine
         stopSearchEngine();
         
@@ -515,11 +562,53 @@ public class TreeSharingTopComponent extends TopComponent {
         searchThread.stopGracefully();
     }
 
-    void setRotatingIcon(ImageIcon icon, String toolTip) {
+    public void setRotatingIcon(ImageIcon icon, String toolTip) {
         rotating.setIcon(icon);
         rotating.setToolTipText(toolTip);
         rotating.revalidate();
     }
 
+    public Comm getCommHandler() {
+        return commHandler;
+    }
+
+    public List<SharedGedcom> getSharedGedcoms() {
+        return sharedGedcoms;
+    }
+
+    public List<AncestrisMember> getAncestrisMembers() {
+        return ancestrisMembers;
+    }
+
+
+    /**
+     * In case I am sharing my gedcoms and get called by an allowed member, I will return my shared entities
+     * 
+     * @param member
+     * @return 
+     */
+    public List<FriendGedcomEntity> provideMySharedEntitiesToMember(AncestrisMember member) {
+        
+        // Check if member is in allowed list
+        if (!member.isAllowed()) {
+                return null;
+            }
+        
+        // Get all shared entities for all gedcoms
+        List<Entity> sharedEntities = new LinkedList<Entity>();
+        for (SharedGedcom sharedGedcom : sharedGedcoms) {
+            sharedEntities.addAll(sharedGedcom.getAllPublicEntities());
+        }
+        
+        // Build return list
+        List<FriendGedcomEntity> providedEntities = new LinkedList<FriendGedcomEntity>();
+        for (Entity entity : sharedEntities) {
+            providedEntities.add(new FriendGedcomEntity(new AncestrisFriend(commPseudo, getPreferredAccess()), entity.getGedcom(), entity));
+        }
+        
+        return providedEntities;
+    }
+
+    
     
 }
