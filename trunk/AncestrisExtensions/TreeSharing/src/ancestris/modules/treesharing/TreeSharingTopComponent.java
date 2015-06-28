@@ -18,6 +18,7 @@ import ancestris.modules.treesharing.communication.Comm;
 import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanelController;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
+import ancestris.modules.treesharing.panels.GedcomFriendMatch;
 import ancestris.modules.treesharing.panels.MembersPopup;
 import ancestris.modules.treesharing.panels.PrivacyToggle;
 import ancestris.modules.treesharing.panels.RearrangeAction;
@@ -36,8 +37,10 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.Box;
@@ -123,21 +126,27 @@ public class TreeSharingTopComponent extends TopComponent {
     private StopSharingAllToggle stopSharingToggle;
     private JLabel rotating = null;
     private final int LEFT_OFFSET_GEDCOM = 10;
+    private final int LEFT_OFFSET_MATCHES = 400;
+    private final int LEFT_OFFSET_FRIENDS = 600;
     private final int TOP_OFFSET = 10;
     private final int VERTICAL_SPACE = 10;
-    private final int LEFT_OFFSET_FRIENDS = 400;
     
     // Sharing elements
     private boolean isBusy = false;
     private String commPseudo = "";
     private Comm commHandler = null;
-    private List<SharedGedcom> sharedGedcoms = null;
-    private List<AncestrisMember> ancestrisMembers = null; // all connected members
-    private List<AncestrisFriend> ancestrisFriends = null; // only members with entities in common
     private Timer timer;
+    private List<AncestrisMember> ancestrisMembers = null;          // list of all connected members
+    private List<SharedGedcom> sharedGedcoms = null;                // iFrames : all open gedcoms
+    private List<AncestrisFriend> ancestrisFriends = null;          // iFrames : only members with entities in common
+    private List<GedcomFriendMatch> gedcomFriendMatches = null;     // iFrames : matches between gedcoms and friends
+
+    private Map<Entity, FriendGedcomEntity> matchedEntities = null;  // see if we need to maintain that table... one entity could have many 
     
     // Searching elements
     private SearchSharedTrees searchThread;
+
+
     
     
     
@@ -182,7 +191,11 @@ public class TreeSharingTopComponent extends TopComponent {
             initMainPanel();
 
             initSharedGedcoms();
-        }
+            
+            // Prepare data that will store all matching entities and the entities they are matched to
+            matchedEntities = new HashMap<Entity, FriendGedcomEntity>();
+            
+    }
         
         privacyToggle.setPrivacy(getPreferredPrivacy());
         isComponentCreated = true;
@@ -315,21 +328,15 @@ public class TreeSharingTopComponent extends TopComponent {
         
     }
 
-    private void displayAncestrisFriends() {
-
-        // Get list
-        //TODO : ancestrisFriends = XXX();
-
-        // Display shared Friends for the first time on the desktop
-        desktopPanel.setFrames(ancestrisFriends, LEFT_OFFSET_FRIENDS, TOP_OFFSET, VERTICAL_SPACE, true);
-    }
-
     public void rearrangeWindows() {
         if (sharedGedcoms != null && !sharedGedcoms.isEmpty()) {
             desktopPanel.setFrames(sharedGedcoms, LEFT_OFFSET_GEDCOM, TOP_OFFSET, VERTICAL_SPACE, false);
         }
         if (ancestrisFriends != null && !ancestrisFriends.isEmpty()) {
             desktopPanel.setFrames(ancestrisFriends, LEFT_OFFSET_FRIENDS, TOP_OFFSET, VERTICAL_SPACE, false);
+        }
+        if (gedcomFriendMatches != null && !gedcomFriendMatches.isEmpty()) {
+            desktopPanel.setFrames(gedcomFriendMatches, LEFT_OFFSET_MATCHES, TOP_OFFSET, VERTICAL_SPACE, false);
         }
     }
     
@@ -487,7 +494,7 @@ public class TreeSharingTopComponent extends TopComponent {
         //            e.printStackTrace();
         //        }
         SharedGedcom newSharedGedcom = new SharedGedcom(gedcom, privacyToggle.isSelected());
-        desktopPanel.addFrame(newSharedGedcom, findLocation(sharedGedcoms.size(), newSharedGedcom.getPreferredSize().height));
+        desktopPanel.addFrame(newSharedGedcom, findLocation(sharedGedcoms.size(), LEFT_OFFSET_GEDCOM, newSharedGedcom.getPreferredSize().height));
         sharedGedcoms.add(newSharedGedcom);
     }
     
@@ -504,12 +511,8 @@ public class TreeSharingTopComponent extends TopComponent {
         }
     }
 
-    private Point findLocation(int nbElements, int height) {
-        
-        if (sharedGedcoms.isEmpty()) {
-            return new Point(10, 10);
-        }
-        return new Point(LEFT_OFFSET_GEDCOM, TOP_OFFSET + nbElements * (height + VERTICAL_SPACE));
+    private Point findLocation(int size, int offset, int height) {
+        return new Point(offset, TOP_OFFSET + size * (height + VERTICAL_SPACE));
     }
 
     private boolean setTimer() {
@@ -609,6 +612,61 @@ public class TreeSharingTopComponent extends TopComponent {
         return providedEntities;
     }
 
+    void createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String entityType) {
+
+        // Store match
+        //matchedEntities.put(myEntity, memberEntity);
+        
+        // Update or Create matchFrame
+        GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, memberEntity.getFriend());
+        match.addEntity(myEntity, memberEntity);
+        
+        // Propagate update of sharedGedcom
+        
+        // Propagate update or creation of AncestrisFriend
+    }
+
+    
+    private GedcomFriendMatch getGedcomFriendMatch(SharedGedcom sharedGedcom, AncestrisFriend friend) {
+        
+        GedcomFriendMatch match = null;
+        
+        // If list of matches null, create it
+        if (gedcomFriendMatches == null) {
+            gedcomFriendMatches = new LinkedList<GedcomFriendMatch>();
+        }
+
+        // If list of matches not empty, try to find match
+        if (!gedcomFriendMatches.isEmpty()) {
+            for (GedcomFriendMatch gfm : gedcomFriendMatches) {
+                if (gfm.getSharedGedcom().getGedcom().getOrigin().getFile().getAbsolutePath().equals(sharedGedcom.getGedcom().getOrigin().getFile().getAbsolutePath())
+                 && gfm.getFriend().getFriendName().equals(friend.getFriendName())) {
+                    match = gfm;
+                    break;
+                }
+            }
+        }
+        
+        // If match still null, then create it
+        if (match == null) {
+            match = new GedcomFriendMatch(sharedGedcom, friend);
+            desktopPanel.addFrame(match, findLocation(gedcomFriendMatches.size(), LEFT_OFFSET_MATCHES, match.getPreferredSize().height));
+            gedcomFriendMatches.add(match);
+        }
+        
+        return match;
+    }
+
+    private void displayAncestrisFriends() {
+
+        // Get list
+        //TODO : ancestrisFriends = XXX();
+
+        // Display shared Friends for the first time on the desktop
+        desktopPanel.setFrames(ancestrisFriends, LEFT_OFFSET_FRIENDS, TOP_OFFSET, VERTICAL_SPACE, true);
+    }
+
+    
     
     
 }

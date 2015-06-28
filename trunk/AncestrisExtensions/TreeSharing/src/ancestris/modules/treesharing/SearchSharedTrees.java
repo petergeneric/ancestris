@@ -22,14 +22,8 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertySex;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.swing.ImageIcon;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -78,9 +72,6 @@ public class SearchSharedTrees extends Thread {
         // Get matching type from preferences
         String matchType = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", TreeSharingOptionsPanel.MATCHING_TYPES[0]);
         
-        // Prepare data that will store all matching entities and the entities they are matched to
-        Map<Entity, FriendGedcomEntity> matchedEntities = new HashMap<Entity, FriendGedcomEntity>();
-
         // Loop on all members
         for (AncestrisMember member : ancestrisMembers) {
             
@@ -113,8 +104,7 @@ public class SearchSharedTrees extends Thread {
                             Indi memberIndi = memberEntity.getIndi();
                             // same individual
                             if (isSameIndividual(myIndi, memberIndi, matchType)) { // we have a match
-                                matchedEntities.put(myEntity, memberEntity);
-                                // update sharedGedcom, create match InternalFrame, create AncestrisFriend
+                                owner.createMatch(sharedGedcom, myEntity, memberEntity, Gedcom.INDI);
                             }
                             continue;
                         }
@@ -124,15 +114,14 @@ public class SearchSharedTrees extends Thread {
                             Fam memberFam = memberEntity.getFam();
                             // same husband and same wife ?
                             if (isSameIndividual(myFam.getHusband(), memberFam.getHusband(), matchType) && (isSameIndividual(myFam.getWife(), memberFam.getWife(), matchType))) { // we have a match
-                                matchedEntities.put(myEntity, memberEntity);
-                                // update sharedGedcom, create match InternalFrame, create AncestrisFriend
+                                owner.createMatch(sharedGedcom, myEntity, memberEntity, Gedcom.FAM);
                             }
                         }
                     } // endfor memberEntities
                 } // endfor myEntities
             } // endfor myGedcoms
         } // endfor members
-        
+        stopGracefully();
         // end of search
     }
 
