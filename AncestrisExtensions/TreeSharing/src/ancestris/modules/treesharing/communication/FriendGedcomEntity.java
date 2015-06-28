@@ -52,5 +52,12 @@ public class FriendGedcomEntity {
             return (Fam) entity;
         }
 
+        public String getName() {
+            if (friend == null) {
+                return "";
+            }
+            return friend.getFriendName();
+        }
+
     
 }
