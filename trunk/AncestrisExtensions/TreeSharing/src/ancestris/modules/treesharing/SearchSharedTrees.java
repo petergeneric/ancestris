@@ -26,6 +26,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -109,19 +110,20 @@ public class SearchSharedTrees extends Thread {
                     for (FriendGedcomEntity memberEntity : memberEntities) {
                         if ((myEntity instanceof Indi) && (memberEntity.isIndi())) {
                             Indi myIndi = (Indi) myEntity;
-                            Indi collectedIndi = memberEntity.getIndi();
+                            Indi memberIndi = memberEntity.getIndi();
                             // same individual
-                            if (isSameIndividual(myIndi, collectedIndi, matchType)) { // we have a match
+                            if (isSameIndividual(myIndi, memberIndi, matchType)) { // we have a match
                                 matchedEntities.put(myEntity, memberEntity);
                                 // update sharedGedcom, create match InternalFrame, create AncestrisFriend
                             }
+                            continue;
                         }
 
                         if ((myEntity instanceof Fam) && (memberEntity.isFam())) {
                             Fam myFam = (Fam) myEntity;
-                            Fam collectedFam = memberEntity.getFam();
+                            Fam memberFam = memberEntity.getFam();
                             // same husband and same wife ?
-                            if (isSameIndividual(myFam.getHusband(), collectedFam.getHusband(), matchType) && (isSameIndividual(myFam.getWife(), collectedFam.getWife(), matchType))) { // we have a match
+                            if (isSameIndividual(myFam.getHusband(), memberFam.getHusband(), matchType) && (isSameIndividual(myFam.getWife(), memberFam.getWife(), matchType))) { // we have a match
                                 matchedEntities.put(myEntity, memberEntity);
                                 // update sharedGedcom, create match InternalFrame, create AncestrisFriend
                             }
@@ -130,6 +132,8 @@ public class SearchSharedTrees extends Thread {
                 } // endfor myEntities
             } // endfor myGedcoms
         } // endfor members
+        
+        // end of search
     }
 
     
@@ -147,7 +151,7 @@ public class SearchSharedTrees extends Thread {
         
         
         // dummy code for now, until communication gets done
-        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
+        List<FriendGedcomEntity> allShared = new LinkedList<FriendGedcomEntity>();
         
         Gedcom gedcom = new Gedcom();
         try {
@@ -173,21 +177,29 @@ public class SearchSharedTrees extends Thread {
             indi9.setName("André", "MALRAUX");
             indi10.setName("Napoléon", "BONAPARTE");
 
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("François", "xxxx"), gedcom, indi1));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi2));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi3));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi4));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi5));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi6));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Dominique", "xxxx"), gedcom, indi7));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Valérie", "xxxx"), gedcom, indi8));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi9));
-            ret.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi10));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("François", "xxxx"), gedcom, indi1));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi2));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi3));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi4));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi5));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi6));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Dominique", "xxxx"), gedcom, indi7));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Valérie", "xxxx"), gedcom, indi8));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi9));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi10));
 
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
 
+        // Dummy code to test : Extract entities related to member only (as if I had found them through the communication to that member)
+        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
+        for (FriendGedcomEntity element : allShared) {
+            if (element.getName().equals(member.getName())) {
+                ret.add(element);
+            }
+        }
+        
         return ret;
     }
 
