@@ -165,11 +165,12 @@ public class GedcomFriendMatch extends JInternalFrame {
     private void updateStats() {
         jButton1.setText("" + matchedIndis.size());
         jButton2.setText("" + matchedFams.size());
+        jButton1.setEnabled(matchedIndis.size() != 0);
+        jButton2.setEnabled(matchedFams.size() != 0);
     }
 
     private void showList(Map<?, FriendGedcomEntity> list) {
-        DialogManager.create(NbBundle.getMessage(
-                GedcomFriendMatch.class, "TITL_CommonEntities"), 
+        DialogManager.create(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_CommonEntities"), 
                 new ListEntitiesPanel(sharedGedcom.getGedcom().getName(), 
                 ancestrisFriend.getFriendName(), 
                 list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();

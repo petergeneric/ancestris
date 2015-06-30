@@ -127,7 +127,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private JLabel rotating = null;
     private final int LEFT_OFFSET_GEDCOM = 10;
     private final int LEFT_OFFSET_MATCHES = 400;
-    private final int LEFT_OFFSET_FRIENDS = 600;
+    private final int LEFT_OFFSET_FRIENDS = 590;
     private final int TOP_OFFSET = 10;
     private final int VERTICAL_SPACE = 10;
     
@@ -622,8 +622,11 @@ public class TreeSharingTopComponent extends TopComponent {
         match.addEntity(myEntity, memberEntity);
         
         // Propagate update of sharedGedcom
-        
+        sharedGedcom.addEntity(myEntity, memberEntity);
+                
         // Propagate update or creation of AncestrisFriend
+        AncestrisFriend friend = getFriend(memberEntity.getFriend());
+        friend.addEntity(myEntity, memberEntity);
     }
 
     
@@ -657,16 +660,34 @@ public class TreeSharingTopComponent extends TopComponent {
         return match;
     }
 
-    private void displayAncestrisFriends() {
+    private AncestrisFriend getFriend(AncestrisFriend foundFriend) {
 
-        // Get list
-        //TODO : ancestrisFriends = XXX();
+        AncestrisFriend friend = null;
+        
+        // If list of matches null, create it
+        if (ancestrisFriends == null) {
+            ancestrisFriends = new LinkedList<AncestrisFriend>();
+        }
 
-        // Display shared Friends for the first time on the desktop
-        desktopPanel.setFrames(ancestrisFriends, LEFT_OFFSET_FRIENDS, TOP_OFFSET, VERTICAL_SPACE, true);
+        // If list of matches not empty, try to find match
+        if (!ancestrisFriends.isEmpty()) {
+            for (AncestrisFriend f : ancestrisFriends) {
+                if (f.getFriendName().equals(foundFriend.getFriendName())) {
+                    friend = f;
+                    break;
+                }
+            }
+        }
+        
+        // If match still null, then create it
+        if (friend == null) {
+            friend = new AncestrisFriend(foundFriend.getFriendName(), foundFriend.getAccess());
+            desktopPanel.addFrame(friend, findLocation(ancestrisFriends.size(), LEFT_OFFSET_FRIENDS, friend.getPreferredSize().height));
+            ancestrisFriends.add(friend);
+        }
+        
+        return friend;
     }
 
-    
-    
     
 }

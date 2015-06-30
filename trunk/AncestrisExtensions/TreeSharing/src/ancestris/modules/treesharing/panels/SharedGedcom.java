@@ -12,6 +12,8 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
+import ancestris.modules.treesharing.communication.FriendGedcomEntity;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -20,11 +22,14 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JInternalFrame;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -42,14 +47,22 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     private int nbCommonIndis;
     private int nbCommonFams;
     
+    private Map<Indi, FriendGedcomEntity> matchedIndis = null; 
+    private Map<Fam, FriendGedcomEntity> matchedFams = null; 
+    
+    
     /**
      * Creates new form SharedGedcom
      */
     public SharedGedcom(Gedcom gedcom, boolean respectPrivacy) {
         super(gedcom.getName());
         this.gedcom = gedcom;
+        matchedIndis = new HashMap<Indi, FriendGedcomEntity>();
+        matchedFams = new HashMap<Fam, FriendGedcomEntity>();
+        
         ppi = new PrivacyPolicyImpl();
         popup = null;
+        
         gedcom.addGedcomListener(this);
         initComponents();
         setShared(false);
@@ -272,11 +285,11 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        showList((Map<?, FriendGedcomEntity>)matchedIndis);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        showList((Map<?, FriendGedcomEntity>)matchedFams);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -309,9 +322,11 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
             nbTotalFams = gedcom.getEntities(Gedcom.FAM).size();
             nbPublicIndis = getNbPublicEntities(Gedcom.INDI);
             nbPublicFams = getNbPublicEntities(Gedcom.FAM);
-            nbCommonIndis = 0; // TODO
-            nbCommonFams = 0; // TODO
         }
+        
+        nbCommonIndis = matchedIndis.size();
+        nbCommonFams = matchedFams.size();
+        
         
         // Display
         jLabel6.setText(""+nbTotalIndis);
@@ -320,6 +335,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         jLabel9.setText(jCheckBox1.isSelected() ? (jCheckBox2.isSelected() ? ""+nbPublicFams : ""+nbTotalFams) : "0");
         jButton1.setText(""+nbCommonIndis);
         jButton2.setText(""+nbCommonFams);
+        jButton1.setEnabled(matchedIndis.size() != 0);
+        jButton2.setEnabled(matchedFams.size() != 0);
+
     }
 
     public final void setShared(boolean shared) {
@@ -367,6 +385,18 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
     
     
+    public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity) {
+        if (entity instanceof Indi) {
+            matchedIndis.put((Indi) entity, friendGedcomEntity);
+            updateStats(false);
+            return;
+        }
+        if (entity instanceof Fam) {
+            matchedFams.put((Fam) entity, friendGedcomEntity);
+            updateStats(false);
+            return;
+        }
+    }
     
     
     
@@ -412,6 +442,13 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         }
         
         return true;
+    }
+
+    private void showList(Map<?, FriendGedcomEntity> list) {
+        DialogManager.create(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_CommonEntities"), 
+                new ListEntitiesPanel(getGedcom().getName(), 
+                NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllFriends"),  
+                list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
     }
 
 
