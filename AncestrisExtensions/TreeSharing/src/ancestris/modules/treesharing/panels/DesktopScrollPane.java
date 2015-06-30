@@ -156,7 +156,7 @@ public class DesktopScrollPane extends JScrollPane {
                     setViewport(view);
                 }
                 // resize the desktop
-                setDesktopSize(new Dimension(maxX - minX, maxY - minY));
+                setDesktopSize(new Dimension(maxX - minX, maxY - minY + 70));    // 70 to add the size of the bottom line of icons
                 setVisible(true); // update the viewport again
                 repaint();
                 desktopPane.revalidate();

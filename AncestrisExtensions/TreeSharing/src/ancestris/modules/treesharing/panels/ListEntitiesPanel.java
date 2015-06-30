@@ -13,6 +13,7 @@ package ancestris.modules.treesharing.panels;
 
 import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import genj.gedcom.Entity;
+import java.awt.Dimension;
 import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
@@ -23,19 +24,26 @@ import org.openide.util.NbBundle;
  */
 public class ListEntitiesPanel extends javax.swing.JPanel {
 
+    private Map<?, FriendGedcomEntity> map;
+    
     /**
      * Creates new form ListEntitiesPanel
      */
     public ListEntitiesPanel(String gedcomName, String friend, Map<?, FriendGedcomEntity> map) {
+        this.map = map;
         initComponents();
         jLabel3.setText(gedcomName);
         jLabel4.setText(friend);
-        jTable1.setModel(new MyTableModel(map));
         jTable1.setAutoCreateRowSorter(true);
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(320);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(130);
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(150);
         jTable1.getColumnModel().getColumn(3).setPreferredWidth(100);
+        jTable1.setFillsViewportHeight(true);
+        
+        Dimension preferredSize = jTable1.getPreferredSize();
+        preferredSize.height = map.size()*jTable1.getRowHeight();
+        jTable1.setPreferredSize(preferredSize);
 
     }
 
@@ -67,19 +75,11 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(ListEntitiesPanel.class, "ListEntitiesPanel.jLabel4.text")); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jTable1.setPreferredSize(new java.awt.Dimension(700, 64));
+        jTable1.setModel(new MyTableModel(map));
+        jTable1.setColumnSelectionAllowed(true);
+        jTable1.setPreferredSize(new java.awt.Dimension(300, 150));
         jScrollPane2.setViewportView(jTable1);
+        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

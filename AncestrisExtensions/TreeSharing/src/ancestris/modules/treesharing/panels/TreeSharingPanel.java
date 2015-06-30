@@ -31,6 +31,7 @@ public class TreeSharingPanel extends javax.swing.JPanel {
     public TreeSharingPanel() {
         initComponents();
         jDesktopPane.setLayout(null);
+        jScrollPane.getVerticalScrollBar().setUnitIncrement(12);
     }
 
     /**
