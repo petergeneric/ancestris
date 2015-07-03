@@ -24,9 +24,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.ImageIcon;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /**
@@ -37,7 +35,6 @@ public class SearchSharedTrees extends Thread {
     
     private final TreeSharingTopComponent owner;
     private volatile boolean stopRun;
-    private final ImageIcon ROTATING_ICON_PATH = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/rotating24.gif"));
 
     public SearchSharedTrees(TreeSharingTopComponent tstc) {
         this.owner = tstc;
@@ -47,7 +44,7 @@ public class SearchSharedTrees extends Thread {
     @Override
     public void run() {
         stopRun = false;
-        owner.setRotatingIcon(ROTATING_ICON_PATH, NbBundle.getMessage(SearchSharedTrees.class, "TIP_SearchInProgress"));
+        owner.setRotatingIcon(true);
         while (!stopRun) {
             getAllMatchingEntities(owner.getCommHandler(), owner.getSharedGedcoms(), owner.getAncestrisMembers());
         }
@@ -55,7 +52,7 @@ public class SearchSharedTrees extends Thread {
 
     public void stopGracefully() {
         stopRun = true;
-        owner.setRotatingIcon(null, null);
+        owner.setRotatingIcon(false);
     }
 
     /**
