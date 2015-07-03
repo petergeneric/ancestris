@@ -80,11 +80,11 @@ public class DesktopScrollPane extends JScrollPane {
             resizeDesktop();
         }
     }
-
+   
     /**
      * returns all internal frames placed upon the desktop
      *     
-* @return a JInternalFrame array containing references to the internal
+     * @return a JInternalFrame array containing references to the internal
      * frames
      */
     public JInternalFrame[] getAllFrames() {
@@ -156,7 +156,7 @@ public class DesktopScrollPane extends JScrollPane {
                     setViewport(view);
                 }
                 // resize the desktop
-                setDesktopSize(new Dimension(maxX - minX, maxY - minY + 70));    // 70 to add the size of the bottom line of icons
+                setDesktopSize(new Dimension(maxX - minX, maxY - minY));    // Add 70 if needs to add the size of the bottom line of icons, pb is that icons are always too low
                 setVisible(true); // update the viewport again
                 repaint();
                 desktopPane.revalidate();

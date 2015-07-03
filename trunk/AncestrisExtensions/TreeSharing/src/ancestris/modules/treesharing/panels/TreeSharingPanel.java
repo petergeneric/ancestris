@@ -14,6 +14,8 @@ package ancestris.modules.treesharing.panels;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.PropertyVetoException;
 import java.util.List;
 import javax.swing.JInternalFrame;
@@ -25,12 +27,14 @@ import org.openide.util.Exceptions;
  */
 public class TreeSharingPanel extends javax.swing.JPanel {
 
+    GraphicDesktopPane gDesktopPane;
+        
     /**
      * Creates new form TreeSharingPanel
      */
     public TreeSharingPanel() {
         initComponents();
-        jDesktopPane.setLayout(null);
+        gDesktopPane.setLayout(null);
         jScrollPane.getVerticalScrollBar().setUnitIncrement(12);
     }
 
@@ -43,9 +47,9 @@ public class TreeSharingPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.JDesktopPane previousDesktopPane = new javax.swing.JDesktopPane();
-        jScrollPane = new DesktopScrollPane(previousDesktopPane);
-        jDesktopPane = previousDesktopPane;
+        gDesktopPane = new GraphicDesktopPane();
+        jScrollPane = new DesktopScrollPane(gDesktopPane);
+        jDesktopPane = gDesktopPane;
 
         jDesktopPane.setToolTipText(org.openide.util.NbBundle.getMessage(TreeSharingPanel.class, "TreeSharingPanel.jDesktopPane.toolTipText")); // NOI18N
         jDesktopPane.setAutoscrolls(true);
@@ -89,22 +93,36 @@ public class TreeSharingPanel extends javax.swing.JPanel {
         int i = 0;
         for (Object o : frames) {
             JInternalFrame frame = (JInternalFrame) o;
-            Insets insets = jDesktopPane.getInsets();
+            Insets insets = gDesktopPane.getInsets();
             Dimension size = frame.getPreferredSize();
             if (add) {
-                jDesktopPane.add(frame);
-            }
+                gDesktopPane.add(frame);
+                frame.addComponentListener(new ComponentAdapter() {
+
+                    @Override
+                    public void componentMoved(ComponentEvent e) {
+                        gDesktopPane.repaint();
+                    }
+                });
+             }
             frame.setBounds(insets.left + leftSpace, insets.top + topSpace + i * (size.height + verticalSpace), size.width, size.height);
             i++;
         }
-        jDesktopPane.revalidate();
-        jDesktopPane.repaint();
+        gDesktopPane.revalidate();
+        gDesktopPane.repaint();
     }
     
     public void addFrame(JInternalFrame frame, Point point) {
-        jDesktopPane.add(frame);
+        gDesktopPane.add(frame);
+        frame.addComponentListener(new ComponentAdapter() {
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                gDesktopPane.repaint();
+            }
+        });
         frame.setVisible(true);
-        Insets insets = jDesktopPane.getInsets();
+        Insets insets = gDesktopPane.getInsets();
         Dimension size = frame.getPreferredSize();
         frame.setBounds(insets.left + point.x, insets.top + point.y, size.width, size.height);
         frame.moveToFront();
@@ -113,15 +131,20 @@ public class TreeSharingPanel extends javax.swing.JPanel {
         } catch (PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
         }
-        jDesktopPane.setSelectedFrame(frame);
-        jDesktopPane.revalidate();
-        jDesktopPane.repaint();
+        gDesktopPane.setSelectedFrame(frame);
+        gDesktopPane.revalidate();
+        gDesktopPane.repaint();
     }
 
     public void removeFrame(Object o) {
-        jDesktopPane.remove((JInternalFrame) o);
-        jDesktopPane.revalidate();
-        jDesktopPane.repaint();
+        gDesktopPane.remove((JInternalFrame) o);
+        gDesktopPane.revalidate();
+        gDesktopPane.repaint();
     }
+
+    public void linkFrames(Object o1, Object o2) {
+        gDesktopPane.addLink((JInternalFrame) o1, (JInternalFrame) o2);
+    }
+
     
 }

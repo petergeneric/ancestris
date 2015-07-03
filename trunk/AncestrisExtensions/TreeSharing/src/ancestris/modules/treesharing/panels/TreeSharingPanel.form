@@ -28,8 +28,8 @@
   <SubComponents>
     <Container class="javax.swing.JScrollPane" name="jScrollPane">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new DesktopScrollPane(previousDesktopPane)"/>
-        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="javax.swing.JDesktopPane previousDesktopPane = new javax.swing.JDesktopPane();"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new DesktopScrollPane(gDesktopPane)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="gDesktopPane = new GraphicDesktopPane();"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
@@ -42,7 +42,7 @@
             <Property name="autoscrolls" type="boolean" value="true"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="previousDesktopPane"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="gDesktopPane"/>
           </AuxValues>
 
           <Layout>
