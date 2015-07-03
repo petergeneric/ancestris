@@ -39,7 +39,19 @@ public class GraphicDesktopPane extends JDesktopPane {
     }
 
     public void addLink(JInternalFrame f1, JInternalFrame f2) {
-        listOfLinks.add(new Link(f1, f2));
+
+        // locate if link does not already exist
+        boolean found = false;
+        for (Link link : listOfLinks) {
+            if (link.f1 == f1 && link.f2 == f2) {
+                found = true;
+            }
+        }
+        
+        // if not found, create it
+        if (!found) {
+            listOfLinks.add(new Link(f1, f2));
+        }
     }
 
     

@@ -22,6 +22,7 @@ import ancestris.modules.treesharing.panels.GedcomFriendMatch;
 import ancestris.modules.treesharing.panels.MembersPopup;
 import ancestris.modules.treesharing.panels.PrivacyToggle;
 import ancestris.modules.treesharing.panels.RearrangeAction;
+import ancestris.modules.treesharing.panels.SearchAction;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import ancestris.modules.treesharing.panels.StartSharingAllToggle;
 import ancestris.modules.treesharing.panels.StopSharingAllToggle;
@@ -62,20 +63,20 @@ import org.openide.windows.TopComponent;
  * Get subtrees of other Ancestris friends which share common entities (INDI, FAM) with my own shared gedcom trees
  * 
  * Overall process, which might be split into visual steps from users:
- * - Identify the list of currently sharing friends from the ancestris server (crypted communication)
- * - Launch sequentially a 1-to-1 communications with each sharing Ancestris friend (crypted communication)
- * - Ask each member ancestris running program for the list of shared [gedcom x entities(INDI, FAM)] 
+ * X Identify the list of currently sharing friends from the ancestris server (crypted communication)
+ * X Launch sequentially a 1-to-1 communications with each sharing Ancestris friend (crypted communication)
+ * X Ask each member ancestris running program for the list of shared [gedcom x entities(INDI, FAM)] 
  *      / limited to owner's criteria (duration, selected members, privacy) 
  *      / one gedcom at a time, crypted and zipped
  *      / until all data collected on my ancestris
- * - Once data collected within my ancestris, without me knowing, compares all entities to all of mines,
+ * X Once data collected within my ancestris, without me knowing, compares all entities to all of mines,
  *      / on "Lastname" + "one firstname" + "birth or death date" for individuals and families 
- * - Flags all my entities which are found as matching across all shared gedcoms, and which ancestris member/gedcom/entityID it is matched to (pseudos and the matching entities list)
- * - Continue with each member
- * - Store permanently matching elements (crypted) and skip members and entities already matched (from crypted storage) (useful for performance reason)
- * - Notifies me of the existence of matches, but without revealing any data
- * - Notifies the identified members that I have identified common data with them
+ * X Flags all my entities which are found as matching across all shared gedcoms, and which ancestris member/gedcom/entityID it is matched to (pseudos and the matching entities list)
+ * X Continue with each member
+ * X Notifies me of the existence of matches, but without revealing any data
+ * X Notifies the identified members that I have identified common data with them
  * <pause>
+ * - Store permanently matching elements (crypted) and skip members and entities already matched (from crypted storage) (useful for performance reason)
  * - Requests authorisation to the identified friends 
  * - Once mutual agreement confirmed, asynchronously, provides each member (me and my matching mate) the matching entities list, the total number of entities
  * <pause>
@@ -84,14 +85,14 @@ import org.openide.windows.TopComponent;
  * - Upon agreement, communicate members one human contact detail (eg: email or tel)
  * 
  * Principle of security :
- *      1/ No data can be obtain without sharing one's own 
- *      2/ Data can only be obtained from matching entities in my trees => users can only get as much as they share !
- *      3/ Data remains crypted across the Internet
- *      4/ No gedcom data is stored on the ancestris centralised server : server only has members "access information" and public crypting key
- *      5/ Members do see connected members' pseudos (otherwise would not know when to run their search and would not be human!)
- *      5/ Ancestris friends do not get somebody else data without prior owner's authorisation
- *      6/ Only ancestris applications know who's who and manipulate the data until explicit authorisation from owners
- *      7/ Shared gedcom files have to be opened in Ancestris
+ *      1/ Shared gedcom files have to be opened in Ancestris
+ *      2/ No data can be obtain without sharing one's own 
+ *      3/ Data can only be obtained from matching entities in my trees => users can only get as much as they share !
+ *      4/ Data remains crypted across the Internet
+ *      5/ No gedcom data is stored on the ancestris centralised server : server only has members "access information" and public crypting key
+ *      6/ Members do see connected members' pseudos (otherwise would not know when to run their search and would not be human!)
+ *      7/ Ancestris friends do not get somebody else data without prior owner's authorisation
+ *      8/ Only ancestris applications know who's who and manipulate the data until explicit authorisation from owners
  *             
  * Principle of usage :
  *      1/ Make interaction as simple as possible : do not explicit all steps and unecessary ones, make it as automated as possible
@@ -124,7 +125,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private boolean shareAll = false;
     private StartSharingAllToggle startSharingToggle;
     private StopSharingAllToggle stopSharingToggle;
-    private JLabel rotating = null;
+    private SearchAction searchButton = null;
     private final int LEFT_OFFSET_GEDCOM = 10;
     private final int LEFT_OFFSET_MATCHES = 400;
     private final int LEFT_OFFSET_FRIENDS = 590;
@@ -235,8 +236,9 @@ public class TreeSharingTopComponent extends TopComponent {
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
         toolbar.addSeparator();
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
-        rotating = new JLabel(TOOLBAR_SPACE);
-        toolbar.add(rotating);
+        searchButton = new SearchAction(this);
+        searchButton.setOff();
+        toolbar.add(searchButton);
 
         toolbar.add(new Box.Filler(null, null, null), "growx, pushx, center");
 
@@ -457,6 +459,7 @@ public class TreeSharingTopComponent extends TopComponent {
         stopSharingToggle.setEnabled(true);
         stopSharingToggle.setToolTipText(true);
         dispatchShare(true);
+        searchButton.setOn();
         isBusy = false;
     }
 
@@ -470,6 +473,7 @@ public class TreeSharingTopComponent extends TopComponent {
         startSharingToggle.setEnabled(true);
         startSharingToggle.setToolTipText(true);
         dispatchShare(false);
+        searchButton.setOff();
         isBusy = false;
     }
 
@@ -553,7 +557,7 @@ public class TreeSharingTopComponent extends TopComponent {
         setTimer();
     }
 
-    private void launchSearchEngine() {
+    public void launchSearchEngine() {
         // Init thread (because cannot be launched twice)
         searchThread = new SearchSharedTrees(this);
         
@@ -565,10 +569,12 @@ public class TreeSharingTopComponent extends TopComponent {
         searchThread.stopGracefully();
     }
 
-    public void setRotatingIcon(ImageIcon icon, String toolTip) {
-        rotating.setIcon(icon);
-        rotating.setToolTipText(toolTip);
-        rotating.revalidate();
+    public void setRotatingIcon(boolean search) {
+        if (search) {
+            searchButton.setSearching();
+        } else {
+            searchButton.setOn();
+        }
     }
 
     public Comm getCommHandler() {
@@ -629,6 +635,7 @@ public class TreeSharingTopComponent extends TopComponent {
         AncestrisFriend friend = getFriend(memberEntity.getFriend());
         friend.addEntity(myEntity, memberEntity);
         desktopPanel.linkFrames(match, friend);
+
     }
 
     
