@@ -620,6 +620,7 @@ public class TreeSharingTopComponent extends TopComponent {
         // Update or Create matchFrame
         GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, memberEntity.getFriend());
         match.addEntity(myEntity, memberEntity);
+        desktopPanel.linkFrames(sharedGedcom, match);
         
         // Propagate update of sharedGedcom
         sharedGedcom.addEntity(myEntity, memberEntity);
@@ -627,6 +628,7 @@ public class TreeSharingTopComponent extends TopComponent {
         // Propagate update or creation of AncestrisFriend
         AncestrisFriend friend = getFriend(memberEntity.getFriend());
         friend.addEntity(myEntity, memberEntity);
+        desktopPanel.linkFrames(match, friend);
     }
 
     
