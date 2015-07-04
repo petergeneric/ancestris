@@ -166,10 +166,10 @@ public class SearchSharedTrees extends Thread {
             indi7.setName("Jacques Léon Paulin", "ROUQUETTE");
             indi8.setName("Georges", "SCHLUCK");
             indi9.setName("marie", "KAYE");
-            indi10.setName("Napoléon", "BONAPARTE");
-            indi11.setName("Napoléon", "BONAPARTE");
-            indi12.setName("Napoléon", "BONAPARTE");
-            indi13.setName("Napoléon", "BONAPARTE");
+            indi10.setName("Alexis", "GUILLOT");
+            indi11.setName("Victor Jean Marie Joseph", "de LEUZE");
+            indi12.setName("Valentine", "RENAUD");
+            indi13.setName("Marie Magdeleine Clothilde", "CHAVINIER");
             indi14.setName("Napoléon", "BONAPARTE");
 
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("François", "xxxx"), gedcom, indi1));
