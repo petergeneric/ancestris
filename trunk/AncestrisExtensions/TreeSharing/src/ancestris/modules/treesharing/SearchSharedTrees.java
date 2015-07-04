@@ -140,6 +140,7 @@ public class SearchSharedTrees extends Thread {
         List<FriendGedcomEntity> allShared = new LinkedList<FriendGedcomEntity>();
         
         Gedcom gedcom = new Gedcom();
+        gedcom.setName("other.ged");
         try {
             Indi indi1 = (Indi) gedcom.createEntity(Gedcom.INDI);
             Indi indi2 = (Indi) gedcom.createEntity(Gedcom.INDI);
