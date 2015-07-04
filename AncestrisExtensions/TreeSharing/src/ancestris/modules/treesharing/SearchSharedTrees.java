@@ -152,6 +152,10 @@ public class SearchSharedTrees extends Thread {
             Indi indi8 = (Indi) gedcom.createEntity(Gedcom.INDI);
             Indi indi9 = (Indi) gedcom.createEntity(Gedcom.INDI);
             Indi indi10 = (Indi) gedcom.createEntity(Gedcom.INDI);
+            Indi indi11 = (Indi) gedcom.createEntity(Gedcom.INDI);
+            Indi indi12 = (Indi) gedcom.createEntity(Gedcom.INDI);
+            Indi indi13 = (Indi) gedcom.createEntity(Gedcom.INDI);
+            Indi indi14 = (Indi) gedcom.createEntity(Gedcom.INDI);
 
             indi1.setName("Frédéric", "LAPEYRE");
             indi2.setName("Anne Marie Sophie", "LAPEYRE");
@@ -163,6 +167,10 @@ public class SearchSharedTrees extends Thread {
             indi8.setName("Georges", "SCHLUCK");
             indi9.setName("marie", "KAYE");
             indi10.setName("Napoléon", "BONAPARTE");
+            indi11.setName("Napoléon", "BONAPARTE");
+            indi12.setName("Napoléon", "BONAPARTE");
+            indi13.setName("Napoléon", "BONAPARTE");
+            indi14.setName("Napoléon", "BONAPARTE");
 
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("François", "xxxx"), gedcom, indi1));
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi2));
@@ -174,6 +182,10 @@ public class SearchSharedTrees extends Thread {
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("Valérie", "xxxx"), gedcom, indi8));
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi9));
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi10));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Frederic", "xxxx"), gedcom, indi11));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi12));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi13));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Raymond", "xxxx"), gedcom, indi14));
 
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
@@ -207,7 +219,10 @@ public class SearchSharedTrees extends Thread {
         if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.getFirstName().equals(collectedIndi.getFirstName())) {
             return false;
         }
-        return true;
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0])) {
+            return true;
+        }
+        return false;
         //return (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && myIndi.getBirthDate().compareTo(collectedIndi.getBirthDate()) == 0);
     }
 

@@ -20,7 +20,8 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     
     public static final String[] MATCHING_TYPES = new String[] { 
         NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match1"), 
-        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match2")
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match2"),
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match3")
     };
 
     TreeSharingOptionsPanel(TreeSharingOptionsPanelController controller) {
