@@ -518,6 +518,10 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     private void removeMatch(SharedGedcom sg) {
+        
+        if (gedcomFriendMatches == null || ancestrisFriends == null) {
+            return;
+        }
 
         List<GedcomFriendMatch> removedMatches = new LinkedList<GedcomFriendMatch>();
         
