@@ -19,6 +19,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -361,7 +362,7 @@ public class GedcomVersionConverter {
         }
         if (!list.isEmpty()) {
             try {
-                list.sort(null);            // somethimes users get java.lang.NoSuchMethodError: java.util.List.sort(Ljava/util/Comparator;)V
+                Collections.sort(list,null);            // somethimes users get java.lang.NoSuchMethodError: java.util.List.sort(Ljava/util/Comparator;)V
             } catch (NoSuchMethodError e) { // so I disconsider the exceptions here.
             }                     
         }
@@ -376,7 +377,7 @@ public class GedcomVersionConverter {
         for (Property prop : invalidPropsMultipleTags) {
             list.add(prop.getPath().toString() + " (" + prop.getEntity().getId() + ") - " + prop.getDisplayValue());
         }
-        list.sort(null);
+        Collections.sort(list,null);
         return list.toArray(new String[list.size()]);
     }
 
@@ -401,7 +402,7 @@ public class GedcomVersionConverter {
             }
             list.add(prop.getPath().toString() + " (" + prop.getEntity().getId() + ") - " + value + " : " + builder.toString());
         }
-        list.sort(null);
+        Collections.sort(list,null);
         return list.toArray(new String[list.size()]);
     }
 
