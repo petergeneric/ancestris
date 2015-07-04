@@ -35,10 +35,11 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         jLabel3.setText(gedcomName);
         jLabel4.setText(friend);
         jTable1.setAutoCreateRowSorter(true);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(320);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(130);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(150);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(100);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(320);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(130);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(100);
         jTable1.setFillsViewportHeight(true);
         
         Dimension preferredSize = jTable1.getPreferredSize();
@@ -133,6 +134,7 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
 
         Map<?, FriendGedcomEntity> map = null;
         String[] columnNames = { 
+            NbBundle.getMessage(MembersPopup.class, "COL_myGedcom"), 
             NbBundle.getMessage(MembersPopup.class, "COL_myEntity"), 
             NbBundle.getMessage(MembersPopup.class, "COL_FriendsEntity"),  
             NbBundle.getMessage(MembersPopup.class, "COL_FriendsGedcom"),
@@ -142,14 +144,15 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         
         private MyTableModel(Map<?, FriendGedcomEntity> map) {
             this.map = map;
-            data = new Object[map.size()][4];
+            data = new Object[map.size()][5];
             int i = 0;
             for (Object object : map.keySet()) {
                 Entity ent = (Entity) object;
-                data[i][0] = ent.toString();
-                data[i][1] = map.get(ent).getEntityId();
-                data[i][2] = map.get(ent).getGedcomName();
-                data[i][3] = map.get(ent).getName();
+                data[i][0] = ent.getGedcom().getName();
+                data[i][1] = ent.toString();
+                data[i][2] = map.get(ent).getEntityId();
+                data[i][3] = map.get(ent).getGedcomName();
+                data[i][4] = map.get(ent).getName();
                 i++;
             }
         }
