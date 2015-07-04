@@ -38,10 +38,8 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.Box;
@@ -142,8 +140,6 @@ public class TreeSharingTopComponent extends TopComponent {
     private List<AncestrisFriend> ancestrisFriends = null;          // iFrames : only members with entities in common
     private List<GedcomFriendMatch> gedcomFriendMatches = null;     // iFrames : matches between gedcoms and friends
 
-    private Map<Entity, FriendGedcomEntity> matchedEntities = null;  // see if we need to maintain that table... one entity could have many 
-    
     // Searching elements
     private SearchSharedTrees searchThread;
 
@@ -192,9 +188,6 @@ public class TreeSharingTopComponent extends TopComponent {
             initMainPanel();
 
             initSharedGedcoms();
-            
-            // Prepare data that will store all matching entities and the entities they are matched to
-            matchedEntities = new HashMap<Entity, FriendGedcomEntity>();
             
     }
         
@@ -508,13 +501,50 @@ public class TreeSharingTopComponent extends TopComponent {
         }
         for (SharedGedcom sg : sharedGedcoms) {
             if (sg.getGedcom() == gedcom) {
-                desktopPanel.removeFrame(sg);
-                sharedGedcoms.remove(sg);
+                // Remove gedcom from desktop and list
+                removeGedcom(sg);
+                // Remove matches related to gedcom from desktop and list
+                removeMatch(sg);
                 break;
             }
         }
     }
 
+    
+    private void removeGedcom(SharedGedcom sg) {
+        desktopPanel.removeFrame(sg);
+        desktopPanel.removeLink(sg);
+        sharedGedcoms.remove(sg);
+    }
+
+    private void removeMatch(SharedGedcom sg) {
+
+        List<GedcomFriendMatch> removedMatches = new LinkedList<GedcomFriendMatch>();
+        
+        for (GedcomFriendMatch match : gedcomFriendMatches) {
+            if (match.getSharedGedcom() == sg) {
+                removedMatches.add(match);
+            }
+        }
+
+        for (GedcomFriendMatch match : removedMatches) {
+            AncestrisFriend friend = match.getFriend();
+            desktopPanel.removeFrame(match);
+            desktopPanel.removeLink(match);
+            gedcomFriendMatches.remove(match);
+            friend.removeGedcom(sg);
+            if (friend.isEmpty()) {
+                desktopPanel.removeFrame(friend);
+                desktopPanel.removeLink(friend);
+                ancestrisFriends.remove(friend);
+            }
+        }
+    
+    }
+
+    
+    
+    
     private Point findLocation(int size, int offset, int height) {
         return new Point(offset, TOP_OFFSET + size * (height + VERTICAL_SPACE));
     }
@@ -618,22 +648,21 @@ public class TreeSharingTopComponent extends TopComponent {
         return providedEntities;
     }
 
-    void createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String entityType) {
+    public void createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String entityType) {
 
-        // Store match
-        //matchedEntities.put(myEntity, memberEntity);
-        
-        // Update or Create matchFrame
-        GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, memberEntity.getFriend());
-        match.addEntity(myEntity, memberEntity);
-        desktopPanel.linkFrames(sharedGedcom, match);
-        
-        // Propagate update of sharedGedcom
-        sharedGedcom.addEntity(myEntity, memberEntity);
-                
-        // Propagate update or creation of AncestrisFriend
+        // Update or Create AncestrisFriend
         AncestrisFriend friend = getFriend(memberEntity.getFriend());
+        
+        // Update or Create MatchFrame
+        GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, friend);
+        
+        // Propagate updates
+        sharedGedcom.addEntity(myEntity, memberEntity);
+        match.addEntity(myEntity, memberEntity);
         friend.addEntity(myEntity, memberEntity);
+
+        // Create links
+        desktopPanel.linkFrames(sharedGedcom, match);
         desktopPanel.linkFrames(match, friend);
 
     }
@@ -698,5 +727,4 @@ public class TreeSharingTopComponent extends TopComponent {
         return friend;
     }
 
-    
 }

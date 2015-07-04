@@ -15,8 +15,12 @@ import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JInternalFrame;
 import org.openide.util.NbBundle;
@@ -218,6 +222,35 @@ public class AncestrisFriend extends JInternalFrame {
                 new ListEntitiesPanel(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllGedcoms"),  
                 name, 
                 list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+    }
+
+    public void removeGedcom(SharedGedcom sg) {
+        
+        List<Indi> indisToRemove = new LinkedList<Indi>();
+        List<Fam> famsToRemove = new LinkedList<Fam>();
+        
+        Gedcom gedcom = sg.getGedcom();
+        for (Entity entity : matchedIndis.keySet()) {
+            if (entity.getGedcom() == gedcom) {
+                if (entity instanceof Indi) {
+                    indisToRemove.add((Indi)entity);
+                }
+                if (entity instanceof Fam) {
+                    famsToRemove.add((Fam)entity);
+                }
+            }
+        }
+        
+        for (Indi indi : indisToRemove) {
+            matchedIndis.remove(indi);
+        }
+        for (Fam fam : famsToRemove) {
+            matchedFams.remove(fam);
+        }
+    }
+
+    public boolean isEmpty() {
+        return matchedIndis.isEmpty() && matchedFams.isEmpty();
     }
 
 
