@@ -146,5 +146,11 @@ public class TreeSharingPanel extends javax.swing.JPanel {
         gDesktopPane.addLink((JInternalFrame) o1, (JInternalFrame) o2);
     }
 
+    public void removeLink(Object o) {
+        gDesktopPane.removeLink((JInternalFrame) o);
+        gDesktopPane.revalidate();
+        gDesktopPane.repaint();
+    }
+
     
 }

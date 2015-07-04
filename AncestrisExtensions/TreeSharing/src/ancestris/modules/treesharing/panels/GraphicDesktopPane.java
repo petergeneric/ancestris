@@ -76,6 +76,17 @@ public class GraphicDesktopPane extends JDesktopPane {
         }
     }
 
+    public void removeLink(JInternalFrame f) {
+        List<Link> linksToRemove = new LinkedList<Link>();
+        
+        for (Link link : listOfLinks) {
+            if (link.f1 == f || link.f2 == f) {
+                linksToRemove.add(link);
+            }
+        }
+        listOfLinks.removeAll(linksToRemove);
+    }
+
     private class Link {
         public JInternalFrame f1;
         public JInternalFrame f2;

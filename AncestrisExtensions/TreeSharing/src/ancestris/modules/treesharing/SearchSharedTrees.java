@@ -160,7 +160,7 @@ public class SearchSharedTrees extends Thread {
             indi6.setName("Elisabeth Victoire", "ROBERT");
             indi7.setName("Jacques Léon Paulin", "ROUQUETTE");
             indi8.setName("Georges", "SCHLUCK");
-            indi9.setName("André", "MALRAUX");
+            indi9.setName("marie", "KAYE");
             indi10.setName("Napoléon", "BONAPARTE");
 
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("François", "xxxx"), gedcom, indi1));
@@ -171,7 +171,7 @@ public class SearchSharedTrees extends Thread {
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi6));
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("Dominique", "xxxx"), gedcom, indi7));
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("Valérie", "xxxx"), gedcom, indi8));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi9));
+            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi9));
             allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi10));
 
         } catch (GedcomException ex) {
