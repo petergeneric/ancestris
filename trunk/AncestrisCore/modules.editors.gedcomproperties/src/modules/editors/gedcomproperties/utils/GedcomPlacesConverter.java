@@ -17,6 +17,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.ReferenceSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -127,7 +128,7 @@ public class GedcomPlacesConverter {
         if (listOfIncorrectPlaces == null) {
             return null;
         }
-        listOfIncorrectPlaces.sort(null);
+        Collections.sort(listOfIncorrectPlaces,null);
         return listOfIncorrectPlaces.toArray(new String[listOfIncorrectPlaces.size()]);
     }
     
