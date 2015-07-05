@@ -406,7 +406,10 @@ public class TreeSharingTopComponent extends TopComponent {
 
         // Register on the ancestris server that I am a sharing friend. Remember pseudo that is used
         commPseudo = getPreferredPseudo();
-        commHandler.registerMe(commPseudo, getPreferredAccess());
+        if (!commHandler.registerMe(commPseudo, getPreferredAccess())) {
+          stopSharingAll();
+          return false;
+        };
 
         // Open the sharing locally
         shareAll = true;
@@ -600,7 +603,9 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     private void stopSearchEngine() {
-        searchThread.stopGracefully();
+        if (searchThread != null) {
+            searchThread.stopGracefully();
+        }
     }
 
     public void setRotatingIcon(boolean search) {
