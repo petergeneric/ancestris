@@ -342,10 +342,6 @@ public class TreeSharingTopComponent extends TopComponent {
         return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Pseudo", "");
     }
 
-    private String getPreferredAccess() {
-        return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Access", "");
-    }
-
     
     // Privacy management
     
@@ -406,7 +402,7 @@ public class TreeSharingTopComponent extends TopComponent {
 
         // Register on the ancestris server that I am a sharing friend. Remember pseudo that is used
         commPseudo = getPreferredPseudo();
-        if (!commHandler.registerMe(commPseudo, getPreferredAccess())) {
+        if (!commHandler.registerMe(commPseudo)) {
           stopSharingAll();
           return false;
         };
@@ -651,7 +647,7 @@ public class TreeSharingTopComponent extends TopComponent {
         // Build return list
         List<FriendGedcomEntity> providedEntities = new LinkedList<FriendGedcomEntity>();
         for (Entity entity : sharedEntities) {
-            providedEntities.add(new FriendGedcomEntity(new AncestrisFriend(commPseudo, getPreferredAccess()), entity.getGedcom(), entity));
+            providedEntities.add(new FriendGedcomEntity(new AncestrisFriend(commPseudo, ""), entity.getGedcom(), entity));
         }
         
         return providedEntities;
