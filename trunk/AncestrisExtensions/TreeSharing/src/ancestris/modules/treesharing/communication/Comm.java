@@ -28,6 +28,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.w3c.dom.DOMException;
@@ -38,14 +39,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+
 /**
  *
  * @author frederic
  */
 public class Comm {
 
-    private static String COMM_SERVER = "http://www.lapeyre-frederic.com/sharingmembers/";
-    private static String COMM_CREDENTIALS = "user=lapeyre_smanc&pw=GtresF789et";
+    private static String COMM_SERVER = "http://share.ancestris.org/"; 
+    private static String COMM_CREDENTIALS = "user=ancestrishare&pw=2fQB";
     private int COMM_PORT = 4584;
 
     private volatile boolean stopRun;
@@ -62,16 +64,15 @@ public class Comm {
      * Register on Ancestris server that I am ready to share 
      * 
      * @param myName
-     * @param myAccess
      * @return 
      */
-    public boolean registerMe(String myName, String myAccess) {
+    public boolean registerMe(String myName) {
 
         String myIPAddress = "default";
         String duplicateError = "duplicate entry";
         String timestamp = new Timestamp(new java.util.Date().getTime()).toString().replace(" ", "_");
 
-        String outputString = getQueryResult(COMM_SERVER + "register_member.php?" + COMM_CREDENTIALS + "&pseudo=" + myName + "&access=" + myIPAddress + "&comment=" + timestamp);
+        String outputString = getQueryResult(COMM_SERVER + "register_member.php?" + COMM_CREDENTIALS + "&pseudo=" + myName + "&ipaddress=" + myIPAddress + "&timestamp=" + timestamp);
 
         if (!outputString.trim().isEmpty()) {
             String errorMsg = "";
@@ -121,7 +122,7 @@ public class Comm {
         try {
             String xmlTagMember = "member";
             String xmlTagPseudo = "pseudo";
-            String xmlTagAccess = "access";
+            String xmlTagAccess = "ipaddress";
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             InputSource is = new InputSource(new StringReader(outputString));
@@ -133,9 +134,9 @@ public class Comm {
                 Node node = nodeList.item(temp);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element member = (Element) node;
-                    String pseudo = member.getElementsByTagName(xmlTagPseudo).item(0).getTextContent();
-                    String access = member.getElementsByTagName(xmlTagAccess).item(0).getTextContent();
-                    ancestrisMembers.add(new AncestrisMember(pseudo, access));
+                    String pseudo = StringEscapeUtils.unescapeHtml(member.getElementsByTagName(xmlTagPseudo).item(0).getTextContent()); 
+                    String ipaddress = member.getElementsByTagName(xmlTagAccess).item(0).getTextContent();
+                    ancestrisMembers.add(new AncestrisMember(pseudo, ipaddress));
                 }
             }
             
@@ -150,23 +151,23 @@ public class Comm {
         }
                 
         // Collect list of Ancestris friends (registered name and access)
-        ancestrisMembers.add(new AncestrisMember("François", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Daniel", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Yannick", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Dominique", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Valérie", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Jeannot", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("FrançoiS", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Ben", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Patrice", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Monique", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Frédéric", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Rodolphe", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Agnès", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Eric", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Mathilde", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Christophe", "xxxx"));
-        ancestrisMembers.add(new AncestrisMember("Guillemette", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("François", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Daniel", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Yannick", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Dominique", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Valérie", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Jeannot", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("FrançoiS", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Ben", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Patrice", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Monique", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Frédéric", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Rodolphe", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Agnès", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Eric", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Mathilde", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Christophe", "xxxx"));
+//        ancestrisMembers.add(new AncestrisMember("Guillemette", "xxxx"));
         
         // Return list
         return ancestrisMembers;

@@ -136,6 +136,9 @@ public class SearchSharedTrees extends Thread {
     private List<FriendGedcomEntity> getSharedEntitiesFromMember(AncestrisMember member) {
         
         
+        // Connect to member
+        
+
         // dummy code for now, until communication gets done
         List<FriendGedcomEntity> allShared = new LinkedList<FriendGedcomEntity>();
         
