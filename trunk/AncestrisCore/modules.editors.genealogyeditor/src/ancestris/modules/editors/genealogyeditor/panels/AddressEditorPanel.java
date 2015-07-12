@@ -383,6 +383,10 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         mAddress = address;
         mRoot = root;
         changeListner.mute();
+/**
+ * This part makes CPU explode !!!
+ * FIXME later
+ * 
         AutoCompleteDecorator.decorate((javax.swing.JTextField) cityTextField, mRoot.getGedcom().getReferenceSet("CITY").getKeys(), false);
         InputMap map = cityTextField.getInputMap();
         map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
@@ -398,6 +402,10 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         AutoCompleteDecorator.decorate((javax.swing.JTextField) countryTextField, mRoot.getGedcom().getReferenceSet("CTRY").getKeys(), false);
         map = countryTextField.getInputMap();
         map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
+
+***** End of the part that make the CPU explode
+*/        
+        
 
 //        CardLayout cardLayout = (CardLayout) (addressPanel.getLayout());
         if (mAddress != null) {
