@@ -151,6 +151,7 @@ public class Comm {
         }
                 
         // Collect list of Ancestris friends (registered name and access)
+        
 //        ancestrisMembers.add(new AncestrisMember("François", "xxxx"));
 //        ancestrisMembers.add(new AncestrisMember("Daniel", "xxxx"));
 //        ancestrisMembers.add(new AncestrisMember("Yannick", "xxxx"));

@@ -156,12 +156,19 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
 
         @Override
         public Object getValueAt(int row, int col) {
+            if (data.length == 0) {
+                return null;
+            }
             return data[row][col];
         }
 
         @Override
         public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();       }
+            if (data.length == 0) {
+                return String.class;
+            }
+            return getValueAt(0, c).getClass();
+        }
 
         @Override
         public boolean isCellEditable(int row, int col) {
