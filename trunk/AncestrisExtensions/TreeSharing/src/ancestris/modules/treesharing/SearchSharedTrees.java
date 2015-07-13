@@ -72,8 +72,8 @@ public class SearchSharedTrees extends Thread {
         // Loop on all members
         for (AncestrisMember member : ancestrisMembers) {
             
-            // Skip if member not allowed
-            if (!member.isAllowed()) {
+            // Skip if member not allowed or if it is myself
+            if (!member.isAllowed() || member.getMemberName().equals(owner.getPreferredPseudo())) {
                 continue;
             }
             
