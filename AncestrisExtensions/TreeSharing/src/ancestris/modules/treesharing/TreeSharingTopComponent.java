@@ -40,6 +40,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -205,13 +206,14 @@ public class TreeSharingTopComponent extends TopComponent {
         // Add toolbar elements
         
         // - Dropbox on all connected friends
-        MembersPopup membersList = new MembersPopup(this, ancestrisMembers);
+        final MembersPopup membersList = new MembersPopup(this, ancestrisMembers);
         JButton members = createDropDownButton(new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend24.png")), membersList);
         members.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersList"));
         members.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 initAncestrisMembers();
+                membersList.updateTable(ancestrisMembers);
             }
         });
         toolbar.add(members);
@@ -313,10 +315,21 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     private void initAncestrisMembers() {
+        List<AncestrisMember> tempList = commHandler.getAncestrisMembers();
+
         if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
+            for (AncestrisMember tempItem : tempList) {
+                for (AncestrisMember member : ancestrisMembers) {
+                    if (tempItem.getMemberName().equals(member.getMemberName())) {
+                        tempItem.setAllowed(member.isAllowed());
+                        continue;
+                    }
+                }
+            }
             ancestrisMembers.clear();
         }
-        ancestrisMembers = commHandler.getAncestrisMembers();
+        
+        ancestrisMembers = tempList;
     }
     
     private void initSharedGedcoms() {

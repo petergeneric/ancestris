@@ -43,6 +43,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
     private final ImageIcon ALLOWED_ICON  = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/allowed.png"));
     private final ImageIcon MEMBER_ICON = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend16.png"));
     
+    private JTable table = null;
     
     /**
      * Creates new form MembersPopup
@@ -50,10 +51,15 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
     public MembersPopup(TreeSharingTopComponent tstc, List<AncestrisMember> ancestrisMembers) {
         this.owner = tstc;
         initComponents();
+        table = new JTable();
+        initTable(ancestrisMembers);
+    }
+
+    private void initTable(List<AncestrisMember> ancestrisMembers) {
         
         // Set Table
         setLayout(new BorderLayout());
-        JTable table = new JTable(new MyTableModel(ancestrisMembers));
+        table.setModel(new MyTableModel(ancestrisMembers));
         
         // Sortable columns
         table.setAutoCreateRowSorter(true);
@@ -91,8 +97,12 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         Dimension preferredSize = table.getPreferredSize();
         preferredSize.width += 30;
         preferredSize.height = table.getRowHeight()*15;
-        //preferredSize.height += 30; // if all is to be displayed
         table.setPreferredScrollableViewportSize(preferredSize);
+    }
+
+    public void updateTable(List<AncestrisMember> ancestrisMembers) {
+        this.removeAll();
+        initTable(ancestrisMembers);
     }
 
     /**
