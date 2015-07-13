@@ -350,7 +350,7 @@ public class Comm {
         } catch (EOFException eofException) {
         } catch (SocketTimeoutException stex) {
             LOG.log(Level.INFO, "...Socket timeout");
-            return null;
+            return list;
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (ClassNotFoundException ex) {
