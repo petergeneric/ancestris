@@ -37,6 +37,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -206,6 +208,12 @@ public class TreeSharingTopComponent extends TopComponent {
         MembersPopup membersList = new MembersPopup(this, ancestrisMembers);
         JButton members = createDropDownButton(new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend24.png")), membersList);
         members.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersList"));
+        members.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                initAncestrisMembers();
+            }
+        });
         toolbar.add(members);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
 
@@ -301,10 +309,13 @@ public class TreeSharingTopComponent extends TopComponent {
     
     
     private void initCommunication() {
-        commHandler = new Comm();
+        commHandler = new Comm(this);
     }
 
     private void initAncestrisMembers() {
+        if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
+            ancestrisMembers.clear();
+        }
         ancestrisMembers = commHandler.getAncestrisMembers();
     }
     
@@ -337,8 +348,7 @@ public class TreeSharingTopComponent extends TopComponent {
     
 
     // Connexion preferences
-    
-    private String getPreferredPseudo() {
+    public String getPreferredPseudo() {
         return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Pseudo", "");
     }
 
@@ -625,18 +635,25 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
 
-    /**
-     * In case I am sharing my gedcoms and get called by an allowed member, I will return my shared entities
-     * 
-     * @param member
-     * @return 
-     */
-    public List<FriendGedcomEntity> provideMySharedEntitiesToMember(AncestrisMember member) {
-        
+    public boolean isAllowedMember(String memberName) {
+        boolean found = false;
+
         // Check if member is in allowed list
-        if (!member.isAllowed()) {
-                return null;
+        for (AncestrisMember member : ancestrisMembers) {
+            if (member.getMemberName().equals(memberName)) {
+                found = true;
+                if (!member.isAllowed()) {
+                    return false;
+                } else {
+                    break; // member found and allowed
+                }
             }
+        }
+
+        return found;
+    }
+    
+    public List<FriendGedcomEntity> getMySharedEntities() {
         
         // Get all shared entities for all gedcoms
         List<Entity> sharedEntities = new LinkedList<Entity>();
@@ -647,16 +664,19 @@ public class TreeSharingTopComponent extends TopComponent {
         // Build return list
         List<FriendGedcomEntity> providedEntities = new LinkedList<FriendGedcomEntity>();
         for (Entity entity : sharedEntities) {
-            providedEntities.add(new FriendGedcomEntity(new AncestrisFriend(commPseudo, ""), entity.getGedcom(), entity));
+            providedEntities.add(new FriendGedcomEntity(commPseudo, entity.getGedcom(), entity));
         }
         
         return providedEntities;
     }
 
-    public void createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String entityType) {
+    
+    
+    
+    public void createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String access, String entityType) {
 
         // Update or Create AncestrisFriend
-        AncestrisFriend friend = getFriend(memberEntity.getFriend());
+        AncestrisFriend friend = getFriend(memberEntity.friend, access);
         
         // Update or Create MatchFrame
         GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, friend);
@@ -703,7 +723,7 @@ public class TreeSharingTopComponent extends TopComponent {
         return match;
     }
 
-    private AncestrisFriend getFriend(AncestrisFriend foundFriend) {
+    private AncestrisFriend getFriend(String foundFriend, String access) {
 
         AncestrisFriend friend = null;
         
@@ -715,7 +735,7 @@ public class TreeSharingTopComponent extends TopComponent {
         // If list of matches not empty, try to find match
         if (!ancestrisFriends.isEmpty()) {
             for (AncestrisFriend f : ancestrisFriends) {
-                if (f.getFriendName().equals(foundFriend.getFriendName())) {
+                if (f.getFriendName().equals(foundFriend)) {
                     friend = f;
                     break;
                 }
@@ -724,7 +744,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // If match still null, then create it
         if (friend == null) {
-            friend = new AncestrisFriend(foundFriend.getFriendName(), foundFriend.getAccess());
+            friend = new AncestrisFriend(foundFriend, access);
             desktopPanel.addFrame(friend, findLocation(ancestrisFriends.size(), LEFT_OFFSET_FRIENDS, friend.getPreferredSize().height));
             ancestrisFriends.add(friend);
         }

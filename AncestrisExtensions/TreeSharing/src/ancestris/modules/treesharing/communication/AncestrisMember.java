@@ -32,8 +32,12 @@ public class AncestrisMember {
     }
     
 
-    public String getName() {
+    public String getMemberName() {
         return name;
+    }
+
+    public String getAccess() {
+        return access;
     }
 
     public boolean isAllowed() {

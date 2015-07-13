@@ -84,6 +84,9 @@ public class SearchSharedTrees extends Thread {
             
             // Get all shared entities from member for all its shared gedcoms at the same time
             List<FriendGedcomEntity> memberEntities = getSharedEntitiesFromMember(member);
+            if (memberEntities.isEmpty()) {
+                continue;
+            }
             
             // Loop on each of *my* shared gedcoms
             for (SharedGedcom sharedGedcom : sharedGedcoms) {
@@ -98,20 +101,18 @@ public class SearchSharedTrees extends Thread {
                     for (FriendGedcomEntity memberEntity : memberEntities) {
                         if ((myEntity instanceof Indi) && (memberEntity.isIndi())) {
                             Indi myIndi = (Indi) myEntity;
-                            Indi memberIndi = memberEntity.getIndi();
                             // same individual
-                            if (isSameIndividual(myIndi, memberIndi, matchType)) { // we have a match
-                                owner.createMatch(sharedGedcom, myEntity, memberEntity, Gedcom.INDI);
+                            if (isSameIndividual(myIndi, memberEntity, matchType)) { // we have a match
+                                owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getAccess(), Gedcom.INDI);
                             }
                             continue;
                         }
 
                         if ((myEntity instanceof Fam) && (memberEntity.isFam())) {
                             Fam myFam = (Fam) myEntity;
-                            Fam memberFam = memberEntity.getFam();
                             // same husband and same wife ?
-                            if (isSameIndividual(myFam.getHusband(), memberFam.getHusband(), matchType) && (isSameIndividual(myFam.getWife(), memberFam.getWife(), matchType))) { // we have a match
-                                owner.createMatch(sharedGedcom, myEntity, memberEntity, Gedcom.FAM);
+                            if (isSameFamily(myFam, memberEntity, matchType)) { // we have a match
+                                owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getAccess(), Gedcom.FAM);
                             }
                         }
                     } // endfor memberEntities
@@ -135,74 +136,70 @@ public class SearchSharedTrees extends Thread {
      */
     private List<FriendGedcomEntity> getSharedEntitiesFromMember(AncestrisMember member) {
         
-        
-        // Connect to member
-        
+        // Prepare response
+        return owner.getCommHandler().call(member);
 
-        // dummy code for now, until communication gets done
-        List<FriendGedcomEntity> allShared = new LinkedList<FriendGedcomEntity>();
-        
-        Gedcom gedcom = new Gedcom();
-        gedcom.setName("other.ged");
-        try {
-            Indi indi1 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi2 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi3 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi4 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi5 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi6 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi7 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi8 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi9 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi10 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi11 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi12 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi13 = (Indi) gedcom.createEntity(Gedcom.INDI);
-            Indi indi14 = (Indi) gedcom.createEntity(Gedcom.INDI);
-
-            indi1.setName("Frédéric", "LAPEYRE");
-            indi2.setName("Anne Marie Sophie", "LAPEYRE");
-            indi3.setName("Marie Anne Rosalie", "TROUILLET");
-            indi4.setName("Jean Georges", "RAUCH");
-            indi5.setName("François Henri", "RIOU");
-            indi6.setName("Elisabeth Victoire", "ROBERT");
-            indi7.setName("Jacques Léon Paulin", "ROUQUETTE");
-            indi8.setName("Georges", "SCHLUCK");
-            indi9.setName("marie", "KAYE");
-            indi10.setName("Alexis", "GUILLOT");
-            indi11.setName("Victor Jean Marie Joseph", "de LEUZE");
-            indi12.setName("Valentine", "RENAUD");
-            indi13.setName("Marie Magdeleine Clothilde", "CHAVINIER");
-            indi14.setName("Napoléon", "BONAPARTE");
-
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("François", "xxxx"), gedcom, indi1));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi2));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi3));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi4));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi5));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi6));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Dominique", "xxxx"), gedcom, indi7));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Valérie", "xxxx"), gedcom, indi8));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi9));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi10));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Frederic", "xxxx"), gedcom, indi11));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi12));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi13));
-            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Raymond", "xxxx"), gedcom, indi14));
-
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        // Dummy code to test : Extract entities related to member only (as if I had found them through the communication to that member)
-        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
-        for (FriendGedcomEntity element : allShared) {
-            if (element.getName().equals(member.getName())) {
-                ret.add(element);
-            }
-        }
-        
-        return ret;
+//        Gedcom gedcom = new Gedcom();
+//        gedcom.setName("other.ged");
+//        try {
+//            Indi indi1 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi2 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi3 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi4 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi5 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi6 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi7 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi8 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi9 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi10 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi11 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi12 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi13 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//            Indi indi14 = (Indi) gedcom.createEntity(Gedcom.INDI);
+//
+//            indi1.setName("Frédéric", "LAPEYRE");
+//            indi2.setName("Anne Marie Sophie", "LAPEYRE");
+//            indi3.setName("Marie Anne Rosalie", "TROUILLET");
+//            indi4.setName("Jean Georges", "RAUCH");
+//            indi5.setName("François Henri", "RIOU");
+//            indi6.setName("Elisabeth Victoire", "ROBERT");
+//            indi7.setName("Jacques Léon Paulin", "ROUQUETTE");
+//            indi8.setName("Georges", "SCHLUCK");
+//            indi9.setName("marie", "KAYE");
+//            indi10.setName("Alexis", "GUILLOT");
+//            indi11.setName("Victor Jean Marie Joseph", "de LEUZE");
+//            indi12.setName("Valentine", "RENAUD");
+//            indi13.setName("Marie Magdeleine Clothilde", "CHAVINIER");
+//            indi14.setName("Napoléon", "BONAPARTE");
+//
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("François", "xxxx"), gedcom, indi1));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi2));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi3));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi4));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi5));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi6));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Dominique", "xxxx"), gedcom, indi7));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Valérie", "xxxx"), gedcom, indi8));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi9));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi10));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Frederic", "xxxx"), gedcom, indi11));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi12));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi13));
+//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Raymond", "xxxx"), gedcom, indi14));
+//
+//        } catch (GedcomException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//
+//        // Dummy code to test : Extract entities related to member only (as if I had found them through the communication to that member)
+//        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
+//        for (FriendGedcomEntity element : allShared) {
+//            if (element.getName().equals(member.getMemberName())) {
+//                ret.add(element);
+//            }
+//        }
+//        
+//        return ret;
     }
 
     
@@ -215,18 +212,38 @@ public class SearchSharedTrees extends Thread {
      * @param exactMatch
      * @return 
      */
-    private boolean isSameIndividual(Indi myIndi, Indi collectedIndi, String matchType) {
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.getLastName().equals(collectedIndi.getLastName())) {
+    private boolean isSameIndividual(Indi myIndi, FriendGedcomEntity friendIndi, String matchType) {
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.getLastName().equals(friendIndi.indiLastName)) {
             return false;
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.getFirstName().equals(collectedIndi.getFirstName())) {
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.getFirstName().equals(friendIndi.indiFirstName)) {
             return false;
         }
         if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0])) {
             return true;
         }
         return false;
-        //return (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && myIndi.getBirthDate().compareTo(collectedIndi.getBirthDate()) == 0);
+    }
+
+    private boolean isSameFamily(Fam myFamily, FriendGedcomEntity friendFam, String matchType) {
+        Indi husband = myFamily.getHusband();
+        Indi wife = myFamily.getWife();
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && husband != null && !husband.getLastName().equals(friendFam.husbLastName)) {
+            return false;
+        }
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && husband != null && !husband.getFirstName().equals(friendFam.husbFirstName)) {
+            return false;
+        }
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && wife != null && !wife.getLastName().equals(friendFam.wifeLastName)) {
+            return false;
+        }
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && wife != null && !wife.getFirstName().equals(friendFam.wifeFirstName)) {
+            return false;
+        }
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0])) {
+            return true;
+        }
+        return false;
     }
 
     

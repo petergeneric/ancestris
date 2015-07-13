@@ -134,7 +134,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
             int i = 0;
             for (AncestrisMember member : ancestrisMembers) {
                 data[i][0] = member.isAllowed();
-                data[i][1] = member.getName();
+                data[i][1] = member.getMemberName();
                 i++;
             }
         }
@@ -184,7 +184,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         public AncestrisMember getAncestrisMember(int row) {
             for (AncestrisMember member : ancestrisMembers) {
                 String name = (String) getValueAt(row, 1);
-                if (member.getName().equals(name)) {
+                if (member.getMemberName().equals(name)) {
                     return member;
                 }
             }

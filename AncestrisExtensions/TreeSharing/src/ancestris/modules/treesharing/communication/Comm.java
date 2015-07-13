@@ -12,19 +12,28 @@
 
 package ancestris.modules.treesharing.communication;
 
+import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.util.swing.DialogManager;
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,18 +55,22 @@ import org.xml.sax.SAXException;
  */
 public class Comm {
 
+    private TreeSharingTopComponent owner;
+    
+    private final static Logger LOG = Logger.getLogger("ancestris.modules.treesharing.communication");
+
     private static String COMM_SERVER = "http://share.ancestris.org/"; 
     private static String COMM_CREDENTIALS = "user=ancestrishare&pw=2fQB";
     private int COMM_PORT = 4584;
-
+    private int COMM_TIMEOUT = 1000; // One second
     private volatile boolean stopRun;
     private Thread listeningThread;
-    
+
     /**
      * Constructor
      */
-    public void Comm() {
-        
+    public Comm(TreeSharingTopComponent tstc) {
+        this.owner = tstc;
     }
     
     /**
@@ -84,7 +97,7 @@ public class Comm {
             DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Registration"), errorMsg).setMessageType(DialogManager.ERROR_MESSAGE).show();
             return false;
         }
-         
+        LOG.log(Level.INFO, "Registered " + myName + " on the Ancestris server.");
         return true;
     }
     
@@ -103,7 +116,7 @@ public class Comm {
             DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), outputString).setMessageType(DialogManager.ERROR_MESSAGE).show();
             return false;
         }
-        
+        LOG.log(Level.INFO, "Unregistered " + myName + " from the Ancestris server.");
         return true;
     }
     
@@ -152,7 +165,7 @@ public class Comm {
                 
         // Collect list of Ancestris friends (registered name and access)
         
-//        ancestrisMembers.add(new AncestrisMember("François", "xxxx"));
+        ancestrisMembers.add(new AncestrisMember("Tester", "93.0.227.55"));
 //        ancestrisMembers.add(new AncestrisMember("Daniel", "xxxx"));
 //        ancestrisMembers.add(new AncestrisMember("Yannick", "xxxx"));
 //        ancestrisMembers.add(new AncestrisMember("Dominique", "xxxx"));
@@ -188,17 +201,19 @@ public class Comm {
      * @return 
      */
     public boolean startListeningtoFriends() {
+        
         stopRun = false;
 
-//        listeningThread = new Thread() {
-//            @Override
-//            public void run() {
-//                listen();
-//            }
-//        };
-//        listeningThread.start();
-//        
-//        call();
+        listeningThread = new Thread() {
+            @Override
+            public void run() {
+                listen();
+            }
+        };
+        LOG.log(Level.INFO, "Start listening to incoming calls");
+        listeningThread.setName("TreeSharing thread : wait for Ancestris connection");
+        listeningThread.start();
+        
         return true;
     }
 
@@ -210,7 +225,8 @@ public class Comm {
      */
     public boolean stopListeningtoFriends() {
         stopRun = true;
-        //listeningThread.interrupt();
+        listeningThread.interrupt();
+        LOG.log(Level.INFO, "Stopped listening to incoming calls");
         return true;
     }
 
@@ -252,34 +268,109 @@ public class Comm {
 
     
     
-    
+    /**
+     * Listens to incoming calls
+     * 
+     * Depending on calling person, call type, should return something or something else...
+     * If ok to return something, get info to return from owner.provideMySharedEntitiesToMember()
+     * 
+     */
     public void listen() {
+        
+        BufferedReader in = null;
+        ObjectOutputStream objectOutputStream = null;
+        
         try {
-            ServerSocket serversock = new ServerSocket(COMM_PORT);
-
+            ServerSocket serversocket = new ServerSocket(COMM_PORT);        
             while (!stopRun) {
-                Socket outgoing = serversock.accept();
-                PrintWriter writer = new PrintWriter(outgoing.getOutputStream());
-                writer.println("Hello there");
-                writer.close();
+                // Create server socket and wait
+                LOG.log(Level.INFO, "...Opening server socket " + serversocket.toString());
+                Socket socket = serversocket.accept();
+                LOG.log(Level.INFO, "...Server socket accepting a socket " + socket.toString());
+
+                // Connection is made, get input and output streams
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                
+                // Get first line which should contain pseudo
+                String pseudo = in.readLine();
+                
+                // If pseudo accepted, send data
+                if (owner.isAllowedMember(pseudo)) {                                                // replace with always true to self-test
+                    LOG.log(Level.INFO, "...Member " + pseudo + " is allowed. Sending data.");
+                    for (FriendGedcomEntity item : owner.getMySharedEntities()) {
+                        objectOutputStream.writeObject(item);
+                    }
+                } else {
+                    LOG.log(Level.INFO, "...Member " + pseudo + " is NOT allowed. Nothing sent.");
+                }
+                
+            // Close socket
+            objectOutputStream.close();
+            in.close();
             }
-        } catch (Exception e) {
-            System.out.println("Server Side Error");
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
-
     
-    public void call() {
+    
+    
+    
+    /**
+     * Calls friend and expect something in return
+     * 
+     * @param friend 
+     */
+    public List<FriendGedcomEntity> call(AncestrisMember member) {
+
+        List<FriendGedcomEntity> list = new ArrayList<FriendGedcomEntity>();
+
+        PrintWriter out = null;
+        ObjectInputStream objectInputStream = null;
+        
         try {
-            Socket incoming = new Socket("127.0.0.1", COMM_PORT);
-            InputStreamReader stream = new InputStreamReader(incoming.getInputStream());
-            BufferedReader reader = new BufferedReader(stream);
-            String advice = reader.readLine();
-            reader.close();
-            System.out.println("Today's advice is " + advice);
-        } catch (Exception e) {
-            System.out.println("Client Side Error");
+            // Create socket
+            InetAddress addr = InetAddress.getByName(member.getAccess());
+            LOG.log(Level.INFO, "Calling member '" + member.getMemberName() + "' at IP address " + addr.getCanonicalHostName());
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress("localhost", COMM_PORT), COMM_TIMEOUT);       // replace addr with "localhost" to do self-test
+            LOG.log(Level.INFO, "...Calling socket created " + socket.toString());
+            
+            // First send my pseudo
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(owner.getPreferredPseudo());
+
+            // Then get data
+            objectInputStream = new ObjectInputStream(socket.getInputStream());
+            while (true) {
+                FriendGedcomEntity item = (FriendGedcomEntity) objectInputStream.readObject();
+                list.add(item);
+            }
+        } catch (EOFException eofException) {
+        } catch (SocketTimeoutException stex) {
+            LOG.log(Level.INFO, "...Socket timeout");
+            return null;
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (ClassNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            // Close socket
+            if (objectInputStream != null) {
+                try {
+                    objectInputStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            if (out != null) {
+                out.close();
+            }
         }
+        
+        LOG.log(Level.INFO, "Returned from call to member " + member.getMemberName() + " with " + list.size() + " entities");
+        return list;
     }
 
     
