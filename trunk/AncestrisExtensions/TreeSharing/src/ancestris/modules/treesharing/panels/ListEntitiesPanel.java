@@ -150,9 +150,9 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
                 Entity ent = (Entity) object;
                 data[i][0] = ent.getGedcom().getName();
                 data[i][1] = ent.toString();
-                data[i][2] = map.get(ent).getEntityId();
-                data[i][3] = map.get(ent).getGedcomName();
-                data[i][4] = map.get(ent).getName();
+                data[i][2] = map.get(ent).entityID;
+                data[i][3] = map.get(ent).gedcomName;
+                data[i][4] = map.get(ent).friend;
                 i++;
             }
         }

@@ -22,7 +22,7 @@ import org.openide.util.NbBundle;
  *
  * @author frederic
  */
-public class SearchAction extends AbstractAncestrisAction{
+public class SearchAction extends AbstractAncestrisAction {
 
     private final TreeSharingTopComponent owner;
     
