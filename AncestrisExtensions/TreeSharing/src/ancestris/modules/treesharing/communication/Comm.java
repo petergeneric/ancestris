@@ -334,7 +334,7 @@ public class Comm {
             InetAddress addr = InetAddress.getByName(member.getAccess());
             LOG.log(Level.INFO, "Calling member '" + member.getMemberName() + "' at IP address " + addr.getCanonicalHostName());
             Socket socket = new Socket();
-            socket.connect(new InetSocketAddress("localhost", COMM_PORT), COMM_TIMEOUT);       // replace addr with "localhost" to do self-test
+            socket.connect(new InetSocketAddress(addr, COMM_PORT), COMM_TIMEOUT);       // replace addr with "localhost" to do self-test
             LOG.log(Level.INFO, "...Calling socket created " + socket.toString());
             
             // First send my pseudo
