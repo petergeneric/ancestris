@@ -40,7 +40,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -122,6 +121,8 @@ public class TreeSharingTopComponent extends TopComponent {
     private final BorderLayout borderLayout;
     private String defaultBorderLayout = BorderLayout.NORTH;
     private PrivacyToggle privacyToggle;
+    private JLabel membersNumber = null;
+    private MembersPopup membersList = null;
     private TimerPanel timerPanel;
     private boolean shareAll = false;
     private StartSharingAllToggle startSharingToggle;
@@ -206,17 +207,19 @@ public class TreeSharingTopComponent extends TopComponent {
         // Add toolbar elements
         
         // - Dropbox on all connected friends
-        final MembersPopup membersList = new MembersPopup(this, ancestrisMembers);
+        membersList = new MembersPopup(this, ancestrisMembers);
+        membersNumber = new JLabel("");
+        updateMembersList();
         JButton members = createDropDownButton(new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend24.png")), membersList);
         members.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersList"));
         members.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initAncestrisMembers();
-                membersList.updateTable(ancestrisMembers);
+                updateMembersList();
             }
         });
         toolbar.add(members);
+        toolbar.add(membersNumber);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
 
         // - Timer display
@@ -346,6 +349,14 @@ public class TreeSharingTopComponent extends TopComponent {
         desktopPanel.setFrames(sharedGedcoms, LEFT_OFFSET_GEDCOM, TOP_OFFSET, VERTICAL_SPACE, true);
         
     }
+    
+    private void updateMembersList() {
+        initAncestrisMembers();
+        membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
+        membersNumber.setText(" "+ancestrisMembers.size() + " ");
+        membersList.updateTable(ancestrisMembers);
+    }
+    
 
     public void rearrangeWindows() {
         if (sharedGedcoms != null && !sharedGedcoms.isEmpty()) {
@@ -407,13 +418,9 @@ public class TreeSharingTopComponent extends TopComponent {
         toggleOn();
 
         // We have list of shared gedcoms in "sharedGedcoms" with isShared selected
+        // OK
 
-        // We have list of allowed members in "ancestrisMembers" with isAllowed set to true
-        //        for (AncestrisMember member : ancestrisMembers) {
-        //            System.out.println(member.getName() + " - " + member.isAllowed());
-        //        }
-        
-        // Create timer task to stop sharing after delay cooresponding to indicated date
+        // Create timer task to stop sharing after delay corresponding to indicated date
         if (!setTimer()) {
             toggleOff();
             timerPanel.setFocus();
@@ -426,10 +433,18 @@ public class TreeSharingTopComponent extends TopComponent {
         // Register on the ancestris server that I am a sharing friend. Remember pseudo that is used
         commPseudo = getPreferredPseudo();
         if (!commHandler.registerMe(commPseudo)) {
-          stopSharingAll();
-          return false;
+            commHandler.stopListeningtoFriends();
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
+            }
+            toggleOff();
+            return false;
         };
 
+        // We have list of allowed members in "ancestrisMembers" with isAllowed set to true
+        updateMembersList();
+        
         // Open the sharing locally
         shareAll = true;
         
@@ -459,6 +474,9 @@ public class TreeSharingTopComponent extends TopComponent {
         // Stop the sharing locally
         shareAll = false;
         
+        // Update members list
+        updateMembersList();
+        
         // Toggle the buttons to show it is no longer sharing
         toggleOff();
         
@@ -468,11 +486,8 @@ public class TreeSharingTopComponent extends TopComponent {
     private void toggleOn() {
         Toolkit.getDefaultToolkit().beep();
         isBusy = true;
-        startSharingToggle.setEnabled(false);
         startSharingToggle.setToolTipText(true);
-        stopSharingToggle.setSelected(false);
-        stopSharingToggle.setEnabled(true);
-        stopSharingToggle.setToolTipText(true);
+        stopSharingToggle.setToolTipText(false);
         dispatchShare(true);
         searchButton.setOn();
         isBusy = false;
@@ -482,11 +497,8 @@ public class TreeSharingTopComponent extends TopComponent {
         Toolkit.getDefaultToolkit().beep();
         Toolkit.getDefaultToolkit().beep();
         isBusy = true;
-        stopSharingToggle.setEnabled(false);
-        stopSharingToggle.setToolTipText(false);
-        startSharingToggle.setSelected(false);
-        startSharingToggle.setEnabled(true);
-        startSharingToggle.setToolTipText(true);
+        startSharingToggle.setToolTipText(false);
+        stopSharingToggle.setToolTipText(true);
         dispatchShare(false);
         searchButton.setOff();
         isBusy = false;
@@ -577,12 +589,14 @@ public class TreeSharingTopComponent extends TopComponent {
 
     private boolean setTimer() {
         
-        // Calculte edelay between bow and limit date
+        // Calculte delay between bow and limit date
         Date limitDate = timerPanel.getTimerDate();
         Date currentDate = new java.util.Date();
         long delay = limitDate.getTime() - currentDate.getTime();
         if (delay < 0) {
-            return false;
+            delay = TimerPanel.DEFAULT_DELAY; 
+            timerPanel.setTimerDate((int) delay);
+            //return false; 
         }
 
         // Set timer
