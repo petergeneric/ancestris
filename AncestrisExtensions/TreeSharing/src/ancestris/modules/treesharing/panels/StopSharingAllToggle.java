@@ -26,12 +26,10 @@ public class StopSharingAllToggle extends JToggleButton {
     /**
      * Creates new form StopSharingAllToggle
      */
-    public StopSharingAllToggle(TreeSharingTopComponent tstc, boolean On) {
+    public StopSharingAllToggle(TreeSharingTopComponent tstc, boolean on) {
         this.owner = tstc;
         initComponents();
-        setSelected(On);
-        setEnabled(!On);
-        setToolTipText(false);
+        setToolTipText(on);
 }
 
     /**
@@ -63,6 +61,8 @@ public class StopSharingAllToggle extends JToggleButton {
 
 
     public final void setToolTipText(boolean on) {
+        setSelected(on);
+        setEnabled(!on);
         setToolTipText(NbBundle.getMessage(StartSharingAllToggle.class, on ? "TIP_StopSharingisOn" : "TIP_StopSharingisOff"));
     }
 

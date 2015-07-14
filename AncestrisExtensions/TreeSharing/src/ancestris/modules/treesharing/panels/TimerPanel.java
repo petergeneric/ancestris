@@ -20,6 +20,7 @@ import javax.swing.JToolTip;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.Timer;
+import org.apache.commons.lang.time.DateUtils;
 import org.openide.util.NbBundle;
 
 /**
@@ -27,6 +28,8 @@ import org.openide.util.NbBundle;
  * @author frederic
  */
 public class TimerPanel extends javax.swing.JPanel {
+
+    public static int DEFAULT_DELAY = 6;  // hours 
 
     private final TreeSharingTopComponent owner;
     private boolean stateBeingChanged = false;
@@ -46,6 +49,7 @@ public class TimerPanel extends javax.swing.JPanel {
         jSpinner1.setEditor(new JSpinner.DateEditor(jSpinner1, "d-MMM-yyyy HH:mm"));
         ((JSpinner.DefaultEditor)jSpinner1.getEditor()).getTextField().setHorizontalAlignment(javax.swing.JTextField.CENTER);
         initPopup();
+        setTimerDate(DEFAULT_DELAY);
     }
 
     /**
@@ -64,7 +68,7 @@ public class TimerPanel extends javax.swing.JPanel {
 
         jSpinner1.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jSpinner1.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.HOUR));
-        jSpinner1.setToolTipText(org.openide.util.NbBundle.getMessage(TimerPanel.class, "TimerPanel.jSpinner1.toolTipText")); // NOI18N
+        jSpinner1.setToolTipText(org.openide.util.NbBundle.getMessage(TimerPanel.class, "TimerPanel.jSpinner1.toolTipText", DEFAULT_DELAY));
         jSpinner1.setPreferredSize(new java.awt.Dimension(150, 26));
         jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -75,7 +79,6 @@ public class TimerPanel extends javax.swing.JPanel {
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/timer.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(TimerPanel.class, "TimerPanel.jButton1.text")); // NOI18N
         jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(TimerPanel.class, "TimerPanel.jButton1.toolTipText")); // NOI18N
-        jButton1.setPreferredSize(new java.awt.Dimension(52, 36));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -96,7 +99,7 @@ public class TimerPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
@@ -132,6 +135,11 @@ public class TimerPanel extends javax.swing.JPanel {
 
     public Date getTimerDate() {
         return (Date) jSpinner1.getValue();
+    }
+
+    public void setTimerDate(int hours) {
+        Date date = DateUtils.addHours(new java.util.Date(), hours);
+        jSpinner1.setValue(date);
     }
 
     public final void initPopup() {
