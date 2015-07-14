@@ -27,6 +27,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -66,6 +67,8 @@ public class Comm {
     private volatile boolean stopRun;
     private Thread listeningThread;
 
+    private ServerSocket serversocket = null;
+    
     /**
      * Constructor
      */
@@ -225,7 +228,14 @@ public class Comm {
      */
     public boolean stopListeningtoFriends() {
         stopRun = true;
-        listeningThread.interrupt();
+        try {
+            if (serversocket != null) {
+                serversocket.close();    
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
         LOG.log(Level.INFO, "Stopped listening to incoming calls");
         return true;
     }
@@ -281,16 +291,16 @@ public class Comm {
         ObjectOutputStream objectOutputStream = null;
         
         try {
-            ServerSocket serversocket = new ServerSocket(COMM_PORT);        
+            serversocket = new ServerSocket(COMM_PORT);  
             while (!stopRun) {
                 // Create server socket and wait
                 LOG.log(Level.INFO, "...Opening server socket " + serversocket.toString());
-                Socket socket = serversocket.accept();
-                LOG.log(Level.INFO, "...Server socket accepting a socket " + socket.toString());
+                Socket listeningSocket = serversocket.accept();
+                LOG.log(Level.INFO, "...Server socket accepting a socket " + listeningSocket.toString());
 
                 // Connection is made, get input and output streams
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                in = new BufferedReader(new InputStreamReader(listeningSocket.getInputStream()));
+                objectOutputStream = new ObjectOutputStream(listeningSocket.getOutputStream());
                 
                 // Get first line which should contain pseudo
                 String pseudo = in.readLine();
@@ -309,9 +319,12 @@ public class Comm {
             objectOutputStream.close();
             in.close();
             }
+        } catch (SocketException ex) {
+            // SocketException generated when socketserver is closed, and it is closed to ensure protection and to be reused and to close thread properly.
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
+
     }
     
     
