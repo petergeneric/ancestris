@@ -20,32 +20,43 @@ public class AncestrisMember {
     
     private boolean allowed;
     private final String name;
-    private final String access;
+    private final String ipAddress;
+    private final String portAddress;
 
     /**
      * Constructor
      */
-    public AncestrisMember(String name, String access) {
+    public AncestrisMember(String name, String ipAddress, String portAddress) {
         this.allowed = true;
         this.name = name;
-        this.access = access;
+        this.ipAddress = ipAddress;
+        this.portAddress = portAddress;
     }
     
 
-    public String getMemberName() {
-        return name;
-    }
-
-    public String getAccess() {
-        return access;
-    }
-
-    public boolean isAllowed() {
-        return allowed;
-    }
+    
     
     public void setAllowed(boolean b) {
         allowed = b;
     }
     
+    public boolean isAllowed() {
+        return allowed;
+    }
+    
+
+    
+    
+    public String getMemberName() {
+        return name;
+    }
+
+    public String getIPAddress() {
+        return ipAddress;
+    }
+
+    public String getPortAddress() {
+        return portAddress;
+    }
+
 }

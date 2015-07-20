@@ -15,16 +15,12 @@ import ancestris.modules.treesharing.communication.AncestrisMember;
 import ancestris.modules.treesharing.communication.Comm;
 import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
-import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import java.util.LinkedList;
 import java.util.List;
-import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 
 /**
@@ -77,14 +73,9 @@ public class SearchSharedTrees extends Thread {
                 continue;
             }
             
-            // Connect to member, otherwise skip
-            if (!commHandler.connectToAncestrisFriend(member)) {
-                continue;
-            }
-            
             // Get all shared entities from member for all its shared gedcoms at the same time
             List<FriendGedcomEntity> memberEntities = getSharedEntitiesFromMember(member);
-            if (memberEntities.isEmpty()) {
+            if (memberEntities == null || memberEntities.isEmpty()) {
                 continue;
             }
             
@@ -103,7 +94,7 @@ public class SearchSharedTrees extends Thread {
                             Indi myIndi = (Indi) myEntity;
                             // same individual
                             if (isSameIndividual(myIndi, memberEntity, matchType)) { // we have a match
-                                owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getAccess(), Gedcom.INDI);
+                                owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getIPAddress(), member.getPortAddress(), Gedcom.INDI);
                             }
                             continue;
                         }
@@ -112,7 +103,7 @@ public class SearchSharedTrees extends Thread {
                             Fam myFam = (Fam) myEntity;
                             // same husband and same wife ?
                             if (isSameFamily(myFam, memberEntity, matchType)) { // we have a match
-                                owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getAccess(), Gedcom.FAM);
+                                owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getIPAddress(), member.getPortAddress(), Gedcom.FAM);
                             }
                         }
                     } // endfor memberEntities
