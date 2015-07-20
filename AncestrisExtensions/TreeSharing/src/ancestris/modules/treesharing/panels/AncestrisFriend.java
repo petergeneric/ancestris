@@ -34,7 +34,8 @@ public class AncestrisFriend extends JInternalFrame {
 
     
     private final String name;
-    private final String access;
+    private final String ipAddress;
+    private final String portAddress;
     private Map<Indi, FriendGedcomEntity> matchedIndis = null; 
     private Map<Fam, FriendGedcomEntity> matchedFams = null; 
 
@@ -42,10 +43,11 @@ public class AncestrisFriend extends JInternalFrame {
     /**
      * Creates new form AncestrisFriend
      */
-    public AncestrisFriend(String name, String access) {
+    public AncestrisFriend(String name, String ipAddress, String portAddress) {
         super(name);
         this.name = name;
-        this.access = access;
+        this.ipAddress = ipAddress;
+        this.portAddress = portAddress;
         matchedIndis = new HashMap<Indi, FriendGedcomEntity>();
         matchedFams = new HashMap<Fam, FriendGedcomEntity>();
         initComponents();
@@ -188,8 +190,12 @@ public class AncestrisFriend extends JInternalFrame {
         return name;
     }
     
-    public String getAccess() {
-        return access;
+    public String getIPAddress() {
+        return ipAddress;
+    }
+
+    public String getportAddress() {
+        return portAddress;
     }
 
     public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity) {

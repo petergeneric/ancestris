@@ -16,6 +16,7 @@ import ancestris.modules.treesharing.communication.AncestrisMember;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -91,6 +92,9 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         table.getColumnModel().getColumn(1).setHeaderRenderer(renderer);
         table.getColumnModel().getColumn(0).setHeaderValue(allowedLabel);
         table.getColumnModel().getColumn(1).setHeaderValue(nameLabel);
+        
+        // Set font bold for my pseudo in the pseudo column
+        table.getColumnModel().getColumn(1).setCellRenderer(new BoldCellRenderer(owner.getPreferredPseudo()));
         
         // Resize table based on its number of lines (max 15 lines)
         add(new JScrollPane(table));
@@ -212,6 +216,30 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         }
     }
     
+    class BoldCellRenderer extends JLabel implements TableCellRenderer {
+
+        String myPseudo = "";
+        
+        public BoldCellRenderer(String myPseudo) {
+            this.myPseudo = myPseudo;
+        }
+        
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            
+            Font f = getFont();
+            String cellText = (String) table.getValueAt(row, column);
+            if (cellText != null && cellText.equals(myPseudo)) {
+                setFont(f.deriveFont(Font.BOLD));
+            } else {
+                setFont(f.deriveFont(Font.PLAIN));
+            }
+            setText(cellText);
+            return this;
+
+            
+        }
+    }
    
     
 }

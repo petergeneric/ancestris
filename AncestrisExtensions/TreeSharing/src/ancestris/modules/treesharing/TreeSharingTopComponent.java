@@ -376,6 +376,18 @@ public class TreeSharingTopComponent extends TopComponent {
         return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Pseudo", "");
     }
 
+    public String getRegisteredPseudo() {
+        return commPseudo;
+    }
+    
+    public String getRegisteredIPAddress() {
+        return getMember(commPseudo).getIPAddress();
+    }
+
+    public String getRegisteredPortAddress() {
+        return getMember(commPseudo).getPortAddress();
+    }
+
     
     // Privacy management
     
@@ -427,13 +439,9 @@ public class TreeSharingTopComponent extends TopComponent {
             return false;
         }
         
-        // Open my ancestris communication in/out (I accept to receive communication requests)
-        commHandler.startListeningtoFriends();
-
         // Register on the ancestris server that I am a sharing friend. Remember pseudo that is used
         commPseudo = getPreferredPseudo();
         if (!commHandler.registerMe(commPseudo)) {
-            commHandler.stopListeningtoFriends();
             if (timer != null) {
                 timer.cancel();
                 timer = null;
@@ -467,9 +475,6 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // Unregister from Ancestris server
         commHandler.unregisterMe(commPseudo);
-        
-        // Stop ancestris communication in/out
-        commHandler.stopListeningtoFriends();
         
         // Stop the sharing locally
         shareAll = false;
@@ -661,25 +666,16 @@ public class TreeSharingTopComponent extends TopComponent {
         return ancestrisMembers;
     }
 
-
-    public boolean isAllowedMember(String memberName) {
-        boolean found = false;
-
-        // Check if member is in allowed list
+    public AncestrisMember getMember(String memberToFind) {
         for (AncestrisMember member : ancestrisMembers) {
-            if (member.getMemberName().equals(memberName)) {
-                found = true;
-                if (!member.isAllowed()) {
-                    return false;
-                } else {
-                    break; // member found and allowed
-                }
+            if (member.getMemberName().equals(memberToFind)) {
+                return member;
             }
         }
-
-        return found;
+        return null;
     }
-    
+
+
     public List<FriendGedcomEntity> getMySharedEntities() {
         
         // Get all shared entities for all gedcoms
@@ -700,10 +696,10 @@ public class TreeSharingTopComponent extends TopComponent {
     
     
     
-    public void createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String access, String entityType) {
+    public void createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String IPAddress, String portAddress, String entityType) {
 
         // Update or Create AncestrisFriend
-        AncestrisFriend friend = getFriend(memberEntity.friend, access);
+        AncestrisFriend friend = getFriend(memberEntity.friend, IPAddress, portAddress);
         
         // Update or Create MatchFrame
         GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, friend);
@@ -750,7 +746,7 @@ public class TreeSharingTopComponent extends TopComponent {
         return match;
     }
 
-    private AncestrisFriend getFriend(String foundFriend, String access) {
+    private AncestrisFriend getFriend(String foundFriend, String ipAddress, String portAddress) {
 
         AncestrisFriend friend = null;
         
@@ -771,7 +767,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // If match still null, then create it
         if (friend == null) {
-            friend = new AncestrisFriend(foundFriend, access);
+            friend = new AncestrisFriend(foundFriend, ipAddress, portAddress);
             desktopPanel.addFrame(friend, findLocation(ancestrisFriends.size(), LEFT_OFFSET_FRIENDS, friend.getPreferredSize().height));
             ancestrisFriends.add(friend);
         }
