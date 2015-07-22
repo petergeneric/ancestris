@@ -140,6 +140,7 @@ public class App {
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
+                Logger.getLogger("ancestris").addHandler(handler);
 
                 // Log is up
                 LOG.info("\n\n==================8<================================================================");
