@@ -100,7 +100,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
     void store() {
         NbPreferences.forModule(TreeSharingOptionsPanel.class).putBoolean("RespectPrivacy", jCheckBox1.isSelected());
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Pseudo", jTextField1.getText().substring(0, jTextField1.getText().indexOf(" ")));  // no space in pseudo
+        String str = jTextField1.getText();
+        int i = str.indexOf(" ");
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Pseudo", i == -1 ? str : str.substring(0, i));  // no space in pseudo
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", (String) jComboBox1.getSelectedItem());
     }
 
