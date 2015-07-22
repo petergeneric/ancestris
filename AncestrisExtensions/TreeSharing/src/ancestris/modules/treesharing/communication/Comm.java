@@ -102,7 +102,7 @@ public class Comm {
 
     private TreeSharingTopComponent owner;
     
-    private final static Logger LOG = Logger.getLogger("ancestris.modules.treesharing.communication");
+    private static Logger LOG = Logger.getLogger("ancestris.treesharing");
 
     private static String COMM_SERVER = "vps187192.ovh.net";                                // for all comms
     private int COMM_PORT = 4584;                                                           // for all connected comms
@@ -153,6 +153,7 @@ public class Comm {
      */
     public Comm(TreeSharingTopComponent tstc) {
         this.owner = tstc;
+        //LOG.setResourceBundle(null);
     }
 
     
@@ -252,7 +253,7 @@ public class Comm {
             socket.setSoTimeout(COMM_TIMEOUT);          // make sure there is a timeout to this
             socket.receive(packetReceived);     
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived));
-            LOG.log(Level.INFO, "...Reply from server : " + reply);
+            LOG.log(Level.INFO, "...Reply from server : " + reply.substring(0, 5));
             if (reply.substring(0, 5).equals(CMD_REGOK)) {
                 LOG.log(Level.INFO, "...Registered " + pseudo + " on the Ancestris server.");
                 socket.setSoTimeout(0);
@@ -302,7 +303,7 @@ public class Comm {
             socket.receive(packetReceived);     
             socket.setSoTimeout(0);
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived));
-            LOG.log(Level.INFO, "...Reply from server : " + reply);
+            LOG.log(Level.INFO, "...Reply from server : " + reply.substring(0, 5));
             if (reply.substring(0, 5).equals(CMD_UNROK)) {
                 LOG.log(Level.INFO, "...Unregistered " + pseudo + " from the Ancestris server.");
             } else if (reply.substring(0, 5).equals(CMD_UNRKO)) {
@@ -390,11 +391,15 @@ public class Comm {
                 
                 // Case of CMD_GETSE command (another user asks for my shared entities so send shared entities if allowed)
                 if (command.equals(CMD_GETSE)) {
-                    String member = StringEscapeUtils.unescapeHtml(new String(bytesReceived)).substring(5);
+                    String str = new String(bytesReceived).substring(5);
+                    String member = StringEscapeUtils.unescapeHtml(str.substring(0, str.indexOf(" ")));
                     LOG.log(Level.INFO, "...Incoming GETSE command received from " + member + " (" + packetReceived.getLength() + " bytes)");
                     // If member allowed and IP address matches, send data
                     AncestrisMember aMember = owner.getMember(member);
-                    if (aMember.isAllowed() && packetReceived.getAddress().equals(aMember.getIPAddress()) && packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())) {
+                    if (aMember == null) {
+                        LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
+                    }
+                    else if (aMember.isAllowed() && packetReceived.getAddress().equals(aMember.getIPAddress()) && packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())) {
                         LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sending data.");
                         ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE - 5);
                         byteStream.write(CMD_TAKSE.getBytes()); // start content with command
@@ -414,7 +419,7 @@ public class Comm {
                     }
                 }
 
-                // Case of CMD_TAKSE command (following my GETSE message, another user returns his/her shared entities. Take them.
+                // Case of CMD_TAKSE command (following my GETSE message to another member, he/she returns his/her shared entities. Take them.
                 else if (command.equals(CMD_TAKSE)) {
                     LOG.log(Level.INFO, "...Incoming TAKSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + " (" + packetReceived.getLength() + " bytes)");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
@@ -466,7 +471,7 @@ public class Comm {
         }
         
         LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress);
-        String command = CMD_GETSE + owner.getRegisteredPseudo();
+        String command = CMD_GETSE + owner.getRegisteredPseudo() + " ";   // space is end-delimiter as theire is no space in pseudo
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
         try {
             // Ask member for list of shared entities
@@ -496,22 +501,6 @@ public class Comm {
                 return listOfEntities;
             }
             
-//            byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
-//            DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
-//            LOG.log(Level.INFO, "...DEBUG :     before setting timeout");
-//            socket.setSoTimeout(5*COMM_TIMEOUT);          // make sure there is a timeout to this
-//            LOG.log(Level.INFO, "...DEBUG :     after setting timeout");
-//            LOG.log(Level.INFO, "...Waiting for response from " + member.getMemberName());
-//            socket.receive(packetReceived);
-//            int byteCount = packetReceived.getLength();
-//            LOG.log(Level.INFO, "...Received response of size " + byteCount);
-//            ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesReceived);
-//            LOG.log(Level.INFO, "...DEBUG : bytestream = " + byteStream.toString());
-//            ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
-//            LOG.log(Level.INFO, "...DEBUG : is = " + is.toString());
-//            list = (List<FriendGedcomEntity>) is.readObject();
-//            LOG.log(Level.INFO, "...DEBUG : list size = " + list.size());
-//            is.close();
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
             return null;
