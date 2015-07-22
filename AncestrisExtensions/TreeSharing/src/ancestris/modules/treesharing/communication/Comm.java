@@ -32,7 +32,9 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -76,16 +78,15 @@ import org.xml.sax.SAXException;
  *      ∘ REGIS - register pseudo
  *      ∘ UNREG - unregister pseudo
  *      ∘ THERE - I am there
- * • send to client
- *      ∘ TAKSE - take my shared entities
  * • receive from server (check incoming IP)
  *      ∘ REGOK - registration ok
  *      ∘ REGKO - registration ko
  *      ∘ UNROK - unregistration ok
  *      ∘ UNRKO - unregistration ko
  *      ∘ RUTHE - are you there ?
- * • receive from client (check incoming IP is allowed)
- *      ∘ GETSE - get me your shared entities
+ * • receive from and send to client (check incoming IP is allowed)
+ *      ∘ GETSE - get me your shared entities so build them and send them
+ *      ∘ TAKSE - take my shared entities because you asked so receive them
  *  
  *  • client also queries server for list of registered pseudos and there connection details
  *      ∘ get_members.php as a web service
@@ -141,6 +142,11 @@ public class Comm {
     private Thread listeningThread;
 
     
+    // Call info
+    private List<FriendGedcomEntity> listOfEntities = null;
+    private String expectedCallIPAddress = null;
+    private String expectedCallPortAddress = null;
+    private boolean expectedCall = false;
     
     /**
      * Constructor
@@ -370,28 +376,33 @@ public class Comm {
      */
     public void listen() {
         
-        LOG.log(Level.INFO, "...Listening using existing socket");
+        LOG.log(Level.INFO, "...Listening using main socket " + socket.toString());
         try {
-            byte[] bytesReceived = new byte[512];
+            byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
             while (!stopRun) {
-                // Listen to incoming command
+                // Listen to incoming calls
                 socket.setSoTimeout(0);
                 socket.receive(packetReceived);
-                String command = StringEscapeUtils.unescapeHtml(new String(bytesReceived));
-                if (command.substring(0, 5).equals(CMD_TAKSE)) {
-                    String member = command.substring(5);
-                    LOG.log(Level.INFO, "...Incoming message received from " + member + " when listening on " + socket.toString());
-                    // If pseudo accepted, send data
+                
+                // Identify command
+                String command = new String(Arrays.copyOfRange(bytesReceived, 0, 5));        
+                
+                // Case of CMD_GETSE command (another user asks for my shared entities so send shared entities if allowed)
+                if (command.equals(CMD_GETSE)) {
+                    String member = StringEscapeUtils.unescapeHtml(new String(bytesReceived)).substring(5);
+                    LOG.log(Level.INFO, "...Incoming GETSE command received from " + member + " (" + packetReceived.getLength() + " bytes)");
+                    // If member allowed and IP address matches, send data
                     AncestrisMember aMember = owner.getMember(member);
                     if (aMember.isAllowed() && packetReceived.getAddress().equals(aMember.getIPAddress()) && packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())) {
                         LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sending data.");
-                        ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE);
+                        ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE - 5);
+                        byteStream.write(CMD_TAKSE.getBytes()); // start content with command
                         ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
                         os.flush();
-                        os.writeObject(owner.getMySharedEntities());  // TODO : will need to compress and encrypt data at some point
+                        os.writeObject(owner.getMySharedEntities());  // Add object to content. TODO : will need to compress and encrypt data at some point
                         os.flush();
-                        byte[] bytesSent = byteStream.toByteArray();
+                        byte[] bytesSent = byteStream.toByteArray();  
                         DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, packetReceived.getAddress(), packetReceived.getPort());
                         int byteCount = packetSent.getLength();
                         socket.send(packetSent);
@@ -399,12 +410,35 @@ public class Comm {
                         LOG.log(Level.INFO, "...Sent shared entities to " + packetReceived.getAddress() + ":" + packetReceived.getPort() + "(" + byteCount + " bytes)");
                     } else {
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed or address does not match pseudo. Nothing sent.");
-                        //send KO to member
+                        //TODO send KO to member
                     }
-                } else if (command.substring(0, 5).equals(CMD_CLOSE)) {
-                    LOG.log(Level.INFO, "...Received close listening loop command : " + command + " from " + packetReceived.getAddress() + ":" + packetReceived.getPort());
-                } else {
-                    LOG.log(Level.INFO, "...Received unknown command : " + command + " from " + packetReceived.getAddress() + ":" + packetReceived.getPort());
+                }
+
+                // Case of CMD_TAKSE command (following my GETSE message, another user returns his/her shared entities. Take them.
+                else if (command.equals(CMD_TAKSE)) {
+                    LOG.log(Level.INFO, "...Incoming TAKSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + " (" + packetReceived.getLength() + " bytes)");
+                    // Make sure there is a pending call expecting something from the ipaddress and port received
+                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null
+                            && packetReceived.getAddress().equals(expectedCallIPAddress) && packetReceived.getPort() == Integer.valueOf(expectedCallPortAddress)) {
+                        listOfEntities = null;
+                        ByteArrayInputStream byteStream = new ByteArrayInputStream(Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length-1));
+                        LOG.log(Level.INFO, "...DEBUG : bytestream = " + byteStream.toString());
+                        ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
+                        LOG.log(Level.INFO, "...DEBUG : is = " + is.toString());
+                        listOfEntities = (List<FriendGedcomEntity>) is.readObject();
+                        LOG.log(Level.INFO, "...DEBUG : list size = " + listOfEntities.size());
+                        is.close();
+                        }
+                    }
+
+                // Case of CMD_CLOSE command (following my unresgistration, server sends a close command)
+                else if (command.equals(CMD_CLOSE)) {
+                    LOG.log(Level.INFO, "...Incoming CLOSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort());
+                } 
+                
+                // Case of other commands
+                else {
+                    LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress() + ":" + packetReceived.getPort());
                 }
             }
         } catch (Exception ex) {
@@ -422,38 +456,68 @@ public class Comm {
      */
     public List<FriendGedcomEntity> call(AncestrisMember member) {
 
-        List<FriendGedcomEntity> list = null;
-
-        LOG.log(Level.INFO, "Calling member " + member.getMemberName());
+        // Init call data
+        expectedCallIPAddress = member.getIPAddress();
+        expectedCallPortAddress = member.getPortAddress();
+        if (listOfEntities == null) {
+            listOfEntities = new ArrayList<FriendGedcomEntity>();
+        } else {
+            listOfEntities.clear();
+        }
+        
+        LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress);
         String command = CMD_GETSE + owner.getRegisteredPseudo();
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
         try {
             // Ask member for list of shared entities
-            DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(member.getIPAddress()), Integer.valueOf(member.getPortAddress())); 
+            DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(expectedCallIPAddress), Integer.valueOf(expectedCallPortAddress)); 
+            LOG.log(Level.INFO, "...Sending command " + command);
             socket.send(packetSent);
-            // Expect answer back and get shared entities in return
-            byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
-            DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
-            socket.setSoTimeout(5*COMM_TIMEOUT);          // make sure there is a timeout to this
-            socket.receive(packetReceived);
-            int byteCount = packetReceived.getLength();
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesReceived);
-            ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
-            list = (List<FriendGedcomEntity>) is.readObject();
-            is.close();
-        } catch(SocketTimeoutException e) {
-            String err = NbBundle.getMessage(Comm.class, "ERR_MemberNotResponding");
-            LOG.log(Level.INFO, "...No response from " + member.getMemberName() + ". Error : " + err);
-            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
-            return null;
-        } catch (IOException e) {
+            
+            // Expect answer back and get shared entities in return (wait for response from the other thread...)
+            expectedCall = true;
+            int s = 0;
+            while (expectedCall && (s < 10)) {  // set give up time to 10 seconds
+                TimeUnit.SECONDS.sleep(1);
+                s++;
+            }
+            if (expectedCall) { // response never came back after 10 seconds, consider it failed
+                expectedCall = false;
+                LOG.log(Level.INFO, "...No response from " + member.getMemberName() + " after timeout.");
+                return null;
+            }
+            
+            // There was a response
+            if (listOfEntities == null) { // response happened but with no list
+                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with no list");
+                return null;
+            } else if (listOfEntities.isEmpty()) {
+                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with empty list");
+                return listOfEntities;
+            }
+            
+//            byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
+//            DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
+//            LOG.log(Level.INFO, "...DEBUG :     before setting timeout");
+//            socket.setSoTimeout(5*COMM_TIMEOUT);          // make sure there is a timeout to this
+//            LOG.log(Level.INFO, "...DEBUG :     after setting timeout");
+//            LOG.log(Level.INFO, "...Waiting for response from " + member.getMemberName());
+//            socket.receive(packetReceived);
+//            int byteCount = packetReceived.getLength();
+//            LOG.log(Level.INFO, "...Received response of size " + byteCount);
+//            ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesReceived);
+//            LOG.log(Level.INFO, "...DEBUG : bytestream = " + byteStream.toString());
+//            ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
+//            LOG.log(Level.INFO, "...DEBUG : is = " + is.toString());
+//            list = (List<FriendGedcomEntity>) is.readObject();
+//            LOG.log(Level.INFO, "...DEBUG : list size = " + list.size());
+//            is.close();
+        } catch (Exception e) {
             Exceptions.printStackTrace(e);
             return null;
-        } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
         }
-        LOG.log(Level.INFO, "Returned from call to member " + member.getMemberName() + " with " + list.size() + " entities");
-        return list;
+        LOG.log(Level.INFO, "Returned call from member " + member.getMemberName() + " with " + listOfEntities.size() + " entities");
+        return listOfEntities;
     }
 
 
