@@ -153,7 +153,6 @@ public class Comm {
      */
     public Comm(TreeSharingTopComponent tstc) {
         this.owner = tstc;
-        //LOG.setResourceBundle(null);
     }
 
     
