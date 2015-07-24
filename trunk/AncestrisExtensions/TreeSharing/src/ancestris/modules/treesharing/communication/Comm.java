@@ -31,6 +31,7 @@ import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -102,7 +103,7 @@ public class Comm {
 
     private TreeSharingTopComponent owner;
     
-    private static Logger LOG = Logger.getLogger("ancestris.treesharing");
+    private static final Logger LOG = Logger.getLogger("ancestris.treesharing");
 
     private static String COMM_SERVER = "vps187192.ovh.net";                                // for all comms
     private int COMM_PORT = 4584;                                                           // for all connected comms
@@ -238,7 +239,7 @@ public class Comm {
      */
     public boolean registerMe(String pseudo) {
 
-        LOG.log(Level.INFO, "Registering member " + pseudo + " on Ancestris server.");
+        LOG.log(Level.INFO, "Registering member " + pseudo + " on Ancestris server." + getTimeStamp());
         String command = CMD_REGIS + pseudo;
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
         try {
@@ -251,7 +252,7 @@ public class Comm {
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
             socket.setSoTimeout(COMM_TIMEOUT);          // make sure there is a timeout to this
             socket.receive(packetReceived);     
-            String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived));
+            String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
             LOG.log(Level.INFO, "...Reply from server : " + reply.substring(0, 5));
             if (reply.substring(0, 5).equals(CMD_REGOK)) {
                 LOG.log(Level.INFO, "...Registered " + pseudo + " on the Ancestris server.");
@@ -288,7 +289,7 @@ public class Comm {
     public boolean unregisterMe(String pseudo) {
 
         stopListeningToFriends();  
-        LOG.log(Level.INFO, "Unregistering member " + pseudo + " from Ancestris server.");
+        LOG.log(Level.INFO, "Unregistering member " + pseudo + " from Ancestris server." + getTimeStamp());
         String command = CMD_UNREG + pseudo;
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
         try {
@@ -301,12 +302,12 @@ public class Comm {
             socket.setSoTimeout(COMM_TIMEOUT);          // make sure there is a timeout to this
             socket.receive(packetReceived);     
             socket.setSoTimeout(0);
-            String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived));
+            String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
             LOG.log(Level.INFO, "...Reply from server : " + reply.substring(0, 5));
             if (reply.substring(0, 5).equals(CMD_UNROK)) {
                 LOG.log(Level.INFO, "...Unregistered " + pseudo + " from the Ancestris server.");
             } else if (reply.substring(0, 5).equals(CMD_UNRKO)) {
-                String err = reply.substring(5);
+                String err = reply.substring(5); 
                 LOG.log(Level.INFO, "...Could not unregister " + pseudo + " from the Ancestris server. Error : " + err);
                 DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
                 return false;
@@ -376,7 +377,7 @@ public class Comm {
      */
     public void listen() {
         
-        LOG.log(Level.INFO, "...Listening using main socket " + socket.toString());
+        LOG.log(Level.INFO, "...Listening using main socket " + socket.toString() + getTimeStamp());
         try {
             byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
@@ -392,7 +393,7 @@ public class Comm {
                 if (command.equals(CMD_GETSE)) {
                     String str = new String(bytesReceived).substring(5);
                     String member = StringEscapeUtils.unescapeHtml(str.substring(0, str.indexOf(" ")));
-                    LOG.log(Level.INFO, "...Incoming GETSE command received from " + member + " (" + packetReceived.getLength() + " bytes)");
+                    LOG.log(Level.INFO, "...Incoming GETSE command received from " + member + " (" + packetReceived.getLength() + " bytes)" + getTimeStamp());
                     // If member allowed and IP address matches, send data
                     AncestrisMember aMember = owner.getMember(member);
                     if (aMember == null) {
@@ -420,12 +421,12 @@ public class Comm {
 
                 // Case of CMD_TAKSE command (following my GETSE message to another member, he/she returns his/her shared entities. Take them.
                 else if (command.equals(CMD_TAKSE)) {
-                    LOG.log(Level.INFO, "...Incoming TAKSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + " (" + packetReceived.getLength() + " bytes)");
+                    LOG.log(Level.INFO, "...Incoming TAKSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + " (" + packetReceived.getLength() + " bytes)" + getTimeStamp());
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null
                             && packetReceived.getAddress().equals(expectedCallIPAddress) && packetReceived.getPort() == Integer.valueOf(expectedCallPortAddress)) {
                         listOfEntities = null;
-                        ByteArrayInputStream byteStream = new ByteArrayInputStream(Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length-1));
+                        ByteArrayInputStream byteStream = new ByteArrayInputStream(Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length-1)); // TODO : bout de la fin ?????
                         LOG.log(Level.INFO, "...DEBUG : bytestream = " + byteStream.toString());
                         ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
                         LOG.log(Level.INFO, "...DEBUG : is = " + is.toString());
@@ -437,12 +438,12 @@ public class Comm {
 
                 // Case of CMD_CLOSE command (following my unresgistration, server sends a close command)
                 else if (command.equals(CMD_CLOSE)) {
-                    LOG.log(Level.INFO, "...Incoming CLOSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort());
+                    LOG.log(Level.INFO, "...Incoming CLOSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + getTimeStamp());
                 } 
                 
                 // Case of other commands
                 else {
-                    LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress() + ":" + packetReceived.getPort());
+                    LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + getTimeStamp());
                 }
             }
         } catch (Exception ex) {
@@ -469,7 +470,7 @@ public class Comm {
             listOfEntities.clear();
         }
         
-        LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress);
+        LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress + getTimeStamp());
         String command = CMD_GETSE + owner.getRegisteredPseudo() + " ";   // space is end-delimiter as theire is no space in pseudo
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
         try {
@@ -487,16 +488,16 @@ public class Comm {
             }
             if (expectedCall) { // response never came back after 10 seconds, consider it failed
                 expectedCall = false;
-                LOG.log(Level.INFO, "...No response from " + member.getMemberName() + " after timeout.");
+                LOG.log(Level.INFO, "...No response from " + member.getMemberName() + " after timeout." + getTimeStamp());
                 return null;
             }
             
             // There was a response
             if (listOfEntities == null) { // response happened but with no list
-                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with no list");
+                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with no list" + getTimeStamp());
                 return null;
             } else if (listOfEntities.isEmpty()) {
-                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with empty list");
+                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with empty list" + getTimeStamp());
                 return listOfEntities;
             }
             
@@ -504,8 +505,15 @@ public class Comm {
             Exceptions.printStackTrace(e);
             return null;
         }
-        LOG.log(Level.INFO, "Returned call from member " + member.getMemberName() + " with " + listOfEntities.size() + " entities");
+        LOG.log(Level.INFO, "Returned call from member " + member.getMemberName() + " with " + listOfEntities.size() + " entities" + getTimeStamp());
         return listOfEntities;
+    }
+
+    
+    
+    
+    private String getTimeStamp() {
+        return " (" + new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss").format(new java.util.Date()) + ") ";
     }
 
 
