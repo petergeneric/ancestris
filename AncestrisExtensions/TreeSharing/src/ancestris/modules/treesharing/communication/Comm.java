@@ -243,7 +243,7 @@ public class Comm {
      */
     public boolean registerMe(String pseudo) {
 
-        LOG.log(Level.INFO, "Registering member " + pseudo + " on Ancestris server." + getTimeStamp());
+        LOG.log(Level.INFO, "Registering member " + pseudo + " on Ancestris server.");
         String command = CMD_REGIS + pseudo;
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
         try {
@@ -297,7 +297,7 @@ public class Comm {
     public boolean unregisterMe(String pseudo) {
 
         stopListeningToFriends();  
-        LOG.log(Level.INFO, "Unregistering member " + pseudo + " from Ancestris server." + getTimeStamp());
+        LOG.log(Level.INFO, "Unregistering member " + pseudo + " from Ancestris server.");
         String command = CMD_UNREG + pseudo;
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
         try {
@@ -389,7 +389,7 @@ public class Comm {
      */
     public void listen() {
         
-        LOG.log(Level.INFO, "...Listening using main socket " + socket.toString() + getTimeStamp());
+        LOG.log(Level.INFO, "...Listening using main socket " + socket.toString());
         try {
             byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
@@ -407,7 +407,7 @@ public class Comm {
                 if (command.equals(CMD_GETSE)) {
                     String str = new String(bytesReceived).substring(5);
                     String member = StringEscapeUtils.unescapeHtml(str.substring(0, str.indexOf(" ")));
-                    LOG.log(Level.INFO, "...Incoming GETSE command received from " + member + " (" + packetReceived.getLength() + " bytes)" + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming GETSE command received from " + member + " (" + packetReceived.getLength() + " bytes)");
                     // If member allowed and IP address matches, send data
                     AncestrisMember aMember = owner.getMember(member);
                     LOG.log(Level.INFO, "...DEBUG : aMember = " + aMember.getMemberName());
@@ -462,7 +462,7 @@ public class Comm {
 
                 // Case of CMD_TAKSE command (following my GETSE message to another member, he/she returns his/her shared entities. Take them.
                 else if (command.equals(CMD_TAKSE)) {
-                    LOG.log(Level.INFO, "...Incoming TAKSE command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + " (" + packetReceived.getLength() + " bytes)" + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming TAKSE command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + " (" + packetReceived.getLength() + " bytes)");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null
                             && packetReceived.getAddress().getHostAddress().equals(expectedCallIPAddress) && packetReceived.getPort() == Integer.valueOf(expectedCallPortAddress)) {
@@ -480,12 +480,12 @@ public class Comm {
 
                 // Case of CMD_CLOSE command (following my unresgistration, server sends a close command)
                 else if (command.equals(CMD_CLOSE)) {
-                    LOG.log(Level.INFO, "...Incoming CLOSE command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming CLOSE command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
                 } 
                 
                 // Case of PING commands (debug purpose)
                 else if (command.equals(CMD_PINGG)) {
-                    LOG.log(Level.INFO, "...Incoming PINGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming PINGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
                     byte[] bytesSent = CMD_PONGG.getBytes(Charset.forName(COMM_CHARSET));
                     DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, packetReceived.getAddress(), packetReceived.getPort());
                     LOG.log(Level.INFO, "...DEBUG PINGG: packetSent = " + packetSent);
@@ -501,12 +501,12 @@ public class Comm {
                 
                 // Case of PONG commands (debug purpose)
                 else if (command.equals(CMD_PONGG)) {
-                    LOG.log(Level.INFO, "...Incoming PONGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming PONGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
                 } 
                 
                 // Case of other commands
                 else {
-                    LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
                 }
             }
         } catch (Exception ex) {
@@ -533,7 +533,7 @@ public class Comm {
             listOfEntities.clear();
         }
         
-        LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress + getTimeStamp());
+        LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress);
         String command = CMD_GETSE + owner.getRegisteredPseudo() + " ";   // space is end-delimiter as theire is no space in pseudo
         LOG.log(Level.INFO, "...DEBUG CALL: command = " + command);
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
@@ -561,16 +561,16 @@ public class Comm {
             }
             if (expectedCall) { // response never came back after 10 seconds, consider it failed
                 expectedCall = false;
-                LOG.log(Level.INFO, "...No response from " + member.getMemberName() + " after timeout." + getTimeStamp());
+                LOG.log(Level.INFO, "...No response from " + member.getMemberName() + " after timeout.");
                 return null;
             }
             
             // There was a response
             if (listOfEntities == null) { // response happened but with no list
-                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with no list" + getTimeStamp());
+                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with no list");
                 return null;
             } else if (listOfEntities.isEmpty()) {
-                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with empty list" + getTimeStamp());
+                LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with empty list");
                 return listOfEntities;
             }
             
@@ -578,7 +578,7 @@ public class Comm {
             Exceptions.printStackTrace(e);
             return null;
         }
-        LOG.log(Level.INFO, "Returned call from member " + member.getMemberName() + " with " + listOfEntities.size() + " entities" + getTimeStamp());
+        LOG.log(Level.INFO, "Returned call from member " + member.getMemberName() + " with " + listOfEntities.size() + " entities");
         return listOfEntities;
     }
 
@@ -589,7 +589,7 @@ public class Comm {
             return;
         }
         try {
-            LOG.log(Level.INFO, "Pinging member " + member.getMemberName() + getTimeStamp());
+            LOG.log(Level.INFO, "Pinging member " + member.getMemberName());
             byte[] bytesSent = CMD_PINGG.getBytes(Charset.forName(COMM_CHARSET));
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(member.getIPAddress()), Integer.valueOf(member.getPortAddress()));
             LOG.log(Level.INFO, "...DEBUG PING: packetSent = " + packetSent);
@@ -604,12 +604,6 @@ public class Comm {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-    }
-
-    
-    
-    private String getTimeStamp() {
-        return " (" + new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss").format(new java.util.Date()) + ") ";
     }
 
 
