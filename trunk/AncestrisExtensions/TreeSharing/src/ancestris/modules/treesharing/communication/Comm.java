@@ -247,12 +247,16 @@ public class Comm {
             // Send registering command
             socket = new DatagramSocket();
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(COMM_SERVER), COMM_PORT); 
+            LOG.log(Level.INFO, "...DEBUG : register - before sendPacket");
             socket.send(packetSent);
+            LOG.log(Level.INFO, "...DEBUG : register - after sendPacket");
             // Listen to reply
             byte[] bytesReceived = new byte[512];
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
             socket.setSoTimeout(COMM_TIMEOUT);          // make sure there is a timeout to this
+            LOG.log(Level.INFO, "...DEBUG : register - before receivePacket");
             socket.receive(packetReceived);     
+            LOG.log(Level.INFO, "...DEBUG : register - after receivePacket");
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
             LOG.log(Level.INFO, "...Reply from server : " + reply.substring(0, 5));
             if (reply.substring(0, 5).equals(CMD_REGOK)) {
@@ -303,7 +307,9 @@ public class Comm {
             byte[] bytesReceived = new byte[512];
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
             socket.setSoTimeout(COMM_TIMEOUT);          // make sure there is a timeout to this
+            LOG.log(Level.INFO, "...DEBUG : unregister - before receivePacket");
             socket.receive(packetReceived);     
+            LOG.log(Level.INFO, "...DEBUG : unregister - after receivePacket");
             socket.setSoTimeout(0);
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
             LOG.log(Level.INFO, "...Reply from server : " + reply.substring(0, 5));
@@ -387,7 +393,9 @@ public class Comm {
             while (!stopRun) {
                 // Listen to incoming calls
                 socket.setSoTimeout(0);
-                socket.receive(packetReceived); 
+                LOG.log(Level.INFO, "...DEBUG : listen - before receivePacket");
+                socket.receive(packetReceived);
+                LOG.log(Level.INFO, "...DEBUG : listen - after receivePacket");
                 
                 // Identify command
                 String command = new String(Arrays.copyOfRange(bytesReceived, 0, 5));        
@@ -437,7 +445,9 @@ public class Comm {
                         LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
                         LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getOffset() = " + packetSent.getOffset());
                         LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getData().length = " + packetSent.getData().length);
+                        LOG.log(Level.INFO, "...DEBUG GETSE: before sendPacket");
                         socket.send(packetSent);
+                        LOG.log(Level.INFO, "...DEBUG GETSE: after sendPacket");
                         LOG.log(Level.INFO, "...DEBUG GETSE: after socket send packet");
                         os.close();
                         LOG.log(Level.INFO, "...Sent shared entities to " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + "(" + bytesCount + " bytes)");
@@ -514,8 +524,9 @@ public class Comm {
             LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getOffset() = " + packetSent.getOffset());
             LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getData().length = " + packetSent.getData().length);
             LOG.log(Level.INFO, "...Sending command " + command);
+            LOG.log(Level.INFO, "...DEBUG CALL: before sendPacket");
             socket.send(packetSent);
-            LOG.log(Level.INFO, "...DEBUG CALL: command sent.");
+            LOG.log(Level.INFO, "...DEBUG CALL: after sendPacket");
             
             // Expect answer back and get shared entities in return (wait for response from the other thread...)
             expectedCall = true;
