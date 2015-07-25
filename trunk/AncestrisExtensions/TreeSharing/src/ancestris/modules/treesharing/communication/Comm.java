@@ -148,6 +148,10 @@ public class Comm {
     private String expectedCallIPAddress = null;
     private String expectedCallPortAddress = null;
     private boolean expectedCall = false;
+
+    
+    private DatagramPacket commonPacket = null;  // debug purposes
+    private byte[] commonBytes = null;
     
     /**
      * Constructor
@@ -384,7 +388,18 @@ public class Comm {
             while (!stopRun) {
                 // Listen to incoming calls
                 socket.setSoTimeout(0);
-                socket.receive(packetReceived);
+                socket.receive(packetReceived); /////////////////////////////
+//                boolean wait = true;
+//                while (wait) { 
+//                    TimeUnit.SECONDS.sleep(1);
+//                    wait = (commonPacket == null);
+//                    if (!wait) {
+//                        packetReceived = commonPacket;
+//                        bytesReceived = commonBytes;
+//                        commonPacket = null;
+//                    }
+//                }
+                
                 
                 // Identify command
                 String command = new String(Arrays.copyOfRange(bytesReceived, 0, 5));        
@@ -396,10 +411,19 @@ public class Comm {
                     LOG.log(Level.INFO, "...Incoming GETSE command received from " + member + " (" + packetReceived.getLength() + " bytes)" + getTimeStamp());
                     // If member allowed and IP address matches, send data
                     AncestrisMember aMember = owner.getMember(member);
+                    LOG.log(Level.INFO, "...DEBUG : aMember = " + aMember.getMemberName());
+                    LOG.log(Level.INFO, "...DEBUG : aMember isAllowed= " + aMember.isAllowed());
+                    LOG.log(Level.INFO, "...DEBUG : aMember ipAddress = " + aMember.getIPAddress());
+                    LOG.log(Level.INFO, "...DEBUG : ipAddress received = " + packetReceived.getAddress().getHostAddress());
+                    LOG.log(Level.INFO, "...DEBUG : ipAddress match = " + packetReceived.getAddress().getHostAddress().equals(aMember.getIPAddress()));
+                    LOG.log(Level.INFO, "...DEBUG : aMember portAddress = " + aMember.getPortAddress());
+                    LOG.log(Level.INFO, "...DEBUG : portAddress received = " + packetReceived.getPort());
+                    LOG.log(Level.INFO, "...DEBUG : portAddress match = " + (packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())));
+                    
                     if (aMember == null) {
                         LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
                     }
-                    else if (aMember.isAllowed() && packetReceived.getAddress().equals(aMember.getIPAddress()) && packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())) {
+                    else if (aMember.isAllowed() && packetReceived.getAddress().getHostAddress().equals(aMember.getIPAddress()) && packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())) {
                         LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sending data.");
                         ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE - 5);
                         byteStream.write(CMD_TAKSE.getBytes()); // start content with command
@@ -412,7 +436,7 @@ public class Comm {
                         int byteCount = packetSent.getLength();
                         socket.send(packetSent);
                         os.close();
-                        LOG.log(Level.INFO, "...Sent shared entities to " + packetReceived.getAddress() + ":" + packetReceived.getPort() + "(" + byteCount + " bytes)");
+                        LOG.log(Level.INFO, "...Sent shared entities to " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + "(" + byteCount + " bytes)");
                     } else {
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed or address does not match pseudo. Nothing sent.");
                         //TODO send KO to member
@@ -421,10 +445,10 @@ public class Comm {
 
                 // Case of CMD_TAKSE command (following my GETSE message to another member, he/she returns his/her shared entities. Take them.
                 else if (command.equals(CMD_TAKSE)) {
-                    LOG.log(Level.INFO, "...Incoming TAKSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + " (" + packetReceived.getLength() + " bytes)" + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming TAKSE command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + " (" + packetReceived.getLength() + " bytes)" + getTimeStamp());
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null
-                            && packetReceived.getAddress().equals(expectedCallIPAddress) && packetReceived.getPort() == Integer.valueOf(expectedCallPortAddress)) {
+                            && packetReceived.getAddress().getHostAddress().equals(expectedCallIPAddress) && packetReceived.getPort() == Integer.valueOf(expectedCallPortAddress)) {
                         listOfEntities = null;
                         ByteArrayInputStream byteStream = new ByteArrayInputStream(Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length-1)); // TODO : bout de la fin ?????
                         LOG.log(Level.INFO, "...DEBUG : bytestream = " + byteStream.toString());
@@ -433,17 +457,18 @@ public class Comm {
                         listOfEntities = (List<FriendGedcomEntity>) is.readObject();
                         LOG.log(Level.INFO, "...DEBUG : list size = " + listOfEntities.size());
                         is.close();
+                        expectedCall = false;
                         }
                     }
 
                 // Case of CMD_CLOSE command (following my unresgistration, server sends a close command)
                 else if (command.equals(CMD_CLOSE)) {
-                    LOG.log(Level.INFO, "...Incoming CLOSE command received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming CLOSE command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
                 } 
                 
                 // Case of other commands
                 else {
-                    LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress() + ":" + packetReceived.getPort() + getTimeStamp());
+                    LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
                 }
             }
         } catch (Exception ex) {
@@ -477,7 +502,9 @@ public class Comm {
             // Ask member for list of shared entities
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(expectedCallIPAddress), Integer.valueOf(expectedCallPortAddress)); 
             LOG.log(Level.INFO, "...Sending command " + command);
-            socket.send(packetSent);
+            socket.send(packetSent); //////////////////////////
+//            commonBytes = bytesSent;
+//            commonPacket = packetSent;
             
             // Expect answer back and get shared entities in return (wait for response from the other thread...)
             expectedCall = true;
