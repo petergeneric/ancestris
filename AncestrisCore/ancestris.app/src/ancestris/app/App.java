@@ -23,6 +23,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
@@ -212,13 +213,15 @@ public class App {
     private static class LogFormatter extends Formatter {
 
         public String format(LogRecord record) {
-            StringBuffer result = new StringBuffer(80);
+            StringBuffer result = new StringBuffer(120);
+            result.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(record.getMillis())));
+            result.append(" = ");
             result.append(record.getLevel());
             result.append(":");
             result.append(record.getSourceClassName());
             result.append(".");
             result.append(record.getSourceMethodName());
-            result.append(":");
+            result.append(":   ");
             String msg = record.getMessage();
             Object[] parms = record.getParameters();
             if (parms == null || parms.length == 0) {
