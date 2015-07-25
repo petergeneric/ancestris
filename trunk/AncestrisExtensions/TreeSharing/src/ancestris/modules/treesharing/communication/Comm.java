@@ -240,16 +240,16 @@ public class Comm {
             // Send registering command
             socketServer = new DatagramSocket();
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(COMM_SERVER), COMM_PORT); 
-            LOG.log(Level.INFO, "...DEBUG : register - before sendPacket");
+            LOG.log(Level.INFO, "......DEBUG : register - before sendPacket");
             socketServer.send(packetSent);
-            LOG.log(Level.INFO, "...DEBUG : register - after sendPacket");
+            LOG.log(Level.INFO, "......DEBUG : register - after sendPacket");
             // Listen to reply
             byte[] bytesReceived = new byte[512];
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
             socketServer.setSoTimeout(COMM_TIMEOUT);          // make sure there is a timeout to this
-            LOG.log(Level.INFO, "...DEBUG : register - before receivePacket");
+            LOG.log(Level.INFO, "......DEBUG : register - before receivePacket");
             socketServer.receive(packetReceived);     
-            LOG.log(Level.INFO, "...DEBUG : register - after receivePacket");
+            LOG.log(Level.INFO, "......DEBUG : register - after receivePacket");
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
             LOG.log(Level.INFO, "...Reply from server : " + reply.substring(0, 5));
             if (reply.substring(0, 5).equals(CMD_REGOK)) {
@@ -290,16 +290,16 @@ public class Comm {
         try {
             // Send unrestering command
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(COMM_SERVER), COMM_PORT); 
-            LOG.log(Level.INFO, "...DEBUG : unregister - before sendPacket");
+            LOG.log(Level.INFO, "......DEBUG : unregister - before sendPacket");
             socketServer.send(packetSent);
-            LOG.log(Level.INFO, "...DEBUG : unregister - after sendPacket");
+            LOG.log(Level.INFO, "......DEBUG : unregister - after sendPacket");
             // Listen to reply
             byte[] bytesReceived = new byte[512];
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
             socketServer.setSoTimeout(COMM_TIMEOUT);          // make sure there is a timeout to this
-            LOG.log(Level.INFO, "...DEBUG : unregister - before receivePacket");
+            LOG.log(Level.INFO, "......DEBUG : unregister - before receivePacket");
             socketServer.receive(packetReceived);     
-            LOG.log(Level.INFO, "...DEBUG : unregister - after receivePacket");
+            LOG.log(Level.INFO, "......DEBUG : unregister - after receivePacket");
             socketServer.setSoTimeout(0);
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
             LOG.log(Level.INFO, "...Reply from server : " + reply.substring(0, 5));
@@ -383,9 +383,9 @@ public class Comm {
             while (!stopRun) {
                 // Listen to incoming calls
                 socketServer.setSoTimeout(0);
-                LOG.log(Level.INFO, "...DEBUG : listen - before receivePacket");
+                LOG.log(Level.INFO, "......DEBUG : listen - before receivePacket");
                 socketServer.receive(packetReceived);
-                LOG.log(Level.INFO, "...DEBUG : listen - after receivePacket");
+                LOG.log(Level.INFO, "......DEBUG : listen - after receivePacket");
                 
                 // Identify command
                 String command = new String(Arrays.copyOfRange(bytesReceived, 0, 5));        
@@ -397,14 +397,14 @@ public class Comm {
                     LOG.log(Level.INFO, "...Incoming GETSE command received from " + member + " (" + packetReceived.getLength() + " bytes)");
                     // If member allowed and IP address matches, send data
                     AncestrisMember aMember = owner.getMember(member);
-                    LOG.log(Level.INFO, "...DEBUG : aMember = " + aMember.getMemberName());
-                    LOG.log(Level.INFO, "...DEBUG : aMember isAllowed= " + aMember.isAllowed());
-                    LOG.log(Level.INFO, "...DEBUG : aMember ipAddress = " + aMember.getIPAddress());
-                    LOG.log(Level.INFO, "...DEBUG : ipAddress received = " + packetReceived.getAddress().getHostAddress());
-                    LOG.log(Level.INFO, "...DEBUG : ipAddress match = " + packetReceived.getAddress().getHostAddress().equals(aMember.getIPAddress()));
-                    LOG.log(Level.INFO, "...DEBUG : aMember portAddress = " + aMember.getPortAddress());
-                    LOG.log(Level.INFO, "...DEBUG : portAddress received = " + packetReceived.getPort());
-                    LOG.log(Level.INFO, "...DEBUG : portAddress match = " + (packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())));
+                    LOG.log(Level.INFO, "......DEBUG : aMember = " + aMember.getMemberName());
+                    LOG.log(Level.INFO, "......DEBUG : aMember isAllowed= " + aMember.isAllowed());
+                    LOG.log(Level.INFO, "......DEBUG : aMember ipAddress = " + aMember.getIPAddress());
+                    LOG.log(Level.INFO, "......DEBUG : ipAddress received = " + packetReceived.getAddress().getHostAddress());
+                    LOG.log(Level.INFO, "......DEBUG : ipAddress match = " + packetReceived.getAddress().getHostAddress().equals(aMember.getIPAddress()));
+                    LOG.log(Level.INFO, "......DEBUG : aMember portAddress = " + aMember.getPortAddress());
+                    LOG.log(Level.INFO, "......DEBUG : portAddress received = " + packetReceived.getPort());
+                    LOG.log(Level.INFO, "......DEBUG : portAddress match = " + (packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())));
                     
                     if (aMember == null) {
                         LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
@@ -412,30 +412,30 @@ public class Comm {
                     else if (aMember.isAllowed() && packetReceived.getAddress().getHostAddress().equals(aMember.getIPAddress()) && packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())) {
                         LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sending data.");
                         ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE - 5);
-                        LOG.log(Level.INFO, "...DEBUG GETSE: bytestream = " + byteStream.toString());
+                        LOG.log(Level.INFO, "......DEBUG GETSE: bytestream = " + byteStream.toString());
                         byteStream.write(CMD_TAKSE.getBytes()); // start content with command
-                        LOG.log(Level.INFO, "...DEBUG GETSE: after write");
+                        LOG.log(Level.INFO, "......DEBUG GETSE: after write");
                         ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
-                        LOG.log(Level.INFO, "...DEBUG GETSE: os = " + os.toString());
+                        LOG.log(Level.INFO, "......DEBUG GETSE: os = " + os.toString());
                         os.flush();
-                        LOG.log(Level.INFO, "...DEBUG GETSE: after flush1");
+                        LOG.log(Level.INFO, "......DEBUG GETSE: after flush1");
                         os.writeObject(owner.getMySharedEntities());  // Add object to content. TODO : will need to compress and encrypt data at some point
-                        LOG.log(Level.INFO, "...DEBUG GETSE: after writeObject");
+                        LOG.log(Level.INFO, "......DEBUG GETSE: after writeObject");
                         os.flush();
-                        LOG.log(Level.INFO, "...DEBUG GETSE: after flush2");
+                        LOG.log(Level.INFO, "......DEBUG GETSE: after flush2");
                         byte[] bytesSent = byteStream.toByteArray();  
-                        LOG.log(Level.INFO, "...DEBUG GETSE: after bytesSent declaration");
+                        LOG.log(Level.INFO, "......DEBUG GETSE: after bytesSent declaration");
                         DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, packetReceived.getAddress(), packetReceived.getPort());
-                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent = " + packetSent.toString());
+                        LOG.log(Level.INFO, "......DEBUG GETSE: packetSent = " + packetSent.toString());
                         int bytesCount = packetSent.getLength();
-                        LOG.log(Level.INFO, "...DEBUG GETSE: byteCount = " + bytesCount);
-                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent = " + packetSent);
-                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
-                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getData().length = " + packetSent.getData().length);
-                        LOG.log(Level.INFO, "...DEBUG GETSE: before sendPacket");
+                        LOG.log(Level.INFO, "......DEBUG GETSE: byteCount = " + bytesCount);
+                        LOG.log(Level.INFO, "......DEBUG GETSE: packetSent = " + packetSent);
+                        LOG.log(Level.INFO, "......DEBUG GETSE: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
+                        LOG.log(Level.INFO, "......DEBUG GETSE: packetSent.getData().length = " + packetSent.getData().length);
+                        LOG.log(Level.INFO, "......DEBUG GETSE: before sendPacket");
                         socketServer.send(packetSent);
-                        LOG.log(Level.INFO, "...DEBUG GETSE: after sendPacket");
-                        LOG.log(Level.INFO, "...DEBUG GETSE: after socket send packet");
+                        LOG.log(Level.INFO, "......DEBUG GETSE: after sendPacket");
+                        LOG.log(Level.INFO, "......DEBUG GETSE: after socket send packet");
                         os.close();
                         LOG.log(Level.INFO, "...Sent shared entities to " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + "(" + bytesCount + " bytes)");
                     } else {
@@ -452,11 +452,11 @@ public class Comm {
                             && packetReceived.getAddress().getHostAddress().equals(expectedCallIPAddress) && packetReceived.getPort() == Integer.valueOf(expectedCallPortAddress)) {
                         listOfEntities = null;
                         ByteArrayInputStream byteStream = new ByteArrayInputStream(Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length-1)); // TODO : bout de la fin ?????
-                        LOG.log(Level.INFO, "...DEBUG TAKSE: bytestream = " + byteStream.toString());
+                        LOG.log(Level.INFO, "......DEBUG TAKSE: bytestream = " + byteStream.toString());
                         ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
-                        LOG.log(Level.INFO, "...DEBUG TAKSE: is = " + is.toString());
+                        LOG.log(Level.INFO, "......DEBUG TAKSE: is = " + is.toString());
                         listOfEntities = (List<FriendGedcomEntity>) is.readObject();
-                        LOG.log(Level.INFO, "...DEBUG TAKSE: list size = " + listOfEntities.size());
+                        LOG.log(Level.INFO, "......DEBUG TAKSE: list size = " + listOfEntities.size());
                         is.close();
                         expectedCall = false;
                         }
@@ -469,15 +469,15 @@ public class Comm {
                 
                 // Case of PING commands (debug purpose)
                 else if (command.equals(CMD_PINGG)) {
-                    LOG.log(Level.INFO, "...Incoming PINGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
+                    LOG.log(Level.INFO, "......DEBUG PINGG: Incoming PINGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
                     byte[] bytesSent = CMD_PONGG.getBytes(Charset.forName(COMM_CHARSET));
                     DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, packetReceived.getAddress(), packetReceived.getPort());
-                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent = " + packetSent);
-                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
-                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent.getData().length = " + packetSent.getData().length);
-                    LOG.log(Level.INFO, "...DEBUG PINGG: before sending PONGG");
+                    LOG.log(Level.INFO, "......DEBUG PINGG: packetSent = " + packetSent);
+                    LOG.log(Level.INFO, "......DEBUG PINGG: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
+                    LOG.log(Level.INFO, "......DEBUG PINGG: packetSent.getData().length = " + packetSent.getData().length);
+                    LOG.log(Level.INFO, "......DEBUG PINGG: before sending PONGG");
                     socketServer.send(packetSent);
-                    LOG.log(Level.INFO, "...DEBUG PINGG: after  sending PONGG");
+                    LOG.log(Level.INFO, "......DEBUG PINGG: after  sending PONGG");
                 } 
                 
                 // Case of PONG commands (debug purpose)
@@ -516,20 +516,18 @@ public class Comm {
         
         LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress);
         String command = CMD_GETSE + owner.getRegisteredPseudo() + " ";   // space is end-delimiter as theire is no space in pseudo
-        LOG.log(Level.INFO, "...DEBUG CALL: command = " + command);
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
-        LOG.log(Level.INFO, "...DEBUG CALL: bytesSent = " + bytesSent);
         try {
             // Ask member for list of shared entities
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(expectedCallIPAddress), Integer.valueOf(expectedCallPortAddress)); 
-            LOG.log(Level.INFO, "...DEBUG CALL: packetSent = " + packetSent);
-            LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
-            LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getData().length = " + packetSent.getData().length);
+            LOG.log(Level.INFO, "......DEBUG CALL: packetSent = " + packetSent);
+            LOG.log(Level.INFO, "......DEBUG CALL: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
+            LOG.log(Level.INFO, "......DEBUG CALL: packetSent.getData().length = " + packetSent.getData().length);
             LOG.log(Level.INFO, "...Sending command " + command);
             socketClient = new DatagramSocket();
-            LOG.log(Level.INFO, "...DEBUG CALL: before sendPacket using Client Socket " + socketClient.toString());
+            LOG.log(Level.INFO, "......DEBUG CALL: before sendPacket using Client Socket " + socketClient.toString());
             socketClient.send(packetSent);
-            LOG.log(Level.INFO, "...DEBUG CALL: after sendPacket");
+            LOG.log(Level.INFO, "......DEBUG CALL: after sendPacket");
             
             // Expect answer back and get shared entities in return (wait for response from the other thread...)
             expectedCall = true;
@@ -570,16 +568,16 @@ public class Comm {
     
     public void ping(AncestrisMember member) {
         try {
-            LOG.log(Level.INFO, "Pinging member " + member.getMemberName());
+            LOG.log(Level.INFO, "......DEBUG PING: Pinging member " + member.getMemberName());
             byte[] bytesSent = CMD_PINGG.getBytes(Charset.forName(COMM_CHARSET));
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(member.getIPAddress()), Integer.valueOf(member.getPortAddress()));
-            LOG.log(Level.INFO, "...DEBUG PING: packetSent = " + packetSent);
-            LOG.log(Level.INFO, "...DEBUG PING: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
-            LOG.log(Level.INFO, "...DEBUG PING: packetSent.getData().length = " + packetSent.getData().length);
+            LOG.log(Level.INFO, "......DEBUG PING: packetSent = " + packetSent);
+            LOG.log(Level.INFO, "......DEBUG PING: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
+            LOG.log(Level.INFO, "......DEBUG PING: packetSent.getData().length = " + packetSent.getData().length);
             socketClient = new DatagramSocket();
-            LOG.log(Level.INFO, "...DEBUG PING: before sendPacket using Client Socket " + socketClient.toString());
+            LOG.log(Level.INFO, "......DEBUG PING: before sendPacket using Client Socket " + socketClient.toString());
             socketClient.send(packetSent);
-            LOG.log(Level.INFO, "...DEBUG PING: after sendPacket");
+            LOG.log(Level.INFO, "......DEBUG PING: after sendPacket");
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
