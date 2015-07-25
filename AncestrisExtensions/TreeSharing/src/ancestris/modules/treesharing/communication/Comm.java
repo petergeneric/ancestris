@@ -150,9 +150,6 @@ public class Comm {
     private boolean expectedCall = false;
 
     
-    private DatagramPacket commonPacket = null;  // debug purposes
-    private byte[] commonBytes = null;
-    
     /**
      * Constructor
      */
@@ -299,7 +296,9 @@ public class Comm {
         try {
             // Send unrestering command
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(COMM_SERVER), COMM_PORT); 
+            LOG.log(Level.INFO, "...DEBUG : unregister - before sendPacket");
             socket.send(packetSent);
+            LOG.log(Level.INFO, "...DEBUG : unregister - after sendPacket");
             // Listen to reply
             byte[] bytesReceived = new byte[512];
             DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
@@ -388,18 +387,7 @@ public class Comm {
             while (!stopRun) {
                 // Listen to incoming calls
                 socket.setSoTimeout(0);
-                socket.receive(packetReceived); /////////////////////////////
-//                boolean wait = true;
-//                while (wait) { 
-//                    TimeUnit.SECONDS.sleep(1);
-//                    wait = (commonPacket == null);
-//                    if (!wait) {
-//                        packetReceived = commonPacket;
-//                        bytesReceived = commonBytes;
-//                        commonPacket = null;
-//                    }
-//                }
-                
+                socket.receive(packetReceived); 
                 
                 // Identify command
                 String command = new String(Arrays.copyOfRange(bytesReceived, 0, 5));        
@@ -426,17 +414,33 @@ public class Comm {
                     else if (aMember.isAllowed() && packetReceived.getAddress().getHostAddress().equals(aMember.getIPAddress()) && packetReceived.getPort() == Integer.valueOf(aMember.getPortAddress())) {
                         LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sending data.");
                         ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE - 5);
+                        LOG.log(Level.INFO, "...DEBUG GETSE: bytestream = " + byteStream.toString());
                         byteStream.write(CMD_TAKSE.getBytes()); // start content with command
+                        LOG.log(Level.INFO, "...DEBUG GETSE: after write");
                         ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
+                        LOG.log(Level.INFO, "...DEBUG GETSE: os = " + os.toString());
                         os.flush();
+                        LOG.log(Level.INFO, "...DEBUG GETSE: after flush1");
                         os.writeObject(owner.getMySharedEntities());  // Add object to content. TODO : will need to compress and encrypt data at some point
+                        LOG.log(Level.INFO, "...DEBUG GETSE: after writeObject");
                         os.flush();
+                        LOG.log(Level.INFO, "...DEBUG GETSE: after flush2");
                         byte[] bytesSent = byteStream.toByteArray();  
+                        LOG.log(Level.INFO, "...DEBUG GETSE: after bytesSent declaration");
                         DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, packetReceived.getAddress(), packetReceived.getPort());
-                        int byteCount = packetSent.getLength();
+                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent = " + packetSent.toString());
+                        int bytesCount = packetSent.getLength();
+                        LOG.log(Level.INFO, "...DEBUG GETSE: byteCount = " + bytesCount);
+                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent = " + packetSent);
+                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getAddress().getHostAddress() = " + packetSent.getAddress().getHostAddress());
+                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getPort() = " + packetSent.getPort());
+                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
+                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getOffset() = " + packetSent.getOffset());
+                        LOG.log(Level.INFO, "...DEBUG GETSE: packetSent.getData().length = " + packetSent.getData().length);
                         socket.send(packetSent);
+                        LOG.log(Level.INFO, "...DEBUG GETSE: after socket send packet");
                         os.close();
-                        LOG.log(Level.INFO, "...Sent shared entities to " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + "(" + byteCount + " bytes)");
+                        LOG.log(Level.INFO, "...Sent shared entities to " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + "(" + bytesCount + " bytes)");
                     } else {
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed or address does not match pseudo. Nothing sent.");
                         //TODO send KO to member
@@ -451,11 +455,11 @@ public class Comm {
                             && packetReceived.getAddress().getHostAddress().equals(expectedCallIPAddress) && packetReceived.getPort() == Integer.valueOf(expectedCallPortAddress)) {
                         listOfEntities = null;
                         ByteArrayInputStream byteStream = new ByteArrayInputStream(Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length-1)); // TODO : bout de la fin ?????
-                        LOG.log(Level.INFO, "...DEBUG : bytestream = " + byteStream.toString());
+                        LOG.log(Level.INFO, "...DEBUG TAKSE: bytestream = " + byteStream.toString());
                         ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
-                        LOG.log(Level.INFO, "...DEBUG : is = " + is.toString());
+                        LOG.log(Level.INFO, "...DEBUG TAKSE: is = " + is.toString());
                         listOfEntities = (List<FriendGedcomEntity>) is.readObject();
-                        LOG.log(Level.INFO, "...DEBUG : list size = " + listOfEntities.size());
+                        LOG.log(Level.INFO, "...DEBUG TAKSE: list size = " + listOfEntities.size());
                         is.close();
                         expectedCall = false;
                         }
@@ -497,14 +501,21 @@ public class Comm {
         
         LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress + getTimeStamp());
         String command = CMD_GETSE + owner.getRegisteredPseudo() + " ";   // space is end-delimiter as theire is no space in pseudo
+        LOG.log(Level.INFO, "...DEBUG CALL: command = " + command);
         byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
+        LOG.log(Level.INFO, "...DEBUG CALL: bytesSent = " + bytesSent);
         try {
             // Ask member for list of shared entities
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(expectedCallIPAddress), Integer.valueOf(expectedCallPortAddress)); 
+            LOG.log(Level.INFO, "...DEBUG CALL: packetSent = " + packetSent);
+            LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getAddress().getHostAddress() = " + packetSent.getAddress().getHostAddress());
+            LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getPort() = " + packetSent.getPort());
+            LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
+            LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getOffset() = " + packetSent.getOffset());
+            LOG.log(Level.INFO, "...DEBUG CALL: packetSent.getData().length = " + packetSent.getData().length);
             LOG.log(Level.INFO, "...Sending command " + command);
-            socket.send(packetSent); //////////////////////////
-//            commonBytes = bytesSent;
-//            commonPacket = packetSent;
+            socket.send(packetSent);
+            LOG.log(Level.INFO, "...DEBUG CALL: command sent.");
             
             // Expect answer back and get shared entities in return (wait for response from the other thread...)
             expectedCall = true;
@@ -546,137 +557,3 @@ public class Comm {
 
 }
 
-
-
-
-//        try {
-//            // Create socket
-//            InetAddress addr = InetAddress.getByName(member.getIPAddress());
-//            LOG.log(Level.INFO, "Calling member '" + member.getMemberName() + "' at IP address " + addr.getCanonicalHostName());
-//            Socket socket = new Socket();
-//            socket.connect(new InetSocketAddress(addr, COMM_PORT), COMM_TIMEOUT);       // replace addr with "localhost" to do self-test
-//            LOG.log(Level.INFO, "...Calling socket created " + socket.toString());
-//            
-//            // First send my pseudo
-//            out = new PrintWriter(socket.getOutputStream(), true);
-//            out.println(owner.getPreferredPseudo());
-//
-//            // Then get data
-//            objectInputStream = new ObjectInputStream(socket.getInputStream());
-//            while (true) {
-//                FriendGedcomEntity item = (FriendGedcomEntity) objectInputStream.readObject();
-//                list.add(item);
-//            }
-//        } catch (EOFException eofException) {
-//        } catch (SocketTimeoutException stex) {
-//            LOG.log(Level.INFO, "...Socket timeout");
-//            return list;
-//        } catch (IOException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (ClassNotFoundException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } finally {
-//            // Close socket
-//            if (objectInputStream != null) {
-//                try {
-//                    objectInputStream.close();
-//                } catch (IOException ex) {
-//                    Exceptions.printStackTrace(ex);
-//                }
-//            }
-//            if (out != null) {
-//                out.close();
-//            }
-//        }
-
-
-//        String myIPAddress = "default";
-//        String duplicateError = "duplicate entry";
-//        String timestamp = new Timestamp(new java.util.Date().getTime()).toString().replace(" ", "_");
-//
-//        String outputString = getQueryResult(COMM_SERVER + "register_member.php?" + COMM_CREDENTIALS + "&pseudo=" + myName + "&ipaddress=" + myIPAddress + "&timestamp=" + timestamp);
-//
-//        if (!outputString.trim().isEmpty()) {
-//            String errorMsg = "";
-//            if (outputString.toLowerCase().contains(duplicateError)) {
-//                errorMsg = NbBundle.getMessage(Comm.class, "ERR_DuplicatePseudo");
-//            } else {
-//                errorMsg = outputString;
-//            }
-//            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Registration"), errorMsg).setMessageType(DialogManager.ERROR_MESSAGE).show();
-//            return false;
-//        }
-//        LOG.log(Level.INFO, "Registered " + myName + " on the Ancestris server.");
-//        return true;
-
-
-
-
-//        ancestrisMembers.add(new AncestrisMember("Tester", "93.0.227.55", "45872"));
-//        ancestrisMembers.add(new AncestrisMember("Daniel", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Yannick", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Dominique", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Valérie", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Jeannot", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("FrançoiS", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Ben", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Patrice", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Monique", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Frédéric", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Rodolphe", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Agnès", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Eric", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Mathilde", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Christophe", "xxxx"));
-//        ancestrisMembers.add(new AncestrisMember("Guillemette", "xxxx"));
-        
-
-
-
-//        BufferedReader in = null;
-//        ObjectOutputStream objectOutputStream = null;
-//        
-//        try {
-//            serversocket = new ServerSocket(COMM_PORT);  
-//            while (!stopRun) {
-//                // Create server socket and wait
-//                LOG.log(Level.INFO, "...Opening server socket " + serversocket.toString());
-//                Socket listeningSocket = serversocket.accept();
-//                LOG.log(Level.INFO, "...Server socket accepting a socket " + listeningSocket.toString());
-//
-//                // Connection is made, get input and output streams
-//                in = new BufferedReader(new InputStreamReader(listeningSocket.getInputStream()));
-//                objectOutputStream = new ObjectOutputStream(listeningSocket.getOutputStream());
-//                
-//                // Get first line which should contain pseudo
-//                String pseudo = in.readLine();
-//                
-//                // If pseudo accepted, send data
-//                if (owner.isAllowedMember(pseudo)) {                                                // replace with always true to self-test
-//                    LOG.log(Level.INFO, "...Member " + pseudo + " is allowed. Sending data.");
-//                    for (FriendGedcomEntity item : owner.getMySharedEntities()) {
-//                        objectOutputStream.writeObject(item);
-//                    }
-//                } else {
-//                    LOG.log(Level.INFO, "...Member " + pseudo + " is NOT allowed. Nothing sent.");
-//                }
-//                
-//            // Close socket
-//            objectOutputStream.close();
-//            in.close();
-//            }
-//        } catch (SocketException ex) {
-//            // SocketException generated when socketserver is closed, and it is closed to ensure protection and to be reused and to close thread properly.
-//        } catch (Exception ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-
-
-//        String outputString = getQueryResult(COMM_SERVER + "unregister_member.php?" + COMM_CREDENTIALS + "&pseudo=" + myName);
-//
-//        if (!outputString.trim().isEmpty()) {
-//            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), outputString).setMessageType(DialogManager.ERROR_MESSAGE).show();
-//            return false;
-//        }
-//        LOG.log(Level.INFO, "Unregistered " + myName + " from the Ancestris server.");
-//        return true;
