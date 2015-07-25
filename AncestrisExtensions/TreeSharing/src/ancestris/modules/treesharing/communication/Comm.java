@@ -488,6 +488,12 @@ public class Comm {
                     LOG.log(Level.INFO, "...Incoming PINGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
                     byte[] bytesSent = CMD_PONGG.getBytes(Charset.forName(COMM_CHARSET));
                     DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, packetReceived.getAddress(), packetReceived.getPort());
+                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent = " + packetSent);
+                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent.getAddress().getHostAddress() = " + packetSent.getAddress().getHostAddress());
+                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent.getPort() = " + packetSent.getPort());
+                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
+                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent.getOffset() = " + packetSent.getOffset());
+                    LOG.log(Level.INFO, "...DEBUG PINGG: packetSent.getData().length = " + packetSent.getData().length);
                     LOG.log(Level.INFO, "...DEBUG PINGG: before sending PONGG");
                     socket.send(packetSent);
                     LOG.log(Level.INFO, "...DEBUG PINGG: after  sending PONGG");
@@ -583,7 +589,7 @@ public class Comm {
             return;
         }
         try {
-            LOG.log(Level.INFO, "Pinging member " + member.getMemberName());
+            LOG.log(Level.INFO, "Pinging member " + member.getMemberName() + getTimeStamp());
             byte[] bytesSent = CMD_PINGG.getBytes(Charset.forName(COMM_CHARSET));
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(member.getIPAddress()), Integer.valueOf(member.getPortAddress()));
             LOG.log(Level.INFO, "...DEBUG PING: packetSent = " + packetSent);
