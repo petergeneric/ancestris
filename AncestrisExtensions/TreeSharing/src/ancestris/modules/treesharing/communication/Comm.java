@@ -493,6 +493,11 @@ public class Comm {
                     LOG.log(Level.INFO, "...DEBUG PINGG: after  sending PONGG");
                 } 
                 
+                // Case of PONG commands (debug purpose)
+                else if (command.equals(CMD_PONGG)) {
+                    LOG.log(Level.INFO, "...Incoming PONGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
+                } 
+                
                 // Case of other commands
                 else {
                     LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
