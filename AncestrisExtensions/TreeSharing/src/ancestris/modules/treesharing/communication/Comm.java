@@ -145,13 +145,14 @@ public class Comm {
     private volatile boolean stopRun;
     private Thread listeningThread;
 
-    
     // Call info
     private List<FriendGedcomEntity> listOfEntities = null;
     private String expectedCallIPAddress = null;
     private String expectedCallPortAddress = null;
     private boolean expectedCall = false;
 
+
+    
     
     /**
      * Constructor
@@ -164,8 +165,6 @@ public class Comm {
     
     /**
      * Identify the list of currently sharing friends from the ancestris server (crypted communication)
-     * 
-     * @return all Ancestris friends sharing something
      */
     public List<AncestrisMember> getAncestrisMembers() {
         
@@ -193,13 +192,7 @@ public class Comm {
                 }
             }
             
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ParserConfigurationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (SAXException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (DOMException ex) {
+        } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
                 
@@ -237,9 +230,6 @@ public class Comm {
     
     /**
      * Register on Ancestris server that I am ready to share 
-     * 
-     * @param myName
-     * @return 
      */
     public boolean registerMe(String pseudo) {
 
@@ -290,9 +280,6 @@ public class Comm {
 
     /**
      * Tell Ancestris server that I am no longer ready to share
-     * 
-     * @param myName
-     * @return 
      */
     public boolean unregisterMe(String pseudo) {
 
@@ -582,7 +569,6 @@ public class Comm {
 
     
     public void ping(AncestrisMember member) {
-
         try {
             LOG.log(Level.INFO, "Pinging member " + member.getMemberName());
             byte[] bytesSent = CMD_PINGG.getBytes(Charset.forName(COMM_CHARSET));
