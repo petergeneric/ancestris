@@ -137,6 +137,9 @@ public class Comm {
     // Sharing my shared entities
     private static String CMD_GETSE = "GETSE";
     private static String CMD_TAKSE = "TAKSE";
+    // Testing connection
+    private static String CMD_PINGG = "PINGG";
+    private static String CMD_PONGG = "PONGG";
     
     // Threads
     private volatile boolean stopRun;
@@ -480,6 +483,16 @@ public class Comm {
                     LOG.log(Level.INFO, "...Incoming CLOSE command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
                 } 
                 
+                // Case of PING commands (debug purpose)
+                else if (command.equals(CMD_PINGG)) {
+                    LOG.log(Level.INFO, "...Incoming PINGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
+                    byte[] bytesSent = CMD_PONGG.getBytes(Charset.forName(COMM_CHARSET));
+                    DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, packetReceived.getAddress(), packetReceived.getPort());
+                    LOG.log(Level.INFO, "...DEBUG PINGG: before sending PONGG");
+                    socket.send(packetSent);
+                    LOG.log(Level.INFO, "...DEBUG PINGG: after  sending PONGG");
+                } 
+                
                 // Case of other commands
                 else {
                     LOG.log(Level.INFO, "...Incoming unknown command : " + command + " received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + getTimeStamp());
@@ -559,6 +572,29 @@ public class Comm {
     }
 
     
+    public void ping(AncestrisMember member) {
+
+        if (socket == null || socket.isClosed()) {
+            return;
+        }
+        try {
+            LOG.log(Level.INFO, "Pinging member " + member.getMemberName());
+            byte[] bytesSent = CMD_PINGG.getBytes(Charset.forName(COMM_CHARSET));
+            DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(member.getIPAddress()), Integer.valueOf(member.getPortAddress()));
+            LOG.log(Level.INFO, "...DEBUG PING: packetSent = " + packetSent);
+            LOG.log(Level.INFO, "...DEBUG PING: packetSent.getAddress().getHostAddress() = " + packetSent.getAddress().getHostAddress());
+            LOG.log(Level.INFO, "...DEBUG PING: packetSent.getPort() = " + packetSent.getPort());
+            LOG.log(Level.INFO, "...DEBUG PING: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
+            LOG.log(Level.INFO, "...DEBUG PING: packetSent.getOffset() = " + packetSent.getOffset());
+            LOG.log(Level.INFO, "...DEBUG PING: packetSent.getData().length = " + packetSent.getData().length);
+            LOG.log(Level.INFO, "...DEBUG PING: before sendPacket");
+            socket.send(packetSent);
+            LOG.log(Level.INFO, "...DEBUG PING: after sendPacket");
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
     
     
     private String getTimeStamp() {
