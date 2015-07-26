@@ -355,10 +355,6 @@ public class TreeSharingTopComponent extends TopComponent {
         membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
         membersNumber.setText(" "+ancestrisMembers.size() + " ");
         membersList.updateTable(ancestrisMembers);
-        // debug purposes
-        if (true) {
-            pingMembers();
-        }
     }
     
 
@@ -781,15 +777,5 @@ public class TreeSharingTopComponent extends TopComponent {
 
     
     
-    private void pingMembers() {
-
-        for (AncestrisMember member : ancestrisMembers) {
-            if (!member.isAllowed() || member.getMemberName().equals(getPreferredPseudo())) {
-                continue;
-            }
-            getCommHandler().ping(member);
-        }
-
-    }
 
 }
