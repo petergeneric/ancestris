@@ -461,7 +461,7 @@ public class TreeSharingTopComponent extends TopComponent {
         shareAll = true;
         
         // Launch search engine
-        launchSearchEngine();
+        //launchSearchEngine();
         
         return true;
     }
@@ -469,7 +469,7 @@ public class TreeSharingTopComponent extends TopComponent {
     public boolean stopSharingAll() {
 
         // Launch search engine
-        stopSearchEngine();
+        //stopSearchEngine();
         
         // Stop timer
         if (timer != null) {
