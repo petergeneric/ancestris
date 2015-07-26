@@ -537,7 +537,6 @@ public class Comm {
             if (expectedCall) { // response never came back after 10 seconds, consider it failed
                 expectedCall = false;
                 LOG.log(Level.INFO, "...No response from " + member.getMemberName() + " after timeout.");
-                socket.close();
                 return null;
             }
             
@@ -547,18 +546,13 @@ public class Comm {
                 return null;
             } else if (listOfEntities.isEmpty()) {
                 LOG.log(Level.INFO, "...Returned call from member " + member.getMemberName() + " with empty list");
-                socket.close();
                 return listOfEntities;
             }
             
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
-            if (socket != null) {
-                socket.close();
-            }
             return null;
         }
-        socket.close();
         LOG.log(Level.INFO, "Returned call from member " + member.getMemberName() + " with " + listOfEntities.size() + " entities");
         return listOfEntities;
     }
