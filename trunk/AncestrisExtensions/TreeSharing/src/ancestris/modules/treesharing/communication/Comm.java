@@ -466,7 +466,8 @@ public class Comm {
                 // Case of PING commands (debug purpose)
                 else if (command.equals(CMD_PINGG)) {
                     LOG.log(Level.INFO, "......DEBUG PINGG: Incoming PINGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
-                    byte[] bytesSent = CMD_PONGG.getBytes(Charset.forName(COMM_CHARSET));
+                    String content = CMD_PONGG + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort() + " ";
+                    byte[] bytesSent = content.getBytes(Charset.forName(COMM_CHARSET));
                     DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, packetReceived.getAddress(), packetReceived.getPort());
                     LOG.log(Level.INFO, "......DEBUG PINGG: packetSent = " + packetSent);
                     LOG.log(Level.INFO, "......DEBUG PINGG: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
@@ -478,7 +479,9 @@ public class Comm {
                 
                 // Case of PONG commands (debug purpose)
                 else if (command.equals(CMD_PONGG)) {
-                    LOG.log(Level.INFO, "...Incoming PONGG command received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
+                    String str = new String(bytesReceived).substring(5);
+                    String content = str.substring(0, str.indexOf(" "));
+                    LOG.log(Level.INFO, "...Incoming PONGG command of myself at " + content + " received from " + packetReceived.getAddress().getHostAddress() + ":" + packetReceived.getPort());
                 } 
                 
                 // Case of other commands
@@ -516,11 +519,10 @@ public class Comm {
         try {
             // Ask member for list of shared entities
             DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(expectedCallIPAddress), Integer.valueOf(expectedCallPortAddress)); 
+            LOG.log(Level.INFO, "...Sending command " + command);
             LOG.log(Level.INFO, "......DEBUG CALL: packetSent = " + packetSent);
             LOG.log(Level.INFO, "......DEBUG CALL: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
             LOG.log(Level.INFO, "......DEBUG CALL: packetSent.getData().length = " + packetSent.getData().length);
-            LOG.log(Level.INFO, "...Sending command " + command);
-            socket = new DatagramSocket();
             LOG.log(Level.INFO, "......DEBUG CALL: before sendPacket using socket " + socket.toString());
             socket.send(packetSent);
             LOG.log(Level.INFO, "......DEBUG CALL: after sendPacket");
@@ -575,10 +577,14 @@ public class Comm {
             LOG.log(Level.INFO, "......DEBUG PING: packetSent = " + packetSent);
             LOG.log(Level.INFO, "......DEBUG PING: packetSent.getSocketAddress() = " + packetSent.getSocketAddress());
             LOG.log(Level.INFO, "......DEBUG PING: packetSent.getData().length = " + packetSent.getData().length);
-            socket = new DatagramSocket();
             LOG.log(Level.INFO, "......DEBUG PING: before sendPacket using socket " + socket.toString());
             socket.send(packetSent);
             LOG.log(Level.INFO, "......DEBUG PING: after sendPacket");
+            
+//            LOG.log(Level.INFO, "......DEBUG PING: send to server as well");
+//            DatagramPacket packetSent2 = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(COMM_SERVER), COMM_PORT);
+//            socket.send(packetSent2);
+            
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
