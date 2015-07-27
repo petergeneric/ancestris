@@ -197,7 +197,7 @@ public class Comm {
         };
         listeningThread.setName("TreeSharing thread : loop to wait for Ancestris connections");
         listeningThread.start();
-        LOG.log(Level.INFO, "Start thread listening to incoming calls");
+        LOG.log(Level.INFO, "Start thread listening to incoming calls until " + owner.getRegisteredEndDate());
         
         return true;
     }
