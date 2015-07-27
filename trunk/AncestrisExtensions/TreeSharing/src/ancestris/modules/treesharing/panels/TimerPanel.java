@@ -29,7 +29,7 @@ import org.openide.util.NbBundle;
  */
 public class TimerPanel extends javax.swing.JPanel {
 
-    public static int DEFAULT_DELAY = 6;  // hours 
+    public static int DEFAULT_DELAY = 12;  // hours 
 
     private final TreeSharingTopComponent owner;
     private boolean stateBeingChanged = false;
