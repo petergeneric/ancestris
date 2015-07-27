@@ -14,8 +14,6 @@ package ancestris.modules.treesharing.communication;
 
 import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.util.swing.DialogManager;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -331,6 +329,7 @@ public class Comm {
             return false;
         }
         startListeningToFriends();  
+        
         return true;
     }
     
@@ -378,40 +377,6 @@ public class Comm {
     
 
     private boolean connectToMember(AncestrisMember member) {
-
-//        try {
-//            // test file transfer to myself
-//
-//            // Build msg
-//            ByteArrayOutputStream byteStream1 = new ByteArrayOutputStream();
-//            byteStream1.write(CMD_TAKSE.getBytes());
-//            ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
-//            GZIPOutputStream gz = new GZIPOutputStream(contentStream);
-//            ObjectOutputStream os = new ObjectOutputStream(gz);
-//            os.flush();
-//            os.writeObject(owner.getMySharedEntities()); 
-//            os.flush();
-//            gz.close();
-//            byteStream1.write(contentStream.toByteArray());
-//            byte bytesSentTest[] = byteStream1.toByteArray();
-//            int length = bytesSentTest.length;
-//
-//            // Read msg
-//            byte[] bytesCommand = Arrays.copyOfRange(bytesSentTest, 0, 5);
-//            byte[] bytesContent = Arrays.copyOfRange(bytesSentTest, 5, length);
-//            ByteArrayInputStream byteStream2 = new ByteArrayInputStream(bytesContent);
-//            ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream2));
-//            listOfEntities = (List<FriendGedcomEntity>) is.readObject();
-//            is.close();
-//            
-//        } catch (Exception ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-//        if (true) return false;
-//        
-//        if (socket == null || socket.isClosed()) {
-//            return false;
-//        }
         
         try {
             String command = CMD_CONCT + member.getMemberName();
@@ -601,10 +566,7 @@ public class Comm {
                         }
                         DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(senderIP), senderPort);
                         int bytesCount = packetSent.getLength();
-                        LOG.log(Level.INFO, "......DEBUG GETSE: byteCount = " + bytesCount);
-                        LOG.log(Level.INFO, "......DEBUG GETSE: before sendPacket");
                         socket.send(packetSent);
-                        LOG.log(Level.INFO, "......DEBUG GETSE: after sendPacket");
                         os.close();
                         LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sent shared entities to " + senderAddress + "(" + bytesCount + " bytes)");
                     } else {
@@ -625,7 +587,7 @@ public class Comm {
                             ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream));
                             listOfEntities = (List<FriendGedcomEntity>) is.readObject();
                             is.close();
-                            LOG.log(Level.INFO, "......DEBUG TAKSE: list size = " + listOfEntities.size());
+                            LOG.log(Level.INFO, "...List size is " + listOfEntities.size());
                         }
                         expectedCall = false;
                         }
