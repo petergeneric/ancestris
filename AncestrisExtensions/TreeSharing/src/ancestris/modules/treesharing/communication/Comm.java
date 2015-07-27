@@ -345,7 +345,7 @@ public class Comm {
             
             // Expect answer back (wait for response from the other thread...)
             int s = 0;
-            while (!stopRun && (s < 100)) {  // set give up time to 2 seconds
+            while (!stopRun && (s < 200)) {  // set give up time to 4 seconds
                 TimeUnit.MILLISECONDS.sleep(20);
                 s++;
             }
@@ -374,6 +374,32 @@ public class Comm {
 
     private boolean connectToMember(AncestrisMember member) {
 
+//        try {
+//            // test file transfer to myself
+//
+//            // Build msg
+//            ByteArrayOutputStream byteStream1 = new ByteArrayOutputStream(COMM_PACKET_SIZE);
+//            byteStream1.write(CMD_TAKSE.getBytes());
+//            ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream1));
+//            os.flush();
+//            os.writeObject(owner.getMySharedEntities()); // Add object to content. TODO : will need to compress and encrypt data at some point
+//            os.flush();
+//            byte[] bytesSentTest = byteStream1.toByteArray();
+//            int length = bytesSentTest.length;
+//
+//            // Read msg
+//            byte[] bytesCommand = Arrays.copyOfRange(bytesSentTest, 0, 5);
+//            byte[] bytesContent = Arrays.copyOfRange(bytesSentTest, 5, length);
+//            ByteArrayInputStream byteStream2 = new ByteArrayInputStream(bytesContent);
+//            ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream2));
+//            listOfEntities = (List<FriendGedcomEntity>) is.readObject();
+//            is.close();
+//            
+//        } catch (Exception ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        if (true) return true;
+        
         if (socket == null || socket.isClosed()) {
             return false;
         }
@@ -548,20 +574,13 @@ public class Comm {
                         LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
                     }
                     else if (aMember.isAllowed() && senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress())) {
-                        ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE - 5);
-                        LOG.log(Level.INFO, "......DEBUG GETSE: bytestream = " + byteStream.toString());
-                        byteStream.write(CMD_TAKSE.getBytes()); // start content with command
-                        LOG.log(Level.INFO, "......DEBUG GETSE: after write");
+                        ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE);
+                        byteStream.write(CMD_TAKSE.getBytes());
                         ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
-                        LOG.log(Level.INFO, "......DEBUG GETSE: os = " + os.toString());
                         os.flush();
-                        LOG.log(Level.INFO, "......DEBUG GETSE: after flush1");
-                        os.writeObject(owner.getMySharedEntities());  // Add object to content. TODO : will need to compress and encrypt data at some point
-                        LOG.log(Level.INFO, "......DEBUG GETSE: after writeObject");
+                        os.writeObject(owner.getMySharedEntities()); // TODO : will need to compress and encrypt data at some point
                         os.flush();
-                        LOG.log(Level.INFO, "......DEBUG GETSE: after flush2");
-                        byte[] bytesSent = byteStream.toByteArray();  
-                        LOG.log(Level.INFO, "......DEBUG GETSE: after bytesSent declaration");
+                        byte[] bytesSent = byteStream.toByteArray();
                         DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(senderIP), senderPort);
                         int bytesCount = packetSent.getLength();
                         LOG.log(Level.INFO, "......DEBUG GETSE: byteCount = " + bytesCount);
@@ -583,13 +602,12 @@ public class Comm {
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress+":"+expectedCallPortAddress)) {
                         listOfEntities = null;
                         if (!content.isEmpty()) {
-                            ByteArrayInputStream byteStream = new ByteArrayInputStream(content.getBytes());
-                            LOG.log(Level.INFO, "......DEBUG TAKSE: bytestream = " + byteStream.toString());
+                            byte[] bytesContent = Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length);
+                            ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesContent);
                             ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
-                            LOG.log(Level.INFO, "......DEBUG TAKSE: is = " + is.toString());
                             listOfEntities = (List<FriendGedcomEntity>) is.readObject();
-                            LOG.log(Level.INFO, "......DEBUG TAKSE: list size = " + listOfEntities.size());
                             is.close();
+                            LOG.log(Level.INFO, "......DEBUG TAKSE: list size = " + listOfEntities.size());
                         }
                         expectedCall = false;
                         }
