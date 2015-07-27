@@ -702,7 +702,7 @@ public class TreeSharingTopComponent extends TopComponent {
     
     
     
-    public void createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String IPAddress, String portAddress, String entityType) {
+    public AncestrisFriend createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String IPAddress, String portAddress, String entityType) {
 
         // Update or Create AncestrisFriend
         AncestrisFriend friend = getFriend(memberEntity.friend, IPAddress, portAddress);
@@ -718,7 +718,8 @@ public class TreeSharingTopComponent extends TopComponent {
         // Create links
         desktopPanel.linkFrames(sharedGedcom, match);
         desktopPanel.linkFrames(match, friend);
-
+        
+        return friend;
     }
 
     

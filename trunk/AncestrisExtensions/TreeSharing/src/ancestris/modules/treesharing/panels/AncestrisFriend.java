@@ -53,7 +53,7 @@ public class AncestrisFriend extends JInternalFrame {
         initComponents();
         updateStats();
         
-        // Friend is created, therefore a first noticifaction is sent to friend to let hom know
+        // Friend is created, therefore a first notification is sent to friend to let hom know
         // TODO
     }
 
@@ -256,6 +256,11 @@ public class AncestrisFriend extends JInternalFrame {
 
     public boolean isEmpty() {
         return matchedIndis.isEmpty() && matchedFams.isEmpty();
+    }
+
+    public void updateTotals(int iIndis, int iFams) {
+        jLabel5.setText(""+iIndis);
+        jLabel6.setText(""+iFams);
     }
 
 

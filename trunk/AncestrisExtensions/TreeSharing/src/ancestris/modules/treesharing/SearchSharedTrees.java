@@ -15,6 +15,7 @@ import ancestris.modules.treesharing.communication.AncestrisMember;
 import ancestris.modules.treesharing.communication.Comm;
 import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
+import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -63,6 +64,11 @@ public class SearchSharedTrees extends Thread {
      */
     private void getAllMatchingEntities(Comm commHandler, List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
+        // Counters
+        AncestrisFriend friend = null;
+        int iIndis = 0;
+        int iFams = 0;
+        
         // Get matching type from preferences
         String matchType = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", TreeSharingOptionsPanel.MATCHING_TYPES[0]);
         
@@ -90,24 +96,32 @@ public class SearchSharedTrees extends Thread {
                 for (Entity myEntity : myEntities) {
                     
                     // Loop all member shared entities
+                    friend = null;
+                    iIndis = 0;
+                    iFams = 0;
                     for (FriendGedcomEntity memberEntity : memberEntities) {
                         if ((myEntity instanceof Indi) && (memberEntity.isIndi())) {
                             Indi myIndi = (Indi) myEntity;
+                            iIndis++;
                             // same individual
                             if (isSameIndividual(myIndi, memberEntity, matchType)) { // we have a match
-                                owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getIPAddress(), member.getPortAddress(), Gedcom.INDI);
+                                friend = owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getIPAddress(), member.getPortAddress(), Gedcom.INDI);
                             }
                             continue;
                         }
 
                         if ((myEntity instanceof Fam) && (memberEntity.isFam())) {
                             Fam myFam = (Fam) myEntity;
+                            iFams++;
                             // same husband and same wife ?
                             if (isSameFamily(myFam, memberEntity, matchType)) { // we have a match
-                                owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getIPAddress(), member.getPortAddress(), Gedcom.FAM);
+                                friend = owner.createMatch(sharedGedcom, myEntity, memberEntity, member.getIPAddress(), member.getPortAddress(), Gedcom.FAM);
                             }
                         }
                     } // endfor memberEntities
+                    if (friend != null) {
+                        friend.updateTotals(iIndis, iFams);
+                    }
                 } // endfor myEntities
             } // endfor myGedcoms
         } // endfor members
