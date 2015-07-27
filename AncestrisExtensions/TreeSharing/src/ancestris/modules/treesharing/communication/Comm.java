@@ -379,39 +379,39 @@ public class Comm {
 
     private boolean connectToMember(AncestrisMember member) {
 
-        try {
-            // test file transfer to myself
-
-            // Build msg
-            ByteArrayOutputStream byteStream1 = new ByteArrayOutputStream();
-            byteStream1.write(CMD_TAKSE.getBytes());
-            ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
-            GZIPOutputStream gz = new GZIPOutputStream(contentStream);
-            ObjectOutputStream os = new ObjectOutputStream(gz);
-            os.flush();
-            os.writeObject(owner.getMySharedEntities()); 
-            os.flush();
-            gz.close();
-            byteStream1.write(contentStream.toByteArray());
-            byte bytesSentTest[] = byteStream1.toByteArray();
-            int length = bytesSentTest.length;
-
-            // Read msg
-            byte[] bytesCommand = Arrays.copyOfRange(bytesSentTest, 0, 5);
-            byte[] bytesContent = Arrays.copyOfRange(bytesSentTest, 5, length);
-            ByteArrayInputStream byteStream2 = new ByteArrayInputStream(bytesContent);
-            ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream2));
-            listOfEntities = (List<FriendGedcomEntity>) is.readObject();
-            is.close();
-            
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        if (true) return false;
-        
-        if (socket == null || socket.isClosed()) {
-            return false;
-        }
+//        try {
+//            // test file transfer to myself
+//
+//            // Build msg
+//            ByteArrayOutputStream byteStream1 = new ByteArrayOutputStream();
+//            byteStream1.write(CMD_TAKSE.getBytes());
+//            ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
+//            GZIPOutputStream gz = new GZIPOutputStream(contentStream);
+//            ObjectOutputStream os = new ObjectOutputStream(gz);
+//            os.flush();
+//            os.writeObject(owner.getMySharedEntities()); 
+//            os.flush();
+//            gz.close();
+//            byteStream1.write(contentStream.toByteArray());
+//            byte bytesSentTest[] = byteStream1.toByteArray();
+//            int length = bytesSentTest.length;
+//
+//            // Read msg
+//            byte[] bytesCommand = Arrays.copyOfRange(bytesSentTest, 0, 5);
+//            byte[] bytesContent = Arrays.copyOfRange(bytesSentTest, 5, length);
+//            ByteArrayInputStream byteStream2 = new ByteArrayInputStream(bytesContent);
+//            ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream2));
+//            listOfEntities = (List<FriendGedcomEntity>) is.readObject();
+//            is.close();
+//            
+//        } catch (Exception ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        if (true) return false;
+//        
+//        if (socket == null || socket.isClosed()) {
+//            return false;
+//        }
         
         try {
             String command = CMD_CONCT + member.getMemberName();
