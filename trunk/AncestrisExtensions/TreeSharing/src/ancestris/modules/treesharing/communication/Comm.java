@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -110,6 +112,9 @@ import org.xml.sax.InputSource;
  * 
  *  • Client A can send GETSE to client B once connection is established (call : connect, wait for connection flag, then GETSE)
  * .
+ * Documentation : UDP - http://www.brynosaurus.com/pub/net/p2pnat/ 
+ * Packet - http://www.javaworld.com/article/2077539/learn-java/java-tip-40--object-transport-via-datagram-packets.html
+ * 
  */
 
 
@@ -374,31 +379,35 @@ public class Comm {
 
     private boolean connectToMember(AncestrisMember member) {
 
-//        try {
-//            // test file transfer to myself
-//
-//            // Build msg
-//            ByteArrayOutputStream byteStream1 = new ByteArrayOutputStream(COMM_PACKET_SIZE);
-//            byteStream1.write(CMD_TAKSE.getBytes());
-//            ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream1));
-//            os.flush();
-//            os.writeObject(owner.getMySharedEntities()); // Add object to content. TODO : will need to compress and encrypt data at some point
-//            os.flush();
-//            byte[] bytesSentTest = byteStream1.toByteArray();
-//            int length = bytesSentTest.length;
-//
-//            // Read msg
-//            byte[] bytesCommand = Arrays.copyOfRange(bytesSentTest, 0, 5);
-//            byte[] bytesContent = Arrays.copyOfRange(bytesSentTest, 5, length);
-//            ByteArrayInputStream byteStream2 = new ByteArrayInputStream(bytesContent);
-//            ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream2));
-//            listOfEntities = (List<FriendGedcomEntity>) is.readObject();
-//            is.close();
-//            
-//        } catch (Exception ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-//        if (true) return true;
+        try {
+            // test file transfer to myself
+
+            // Build msg
+            ByteArrayOutputStream byteStream1 = new ByteArrayOutputStream();
+            byteStream1.write(CMD_TAKSE.getBytes());
+            ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
+            GZIPOutputStream gz = new GZIPOutputStream(contentStream);
+            ObjectOutputStream os = new ObjectOutputStream(gz);
+            os.flush();
+            os.writeObject(owner.getMySharedEntities()); 
+            os.flush();
+            gz.close();
+            byteStream1.write(contentStream.toByteArray());
+            byte bytesSentTest[] = byteStream1.toByteArray();
+            int length = bytesSentTest.length;
+
+            // Read msg
+            byte[] bytesCommand = Arrays.copyOfRange(bytesSentTest, 0, 5);
+            byte[] bytesContent = Arrays.copyOfRange(bytesSentTest, 5, length);
+            ByteArrayInputStream byteStream2 = new ByteArrayInputStream(bytesContent);
+            ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream2));
+            listOfEntities = (List<FriendGedcomEntity>) is.readObject();
+            is.close();
+            
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        if (true) return false;
         
         if (socket == null || socket.isClosed()) {
             return false;
@@ -574,13 +583,22 @@ public class Comm {
                         LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
                     }
                     else if (aMember.isAllowed() && senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress())) {
-                        ByteArrayOutputStream byteStream = new ByteArrayOutputStream(COMM_PACKET_SIZE);
+                        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
                         byteStream.write(CMD_TAKSE.getBytes());
-                        ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
+                        ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
+                        GZIPOutputStream gz = new GZIPOutputStream(contentStream);
+                        ObjectOutputStream os = new ObjectOutputStream(gz);
                         os.flush();
-                        os.writeObject(owner.getMySharedEntities()); // TODO : will need to compress and encrypt data at some point
+                        os.writeObject(owner.getMySharedEntities());
                         os.flush();
+                        gz.close();
+                        byteStream.write(contentStream.toByteArray());
                         byte[] bytesSent = byteStream.toByteArray();
+                        int length = bytesSent.length;
+                        if (length > COMM_PACKET_SIZE) {
+                            LOG.log(Level.INFO, "......Content to be sent exceeds packet size limit : " + length + ". Cannot be sent.");
+                            continue;
+                        }
                         DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(senderIP), senderPort);
                         int bytesCount = packetSent.getLength();
                         LOG.log(Level.INFO, "......DEBUG GETSE: byteCount = " + bytesCount);
@@ -594,7 +612,7 @@ public class Comm {
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed or address does not match pseudo. Sent empty content.");
                     }
                 }
-
+                
                 // Case of CMD_TAKSE command (following my GETSE message to another member, he/she returns his/her shared entities. Take them.
                 else if (command.equals(CMD_TAKSE)) {
                     LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
@@ -604,7 +622,7 @@ public class Comm {
                         if (!content.isEmpty()) {
                             byte[] bytesContent = Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length);
                             ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesContent);
-                            ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(byteStream));
+                            ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream));
                             listOfEntities = (List<FriendGedcomEntity>) is.readObject();
                             is.close();
                             LOG.log(Level.INFO, "......DEBUG TAKSE: list size = " + listOfEntities.size());
