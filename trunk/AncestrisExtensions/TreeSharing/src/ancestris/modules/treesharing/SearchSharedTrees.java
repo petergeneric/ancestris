@@ -42,6 +42,7 @@ public class SearchSharedTrees extends Thread {
         stopRun = false;
         owner.setRotatingIcon(true);
         while (!stopRun) {
+            owner.updateMembersList();
             getAllMatchingEntities(owner.getCommHandler(), owner.getSharedGedcoms(), owner.getAncestrisMembers());
         }
     }

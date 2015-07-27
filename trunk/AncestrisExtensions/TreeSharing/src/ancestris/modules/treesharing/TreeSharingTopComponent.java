@@ -351,7 +351,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
     }
     
-    private void updateMembersList() {
+    public void updateMembersList() {
         initAncestrisMembers();
         membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
         membersNumber.setText(" "+ancestrisMembers.size() + " ");
@@ -638,6 +638,7 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     public void launchSearchEngine() {
+        
         // Init thread (because cannot be launched twice)
         searchThread = new SearchSharedTrees(this);
         
