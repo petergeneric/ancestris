@@ -39,6 +39,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -388,6 +389,10 @@ public class TreeSharingTopComponent extends TopComponent {
         return getMember(commPseudo).getPortAddress();
     }
 
+    public String getRegisteredEndDate() {
+        return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(timerPanel.getTimerDate());
+    }
+    
     
     // Privacy management
     
