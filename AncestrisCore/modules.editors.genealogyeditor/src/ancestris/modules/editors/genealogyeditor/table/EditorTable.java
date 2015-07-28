@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.RootPaneContainer;
 import javax.swing.RowSorter;
@@ -93,7 +94,9 @@ public class EditorTable extends JTable {
                 if (evt.getClickCount() == 2) {
                     RootPaneContainer c = (RootPaneContainer) SwingUtilities.getAncestorOfClass(RootPaneContainer.class, table);
                     if (c != null) {
-                        c.getRootPane().getDefaultButton().doClick();
+                        JButton defaultButton = c.getRootPane().getDefaultButton();
+                        if (defaultButton != null) 
+                            c.getRootPane().getDefaultButton().doClick();
                     }
                 }
             }
