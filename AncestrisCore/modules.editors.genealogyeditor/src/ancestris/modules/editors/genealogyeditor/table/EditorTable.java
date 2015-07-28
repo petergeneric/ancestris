@@ -96,7 +96,7 @@ public class EditorTable extends JTable {
                     if (c != null) {
                         JButton defaultButton = c.getRootPane().getDefaultButton();
                         if (defaultButton != null) 
-                            c.getRootPane().getDefaultButton().doClick();
+                            defaultButton.doClick();
                     }
                 }
             }
