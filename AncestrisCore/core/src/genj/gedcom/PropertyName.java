@@ -564,10 +564,10 @@ public class PropertyName extends Property {
         newValue = computeNameValue("", f, "", l, s);
 
         String npfx = getPropertyValue("NPFX");
-        f = stripPrefix(f, npfx + " ");
+        f = stripPrefix(f, npfx);
 
         String spfx = getPropertyValue("SPFX");
-        l = stripPrefix(l, spfx + " ");
+        l = stripPrefix(l, spfx);
 
         // Format GIVN Tag (' ' char replaced by ', ')
         f = f.replaceAll(" +", ", ");// Normalize
@@ -600,7 +600,7 @@ public class PropertyName extends Property {
      */
     private static String stripPrefix(String value, String prefix) {
         if (value.toLowerCase().startsWith(prefix.toLowerCase())) {
-            return value.substring(prefix.length());
+            return value.substring(prefix.length()).trim();
         }
         return value;
     }
