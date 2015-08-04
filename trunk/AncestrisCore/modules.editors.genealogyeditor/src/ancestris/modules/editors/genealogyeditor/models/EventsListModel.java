@@ -48,7 +48,13 @@ public class EventsListModel extends AbstractListModel<String> {
     public String getElementAt(int row) {
         if (row < eventsList.size()) {
             final Property propertyEvent = eventsList.get(row);
-            final PropertyDate propertyDate = (PropertyDate) propertyEvent.getProperty("DATE");
+            /* FIXME: if property DATE is not valid, it is a PropertySimpleValue and cannot be cast
+               to a PropertyDate. In that case this property is thrown and not displayed
+               in editor. This case has to be handled as in Gedcom Editor where the property is
+               shown as is with an error icon.
+            */
+            final Property p =propertyEvent.getProperty("DATE");
+            final PropertyDate propertyDate = (PropertyDate) (p instanceof PropertyDate?p:null);
             final String date = propertyDate != null ? propertyDate.getDisplayValue() : null;
             if (propertyEvent.getTag().equals("EVEN") || propertyEvent.getTag().equals("FACT")) {
                 Property eventType = propertyEvent.getProperty("TYPE");
