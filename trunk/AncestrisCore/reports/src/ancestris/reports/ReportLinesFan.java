@@ -41,7 +41,7 @@ public class ReportLinesFan extends Report {
     public int reportMaxGenerations = 999;
     public boolean useColors = true;
     private int pageNo;
-    private LinkedList<Object> indiList = new LinkedList<Object>();
+    private final LinkedList<Object> indiList = new LinkedList<Object>();
 
     /**
      * Helper - Create a PrintWriter wrapper for output stream
@@ -96,7 +96,7 @@ public class ReportLinesFan extends Report {
         //	indiList.add(indi);
         //indiList.add(new Integer(1));
         indiList.add(indi);
-        indiList.add(Integer.valueOf(1));
+        indiList.add(1);
         pageNo = 1;
 
         while (!indiList.isEmpty()) {
@@ -107,7 +107,7 @@ public class ReportLinesFan extends Report {
             if (genIndex != null) {
                 writer.println("gsave");
                 writer.println("%%Page " + pageNo);
-                pedigree(1, genIndex.intValue(), 1, 1, indiIterator);
+                pedigree(1, genIndex, 1, 1, indiIterator);
                 writer.println("showpage");
                 writer.println("%%PageTrailer");
                 pageNo++;
@@ -149,7 +149,7 @@ public class ReportLinesFan extends Report {
                     + " i");
         } else {
             indiList.add(indi);
-            indiList.add(Integer.valueOf(gen));
+            indiList.add(gen);
             writer.println(" " + (in - 1)
                     + " " + (ah - lev)
                     + " " + (indiList.size() / 2 + pageNo)
