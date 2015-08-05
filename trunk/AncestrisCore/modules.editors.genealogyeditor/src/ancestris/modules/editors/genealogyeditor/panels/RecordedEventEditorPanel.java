@@ -358,7 +358,8 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
                 }
             }
         }
-        mDate = (PropertyDate) mEvent.getProperty("DATE", false);
+        final Property p =mEvent.getProperty("DATE",false);
+        mDate = (PropertyDate) (p instanceof PropertyDate?p:null);
         if (mDate == null) {
 //            try {
 //              mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -378,6 +379,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         }
 
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+        //FIXME: should we comment this code?
         if (mPlace == null) {
             try {
                 mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {

@@ -740,7 +740,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             privateRecordToggleButton.setSelected(false);
         }
 
-        mDate = (PropertyDate) mEvent.getProperty("DATE", false);
+        final Property p =mEvent.getProperty("DATE",false);
+        mDate = (PropertyDate) (p instanceof PropertyDate?p:null);
 //        if (mDate == null) {
 //            try {
 //                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -913,7 +914,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         }
                     }
 
-                    PropertyDate date = (PropertyDate) mEvent.getProperty("DATE", false);
+                    final Property p =mEvent.getProperty("DATE",false);
+                    PropertyDate date = (PropertyDate) (p instanceof PropertyDate?p:null);
                     if (date != null && date.isValid()) {
                         mEvent.setValue("");
                     } else {

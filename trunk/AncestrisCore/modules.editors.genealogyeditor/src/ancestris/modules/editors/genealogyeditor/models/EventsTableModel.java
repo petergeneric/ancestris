@@ -83,7 +83,7 @@ public class EventsTableModel extends AbstractTableModel {
                     }
                 }
             } else if (column == 2) {
-                PropertyDate date = (PropertyDate) propertyEvent.getProperty("DATE");
+                Property date =  propertyEvent.getProperty("DATE");
                 return date != null ? date : new PropertyDate();
             } else {
                 return "";
