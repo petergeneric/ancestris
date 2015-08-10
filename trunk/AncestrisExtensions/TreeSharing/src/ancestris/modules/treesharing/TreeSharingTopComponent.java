@@ -217,6 +217,9 @@ public class TreeSharingTopComponent extends TopComponent {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateMembersList();
+                if (commHandler != null) {
+                    commHandler.sendPing();
+                }
             }
         });
         toolbar.add(members);

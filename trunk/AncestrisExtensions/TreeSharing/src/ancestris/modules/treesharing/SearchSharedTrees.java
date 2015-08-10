@@ -21,6 +21,8 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import org.openide.util.NbPreferences;
 
@@ -72,8 +74,11 @@ public class SearchSharedTrees extends Thread {
         // Get matching type from preferences
         String matchType = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", TreeSharingOptionsPanel.MATCHING_TYPES[0]);
         
+        // Copy ancestris members to avoid concurrent access to the list while using it
+        List<AncestrisMember> copyOfAncestrisMembers = (List) ((ArrayList) ancestrisMembers).clone();
+        
         // Loop on all members
-        for (AncestrisMember member : ancestrisMembers) {
+        for (AncestrisMember member : copyOfAncestrisMembers) {
             
             // Skip if member not allowed or if it is myself
             if (!member.isAllowed() || member.getMemberName().equals(owner.getPreferredPseudo())) {
