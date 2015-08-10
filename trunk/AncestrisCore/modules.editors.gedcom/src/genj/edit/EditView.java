@@ -161,7 +161,9 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume
         // that the containing window was closed and we're not going to throw a dialog out there or do a change
         // behind the covers - we really would need a about-to-close hook for contained components here :(
-        if (!getTopLevelAncestor().isVisible()) {
+        // FIXME: How can getTopLevelAncestor() be null? probably an Editor TC closed and the view still alive. 
+        // Must be fixed
+        if (getTopLevelAncestor() == null || !getTopLevelAncestor().isVisible()) {
             return;
         }
 
