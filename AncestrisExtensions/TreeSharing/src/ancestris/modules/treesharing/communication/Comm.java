@@ -164,8 +164,9 @@ public class Comm {
     private static String CMD_PONGG = "PONGG";
     
     // Threads
-    private volatile boolean stopRun;
+    private volatile boolean sharing;
     private Thread listeningThread;
+    private Thread pingingThread;
 
     // Call info
     private boolean expectedConnection = false;
@@ -190,7 +191,7 @@ public class Comm {
      */
     private boolean startListeningToFriends() {
         
-        stopRun = false;
+        sharing = true;
 
         listeningThread = new Thread() {
             @Override
@@ -200,8 +201,19 @@ public class Comm {
         };
         listeningThread.setName("TreeSharing thread : loop to wait for Ancestris connections");
         listeningThread.start();
-        LOG.log(Level.INFO, "Start thread listening to incoming calls until " + owner.getRegisteredEndDate());
         
+        pingingThread = new Thread() {
+            @Override
+            public void run() {
+                ping();
+            }
+        };
+
+        pingingThread.setName("TreeSharing thread : loop to stay alive with server");
+        pingingThread.start();
+
+        LOG.log(Level.INFO, "Start thread listening to incoming calls until " + owner.getRegisteredEndDate());
+
         return true;
     }
 
@@ -349,11 +361,11 @@ public class Comm {
             
             // Expect answer back (wait for response from the other thread...)
             int s = 0;
-            while (!stopRun && (s < 200)) {  // set give up time to 4 seconds
+            while (sharing && (s < 200)) {  // set give up time to 4 seconds
                 TimeUnit.MILLISECONDS.sleep(20);
                 s++;
             }
-            if (!stopRun) { // response never came back after timeout, consider it failed
+            if (sharing) { // response never came back after timeout, consider it failed
                 String err = NbBundle.getMessage(Comm.class, "ERR_ServerNotResponding");
                 LOG.log(Level.INFO, "...(TIMEOUT) Could not unregister " + pseudo + " from the Ancestris server. Error : " + err);
                 DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
@@ -491,7 +503,7 @@ public class Comm {
         LOG.log(Level.INFO, "Listening to all incoming calls indefinitely.......");
 
         try {
-            while (!stopRun) {
+            while (sharing) {
                 
                 // Listen to incoming calls indefinitely
                 socket.setSoTimeout(0);
@@ -514,12 +526,13 @@ public class Comm {
                 if (command.equals(CMD_CONCT)) {
                     String member = StringEscapeUtils.unescapeHtml(content.substring(0, content.indexOf(" ")));
                     LOG.log(Level.INFO, "...Request to connect to " + member);
+                    owner.updateMembersList();
                     AncestrisMember aMember = owner.getMember(member);
                     if (aMember == null) {
                         LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
                     }
                     else if (aMember.isAllowed()) {
-                        sendReply(CMD_PINGG + owner.getRegisteredPseudo() + " ", aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
+                        sendMsg(CMD_PINGG + owner.getRegisteredPseudo() + " ", aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
                         LOG.log(Level.INFO, "...Member " + member + " is allowed. Replied back with PINGG.");
                     } else {
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed. No reply.");
@@ -528,7 +541,7 @@ public class Comm {
                 
                 // Case of PING command 
                 else if (command.equals(CMD_PINGG)) {
-                    sendReply(CMD_PONGG, senderIP, senderPort);
+                    sendMsg(CMD_PONGG + owner.getRegisteredPseudo(), senderIP, senderPort);
                     LOG.log(Level.INFO, "...Replied back with PONGG.");
                     expectedConnection = false;
                 } 
@@ -570,7 +583,7 @@ public class Comm {
                         os.close();
                         LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sent shared entities to " + senderAddress + "(" + bytesCount + " bytes)");
                     } else {
-                        sendReply(CMD_TAKSE, senderIP, senderPort);
+                        sendMsg(CMD_TAKSE, senderIP, senderPort);
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed or address does not match pseudo. Sent empty content.");
                     }
                 }
@@ -595,7 +608,7 @@ public class Comm {
 
                 // Case of CMD_UNROK command (unregistration worked)
                 else if (command.equals(CMD_UNROK)) {
-                    stopRun = true;
+                    sharing = false;
                 } 
                 
                 // Case of CMD_UNRKO command (unregistration did not work)
@@ -617,11 +630,41 @@ public class Comm {
     }
 
     
+
+    /**
+     * Calls the server avery 150 seconds (hole lasts 180 seconds in general)
+     */
+    private void ping() {
+
+        while (sharing) {
+            sendPing();
+            owner.updateMembersList();
+            try {
+                TimeUnit.SECONDS.sleep(150);
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+    }
+
+  
+    public void sendPing() {
+
+        String command = CMD_PONGG + owner.getRegisteredPseudo(); // send PONG because we do not expect server to respond
+        if (sharing) {
+            sendMsg(command, COMM_SERVER, COMM_PORT);
+        }
+
+    }
     
     
-    private void sendReply(String reply, String ipAddress, int portAddress) {
+    
+    
+    
+    private void sendMsg(String msg, String ipAddress, int portAddress) {
         
-        byte[] bytesSent = reply.getBytes(Charset.forName(COMM_CHARSET));
+        byte[] bytesSent = msg.getBytes(Charset.forName(COMM_CHARSET));
         DatagramPacket packetSent;
         try {
             packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(ipAddress), portAddress);
