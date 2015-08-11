@@ -677,6 +677,34 @@ public class Comm {
         
     }
     
+
+    public byte[] objectWrapper(Object object) {
+
+        //String command = object.getCommand();
+        byte[] bytes = null;
+        String command = "dummy";
+        
+        
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            byteStream.write(command.getBytes());
+            ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
+            GZIPOutputStream gz = new GZIPOutputStream(contentStream);
+            ObjectOutputStream os = new ObjectOutputStream(gz);
+            os.flush();
+            os.writeObject(object);
+            os.flush();
+            gz.close();
+            byteStream.write(contentStream.toByteArray());
+            bytes = byteStream.toByteArray();
+            
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return bytes;
+    }
+    
     
 
 }
