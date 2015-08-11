@@ -22,8 +22,10 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.openide.util.NbPreferences;
 
 /**
@@ -66,6 +68,39 @@ public class SearchSharedTrees extends Thread {
      */
     private void getAllMatchingEntities(Comm commHandler, List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
+        Set<String> lastnames;
+        List<String> allnames;
+        List<FriendGedcomEntity> entities;
+                
+        byte[] pack;
+        
+        for (SharedGedcom sharedGedcom : sharedGedcoms) {
+            System.out.print("gedcom=" + sharedGedcom.getGedcom().getName() + "\n");
+            lastnames = sharedGedcom.getPublicLastnames();
+            pack = owner.getCommHandler().objectWrapper(lastnames);
+            System.out.print("nb lastnames=" + lastnames.size() + "\n");
+            System.out.print("size lastnames object to send=" + pack.length + "\n");
+            System.out.print(" \n");
+            allnames = sharedGedcom.getPublicNames();
+            pack = owner.getCommHandler().objectWrapper(allnames);
+            System.out.print("nb names=" + allnames.size() + "\n");
+            System.out.print("size allnames object to send=" + pack.length + "\n");
+            System.out.print(" \n");
+            entities = sharedGedcom.getAllSharedEntities(owner.getRegisteredPseudo());
+            pack = owner.getCommHandler().objectWrapper(entities);
+            System.out.print("nb all shared entities=" + entities.size() + "\n");
+            System.out.print("size all shared entities object to send=" + pack.length + "\n");
+            System.out.print(" \n");
+            System.out.print(" \n");
+            System.out.print(" \n");
+        }
+        
+        
+        stopGracefully();
+        
+        
+        if (true) return;
+        
         // Counters
         AncestrisFriend friend = null;
         int iIndis = 0;
@@ -147,70 +182,8 @@ public class SearchSharedTrees extends Thread {
      */
     private List<FriendGedcomEntity> getSharedEntitiesFromMember(AncestrisMember member) {
         
-        // Prepare response
         return owner.getCommHandler().call(member);
 
-//        Gedcom gedcom = new Gedcom();
-//        gedcom.setName("other.ged");
-//        try {
-//            Indi indi1 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi2 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi3 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi4 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi5 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi6 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi7 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi8 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi9 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi10 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi11 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi12 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi13 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//            Indi indi14 = (Indi) gedcom.createEntity(Gedcom.INDI);
-//
-//            indi1.setName("Frédéric", "LAPEYRE");
-//            indi2.setName("Anne Marie Sophie", "LAPEYRE");
-//            indi3.setName("Marie Anne Rosalie", "TROUILLET");
-//            indi4.setName("Jean Georges", "RAUCH");
-//            indi5.setName("François Henri", "RIOU");
-//            indi6.setName("Elisabeth Victoire", "ROBERT");
-//            indi7.setName("Jacques Léon Paulin", "ROUQUETTE");
-//            indi8.setName("Georges", "SCHLUCK");
-//            indi9.setName("marie", "KAYE");
-//            indi10.setName("Alexis", "GUILLOT");
-//            indi11.setName("Victor Jean Marie Joseph", "de LEUZE");
-//            indi12.setName("Valentine", "RENAUD");
-//            indi13.setName("Marie Magdeleine Clothilde", "CHAVINIER");
-//            indi14.setName("Napoléon", "BONAPARTE");
-//
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("François", "xxxx"), gedcom, indi1));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi2));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi3));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi4));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi5));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Yannick", "xxxx"), gedcom, indi6));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Dominique", "xxxx"), gedcom, indi7));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Valérie", "xxxx"), gedcom, indi8));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi9));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi10));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Frederic", "xxxx"), gedcom, indi11));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Daniel", "xxxx"), gedcom, indi12));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Jeannot", "xxxx"), gedcom, indi13));
-//            allShared.add(new FriendGedcomEntity(new AncestrisFriend("Raymond", "xxxx"), gedcom, indi14));
-//
-//        } catch (GedcomException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-//
-//        // Dummy code to test : Extract entities related to member only (as if I had found them through the communication to that member)
-//        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
-//        for (FriendGedcomEntity element : allShared) {
-//            if (element.getName().equals(member.getMemberName())) {
-//                ret.add(element);
-//            }
-//        }
-//        
-//        return ret;
     }
 
     

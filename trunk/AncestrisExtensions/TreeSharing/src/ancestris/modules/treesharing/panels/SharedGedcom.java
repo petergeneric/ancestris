@@ -21,11 +21,15 @@ import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
+import genj.gedcom.TagPath;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.JInternalFrame;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
@@ -354,23 +358,65 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         updateStats(false);
     }
 
+    private final boolean isPrivacySet() {
+        return jCheckBox2.isSelected();
+    }
+    
+    
+    
+    
+
     private int getNbPublicEntities(String tag) {
         ppi.clear();
         int ret = 0;
         Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(tag);
         for (Entity entity : entities) {
-            ret += (ppi.isPrivate(entity)) ? 0 : 1;
+            ret += (isPrivacySet() && ppi.isPrivate(entity)) ? 0 : 1;
         }
         return ret;
     }
 
+    /**
+     * Build list of unique lastnames from gedcom file
+     * (a set has no duplicates)
+     * @return set
+     */
+    
+    public Set<String> getPublicLastnames() {
+        Set<String> ret = new HashSet<String>();
+        List<Entity> entities = getPublicEntities(Gedcom.INDI);
+        for (Entity entity : entities) {
+            Indi indi = (Indi) entity;
+            if (indi != null && indi.getLastName() != null) {
+                ret.add(indi.getLastName());
+            }
+        }
+        return ret;
+    }
+
+    public List<String> getPublicNames() {
+        return getPublicProperties(new TagPath("INDI:NAME"));
+    }
+
+    private List<String> getPublicProperties(TagPath tagPath) {
+        ppi.clear();
+        List<String> ret = new ArrayList<String>();
+        
+        Property[] props = gedcom.getProperties(tagPath);
+        for (Property prop : props) {
+            if (!isPrivacySet() || !ppi.isPrivate(prop)) {
+                ret.add(prop.getDisplayValue());
+            }
+        }
+        return ret;
+    }
 
     public List<Entity> getPublicEntities(String tag) {
         ppi.clear();
         List<Entity> ret = new LinkedList<Entity>();
         Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(tag);
         for (Entity entity : entities) {
-            if (!ppi.isPrivate(entity)) {
+            if (!isPrivacySet() || !ppi.isPrivate(entity)) {
                 ret.add(entity);
             }
         }
@@ -383,6 +429,17 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         return ret;
     }
 
+    public List<FriendGedcomEntity> getAllSharedEntities(String pseudo) {
+        
+        List<Entity> sharedEntities = getAllPublicEntities();
+        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
+        for (Entity entity : sharedEntities) {
+            ret.add(new FriendGedcomEntity(pseudo, entity.getGedcom(), entity));
+        }
+        return ret;
+    }
+
+    
     
     
     public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity) {
