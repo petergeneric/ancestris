@@ -1509,12 +1509,14 @@ public class Gedcom implements Comparable {
     }
 
     /**
-     * getter
+     * getter. Get Place Display Format option for this gedcom.
+     * Defaults to global preferences.
      *
      * @return
      */
     public String getPlaceDisplayFormat() {
-        return getRegistry().get(GedcomOptions.PLACE_DISPLAY_FORMAT, (String) null);
+        return getRegistry().get(GedcomOptions.PLACE_DISPLAY_FORMAT, 
+                GedcomOptions.getInstance().getPlaceDisplayFormat());
     }
 
     /**

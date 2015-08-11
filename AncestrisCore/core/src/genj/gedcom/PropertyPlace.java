@@ -35,7 +35,6 @@ import java.util.StringTokenizer;
 public class PropertyPlace extends PropertyChoiceValue {
 
     private final static boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();
-    ;
 
   public final static ImageIcon IMAGE = Grammar.V55.getMeta(new TagPath("INDI:BIRT:PLAC")).getImage();
 
@@ -56,24 +55,25 @@ public class PropertyPlace extends PropertyChoiceValue {
     /**
      * Overridden - special trim
      */
-    protected String trim(String value) {
-        StringBuilder buf = new StringBuilder(value.length());
-        DirectAccessTokenizer jurisdictions = new DirectAccessTokenizer(value, JURISDICTION_SEPARATOR);
-        for (int i = 0;; i++) {
-            String jurisdiction = jurisdictions.get(i, true);
-            if (jurisdiction == null) {
-                break;
-            }
-            if (i > 0) {
-                buf.append(JURISDICTION_SEPARATOR);
-                if (USE_SPACES) {
-                    buf.append(' ');
-                }
-            }
-            buf.append(jurisdiction);
-        }
-        return buf.toString().intern();
-    }
+    //FIXME: Not used?
+//    protected String trim(String value) {
+//        StringBuilder buf = new StringBuilder(value.length());
+//        DirectAccessTokenizer jurisdictions = new DirectAccessTokenizer(value, JURISDICTION_SEPARATOR);
+//        for (int i = 0;; i++) {
+//            String jurisdiction = jurisdictions.get(i, true);
+//            if (jurisdiction == null) {
+//                break;
+//            }
+//            if (i > 0) {
+//                buf.append(JURISDICTION_SEPARATOR);
+//                if (USE_SPACES) {
+//                    buf.append(' ');
+//                }
+//            }
+//            buf.append(jurisdiction);
+//        }
+//        return buf.toString().intern();
+//    }
 
     /**
      * Remember a jurisdiction's value
@@ -129,14 +129,31 @@ public class PropertyPlace extends PropertyChoiceValue {
     /**
      * Accessor - format
      */
-    public static String[] getFormat(Gedcom gedcom) {
-        return toJurisdictions(gedcom.getPlaceFormat());
-    }
-
     public static String[] getFormat(String str) {
         return toJurisdictions(str);
     }
 
+    /**
+     * Returns Place Format for gedcom.
+     * @param gedcom
+     * @return 
+     */
+    public static String[] getFormat(Gedcom gedcom) {
+        return getFormat(gedcom, false);
+    }
+
+    /**
+     * Returns Place Format for gedcom. fallback to AncestrisSetting
+     * @param gedcom
+     * @return 
+     */
+    public static String[] getFormat(Gedcom gedcom,boolean fallback) {
+        String[] format = toJurisdictions(gedcom.getPlaceFormat());
+        if (fallback && (format == null || format.length == 0)) {
+            format = toJurisdictions(GedcomOptions.getInstance().getPlaceFormat());
+        }
+        return format;
+    }
     private static String[] toJurisdictions(String value) {
         ArrayList<String> result = new ArrayList<String>(10);
         String lastToken = JURISDICTION_SEPARATOR;
@@ -348,7 +365,8 @@ public class PropertyPlace extends PropertyChoiceValue {
     /**
      * Shortcut for PropertyPlace.getMap.getLatitude().
      * returns null if not available. If strict is true,
-     * return null if Longitude is not available
+     * return null if Longitude is not available meaning that 
+     * a Latitude with no Longitude set has no real sens
      * @param strict
      * @return 
      */
@@ -364,7 +382,8 @@ public class PropertyPlace extends PropertyChoiceValue {
     /**
      * Shortcut for PropertyPlace.getMap.getLongitude().
      * returns null if not available. If strict is true,
-     * return null if Latitude is not available
+     * return null if Latitude is not available meaning that 
+     * a Longitude with no Latitude set has no real sens
      * @param strict
      * @return 
      */
@@ -436,6 +455,8 @@ public class PropertyPlace extends PropertyChoiceValue {
         }
         StringBuilder result = new StringBuilder();
         String[] jurisdictions = getJurisdictions();
+        // TODO: // replace only digit not surrounded by other digits (ex: zip code is not to be replaced)
+        // Is it still used in geo?
         for (int i = 0; i < f.length(); i++) {
             char c = f.charAt(i);
             if (Character.isDigit(c)) {
