@@ -4,16 +4,24 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.modules.editors.genealogyeditor.panels.PlaceFormatEditorOptionsPanel;
-import ancestris.util.swing.DialogManager;
-import genj.gedcom.*;
+import ancestris.modules.editors.geoplace.MapPlaceEditor;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomListener;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyLatitude;
+import genj.gedcom.PropertyLongitude;
+import genj.gedcom.PropertyPlace;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import javax.swing.JOptionPane;
-import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -25,7 +33,7 @@ import org.openide.windows.WindowManager;
  */
 class GeoPlacesList implements GedcomListener {
 
-    private static String FORCE_REFRESH_DATE = "03-05-2015";
+    private static final String FORCE_REFRESH_DATE = "03-05-2015";
     
     public static String TYPEOFCHANGE_GEDCOM = "gedcom";
     public static String TYPEOFCHANGE_COORDINATES = "coord";
@@ -33,10 +41,8 @@ class GeoPlacesList implements GedcomListener {
     private static SortedMap<Gedcom, GeoPlacesList> instances;
     private final Gedcom gedcom;
     private GeoNodeObject[] geoNodes;
-    private List<GeoPlacesListener> listeners = new ArrayList<GeoPlacesListener>(10);
+    private final List<GeoPlacesListener> listeners = new ArrayList<GeoPlacesListener>(10);
     private boolean stopListening = false;
-    private int[] placeSortOrder;
-    private String placeDisplayFormat;
     private PropertyPlace copiedPlace = null;
 
 
@@ -81,8 +87,8 @@ class GeoPlacesList implements GedcomListener {
         
         // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"); 
-        Date versionDate = null;
-        Date fromValidDate = null;
+        Date versionDate;
+        Date fromValidDate;
         try {
             versionDate = (Date)formatter.parse(NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", "01-01-1900"));
             fromValidDate = (Date)formatter.parse(FORCE_REFRESH_DATE);
@@ -196,42 +202,18 @@ class GeoPlacesList implements GedcomListener {
      * 
      */
     public boolean initPlaceDisplayFormat(boolean forceEdit) {
-        boolean ret = false;
-        PlaceFormatEditorOptionsPanel pfeop = new PlaceFormatEditorOptionsPanel(gedcom);
-        placeSortOrder = pfeop.getPlaceSortOrder();
-
-        if (!pfeop.isRegisteredPlaceSortOrder() || forceEdit) {
-            DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
-                    pfeop);
-            gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
-            if (gedcomPlaceFormatEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                placeSortOrder = pfeop.getPlaceSortOrder();
-                pfeop.registerPlaceSortOrder();
-                ret = true;
-            }
-        } 
-        placeDisplayFormat = pfeop.getPlaceDisplayFormat();
-        return ret;
+        // TODO: use Lookup to find place editor
+        return MapPlaceEditor.updatePlaceFormat(gedcom,forceEdit);
     }
 
+    // TODO: add a setting for Geo module to modify place format
     public String getPlaceDisplayFormat(PropertyPlace place) {
-        
-        if (place == null || place.toString().trim().isEmpty() || place.getFirstAvailableJurisdiction().trim().isEmpty()) {
+        String str = "";
+        if (place == null || (str = place.format(null)).isEmpty()) {
             return NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty");
         }
         
-        String str = placeDisplayFormat;
-        String[] jurisdictions = place.getJurisdictions();
-        
-        
-        for (int i = 0; i < Math.max(jurisdictions.length, PropertyPlace.getFormat(gedcom).length); i++) {
-            String juri = "";
-            if (i < jurisdictions.length) {
-                juri = (jurisdictions[i].trim().length() == 0) ? "" : jurisdictions[i];
-            }
-            str = str.replaceAll("\\b" + i + "{1}\\b", juri);    // replace only digit not surrounded by other digits (ex: zip code is not to be replaced)
-        }
+        //TODO: Should we  move this code to PropertyPlace.format?
         str = str.replaceAll("\\(\\)", ""); // aestethic cleanning of empty jurisdictions in case they are between ()
         str = str.replaceAll("\\[\\]", ""); // aestethic cleanning of empty jurisdictions in case they are between []
         str = str.replaceAll("\\{\\}", ""); // aestethic cleanning of empty jurisdictions in case they are between {}

@@ -305,7 +305,7 @@ public class HoverPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jScrollBar1AdjustmentValueChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        GeoNode.editPlace(currentGno);
+//XXX: temporarilly disabled        GeoNode.editPlace(currentGno);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
