@@ -87,7 +87,7 @@ public abstract class DialogManager {
      * Creates a simple error dialog message with only an ok button.
      *
      * @param title
-param text
+     * @param text
      *
      * @return
      */
