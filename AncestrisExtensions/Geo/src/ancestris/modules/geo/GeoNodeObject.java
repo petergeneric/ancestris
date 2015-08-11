@@ -92,6 +92,7 @@ public class GeoNodeObject {
     public GeoNodeObject(GeoPlacesList gplOwner, PropertyPlace place, boolean avoidInternetSearch) {
         this.gplOwner = gplOwner;
         this.place = place;
+        //FIXME: replace with place.format(null);
         this.placeDisplayFormat = gplOwner.getPlaceDisplayFormat(place);
         this.placeKey = gplOwner.getPlaceKey(place);
         this.property = place.getParent();

@@ -4,13 +4,14 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.api.editor.PlaceEditor;
+//XXX: DAN: remove direct dependency to editors, use lookup
 import ancestris.modules.editors.gedcom.EditTopComponent;
 import ancestris.modules.editors.gedcom.GedcomEditorPlugin;
 import ancestris.modules.editors.genealogyeditor.GenealogyEditorPlugin;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
-import ancestris.modules.editors.genealogyeditor.panels.PlaceEditorPanel;
-import ancestris.util.swing.DialogManager.ADialog;
+import ancestris.modules.editors.geoplace.MapPlaceEditor;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -18,6 +19,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -28,7 +30,6 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.netbeans.api.javahelp.Help;
-import org.openide.DialogDescriptor;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.Exceptions;
@@ -194,7 +195,35 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                         new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
 
             } else if (actionName.equals("ACTION_EditPlace")) {
-                editPlace(obj);
+                // Popup editor
+                Gedcom gedcom = obj.getGedcom();
+                int undoNb = gedcom.getUndoNb();
+                final PlaceEditor editor = new MapPlaceEditor();
+                editor.setup(obj.getProperty(),obj.getPlace()); // if obj.getPlace(), create a new PropertyPlace
+                if (editor.edit() != null){
+                    try {
+                        GeoPlacesList.getInstance(gedcom).stopListening();
+                        gedcom.doUnitOfWork(new UnitOfWork() {
+
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                PropertyPlace p = editor.commit();  // writes place edited and also writes geocoordinates into gedcom file
+                                if (p != null){
+                                    // update all other places in gedcom and refresh list
+                                    obj.updateAllEventsPlaces(p);
+                                }
+                            }
+                        });
+                        GeoPlacesList.getInstance(gedcom).refreshPlaceName();
+                        GeoPlacesList.getInstance(gedcom).startListening();    
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                } else {
+                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                        gedcom.undoUnitOfWork(false);
+                    }
+                }
             } else if (actionName.equals("ACTION_CopyPlace")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace());
             } else if (actionName.equals("ACTION_PastePlace")) {
@@ -230,11 +259,13 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 Entity entity = obj.getProperty().getEntity();
                 if (entity instanceof Fam) {
                     Fam family = (Fam) entity;
+                    //XXX: use Editor API to find proper editor
                     FamilyEditor familyEditor = new FamilyEditor();
                     familyEditor.setContext(new Context(obj.getProperty()));
                     familyEditor.showPanel();
                 } else if (entity instanceof Indi) {
                     Indi child = (Indi) entity;
+                    //XXX: use Editor API to find proper editor
                     IndividualEditor individualEditor = new IndividualEditor();
                     individualEditor.setContext(new Context(obj.getProperty()));
                     individualEditor.showPanel();
@@ -258,43 +289,43 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
 
     }
 
-    // FIXME : should not be here nor static. Fix later.
-    public static void editPlace(GeoNodeObject gno) {
-        final GeoNodeObject obj = gno;
-        // Popup editor
-        Gedcom gedcom = obj.getGedcom();
-        int undoNb = gedcom.getUndoNb();
-        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null, obj.getGeoPosition());
-        placeEditorPanel.hideAddressPanel();
-        //placeEditorPanel.runSearch();
-        ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"), placeEditorPanel);
-        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            try {
-                GeoPlacesList.getInstance(gedcom).stopListening();
-                gedcom.doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        placeEditorPanel.commit();  // writes place edited and also writes geocoordinates into gedcom file
-                        // update all other places in gedcom and refresh list
-                        obj.updateAllEventsPlaces(obj.getPlace());
-                    }
-                });
-                GeoPlacesList.getInstance(gedcom).refreshPlaceName();
-                GeoPlacesList.getInstance(gedcom).startListening();
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else {
-            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
-        }
-    }
-    
+//    // FIXME : should not be here nor static. Fix later.
+//    public static void editPlace(GeoNodeObject gno) {
+//        final GeoNodeObject obj = gno;
+//        // Popup editor
+//        Gedcom gedcom = obj.getGedcom();
+//        int undoNb = gedcom.getUndoNb();
+//        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+//        placeEditorPanel.set(obj.getProperty(), obj.getPlace(), null, obj.getGeoPosition());
+//        placeEditorPanel.hideAddressPanel();
+//        //placeEditorPanel.runSearch();
+//        ADialog eventEditorDialog = new ADialog(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"), placeEditorPanel);
+//        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
+//
+//        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+//            try {
+//                GeoPlacesList.getInstance(gedcom).stopListening();
+//                gedcom.doUnitOfWork(new UnitOfWork() {
+//
+//                    @Override
+//                    public void perform(Gedcom gedcom) throws GedcomException {
+//                        placeEditorPanel.commit();  // writes place edited and also writes geocoordinates into gedcom file
+//                        // update all other places in gedcom and refresh list
+//                        obj.updateAllEventsPlaces(obj.getPlace());
+//                    }
+//                });
+//                GeoPlacesList.getInstance(gedcom).refreshPlaceName();
+//                GeoPlacesList.getInstance(gedcom).startListening();
+//            } catch (GedcomException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        } else {
+//            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+//                gedcom.undoUnitOfWork(false);
+//            }
+//        }
+//    }
+//    
     
     private GeoMapTopComponent getMapTopComponent(GeoNodeObject obj) {
         GeoMapTopComponent theList = null;
