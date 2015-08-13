@@ -685,23 +685,23 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
 
-    public List<FriendGedcomEntity> getMySharedEntities() {
-        
-        // Get all shared entities for all gedcoms
-        List<Entity> sharedEntities = new LinkedList<Entity>();
-        for (SharedGedcom sharedGedcom : sharedGedcoms) {
-            sharedEntities.addAll(sharedGedcom.getAllPublicEntities());
-        }
-        
-        // Build return list
-        List<FriendGedcomEntity> providedEntities = new LinkedList<FriendGedcomEntity>();
-        for (Entity entity : sharedEntities) {
-            providedEntities.add(new FriendGedcomEntity(commPseudo, entity.getGedcom(), entity));
-        }
-        
-        return providedEntities;
-    }
-
+//    public List<FriendGedcomEntity> getMySharedEntities() {
+//        
+//        // Get all shared entities for all gedcoms
+//        List<Entity> sharedEntities = new LinkedList<Entity>();
+//        for (SharedGedcom sharedGedcom : sharedGedcoms) {
+//            sharedEntities.addAll(sharedGedcom.getAllPublicEntities());
+//        }
+//        
+//        // Build return list
+//        List<FriendGedcomEntity> providedEntities = new LinkedList<FriendGedcomEntity>();
+//        for (Entity entity : sharedEntities) {
+//            providedEntities.add(new FriendGedcomEntity(commPseudo, entity.getGedcom(), entity));
+//        }
+//        
+//        return providedEntities;
+//    }
+//
     
     
     

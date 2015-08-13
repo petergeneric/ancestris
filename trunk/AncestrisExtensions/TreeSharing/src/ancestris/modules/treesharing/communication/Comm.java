@@ -33,6 +33,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -567,7 +568,7 @@ public class Comm {
                         GZIPOutputStream gz = new GZIPOutputStream(contentStream);
                         ObjectOutputStream os = new ObjectOutputStream(gz);
                         os.flush();
-                        os.writeObject(owner.getMySharedEntities());
+                        //os.writeObject(owner.getMySharedEntities());
                         os.flush();
                         gz.close();
                         byteStream.write(contentStream.toByteArray());
@@ -678,7 +679,26 @@ public class Comm {
     }
     
 
-    public byte[] objectWrapper(Object object) {
+    public Set<String> getSharedIndiLastnamesFromMember(AncestrisMember member) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<GedcomIndi> getGedcomIndisFromMember(AncestrisMember member, Set<String> commonIndiLastnames) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Set<String> getSharedFamLastnamesFromMember(AncestrisMember member) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<GedcomFam> getGedcomFamsFromMember(AncestrisMember member, Set<String> commonFamLastnames) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+
+    
+    private byte[] objectWrapper(Object object) {
 
         //String command = object.getCommand();
         byte[] bytes = null;
@@ -704,8 +724,8 @@ public class Comm {
         
         return bytes;
     }
-    
-    
 
+    
+    
 }
 

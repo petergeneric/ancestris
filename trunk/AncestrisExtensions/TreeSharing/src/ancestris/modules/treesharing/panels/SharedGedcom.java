@@ -13,6 +13,8 @@ package ancestris.modules.treesharing.panels;
 
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
 import ancestris.modules.treesharing.communication.FriendGedcomEntity;
+import ancestris.modules.treesharing.communication.GedcomFam;
+import ancestris.modules.treesharing.communication.GedcomIndi;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -365,52 +367,6 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     
     
     
-
-    private int getNbPublicEntities(String tag) {
-        ppi.clear();
-        int ret = 0;
-        Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(tag);
-        for (Entity entity : entities) {
-            ret += (isPrivacySet() && ppi.isPrivate(entity)) ? 0 : 1;
-        }
-        return ret;
-    }
-
-    /**
-     * Build list of unique lastnames from gedcom file
-     * (a set has no duplicates)
-     * @return set
-     */
-    
-    public Set<String> getPublicLastnames() {
-        Set<String> ret = new HashSet<String>();
-        List<Entity> entities = getPublicEntities(Gedcom.INDI);
-        for (Entity entity : entities) {
-            Indi indi = (Indi) entity;
-            if (indi != null && indi.getLastName() != null) {
-                ret.add(indi.getLastName());
-            }
-        }
-        return ret;
-    }
-
-    public List<String> getPublicNames() {
-        return getPublicProperties(new TagPath("INDI:NAME"));
-    }
-
-    private List<String> getPublicProperties(TagPath tagPath) {
-        ppi.clear();
-        List<String> ret = new ArrayList<String>();
-        
-        Property[] props = gedcom.getProperties(tagPath);
-        for (Property prop : props) {
-            if (!isPrivacySet() || !ppi.isPrivate(prop)) {
-                ret.add(prop.getDisplayValue());
-            }
-        }
-        return ret;
-    }
-
     public List<Entity> getPublicEntities(String tag) {
         ppi.clear();
         List<Entity> ret = new LinkedList<Entity>();
@@ -423,22 +379,131 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         return ret;
     }
 
-    public List<Entity> getAllPublicEntities() {
-        List<Entity> ret = getPublicEntities(Gedcom.INDI);
-        ret.addAll(getPublicEntities(Gedcom.FAM));
+
+    /**
+     * Build list of unique lastnames from gedcom file
+     * (a set has no duplicates)
+     * @return set
+     */
+    public Set<String> getPublicIndiLastnames() {
+        Set<String> ret = new HashSet<String>();
+        List<Entity> entities = getPublicEntities(Gedcom.INDI);
+        for (Entity entity : entities) {
+            Indi indi = (Indi) entity;
+            if (indi != null && indi.getLastName() != null) {
+                ret.add(indi.getLastName());
+            }
+        }
         return ret;
     }
+    
+    /**
+     * Build list of unique husband lastname + "/" + wife lastname from gedcom file
+     * (a set has no duplicates)
+     * @return set
+     */
+    public Set<String> getPublicFamLastnames() {
+        String str;
+        Set<String> ret = new HashSet<String>();
+        List<Entity> entities = getPublicEntities(Gedcom.FAM);
+        for (Entity entity : entities) {
+            Fam fam = (Fam) entity;
+            str = getLastName(fam);
+            if (!str.equals("/")) {
+                ret.add(str);
+            }
+        }
+        return ret;
+    }
+    
 
-    public List<FriendGedcomEntity> getAllSharedEntities(String pseudo) {
+    public List<GedcomIndi> getPublicGedcomIndis(Set<String> commonIndiLastnames) {
+        List<GedcomIndi> ret = new ArrayList<GedcomIndi>();
+        List<Entity> entities = getPublicEntities(Gedcom.INDI);
+        for (Entity entity : entities) {
+            Indi indi = (Indi) entity;
+            if (indi != null) {
+                String str = indi.getLastName();
+                if (str != null && commonIndiLastnames.contains(str.trim())) {
+                    ret.add(new GedcomIndi(gedcom, indi));
+                }
+            }
+        }
+        return ret;
         
-        List<Entity> sharedEntities = getAllPublicEntities();
-        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
-        for (Entity entity : sharedEntities) {
-            ret.add(new FriendGedcomEntity(pseudo, entity.getGedcom(), entity));
+    }
+
+
+
+    public List<GedcomFam> getPublicGedcomFams(Set<String> commonFamLastnames) {
+        List<GedcomFam> ret = new ArrayList<GedcomFam>();
+        List<Entity> entities = getPublicEntities(Gedcom.FAM);
+        for (Entity entity : entities) {
+            Fam fam = (Fam) entity;
+            if (commonFamLastnames.contains(getLastName(fam))) {
+                ret.add(new GedcomFam(gedcom, fam));
+            }
+        }
+        return ret;
+        
+    }
+
+    private String getLastName(Fam fam) {
+        String strHusb = "";
+        String strWife = "";
+        if (fam != null) {
+            strHusb = fam.getHusband() != null ? fam.getHusband().getLastName().trim() : "";
+            strWife = fam.getWife() != null ? fam.getWife().getLastName().trim() : "";
+        }
+        return strHusb + "/" + strWife;
+    }
+
+    
+    
+    private int getNbPublicEntities(String tag) {
+        ppi.clear();
+        int ret = 0;
+        Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(tag);
+        for (Entity entity : entities) {
+            ret += (isPrivacySet() && ppi.isPrivate(entity)) ? 0 : 1;
         }
         return ret;
     }
 
+
+//    public List<String> getPublicNames() {
+//        return getPublicProperties(new TagPath("INDI:NAME"));
+//    }
+//
+//    private List<String> getPublicProperties(TagPath tagPath) {
+//        ppi.clear();
+//        List<String> ret = new ArrayList<String>();
+//        
+//        Property[] props = gedcom.getProperties(tagPath);
+//        for (Property prop : props) {
+//            if (!isPrivacySet() || !ppi.isPrivate(prop)) {
+//                ret.add(prop.getDisplayValue());
+//            }
+//        }
+//        return ret;
+//    }
+
+//    public List<Entity> getAllPublicEntities() {
+//        List<Entity> ret = getPublicEntities(Gedcom.INDI);
+//        ret.addAll(getPublicEntities(Gedcom.FAM));
+//        return ret;
+//    }
+//
+//    public List<FriendGedcomEntity> getAllSharedEntities(String pseudo) {
+//        
+//        List<Entity> sharedEntities = getAllPublicEntities();
+//        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
+//        for (Entity entity : sharedEntities) {
+//            ret.add(new FriendGedcomEntity(pseudo, entity.getGedcom(), entity));
+//        }
+//        return ret;
+//    }
+//
     
     
     
