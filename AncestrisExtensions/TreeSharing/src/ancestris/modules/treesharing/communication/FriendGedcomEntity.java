@@ -52,6 +52,7 @@ public class FriendGedcomEntity implements Serializable {
         public String wifeBirthPlace = "";
         public String wifeDeathDate = "";
         public String wifeDeathPlace = "";
+        //TODO add match type for color
         
         
         public FriendGedcomEntity(String friend, Gedcom gedcom, Entity entity) {
