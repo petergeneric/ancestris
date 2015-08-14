@@ -70,22 +70,19 @@ import org.xml.sax.InputSource;
  *      ∘ REGKO - registration ko
  *      ∘ UNROK - unregistration ok
  *      ∘ UNRKO - unregistration ko
- *      ∘ RUTHE - are you there ?
  * 
  * Client
  *  • send to server
  *      ∘ REGIS - register pseudo
  *      ∘ UNREG - unregister pseudo
- *      ∘ THERE - I am there
  * • receive from server (check incoming IP)
  *      ∘ REGOK - registration ok
  *      ∘ REGKO - registration ko
  *      ∘ UNROK - unregistration ok
  *      ∘ UNRKO - unregistration ko
- *      ∘ RUTHE - are you there ?
  * • receive from and send to client (check incoming IP is allowed)
- *      ∘ GETSE - get me your shared entities so build them and send them
- *      ∘ TAKSE - take my shared entities because you asked so receive them
+ *      ∘ Gxxxx - get me your shared entities so build them and send them
+ *      ∘ Txxxx - take my shared entities because you asked so receive them
  *  
  *  • client also queries server for list of registered pseudos and there connection details
  *      ∘ get_members.php as a web service
@@ -152,17 +149,21 @@ public class Comm {
     private static String CMD_UNREG = "UNREG";
     private static String CMD_UNROK = "UNROK";
     private static String CMD_UNRKO = "UNRKO";
-    // Checking I a still there
-    private static String CMD_RUTHE = "RUTHE";
-    private static String CMD_THERE = "THERE";
-    private static String CMD_CLOSE = "CLOSE";
-    // Sharing my shared entities
-    private static String CMD_GETSE = "GETSE";
-    private static String CMD_TAKSE = "TAKSE";
     // Establishing connection
     private static String CMD_CONCT = "CONCT";
     private static String CMD_PINGG = "PINGG";
     private static String CMD_PONGG = "PONGG";
+    // Sharing my shared entities
+    private static String CMD_GETSE = "GETSE";
+    private static String CMD_TAKSE = "TAKSE";
+    private static String CMD_GILxx = "GIL";
+    private static String CMD_TILxx = "TIL";
+    private static String CMD_GIDxx = "GID";
+    private static String CMD_TIDxx = "TID";
+    private static String CMD_GFLxx = "GFL";
+    private static String CMD_TFLxx = "TFL";
+    private static String CMD_GFDxx = "GFD";
+    private static String CMD_TFDxx = "TFD";
     
     // Threads
     private volatile boolean sharing;
@@ -386,6 +387,37 @@ public class Comm {
     
 
     
+
+    /**
+     * Calls the server avery 150 seconds (hole lasts 180 seconds in general)
+     */
+    private void ping() {
+
+        while (sharing) {
+            sendPing();
+            owner.updateMembersList();
+            try {
+                TimeUnit.SECONDS.sleep(150);
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+    }
+
+  
+    public void sendPing() {
+
+        if (sharing) {
+            sendCommand(CMD_PONGG, owner.getRegisteredPseudo(), COMM_SERVER, COMM_PORT);
+        }
+
+    }
+    
+    
+    
+    
+    
         
     
 
@@ -533,16 +565,28 @@ public class Comm {
                         LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
                     }
                     else if (aMember.isAllowed()) {
-                        sendMsg(CMD_PINGG + owner.getRegisteredPseudo() + " ", aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
+                        sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + " ", aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
                         LOG.log(Level.INFO, "...Member " + member + " is allowed. Replied back with PINGG.");
                     } else {
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed. No reply.");
                     }
                 }
                 
+                // Case of CMD_UNROK command (unregistration worked)
+                else if (command.equals(CMD_UNROK)) {
+                    sharing = false;
+                } 
+                
+                // Case of CMD_UNRKO command (unregistration did not work)
+                else if (command.equals(CMD_UNRKO)) {
+                    String err = new String(bytesReceived).substring(5);
+                    LOG.log(Level.INFO, "...Could not unregister " + owner.getRegisteredPseudo() + " from the Ancestris server. Error : " + err);
+                    DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                } 
+                
                 // Case of PING command 
                 else if (command.equals(CMD_PINGG)) {
-                    sendMsg(CMD_PONGG + owner.getRegisteredPseudo(), senderIP, senderPort);
+                    sendCommand(CMD_PONGG, owner.getRegisteredPseudo(), senderIP, senderPort);
                     LOG.log(Level.INFO, "...Replied back with PONGG.");
                     expectedConnection = false;
                 } 
@@ -562,29 +606,17 @@ public class Comm {
                         LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
                     }
                     else if (aMember.isAllowed() && senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress())) {
-                        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-                        byteStream.write(CMD_TAKSE.getBytes());
-                        ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
-                        GZIPOutputStream gz = new GZIPOutputStream(contentStream);
-                        ObjectOutputStream os = new ObjectOutputStream(gz);
-                        os.flush();
-                        //os.writeObject(owner.getMySharedEntities());
-                        os.flush();
-                        gz.close();
-                        byteStream.write(contentStream.toByteArray());
-                        byte[] bytesSent = byteStream.toByteArray();
-                        int length = bytesSent.length;
-                        if (length > COMM_PACKET_SIZE) {
-                            LOG.log(Level.INFO, "......Content to be sent exceeds packet size limit : " + length + ". Cannot be sent.");
+                        byte[] bytesSent = wrapObject(CMD_TAKSE, null); //owner.getMySharedEntities());
+                        if (bytesSent.length > COMM_PACKET_SIZE) {
+                            LOG.log(Level.INFO, "......Content to be sent exceeds packet size limit : " + bytesSent.length + ". Cannot be sent.");
                             continue;
                         }
                         DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(senderIP), senderPort);
                         int bytesCount = packetSent.getLength();
                         socket.send(packetSent);
-                        os.close();
                         LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sent shared entities to " + senderAddress + "(" + bytesCount + " bytes)");
                     } else {
-                        sendMsg(CMD_TAKSE, senderIP, senderPort);
+                        sendCommand(CMD_TAKSE, null, senderIP, senderPort);
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed or address does not match pseudo. Sent empty content.");
                     }
                 }
@@ -594,31 +626,12 @@ public class Comm {
                     LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress+":"+expectedCallPortAddress)) {
-                        listOfEntities = null;
-                        if (!content.isEmpty()) {
-                            byte[] bytesContent = Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length);
-                            ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesContent);
-                            ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream));
-                            listOfEntities = (List<FriendGedcomEntity>) is.readObject();
-                            is.close();
-                            LOG.log(Level.INFO, "...List size is " + listOfEntities.size());
-                        }
+                        listOfEntities = (List<FriendGedcomEntity>) unwrapObject(Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length));
+                        LOG.log(Level.INFO, "...List size is " + listOfEntities.size());
                         expectedCall = false;
                         }
                     }
 
-                // Case of CMD_UNROK command (unregistration worked)
-                else if (command.equals(CMD_UNROK)) {
-                    sharing = false;
-                } 
-                
-                // Case of CMD_UNRKO command (unregistration did not work)
-                else if (command.equals(CMD_UNRKO)) {
-                    String err = new String(bytesReceived).substring(5);
-                    LOG.log(Level.INFO, "...Could not unregister " + owner.getRegisteredPseudo() + " from the Ancestris server. Error : " + err);
-                    DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
-                } 
-                
                 // Case of other commands
                 else {
                     // nothing
@@ -631,56 +644,13 @@ public class Comm {
     }
 
     
-
-    /**
-     * Calls the server avery 150 seconds (hole lasts 180 seconds in general)
-     */
-    private void ping() {
-
-        while (sharing) {
-            sendPing();
-            owner.updateMembersList();
-            try {
-                TimeUnit.SECONDS.sleep(150);
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-    }
-
-  
-    public void sendPing() {
-
-        String command = CMD_PONGG + owner.getRegisteredPseudo(); // send PONG because we do not expect server to respond
-        if (sharing) {
-            sendMsg(command, COMM_SERVER, COMM_PORT);
-        }
-
-    }
     
     
-    
-    
-    
-    private void sendMsg(String msg, String ipAddress, int portAddress) {
-        
-        byte[] bytesSent = msg.getBytes(Charset.forName(COMM_CHARSET));
-        DatagramPacket packetSent;
-        try {
-            packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(ipAddress), portAddress);
-            socket.send(packetSent);
-        } catch (UnknownHostException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        
-    }
     
 
     public Set<String> getSharedIndiLastnamesFromMember(AncestrisMember member) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Passer tous les envois de CMD_xxxxx en sendCommand(CMD_xxxxx, paquet, destIP, destPort)
+        return null;
     }
 
     public List<GedcomIndi> getGedcomIndisFromMember(AncestrisMember member, Set<String> commonIndiLastnames) {
@@ -695,19 +665,42 @@ public class Comm {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    
 
     
-    private byte[] objectWrapper(Object object) {
+    
+    
+    
+    /**
+     * Used to send command to server (simple text)
+     */
+    private void sendCommand(String command, String string, String ipAddress, int portAddress) {
+        sendObject(wrapObject(command, string), ipAddress, portAddress);
+        
+    }
+    
+    /**
+     * Used to send command to Ancestris (complex object)
+     */
+    private void sendCommand(String command, Object object, String ipAddress, int portAddress) {
+        sendObject(wrapObject(command, object), ipAddress, portAddress);
+    }
+    
+    
+    
+    private byte[] wrapObject(String command, String string) {
 
-        //String command = object.getCommand();
+        String content = command + string; 
+        return content.getBytes(Charset.forName(COMM_CHARSET));
+    }
+
+    
+    
+    private byte[] wrapObject(String command, Object object) {
+
         byte[] bytes = null;
-        String command = "dummy";
-        
-        
         try {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            byteStream.write(command.getBytes());
+            byteStream.write(command.getBytes(Charset.forName(COMM_CHARSET)));
             ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
             GZIPOutputStream gz = new GZIPOutputStream(contentStream);
             ObjectOutputStream os = new ObjectOutputStream(gz);
@@ -721,11 +714,43 @@ public class Comm {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
         return bytes;
     }
 
+    private Object unwrapObject(byte[] content) {
+
+        Object object = null;
+        if (content == null || content.length == 0) {
+            return null;
+        }
+        try {
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(content);
+            ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream));
+            object = is.readObject();
+            is.close();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (ClassNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return object;
+    }
+
     
+    private void sendObject(byte[] bytesSent, String ipAddress, int portAddress) {
+        DatagramPacket packetSent;
+        try {
+            packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(ipAddress), portAddress);
+            socket.send(packetSent);
+        } catch (UnknownHostException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+    }
+    
+
     
 }
 
