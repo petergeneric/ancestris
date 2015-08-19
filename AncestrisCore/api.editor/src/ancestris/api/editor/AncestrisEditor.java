@@ -71,18 +71,25 @@ public abstract class AncestrisEditor {
 
     public abstract boolean isActive();
 
-    public abstract boolean edit(Property property, boolean isNew);
+    /**
+     * Open editor panel as in {@link #edit(genj.gedcom.Property) } but 
+     * isNew parameter is used to display some meaningfull message if property
+     * has been crated.
+     * @param property
+     * @param isNew
+     * @return The property updated
+     * @deprecated use {@link #edit(genj.gedcom.Property)} or {@link #add(genj.gedcom.Property) }
+     */
+    @Deprecated
+    // We could add som setTitle method instead
+    public abstract Property edit(Property property, boolean isNew);
 
-    public boolean edit(Property property) {
+//    public abstract Property edit(Property property, Property parent);
+    public abstract Property add(Property parent);
+//    public abstract Property edit(Property property);
+    public Property edit(Property property) {
         return edit(property, false);
     }
-
-    // Actions
-    public abstract Action getCreateSpouseAction(Indi indi);
-
-    public abstract Action getCreateParentAction(Indi child, int sex);
-
-    public abstract Action getCreateChildAction(Indi indi);
 
     /**
      * This editor does nothing. It is created to avoid many check against null by findEditor
@@ -97,23 +104,8 @@ public abstract class AncestrisEditor {
         }
 
         @Override
-        public boolean edit(Property property, boolean isNew) {
-            return false;
-        }
-
-        @Override
-        public Action getCreateSpouseAction(Indi indi) {
-            return NOOP;
-        }
-
-        @Override
-        public Action getCreateParentAction(Indi child, int sex) {
-            return NOOP;
-        }
-
-        @Override
-        public Action getCreateChildAction(Indi indi) {
-            return NOOP;
+        public Property edit(Property property, boolean isNew) {
+            return null;
         }
 
         /**
@@ -124,6 +116,11 @@ public abstract class AncestrisEditor {
         @Override
         public boolean isActive() {
             return false;
+        }
+
+        @Override
+        public Property add(Property parent) {
+            return null;
         }
     }
 @ActionID(category = "Edit",
@@ -149,22 +146,22 @@ public final static class OpenEditorAction
     public @Override
     Action createContextAwareInstance(Lookup context) {
         Action action = CommonActions.NOOP;
-        Entity entity = context.lookup(Entity.class);
-        AncestrisEditor editor = AncestrisEditor.findEditor(entity);
+        Property property = context.lookup(Property.class);
+        AncestrisEditor editor = AncestrisEditor.findEditor(property);
 
         if (editor != null){
-            action = new OpenEditor(entity, editor);
+            action = new OpenEditor(property, editor);
         }
         return action;
     }
 
     private static final class OpenEditor extends AbstractAncestrisAction {
 
-        private final Entity entity;
+        private final Property property;
         private final AncestrisEditor editor;
         
-        public OpenEditor(Entity context, AncestrisEditor editor) {
-            this.entity = context;
+        public OpenEditor(Property context, AncestrisEditor editor) {
+            this.property = context;
             this.editor = editor;
             setText(OpenInEditor_title());  // NOI18N
             setImage(editorIcon);
@@ -174,7 +171,7 @@ public final static class OpenEditorAction
         public void actionPerformed(ActionEvent e) {
             SelectionDispatcher.muteSelection(true);
             if (editor != null) {
-                editor.edit(entity);
+                editor.edit(property);
             }
             SelectionDispatcher.muteSelection(false);
         }

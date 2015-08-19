@@ -4,7 +4,7 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.api.editor.PlaceEditor;
+import ancestris.api.editor.AncestrisEditor;
 //XXX: DAN: remove direct dependency to editors, use lookup
 import ancestris.modules.editors.gedcom.EditTopComponent;
 import ancestris.modules.editors.gedcom.GedcomEditorPlugin;
@@ -198,32 +198,43 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 // Popup editor
                 Gedcom gedcom = obj.getGedcom();
                 int undoNb = gedcom.getUndoNb();
-                final PlaceEditor editor = new MapPlaceEditor();
-                editor.setup(obj.getProperty(),obj.getPlace()); // if obj.getPlace(), create a new PropertyPlace
-                if (editor.edit() != null){
-                    try {
-                        GeoPlacesList.getInstance(gedcom).stopListening();
-                        gedcom.doUnitOfWork(new UnitOfWork() {
-
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                PropertyPlace p = editor.commit();  // writes place edited and also writes geocoordinates into gedcom file
-                                if (p != null){
-                                    // update all other places in gedcom and refresh list
-                                    obj.updateAllEventsPlaces(p);
-                                }
-                            }
-                        });
-                        GeoPlacesList.getInstance(gedcom).refreshPlaceName();
-                        GeoPlacesList.getInstance(gedcom).startListening();    
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                // XXX: use lookup
+                final AncestrisEditor editor = new MapPlaceEditor();
+                GeoPlacesList.getInstance(gedcom).stopListening();
+                genj.gedcom.Property p = obj.getPlace();
+                if (p == null){
+                    p = editor.add(obj.getProperty());
                 } else {
-                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                        gedcom.undoUnitOfWork(false);
-                    }
+                    p = editor.edit(p);
                 }
+                try {
+//                (PropertyPlace)editor.edit(obj.getPlace(),obj.getProperty());
+                    obj.updateAllEventsPlaces((PropertyPlace)p); // need to update everytime (even if p == null) as listener has been stopped
+                } catch (ClassCastException ex){}
+//                
+//                if (editor.edit(obj.getPlace(),obj.getProperty()) != null){
+//                    try {
+//                        gedcom.doUnitOfWork(new UnitOfWork() {
+//
+//                            @Override
+//                            public void perform(Gedcom gedcom) throws GedcomException {
+//                                PropertyPlace p = editor.commit();  // writes place edited and also writes geocoordinates into gedcom file
+//                                if (p != null){
+//                                    // update all other places in gedcom and refresh list
+//                                    obj.updateAllEventsPlaces(p);
+//                                }
+//                            }
+//                        });
+                GeoPlacesList.getInstance(gedcom).refreshPlaceName();
+                GeoPlacesList.getInstance(gedcom).startListening();    
+//                    } catch (GedcomException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+//                } else {
+//                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+//                        gedcom.undoUnitOfWork(false);
+//                    }
+//                }
             } else if (actionName.equals("ACTION_CopyPlace")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace());
             } else if (actionName.equals("ACTION_PastePlace")) {

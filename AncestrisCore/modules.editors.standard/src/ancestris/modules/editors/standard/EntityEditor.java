@@ -31,7 +31,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AncestrisEditor.class,position = 100)
 public class EntityEditor extends AncestrisEditor {
 
-    public static boolean editEntity(Fam fam, boolean isNew) {
+    public static Property editEntity(Fam fam, boolean isNew) {
         final FamPanel bean = new FamPanel();
 
         if (isNew) {
@@ -40,13 +40,13 @@ public class EntityEditor extends AncestrisEditor {
             bean.setTitle(NbBundle.getMessage(EntityEditor.class, "dialog.fam.edit.title", fam));
         }
         bean.setContext(new Context(fam));
-        return bean.showPanel();
+        return bean.showPanel()?fam:null;
     }
 
-    public static boolean editEntity(Indi indi, boolean isNew) {
+    public static Property editEntity(Indi indi, boolean isNew) {
         final IndiPanel bean = new IndiPanel();
         if (indi == null) {
-            return false;
+            return null;
         }
 
         if (isNew) {
@@ -55,7 +55,7 @@ public class EntityEditor extends AncestrisEditor {
             bean.setTitle(NbBundle.getMessage(EntityEditor.class, "dialog.indi.edit.title", indi));
         }
         bean.setContext(new Context(indi));
-        return bean.showPanel();
+        return bean.showPanel()?indi:null;
     }
 
     @Override
@@ -69,43 +69,18 @@ public class EntityEditor extends AncestrisEditor {
     }
 
     @Override
-    public boolean edit(Property property, boolean isNew) {
+    public Property edit(Property property, boolean isNew) {
         if (property instanceof Fam) {
             return editEntity((Fam) property, isNew);
         }
         if (property instanceof Indi) {
             return editEntity((Indi) property, isNew);
         }
-        return false;
+        return null;
     }
 
     @Override
-    public Action getCreateParentAction(Indi child, int sex) {
-        return AActions.alwaysEnabled(
-                new ACreateParent(child, sex, this),
-                "",
-                org.openide.util.NbBundle.getMessage(EntityEditor.class, "action.createparent.title"),
-                "ancestris/modules/editors/standard/images/add-child.png", // NOI18N
-                true);
-    }
-
-    @Override
-    public Action getCreateChildAction(Indi indi) {
-        return AActions.alwaysEnabled(
-                new ACreateChild(indi, this),
-                "",
-                org.openide.util.NbBundle.getMessage(EntityEditor.class, "action.createchild.title", indi),
-                "ancestris/modules/editors/standard/images/add-child.png", // NOI18N
-                true);
-    }
-
-    @Override
-    public Action getCreateSpouseAction(Indi indi) {
-        return AActions.alwaysEnabled(
-                new ACreateSpouse(indi, this),
-                "",
-                org.openide.util.NbBundle.getMessage(EntityEditor.class, "action.addspouse.title"),
-                "ancestris/modules/editors/standard/images/add-spouse.png", // NOI18N
-                true);
+    public Property add(Property parent) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
