@@ -46,7 +46,7 @@ public class GenealogyEditorAction extends AncestrisEditor {
     }
 
     @Override
-    public boolean edit(Property property, boolean isNew) {
+    public Property edit(Property property, boolean isNew) {
         Context context;
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
 
@@ -54,71 +54,46 @@ public class GenealogyEditorAction extends AncestrisEditor {
                 IndividualEditor individualEditor = new IndividualEditor(isNew);
                 individualEditor.setContext(context);
                 individualEditor.showPanel();
-                return true;
+                return property;
             } else if (property instanceof Fam) {
                 FamilyEditor familyEditor = new FamilyEditor(isNew);
                 familyEditor.setContext(context);
                familyEditor.showPanel();
-                return true;
+                return property;
             } else if (property instanceof Note) {
                 NoteEditor noteEditor = new NoteEditor(isNew);
                 noteEditor.setContext(context);
                 noteEditor.showPanel();
-                return true;
+                return property;
             } else if (property instanceof Media) {
                 MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor(isNew);
                 multiMediaObjectEditor.setContext(context);
                 multiMediaObjectEditor.showPanel();
-                return true;
+                return property;
             } else if (property instanceof Source) {
                 SourceEditor sourceEditor = new SourceEditor(isNew);
                 sourceEditor.setContext(context);
                 sourceEditor.showPanel();
-                return true;
+                return property;
             } else if (property instanceof Repository) {
                 RepositoryEditor repositoryEditor = new RepositoryEditor(isNew);
                 repositoryEditor.setContext(context);
                 repositoryEditor.showPanel();
-                return true;
+                return property;
             } else if (property instanceof Submitter) {
                 SubmitterEditor submitterEditor = new SubmitterEditor(isNew);
                 submitterEditor.setContext(context);
                 submitterEditor.showPanel();
-                return true;
+                return property;
             } else {
-                return false;
+                return null;
             }
         }
-        return false;
+        return null;
     }
 
     @Override
-    public Action getCreateParentAction(Indi child, int sex) {
-        return AActions.alwaysEnabled(
-                new ACreateParent(child, sex, this),
-                "",
-                org.openide.util.NbBundle.getMessage(GenealogyEditorAction.class, "action.createparent.title"),
-                "ancestris/modules/editors/standard/images/add-child.png", // NOI18N
-                true);
-    }
-
-    @Override
-    public Action getCreateChildAction(Indi indi) {
-        return AActions.alwaysEnabled(
-                new ACreateChild(indi, this),
-                "",
-                org.openide.util.NbBundle.getMessage(GenealogyEditorAction.class, "action.createchild.title", indi),
-                "ancestris/modules/editors/standard/images/add-child.png", // NOI18N
-                true);
-    }
-
-    @Override
-    public Action getCreateSpouseAction(Indi indi) {
-        return AActions.alwaysEnabled(
-                new ACreateSpouse(indi, this),
-                "",
-                org.openide.util.NbBundle.getMessage(GenealogyEditorAction.class, "action.addspouse.title"),
-                "ancestris/modules/editors/standard/images/add-spouse.png", // NOI18N
-                true);
+    public Property add(Property parent) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

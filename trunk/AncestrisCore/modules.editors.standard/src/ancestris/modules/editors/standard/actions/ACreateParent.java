@@ -27,7 +27,7 @@ public class ACreateParent extends AbstractAction {
         cpAction.actionPerformed(e);
         Indi parent = (Indi) cpAction.getCreated();
         if (cpAction.isNew()) {
-            if (!editor.edit(parent, true)) {
+            if (editor.edit(parent, true)== null) {
                 child.getGedcom().undoUnitOfWork(false);
             }
         }

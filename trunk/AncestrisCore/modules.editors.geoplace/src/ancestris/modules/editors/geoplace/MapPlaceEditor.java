@@ -11,53 +11,91 @@
  */
 package ancestris.modules.editors.geoplace;
 
-import ancestris.api.editor.PlaceEditor;
+import ancestris.api.editor.AncestrisEditor;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
-import javax.swing.JComponent;
+import javax.swing.Action;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author daniel
  */
-public class MapPlaceEditor implements PlaceEditor{
+@ServiceProvider(service = AncestrisEditor.class,position = 100)
+public class MapPlaceEditor extends AncestrisEditor{
     private final PlaceEditorPanel editorPanel;
 
     public MapPlaceEditor() {
         editorPanel = new PlaceEditorPanel();
     }
 
-    
     @Override
-    public PlaceEditor setup(Property parent,PropertyPlace place) {
-        editorPanel.set(parent, place);
-        return this;
+    public boolean canEdit(Property property) {
+        return property instanceof PropertyPlace;
     }
 
     @Override
-    public JComponent getEditorPanel() {
-        return editorPanel;
+    public boolean isActive() {
+        return false;
     }
 
     @Override
-    public PropertyPlace edit() {
-        ADialog dialog = new ADialog(NbBundle.getMessage(MapPlaceEditor.class, "PlaceEditorPanel.edit.title"), getEditorPanel());
-        if (dialog.show() == ADialog.OK_OPTION) {
-            return editorPanel.get();
-        } else {
-            return null;
+    public Property edit(Property property, boolean isNew) {
+        return edit(property,null);
+    }
+
+    @Override
+    public Property add(Property parent) {
+        return edit(null,parent);
+    }
+
+//    @Override
+//    public PlaceEditor setup(Property parent,PropertyPlace place) {
+//        editorPanel.set(parent, place);
+//        return this;
+//    }
+
+//    @Override
+//    public JComponent getEditorPanel() {
+//        return editorPanel;
+//    }
+//
+    private Property edit(Property place, Property parent) {
+        if (place instanceof PropertyPlace || place == null){
+            
+            editorPanel.set(parent, (PropertyPlace)place);
+            ADialog dialog = new ADialog(NbBundle.getMessage(MapPlaceEditor.class, "PlaceEditorPanel.edit.title"), editorPanel);
+            if (dialog.show() == ADialog.OK_OPTION) {
+                // Add dow:
+//                        gedcom.doUnitOfWork(new UnitOfWork() {
+//
+//                            @Override
+//                            public void perform(Gedcom gedcom) throws GedcomException {
+//                                PropertyPlace p = editor.commit();  // writes place edited and also writes geocoordinates into gedcom file
+//                                if (p != null){
+//                                    // update all other places in gedcom and refresh list
+//                                    obj.updateAllEventsPlaces(p);
+//                                }
+//                            }
+//                        });
+
+                editorPanel.commit();
+                return editorPanel.get();
+            }
         }
+        return null;
     }
 
-    @Override
-    public PropertyPlace commit() {
-        editorPanel.commit();
-        return editorPanel.get();
-    }
+//    @Override
+//    public PropertyPlace commit() {
+//        editorPanel.commit();
+//        return editorPanel.get();
+//    }
     
     /**
      * Open Place Format option dialog.

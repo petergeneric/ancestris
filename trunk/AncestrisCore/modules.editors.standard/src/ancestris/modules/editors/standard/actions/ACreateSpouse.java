@@ -28,7 +28,7 @@ public class ACreateSpouse extends AbstractAction {
             csAction.actionPerformed(e);
             Indi indi = (Indi) csAction.getCreated();
             if (csAction.isNew()) {
-                if (!editor.edit(indi, true)) {
+                if (editor.edit(indi, true)==null) {
                     other.getGedcom().undoUnitOfWork(false);
                 }
             }

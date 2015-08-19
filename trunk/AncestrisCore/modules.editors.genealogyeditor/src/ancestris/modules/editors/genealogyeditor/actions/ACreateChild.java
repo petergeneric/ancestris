@@ -54,7 +54,7 @@ public class ACreateChild extends AbstractAction {
             }
             Indi indi = (Indi) ccAction.getCreated();
             if (ccAction.isNew()) {
-                if (!editor.edit(indi, true)) {
+                if (editor.edit(indi, true)==null) {
                     if (gedcom != null) {
                         gedcom.undoUnitOfWork(false);
                     }
