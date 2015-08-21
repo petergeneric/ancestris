@@ -436,7 +436,10 @@ public class SourceEditor extends EntityEditor {
             /*
              * +1 <<SOURCE_REPOSITORY_CITATION>>
              */
-            repositoryCitationPanel.set(mSource, (PropertyRepository) mSource.getProperty("REPO"));
+                // FIXME: same fix as in r6314. To be improved
+                final Property p =mSource.getProperty("REPO"); 
+                PropertyRepository repo = (PropertyRepository) (p instanceof PropertyRepository?p:null);
+            repositoryCitationPanel.set(mSource, repo);
 
             /*
              * +1 REFN <USER_REFERENCE_NUMBER>

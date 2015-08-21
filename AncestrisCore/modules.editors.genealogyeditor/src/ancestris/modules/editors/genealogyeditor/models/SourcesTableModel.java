@@ -79,14 +79,18 @@ public class SourcesTableModel extends AbstractTableModel {
                     return "";
                 }
             } else if (column == 4) {
-                PropertyRepository repositoryXref = (PropertyRepository) source.getProperty("REPO");
+                // FIXME: same fix as in r6314. To be improved
+                final Property p =source.getProperty("REPO"); 
+                PropertyRepository repositoryXref = (PropertyRepository) (p instanceof PropertyRepository?p:null);
                 if (repositoryXref != null) {
                     return repositoryXref.getDisplayValue();
                 } else {
                     return "";
                 }
             } else if (column == 5) {
-                PropertyRepository repositoryXref = (PropertyRepository) source.getProperty("REPO");
+                // FIXME: same fix as in r6314. To be improved
+                final Property p =source.getProperty("REPO"); 
+                PropertyRepository repositoryXref = (PropertyRepository) (p instanceof PropertyRepository?p:null);
                 if (repositoryXref != null) {
                     Property caln = repositoryXref.getProperty("CALN");
                     if (caln != null) {
