@@ -62,9 +62,6 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         if (ancestrisMembers == null || ancestrisMembers.isEmpty()) {
             return;
         }
-        if (table.getColumnModel().getColumnCount() < 2) {
-            return;
-        }
         
         // Set Table
         setLayout(new BorderLayout());
@@ -77,6 +74,11 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         // Editable Table
         table.getModel().addTableModelListener(this);
         
+        // If columns & data not yet loaded, return (possible bug)
+        if (table.getColumnModel().getColumnCount() < 2) {
+            return;
+        }
+
         // Resize first column
         table.getColumnModel().getColumn(0).setPreferredWidth(20);
         
