@@ -11,7 +11,6 @@
  */
 package ancestris.modules.treesharing.panels;
 
-import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import genj.gedcom.Entity;
 import java.awt.Dimension;
 import java.util.Map;

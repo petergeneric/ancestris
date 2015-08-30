@@ -15,7 +15,7 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.treesharing.communication.AncestrisMember;
 import ancestris.modules.treesharing.panels.SettingsAction;
 import ancestris.modules.treesharing.communication.Comm;
-import ancestris.modules.treesharing.communication.FriendGedcomEntity;
+import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanelController;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.GedcomFriendMatch;
@@ -685,30 +685,11 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
 
-//    public List<FriendGedcomEntity> getMySharedEntities() {
-//        
-//        // Get all shared entities for all gedcoms
-//        List<Entity> sharedEntities = new LinkedList<Entity>();
-//        for (SharedGedcom sharedGedcom : sharedGedcoms) {
-//            sharedEntities.addAll(sharedGedcom.getAllPublicEntities());
-//        }
-//        
-//        // Build return list
-//        List<FriendGedcomEntity> providedEntities = new LinkedList<FriendGedcomEntity>();
-//        for (Entity entity : sharedEntities) {
-//            providedEntities.add(new FriendGedcomEntity(commPseudo, entity.getGedcom(), entity));
-//        }
-//        
-//        return providedEntities;
-//    }
-//
     
-    
-    
-    public AncestrisFriend createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, String IPAddress, String portAddress, String entityType) {
+    public AncestrisFriend createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, AncestrisMember member) {
 
         // Update or Create AncestrisFriend
-        AncestrisFriend friend = getFriend(memberEntity.friend, IPAddress, portAddress);
+        AncestrisFriend friend = getFriend(memberEntity.friend, member.getIPAddress(), member.getPortAddress());
         
         // Update or Create MatchFrame
         GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, friend);

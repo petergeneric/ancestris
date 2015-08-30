@@ -13,6 +13,7 @@
 package ancestris.modules.treesharing.communication;
 
 import ancestris.modules.treesharing.TreeSharingTopComponent;
+import ancestris.modules.treesharing.panels.SharedGedcom;
 import ancestris.util.swing.DialogManager;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -32,7 +33,10 @@ import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -58,6 +62,7 @@ import org.xml.sax.InputSource;
  * Principle : 
  *  - use one single socket for all connected comms on the client side
  *  - first 5 bytes of message is the command 
+ *  - sent command are all "command|pseudo+space|object"
  * 
  * 
  * Server
@@ -132,15 +137,23 @@ public class Comm {
     private int COMM_TIMEOUT = 1000; // One second
 
     private static DatagramSocket socket = null;
-    private int COMM_PACKET_SIZE = 65536;
 
-    // Commands
     // Get members web service
     private static String CMD_GETMB = "/get_members.php?";
     private static String TAG_MEMBER = "member";
     private static String TAG_PSEUDO = "pseudo";
     private static String TAG_IPADDR = "ipaddress";
     private static String TAG_PORTAD = "portaddress";
+
+    // Command and Packets size
+    private int COMM_PACKET_SIZE = 65000;
+    private int COMM_CMD_SIZE = 5;
+    private int COMM_CMD_PFX_SIZE = 3;
+    private String FMT_IDX = "%02d";
+    private int COMM_PACKET_NB = 100;
+    private static String STR_DELIMITER = " ";
+
+    // Commands
     // Registration
     private static String CMD_REGIS = "REGIS";
     private static String CMD_REGOK = "REGOK";
@@ -154,16 +167,14 @@ public class Comm {
     private static String CMD_PINGG = "PINGG";
     private static String CMD_PONGG = "PONGG";
     // Sharing my shared entities
-    private static String CMD_GETSE = "GETSE";
-    private static String CMD_TAKSE = "TAKSE";
-    private static String CMD_GILxx = "GIL";
-    private static String CMD_TILxx = "TIL";
-    private static String CMD_GIDxx = "GID";
-    private static String CMD_TIDxx = "TID";
-    private static String CMD_GFLxx = "GFL";
-    private static String CMD_TFLxx = "TFL";
-    private static String CMD_GFDxx = "GFD";
-    private static String CMD_TFDxx = "TFD";
+    private static String CMD_GILxx = "GIL";   // Get Individual lastnames
+    private static String CMD_TILxx = "TIL";   // Take individual lastnames
+    private static String CMD_GIDxx = "GID";   // Get individual details
+    private static String CMD_TIDxx = "TID";   // Take individual details
+    private static String CMD_GFLxx = "GFL";   // Get family lastnames
+    private static String CMD_TFLxx = "TFL";   // Take family lastnames
+    private static String CMD_GFDxx = "GFD";   // Get family details
+    private static String CMD_TFDxx = "TFD";   // Take family details
     
     // Threads
     private volatile boolean sharing;
@@ -172,12 +183,28 @@ public class Comm {
 
     // Call info
     private boolean expectedConnection = false;
-    private List<FriendGedcomEntity> listOfEntities = null;
     private String expectedCallIPAddress = null;
     private String expectedCallPortAddress = null;
     private boolean expectedCall = false;
 
-
+    // Possible data objects to be received
+    private boolean listOfIndiLastnamesEOF = false;
+    private Set<String> listOfIndiLastnames = null;
+    private boolean listOfIndiDetailsEOF = false;
+    private Set<GedcomIndi> listOfIndiDetails = null;
+    private boolean listOfFamLastnamesEOF = false;
+    private Set<String> listOfFamLastnames = null;
+    private boolean listOfFamDetailsEOF = false;
+    private Set<GedcomFam> listOfFamDetails = null;
+    
+    // Possible data objects to be sent by packets
+    private Map<Integer, Set<String>> packetsOfIndiLastnames = null;
+    private Map<Integer, Set<GedcomIndi>> packetsOfIndiDetails = null;
+    private Map<Integer, Set<String>> packetsOfFamLastnames = null;
+    private Map<Integer, Set<GedcomFam>> packetsOfFamDetails = null;
+    
+    
+    
     
     
     /**
@@ -220,6 +247,10 @@ public class Comm {
     }
 
 
+    
+    
+    
+    
     /**
      * Closes door stopping friends from listening to me
      */
@@ -301,16 +332,12 @@ public class Comm {
     public boolean registerMe(String pseudo) {
 
         LOG.log(Level.INFO, "***");
-        LOG.log(Level.INFO, "Registering member " + pseudo + " on Ancestris server.");
         try {
             // Create our unique socket
             socket = new DatagramSocket();
             
             // Registers on server
-            String command = CMD_REGIS + pseudo;
-            byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
-            DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(COMM_SERVER), COMM_PORT); 
-            socket.send(packetSent);
+            sendCommand(CMD_REGIS, pseudo, null, COMM_SERVER, COMM_PORT);
 
             // Listen to reply
             byte[] bytesReceived = new byte[512];
@@ -320,11 +347,11 @@ public class Comm {
             
             // Process reply
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
-            if (reply.substring(0, 5).equals(CMD_REGOK)) {
+            if (reply.substring(0, COMM_CMD_SIZE).equals(CMD_REGOK)) {
                 LOG.log(Level.INFO, "...(REGOK) Registered " + pseudo + " on the Ancestris server.");
                 socket.setSoTimeout(0);
-            } else if (reply.substring(0, 5).equals(CMD_REGKO)) {
-                String err = reply.substring(5);
+            } else if (reply.substring(0, COMM_CMD_SIZE).equals(CMD_REGKO)) {
+                String err = reply.substring(COMM_CMD_SIZE);
                 LOG.log(Level.INFO, "...(REGKO) Could not register " + pseudo + " on the Ancestris server. Error : " + err);
                 if (err.startsWith("Duplicate entry")) {
                     err = NbBundle.getMessage(Comm.class, "ERR_DuplicatePseudo");
@@ -347,19 +374,14 @@ public class Comm {
         return true;
     }
     
-
     /**
      * Tell Ancestris server that I am no longer ready to share
      */
     public boolean unregisterMe(String pseudo) {
 
-        LOG.log(Level.INFO, "Unregistering member " + pseudo + " from Ancestris server.");
         try {
             // Send unrestering command
-            String command = CMD_UNREG + pseudo;
-            byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
-            DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(COMM_SERVER), COMM_PORT); 
-            socket.send(packetSent);
+            sendCommand(CMD_UNREG, pseudo, null, COMM_SERVER, COMM_PORT);
             
             // Expect answer back (wait for response from the other thread...)
             int s = 0;
@@ -387,9 +409,12 @@ public class Comm {
     
 
     
+    
+    
+    
 
     /**
-     * Calls the server avery 150 seconds (hole lasts 180 seconds in general)
+     * Calls the server every 150 seconds (hole lasts 180 seconds in general)
      */
     private void ping() {
 
@@ -404,12 +429,11 @@ public class Comm {
         }
 
     }
-
   
     public void sendPing() {
 
         if (sharing) {
-            sendCommand(CMD_PONGG, owner.getRegisteredPseudo(), COMM_SERVER, COMM_PORT);
+            sendCommand(CMD_PONGG, owner.getRegisteredPseudo(), null, COMM_SERVER, COMM_PORT);
         }
 
     }
@@ -418,17 +442,125 @@ public class Comm {
     
     
     
+    
+    public Set<String> getSharedIndiLastnamesFromMember(AncestrisMember member) {
+        if (listOfIndiLastnames == null) {
+            listOfIndiLastnames = new HashSet<String>();
+        } else {
+            listOfIndiLastnames.clear();
+        }
+        listOfIndiLastnamesEOF = false;
+        call(member, CMD_GILxx, null);
+        return listOfIndiLastnames;
+    }
+
+    public Set<GedcomIndi> getGedcomIndisFromMember(AncestrisMember member, Set<String> commonIndiLastnames) {
+        if (listOfIndiDetails == null) {
+            listOfIndiDetails = new HashSet<GedcomIndi>();
+        } else {
+            listOfIndiDetails.clear();
+        }
+        listOfIndiDetailsEOF = false;
+        call(member, CMD_GIDxx, commonIndiLastnames);
+        return listOfIndiDetails;
+    }
+
+    
+    public Set<String> getSharedFamLastnamesFromMember(AncestrisMember member) {
+        if (listOfFamLastnames == null) {
+            listOfFamLastnames = new HashSet<String>();
+        } else {
+            listOfFamLastnames.clear();
+        }
+        listOfFamLastnamesEOF = false;
+        call(member, CMD_GFLxx, null);
+        return listOfFamLastnames;
+    }
+
+    public Set<GedcomFam> getGedcomFamsFromMember(AncestrisMember member, Set<String> commonFamLastnames) {
+        if (listOfFamDetails == null) {
+            listOfFamDetails = new HashSet<GedcomFam>();
+        } else {
+            listOfFamDetails.clear();
+        }
+        listOfFamDetailsEOF = false;
+        call(member, CMD_GFDxx, commonFamLastnames);
+        return listOfFamDetails;
+    }
+    
+    
+    
         
     
 
+    /**
+     * Generic call method to friend and expect something in return
+     */
+    public void call(AncestrisMember member, String command, Object object) {
+
+        if (socket == null || socket.isClosed()) {
+            return;
+        }
+        
+        // Connect to Member
+        if (!connectToMember(member)) {
+            return;
+        }
+        
+        // Init call data
+        expectedCallIPAddress = member.getIPAddress();
+        expectedCallPortAddress = member.getPortAddress();
+        
+        // Loop on packets. Last packet number is COMM_PACKET_NB-1.
+        int iPacket = 0;
+        while (iPacket < COMM_PACKET_NB) {
+            String commandIndexed = command + String.format(FMT_IDX, iPacket);
+            try {
+                // Ask member for list of something
+                sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, (iPacket == 0 ? object : null), expectedCallIPAddress, Integer.valueOf(expectedCallPortAddress));
+            
+                // Expect answer back and get shared entities in return (wait for response from the other thread...)
+                expectedCall = true;
+                int s = 0;
+                while (expectedCall && (s < 10)) {  // set give up time to 10 seconds
+                    TimeUnit.SECONDS.sleep(1);
+                    s++;
+                }
+                if (expectedCall) { // response never came back after 10 seconds, consider it failed
+                    expectedCall = false;
+                    LOG.log(Level.INFO, "...(TIMEOUT) No response from " + member.getMemberName() + " after timeout.");
+                    return;
+                }
+                
+                iPacket++;
+            
+                // No more packet
+                if (command.equals(CMD_GILxx) && listOfIndiLastnamesEOF) {
+                    break;
+                }
+                if (command.equals(CMD_GIDxx) && listOfIndiDetailsEOF) {
+                    break;
+                }
+                if (command.equals(CMD_GFLxx) && listOfFamLastnamesEOF) {
+                    break;
+                }
+                if (command.equals(CMD_GFDxx) && listOfFamDetailsEOF) {
+                    break;
+                }
+            
+            } catch (Exception e) {
+                Exceptions.printStackTrace(e);
+                return;
+            }
+        }
+        LOG.log(Level.INFO, "...(SUCCESS) Returned call from member " + member.getMemberName() + " with " + iPacket + " packets");
+    }
+
+    
     private boolean connectToMember(AncestrisMember member) {
         
         try {
-            String command = CMD_CONCT + member.getMemberName();
-            byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
-            DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(COMM_SERVER), COMM_PORT);
-            LOG.log(Level.INFO, "Connecting to member " + member.getMemberName() + " through server " + packetSent.getSocketAddress());
-            socket.send(packetSent);
+            sendCommand(CMD_CONCT, member.getMemberName(), null, COMM_SERVER, COMM_PORT);
 
             // Expect that connection gets established (wait for response from the other thread...)
             expectedConnection = true;
@@ -454,74 +586,12 @@ public class Comm {
 
     
     
-    /**
-     * Calls friend and expect something in return
-     */
-    public List<FriendGedcomEntity> call(AncestrisMember member) {
-
-        if (socket == null || socket.isClosed()) {
-            return null;
-        }
-        
-        // Connect to Member
-        if (!connectToMember(member)) {
-            return null;
-        }
-        
-        // Init call data
-        expectedCallIPAddress = member.getIPAddress();
-        expectedCallPortAddress = member.getPortAddress();
-        if (listOfEntities == null) {
-            listOfEntities = new ArrayList<FriendGedcomEntity>();
-        } else {
-            listOfEntities.clear();
-        }
-        
-        LOG.log(Level.INFO, "Calling member " + member.getMemberName() + " on " + expectedCallIPAddress + ":" + expectedCallPortAddress);
-        String command = CMD_GETSE + owner.getRegisteredPseudo() + " ";   // space is end-delimiter as theire is no space in pseudo
-        byte[] bytesSent = command.getBytes(Charset.forName(COMM_CHARSET));
-        try {
-            // Ask member for list of shared entities
-            DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(expectedCallIPAddress), Integer.valueOf(expectedCallPortAddress)); 
-            socket.send(packetSent);
-            
-            // Expect answer back and get shared entities in return (wait for response from the other thread...)
-            expectedCall = true;
-            int s = 0;
-            while (expectedCall && (s < 10)) {  // set give up time to 10 seconds
-                TimeUnit.SECONDS.sleep(1);
-                s++;
-            }
-            if (expectedCall) { // response never came back after 10 seconds, consider it failed
-                expectedCall = false;
-                LOG.log(Level.INFO, "...(TIMEOUT) No response from " + member.getMemberName() + " after timeout.");
-                return null;
-            }
-            
-            // There was a response
-            if (listOfEntities == null) { // response happened but with no list
-                LOG.log(Level.INFO, "...(NULL) Returned call from member " + member.getMemberName() + " with no list");
-                return null;
-            } else if (listOfEntities.isEmpty()) {
-                LOG.log(Level.INFO, "...(EMPTY) Returned call from member " + member.getMemberName() + " with empty list");
-                return listOfEntities;
-            }
-            
-        } catch (Exception e) {
-            Exceptions.printStackTrace(e);
-            return null;
-        }
-        LOG.log(Level.INFO, "...(SUCCESS) Returned call from member " + member.getMemberName() + " with " + listOfEntities.size() + " entities");
-        return listOfEntities;
-    }
-
-    
     
 
     
     
     /**
-     * Listens to incoming calls and process them all
+     * Main listen method : listens to incoming calls and process them all
      */
     public void listen() {
 
@@ -529,9 +599,13 @@ public class Comm {
         String senderAddress = null;
         String senderIP = null;
         int senderPort = 0;
-        String content = null;
         byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
         DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
+        
+        String contentStr = null;
+        String member = null;
+        AncestrisMember aMember = null;
+        byte[] contentObj = null;
         
         LOG.log(Level.INFO, "Listening to all incoming calls indefinitely.......");
 
@@ -542,100 +616,243 @@ public class Comm {
                 socket.setSoTimeout(0);
                 socket.receive(packetReceived);
                 
-                // Identify key elements of call
+                // Identify key elements of call for all calls
                 senderIP = packetReceived.getAddress().getHostAddress();
                 senderPort = packetReceived.getPort();
                 senderAddress = senderIP + ":" + senderPort;
-                command = new String(Arrays.copyOfRange(bytesReceived, 0, 5));        
-                content = new String(bytesReceived).substring(5);
-                String[] bits = content.split("\0");
+                
+                command = new String(Arrays.copyOfRange(bytesReceived, 0, COMM_CMD_SIZE));        
+                
+                contentStr = new String(bytesReceived).substring(COMM_CMD_SIZE);
+                String[] bits = contentStr.split("\0");
                 if (bits.length > 0) {
-                    content = bits[0];
+                    contentStr = bits[0];
                 }
+                
                 LOG.log(Level.INFO, "...Incoming " + command + " command received from " + senderAddress);
 
+                //
+                // PROCESS COMMANDS FROM SERVER
+                //
                 
+                // Case of CMD_UNROK command (unregistration worked)
+                if (command.equals(CMD_UNROK)) {
+                    sharing = false;
+                    continue;
+                } 
+                
+                // Case of CMD_UNRKO command (unregistration did not work)
+                if (command.equals(CMD_UNRKO)) {
+                    String err = new String(bytesReceived).substring(COMM_CMD_SIZE);
+                    LOG.log(Level.INFO, "...Could not unregister " + owner.getRegisteredPseudo() + " from the Ancestris server. Error : " + err);
+                    DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                    continue;
+                } 
+
                 // Case of CMD_CONCT command (server replies back to my connection request or asks me to connect to indicated pseudo)
                 if (command.equals(CMD_CONCT)) {
-                    String member = StringEscapeUtils.unescapeHtml(content.substring(0, content.indexOf(" ")));
+                    member = StringEscapeUtils.unescapeHtml(contentStr);
                     LOG.log(Level.INFO, "...Request to connect to " + member);
                     owner.updateMembersList();
-                    AncestrisMember aMember = owner.getMember(member);
+                    aMember = owner.getMember(member);
                     if (aMember == null) {
                         LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
                     }
                     else if (aMember.isAllowed()) {
-                        sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + " ", aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
+                        sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + STR_DELIMITER, null, aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
                         LOG.log(Level.INFO, "...Member " + member + " is allowed. Replied back with PINGG.");
                     } else {
                         LOG.log(Level.INFO, "...Member " + member + " is NOT allowed. No reply.");
                     }
+                    continue;
                 }
                 
-                // Case of CMD_UNROK command (unregistration worked)
-                else if (command.equals(CMD_UNROK)) {
-                    sharing = false;
-                } 
+
+
                 
-                // Case of CMD_UNRKO command (unregistration did not work)
-                else if (command.equals(CMD_UNRKO)) {
-                    String err = new String(bytesReceived).substring(5);
-                    LOG.log(Level.INFO, "...Could not unregister " + owner.getRegisteredPseudo() + " from the Ancestris server. Error : " + err);
-                    DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                
+                //
+                // PROCESS COMMANDS FROM OTHER ANCESTRIS MEMBER
+                //
+                
+                // Identify member elements of call and content. If member not allowed, continue
+                if (contentStr.contains(STR_DELIMITER)) {
+                    contentStr = contentStr.substring(0, contentStr.indexOf(STR_DELIMITER));
+                }
+                member = StringEscapeUtils.unescapeHtml(contentStr);
+                aMember = owner.getMember(member);
+                if (aMember == null) {
+                    LOG.log(Level.INFO, "...Calling member " + member + " is not in the list of members.");
+                    continue;
+                } else if (!aMember.isAllowed() ||  !senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress())) {
+                    LOG.log(Level.INFO, "...Member " + member + " is NOT allowed or address does not matcvh the one I know. Do not reply.");
+                    continue;
                 } 
+                contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentStr.length() + STR_DELIMITER.length(), bytesReceived.length);
+                
                 
                 // Case of PING command 
-                else if (command.equals(CMD_PINGG)) {
-                    sendCommand(CMD_PONGG, owner.getRegisteredPseudo(), senderIP, senderPort);
-                    LOG.log(Level.INFO, "...Replied back with PONGG.");
+                if (command.equals(CMD_PINGG)) {
+                    sendCommand(CMD_PONGG, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
                     expectedConnection = false;
+                    continue;
                 } 
                 
                 // Case of PONG command 
-                else if (command.equals(CMD_PONGG)) {
+                if (command.equals(CMD_PONGG)) {
                     expectedConnection = false;
+                    continue;
                 } 
+
                 
-                // Case of CMD_GETSE command (another user asks for my shared entities so send shared entities if allowed)
-                else if (command.equals(CMD_GETSE)) {
-                    String member = StringEscapeUtils.unescapeHtml(content.substring(0, content.indexOf(" ")));
-                    LOG.log(Level.INFO, "...Request to give my shared entities to " + member);
-                    // If member allowed and IP address matches, send data
-                    AncestrisMember aMember = owner.getMember(member);
-                    if (aMember == null) {
-                        LOG.log(Level.INFO, "...Member " + member + " is not in the list of members.");
+                
+                
+                // Case of CMD_GILxx command (member asks for the list of lastnames I am sharing). Send back.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GILxx)) {
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                    if (iPacket == 0 || packetsOfIndiLastnames == null) {
+                        buildPacketsOfString(getMySharedIndiLastnames(owner.getSharedGedcoms()), packetsOfIndiLastnames);
                     }
-                    else if (aMember.isAllowed() && senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress())) {
-                        byte[] bytesSent = wrapObject(CMD_TAKSE, null); //owner.getMySharedEntities());
-                        if (bytesSent.length > COMM_PACKET_SIZE) {
-                            LOG.log(Level.INFO, "......Content to be sent exceeds packet size limit : " + bytesSent.length + ". Cannot be sent.");
-                            continue;
-                        }
-                        DatagramPacket packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(senderIP), senderPort);
-                        int bytesCount = packetSent.getLength();
-                        socket.send(packetSent);
-                        LOG.log(Level.INFO, "...Member " + member + " is allowed and address matches. Sent shared entities to " + senderAddress + "(" + bytesCount + " bytes)");
+                    String commandIndexed = CMD_TILxx + String.format(FMT_IDX, iPacket);
+                    Set<String> set = packetsOfIndiLastnames.get(iPacket);
+                    if (set == null) {
+                        commandIndexed = CMD_TILxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
                     } else {
-                        sendCommand(CMD_TAKSE, null, senderIP, senderPort);
-                        LOG.log(Level.INFO, "...Member " + member + " is NOT allowed or address does not match pseudo. Sent empty content.");
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
                     }
+                    continue;
                 }
-                
-                // Case of CMD_TAKSE command (following my GETSE message to another member, he/she returns his/her shared entities. Take them.
-                else if (command.equals(CMD_TAKSE)) {
+
+                // Case of CMD_TILxx command (following my GILxx message to another member, he/she returns his/her shared entities. Take them.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TILxx)) {
                     LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
-                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress+":"+expectedCallPortAddress)) {
-                        listOfEntities = (List<FriendGedcomEntity>) unwrapObject(Arrays.copyOfRange(bytesReceived, 5, bytesReceived.length));
-                        LOG.log(Level.INFO, "...List size is " + listOfEntities.size());
-                        expectedCall = false;
+                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                        if (iPacket == COMM_PACKET_NB - 1) { // no more packet
+                            listOfIndiLastnamesEOF = true;
+                        } else {
+                            listOfIndiLastnames.addAll((Set<String>) unwrapObject(contentObj));
                         }
+                        expectedCall = false;
                     }
-
-                // Case of other commands
-                else {
-                    // nothing
+                    continue;
                 }
+
+                
+                
+                
+                
+                // Case of CMD_GIDxx command (member asks for the details on individuals for a given list of lastnames. Send back.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GIDxx)) {
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                    if (iPacket == 0 || packetsOfIndiDetails == null) {
+                        buildPacketsOfIndis(getMySharedGedcomIndis(owner.getSharedGedcoms(), (Set<String>) unwrapObject(contentObj)), packetsOfIndiDetails);
+                    }
+                    String commandIndexed = CMD_TIDxx + String.format(FMT_IDX, iPacket);
+                    Set<GedcomIndi> set = packetsOfIndiDetails.get(iPacket);
+                    if (set == null) {
+                        commandIndexed = CMD_TIDxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
+                    } else {
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
+                    }
+                    continue;
+                }
+
+                // Case of CMD_TIDxx command (following my GIDxx message to another member, he/she returns his/her shared entities. Take them.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TIDxx)) {
+                    LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
+                    // Make sure there is a pending call expecting something from the ipaddress and port received
+                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                        if (iPacket == COMM_PACKET_NB - 1) { // no more packet
+                            listOfIndiDetailsEOF = true;
+                        } else {
+                            listOfIndiDetails.addAll((Set<GedcomIndi>) unwrapObject(contentObj));
+                        }
+                        expectedCall = false;
+                    }
+                    continue;
+                }
+
+                
+                
+                
+                // Case of CMD_GFLxx command (member asks for the list of lastnames I am sharing). Send back.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GFLxx)) {
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                    if (iPacket == 0 || packetsOfFamLastnames == null) {
+                        buildPacketsOfString(getMySharedFamLastnames(owner.getSharedGedcoms()), packetsOfFamLastnames);
+                    }
+                    String commandIndexed = CMD_TFLxx + String.format(FMT_IDX, iPacket);
+                    Set<String> set = packetsOfFamLastnames.get(iPacket);
+                    if (set == null) {
+                        commandIndexed = CMD_TFLxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
+                    } else {
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
+                    }
+                    continue;
+                }
+
+                // Case of CMD_TFLxx command (following my GFLxx message to another member, he/she returns his/her shared entities. Take them.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TFLxx)) {
+                    LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
+                    // Make sure there is a pending call expecting something from the ipaddress and port received
+                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                        if (iPacket == COMM_PACKET_NB - 1) { // no more packet
+                            listOfFamLastnamesEOF = true;
+                        } else {
+                            listOfFamLastnames.addAll((Set<String>) unwrapObject(contentObj));
+                        }
+                        expectedCall = false;
+                    }
+                    continue;
+                }
+
+                
+                
+                
+                
+                // Case of CMD_GFDxx command (member asks for the details on individuals for a given list of lastnames. Send back.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GFDxx)) {
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                    if (iPacket == 0 || packetsOfFamDetails == null) {
+                        buildPacketsOfFams(getMySharedGedcomFams(owner.getSharedGedcoms(), (Set<String>) unwrapObject(contentObj)), packetsOfFamDetails);
+                    }
+                    String commandIndexed = CMD_TFDxx + String.format(FMT_IDX, iPacket);
+                    Set<GedcomFam> set = packetsOfFamDetails.get(iPacket);
+                    if (set == null) {
+                        commandIndexed = CMD_TFDxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
+                    } else {
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
+                    }
+                    continue;
+                }
+
+                // Case of CMD_TFDxx command (following my GFDxx message to another member, he/she returns his/her shared entities. Take them.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TFDxx)) {
+                    LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
+                    // Make sure there is a pending call expecting something from the ipaddress and port received
+                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                        if (iPacket == COMM_PACKET_NB - 1) { // no more packet
+                            listOfFamDetailsEOF = true;
+                        } else {
+                            listOfFamDetails.addAll((Set<GedcomFam>) unwrapObject(contentObj));
+                        }
+                        expectedCall = false;
+                    }
+                    continue;
+                }
+
+                
+                
+                
             }
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
@@ -648,22 +865,9 @@ public class Comm {
     
     
 
-    public Set<String> getSharedIndiLastnamesFromMember(AncestrisMember member) {
-        // Passer tous les envois de CMD_xxxxx en sendCommand(CMD_xxxxx, paquet, destIP, destPort)
-        return null;
-    }
-
-    public List<GedcomIndi> getGedcomIndisFromMember(AncestrisMember member, Set<String> commonIndiLastnames) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public Set<String> getSharedFamLastnamesFromMember(AncestrisMember member) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public List<GedcomFam> getGedcomFamsFromMember(AncestrisMember member, Set<String> commonFamLastnames) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
+    
+    
     
 
     
@@ -671,36 +875,47 @@ public class Comm {
     
     
     /**
-     * Used to send command to server (simple text)
+     * Used to send command to Server and Members
      */
-    private void sendCommand(String command, String string, String ipAddress, int portAddress) {
-        sendObject(wrapObject(command, string), ipAddress, portAddress);
+    private void sendCommand(String command, String string, Object object, String ipAddress, int portAddress) {
         
+        byte[] msgBytes = null; // content to send
+
+        if (!command.equals(CMD_PONGG)) {   // no need to log this message as it is sent every few minutes to the server
+            LOG.log(Level.INFO, "Sending command " + command + " with " + string + (object != null ? " and object " : "") + " to " + ipAddress + ":" + portAddress);
+        }
+        
+        String contentStr = command + string;
+        byte[] contentBytes = contentStr.getBytes(Charset.forName(COMM_CHARSET));
+        
+        // Return just this if no object
+        if (object == null) {
+            msgBytes = contentBytes;
+        } else {
+            // ...else add wrapped object
+            try {
+                ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+                byteStream.write(contentBytes);
+                byteStream.write(wrapObject(object));
+                msgBytes = byteStream.toByteArray();
+
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+        // Send whole msg
+        sendObject(msgBytes, ipAddress, portAddress);
     }
     
+    
+
     /**
-     * Used to send command to Ancestris (complex object)
+     * Build packet from an object
      */
-    private void sendCommand(String command, Object object, String ipAddress, int portAddress) {
-        sendObject(wrapObject(command, object), ipAddress, portAddress);
-    }
-    
-    
-    
-    private byte[] wrapObject(String command, String string) {
-
-        String content = command + string; 
-        return content.getBytes(Charset.forName(COMM_CHARSET));
-    }
-
-    
-    
-    private byte[] wrapObject(String command, Object object) {
-
+    private byte[] wrapObject(Object object) {
         byte[] bytes = null;
         try {
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            byteStream.write(command.getBytes(Charset.forName(COMM_CHARSET)));
             ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
             GZIPOutputStream gz = new GZIPOutputStream(contentStream);
             ObjectOutputStream os = new ObjectOutputStream(gz);
@@ -708,8 +923,7 @@ public class Comm {
             os.writeObject(object);
             os.flush();
             gz.close();
-            byteStream.write(contentStream.toByteArray());
-            bytes = byteStream.toByteArray();
+            bytes = contentStream.toByteArray();
             
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -717,6 +931,9 @@ public class Comm {
         return bytes;
     }
 
+    /**
+     * Detatch object from packet
+     */
     private Object unwrapObject(byte[] content) {
 
         Object object = null;
@@ -736,7 +953,9 @@ public class Comm {
         return object;
     }
 
-    
+    /**
+     * Elementary method to send object once packet has been built
+     */
     private void sendObject(byte[] bytesSent, String ipAddress, int portAddress) {
         DatagramPacket packetSent;
         try {
@@ -747,10 +966,103 @@ public class Comm {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
     }
     
 
+    
+    
+    
+    
+    
+    
+    
+    
+    public Set<String> getMySharedIndiLastnames(List<SharedGedcom> sharedGedcoms) {
+        Set<String> ret = new HashSet<String>();
+        for (SharedGedcom sharedGedcom : sharedGedcoms) {
+            ret.addAll(sharedGedcom.getPublicIndiLastnames());
+        }
+        return ret;
+    }
+
+    public Set<String> getMySharedFamLastnames(List<SharedGedcom> sharedGedcoms) {
+        Set<String> ret = new HashSet<String>();
+        for (SharedGedcom sharedGedcom : sharedGedcoms) {
+            ret.addAll(sharedGedcom.getPublicFamLastnames());
+        }
+        return ret;
+    }
+
+    public Set<GedcomIndi> getMySharedGedcomIndis(List<SharedGedcom> sharedGedcoms, Set<String> commonIndiLastnames) {
+        Set<GedcomIndi> ret = new HashSet<GedcomIndi>();
+        for (SharedGedcom sharedGedcom : sharedGedcoms) {
+            ret.addAll(sharedGedcom.getPublicGedcomIndis(commonIndiLastnames));
+        }
+        return ret;
+    }
+
+    public Set<GedcomFam> getMySharedGedcomFams(List<SharedGedcom> sharedGedcoms, Set<String> commonFamLastnames) {
+        Set<GedcomFam> ret = new HashSet<GedcomFam>();
+        for (SharedGedcom sharedGedcom : sharedGedcoms) {
+            ret.addAll(sharedGedcom.getPublicGedcomFams(commonFamLastnames));
+        }
+        return ret;
+    }
+
+    
+    
+    
+    
+    /**
+     * Builds packets of strings, not of bytes, so that each packets can be unwrapped into lists without the other packets
+     */
+    private void buildPacketsOfString(Set<String> masterSet, Map<Integer, Set<String>> packets) {
+        packets = new HashMap<Integer, Set<String>>();
+        byte[] masterPacket = wrapObject(masterSet);
+        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE + 1);   // +1 to have some margin because packets will not all be of same size
+        for (Integer i = 0; i < nbPackets; i++) {
+            packets.put(i, new HashSet<String>());
+        }
+        int index = 0;
+        for (String obj : masterSet) {
+            packets.get(index++ % nbPackets).add(obj);
+        }
+    }
+
+    /**
+     * Builds packets of GedcomIndi, not of bytes, so that each packets can be unwrapped into lists without the other packets
+     */
+    private void buildPacketsOfIndis(Set<GedcomIndi> masterSet, Map<Integer, Set<GedcomIndi>> packets) {
+        packets = new HashMap<Integer, Set<GedcomIndi>>();
+        byte[] masterPacket = wrapObject(masterSet);
+        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE + 1);   // +1 to have some margin because packets will not all be of same size
+        for (Integer i = 0; i < nbPackets; i++) {
+            packets.put(i, new HashSet<GedcomIndi>());
+        }
+        int index = 0;
+        for (GedcomIndi obj : masterSet) {
+            packets.get(index++ % nbPackets).add(obj);
+        }
+    }
+
+    /**
+     * Builds packets of GedcomFam, not of bytes, so that each packets can be unwrapped into lists without the other packets
+     */
+    private void buildPacketsOfFams(Set<GedcomFam> masterSet, Map<Integer, Set<GedcomFam>> packets) {
+        packets = new HashMap<Integer, Set<GedcomFam>>();
+        byte[] masterPacket = wrapObject(masterSet);
+        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE + 1);   // +1 to have some margin because packets will not all be of same size
+        for (Integer i = 0; i < nbPackets; i++) {
+            packets.put(i, new HashSet<GedcomFam>());
+        }
+        int index = 0;
+        for (GedcomFam obj : masterSet) {
+            packets.get(index++ % nbPackets).add(obj);
+        }
+    }
+
+
+    
     
 }
 

@@ -12,11 +12,9 @@
 
 package ancestris.modules.treesharing.communication;
 
-import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyDate;
 import genj.gedcom.TagPath;
 import java.io.Serializable;
 
