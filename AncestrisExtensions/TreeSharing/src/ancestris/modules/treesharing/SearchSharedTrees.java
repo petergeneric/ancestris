@@ -18,7 +18,6 @@ import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
-import genj.gedcom.Gedcom;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

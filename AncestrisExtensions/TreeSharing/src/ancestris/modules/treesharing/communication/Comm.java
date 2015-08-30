@@ -628,6 +628,9 @@ public class Comm {
                 if (bits.length > 0) {
                     contentStr = bits[0];
                 }
+                if (contentStr.contains(STR_DELIMITER)) {
+                    contentStr = contentStr.substring(0, contentStr.indexOf(STR_DELIMITER));
+                }
                 
                 LOG.log(Level.INFO, "...Incoming " + command + " command received from " + senderAddress);
 
@@ -676,9 +679,6 @@ public class Comm {
                 //
                 
                 // Identify member elements of call and content. If member not allowed, continue
-                if (contentStr.contains(STR_DELIMITER)) {
-                    contentStr = contentStr.substring(0, contentStr.indexOf(STR_DELIMITER));
-                }
                 member = StringEscapeUtils.unescapeHtml(contentStr);
                 aMember = owner.getMember(member);
                 if (aMember == null) {
