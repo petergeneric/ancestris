@@ -70,6 +70,7 @@ public class SearchSharedTrees extends Thread {
         Set<String> myIndiLastnames = owner.getCommHandler().getMySharedIndiLastnames(sharedGedcoms);
         Set<String> myFamLastnames = owner.getCommHandler().getMySharedFamLastnames(sharedGedcoms);  
         
+        owner.getCommHandler().debug();
         
         // Loop on all members
         for (AncestrisMember member : copyOfAncestrisMembers) {
