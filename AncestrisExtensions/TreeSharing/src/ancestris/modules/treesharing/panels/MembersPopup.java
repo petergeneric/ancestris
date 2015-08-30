@@ -58,8 +58,11 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
 
     private void initTable(List<AncestrisMember> ancestrisMembers) {
         
-        // return if ancestris membeers is empty
+        // return if ancestris members is empty
         if (ancestrisMembers == null || ancestrisMembers.isEmpty()) {
+            return;
+        }
+        if (table.getColumnModel().getColumnCount() < 2) {
             return;
         }
         

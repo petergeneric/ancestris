@@ -11,7 +11,6 @@
  */
 package ancestris.modules.treesharing.panels;
 
-import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;

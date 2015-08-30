@@ -12,7 +12,6 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
-import ancestris.modules.treesharing.communication.FriendGedcomEntity;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
 import ancestris.util.swing.DialogManager;
@@ -23,7 +22,6 @@ import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
-import genj.gedcom.TagPath;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -471,40 +469,6 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     }
 
 
-//    public List<String> getPublicNames() {
-//        return getPublicProperties(new TagPath("INDI:NAME"));
-//    }
-//
-//    private List<String> getPublicProperties(TagPath tagPath) {
-//        ppi.clear();
-//        List<String> ret = new ArrayList<String>();
-//        
-//        Property[] props = gedcom.getProperties(tagPath);
-//        for (Property prop : props) {
-//            if (!isPrivacySet() || !ppi.isPrivate(prop)) {
-//                ret.add(prop.getDisplayValue());
-//            }
-//        }
-//        return ret;
-//    }
-
-//    public List<Entity> getAllPublicEntities() {
-//        List<Entity> ret = getPublicEntities(Gedcom.INDI);
-//        ret.addAll(getPublicEntities(Gedcom.FAM));
-//        return ret;
-//    }
-//
-//    public List<FriendGedcomEntity> getAllSharedEntities(String pseudo) {
-//        
-//        List<Entity> sharedEntities = getAllPublicEntities();
-//        List<FriendGedcomEntity> ret = new LinkedList<FriendGedcomEntity>();
-//        for (Entity entity : sharedEntities) {
-//            ret.add(new FriendGedcomEntity(pseudo, entity.getGedcom(), entity));
-//        }
-//        return ret;
-//    }
-//
-    
     
     
     public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity) {

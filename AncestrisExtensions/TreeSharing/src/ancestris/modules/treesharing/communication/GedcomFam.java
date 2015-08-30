@@ -12,7 +12,6 @@
 
 package ancestris.modules.treesharing.communication;
 
-import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
