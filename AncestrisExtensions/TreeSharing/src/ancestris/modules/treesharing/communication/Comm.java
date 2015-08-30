@@ -709,7 +709,7 @@ public class Comm {
                 
                 // Case of CMD_GILxx command (member asks for the list of lastnames I am sharing). Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GILxx)) {
-                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfIndiLastnames == null) {
                         buildPacketsOfString(getMySharedIndiLastnames(owner.getSharedGedcoms()), packetsOfIndiLastnames);
                     }
@@ -729,7 +729,7 @@ public class Comm {
                     LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
-                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfIndiLastnamesEOF = true;
                         } else {
@@ -746,7 +746,7 @@ public class Comm {
                 
                 // Case of CMD_GIDxx command (member asks for the details on individuals for a given list of lastnames. Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GIDxx)) {
-                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfIndiDetails == null) {
                         buildPacketsOfIndis(getMySharedGedcomIndis(owner.getSharedGedcoms(), (Set<String>) unwrapObject(contentObj)), packetsOfIndiDetails);
                     }
@@ -766,7 +766,7 @@ public class Comm {
                     LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
-                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfIndiDetailsEOF = true;
                         } else {
@@ -782,7 +782,7 @@ public class Comm {
                 
                 // Case of CMD_GFLxx command (member asks for the list of lastnames I am sharing). Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GFLxx)) {
-                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfFamLastnames == null) {
                         buildPacketsOfString(getMySharedFamLastnames(owner.getSharedGedcoms()), packetsOfFamLastnames);
                     }
@@ -802,7 +802,7 @@ public class Comm {
                     LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
-                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfFamLastnamesEOF = true;
                         } else {
@@ -819,7 +819,7 @@ public class Comm {
                 
                 // Case of CMD_GFDxx command (member asks for the details on individuals for a given list of lastnames. Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GFDxx)) {
-                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfFamDetails == null) {
                         buildPacketsOfFams(getMySharedGedcomFams(owner.getSharedGedcoms(), (Set<String>) unwrapObject(contentObj)), packetsOfFamDetails);
                     }
@@ -839,7 +839,7 @@ public class Comm {
                     LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
-                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE - COMM_CMD_PFX_SIZE));
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfFamDetailsEOF = true;
                         } else {
@@ -1062,6 +1062,17 @@ public class Comm {
     }
 
 
+
+    public void debug() {
+        
+    }
+        
+            
+            
+            
+            
+
+    
     
     
 }
