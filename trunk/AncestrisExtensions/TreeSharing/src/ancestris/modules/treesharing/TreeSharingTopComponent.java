@@ -30,6 +30,7 @@ import ancestris.modules.treesharing.panels.TimerPanel;
 import org.openide.util.ImageUtilities;
 import ancestris.modules.treesharing.panels.TreeSharingPanel;
 import ancestris.swing.ToolBar;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -132,6 +133,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private StartSharingAllToggle startSharingToggle;
     private StopSharingAllToggle stopSharingToggle;
     private SearchAction searchButton = null;
+    private SettingsAction settings = null;
     private final int LEFT_OFFSET_GEDCOM = 10;
     private final int LEFT_OFFSET_MATCHES = 400;
     private final int LEFT_OFFSET_FRIENDS = 590;
@@ -272,7 +274,8 @@ public class TreeSharingTopComponent extends TopComponent {
         toolbar.addSeparator();
         toolbar.add(new RearrangeAction(this));
         // - Settings
-        toolbar.add(new SettingsAction());
+        settings = new SettingsAction();
+        toolbar.add(settings);
 
         // Add toolbar
         add(toolbar, defaultBorderLayout);
@@ -414,7 +417,7 @@ public class TreeSharingTopComponent extends TopComponent {
 
     // Connexion preferences
     public String getPreferredPseudo() {
-        return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Pseudo", "");
+        return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Pseudo", "").trim();
     }
 
     public String getRegisteredPseudo() {
@@ -471,6 +474,14 @@ public class TreeSharingTopComponent extends TopComponent {
     
     public boolean startSharingAll() {
         
+        // Get pseudo and ask user to go to parameters if not set
+        commPseudo = getPreferredPseudo();
+        if (commPseudo.equals("")) {
+            DialogManager.create("", NbBundle.getMessage(TreeSharingTopComponent.class, "ERR_NullPseudo")).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            settings.displayOptionsPanel();
+            return false;
+        }
+        
         // Toggle the buttons to show it is set to sharing
         toggleOn();
 
@@ -485,7 +496,6 @@ public class TreeSharingTopComponent extends TopComponent {
         }
         
         // Register on the ancestris server that I am a sharing friend. Remember pseudo that is used
-        commPseudo = getPreferredPseudo();
         if (!commHandler.registerMe(commPseudo)) {
             if (timer != null) {
                 timer.cancel();
