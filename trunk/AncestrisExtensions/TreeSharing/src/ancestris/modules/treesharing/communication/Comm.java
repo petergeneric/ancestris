@@ -180,6 +180,7 @@ public class Comm {
     private volatile boolean sharing;
     private Thread listeningThread;
     private Thread pingingThread;
+    private int refreshDelay;
 
     // Call info
     private boolean expectedConnection = false;
@@ -210,8 +211,9 @@ public class Comm {
     /**
      * Constructor
      */
-    public Comm(TreeSharingTopComponent tstc) {
+    public Comm(TreeSharingTopComponent tstc, int refreshDelay) {
         this.owner = tstc;
+        this.refreshDelay = refreshDelay;
     }
 
     
@@ -262,7 +264,7 @@ public class Comm {
     
     
     /**
-     * Identify the list of currently sharing friends from the ancestris server (crypted communication)
+     * Identify the list of currently sharing friends from the ancestris server
      */
     public List<AncestrisMember> getAncestrisMembers() {
         
@@ -420,9 +422,8 @@ public class Comm {
 
         while (sharing) {
             sendPing();
-            owner.updateMembersList();
             try {
-                TimeUnit.SECONDS.sleep(150);
+                TimeUnit.SECONDS.sleep(refreshDelay);
             } catch (InterruptedException ex) {
                 Exceptions.printStackTrace(ex);
             }
