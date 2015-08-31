@@ -44,41 +44,30 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
     private final ImageIcon ALLOWED_ICON  = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/allowed.png"));
     private final ImageIcon MEMBER_ICON = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend16.png"));
     
+    private MyTableModel model = null;
     private JTable table = null;
+    private JScrollPane jscrollpane = null;
     
     /**
      * Creates new form MembersPopup
      */
-    public MembersPopup(TreeSharingTopComponent tstc, List<AncestrisMember> ancestrisMembers) {
+    public MembersPopup(TreeSharingTopComponent tstc) {
         this.owner = tstc;
         initComponents();
         table = new JTable();
-        initTable(ancestrisMembers);
-    }
 
-    private void initTable(List<AncestrisMember> ancestrisMembers) {
-        
-        // return if ancestris members is empty
-        if (ancestrisMembers == null || ancestrisMembers.isEmpty()) {
-            return;
-        }
-        
-        // Set Table
+        // Set Table model
         setLayout(new BorderLayout());
-        table.setModel(new MyTableModel(ancestrisMembers));
+        model = new MyTableModel();
+        table.setModel(model);
+
+        // Editable Table
+        table.getModel().addTableModelListener(this);
         
         // Sortable columns
         table.setAutoCreateRowSorter(true);
         table.getTableHeader().setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_SortHeader"));
         
-        // Editable Table
-        table.getModel().addTableModelListener(this);
-        
-        // If columns & data not yet loaded, return (possible bug)
-        if (table.getColumnModel().getColumnCount() < 2) {
-            return;
-        }
-
         // Resize first column
         table.getColumnModel().getColumn(0).setPreferredWidth(20);
         
@@ -102,22 +91,40 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         table.getColumnModel().getColumn(1).setHeaderRenderer(renderer);
         table.getColumnModel().getColumn(0).setHeaderValue(allowedLabel);
         table.getColumnModel().getColumn(1).setHeaderValue(nameLabel);
-        
+
         // Set font bold for my pseudo in the pseudo column
         table.getColumnModel().getColumn(1).setCellRenderer(new BoldCellRenderer(owner.getPreferredPseudo()));
+
+        // Display table in scrolable dropdown in this component
+        jscrollpane = new JScrollPane(table);
+        add(jscrollpane);
+        updateTable();
         
-        // Resize table based on its number of lines (max 15 lines)
-        add(new JScrollPane(table));
-        Dimension preferredSize = table.getPreferredSize();
-        preferredSize.width += 30;
-        preferredSize.height = table.getRowHeight()*15;
-        table.setPreferredScrollableViewportSize(preferredSize);
     }
 
-    public void updateTable(List<AncestrisMember> ancestrisMembers) {
-        this.removeAll();
-        initTable(ancestrisMembers);
+    public void updateTable() {
+
+        // Get latest data
+        if (model != null) {
+            model.refreshData();
+        } else {
+            return;
+        }
+
+        // Resize table based on its number of lines (max 15 lines)
+        Dimension preferredSize = table.getPreferredSize();
+        preferredSize.width += 30;
+        preferredSize.height = table.getRowHeight()*Math.min(15, model.getRowCount()+1) + 5;
+        if (model.getRowCount() == 0) {
+            preferredSize.height = 0;
+        }
+        table.setPreferredScrollableViewportSize(preferredSize);
+
+        // Refresh scrollpane
+        //model.fireTableDataChanged();
+        jscrollpane.repaint();
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -131,15 +138,20 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
 
     @Override
     public void tableChanged(TableModelEvent e) {
+        if (model == null || model.getRowCount() == 0) {
+            return;
+        }
         int row = e.getFirstRow();
         int column = e.getColumn();
-        MyTableModel model = (MyTableModel)e.getSource();
-        Object data = model.getValueAt(row, column);
-        if (column == 0) {
-            model.getAncestrisMember(row).setAllowed((Boolean)data);
-            // Member is activated or desactivated. If something else needs to be done, do it here.
+        if (row >= 0 && row < model.getRowCount() && column >= 0 && column < model.getColumnCount()) {
+            Object data = model.getValueAt(row, column);
+            if (column == 0) {
+                model.getAncestrisMember(row).setAllowed((Boolean) data);
+                // Member is activated or desactivated. If something else needs to be done, do it here.
+            }
         }
     }
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -150,10 +162,15 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
 
         List<AncestrisMember> ancestrisMembers = null;
         String[] columnNames = { "", "" };
-        Object[][] data;
+        Object[][] data = new Object[0][2];
         
-        private MyTableModel(List<AncestrisMember> ancestrisMembers) {
-            this.ancestrisMembers = ancestrisMembers;
+        private MyTableModel() {
+            this.ancestrisMembers = owner.getAncestrisMembers();
+            refreshData();
+        }
+
+        public void refreshData() {
+            this.ancestrisMembers = owner.getAncestrisMembers();
             data = new Object[ancestrisMembers.size()][2];
             int i = 0;
             for (AncestrisMember member : ancestrisMembers) {
@@ -180,17 +197,11 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
 
         @Override
         public Object getValueAt(int row, int col) {
-            if (data.length == 0) {
-                return null;
-            }
             return data[row][col];
         }
 
         @Override
         public Class getColumnClass(int c) {
-            if (data.length == 0) {
-                return String.class;
-            }
             return getValueAt(0, c).getClass();
         }
 
@@ -206,7 +217,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         }
 
         public AncestrisMember getAncestrisMember(int row) {
-            for (AncestrisMember member : ancestrisMembers) {
+            for (AncestrisMember member : owner.getAncestrisMembers()) {
                 String name = (String) getValueAt(row, 1);
                 if (member.getMemberName().equals(name)) {
                     return member;
@@ -214,6 +225,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
             }
             return null;
         }
+
 
     }
     

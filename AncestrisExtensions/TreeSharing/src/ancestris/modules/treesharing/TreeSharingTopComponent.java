@@ -45,14 +45,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
@@ -147,6 +150,9 @@ public class TreeSharingTopComponent extends TopComponent {
 
     // Searching elements
     private SearchSharedTrees searchThread;
+    private volatile boolean refreshing;
+    private Thread refreshThread;
+    private final int REFRESH_DELAY = 150;
 
 
     
@@ -208,7 +214,7 @@ public class TreeSharingTopComponent extends TopComponent {
         // Add toolbar elements
         
         // - Dropbox on all connected friends
-        membersList = new MembersPopup(this, ancestrisMembers);
+        membersList = new MembersPopup(this);
         membersNumber = new JLabel("");
         updateMembersList();
         JButton members = createDropDownButton(new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend24.png")), membersList);
@@ -222,6 +228,16 @@ public class TreeSharingTopComponent extends TopComponent {
                 }
             }
         });
+        refreshThread = new Thread() {
+            @Override
+            public void run() {
+                refreshMembers();
+            }
+        };
+        refreshThread.setName("TreeSharing thread : refresh members list");
+        refreshing = true;
+        refreshThread.start();
+        
         toolbar.add(members);
         toolbar.add(membersNumber);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
@@ -266,6 +282,30 @@ public class TreeSharingTopComponent extends TopComponent {
         add(desktopPanel);
     }
 
+    private void refreshMembers() {
+
+        while (refreshing) {
+            updateMembersList();
+            try {
+                TimeUnit.SECONDS.sleep(REFRESH_DELAY);  // aligned with ping, every 150 seconds
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+    }
+    
+    public void updateMembersList() {
+        initAncestrisMembers();
+        membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
+        membersNumber.setText(" "+ancestrisMembers.size() + " ");
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                membersList.updateTable();
+            }
+        });
+    }
     
     @Override
     protected void addImpl(Component comp, Object constraints, int index) {
@@ -290,6 +330,7 @@ public class TreeSharingTopComponent extends TopComponent {
     @Override
     public void componentClosed() {
         stopSharingToggle.doClick();
+        refreshing = false;
     }
 
         
@@ -318,14 +359,16 @@ public class TreeSharingTopComponent extends TopComponent {
     
     
     private void initCommunication() {
-        commHandler = new Comm(this);
+        commHandler = new Comm(this, REFRESH_DELAY);
     }
 
     private void initAncestrisMembers() {
-        List<AncestrisMember> tempList = commHandler.getAncestrisMembers();
+        // Get new list from server
+        List<AncestrisMember> newList = commHandler.getAncestrisMembers();
 
+        // If a list exists, 
         if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
-            for (AncestrisMember tempItem : tempList) {
+            for (AncestrisMember tempItem : newList) {
                 for (AncestrisMember member : ancestrisMembers) {
                     if (tempItem.getMemberName().equals(member.getMemberName())) {
                         tempItem.setAllowed(member.isAllowed());
@@ -336,7 +379,8 @@ public class TreeSharingTopComponent extends TopComponent {
             ancestrisMembers.clear();
         }
         
-        ancestrisMembers = tempList;
+        // Set previous list to newlist or set it if first time        
+        ancestrisMembers = newList;
     }
     
     private void initSharedGedcoms() {
@@ -352,13 +396,6 @@ public class TreeSharingTopComponent extends TopComponent {
         // Display shared Gedcoms for the first time on the desktop
         desktopPanel.setFrames(sharedGedcoms, LEFT_OFFSET_GEDCOM, TOP_OFFSET, VERTICAL_SPACE, true);
         
-    }
-    
-    public void updateMembersList() {
-        initAncestrisMembers();
-        membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
-        membersNumber.setText(" "+ancestrisMembers.size() + " ");
-        membersList.updateTable(ancestrisMembers);
     }
     
 
