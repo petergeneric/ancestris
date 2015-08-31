@@ -34,6 +34,10 @@ public class SettingsAction extends AbstractAncestrisAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        displayOptionsPanel();
+    }
+    
+    public void displayOptionsPanel() {
         OptionsDisplayer.getDefault().open("Extensions/TreeSharingOptions");
     }
 
