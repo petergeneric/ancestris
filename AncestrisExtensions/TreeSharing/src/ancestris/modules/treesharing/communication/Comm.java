@@ -712,7 +712,7 @@ public class Comm {
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GILxx)) {
                     Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfIndiLastnames == null) {
-                        buildPacketsOfString(getMySharedIndiLastnames(owner.getSharedGedcoms()), packetsOfIndiLastnames);
+                        packetsOfIndiLastnames = buildPacketsOfString(getMySharedIndiLastnames(owner.getSharedGedcoms()));
                     }
                     String commandIndexed = CMD_TILxx + String.format(FMT_IDX, iPacket);
                     Set<String> set = packetsOfIndiLastnames.get(iPacket);
@@ -749,7 +749,7 @@ public class Comm {
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GIDxx)) {
                     Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfIndiDetails == null) {
-                        buildPacketsOfIndis(getMySharedGedcomIndis(owner.getSharedGedcoms(), (Set<String>) unwrapObject(contentObj)), packetsOfIndiDetails);
+                        packetsOfIndiDetails = buildPacketsOfIndis(getMySharedGedcomIndis(owner.getSharedGedcoms(), (Set<String>) unwrapObject(contentObj)));
                     }
                     String commandIndexed = CMD_TIDxx + String.format(FMT_IDX, iPacket);
                     Set<GedcomIndi> set = packetsOfIndiDetails.get(iPacket);
@@ -785,7 +785,7 @@ public class Comm {
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GFLxx)) {
                     Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfFamLastnames == null) {
-                        buildPacketsOfString(getMySharedFamLastnames(owner.getSharedGedcoms()), packetsOfFamLastnames);
+                        packetsOfFamLastnames = buildPacketsOfString(getMySharedFamLastnames(owner.getSharedGedcoms()));
                     }
                     String commandIndexed = CMD_TFLxx + String.format(FMT_IDX, iPacket);
                     Set<String> set = packetsOfFamLastnames.get(iPacket);
@@ -822,7 +822,7 @@ public class Comm {
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GFDxx)) {
                     Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfFamDetails == null) {
-                        buildPacketsOfFams(getMySharedGedcomFams(owner.getSharedGedcoms(), (Set<String>) unwrapObject(contentObj)), packetsOfFamDetails);
+                        packetsOfFamDetails = buildPacketsOfFams(getMySharedGedcomFams(owner.getSharedGedcoms(), (Set<String>) unwrapObject(contentObj)));
                     }
                     String commandIndexed = CMD_TFDxx + String.format(FMT_IDX, iPacket);
                     Set<GedcomFam> set = packetsOfFamDetails.get(iPacket);
@@ -1017,8 +1017,8 @@ public class Comm {
     /**
      * Builds packets of strings, not of bytes, so that each packets can be unwrapped into lists without the other packets
      */
-    private void buildPacketsOfString(Set<String> masterSet, Map<Integer, Set<String>> packets) {
-        packets = new HashMap<Integer, Set<String>>();
+    private Map<Integer, Set<String>> buildPacketsOfString(Set<String> masterSet) {
+        Map<Integer, Set<String>> packets = new HashMap<Integer, Set<String>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE + 1);   // +1 to have some margin because packets will not all be of same size
         for (Integer i = 0; i < nbPackets; i++) {
@@ -1028,13 +1028,14 @@ public class Comm {
         for (String obj : masterSet) {
             packets.get(index++ % nbPackets).add(obj);
         }
+        return packets;
     }
 
     /**
      * Builds packets of GedcomIndi, not of bytes, so that each packets can be unwrapped into lists without the other packets
      */
-    private void buildPacketsOfIndis(Set<GedcomIndi> masterSet, Map<Integer, Set<GedcomIndi>> packets) {
-        packets = new HashMap<Integer, Set<GedcomIndi>>();
+    private Map<Integer, Set<GedcomIndi>> buildPacketsOfIndis(Set<GedcomIndi> masterSet) {
+        Map<Integer, Set<GedcomIndi>> packets = new HashMap<Integer, Set<GedcomIndi>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE + 1);   // +1 to have some margin because packets will not all be of same size
         for (Integer i = 0; i < nbPackets; i++) {
@@ -1044,13 +1045,14 @@ public class Comm {
         for (GedcomIndi obj : masterSet) {
             packets.get(index++ % nbPackets).add(obj);
         }
+        return packets;
     }
 
     /**
      * Builds packets of GedcomFam, not of bytes, so that each packets can be unwrapped into lists without the other packets
      */
-    private void buildPacketsOfFams(Set<GedcomFam> masterSet, Map<Integer, Set<GedcomFam>> packets) {
-        packets = new HashMap<Integer, Set<GedcomFam>>();
+    private Map<Integer, Set<GedcomFam>> buildPacketsOfFams(Set<GedcomFam> masterSet) {
+        Map<Integer, Set<GedcomFam>> packets = new HashMap<Integer, Set<GedcomFam>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE + 1);   // +1 to have some margin because packets will not all be of same size
         for (Integer i = 0; i < nbPackets; i++) {
@@ -1060,6 +1062,7 @@ public class Comm {
         for (GedcomFam obj : masterSet) {
             packets.get(index++ % nbPackets).add(obj);
         }
+        return packets;
     }
 
 
