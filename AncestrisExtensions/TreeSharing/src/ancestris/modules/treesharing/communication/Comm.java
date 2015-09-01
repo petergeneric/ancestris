@@ -466,6 +466,12 @@ public class Comm {
             listOfIndiDetails.clear();
         }
         listOfIndiDetailsEOF = false;
+        communicationInProgress = true;
+// DEBUG
+LOG.log(Level.INFO, ".......DEBUG nb of lastnames in common found" + commonIndiLastnames.size());
+for (String str : commonIndiLastnames) {
+    LOG.log(Level.INFO, ".......DEBUG lastnames in common found" + commonIndiLastnames);
+}
         call(member, CMD_GIDxx, commonIndiLastnames);
         return listOfIndiDetails;
     }
@@ -478,6 +484,7 @@ public class Comm {
             listOfFamLastnames.clear();
         }
         listOfFamLastnamesEOF = false;
+        communicationInProgress = true;
         call(member, CMD_GFLxx, null);
         return listOfFamLastnames;
     }
@@ -489,7 +496,14 @@ public class Comm {
             listOfFamDetails.clear();
         }
         listOfFamDetailsEOF = false;
+        communicationInProgress = true;
+// DEBUG
+LOG.log(Level.INFO, ".......DEBUG nb of lastnames in common found" + commonFamLastnames.size());
+for (String str : commonFamLastnames) {
+    LOG.log(Level.INFO, ".......DEBUG lastnames in common found" + commonFamLastnames);
+}
         call(member, CMD_GFDxx, commonFamLastnames);
+        communicationInProgress = false;
         return listOfFamDetails;
     }
     
@@ -757,11 +771,6 @@ public class Comm {
                     }
                     String commandIndexed = CMD_TIDxx + String.format(FMT_IDX, iPacket);
                     Set<GedcomIndi> set = packetsOfIndiDetails.get(iPacket);
-        // DEBUG
-        LOG.log(Level.INFO, ".......DEBUG nb of lastnames in common found" + set.size());
-        for (GedcomIndi indi : set) {
-            LOG.log(Level.INFO, ".......DEBUG lastnames in common found" + indi);
-        }
                     if (set == null) {
                         commandIndexed = CMD_TIDxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
@@ -835,11 +844,6 @@ public class Comm {
                     }
                     String commandIndexed = CMD_TFDxx + String.format(FMT_IDX, iPacket);
                     Set<GedcomFam> set = packetsOfFamDetails.get(iPacket);
-        // DEBUG
-        LOG.log(Level.INFO, ".......DEBUG nb of lastnames in common found" + set.size());
-        for (GedcomFam fam : set) {
-            LOG.log(Level.INFO, ".......DEBUG lastnames in common found" + fam);
-        }
                     if (set == null) {
                         commandIndexed = CMD_TFDxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
