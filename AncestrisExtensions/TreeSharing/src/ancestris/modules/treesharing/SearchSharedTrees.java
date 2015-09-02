@@ -195,13 +195,13 @@ public class SearchSharedTrees extends Thread {
                 for (GedcomIndi memberGedcomIndi : memberGedcomIndis) {
                     iIndis++;
                     if (isSameIndividual(myGedcomIndi, memberGedcomIndi, matchType)) { // we have a match
-                        LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Individual in common found!!!! : " + myGedcomIndi.indiFirstName + " " + myGedcomIndi.indiLastName);
+                        //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Individual in common found!!!! : " + myGedcomIndi.indiFirstName + " " + myGedcomIndi.indiLastName);
                         friend = owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomIndi.entityID), 
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomIndi.gedcomName, memberGedcomIndi.entityID), 
                                 member);
                     } else {
-                        LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Individual NOT in common : " + myGedcomIndi.indiFirstName + " " + myGedcomIndi.indiLastName);
+                        //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Individual NOT in common : " + myGedcomIndi.indiFirstName + " " + myGedcomIndi.indiLastName);
                     }
                     continue;
                 } // endfor memberEntities
@@ -231,13 +231,13 @@ public class SearchSharedTrees extends Thread {
                 for (GedcomFam memberGedcomFam : memberGedcomFams) {
                     iIndis++;
                     if (isSameFamily(myGedcomFam, memberGedcomFam, matchType)) { // we have a match
-                        LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Family in common found!!!! : " + myGedcomFam.husbLastName + " " + myGedcomFam.wifeLastName);
+                        //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Family in common found!!!! : " + myGedcomFam.husbLastName + " " + myGedcomFam.wifeLastName);
                         friend = owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomFam.entityID), 
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomFam.gedcomName, memberGedcomFam.entityID), 
                                 member);
                     } else {
-                        LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Family NOT in common : " + myGedcomFam.husbLastName + " " + myGedcomFam.wifeLastName);
+                        //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Family NOT in common : " + myGedcomFam.husbLastName + " " + myGedcomFam.wifeLastName);
                     }
                     continue;
                 } // endfor memberEntities
@@ -262,11 +262,9 @@ public class SearchSharedTrees extends Thread {
      *  Later introduce colors : green for exact match on all criteria, orange on some only
      */
     private boolean isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, String matchType) {
-        LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ testing match : " + myIndi.indiLastName + " " + friendIndi.indiLastName);
         if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.indiLastName.equals(friendIndi.indiLastName)) {
             return false;
         }
-        LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ testing match : " + myIndi.indiFirstName + " " + friendIndi.indiFirstName);
         if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.indiFirstName.equals(friendIndi.indiFirstName)) {
             return false;
         }
