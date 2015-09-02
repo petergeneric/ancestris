@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -445,7 +444,6 @@ public class Comm {
     
     
     
-    
     public Set<String> getSharedIndiLastnamesFromMember(AncestrisMember member) {
         if (listOfIndiLastnames == null) {
             listOfIndiLastnames = new HashSet<String>();
@@ -455,7 +453,6 @@ public class Comm {
         listOfIndiLastnamesEOF = false;
         communicationInProgress = false;
         call(member, CMD_GILxx, null);
-        communicationInProgress = true;
         return listOfIndiLastnames;
     }
 
@@ -466,12 +463,6 @@ public class Comm {
             listOfIndiDetails.clear();
         }
         listOfIndiDetailsEOF = false;
-        communicationInProgress = true;
-// DEBUG
-LOG.log(Level.INFO, ".......DEBUG nb of lastnames in common found" + commonIndiLastnames.size());
-for (String str : commonIndiLastnames) {
-    LOG.log(Level.INFO, ".......DEBUG lastnames in common found" + commonIndiLastnames);
-}
         call(member, CMD_GIDxx, commonIndiLastnames);
         return listOfIndiDetails;
     }
@@ -484,7 +475,6 @@ for (String str : commonIndiLastnames) {
             listOfFamLastnames.clear();
         }
         listOfFamLastnamesEOF = false;
-        communicationInProgress = true;
         call(member, CMD_GFLxx, null);
         return listOfFamLastnames;
     }
@@ -496,12 +486,6 @@ for (String str : commonIndiLastnames) {
             listOfFamDetails.clear();
         }
         listOfFamDetailsEOF = false;
-        communicationInProgress = true;
-// DEBUG
-LOG.log(Level.INFO, ".......DEBUG nb of lastnames in common found" + commonFamLastnames.size());
-for (String str : commonFamLastnames) {
-    LOG.log(Level.INFO, ".......DEBUG lastnames in common found" + commonFamLastnames);
-}
         call(member, CMD_GFDxx, commonFamLastnames);
         communicationInProgress = false;
         return listOfFamDetails;
