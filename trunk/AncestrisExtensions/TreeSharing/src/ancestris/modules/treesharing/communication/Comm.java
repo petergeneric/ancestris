@@ -146,7 +146,7 @@ public class Comm {
     private static String TAG_PORTAD = "portaddress";
 
     // Command and Packets size
-    private int COMM_PACKET_SIZE = 32000;
+    private int COMM_PACKET_SIZE = 16000;
     private int COMM_CMD_SIZE = 5;
     private int COMM_CMD_PFX_SIZE = 3;
     private String FMT_IDX = "%02d";
