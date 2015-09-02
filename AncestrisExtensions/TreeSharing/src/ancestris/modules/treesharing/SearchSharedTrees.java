@@ -206,7 +206,7 @@ public class SearchSharedTrees extends Thread {
                     continue;
                 } // endfor memberEntities
                 if (friend != null) {
-                    friend.updateTotals(iIndis, 0);
+                    friend.updateTotals(iIndis, 0);  // TODO: useless, it does not count the real nb of indis, only those with same lastnames !
                 }
             } // endfor myEntities
         } // endfor myGedcoms

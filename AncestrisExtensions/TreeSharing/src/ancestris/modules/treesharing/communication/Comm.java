@@ -1022,7 +1022,7 @@ public class Comm {
     private Map<Integer, Set<String>> buildPacketsOfString(Set<String> masterSet) {
         Map<Integer, Set<String>> packets = new HashMap<Integer, Set<String>>();
         byte[] masterPacket = wrapObject(masterSet);
-        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 1;   // +1 to have some margin because packets will not all be of same size
+        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 2;   // +2 to have some margin because packets will not all be of same size
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<String>());
         }
@@ -1039,7 +1039,9 @@ public class Comm {
     private Map<Integer, Set<GedcomIndi>> buildPacketsOfIndis(Set<GedcomIndi> masterSet) {
         Map<Integer, Set<GedcomIndi>> packets = new HashMap<Integer, Set<GedcomIndi>>();
         byte[] masterPacket = wrapObject(masterSet);
-        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 1;   // +1 to have some margin because packets will not all be of same size
+        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 2;   // +2 to have some margin because packets will not all be of same size
+        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Indi master paquet size is : " + masterPacket.length);
+        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Indi number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomIndi>());
         }
@@ -1056,7 +1058,9 @@ public class Comm {
     private Map<Integer, Set<GedcomFam>> buildPacketsOfFams(Set<GedcomFam> masterSet) {
         Map<Integer, Set<GedcomFam>> packets = new HashMap<Integer, Set<GedcomFam>>();
         byte[] masterPacket = wrapObject(masterSet);
-        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 1;   // +1 to have some margin because packets will not all be of same size
+        int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 2;   // +2 to have some margin because packets will not all be of same size
+        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Family master paquet size is : " + masterPacket.length);
+        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Family number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomFam>());
         }
