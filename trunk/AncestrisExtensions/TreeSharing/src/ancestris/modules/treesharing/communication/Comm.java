@@ -146,7 +146,7 @@ public class Comm {
     private static String TAG_PORTAD = "portaddress";
 
     // Command and Packets size
-    private int COMM_PACKET_SIZE = 16000;
+    private int COMM_PACKET_SIZE = 16000;   // max size of UDP packet seems to be 16384
     private int COMM_CMD_SIZE = 5;
     private int COMM_CMD_PFX_SIZE = 3;
     private String FMT_IDX = "%02d";
@@ -1023,8 +1023,8 @@ public class Comm {
         Map<Integer, Set<String>> packets = new HashMap<Integer, Set<String>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * 1.15) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
-        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Str master paquet size is : " + masterPacket.length);
-        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Str number of paquets is : " + nbPackets);
+        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Str master paquet size is : " + masterPacket.length);
+        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Str number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<String>());
         }
@@ -1042,8 +1042,8 @@ public class Comm {
         Map<Integer, Set<GedcomIndi>> packets = new HashMap<Integer, Set<GedcomIndi>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * 1.15) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
-        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Indi master paquet size is : " + masterPacket.length);
-        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Indi number of paquets is : " + nbPackets);
+        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Indi master paquet size is : " + masterPacket.length);
+        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Indi number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomIndi>());
         }
@@ -1061,8 +1061,8 @@ public class Comm {
         Map<Integer, Set<GedcomFam>> packets = new HashMap<Integer, Set<GedcomFam>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * 1.15) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
-        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Family master paquet size is : " + masterPacket.length);
-        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Family number of paquets is : " + nbPackets);
+        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Family master paquet size is : " + masterPacket.length);
+        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Family number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomFam>());
         }
