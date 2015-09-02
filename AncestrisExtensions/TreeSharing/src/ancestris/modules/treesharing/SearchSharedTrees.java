@@ -89,7 +89,7 @@ public class SearchSharedTrees extends Thread {
             
             // A. Individuals
             // Phase 1 - Get all lastnames from member for all its shared gedcoms at the same time and identify commons ones with mine
-            LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ current member is : " + member + ". Asking lastnames...");
+            LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ current member is : " + member.getMemberName() + ". Asking lastnames...");
             Set<String> memberIndiLastnames = owner.getCommHandler().getSharedIndiLastnamesFromMember(member);
             if (memberIndiLastnames == null || memberIndiLastnames.isEmpty()) {
                 LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ no lastnames received. Exit");
@@ -124,7 +124,7 @@ public class SearchSharedTrees extends Thread {
             
             // B. Families
             // Phase 1 - Get all fams lastnames from member for all its shared gedcoms at the same time and identify commons ones with mine
-            LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ current member is : " + member + ". Asking family names...");
+            LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ current member is : " + member.getMemberName() + ". Asking family names...");
             Set<String> memberFamLastnames = owner.getCommHandler().getSharedFamLastnamesFromMember(member);
             if (memberFamLastnames == null || memberFamLastnames.isEmpty()) {
                 LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ no family names received. Exit");
@@ -262,10 +262,12 @@ public class SearchSharedTrees extends Thread {
      *  Later introduce colors : green for exact match on all criteria, orange on some only
      */
     private boolean isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, String matchType) {
+        LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ testing match : " + myIndi.indiLastName + " " + friendIndi.indiLastName);
         if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.indiLastName.equals(friendIndi.indiLastName)) {
             return false;
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.indiLastName.equals(friendIndi.indiFirstName)) {
+        LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ testing match : " + myIndi.indiFirstName + " " + friendIndi.indiFirstName);
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.indiFirstName.equals(friendIndi.indiFirstName)) {
             return false;
         }
         if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0])) {
