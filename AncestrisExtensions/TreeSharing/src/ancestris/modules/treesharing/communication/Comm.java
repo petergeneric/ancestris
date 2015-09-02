@@ -1023,6 +1023,8 @@ public class Comm {
         Map<Integer, Set<String>> packets = new HashMap<Integer, Set<String>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 2;   // +2 to have some margin because packets will not all be of same size
+        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Str master paquet size is : " + masterPacket.length);
+        LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Str number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<String>());
         }
