@@ -742,9 +742,9 @@ public class TreeSharingTopComponent extends TopComponent {
         GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, friend);
         
         // Propagate updates
-        sharedGedcom.addEntity(myEntity, memberEntity);
-        match.addEntity(myEntity, memberEntity);
-        friend.addEntity(myEntity, memberEntity);
+        sharedGedcom.addEntity(myEntity, memberEntity, "");
+        match.addEntity(myEntity, memberEntity, "");
+        friend.addEntity(myEntity, memberEntity, "");
 
         // Create links
         desktopPanel.linkFrames(sharedGedcom, match);

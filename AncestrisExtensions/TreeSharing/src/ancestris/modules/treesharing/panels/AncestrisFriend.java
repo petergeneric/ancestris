@@ -16,10 +16,10 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import javax.swing.JInternalFrame;
 import org.openide.util.NbBundle;
 
@@ -35,8 +35,8 @@ public class AncestrisFriend extends JInternalFrame {
     private final String name;
     private final String ipAddress;
     private final String portAddress;
-    private Map<Indi, FriendGedcomEntity> matchedIndis = null; 
-    private Map<Fam, FriendGedcomEntity> matchedFams = null; 
+    private Set<MatchData> matchedIndis = null; 
+    private Set<MatchData> matchedFams = null; 
 
     
     /**
@@ -47,8 +47,8 @@ public class AncestrisFriend extends JInternalFrame {
         this.name = name;
         this.ipAddress = ipAddress;
         this.portAddress = portAddress;
-        matchedIndis = new HashMap<Indi, FriendGedcomEntity>();
-        matchedFams = new HashMap<Fam, FriendGedcomEntity>();
+        matchedIndis = new HashSet<MatchData>();
+        matchedFams = new HashSet<MatchData>();
         initComponents();
         updateStats();
         
@@ -133,15 +133,15 @@ public class AncestrisFriend extends JInternalFrame {
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, Short.MAX_VALUE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,11 +165,11 @@ public class AncestrisFriend extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        showList((Map<?, FriendGedcomEntity>)matchedIndis);
+        showList(matchedIndis);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showList((Map<?, FriendGedcomEntity>)matchedFams);
+        showList(matchedFams);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -196,16 +196,16 @@ public class AncestrisFriend extends JInternalFrame {
         return portAddress;
     }
 
-    public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity) {
+    public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity, String type) {
         if (entity instanceof Indi) {
-            matchedIndis.put((Indi) entity, friendGedcomEntity);
+            matchedIndis.add(new MatchData(entity, friendGedcomEntity, type));
             updateStats();
             // Friend is being match one more time for an indi, therefore notify him/her
             // TODO
             return;
         }
         if (entity instanceof Fam) {
-            matchedFams.put((Fam) entity, friendGedcomEntity);
+            matchedFams.add(new MatchData(entity, friendGedcomEntity, type));
             updateStats();
             // Friend is being match one more time for a family, therefore notify him/her
             // TODO
@@ -220,7 +220,7 @@ public class AncestrisFriend extends JInternalFrame {
         jButton2.setEnabled(matchedFams.size() != 0);
     }
 
-    private void showList(Map<?, FriendGedcomEntity> list) {
+    private void showList(Set<MatchData> list) {
         DialogManager.create(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_CommonEntities"), 
                 new ListEntitiesPanel(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllGedcoms"),  
                 name, 
@@ -229,26 +229,26 @@ public class AncestrisFriend extends JInternalFrame {
 
     public void removeGedcom(SharedGedcom sg) {
         
-        List<Indi> indisToRemove = new LinkedList<Indi>();
-        List<Fam> famsToRemove = new LinkedList<Fam>();
+        List<MatchData> indisToRemove = new LinkedList<MatchData>();
+        List<MatchData> famsToRemove = new LinkedList<MatchData>();
         
         Gedcom gedcom = sg.getGedcom();
-        for (Entity entity : matchedIndis.keySet()) {
-            if (entity.getGedcom() == gedcom) {
-                if (entity instanceof Indi) {
-                    indisToRemove.add((Indi)entity);
+        for (MatchData line : matchedIndis) {
+            if (line.myEntity.getGedcom() == gedcom) {
+                if (line.myEntity instanceof Indi) {
+                    indisToRemove.add(line);
                 }
-                if (entity instanceof Fam) {
-                    famsToRemove.add((Fam)entity);
+                if (line.myEntity instanceof Fam) {
+                    famsToRemove.add(line);
                 }
             }
         }
         
-        for (Indi indi : indisToRemove) {
-            matchedIndis.remove(indi);
+        for (MatchData match : indisToRemove) {
+            matchedIndis.remove(match);
         }
-        for (Fam fam : famsToRemove) {
-            matchedFams.remove(fam);
+        for (MatchData match : famsToRemove) {
+            matchedFams.remove(match);
         }
     }
 

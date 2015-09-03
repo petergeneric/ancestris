@@ -24,11 +24,9 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.swing.JInternalFrame;
 import javax.swing.Popup;
@@ -51,8 +49,8 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     private int nbCommonIndis;
     private int nbCommonFams;
     
-    private Map<Indi, FriendGedcomEntity> matchedIndis = null; 
-    private Map<Fam, FriendGedcomEntity> matchedFams = null; 
+    private Set<MatchData> matchedIndis = null; 
+    private Set<MatchData> matchedFams = null; 
     
     
     /**
@@ -61,8 +59,8 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     public SharedGedcom(Gedcom gedcom, boolean respectPrivacy) {
         super(gedcom.getName());
         this.gedcom = gedcom;
-        matchedIndis = new HashMap<Indi, FriendGedcomEntity>();
-        matchedFams = new HashMap<Fam, FriendGedcomEntity>();
+        matchedIndis = new HashSet<MatchData>();
+        matchedFams = new HashSet<MatchData>();
         
         ppi = new PrivacyPolicyImpl();
         popup = null;
@@ -102,7 +100,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         setIconifiable(true);
         setToolTipText(org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.toolTipText")); // NOI18N
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/tree.png"))); // NOI18N
-        setPreferredSize(new java.awt.Dimension(300, 130));
+        setPreferredSize(new java.awt.Dimension(350, 130));
         setRequestFocusEnabled(false);
         setVisible(true);
 
@@ -111,12 +109,14 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Indi.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel1.text")); // NOI18N
         jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel1.toolTipText")); // NOI18N
+        jLabel1.setPreferredSize(new java.awt.Dimension(50, 14));
 
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Fam.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel2.text")); // NOI18N
         jLabel2.setToolTipText(org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel2.toolTipText")); // NOI18N
+        jLabel2.setPreferredSize(new java.awt.Dimension(50, 14));
 
         jLabel3.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel3.text")); // NOI18N
@@ -130,14 +130,16 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         jLabel6.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel6.text")); // NOI18N
+        jLabel6.setPreferredSize(new java.awt.Dimension(50, 14));
 
         jLabel7.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel7.text")); // NOI18N
+        jLabel7.setPreferredSize(new java.awt.Dimension(50, 14));
 
         jButton1.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jButton1.text")); // NOI18N
-        jButton1.setPreferredSize(new java.awt.Dimension(75, 20));
+        jButton1.setPreferredSize(new java.awt.Dimension(50, 20));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -147,14 +149,16 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         jLabel8.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel8.text")); // NOI18N
+        jLabel8.setPreferredSize(new java.awt.Dimension(50, 14));
 
         jLabel9.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jLabel9.text")); // NOI18N
+        jLabel9.setPreferredSize(new java.awt.Dimension(50, 14));
 
         jButton2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jButton2.text")); // NOI18N
-        jButton2.setPreferredSize(new java.awt.Dimension(75, 20));
+        jButton2.setPreferredSize(new java.awt.Dimension(50, 20));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -203,18 +207,21 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
                     .addComponent(jLabel5)
                     .addComponent(jLabel3)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jCheckBox2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -225,27 +232,27 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jCheckBox1)))
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel8)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCheckBox2))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -289,11 +296,11 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        showList((Map<?, FriendGedcomEntity>)matchedIndis);
+        showList(matchedIndis);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showList((Map<?, FriendGedcomEntity>)matchedFams);
+        showList(matchedFams);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -389,7 +396,10 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         for (Entity entity : entities) {
             Indi indi = (Indi) entity;
             if (indi != null && indi.getLastName() != null) {
-                ret.add(indi.getLastName());
+                String str = indi.getLastName().replace("?", "").trim();
+                if (!str.isEmpty()) {
+                    ret.add(str);
+                }
             }
         }
         return ret;
@@ -450,8 +460,13 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         String strHusb = "";
         String strWife = "";
         if (fam != null) {
-            strHusb = fam.getHusband() != null ? fam.getHusband().getLastName().trim() : "";
-            strWife = fam.getWife() != null ? fam.getWife().getLastName().trim() : "";
+            if (fam.getHusband() != null) {
+                strHusb = fam.getHusband().getLastName() != null ? fam.getHusband().getLastName().replace("?", "").trim() : "";
+            }
+            if (fam.getWife() != null) {
+                strWife = fam.getWife().getLastName() != null ? fam.getWife().getLastName().replace("?", "").trim() : "";
+            }
+            
         }
         return strHusb + "/" + strWife;
     }
@@ -471,14 +486,14 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
     
     
-    public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity) {
+    public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity, String type) {
         if (entity instanceof Indi) {
-            matchedIndis.put((Indi) entity, friendGedcomEntity);
+            matchedIndis.add(new MatchData(entity, friendGedcomEntity, type));
             updateStats(false);
             return;
         }
         if (entity instanceof Fam) {
-            matchedFams.put((Fam) entity, friendGedcomEntity);
+            matchedFams.add(new MatchData(entity, friendGedcomEntity, type));
             updateStats(false);
             return;
         }
@@ -530,7 +545,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         return true;
     }
 
-    private void showList(Map<?, FriendGedcomEntity> list) {
+    private void showList(Set<MatchData> list) {
         DialogManager.create(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_CommonEntities"), 
                 new ListEntitiesPanel(getGedcom().getName(), 
                 NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllFriends"),  
