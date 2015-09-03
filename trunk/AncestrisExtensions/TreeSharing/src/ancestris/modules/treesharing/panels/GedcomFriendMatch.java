@@ -15,9 +15,9 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import java.util.HashMap;
+import java.util.HashSet;
 
-import java.util.Map;
+import java.util.Set;
 import javax.swing.JInternalFrame;
 import org.openide.util.NbBundle;
 
@@ -29,8 +29,8 @@ public class GedcomFriendMatch extends JInternalFrame {
 
     private SharedGedcom sharedGedcom = null;
     private AncestrisFriend ancestrisFriend = null;
-    private Map<Indi, FriendGedcomEntity> matchedIndis = null; 
-    private Map<Fam, FriendGedcomEntity> matchedFams = null; 
+    private Set<MatchData> matchedIndis = null; 
+    private Set<MatchData> matchedFams = null; 
     
     
     /**
@@ -39,8 +39,8 @@ public class GedcomFriendMatch extends JInternalFrame {
     public GedcomFriendMatch(SharedGedcom sharedGedcom, AncestrisFriend ancestrisFriend) {
         this.sharedGedcom = sharedGedcom;
         this.ancestrisFriend = ancestrisFriend;
-        matchedIndis = new HashMap<Indi, FriendGedcomEntity>();
-        matchedFams = new HashMap<Fam, FriendGedcomEntity>();
+        matchedIndis = new HashSet<MatchData>();
+        matchedFams = new HashSet<MatchData>();
         
         initComponents();
         setJMenuBar(null);
@@ -71,15 +71,16 @@ public class GedcomFriendMatch extends JInternalFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Indi.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomFriendMatch.class, "GedcomFriendMatch.jLabel1.text")); // NOI18N
-        jLabel1.setPreferredSize(new java.awt.Dimension(21, 14));
+        jLabel1.setPreferredSize(new java.awt.Dimension(50, 14));
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Fam.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomFriendMatch.class, "GedcomFriendMatch.jLabel2.text")); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(21, 14));
+        jLabel2.setPreferredSize(new java.awt.Dimension(50, 14));
 
         jButton1.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(GedcomFriendMatch.class, "GedcomFriendMatch.jButton1.text")); // NOI18N
+        jButton1.setPreferredSize(new java.awt.Dimension(50, 26));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -88,6 +89,7 @@ public class GedcomFriendMatch extends JInternalFrame {
 
         jButton2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(GedcomFriendMatch.class, "GedcomFriendMatch.jButton2.text")); // NOI18N
+        jButton2.setPreferredSize(new java.awt.Dimension(50, 26));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -100,14 +102,14 @@ public class GedcomFriendMatch extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,18 +120,18 @@ public class GedcomFriendMatch extends JInternalFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        showList((Map<?, FriendGedcomEntity>)matchedIndis);
+        showList(matchedIndis);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showList((Map<?, FriendGedcomEntity>)matchedFams);
+        showList(matchedFams);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -148,14 +150,14 @@ public class GedcomFriendMatch extends JInternalFrame {
         return ancestrisFriend;
     }
 
-    public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity) {
+    public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity, String type) {
         if (entity instanceof Indi) {
-            matchedIndis.put((Indi) entity, friendGedcomEntity);
+            matchedIndis.add(new MatchData(entity, friendGedcomEntity, type));
             updateStats();
             return;
         }
         if (entity instanceof Fam) {
-            matchedFams.put((Fam) entity, friendGedcomEntity);
+            matchedFams.add(new MatchData(entity, friendGedcomEntity, type));
             updateStats();
             return;
         }
@@ -168,7 +170,7 @@ public class GedcomFriendMatch extends JInternalFrame {
         jButton2.setEnabled(matchedFams.size() != 0);
     }
 
-    private void showList(Map<?, FriendGedcomEntity> list) {
+    private void showList(Set<MatchData> list) {
         DialogManager.create(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_CommonEntities"), 
                 new ListEntitiesPanel(sharedGedcom.getGedcom().getName(), 
                 ancestrisFriend.getFriendName(), 

@@ -11,9 +11,8 @@
  */
 package ancestris.modules.treesharing.panels;
 
-import genj.gedcom.Entity;
 import java.awt.Dimension;
-import java.util.Map;
+import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
 
@@ -23,13 +22,13 @@ import org.openide.util.NbBundle;
  */
 public class ListEntitiesPanel extends javax.swing.JPanel {
 
-    private Map<?, FriendGedcomEntity> map;
+    private Set<MatchData> list;
     
     /**
      * Creates new form ListEntitiesPanel
      */
-    public ListEntitiesPanel(String gedcomName, String friend, Map<?, FriendGedcomEntity> map) {
-        this.map = map;
+    public ListEntitiesPanel(String gedcomName, String friend, Set<MatchData> list) {
+        this.list = list;
         initComponents();
         jLabel3.setText(gedcomName);
         jLabel4.setText(friend);
@@ -42,7 +41,7 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         jTable1.setFillsViewportHeight(true);
         
         Dimension preferredSize = jTable1.getPreferredSize();
-        preferredSize.height = map.size()*jTable1.getRowHeight();
+        preferredSize.height = list.size()*jTable1.getRowHeight();
         jTable1.setPreferredSize(preferredSize);
 
     }
@@ -75,7 +74,7 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(ListEntitiesPanel.class, "ListEntitiesPanel.jLabel4.text")); // NOI18N
 
-        jTable1.setModel(new MyTableModel(map));
+        jTable1.setModel(new MyTableModel(list));
         jTable1.setColumnSelectionAllowed(true);
         jTable1.setPreferredSize(new java.awt.Dimension(300, 150));
         jScrollPane2.setViewportView(jTable1);
@@ -131,7 +130,7 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
 
     class MyTableModel extends AbstractTableModel {
 
-        Map<?, FriendGedcomEntity> map = null;
+        Set<MatchData> list = null;
         String[] columnNames = { 
             NbBundle.getMessage(MembersPopup.class, "COL_myGedcom"), 
             NbBundle.getMessage(MembersPopup.class, "COL_myEntity"), 
@@ -141,17 +140,16 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         };
         Object[][] data;
         
-        private MyTableModel(Map<?, FriendGedcomEntity> map) {
-            this.map = map;
-            data = new Object[map.size()][5];
+        private MyTableModel(Set<MatchData> list) {
+            this.list = list;
+            data = new Object[list.size()][5];
             int i = 0;
-            for (Object object : map.keySet()) {
-                Entity ent = (Entity) object;
-                data[i][0] = ent.getGedcom().getName();
-                data[i][1] = ent.toString();
-                data[i][2] = map.get(ent).entityID;
-                data[i][3] = map.get(ent).gedcomName;
-                data[i][4] = map.get(ent).friend;
+            for (MatchData line : list) {
+                data[i][0] = line.myEntity.getGedcom().getName();
+                data[i][1] = line.myEntity.toString();
+                data[i][2] = line.friendGedcomEntity.entityID;
+                data[i][3] = line.friendGedcomEntity.gedcomName;
+                data[i][4] = line.friendGedcomEntity.friend;
                 i++;
             }
         }
