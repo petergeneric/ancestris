@@ -15,7 +15,7 @@
       <Image iconType="3" name="/ancestris/modules/treesharing/resources/tree.png"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[350, 130]"/>
+      <Dimension value="[340, 130]"/>
     </Property>
     <Property name="requestFocusEnabled" type="boolean" value="false"/>
     <Property name="visible" type="boolean" value="true"/>
@@ -55,12 +55,12 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jButton2" alignment="0" pref="62" max="32767" attributes="0"/>
+                  <Component id="jButton2" alignment="0" pref="58" max="32767" attributes="0"/>
                   <Component id="jLabel2" alignment="1" max="32767" attributes="0"/>
                   <Component id="jLabel8" alignment="1" max="32767" attributes="0"/>
                   <Component id="jLabel9" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jCheckBox1" max="32767" attributes="0"/>
                   <Component id="jCheckBox2" max="32767" attributes="0"/>
