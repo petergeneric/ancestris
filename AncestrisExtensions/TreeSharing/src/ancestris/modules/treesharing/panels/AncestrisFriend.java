@@ -79,7 +79,7 @@ public class AncestrisFriend extends JInternalFrame {
         setToolTipText(org.openide.util.NbBundle.getMessage(AncestrisFriend.class, "AncestrisFriend.Form.toolTipText")); // NOI18N
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend.png"))); // NOI18N
         setMinimumSize(new java.awt.Dimension(150, 100));
-        setPreferredSize(new java.awt.Dimension(195, 115));
+        setPreferredSize(new java.awt.Dimension(265, 115));
         setRequestFocusEnabled(false);
         setVisible(true);
 
@@ -143,7 +143,7 @@ public class AncestrisFriend extends JInternalFrame {
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
