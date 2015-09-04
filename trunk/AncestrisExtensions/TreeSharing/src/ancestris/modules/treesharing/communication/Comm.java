@@ -175,6 +175,7 @@ public class Comm {
     private static String CMD_TFLxx = "TFL";   // Take family lastnames
     private static String CMD_GFDxx = "GFD";   // Get family details
     private static String CMD_TFDxx = "TFD";   // Take family details
+    private static String CMD_THANX = "THANX"; // Friend says thanks !
     
     // Threads
     private volatile boolean sharing;
@@ -188,6 +189,7 @@ public class Comm {
     private String expectedCallIPAddress = null;
     private String expectedCallPortAddress = null;
     private boolean expectedCall = false;
+    private int REQUEST_TIMEOUT = 5;
 
     // Possible data objects to be received
     private boolean listOfIndiLastnamesEOF = false;
@@ -492,6 +494,13 @@ public class Comm {
         return listOfFamDetails;
     }
     
+    public void thank(AncestrisMember member) {
+        call(member, CMD_THANX, null);
+    }
+        
+            
+            
+            
     
     
         
@@ -517,6 +526,7 @@ public class Comm {
         
         // Loop on packets. Last packet number is COMM_PACKET_NB-1.
         int iPacket = 0;
+        boolean retry = true;
         while (iPacket < COMM_PACKET_NB) {
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
             try {
@@ -526,14 +536,19 @@ public class Comm {
                 // Expect answer back and get shared entities in return (wait for response from the other thread...)
                 expectedCall = true;
                 int s = 0;
-                while (expectedCall && (s < 10)) {  // set give up time to 10 seconds
+                while (expectedCall && (s < REQUEST_TIMEOUT)) {  
                     TimeUnit.SECONDS.sleep(1);
                     s++;
                 }
-                if (expectedCall) { // response never came back after 10 seconds, consider it failed
-                    expectedCall = false;
-                    LOG.log(Level.INFO, "...(TIMEOUT) No response from " + member.getMemberName() + " after timeout.");
-                    return;
+                if (expectedCall) { // response never came back after timeout, retry once or consider it failed
+                    if (retry) {
+                        LOG.log(Level.INFO, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Retrying once...");
+                        retry = false;
+                        continue;
+                    } else {
+                        LOG.log(Level.INFO, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Exit");
+                        return;
+                    }
                 }
                 
                 iPacket++;
@@ -569,14 +584,14 @@ public class Comm {
             // Expect that connection gets established (wait for response from the other thread...)
             expectedConnection = true;
             int s = 0;
-            while (expectedConnection && (s < 10)) {  // set give up time to 10 seconds
+            while (expectedConnection && (s < REQUEST_TIMEOUT)) {  
                 TimeUnit.SECONDS.sleep(1);
                 s++;
             }
             
             if (expectedConnection) { // response never came back after 10 seconds, consider it failed
                 expectedConnection = false;
-                LOG.log(Level.INFO, "...(TIMEOUT) No connection to " + member.getMemberName() + " after timeout.");
+                LOG.log(Level.INFO, "...(TIMEOUT) No connection to " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout.");
                 return false;
             }
             
@@ -705,6 +720,14 @@ public class Comm {
                 // Case of PONG command 
                 if (command.equals(CMD_PONGG)) {
                     expectedConnection = false;
+                    owner.incrementConnectionsNb();
+                    owner.addUniqueMember(member);
+                    continue;
+                } 
+
+                // Case of THANX command 
+                if (command.equals(CMD_THANX)) {
+                    owner.addUniqueFriend(member);
                     continue;
                 } 
 
@@ -1078,10 +1101,7 @@ public class Comm {
     public void debug() {
         
     }
-        
-            
-            
-            
+
             
 
     

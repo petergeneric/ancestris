@@ -22,6 +22,7 @@ import ancestris.modules.treesharing.panels.GedcomFriendMatch;
 import ancestris.modules.treesharing.panels.MembersPopup;
 import ancestris.modules.treesharing.panels.PrivacyToggle;
 import ancestris.modules.treesharing.panels.RearrangeAction;
+import ancestris.modules.treesharing.panels.ResetResults;
 import ancestris.modules.treesharing.panels.SearchAction;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import ancestris.modules.treesharing.panels.StartSharingAllToggle;
@@ -36,14 +37,17 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -133,6 +137,13 @@ public class TreeSharingTopComponent extends TopComponent {
     private StartSharingAllToggle startSharingToggle;
     private StopSharingAllToggle stopSharingToggle;
     private SearchAction searchButton = null;
+    private JLabel memberInProgress = null;
+    private JLabel rcvdConnections = null;
+    private JLabel rcvdUniqueMembers = null;
+    private JLabel rcvdUniqueFriends = null;
+    private int rcvdConnectionsNb = 0;
+    private Set<String> rcvdUniqueMembersList = null;
+    private Set<String> rcvdUniqueFriendsList = null;
     private SettingsAction settings = null;
     private final int LEFT_OFFSET_GEDCOM = 10;
     private final int LEFT_OFFSET_MATCHES = 400;
@@ -195,6 +206,7 @@ public class TreeSharingTopComponent extends TopComponent {
         if (!isComponentCreated) {
             initCommunication();
             initAncestrisMembers();
+            initRcvdConnections();
 
             // retrieve last position of toolbar when modified
             defaultBorderLayout = NbPreferences.forModule(TreeSharingTopComponent.class).get("ToolbarBorderLayout", BorderLayout.NORTH);
@@ -213,9 +225,8 @@ public class TreeSharingTopComponent extends TopComponent {
         // Create toolbar
         toolbar = new ToolBar();
         
-        // Add toolbar elements
-        
-        // - Dropbox on all connected friends
+        // Sharing space
+        // - Sharing space : Dropbox on all connected friends
         membersList = new MembersPopup(this);
         membersNumber = new JLabel("");
         updateMembersList();
@@ -239,44 +250,79 @@ public class TreeSharingTopComponent extends TopComponent {
         refreshThread.setName("TreeSharing thread : refresh members list");
         refreshing = true;
         refreshThread.start();
-        
         toolbar.add(members);
         toolbar.add(membersNumber);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
 
-        // - Timer display
+        // - Sharing space : Timer display
         timerPanel = new TimerPanel(this);
         toolbar.add(timerPanel);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
 
-        // - Set Privacy ON/OFF
+        // - Sharing space : Set Privacy ON/OFF
         privacyToggle = new PrivacyToggle(this, getPreferredPrivacy());
         toolbar.add(privacyToggle);
         toolbar.add(new JLabel(TOOLBAR_SPACE));
-        toolbar.addSeparator();
         
-        // - General share button : ON/OFF
+        // - Sharing space : General share button : ON/OFF
+        toolbar.addSeparator();
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
         startSharingToggle = new StartSharingAllToggle(this, shareAll);
         toolbar.add(startSharingToggle);
         stopSharingToggle = new StopSharingAllToggle(this, !shareAll);
         toolbar.add(stopSharingToggle);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+        
+        // Search space
+        // - Search space : search button
         toolbar.addSeparator();
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
         searchButton = new SearchAction(this);
         searchButton.setOff();
         toolbar.add(searchButton);
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
 
+        // - Search space : member in progress
+        memberInProgress = new JLabel("");
+        toolbar.add(memberInProgress);
+        memberInProgress.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_memberInProgress"));
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+
+        // - Search space : reset search results
+        toolbar.add(new ResetResults(this));
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+
+        // Connection space
+        // - Connection space : labels
+        toolbar.addSeparator();
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+        //...
+        rcvdConnections = new JLabel("");
+        toolbar.add(rcvdConnections);
+        rcvdConnections.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_rcvdConnections"));
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+        //...
+        rcvdUniqueMembers = new JLabel("");
+        toolbar.add(rcvdUniqueMembers);
+        rcvdUniqueMembers.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_rcvdUniqueMembers"));
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+        //...
+        rcvdUniqueFriends = new JLabel("");
+        toolbar.add(rcvdUniqueFriends);
+        rcvdUniqueFriends.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_rcvdUniqueFriends"));
+
+        // - Glue
         toolbar.add(new Box.Filler(null, null, null), "growx, pushx, center");
 
-        // - Rearrange gedcoms and Friends on desktop
+        // - Settings space : Rearrange gedcoms and Friends on desktop
         toolbar.addSeparator();
         toolbar.add(new RearrangeAction(this));
-        // - Settings
+        // - Settings space : Settings
         settings = new SettingsAction();
         toolbar.add(settings);
 
+        
+        
         // Add toolbar
         add(toolbar, defaultBorderLayout);
         
@@ -481,7 +527,11 @@ public class TreeSharingTopComponent extends TopComponent {
             settings.displayOptionsPanel();
             return false;
         }
-        
+
+        // Reset received connections
+        initRcvdConnections();
+        updateRcvdConnections();
+
         // Toggle the buttons to show it is set to sharing
         toggleOn();
 
@@ -540,6 +590,10 @@ public class TreeSharingTopComponent extends TopComponent {
         // Toggle the buttons to show it is no longer sharing
         toggleOff();
         
+        // Reset received connections
+        initRcvdConnections();
+        updateRcvdConnections();
+
         return true;
     }
 
@@ -710,6 +764,61 @@ public class TreeSharingTopComponent extends TopComponent {
         }
     }
 
+
+    public void displaySearchedMember(String memberName) {
+        Font font = memberInProgress.getFont();
+        memberInProgress.setFont(font.deriveFont(Font.ITALIC));
+        memberInProgress.setText(memberName + (memberName.isEmpty() ? "" : "..."));
+    }
+
+    
+    
+    public void resetResults() {
+        for (SharedGedcom sg : sharedGedcoms) {
+            removeMatch(sg);
+        }
+    }
+
+    
+    public void initRcvdConnections() {
+        rcvdConnectionsNb = 0;
+
+        if (rcvdUniqueMembersList == null) {
+            rcvdUniqueMembersList = new HashSet<String>();
+        } else {
+            rcvdUniqueMembersList.clear();
+        }
+
+        if (rcvdUniqueFriendsList == null) {
+            rcvdUniqueFriendsList = new HashSet<String>();
+        } else {
+            rcvdUniqueFriendsList.clear();
+        }
+    }
+    
+    public void updateRcvdConnections() {
+        rcvdConnections.setText(rcvdConnectionsNb == 0 ? "" : ""+rcvdConnectionsNb);
+        rcvdUniqueMembers.setText(rcvdUniqueMembersList.size() == 0 ? "" : ""+rcvdUniqueMembersList.size());
+        rcvdUniqueFriends.setText(rcvdUniqueFriendsList.size() == 0 ? "" : ""+rcvdUniqueFriendsList.size());
+    }
+
+    public void incrementConnectionsNb() {
+        rcvdConnectionsNb++;
+        updateRcvdConnections();
+    }
+    
+    public void addUniqueMember(String member) {
+        rcvdUniqueMembersList.add(member);
+        updateRcvdConnections();
+    }
+    
+    public void addUniqueFriend(String member) {
+        rcvdUniqueFriendsList.add(member);
+        updateRcvdConnections();
+    }
+    
+    
+    
     public Comm getCommHandler() {
         return commHandler;
     }
@@ -813,7 +922,6 @@ public class TreeSharingTopComponent extends TopComponent {
         return friend;
     }
 
-    
     
 
 }
