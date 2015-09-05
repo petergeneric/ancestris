@@ -783,6 +783,8 @@ public class Comm {
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
                     } else {
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
+                        LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Size of Set is..." + set.size());
+                        
                     }
                     continue;
                 }
@@ -796,9 +798,13 @@ public class Comm {
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfIndiDetailsEOF = true;
                         } else {
+                            LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ ...Extracting content");
                             listOfIndiDetails.addAll((Set<GedcomIndi>) unwrapObject(contentObj));
                         }
+                        LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ ...Closing expected call...");
                         expectedCall = false;
+                    } else {
+                        LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ ...Nothing to do...");
                     }
                     continue;
                 }
@@ -925,6 +931,11 @@ public class Comm {
                 Exceptions.printStackTrace(ex);
             }
         }
+
+        if (command.equals("TID00")) {
+            LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ ...Sending command TID00. Packet size = " + msgBytes.length);
+        }
+
 
         // Send whole msg
         if (!command.equals(CMD_PONGG)) {   // no need to log this message as it is sent every few minutes to the server
