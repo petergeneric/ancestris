@@ -495,7 +495,7 @@ public class Comm {
     }
     
     public void thank(AncestrisMember member) {
-        call(member, CMD_THANX, null);
+        sendCommand(CMD_THANX, owner.getRegisteredPseudo() + STR_DELIMITER, null, member.getIPAddress(), Integer.valueOf(member.getPortAddress()));
     }
         
             
@@ -516,7 +516,7 @@ public class Comm {
         }
         
         // Connect to Member only if no communication in progress
-        if (! communicationInProgress && !connectToMember(member)) {
+        if (!communicationInProgress && !connectToMember(member)) {
             return;
         }
         
@@ -720,8 +720,7 @@ public class Comm {
                 // Case of PONG command 
                 if (command.equals(CMD_PONGG)) {
                     expectedConnection = false;
-                    owner.incrementConnectionsNb();
-                    owner.addUniqueMember(member);
+                    owner.addConnection(member);
                     continue;
                 } 
 
@@ -1097,12 +1096,6 @@ public class Comm {
     }
 
 
-
-    public void debug() {
-        
-    }
-
-            
 
     
     
