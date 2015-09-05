@@ -18,6 +18,7 @@ import ancestris.modules.treesharing.communication.Comm;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanelController;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
+import ancestris.modules.treesharing.panels.DisplayStatsAction;
 import ancestris.modules.treesharing.panels.GedcomFriendMatch;
 import ancestris.modules.treesharing.panels.MembersPopup;
 import ancestris.modules.treesharing.panels.PrivacyToggle;
@@ -26,6 +27,8 @@ import ancestris.modules.treesharing.panels.ResetResults;
 import ancestris.modules.treesharing.panels.SearchAction;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import ancestris.modules.treesharing.panels.StartSharingAllToggle;
+import ancestris.modules.treesharing.panels.StatsData;
+import ancestris.modules.treesharing.panels.StatsPanel;
 import ancestris.modules.treesharing.panels.StopSharingAllToggle;
 import ancestris.modules.treesharing.panels.TimerPanel;
 import org.openide.util.ImageUtilities;
@@ -44,10 +47,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -138,12 +141,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private StopSharingAllToggle stopSharingToggle;
     private SearchAction searchButton = null;
     private JLabel memberInProgress = null;
-    private JLabel rcvdConnections = null;
-    private JLabel rcvdUniqueMembers = null;
-    private JLabel rcvdUniqueFriends = null;
-    private int rcvdConnectionsNb = 0;
-    private Set<String> rcvdUniqueMembersList = null;
-    private Set<String> rcvdUniqueFriendsList = null;
+    private DisplayStatsAction statsButton = null;
     private SettingsAction settings = null;
     private final int LEFT_OFFSET_GEDCOM = 10;
     private final int LEFT_OFFSET_MATCHES = 400;
@@ -167,7 +165,12 @@ public class TreeSharingTopComponent extends TopComponent {
     private Thread refreshThread;
     private final int REFRESH_DELAY = 150;
 
-
+    // Stats elements
+    private JLabel rcvdConnections = null;
+    private JLabel rcvdUniqueMembers = null;
+    private JLabel rcvdUniqueFriends = null;
+    private Map<String, StatsData> connectionStats = null;
+    private boolean resetStats = false;
     
     
     
@@ -206,7 +209,7 @@ public class TreeSharingTopComponent extends TopComponent {
         if (!isComponentCreated) {
             initCommunication();
             initAncestrisMembers();
-            initRcvdConnections();
+            initConnectionStats();
 
             // retrieve last position of toolbar when modified
             defaultBorderLayout = NbPreferences.forModule(TreeSharingTopComponent.class).get("ToolbarBorderLayout", BorderLayout.NORTH);
@@ -214,6 +217,8 @@ public class TreeSharingTopComponent extends TopComponent {
 
             initSharedGedcoms();
             
+            initConnectionStats();
+        
     }
         
         privacyToggle.setPrivacy(getPreferredPrivacy());
@@ -296,6 +301,9 @@ public class TreeSharingTopComponent extends TopComponent {
         // - Connection space : labels
         toolbar.addSeparator();
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+        statsButton = new DisplayStatsAction(this);
+        toolbar.add(statsButton);
+        toolbar.add(new JLabel(TOOLBAR_SPACE)); 
         //...
         rcvdConnections = new JLabel("");
         toolbar.add(rcvdConnections);
@@ -310,6 +318,8 @@ public class TreeSharingTopComponent extends TopComponent {
         rcvdUniqueFriends = new JLabel("");
         toolbar.add(rcvdUniqueFriends);
         rcvdUniqueFriends.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_rcvdUniqueFriends"));
+        updateStatsDisplay();
+
 
         // - Glue
         toolbar.add(new Box.Filler(null, null, null), "growx, pushx, center");
@@ -347,11 +357,19 @@ public class TreeSharingTopComponent extends TopComponent {
     public void updateMembersList() {
         initAncestrisMembers();
         membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
-        membersNumber.setText(" "+ancestrisMembers.size() + " ");
+        final int n = ancestrisMembers.size();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 membersList.updateTable();
+                String title = NbBundle.getMessage(TreeSharingTopComponent.class, "CTL_TreeSharingTopComponent");
+                if (n > 0) {
+                    membersNumber.setText(" " + n + " ");
+                    instance.setDisplayName(title + " (" + n + ")");
+                } else {
+                    membersNumber.setText(" ");
+                    instance.setDisplayName(title);
+                }
             }
         });
     }
@@ -528,10 +546,6 @@ public class TreeSharingTopComponent extends TopComponent {
             return false;
         }
 
-        // Reset received connections
-        initRcvdConnections();
-        updateRcvdConnections();
-
         // Toggle the buttons to show it is set to sharing
         toggleOn();
 
@@ -590,10 +604,6 @@ public class TreeSharingTopComponent extends TopComponent {
         // Toggle the buttons to show it is no longer sharing
         toggleOff();
         
-        // Reset received connections
-        initRcvdConnections();
-        updateRcvdConnections();
-
         return true;
     }
 
@@ -779,43 +789,100 @@ public class TreeSharingTopComponent extends TopComponent {
         }
     }
 
+
     
-    public void initRcvdConnections() {
-        rcvdConnectionsNb = 0;
-
-        if (rcvdUniqueMembersList == null) {
-            rcvdUniqueMembersList = new HashSet<String>();
+    public void initConnectionStats() {
+        if (connectionStats == null) {
+            connectionStats = new HashMap<String, StatsData>();
         } else {
-            rcvdUniqueMembersList.clear();
-        }
-
-        if (rcvdUniqueFriendsList == null) {
-            rcvdUniqueFriendsList = new HashSet<String>();
-        } else {
-            rcvdUniqueFriendsList.clear();
+            connectionStats.clear();
         }
     }
     
-    public void updateRcvdConnections() {
-        rcvdConnections.setText(rcvdConnectionsNb == 0 ? "" : ""+rcvdConnectionsNb);
-        rcvdUniqueMembers.setText(rcvdUniqueMembersList.size() == 0 ? "" : ""+rcvdUniqueMembersList.size());
-        rcvdUniqueFriends.setText(rcvdUniqueFriendsList.size() == 0 ? "" : ""+rcvdUniqueFriendsList.size());
+    public void updateStatsDisplay() {
+        if (connectionStats == null || connectionStats.isEmpty()) {
+            statsButton.setEnabled(false);
+            rcvdConnections.setText("");
+            rcvdUniqueMembers.setText("");
+            rcvdUniqueFriends.setText("");
+        } else {
+            statsButton.setEnabled(true);
+            int rcvdConnectionsNb = 0;
+            int rcvdUniqueMembersNb = 0;
+            int rcvdUniqueFriendsNb = 0;
+            for (String member : connectionStats.keySet()) {
+                StatsData stats = connectionStats.get(member);
+                rcvdConnectionsNb += stats.connections;
+                rcvdUniqueMembersNb++;
+                if (stats.match) {
+                    rcvdUniqueFriendsNb++;
+                }
+            }
+            rcvdConnections.setText(""+rcvdConnectionsNb);
+            rcvdUniqueMembers.setText(""+rcvdUniqueMembersNb);
+            rcvdUniqueFriends.setText(""+rcvdUniqueFriendsNb);
+        }
     }
 
-    public void incrementConnectionsNb() {
-        rcvdConnectionsNb++;
-        updateRcvdConnections();
+    public void setResetStats() {
+        resetStats = true;
     }
+
     
-    public void addUniqueMember(String member) {
-        rcvdUniqueMembersList.add(member);
-        updateRcvdConnections();
+    public void displayStats() {
+        DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_StatsPanel"), 
+                new StatsPanel(connectionStats, this)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+        if (resetStats) {
+            initConnectionStats();
+            updateStatsDisplay();
+        }
+    }
+
+    
+    public void addConnection(String member) {
+        if (connectionStats == null) {
+            initConnectionStats();
+        }
+        
+        StatsData stats = connectionStats.get(member);
+        if (stats == null) {
+            stats = new StatsData();
+        }
+        
+        stats.connections++;
+        if (stats.startDate == null) {
+            stats.startDate = new Date();
+        }
+        stats.endDate = new Date();
+        connectionStats.put(member, stats);
+
+        updateStatsDisplay();
     }
     
     public void addUniqueFriend(String member) {
-        rcvdUniqueFriendsList.add(member);
-        updateRcvdConnections();
+        if (connectionStats == null) {
+            initConnectionStats();
+        }
+        
+        StatsData stats = connectionStats.get(member);
+        if (stats == null) {  // should never happen but we never know !
+            stats = new StatsData();
+            stats.connections++;
+            if (stats.startDate == null) {
+                stats.startDate = new Date();
+            }
+            stats.endDate = new Date();
+        }
+        
+        stats.match = true;
+        connectionStats.put(member, stats);
+
+        updateStatsDisplay();
     }
+    
+    
+    
+    
     
     
     

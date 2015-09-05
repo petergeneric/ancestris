@@ -77,8 +77,6 @@ public class SearchSharedTrees extends Thread {
         Set<String> myIndiLastnames = owner.getCommHandler().getMySharedIndiLastnames(sharedGedcoms);
         Set<String> myFamLastnames = owner.getCommHandler().getMySharedFamLastnames(sharedGedcoms);  
         
-        //owner.getCommHandler().debug();
-        
         // Loop on all members
         for (AncestrisMember member : copyOfAncestrisMembers) {
             
@@ -89,6 +87,10 @@ public class SearchSharedTrees extends Thread {
 
             // Indicate which member is being analysed
             owner.displaySearchedMember(member.getMemberName());
+
+//debug
+owner.addConnection(member.getMemberName());
+owner.addUniqueFriend(member.getMemberName());
             
             // A. Individuals
             // Phase 1 - Get all lastnames from member for all its shared gedcoms at the same time and identify commons ones with mine
@@ -105,9 +107,9 @@ public class SearchSharedTrees extends Thread {
                 continue;
             }
             //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ nb of common lastnames found is : " + commonIndiLastnames.size() + ". Listing them...");
-            for (String str : commonIndiLastnames) {
-                //LOG_DEBUG.log(Level.INFO, ".......DEBUG common lastnames found : " + str);
-            }
+            //  for (String str : commonIndiLastnames) {
+            //      LOG_DEBUG.log(Level.INFO, ".......DEBUG common lastnames found : " + str);
+            //  }
             
             // Phase 2 - Get individual details for common lastnames from member and identify matching ones according to matching type
             //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Asking details of those individuals...");
@@ -184,8 +186,6 @@ public class SearchSharedTrees extends Thread {
 
     private boolean addCommonIndis(List<SharedGedcom> sharedGedcoms, Set<GedcomIndi> myGedcomIndis, Set<GedcomIndi> memberGedcomIndis, String matchType, AncestrisMember member) {
         
-        // Counters
-        AncestrisFriend friend = null;
         boolean ret = false;
 
         // Loop on each of *my* shared gedcoms
@@ -195,11 +195,10 @@ public class SearchSharedTrees extends Thread {
             for (GedcomIndi myGedcomIndi : myGedcomIndis) {
 
                 // Loop all *member* entities
-                friend = null;
                 for (GedcomIndi memberGedcomIndi : memberGedcomIndis) {
                     if (isSameIndividual(myGedcomIndi, memberGedcomIndi, matchType)) { // we have a match
                         //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Individual in common found!!!! : " + myGedcomIndi.indiFirstName + " " + myGedcomIndi.indiLastName);
-                        friend = owner.createMatch(sharedGedcom, 
+                        owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomIndi.entityID), 
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomIndi.gedcomName, memberGedcomIndi.entityID), 
                                 member);
@@ -217,8 +216,6 @@ public class SearchSharedTrees extends Thread {
 
     private boolean addCommonFams(List<SharedGedcom> sharedGedcoms, Set<GedcomFam> myGedcomFams, Set<GedcomFam> memberGedcomFams, String matchType, AncestrisMember member) {
         
-        // Counters
-        AncestrisFriend friend = null;
         boolean ret = false;
 
         // Loop on each of *my* shared gedcoms
@@ -228,11 +225,10 @@ public class SearchSharedTrees extends Thread {
             for (GedcomFam myGedcomFam : myGedcomFams) {
 
                 // Loop all *member* entities
-                friend = null;
                 for (GedcomFam memberGedcomFam : memberGedcomFams) {
                     if (isSameFamily(myGedcomFam, memberGedcomFam, matchType)) { // we have a match
                         //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Family in common found!!!! : " + myGedcomFam.husbLastName + " " + myGedcomFam.wifeLastName);
-                        friend = owner.createMatch(sharedGedcom, 
+                        owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomFam.entityID), 
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomFam.gedcomName, memberGedcomFam.entityID), 
                                 member);
