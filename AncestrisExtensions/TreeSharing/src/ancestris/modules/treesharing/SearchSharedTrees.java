@@ -88,10 +88,6 @@ public class SearchSharedTrees extends Thread {
             // Indicate which member is being analysed
             owner.displaySearchedMember(member.getMemberName());
 
-//debug
-owner.addConnection(member.getMemberName());
-owner.addUniqueFriend(member.getMemberName());
-            
             // A. Individuals
             // Phase 1 - Get all lastnames from member for all its shared gedcoms at the same time and identify commons ones with mine
             //LOG_DEBUG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ current member is : " + member.getMemberName() + ". Asking lastnames...");
