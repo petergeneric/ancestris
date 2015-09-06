@@ -146,7 +146,7 @@ public class Comm {
     private static String TAG_PORTAD = "portaddress";
 
     // Command and Packets size
-    private int COMM_PACKET_SIZE = 16000;   // max size of UDP packet seems to be 16384
+    private int COMM_PACKET_SIZE = 8000;   // max size of UDP packet seems to be 16384
     private int COMM_CMD_SIZE = 5;
     private int COMM_CMD_PFX_SIZE = 3;
     private String FMT_IDX = "%02d";
@@ -783,7 +783,6 @@ public class Comm {
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
                     } else {
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
-                        LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ Size of Set is..." + set.size());
                         
                     }
                     continue;
@@ -791,20 +790,15 @@ public class Comm {
 
                 // Case of CMD_TIDxx command (following my GIDxx message to another member, he/she returns his/her shared entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TIDxx)) {
-                    LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfIndiDetailsEOF = true;
                         } else {
-                            LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ ...Extracting content");
                             listOfIndiDetails.addAll((Set<GedcomIndi>) unwrapObject(contentObj));
                         }
-                        LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ ...Closing expected call...");
                         expectedCall = false;
-                    } else {
-                        LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ ...Nothing to do...");
                     }
                     continue;
                 }
@@ -831,7 +825,6 @@ public class Comm {
 
                 // Case of CMD_TFLxx command (following my GFLxx message to another member, he/she returns his/her shared entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TFLxx)) {
-                    LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
@@ -868,7 +861,6 @@ public class Comm {
 
                 // Case of CMD_TFDxx command (following my GFDxx message to another member, he/she returns his/her shared entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TFDxx)) {
-                    LOG.log(Level.INFO, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
@@ -932,13 +924,8 @@ public class Comm {
             }
         }
 
-        if (command.equals("TID00")) {
-            LOG.log(Level.INFO, "¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤ ...Sending command TID00. Packet size = " + msgBytes.length);
-        }
-
-
         // Send whole msg
-        if (!command.equals(CMD_PONGG)) {   // no need to log this message as it is sent every few minutes to the server
+        if (!command.equals(CMD_PONGG)) {   // no need to log this PONGG message as it is sent every few minutes to the server
             LOG.log(Level.INFO, "Sending command " + command + " with " + string + (object != null ? " and object of size " + msgBytes.length : "") + " to " + ipAddress + ":" + portAddress);
         }
         sendObject(msgBytes, ipAddress, portAddress);
@@ -1056,8 +1043,6 @@ public class Comm {
         Map<Integer, Set<String>> packets = new HashMap<Integer, Set<String>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * 1.20) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
-        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Str master paquet size is : " + masterPacket.length);
-        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Str number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<String>());
         }
@@ -1075,8 +1060,6 @@ public class Comm {
         Map<Integer, Set<GedcomIndi>> packets = new HashMap<Integer, Set<GedcomIndi>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * 1.20) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
-        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Indi master paquet size is : " + masterPacket.length);
-        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Indi number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomIndi>());
         }
@@ -1094,8 +1077,6 @@ public class Comm {
         Map<Integer, Set<GedcomFam>> packets = new HashMap<Integer, Set<GedcomFam>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * 1.20) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
-        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Family master paquet size is : " + masterPacket.length);
-        //LOG.log(Level.INFO, "¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤¤ : Family number of paquets is : " + nbPackets);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomFam>());
         }
