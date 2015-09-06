@@ -25,6 +25,7 @@ import genj.gedcom.PropertyChange;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -324,6 +325,14 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         return gedcom;
     }
     
+    public int getNbOfPublicIndis() {
+        return nbPublicIndis;
+    }
+    
+    public int getNbOfPublicFams() {
+        return nbPublicFams;
+    }
+    
     public void updateStats(boolean recalculate) {
         // Calculate
         if (recalculate || nbTotalIndis == 0) {
@@ -333,8 +342,8 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
             nbPublicFams = getNbPublicEntities(Gedcom.FAM);
         }
         
-        nbCommonIndis = matchedIndis.size();
-        nbCommonFams = matchedFams.size();
+        nbCommonIndis = countIds(matchedIndis);
+        nbCommonFams = countIds(matchedFams);
         
         
         // Display
@@ -344,8 +353,8 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         jLabel9.setText(jCheckBox1.isSelected() ? (jCheckBox2.isSelected() ? ""+nbPublicFams : ""+nbTotalFams) : "0");
         jButton1.setText(""+nbCommonIndis);
         jButton2.setText(""+nbCommonFams);
-        jButton1.setEnabled(matchedIndis.size() != 0);
-        jButton2.setEnabled(matchedFams.size() != 0);
+        jButton1.setEnabled(nbCommonIndis != 0);
+        jButton2.setEnabled(nbCommonFams != 0);
 
     }
 
@@ -566,6 +575,14 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
                 new ListEntitiesPanel(getGedcom().getName(), 
                 NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllFriends"),  
                 list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+    }
+
+    private int countIds(Set<MatchData> matchedEntities) {
+        Set<String> ret = new HashSet<String>();
+        for (MatchData data : matchedEntities) {
+            ret.add(data.myEntity.getId());
+        }
+        return ret.size();
     }
 
 

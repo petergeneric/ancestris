@@ -14,7 +14,9 @@ package ancestris.modules.treesharing;
 import ancestris.modules.treesharing.communication.AncestrisMember;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
+import ancestris.modules.treesharing.communication.GedcomNumbers;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
+import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import java.util.ArrayList;
@@ -65,6 +67,7 @@ public class SearchSharedTrees extends Thread {
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
         // Initialize variables
+        AncestrisFriend friend = null;
         String matchType = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", TreeSharingOptionsPanel.MATCHING_TYPES[0]);
         List<AncestrisMember> copyOfAncestrisMembers = (List) ((ArrayList) ancestrisMembers).clone(); // Copy ancestris members to avoid concurrent access to the list while using it
         Set<String> myIndiLastnames = owner.getCommHandler().getMySharedIndiLastnames(sharedGedcoms);
@@ -80,6 +83,15 @@ public class SearchSharedTrees extends Thread {
 
             // Indicate which member is being analysed
             owner.displaySearchedMember(member.getMemberName());
+            
+            
+            // Ask for stats first (nb of indis and nb of families
+            owner.getCommHandler().setCommunicationInProgress(false);
+            GedcomNumbers gn = owner.getCommHandler().getNbOfEntities(member);
+            if (gn == null) {
+                continue;
+            }
+            owner.getCommHandler().setCommunicationInProgress(true);
 
             // A. Individuals
             // Phase 1 - Get all lastnames from member for all its shared gedcoms at the same time and identify commons ones with mine
@@ -98,8 +110,11 @@ public class SearchSharedTrees extends Thread {
                 // Phase 3 - Identify and create/update matches
                 Set<GedcomIndi> myGedcomIndis = owner.getCommHandler().getMySharedGedcomIndis(sharedGedcoms, commonIndiLastnames);
                 if (myGedcomIndis != null && !myGedcomIndis.isEmpty()) {
-                    if (addCommonIndis(sharedGedcoms, myGedcomIndis, memberGedcomIndis, matchType, member)) { // create/update matches and friends if common are found
+                    friend = addCommonIndis(sharedGedcoms, myGedcomIndis, memberGedcomIndis, matchType, member);    // create/update matches and friends if common are found
+                    if (friend != null) { 
                         owner.getCommHandler().thank(member);
+                        friend.setTotalIndis(gn.nbIndis);
+                        friend = null;
                     }
                 }
             }
@@ -122,14 +137,20 @@ public class SearchSharedTrees extends Thread {
                 // Phase 3 - Identify and create/update matches
                 Set<GedcomFam> myGedcomFams = owner.getCommHandler().getMySharedGedcomFams(sharedGedcoms, commonFamLastnames);
                 if (myGedcomFams != null && !myGedcomFams.isEmpty()) {
-                    addCommonFams(sharedGedcoms, myGedcomFams, memberGedcomFams, matchType, member);    // create/update matches and friends
+                    friend = addCommonFams(sharedGedcoms, myGedcomFams, memberGedcomFams, matchType, member);    // create/update matches and friends
+                    if (friend != null) { 
+                        owner.getCommHandler().thank(member);
+                        friend.setTotalFams(gn.nbFams);
+                        friend = null;
+                    }
+                    
                 }
                 
             }
             
         } // endfor members
 
-        
+        owner.getCommHandler().setCommunicationInProgress(false);
         stopGracefully();
     }
     
@@ -147,9 +168,9 @@ public class SearchSharedTrees extends Thread {
         return new HashSet<String>(memberIndiLastnames);
     }
 
-    private boolean addCommonIndis(List<SharedGedcom> sharedGedcoms, Set<GedcomIndi> myGedcomIndis, Set<GedcomIndi> memberGedcomIndis, String matchType, AncestrisMember member) {
+    private AncestrisFriend addCommonIndis(List<SharedGedcom> sharedGedcoms, Set<GedcomIndi> myGedcomIndis, Set<GedcomIndi> memberGedcomIndis, String matchType, AncestrisMember member) {
         
-        boolean ret = false;
+        AncestrisFriend friend = null;
 
         // Loop on each of *my* shared gedcoms
         for (SharedGedcom sharedGedcom : sharedGedcoms) {
@@ -160,23 +181,25 @@ public class SearchSharedTrees extends Thread {
                 // Loop all *member* entities
                 for (GedcomIndi memberGedcomIndi : memberGedcomIndis) {
                     if (isSameIndividual(myGedcomIndi, memberGedcomIndi, matchType)) { // we have a match
-                        owner.createMatch(sharedGedcom, 
+                        friend = owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomIndi.entityID), 
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomIndi.gedcomName, memberGedcomIndi.entityID), 
                                 member);
-                        ret = true;
                     }
                     continue;
                 } // endfor memberEntities
             } // endfor myEntities
         } // endfor myGedcoms
         
-        return ret;
+        return friend;
     }
 
-    private boolean addCommonFams(List<SharedGedcom> sharedGedcoms, Set<GedcomFam> myGedcomFams, Set<GedcomFam> memberGedcomFams, String matchType, AncestrisMember member) {
+    
+    
+    
+    private AncestrisFriend addCommonFams(List<SharedGedcom> sharedGedcoms, Set<GedcomFam> myGedcomFams, Set<GedcomFam> memberGedcomFams, String matchType, AncestrisMember member) {
         
-        boolean ret = false;
+        AncestrisFriend friend = null;
 
         // Loop on each of *my* shared gedcoms
         for (SharedGedcom sharedGedcom : sharedGedcoms) {
@@ -187,18 +210,17 @@ public class SearchSharedTrees extends Thread {
                 // Loop all *member* entities
                 for (GedcomFam memberGedcomFam : memberGedcomFams) {
                     if (isSameFamily(myGedcomFam, memberGedcomFam, matchType)) { // we have a match
-                        owner.createMatch(sharedGedcom, 
+                        friend = owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomFam.entityID), 
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomFam.gedcomName, memberGedcomFam.entityID), 
                                 member);
-                        ret = true;
                     }
                     continue;
                 } // endfor memberEntities
             } // endfor myEntities
         } // endfor myGedcoms
         
-        return ret;
+        return friend;
     }
 
     
