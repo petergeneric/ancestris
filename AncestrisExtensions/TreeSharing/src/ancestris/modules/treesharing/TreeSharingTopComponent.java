@@ -48,6 +48,7 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -357,7 +358,7 @@ public class TreeSharingTopComponent extends TopComponent {
     public void updateMembersList() {
         initAncestrisMembers();
         membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
-        final int n = ancestrisMembers.size();
+        final int n = ancestrisMembers.size() - (shareAll ? 1 : 0);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
