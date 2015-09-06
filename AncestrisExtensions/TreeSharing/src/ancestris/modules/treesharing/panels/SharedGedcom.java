@@ -389,6 +389,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
      * @return set
      */
     public Set<String> getPublicIndiLastnames() {
+        if (!isShared()) {
+            return null;
+        }
         Set<String> ret = new HashSet<String>();
         List<Entity> entities = getPublicEntities(Gedcom.INDI);
         for (Entity entity : entities) {
@@ -409,6 +412,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
      * @return set
      */
     public Set<String> getPublicFamLastnames() {
+        if (!isShared()) {
+            return null;
+        }
         String str;
         Set<String> ret = new HashSet<String>();
         List<Entity> entities = getPublicEntities(Gedcom.FAM);
@@ -424,6 +430,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     
 
     public List<GedcomIndi> getPublicGedcomIndis(Set<String> commonIndiLastnames) {
+        if (!isShared()) {
+            return null;
+        }
         List<GedcomIndi> ret = new ArrayList<GedcomIndi>();
         List<Entity> entities = getPublicEntities(Gedcom.INDI);
         for (Entity entity : entities) {
@@ -442,6 +451,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
 
     public List<GedcomFam> getPublicGedcomFams(Set<String> commonFamLastnames) {
+        if (!isShared()) {
+            return null;
+        }
         List<GedcomFam> ret = new ArrayList<GedcomFam>();
         List<Entity> entities = getPublicEntities(Gedcom.FAM);
         for (Entity entity : entities) {

@@ -570,11 +570,11 @@ public class TreeSharingTopComponent extends TopComponent {
             return false;
         };
 
-        // We have list of allowed members in "ancestrisMembers" with isAllowed set to true
-        updateMembersList();
-        
         // Open the sharing locally
         shareAll = true;
+        
+        // We have list of allowed members in "ancestrisMembers" with isAllowed set to true
+        updateMembersList();
         
         // Launch search engine
         //launchSearchEngine();
