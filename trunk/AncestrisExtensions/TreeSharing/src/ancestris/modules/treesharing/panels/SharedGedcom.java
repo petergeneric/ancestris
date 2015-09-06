@@ -367,6 +367,12 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         return jCheckBox2.isSelected();
     }
     
+    public final void resetResults() {
+        matchedIndis.clear();
+        matchedFams.clear();
+        updateStats(false);
+    }
+
     
     
     
@@ -390,7 +396,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
      */
     public Set<String> getPublicIndiLastnames() {
         if (!isShared()) {
-            return null;
+            return new HashSet<String>();
         }
         Set<String> ret = new HashSet<String>();
         List<Entity> entities = getPublicEntities(Gedcom.INDI);
@@ -413,7 +419,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
      */
     public Set<String> getPublicFamLastnames() {
         if (!isShared()) {
-            return null;
+            return new HashSet<String>();
         }
         String str;
         Set<String> ret = new HashSet<String>();
@@ -431,7 +437,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
     public List<GedcomIndi> getPublicGedcomIndis(Set<String> commonIndiLastnames) {
         if (!isShared()) {
-            return null;
+            return new ArrayList<GedcomIndi>();
         }
         List<GedcomIndi> ret = new ArrayList<GedcomIndi>();
         List<Entity> entities = getPublicEntities(Gedcom.INDI);
@@ -452,7 +458,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
     public List<GedcomFam> getPublicGedcomFams(Set<String> commonFamLastnames) {
         if (!isShared()) {
-            return null;
+            return new ArrayList<GedcomFam>();
         }
         List<GedcomFam> ret = new ArrayList<GedcomFam>();
         List<Entity> entities = getPublicEntities(Gedcom.FAM);

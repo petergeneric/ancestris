@@ -787,6 +787,7 @@ public class TreeSharingTopComponent extends TopComponent {
     public void resetResults() {
         for (SharedGedcom sg : sharedGedcoms) {
             removeMatch(sg);
+            sg.resetResults();
         }
     }
 
