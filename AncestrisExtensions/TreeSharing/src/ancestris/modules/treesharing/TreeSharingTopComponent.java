@@ -540,10 +540,10 @@ public class TreeSharingTopComponent extends TopComponent {
     public boolean startSharingAll() {
         
         // Get pseudo and ask user to go to parameters if not set
-        commPseudo = getPreferredPseudo();
-        if (commPseudo.equals("")) {
-            DialogManager.create("", NbBundle.getMessage(TreeSharingTopComponent.class, "ERR_NullPseudo")).setMessageType(DialogManager.ERROR_MESSAGE).show();
-            settings.displayOptionsPanel();
+        
+        if (isMyProfileOK()) {
+            commPseudo = getPreferredPseudo();
+        } else {
             return false;
         }
 
@@ -576,16 +576,13 @@ public class TreeSharingTopComponent extends TopComponent {
         // We have list of allowed members in "ancestrisMembers" with isAllowed set to true
         updateMembersList();
         
-        // Launch search engine
-        //launchSearchEngine();
-        
         return true;
     }
 
     public boolean stopSharingAll() {
 
-        // Launch search engine
-        //stopSearchEngine();
+        // Launch search engine in case it is running
+        stopSearchEngine();
         
         // Stop timer
         if (timer != null) {
@@ -629,6 +626,20 @@ public class TreeSharingTopComponent extends TopComponent {
         isBusy = false;
     }
 
+    
+    
+    private boolean isMyProfileOK() {
+        if (getPreferredPseudo().equals("")) {
+            DialogManager.create("", NbBundle.getMessage(TreeSharingTopComponent.class, "ERR_NullPseudo")).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            settings.displayOptionsPanel();
+            return false;
+        }
+        return true;
+    }
+
+    
+    
+    
     private void dispatchShare(boolean b) {
         if (sharedGedcoms == null) {
             return;

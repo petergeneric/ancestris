@@ -216,12 +216,23 @@ public class AncestrisFriend extends JInternalFrame {
     }
 
     private void updateStats() {
-        jButton1.setText("" + matchedIndis.size());
-        jButton2.setText("" + matchedFams.size());
-        jButton1.setEnabled(matchedIndis.size() != 0);
-        jButton2.setEnabled(matchedFams.size() != 0);
+        int nbCommonIndis = countIds(matchedIndis);
+        int nbCommonFams = countIds(matchedFams);
+        jButton1.setText("" + nbCommonIndis);
+        jButton2.setText("" + nbCommonFams);
+        jButton1.setEnabled(nbCommonIndis != 0);
+        jButton2.setEnabled(nbCommonFams != 0);
     }
 
+    private int countIds(Set<MatchData> matchedEntities) {
+        Set<String> ret = new HashSet<String>();
+        for (MatchData data : matchedEntities) {
+            ret.add(data.myEntity.getId());
+        }
+        return ret.size();
+    }
+
+    
     private void showList(Set<MatchData> list) {
         DialogManager.create(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_CommonEntities"), 
                 new ListEntitiesPanel(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllGedcoms"),  
@@ -258,8 +269,11 @@ public class AncestrisFriend extends JInternalFrame {
         return matchedIndis.isEmpty() && matchedFams.isEmpty();
     }
 
-    public void updateTotals(int iIndis, int iFams) {
+    public void setTotalIndis(int iIndis) {
         jLabel5.setText(""+iIndis);
+    }
+
+    public void setTotalFams(int iFams) {
         jLabel6.setText(""+iFams);
     }
 

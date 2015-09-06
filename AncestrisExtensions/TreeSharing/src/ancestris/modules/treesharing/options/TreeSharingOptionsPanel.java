@@ -11,12 +11,20 @@
  */
 package ancestris.modules.treesharing.options;
 
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
     private final TreeSharingOptionsPanelController controller;
+    private String photoPath = "";
     
     public static final String[] MATCHING_TYPES = new String[] { 
         NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match1"), 
@@ -42,6 +50,18 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jTextField5 = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jTextField6 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jCheckBox1.text")); // NOI18N
 
@@ -53,6 +73,49 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(MATCHING_TYPES));
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel2.text")); // NOI18N
+
+        jTextField2.setText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jTextField2.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel4.text")); // NOI18N
+
+        jTextField3.setText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jTextField3.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel5.text")); // NOI18N
+
+        jTextField5.setText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jTextField5.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel6.text")); // NOI18N
+
+        jTextField6.setText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jTextField6.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel7.text")); // NOI18N
+
+        jTextField4.setText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jTextField4.text")); // NOI18N
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.text")); // NOI18N
+        jLabel8.setToolTipText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText")); // NOI18N
+        jLabel8.setPreferredSize(new java.awt.Dimension(155, 49));
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -60,40 +123,88 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(47, 47, 47)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 127, Short.MAX_VALUE)))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTextField5)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                    .addComponent(jTextField3)
+                    .addComponent(jTextField4)
+                    .addComponent(jTextField6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50)
                 .addComponent(jCheckBox1)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addGap(18, 18, 18))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        chooseAndDisplayImage();
+    }//GEN-LAST:event_jLabel8MouseClicked
 
     void load() {
         jCheckBox1.setSelected(NbPreferences.forModule(TreeSharingOptionsPanel.class).getBoolean("RespectPrivacy", true));
         jTextField1.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", ""));
+        jTextField2.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Lastname", ""));
+        jTextField3.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Firstname", ""));
+        jTextField4.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", ""));
+        jTextField5.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", ""));
+        jTextField6.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", ""));
+        photoPath = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "");
+        loadPhoto(new File(photoPath));
         jComboBox1.setSelectedItem(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", MATCHING_TYPES[0]));
     }
 
@@ -102,6 +213,12 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         String str = jTextField1.getText();
         int i = str.indexOf(" ");
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Pseudo", i == -1 ? str : str.substring(0, i));  // no space in pseudo
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Lastname", jTextField2.getText());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Firstname", jTextField3.getText());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Email", jTextField4.getText());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("City", jTextField5.getText());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Country", jTextField6.getText());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Photo", photoPath);
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", (String) jComboBox1.getSelectedItem());
     }
 
@@ -114,7 +231,48 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
+
+    private void chooseAndDisplayImage() {
+        JFileChooser jfc = new JFileChooser();
+        int ret = jfc.showDialog(jfc, NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserTitle"));
+        if (ret == JFileChooser.APPROVE_OPTION) {
+            File f = jfc.getSelectedFile();
+            if (!loadPhoto(f)) {
+                jLabel8.setText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText"));
+                jLabel8.setIcon(null);
+            }
+        }
+    }
+    
+    private boolean loadPhoto(File f) {
+        if (f != null) {
+            try {
+                Image bi = ImageIO.read(f);
+                if (bi != null) {
+                    jLabel8.setText("");
+                    jLabel8.setIcon(new ImageIcon(bi.getScaledInstance(jLabel8.getSize().width, jLabel8.getSize().height, Image.SCALE_SMOOTH)));
+                    photoPath = f.getAbsolutePath();
+                    return true;
+                }
+            } catch (Exception ex) {
+                //Exceptions.printStackTrace(ex);
+            }
+        }
+        return false;
+    }
 }

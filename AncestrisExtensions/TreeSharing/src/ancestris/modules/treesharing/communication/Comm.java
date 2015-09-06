@@ -177,6 +177,8 @@ public class Comm {
     private static String CMD_TFLxx = "TC";   // Take family lastnames
     private static String CMD_GFDxx = "GD";   // Get family details
     private static String CMD_TFDxx = "TD";   // Take family details
+    private static String CMD_GSTAT = "GS";   // Get stats (one packet will be enough)
+    private static String CMD_TSTAT = "TS";   // Take stats (one packet will be enough)
     private static String CMD_THANX = "THANX"; // Friend says thanks !
     
     // Threads
@@ -194,6 +196,8 @@ public class Comm {
     private int REQUEST_TIMEOUT = 5;
 
     // Possible data objects to be received
+    private boolean gedcomNumbersEOF = false;
+    private GedcomNumbers gedcomNumbers = null;
     private boolean listOfIndiLastnamesEOF = false;
     private Set<String> listOfIndiLastnames = null;
     private boolean listOfIndiDetailsEOF = false;
@@ -202,6 +206,8 @@ public class Comm {
     private Set<String> listOfFamLastnames = null;
     private boolean listOfFamDetailsEOF = false;
     private Set<GedcomFam> listOfFamDetails = null;
+    private boolean memberProfileEOF = false;
+    private MemberProfile memberProfile = null;
     
     // Possible data objects to be sent by packets
     private Map<Integer, Set<String>> packetsOfIndiLastnames = null;
@@ -446,7 +452,20 @@ public class Comm {
     
     
     
+    public void setCommunicationInProgress(boolean inProgress) {
+        communicationInProgress = inProgress;
+    }
     
+    
+    
+    public GedcomNumbers getNbOfEntities(AncestrisMember member) {
+        if (gedcomNumbers == null) {
+            gedcomNumbers = new GedcomNumbers();
+        }
+        gedcomNumbersEOF = false;
+        call(member, CMD_GSTAT, null);
+        return gedcomNumbers;
+    }
     
     public Set<String> getSharedIndiLastnamesFromMember(AncestrisMember member) {
         if (listOfIndiLastnames == null) {
@@ -455,9 +474,7 @@ public class Comm {
             listOfIndiLastnames.clear();
         }
         listOfIndiLastnamesEOF = false;
-        communicationInProgress = false;
         call(member, CMD_GILxx, null);
-        communicationInProgress = true;
         return listOfIndiLastnames;
     }
 
@@ -492,7 +509,6 @@ public class Comm {
         }
         listOfFamDetailsEOF = false;
         call(member, CMD_GFDxx, commonFamLastnames);
-        communicationInProgress = false;
         return listOfFamDetails;
     }
     
@@ -529,8 +545,9 @@ public class Comm {
         // Loop on packets. Last packet number is COMM_PACKET_NB-1.
         int iPacket = 0;
         boolean retry = true;
+        int nbNoResponses = 0; // nb of consecutive no responses
         LOG.log(Level.FINE, "Calling member " + member.getMemberName() + " with " + command);
-        while (iPacket < COMM_PACKET_NB) {
+        while (iPacket < COMM_PACKET_NB && nbNoResponses < 10) {  // stop at the last packet or after 10 consecutive retry/skips
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
             try {
                 // Ask member for list of something
@@ -544,20 +561,27 @@ public class Comm {
                     s++;
                 }
                 if (expectedCall) { // response never came back after timeout, retry once or consider it failed
+                    nbNoResponses++;
                     if (retry) {
                         LOG.log(Level.FINEST, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Retrying once...");
                         retry = false;
-                        continue;
                     } else {
                         LOG.log(Level.FINEST, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Skip");
                         retry = true;
-                        //return;
+                        iPacket++;
                     }
+                    continue;
                 }
                 
+                // packet received
+                nbNoResponses = 0;
+                retry = true;
                 iPacket++;
             
                 // No more packet
+                if (command.equals(CMD_GSTAT) && gedcomNumbersEOF) {
+                    break;
+                }
                 if (command.equals(CMD_GILxx) && listOfIndiLastnamesEOF) {
                     break;
                 }
@@ -576,7 +600,7 @@ public class Comm {
                 return;
             }
         }
-        LOG.log(Level.FINEST, "...(SUCCESS) Returned call from member " + member.getMemberName() + " with " + iPacket + " packets");
+        LOG.log(Level.FINE, "...(SUCCESS) Returned call from member " + member.getMemberName() + " with " + iPacket + " packets");
     }
 
     
@@ -736,6 +760,34 @@ public class Comm {
                     continue;
                 } 
 
+                
+                
+                
+                // Case of CMD_GSTAT command (member asks for the number of entities. Send back.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GSTAT)) {
+                    String commandIndexed = CMD_TSTAT + String.format(FMT_IDX, COMM_PACKET_NB - 1);
+                    GedcomNumbers gn = getMySharedNumbers(owner.getSharedGedcoms());
+                    TimeUnit.MILLISECONDS.sleep(COMM_RESPONSE_DELAY);
+                    sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, gn, senderIP, senderPort);
+                    continue;
+                }
+
+                // Case of CMD_TSTAT command (following my GSTAT message to another member, he/she returns his/her nb of entities. Take them.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TSTAT)) {
+                    LOG.log(Level.FINEST, "...Packet size is " + packetReceived.getLength() + " bytes");
+                    // Make sure there is a pending call expecting something from the ipaddress and port received
+                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
+                        if (iPacket == COMM_PACKET_NB - 1) { 
+                            gedcomNumbersEOF = true;
+                            gedcomNumbers = (GedcomNumbers) unwrapObject(contentObj);
+                        }
+                        expectedCall = false;
+                    }
+                    continue;
+                }
+
+                
                 
                 
                 
@@ -1009,6 +1061,15 @@ public class Comm {
     
     
     
+    public GedcomNumbers getMySharedNumbers(List<SharedGedcom> sharedGedcoms) {
+        GedcomNumbers gn = new GedcomNumbers();
+        for (SharedGedcom sharedGedcom : sharedGedcoms) {
+            gn.nbIndis += sharedGedcom.getNbOfPublicIndis();
+            gn.nbFams += sharedGedcom.getNbOfPublicFams();
+        }
+        return gn;
+    }
+
     
     public Set<String> getMySharedIndiLastnames(List<SharedGedcom> sharedGedcoms) {
         Set<String> ret = new HashSet<String>();
