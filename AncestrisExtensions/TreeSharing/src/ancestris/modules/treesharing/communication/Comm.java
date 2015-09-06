@@ -154,15 +154,15 @@ public class Comm {
     private static String STR_DELIMITER = " ";
 
     // Commands
-    // Registration
+    // Registration on server
     private static String CMD_REGIS = "REGIS";
     private static String CMD_REGOK = "REGOK";
     private static String CMD_REGKO = "REGKO";
-    // Unregistration
+    // Unregistration from server
     private static String CMD_UNREG = "UNREG";
     private static String CMD_UNROK = "UNROK";
     private static String CMD_UNRKO = "UNRKO";
-    // Establishing connection
+    // Establishing connection 
     private static String CMD_CONCT = "CONCT";
     private static String CMD_PINGG = "PINGG";
     private static String CMD_PONGG = "PONGG";

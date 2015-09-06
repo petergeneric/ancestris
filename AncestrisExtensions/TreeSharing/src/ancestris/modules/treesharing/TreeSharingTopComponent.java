@@ -835,6 +835,7 @@ public class TreeSharingTopComponent extends TopComponent {
         if (resetStats) {
             initConnectionStats();
             updateStatsDisplay();
+            resetStats = false;
         }
     }
 
