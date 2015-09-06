@@ -146,12 +146,12 @@ public class Comm {
     private static String TAG_PORTAD = "portaddress";
 
     // Command and Packets size
-    private int COMM_PACKET_SIZE = 8100;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
-    private double COMM_COMPRESSING_FACTOR = 1.5;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
+    private int COMM_PACKET_SIZE = 10000;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
+    private double COMM_COMPRESSING_FACTOR = 1.3;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
     private int COMM_CMD_SIZE = 5;
-    private int COMM_CMD_PFX_SIZE = 3;
-    private String FMT_IDX = "%02d";
-    private int COMM_PACKET_NB = 100;
+    private int COMM_CMD_PFX_SIZE = 2;
+    private String FMT_IDX = "%03d";
+    private int COMM_PACKET_NB = 1000;
     private static String STR_DELIMITER = " ";
 
     // Commands
@@ -168,14 +168,14 @@ public class Comm {
     private static String CMD_PINGG = "PINGG";
     private static String CMD_PONGG = "PONGG";
     // Sharing my shared entities
-    private static String CMD_GILxx = "GIL";   // Get Individual lastnames
-    private static String CMD_TILxx = "TIL";   // Take individual lastnames
-    private static String CMD_GIDxx = "GID";   // Get individual details
-    private static String CMD_TIDxx = "TID";   // Take individual details
-    private static String CMD_GFLxx = "GFL";   // Get family lastnames
-    private static String CMD_TFLxx = "TFL";   // Take family lastnames
-    private static String CMD_GFDxx = "GFD";   // Get family details
-    private static String CMD_TFDxx = "TFD";   // Take family details
+    private static String CMD_GILxx = "GA";   // Get Individual lastnames
+    private static String CMD_TILxx = "TA";   // Take individual lastnames
+    private static String CMD_GIDxx = "GB";   // Get individual details
+    private static String CMD_TIDxx = "TB";   // Take individual details
+    private static String CMD_GFLxx = "GC";   // Get family lastnames
+    private static String CMD_TFLxx = "TC";   // Take family lastnames
+    private static String CMD_GFDxx = "GD";   // Get family details
+    private static String CMD_TFDxx = "TD";   // Take family details
     private static String CMD_THANX = "THANX"; // Friend says thanks !
     
     // Threads
@@ -537,8 +537,8 @@ public class Comm {
                 // Expect answer back and get shared entities in return (wait for response from the other thread...)
                 expectedCall = true;
                 int s = 0;
-                while (expectedCall && (s < REQUEST_TIMEOUT)) {  
-                    TimeUnit.SECONDS.sleep(1);
+                while (expectedCall && (s < REQUEST_TIMEOUT*10)) {  
+                    TimeUnit.MILLISECONDS.sleep(100);
                     s++;
                 }
                 if (expectedCall) { // response never came back after timeout, retry once or consider it failed
@@ -744,6 +744,7 @@ public class Comm {
                     }
                     String commandIndexed = CMD_TILxx + String.format(FMT_IDX, iPacket);
                     Set<String> set = packetsOfIndiLastnames.get(iPacket);
+                    TimeUnit.MILLISECONDS.sleep(100);
                     if (set == null) {
                         commandIndexed = CMD_TILxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
@@ -781,6 +782,7 @@ public class Comm {
                     }
                     String commandIndexed = CMD_TIDxx + String.format(FMT_IDX, iPacket);
                     Set<GedcomIndi> set = packetsOfIndiDetails.get(iPacket);
+                    TimeUnit.MILLISECONDS.sleep(100);
                     if (set == null) {
                         commandIndexed = CMD_TIDxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
@@ -817,6 +819,7 @@ public class Comm {
                     }
                     String commandIndexed = CMD_TFLxx + String.format(FMT_IDX, iPacket);
                     Set<String> set = packetsOfFamLastnames.get(iPacket);
+                    TimeUnit.MILLISECONDS.sleep(100);
                     if (set == null) {
                         commandIndexed = CMD_TFLxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
@@ -853,6 +856,7 @@ public class Comm {
                     }
                     String commandIndexed = CMD_TFDxx + String.format(FMT_IDX, iPacket);
                     Set<GedcomFam> set = packetsOfFamDetails.get(iPacket);
+                    TimeUnit.MILLISECONDS.sleep(100);
                     if (set == null) {
                         commandIndexed = CMD_TFDxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
