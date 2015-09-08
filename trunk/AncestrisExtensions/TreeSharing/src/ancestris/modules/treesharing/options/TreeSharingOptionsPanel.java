@@ -11,6 +11,7 @@
  */
 package ancestris.modules.treesharing.options;
 
+import ancestris.modules.treesharing.communication.MemberProfile;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -98,7 +99,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.text")); // NOI18N
         jLabel8.setToolTipText(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText")); // NOI18N
-        jLabel8.setPreferredSize(new java.awt.Dimension(155, 49));
+        jLabel8.setBorder(null);
+        jLabel8.setIconTextGap(0);
+        jLabel8.setPreferredSize(new java.awt.Dimension(155, 186));
         jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel8MouseClicked(evt);
@@ -113,8 +116,11 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        jLabel8.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.AccessibleContext.accessibleName")); // NOI18N
+        jLabel8.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.AccessibleContext.accessibleDescription")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -196,29 +202,29 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jLabel8MouseClicked
 
     void load() {
-        jCheckBox1.setSelected(NbPreferences.forModule(TreeSharingOptionsPanel.class).getBoolean("RespectPrivacy", true));
-        jTextField1.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", ""));
-        jTextField2.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Lastname", ""));
-        jTextField3.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Firstname", ""));
-        jTextField4.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", ""));
-        jTextField5.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", ""));
-        jTextField6.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", ""));
+        jTextField1.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", "").trim());
+        jTextField2.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Lastname", "").trim());
+        jTextField3.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Firstname", "").trim());
+        jTextField4.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", "").trim());
+        jTextField5.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", "").trim());
+        jTextField6.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", "".trim()));
         photoPath = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "");
         loadPhoto(new File(photoPath));
+        jCheckBox1.setSelected(NbPreferences.forModule(TreeSharingOptionsPanel.class).getBoolean("RespectPrivacy", true));
         jComboBox1.setSelectedItem(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", MATCHING_TYPES[0]));
     }
 
     void store() {
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).putBoolean("RespectPrivacy", jCheckBox1.isSelected());
         String str = jTextField1.getText();
         int i = str.indexOf(" ");
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Pseudo", i == -1 ? str : str.substring(0, i));  // no space in pseudo
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Lastname", jTextField2.getText());
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Firstname", jTextField3.getText());
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Email", jTextField4.getText());
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("City", jTextField5.getText());
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Country", jTextField6.getText());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Lastname", jTextField2.getText().trim());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Firstname", jTextField3.getText().trim());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Email", jTextField4.getText().trim());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("City", jTextField5.getText().trim());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Country", jTextField6.getText().trim());
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Photo", photoPath);
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).putBoolean("RespectPrivacy", jCheckBox1.isSelected());
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", (String) jComboBox1.getSelectedItem());
     }
 
@@ -265,14 +271,35 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                 Image bi = ImageIO.read(f);
                 if (bi != null) {
                     jLabel8.setText("");
-                    jLabel8.setIcon(new ImageIcon(bi.getScaledInstance(jLabel8.getSize().width, jLabel8.getSize().height, Image.SCALE_SMOOTH)));
+                    jLabel8.setIcon(new ImageIcon(bi.getScaledInstance(jLabel8.getPreferredSize().width, jLabel8.getPreferredSize().height, Image.SCALE_SMOOTH)));
                     photoPath = f.getAbsolutePath();
                     return true;
                 }
             } catch (Exception ex) {
-                //Exceptions.printStackTrace(ex);
+                Exceptions.printStackTrace(ex);
             }
         }
         return false;
     }
+    
+    public static String getPseudo() {
+        return NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", "").trim();
+    }
+
+    public static MemberProfile getProfile() {
+        MemberProfile profile = new MemberProfile();
+        profile.lastname = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Lastname", "").trim();
+        profile.firstname = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Firstname", "").trim();
+        profile.email = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", "").trim();
+        profile.city = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", "").trim();
+        profile.country = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", "".trim());
+        try {
+            profile.photo = ImageIO.read(new File(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "")));
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return profile;
+    }
+
+
 }

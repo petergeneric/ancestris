@@ -269,11 +269,8 @@ public class AncestrisFriend extends JInternalFrame {
         return matchedIndis.isEmpty() && matchedFams.isEmpty();
     }
 
-    public void setTotalIndis(int iIndis) {
+    public void setTotals(int iIndis, int iFams) {
         jLabel5.setText(""+iIndis);
-    }
-
-    public void setTotalFams(int iFams) {
         jLabel6.setText(""+iFams);
     }
 

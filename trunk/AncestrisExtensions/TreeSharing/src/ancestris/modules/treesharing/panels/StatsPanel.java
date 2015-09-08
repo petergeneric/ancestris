@@ -29,6 +29,8 @@ import org.openide.util.NbBundle;
  */
 public class StatsPanel extends javax.swing.JPanel {
 
+    private static int NBCOLUMNS = 6;
+    
     private final TreeSharingTopComponent owner;
 
     private Map<String, StatsData> list;
@@ -149,6 +151,7 @@ public class StatsPanel extends javax.swing.JPanel {
         table.getColumnModel().getColumn(2).setPreferredWidth(200);
         table.getColumnModel().getColumn(3).setPreferredWidth(240);
         table.getColumnModel().getColumn(4).setPreferredWidth(240);
+        table.getColumnModel().getColumn(5).setPreferredWidth(20);
         table.setFillsViewportHeight(true);
 
         // Center some of the columns
@@ -157,6 +160,7 @@ public class StatsPanel extends javax.swing.JPanel {
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
         
         if (table == jTable2) {
             table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
@@ -175,16 +179,17 @@ public class StatsPanel extends javax.swing.JPanel {
             NbBundle.getMessage(StatsData.class, "COL_member"), 
             NbBundle.getMessage(StatsData.class, "COL_match"),  
             NbBundle.getMessage(StatsData.class, "COL_startDate"),
-            NbBundle.getMessage(StatsData.class, "COL_endDate")
+            NbBundle.getMessage(StatsData.class, "COL_endDate"),
+            NbBundle.getMessage(StatsData.class, "COL_profile")
         };
         Object[][] data;
         
         private MyTableModel(Map<String, StatsData> list) {
             if (list == null || list.isEmpty()) {
-                data = new Object[1][5];
+                data = new Object[1][NBCOLUMNS];
                 return;
             }
-            data = new Object[list.size()][5];
+            data = new Object[list.size()][NBCOLUMNS];
             int i = 0;
             for (String member : list.keySet()) {
                 data[i][0] = list.get(member).connections;
@@ -192,6 +197,7 @@ public class StatsPanel extends javax.swing.JPanel {
                 data[i][2] = list.get(member).match;
                 data[i][3] = formatter.format(list.get(member).startDate);
                 data[i][4] = formatter.format(list.get(member).endDate);
+                data[i][5] = list.get(member).profile.getIcon();
                 i++;
             }
         }
@@ -243,16 +249,16 @@ public class StatsPanel extends javax.swing.JPanel {
     
     class MyFooterModel extends AbstractTableModel {
 
-        String[] columnNames = { "", "", "", "", ""};
+        String[] columnNames = { "", "", "", "", "", ""};
         Object[][] data;
         
         private MyFooterModel(Map<String, StatsData> list) {
             
             if (list == null || list.isEmpty()) {
-                data = new Object[1][5];
+                data = new Object[1][NBCOLUMNS];
                 return;
             }
-            data = new Object[list.size()][5];
+            data = new Object[list.size()][NBCOLUMNS];
             int iConnections = 0;
             int iMember = 0;
             Date minDate = null;
@@ -275,6 +281,7 @@ public class StatsPanel extends javax.swing.JPanel {
             data[0][2] = iMember;
             data[0][3] = formatter.format(minDate);
             data[0][4] = formatter.format(maxDate);
+            data[0][5] = "";
         }
 
         @Override

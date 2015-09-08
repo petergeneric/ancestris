@@ -179,7 +179,9 @@ public class Comm {
     private static String CMD_TFDxx = "TD";   // Take family details
     private static String CMD_GSTAT = "GS";   // Get stats (one packet will be enough)
     private static String CMD_TSTAT = "TS";   // Take stats (one packet will be enough)
-    private static String CMD_THANX = "THANX"; // Friend says thanks !
+    private static String CMD_GPFxx = "GP";   // Get profile)
+    private static String CMD_TPFxx = "TP";   // Take profile
+    private static String CMD_THANX = "TX";   // I say thanks and provide my profile
     
     // Threads
     private volatile boolean sharing;
@@ -188,12 +190,13 @@ public class Comm {
     private int refreshDelay;
 
     // Call info
+    private int REQUEST_TIMEOUT = 5;
     private boolean communicationInProgress = false;
     private boolean expectedConnection = false;
     private String expectedCallIPAddress = null;
     private String expectedCallPortAddress = null;
     private boolean expectedCall = false;
-    private int REQUEST_TIMEOUT = 5;
+    private boolean thanksInProgress = false;
 
     // Possible data objects to be received
     private boolean gedcomNumbersEOF = false;
@@ -207,13 +210,14 @@ public class Comm {
     private boolean listOfFamDetailsEOF = false;
     private Set<GedcomFam> listOfFamDetails = null;
     private boolean memberProfileEOF = false;
-    private MemberProfile memberProfile = null;
+    private ByteArrayOutputStream memberProfile = null;
     
     // Possible data objects to be sent by packets
     private Map<Integer, Set<String>> packetsOfIndiLastnames = null;
     private Map<Integer, Set<GedcomIndi>> packetsOfIndiDetails = null;
     private Map<Integer, Set<String>> packetsOfFamLastnames = null;
     private Map<Integer, Set<GedcomFam>> packetsOfFamDetails = null;
+    private Map<Integer, byte[]> packetsOfProfile = null;
     
     
     
@@ -512,7 +516,22 @@ public class Comm {
         return listOfFamDetails;
     }
     
-    public void thank(AncestrisMember member) {
+    
+    public MemberProfile getProfileMember(AncestrisMember member) {
+        if (memberProfile == null) {
+            memberProfile = new ByteArrayOutputStream();
+        } else {
+            memberProfile.reset();
+        }
+        memberProfileEOF = false;
+        call(member, CMD_GPFxx, null);
+        return (MemberProfile) unwrapObject(memberProfile.toByteArray());
+    }
+    
+
+    public void thankMember(AncestrisMember member, MemberProfile myProfile) {
+        //        put(member, CMD_THXxx, myProfile);
+        thanksInProgress = true;
         sendCommand(CMD_THANX, owner.getRegisteredPseudo() + STR_DELIMITER, null, member.getIPAddress(), Integer.valueOf(member.getPortAddress()));
     }
         
@@ -551,6 +570,7 @@ public class Comm {
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
             try {
                 // Ask member for list of something
+                // FIXME : possible bug if object size > limit (case of common indi or fam lastnames)
                 sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, (iPacket == 0 ? object : null), expectedCallIPAddress, Integer.valueOf(expectedCallPortAddress));
             
                 // Expect answer back and get shared entities in return (wait for response from the other thread...)
@@ -592,6 +612,9 @@ public class Comm {
                     break;
                 }
                 if (command.equals(CMD_GFDxx) && listOfFamDetailsEOF) {
+                    break;
+                }
+                if (command.equals(CMD_GPFxx) && memberProfileEOF) {
                     break;
                 }
             
@@ -756,7 +779,7 @@ public class Comm {
 
                 // Case of THANX command 
                 if (command.equals(CMD_THANX)) {
-                    owner.addUniqueFriend(member);
+                    owner.addUniqueFriend(member, getProfileMember(aMember)); // Note : during the time of getting the profile, reception is busy
                     continue;
                 } 
 
@@ -939,6 +962,45 @@ public class Comm {
                 
                 
                 
+                // Case of CMD_GPFxx command (member asks for the profile. Send back.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GPFxx)) {
+                    if (!thanksInProgress) {
+                        continue;
+                    }
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
+                    if (iPacket == 0 || packetsOfProfile == null) {
+                        packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
+                    }
+                    String commandIndexed = CMD_TPFxx + String.format(FMT_IDX, iPacket);
+                    byte[] set = packetsOfProfile.get(iPacket);
+                    TimeUnit.MILLISECONDS.sleep(COMM_RESPONSE_DELAY);
+                    if (set == null) {
+                        commandIndexed = CMD_TPFxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
+                    } else {
+                        sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
+                    }
+                    continue;
+                }
+
+                // Case of CMD_TPFxx command (following my GPFxx message to another member, he/she returns his/her profile. Take it.
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TPFxx)) {
+                    // Make sure there is a pending call expecting something from the ipaddress and port received
+                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                        Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
+                        if (iPacket == COMM_PACKET_NB - 1) { // no more packet
+                            memberProfileEOF = true;
+                        } else {
+                            memberProfile.write((byte[])unwrapObject(contentObj));
+                        }
+                        expectedCall = false;
+                    }
+                    continue;
+                }
+
+                
+                
+                
             }
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
@@ -1105,8 +1167,6 @@ public class Comm {
 
     
     
-    
-    
     /**
      * Builds packets of strings, not of bytes, so that each packets can be unwrapped into lists without the other packets
      */
@@ -1154,6 +1214,20 @@ public class Comm {
         int index = 0;
         for (GedcomFam obj : masterSet) {
             packets.get(index++ % nbPackets).add(obj);
+        }
+        return packets;
+    }
+
+    private Map<Integer, byte[]> buildPacketsOfProfile(MemberProfile myProfile) {
+        Map<Integer, byte[]> packets = new HashMap<Integer, byte[]>();
+        byte[] masterPacket = wrapObject(myProfile);
+        int nbPackets = (int) (Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 1);
+        for (Integer i = 0; i < nbPackets; i++) {
+            if (i < nbPackets-1) {
+                packets.put(i, Arrays.copyOfRange(masterPacket, i*COMM_PACKET_SIZE, (i+1)*COMM_PACKET_SIZE));
+            } else {
+                packets.put(i, Arrays.copyOfRange(masterPacket, i*COMM_PACKET_SIZE, masterPacket.length));
+            }
         }
         return packets;
     }

@@ -111,11 +111,6 @@ public class SearchSharedTrees extends Thread {
                 Set<GedcomIndi> myGedcomIndis = owner.getCommHandler().getMySharedGedcomIndis(sharedGedcoms, commonIndiLastnames);
                 if (myGedcomIndis != null && !myGedcomIndis.isEmpty()) {
                     friend = addCommonIndis(sharedGedcoms, myGedcomIndis, memberGedcomIndis, matchType, member);    // create/update matches and friends if common are found
-                    if (friend != null) { 
-                        owner.getCommHandler().thank(member);
-                        friend.setTotalIndis(gn.nbIndis);
-                        friend = null;
-                    }
                 }
             }
 
@@ -138,15 +133,17 @@ public class SearchSharedTrees extends Thread {
                 Set<GedcomFam> myGedcomFams = owner.getCommHandler().getMySharedGedcomFams(sharedGedcoms, commonFamLastnames);
                 if (myGedcomFams != null && !myGedcomFams.isEmpty()) {
                     friend = addCommonFams(sharedGedcoms, myGedcomFams, memberGedcomFams, matchType, member);    // create/update matches and friends
-                    if (friend != null) { 
-                        owner.getCommHandler().thank(member);
-                        friend.setTotalFams(gn.nbFams);
-                        friend = null;
-                    }
-                    
                 }
                 
             }
+
+            // Chek flags
+            if (friend != null) {
+                owner.getCommHandler().thankMember(member, owner.getMyProfile());
+                friend.setTotals(gn.nbIndis, gn.nbFams);
+                friend = null;
+            }
+            
             
         } // endfor members
 
