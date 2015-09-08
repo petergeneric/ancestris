@@ -14,6 +14,7 @@ package ancestris.modules.treesharing.communication;
 
 import java.awt.Image;
 import java.io.Serializable;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -22,15 +23,21 @@ import java.io.Serializable;
 public class MemberProfile implements Serializable {
 
         // nom, prénom, ville, pays, email, photo, h/f
-        public String lastname = "";
-        public String firstname = "";
-        public String city = "";
-        public String country = "";
-        public String email = "";
-        public Image photo = null;
+        public String lastname="";
+        public String firstname="";
+        public String city="";
+        public String country="";
+        public String email="";
+        public Image photo=null;    // size 155x186
         
         public MemberProfile() {
         }
-        
 
+    public ImageIcon getIcon() {
+        if (photo == null) {
+            return null;
+        } else {
+            return new ImageIcon(photo.getScaledInstance(16, 19, Image.SCALE_DEFAULT));
+        }
+    }
 }

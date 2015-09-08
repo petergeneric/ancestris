@@ -12,6 +12,7 @@
 
 package ancestris.modules.treesharing.panels;
 
+import ancestris.modules.treesharing.communication.MemberProfile;
 import java.util.Date;
 
 /**
@@ -25,6 +26,7 @@ public class StatsData {
     public boolean match;
     public Date startDate;
     public Date endDate;
+    public MemberProfile profile;
     
     
     public StatsData() {
@@ -32,6 +34,7 @@ public class StatsData {
         match = false;
         startDate = null;
         endDate = null;
+        profile = null;
     }
 
 }

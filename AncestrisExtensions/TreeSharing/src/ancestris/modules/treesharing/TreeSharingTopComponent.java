@@ -15,6 +15,8 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.treesharing.communication.AncestrisMember;
 import ancestris.modules.treesharing.panels.SettingsAction;
 import ancestris.modules.treesharing.communication.Comm;
+import ancestris.modules.treesharing.communication.MemberProfile;
+import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanelController;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
@@ -482,7 +484,7 @@ public class TreeSharingTopComponent extends TopComponent {
 
     // Connexion preferences
     public String getPreferredPseudo() {
-        return NbPreferences.forModule(TreeSharingOptionsPanelController.class).get("Pseudo", "").trim();
+        return TreeSharingOptionsPanel.getPseudo();
     }
 
     public String getRegisteredPseudo() {
@@ -635,6 +637,10 @@ public class TreeSharingTopComponent extends TopComponent {
             return false;
         }
         return true;
+    }
+
+    public MemberProfile getMyProfile() {
+        return TreeSharingOptionsPanel.getProfile();
     }
 
     
@@ -873,7 +879,7 @@ public class TreeSharingTopComponent extends TopComponent {
         updateStatsDisplay();
     }
     
-    public void addUniqueFriend(String member) {
+    public void addUniqueFriend(String member, MemberProfile profile) {
         if (connectionStats == null) {
             initConnectionStats();
         }
@@ -889,6 +895,7 @@ public class TreeSharingTopComponent extends TopComponent {
         }
         
         stats.match = true;
+        stats.profile = profile;
         connectionStats.put(member, stats);
 
         updateStatsDisplay();
