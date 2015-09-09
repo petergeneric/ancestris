@@ -276,7 +276,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                     return true;
                 }
             } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
+                //Exceptions.printStackTrace(ex);
             }
         }
         return false;
