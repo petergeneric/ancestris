@@ -12,6 +12,8 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.modules.treesharing.TreeSharingTopComponent;
+import ancestris.modules.treesharing.communication.MemberProfile;
+import ancestris.util.swing.DialogManager;
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,13 +35,13 @@ public class StatsPanel extends javax.swing.JPanel {
     
     private final TreeSharingTopComponent owner;
 
-    private Map<String, StatsData> list;
+    private final Map<String, StatsData> list;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("d-MMM-yyyy HH:mm");
     
     /**
      * Creates new form ListEntitiesPanel
      */
-    public StatsPanel(Map<String, StatsData> list, TreeSharingTopComponent tstc) {
+    public StatsPanel(final Map<String, StatsData> list, TreeSharingTopComponent tstc) {
         this.owner = tstc;
         this.list = list;
         initComponents();
@@ -53,6 +55,21 @@ public class StatsPanel extends javax.swing.JPanel {
         Dimension preferredSize = jTable1.getPreferredSize();
         preferredSize.height = list.size()*jTable1.getRowHeight();
         jTable1.setPreferredSize(preferredSize);
+   
+        // Ability to click on image to popup profil
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = jTable1.rowAtPoint(evt.getPoint());
+                int col = jTable1.columnAtPoint(evt.getPoint());
+                if (row > 0 && col == 5) {
+                    MemberProfile mp = list.get(jTable1.getModel().getValueAt(row, 1)).profile;
+                    DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel"),
+                            new ProfilePanel(mp)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+
+                }
+            }
+        });
         
         // Hide table2 headers
         jTable2.setTableHeader(null);
