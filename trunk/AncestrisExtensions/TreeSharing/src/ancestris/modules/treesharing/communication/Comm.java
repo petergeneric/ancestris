@@ -365,11 +365,11 @@ public class Comm {
             // Process reply
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
             if (reply.substring(0, COMM_CMD_SIZE).equals(CMD_REGOK)) {
-                LOG.log(Level.FINEST, "...(REGOK) Registered " + pseudo + " on the Ancestris server.");
+                LOG.log(Level.FINE, "...(REGOK) Registered " + pseudo + " on the Ancestris server.");
                 socket.setSoTimeout(0);
             } else if (reply.substring(0, COMM_CMD_SIZE).equals(CMD_REGKO)) {
                 String err = reply.substring(COMM_CMD_SIZE);
-                LOG.log(Level.FINEST, "...(REGKO) Could not register " + pseudo + " on the Ancestris server. Error : " + err);
+                LOG.log(Level.FINE, "...(REGKO) Could not register " + pseudo + " on the Ancestris server. Error : " + err);
                 if (err.startsWith("Duplicate entry")) {
                     err = NbBundle.getMessage(Comm.class, "ERR_DuplicatePseudo");
                 }
@@ -379,7 +379,7 @@ public class Comm {
             
         } catch(SocketTimeoutException e) {
             String err = NbBundle.getMessage(Comm.class, "ERR_ServerNotResponding");
-            LOG.log(Level.FINEST, "...(TIMEOUT) Could not register " + pseudo + " from the Ancestris server. Error : " + err);
+            LOG.log(Level.FINE, "...(TIMEOUT) Could not register " + pseudo + " from the Ancestris server. Error : " + err);
             DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Registration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
             return false;
         } catch (IOException e) {
@@ -408,7 +408,7 @@ public class Comm {
             }
             if (sharing) { // response never came back after timeout, consider it failed
                 String err = NbBundle.getMessage(Comm.class, "ERR_ServerNotResponding");
-                LOG.log(Level.FINEST, "...(TIMEOUT) Could not unregister " + pseudo + " from the Ancestris server. Error : " + err);
+                LOG.log(Level.FINE, "...(TIMEOUT) Could not unregister " + pseudo + " from the Ancestris server. Error : " + err);
                 DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
                 return false;
             }
@@ -583,10 +583,10 @@ public class Comm {
                 if (expectedCall) { // response never came back after timeout, retry once or consider it failed
                     nbNoResponses++;
                     if (retry) {
-                        LOG.log(Level.FINEST, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Retrying once...");
+                        LOG.log(Level.FINE, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Retrying once...");
                         retry = false;
                     } else {
-                        LOG.log(Level.FINEST, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Skip");
+                        LOG.log(Level.FINE, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Skip");
                         retry = true;
                         iPacket++;
                     }
@@ -642,7 +642,7 @@ public class Comm {
             
             if (expectedConnection) { // response never came back after 10 seconds, consider it failed
                 expectedConnection = false;
-                LOG.log(Level.FINEST, "...(TIMEOUT) No connection to " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout.");
+                LOG.log(Level.FINE, "...(TIMEOUT) No connection to " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout.");
                 return false;
             }
             
@@ -650,7 +650,7 @@ public class Comm {
             Exceptions.printStackTrace(ex);
             return false;
         }
-        LOG.log(Level.FINEST, "...(SUCCESS) Connected successfully to member " + member.getMemberName());
+        LOG.log(Level.FINE, "...(SUCCESS) Connected successfully to member " + member.getMemberName());
         return true;
     }
 
@@ -702,7 +702,7 @@ public class Comm {
                     contentStr = contentStr.substring(0, contentStr.indexOf(STR_DELIMITER));
                 }
                 
-                LOG.log(Level.FINEST, "...Incoming " + command + " command received from " + senderAddress);
+                LOG.log(Level.FINE, "...Incoming " + command + " command received from " + senderAddress);
 
                 //
                 // PROCESS COMMANDS FROM SERVER
@@ -717,7 +717,7 @@ public class Comm {
                 // Case of CMD_UNRKO command (unregistration did not work)
                 if (command.equals(CMD_UNRKO)) {
                     String err = new String(bytesReceived).substring(COMM_CMD_SIZE);
-                    LOG.log(Level.FINEST, "...Could not unregister " + owner.getRegisteredPseudo() + " from the Ancestris server. Error : " + err);
+                    LOG.log(Level.FINE, "...Could not unregister " + owner.getRegisteredPseudo() + " from the Ancestris server. Error : " + err);
                     DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
                     continue;
                 } 
@@ -725,17 +725,17 @@ public class Comm {
                 // Case of CMD_CONCT command (server replies back to my connection request or asks me to connect to indicated pseudo)
                 if (command.equals(CMD_CONCT)) {
                     member = StringEscapeUtils.unescapeHtml(contentStr);
-                    LOG.log(Level.FINEST, "...Request to connect to " + member);
+                    LOG.log(Level.FINE, "...Request to connect to " + member);
                     owner.updateMembersList();
                     aMember = owner.getMember(member);
                     if (aMember == null) {
-                        LOG.log(Level.FINEST, "...Member " + member + " is not in the list of members.");
+                        LOG.log(Level.FINE, "...Member " + member + " is not in the list of members.");
                     }
                     else if (aMember.isAllowed()) {
                         sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + STR_DELIMITER, null, aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
-                        LOG.log(Level.FINEST, "...Member " + member + " is allowed. Replied back with PINGG.");
+                        LOG.log(Level.FINE, "...Member " + member + " is allowed. Replied back with PINGG.");
                     } else {
-                        LOG.log(Level.FINEST, "...Member " + member + " is NOT allowed. No reply.");
+                        LOG.log(Level.FINE, "...Member " + member + " is NOT allowed. No reply.");
                     }
                     continue;
                 }
@@ -752,10 +752,10 @@ public class Comm {
                 member = StringEscapeUtils.unescapeHtml(contentStr);
                 aMember = owner.getMember(member);
                 if (aMember == null) {
-                    LOG.log(Level.FINEST, "...Calling member " + member + " is not in the list of members.");
+                    LOG.log(Level.FINE, "...Calling member " + member + " is not in the list of members.");
                     continue;
                 } else if (!aMember.isAllowed() ||  !senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress())) {
-                    LOG.log(Level.FINEST, "...Member " + member + " is NOT allowed or address does not matcvh the one I know. Do not reply.");
+                    LOG.log(Level.FINE, "...Member " + member + " is NOT allowed or address does not matcvh the one I know. Do not reply.");
                     continue;
                 } 
                 contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentStr.length() + STR_DELIMITER.length(), bytesReceived.length);
@@ -797,7 +797,7 @@ public class Comm {
 
                 // Case of CMD_TSTAT command (following my GSTAT message to another member, he/she returns his/her nb of entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TSTAT)) {
-                    LOG.log(Level.FINEST, "...Packet size is " + packetReceived.getLength() + " bytes");
+                    LOG.log(Level.FINE, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
@@ -834,7 +834,7 @@ public class Comm {
 
                 // Case of CMD_TILxx command (following my GILxx message to another member, he/she returns his/her shared entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TILxx)) {
-                    LOG.log(Level.FINEST, "...Packet size is " + packetReceived.getLength() + " bytes");
+                    LOG.log(Level.FINE, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
@@ -1050,7 +1050,7 @@ public class Comm {
 
         // Send whole msg
         if (!command.equals(CMD_PONGG)) {   // no need to log this PONGG message as it is sent every few minutes to the server
-            LOG.log(Level.FINEST, "Sending command " + command + " with " + string + (object != null ? " and object of size " + msgBytes.length : "") + " to " + ipAddress + ":" + portAddress);
+            LOG.log(Level.FINE, "Sending command " + command + " with " + string + (object != null ? " and object of size " + msgBytes.length : "") + " to " + ipAddress + ":" + portAddress);
         }
         sendObject(msgBytes, ipAddress, portAddress);
     }
