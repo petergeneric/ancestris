@@ -50,7 +50,6 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1002,7 +1001,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // If match still null, then create it
         if (friend == null) {
-            friend = new AncestrisFriend(foundFriend, ipAddress, portAddress);
+            friend = new AncestrisFriend(foundFriend);
             desktopPanel.addFrame(friend, findLocation(ancestrisFriends.size(), LEFT_OFFSET_FRIENDS, friend.getPreferredSize().height));
             ancestrisFriends.add(friend);
         }
