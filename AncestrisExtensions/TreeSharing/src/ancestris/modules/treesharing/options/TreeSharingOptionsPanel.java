@@ -12,13 +12,13 @@
 package ancestris.modules.treesharing.options;
 
 import ancestris.modules.treesharing.communication.MemberProfile;
+import ancestris.util.swing.DialogManager;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -277,6 +277,8 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                 }
             } catch (Exception ex) {
                 //Exceptions.printStackTrace(ex);
+                DialogManager.create(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_BadPicture"),
+                        NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_PleaseChooseOther")).setMessageType(DialogManager.ERROR_MESSAGE).show();
             }
         }
         return false;
@@ -296,7 +298,8 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         try {
             profile.photo = ImageIO.read(new File(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "")));
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            //Exceptions.printStackTrace(ex);
+            profile.photo = null;
         }
         return profile;
     }
