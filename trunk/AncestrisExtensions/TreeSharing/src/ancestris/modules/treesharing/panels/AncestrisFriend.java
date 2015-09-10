@@ -76,9 +76,8 @@ public class AncestrisFriend extends JInternalFrame {
         setIconifiable(true);
         setToolTipText(org.openide.util.NbBundle.getMessage(AncestrisFriend.class, "AncestrisFriend.Form.toolTipText")); // NOI18N
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend.png"))); // NOI18N
-        setMinimumSize(new java.awt.Dimension(150, 100));
-        setPreferredSize(new java.awt.Dimension(265, 115));
-        setRequestFocusEnabled(false);
+        setMinimumSize(new java.awt.Dimension(280, 104));
+        setPreferredSize(new java.awt.Dimension(280, 115));
         setVisible(true);
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
@@ -152,7 +151,7 @@ public class AncestrisFriend extends JInternalFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,7 +173,7 @@ public class AncestrisFriend extends JInternalFrame {
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
