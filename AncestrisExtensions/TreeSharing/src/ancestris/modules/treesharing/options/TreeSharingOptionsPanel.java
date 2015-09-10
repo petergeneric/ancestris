@@ -26,6 +26,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
     private final TreeSharingOptionsPanelController controller;
     private String photoPath = "";
+    private boolean loading = false;
     
     public static final String[] MATCHING_TYPES = new String[] { 
         NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match1"), 
@@ -35,6 +36,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     TreeSharingOptionsPanel(TreeSharingOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
+        loading = false;
         // TODO listen to changes in form fields and call controller.changed()
     }
 
@@ -198,7 +200,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        loading = true;
         chooseAndDisplayImage();
+        loading = false;
     }//GEN-LAST:event_jLabel8MouseClicked
 
     void load() {
@@ -277,8 +281,10 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                 }
             } catch (Exception ex) {
                 //Exceptions.printStackTrace(ex);
-                DialogManager.create(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_BadPicture"),
-                        NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_PleaseChooseOther")).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                if (loading) {
+                    DialogManager.create(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_BadPicture"),
+                            NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_PleaseChooseOther")).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                }
             }
         }
         return false;
