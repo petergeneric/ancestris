@@ -32,7 +32,7 @@ public class StatsData {
     public StatsData() {
         connections = 0;
         match = false;
-        startDate = null;
+        startDate = new Date();
         endDate = null;
         profile = null;
     }
