@@ -15,6 +15,7 @@ import ancestris.modules.treesharing.communication.AncestrisMember;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
 import ancestris.modules.treesharing.communication.GedcomNumbers;
+import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
@@ -87,8 +88,8 @@ public class SearchSharedTrees extends Thread {
             
             // Ask for stats first (nb of indis and nb of families
             owner.getCommHandler().setCommunicationInProgress(false);
-            GedcomNumbers gn = owner.getCommHandler().getNbOfEntities(member);
-            if (gn == null) {
+            GedcomNumbers gedcomNumbers = owner.getCommHandler().getNbOfEntities(member);
+            if (gedcomNumbers == null) {
                 continue;
             }
             owner.getCommHandler().setCommunicationInProgress(true);
@@ -137,10 +138,11 @@ public class SearchSharedTrees extends Thread {
                 
             }
 
-            // Chek flags
+            // Thank you, exchange profiles and update friend
             if (friend != null) {
-                owner.getCommHandler().thankMember(member, owner.getMyProfile());
-                friend.setTotals(gn.nbIndis, gn.nbFams);
+                friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);   // set numbers
+                owner.getCommHandler().thankMember(member, owner.getMyProfile());   // give my profile
+                friend.setProfile(owner.getCommHandler().getProfileMember(member));  // get member profile and set it for friend
                 friend = null;
             }
             

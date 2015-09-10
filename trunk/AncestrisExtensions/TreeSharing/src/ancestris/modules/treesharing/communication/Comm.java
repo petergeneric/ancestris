@@ -977,6 +977,7 @@ public class Comm {
                     if (set == null) {
                         commandIndexed = CMD_TPFxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
+                        thanksInProgress = false; // I have thanked and send my profile.
                     } else {
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
                     }
@@ -990,6 +991,7 @@ public class Comm {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             memberProfileEOF = true;
+                            thanksInProgress = true;  // I have been thanked and given his profile so I thank as well so I can then give my profile
                         } else {
                             memberProfile.write((byte[])unwrapObject(contentObj));
                         }
