@@ -181,7 +181,7 @@ public class Comm {
     private static String CMD_TSTAT = "TS";   // Take stats (one packet will be enough)
     private static String CMD_GPFxx = "GP";   // Get profile)
     private static String CMD_TPFxx = "TP";   // Take profile
-    private static String CMD_THANX = "TX";   // I say thanks and provide my profile
+    private static String CMD_THANX = "THANX";   // I say thanks and provide my profile
     
     // Threads
     private volatile boolean sharing;
