@@ -869,9 +869,6 @@ public class TreeSharingTopComponent extends TopComponent {
         }
         
         stats.connections++;
-        if (stats.startDate == null) {
-            stats.startDate = new Date();
-        }
         stats.endDate = new Date();
         connectionStats.put(member, stats);
 
@@ -887,9 +884,6 @@ public class TreeSharingTopComponent extends TopComponent {
         if (stats == null) {  // should never happen but we never know !
             stats = new StatsData();
             stats.connections++;
-            if (stats.startDate == null) {
-                stats.startDate = new Date();
-            }
             stats.endDate = new Date();
         }
         

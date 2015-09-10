@@ -214,7 +214,7 @@ public class StatsPanel extends javax.swing.JPanel {
                 data[i][2] = list.get(member).match;
                 data[i][3] = formatter.format(list.get(member).startDate);
                 data[i][4] = formatter.format(list.get(member).endDate);
-                data[i][5] = list.get(member).profile.getIcon();
+                data[i][5] = (list.get(member).profile != null) ? list.get(member).profile.getIcon() : "";
                 i++;
             }
         }
