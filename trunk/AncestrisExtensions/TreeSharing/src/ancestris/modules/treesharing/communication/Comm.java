@@ -15,6 +15,7 @@ package ancestris.modules.treesharing.communication;
 import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import ancestris.util.swing.DialogManager;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -517,13 +518,16 @@ public class Comm {
     }
     
     
-    public MemberProfile getProfileMember(AncestrisMember member) {
+    public MemberProfile getProfileMember(AncestrisMember member, boolean connect) {
         if (memberProfile == null) {
             memberProfile = new ByteArrayOutputStream();
         } else {
             memberProfile.reset();
         }
         memberProfileEOF = false;
+        if (!connect) {
+            setCommunicationInProgress(true);
+        }
         call(member, CMD_GPFxx, null);
         return (MemberProfile) unwrapObject(memberProfile.toByteArray());
     }
@@ -779,7 +783,8 @@ public class Comm {
 
                 // Case of THANX command 
                 if (command.equals(CMD_THANX)) {
-                    owner.addUniqueFriend(member, getProfileMember(aMember)); // Note : during the time of getting the profile, reception is busy
+                    thanksInProgress = true;
+                    owner.addUniqueFriend(member, getProfileMember(aMember, false)); // Note : during the time of getting the profile, reception is busy
                     continue;
                 } 
 
@@ -1220,9 +1225,9 @@ public class Comm {
         return packets;
     }
 
-    private Map<Integer, byte[]> buildPacketsOfProfile(MemberProfile myProfile) {
+    private Map<Integer, byte[]> buildPacketsOfProfile(MemberProfile profile) {
         Map<Integer, byte[]> packets = new HashMap<Integer, byte[]>();
-        byte[] masterPacket = wrapObject(myProfile);
+        byte[] masterPacket = wrapObject(profile);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 1);
         for (Integer i = 0; i < nbPackets; i++) {
             if (i < nbPackets-1) {
@@ -1234,10 +1239,6 @@ public class Comm {
         return packets;
     }
 
-
-
-    
-    
     
 }
 

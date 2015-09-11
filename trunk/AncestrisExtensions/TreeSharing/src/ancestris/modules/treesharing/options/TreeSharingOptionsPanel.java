@@ -19,6 +19,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import org.apache.commons.io.FileUtils;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -262,7 +264,15 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         int ret = jfc.showDialog(jfc, NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserTitle"));
         if (ret == JFileChooser.APPROVE_OPTION) {
             File f = jfc.getSelectedFile();
-            if (!loadPhoto(f)) {
+            if (loadPhoto(f)) {
+                File dest = new File(System.getProperty("netbeans.user") + File.separator + f.getName());
+                try {
+                    FileUtils.copyFile(f, dest);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                photoPath = dest.getAbsolutePath();
+            } else {
                 jLabel8.setText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText"));
                 jLabel8.setIcon(null);
             }
@@ -276,7 +286,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                 if (bi != null) {
                     jLabel8.setText("");
                     jLabel8.setIcon(new ImageIcon(bi.getScaledInstance(jLabel8.getPreferredSize().width, jLabel8.getPreferredSize().height, Image.SCALE_SMOOTH)));
-                    photoPath = f.getAbsolutePath();
                     return true;
                 }
             } catch (Exception ex) {
@@ -301,12 +310,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         profile.email = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", "").trim();
         profile.city = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", "").trim();
         profile.country = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", "".trim());
-        try {
-            profile.photo = ImageIO.read(new File(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "")));
-        } catch (IOException ex) {
-            //Exceptions.printStackTrace(ex);
-            profile.photo = null;
-        }
+        profile.setPhotoBytes(new File(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "")));
         return profile;
     }
 

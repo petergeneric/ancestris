@@ -65,7 +65,7 @@ public class StatsPanel extends javax.swing.JPanel {
                 if (row > 0 && col == 5) {
                     MemberProfile mp = list.get(jTable1.getModel().getValueAt(row, 1)).profile;
                     DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel"),
-                            new ProfilePanel(mp)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+                            new ProfilePanel(mp, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
 
                 }
             }

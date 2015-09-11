@@ -38,6 +38,7 @@ public class AncestrisFriend extends JInternalFrame {
     private Set<MatchData> matchedIndis = null; 
     private Set<MatchData> matchedFams = null; 
     private MemberProfile memberProfile = null;
+    private MemberProfile myProfile = null;
 
     
     /**
@@ -187,7 +188,7 @@ public class AncestrisFriend extends JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel"),
-                            new ProfilePanel(memberProfile)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+                            new ProfilePanel(memberProfile, myProfile)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
     }//GEN-LAST:event_jButton3ActionPerformed
 
 
@@ -284,11 +285,12 @@ public class AncestrisFriend extends JInternalFrame {
         jLabel6.setText(""+iFams);
     }
 
-    public void setProfile(MemberProfile memberProfile) {
+    public void setProfile(MemberProfile memberProfile, MemberProfile myProfile) {
         this.memberProfile = memberProfile;
+        this.myProfile = myProfile;
         if (memberProfile != null) {
             jButton3.setEnabled(true);
-            jButton3.setIcon(new ImageIcon(memberProfile.photo));
+            jButton3.setIcon(memberProfile.getIcon());
         }
     }
 
