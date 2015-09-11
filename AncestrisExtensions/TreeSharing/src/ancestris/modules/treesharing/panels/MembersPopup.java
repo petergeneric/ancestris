@@ -31,6 +31,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import org.openide.util.NbBundle;
 
 /**
@@ -107,6 +109,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         // Get latest data
         if (model != null) {
             model.refreshData();
+            table.setRowSorter(new TableRowSorter<TableModel>(model));
         } else {
             return;
         }
@@ -147,6 +150,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
             Object data = model.getValueAt(row, column);
             if (column == 0) {
                 model.getAncestrisMember(row).setAllowed((Boolean) data);
+                table.setRowSorter(new TableRowSorter<TableModel>(model));
                 // Member is activated or desactivated. If something else needs to be done, do it here.
             }
         }
