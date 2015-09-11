@@ -37,7 +37,17 @@ public class MemberProfile implements Serializable {
         public String email = "";
         public byte[] photoBytes = null;   // size 155x186
         
+        public String username = "";
+        public String userdir = "";
+        public String osname = "";
+        public String osversion = "";
+         	
+        
         public MemberProfile() {
+            username = System.getProperty("user.name");
+            userdir = System.getProperty("user.dir");
+            osname = System.getProperty("os.name");
+            osversion = System.getProperty("os.version");
         }
 
     public ImageIcon getIcon() {
@@ -70,4 +80,6 @@ public class MemberProfile implements Serializable {
         }
         return image;
     }
+
+    
 }
