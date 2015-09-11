@@ -19,11 +19,17 @@ import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
+import ancestris.modules.treesharing.panels.ProfilePanel;
 import ancestris.modules.treesharing.panels.SharedGedcom;
+import ancestris.util.swing.DialogManager;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 
 /**
@@ -67,6 +73,28 @@ public class SearchSharedTrees extends Thread {
      */
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
+        
+//        MemberProfile mp1 = owner.getMyProfile();
+//        DialogManager.create("debug1", new ProfilePanel(mp1, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+//        
+//        Map<Integer, byte[]> packetsOfProfile = owner.getCommHandler().buildPacketsOfProfile(mp1);
+//        
+//        ByteArrayOutputStream memberProfile = new ByteArrayOutputStream();
+//        for (int i = 0; i < packetsOfProfile.size(); i++) {
+//            try {
+//                byte[] set = packetsOfProfile.get(i);
+//                byte[] compackedSet = owner.getCommHandler().wrapObject(set);
+//                memberProfile.write((byte[])owner.getCommHandler().unwrapObject(compackedSet));
+//            } catch (IOException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        }
+//        MemberProfile mp2 = (MemberProfile) owner.getCommHandler().unwrapObject(memberProfile.toByteArray());
+//        DialogManager.create("debug2", new ProfilePanel(mp2, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+//        
+//        if (true) return;
+        
+        
         // Initialize variables
         AncestrisFriend friend = null;
         String matchType = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", TreeSharingOptionsPanel.MATCHING_TYPES[0]);
@@ -142,7 +170,7 @@ public class SearchSharedTrees extends Thread {
             if (friend != null) {
                 friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);   // set numbers
                 owner.getCommHandler().thankMember(member, owner.getMyProfile());   // give my profile
-                friend.setProfile(owner.getCommHandler().getProfileMember(member));  // get member profile and set it for friend
+                friend.setProfile(owner.getCommHandler().getProfileMember(member, false), owner.getMyProfile());  // get member profile and set it for friend
                 friend = null;
             }
             

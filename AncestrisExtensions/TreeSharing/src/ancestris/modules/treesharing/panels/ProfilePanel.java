@@ -29,15 +29,19 @@ import org.openide.util.NbBundle;
 public class ProfilePanel extends javax.swing.JPanel {
 
     private MemberProfile memberProfile;
+    private MemberProfile myProfile;
     
     /**
      * Creates new form ProfilePanel
      */
-    public ProfilePanel(MemberProfile mp) {
+    public ProfilePanel(MemberProfile mp, MemberProfile myP) {
         this.memberProfile = mp;
+        this.myProfile = myP;
         initComponents();
-        jLabel1.setText("<html>" + mp.firstname + mp.lastname + "<br>" + mp.city + ", " + mp.country + "<br>" + mp.email + "</html>");
-        jLabel8.setIcon(new ImageIcon(mp.photo));
+        jLabel1.setText("<html><center><font size=14px>" + mp.firstname + " " + mp.lastname + "<br><br>" + mp.city + ", " + mp.country + "<br><br>" + mp.email + "</font></center></html>");
+        if (mp.getPhoto() != null) {
+           jLabel8.setIcon(new ImageIcon(mp.getPhoto()));
+        }
     }
 
     /**
@@ -57,7 +61,6 @@ public class ProfilePanel extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jLabel8.text")); // NOI18N
         jLabel8.setToolTipText(org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jLabel8.toolTipText")); // NOI18N
         jLabel8.setBorder(null);
         jLabel8.setIconTextGap(0);
@@ -73,6 +76,8 @@ public class ProfilePanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        jLabel8.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jLabel8.AccessibleContext.accessibleDescription")); // NOI18N
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jLabel1.text")); // NOI18N
@@ -133,8 +138,8 @@ public class ProfilePanel extends javax.swing.JPanel {
     private void sendMail(String to) {
         String uriStr = String.format("mailto:%s?subject=%s&body=%s",
                 to,
-                urlEncode(NbBundle.getMessage(ProfilePanel.class, "MailTitle")),
-                urlEncode(NbBundle.getMessage(ProfilePanel.class, "MailSubject")));
+                urlEncode(NbBundle.getMessage(ProfilePanel.class, "MailSubject")),
+                urlEncode(NbBundle.getMessage(ProfilePanel.class, "MailContent", memberProfile.firstname, myProfile.firstname + " " + myProfile.lastname)));
         try {
             Desktop.getDesktop().browse(new URI(uriStr));
         } catch (IOException ex) {
