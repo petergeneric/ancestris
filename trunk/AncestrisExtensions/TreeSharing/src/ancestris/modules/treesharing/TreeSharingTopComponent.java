@@ -630,8 +630,17 @@ public class TreeSharingTopComponent extends TopComponent {
     
     
     private boolean isMyProfileOK() {
+
+        String error = "";
+
         if (getPreferredPseudo().equals("")) {
-            DialogManager.create("", NbBundle.getMessage(TreeSharingTopComponent.class, "ERR_NullPseudo")).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            error = NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPseudo");;
+        } else {
+            error = TreeSharingOptionsPanel.getProfileError();
+        }
+
+        if (!error.isEmpty()) {
+            DialogManager.create("", error).setMessageType(DialogManager.ERROR_MESSAGE).show();
             settings.displayOptionsPanel();
             return false;
         }

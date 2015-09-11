@@ -26,6 +26,7 @@ import org.openide.util.NbPreferences;
 
 public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
+
     private final TreeSharingOptionsPanelController controller;
     private String photoPath = "";
     private boolean loading = false;
@@ -315,4 +316,30 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     }
 
 
+    public static String getProfileError() {
+        MemberProfile myProfile = getProfile();
+
+        if (myProfile.firstname.isEmpty() || myProfile.lastname.isEmpty()) {
+            return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullName");
+        }
+        if (!isValidEmailAddress(myProfile.email)) {
+            return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullEmail");
+        }
+        if (myProfile.city.isEmpty() || myProfile.country.isEmpty()) {
+            return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPlace");
+        }
+        if (myProfile.photoBytes.length == 0) {
+            return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPhoto");
+        }
+        return "";
+    }
+    
+    public static boolean isValidEmailAddress(String email) {
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
+    }
+
+    
 }
