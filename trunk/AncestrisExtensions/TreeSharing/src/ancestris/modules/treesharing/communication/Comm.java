@@ -153,8 +153,9 @@ public class Comm {
     private String FMT_IDX = "%03d";
     private int COMM_PACKET_NB = 1000;
     private static String STR_DELIMITER = " ";
-    private int COMM_RESPONSE_DELAY = 50;   // in milliseconds
+    private int REQUEST_TIMEOUT = 3;        // wait for that many seconds before calling timout 
     private int COMM_NB_FAILS = 6;          // give up after this nb of "no response"
+    private int COMM_RESPONSE_DELAY = 50;   // in milliseconds for the waiting loop
 
     // Commands
     // Registration on server
@@ -191,7 +192,6 @@ public class Comm {
     private int refreshDelay;
 
     // Call info
-    private int REQUEST_TIMEOUT = 5;
     private boolean communicationInProgress = false;
     private boolean connectionInProgress = false;
     private boolean expectedConnection = false;
