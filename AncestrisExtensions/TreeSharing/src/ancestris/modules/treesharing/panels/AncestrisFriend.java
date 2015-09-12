@@ -258,12 +258,12 @@ public class AncestrisFriend extends JInternalFrame {
         Gedcom gedcom = sg.getGedcom();
         for (MatchData line : matchedIndis) {
             if (line.myEntity.getGedcom() == gedcom) {
-                if (line.myEntity instanceof Indi) {
-                    indisToRemove.add(line);
-                }
-                if (line.myEntity instanceof Fam) {
-                    famsToRemove.add(line);
-                }
+                indisToRemove.add(line);
+            }
+        }
+        for (MatchData line : matchedFams) {
+            if (line.myEntity.getGedcom() == gedcom) {
+               famsToRemove.add(line);
             }
         }
         
