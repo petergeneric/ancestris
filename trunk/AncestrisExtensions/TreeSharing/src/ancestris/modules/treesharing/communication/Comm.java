@@ -1293,12 +1293,13 @@ public class Comm {
     private Map<Integer, byte[]> buildPacketsOfProfile(MemberProfile profile) {
         Map<Integer, byte[]> packets = new HashMap<Integer, byte[]>();
         byte[] masterPacket = wrapObject(profile);
-        int nbPackets = (int) (Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE / 8) + 1);   // make small packets to make sure it goes through
+        int nbResized = COMM_PACKET_SIZE / 8;
+        int nbPackets = (int) (Math.min(COMM_PACKET_NB, masterPacket.length / nbResized) + 1);   // make small packets to make sure it goes through
         for (Integer i = 0; i < nbPackets; i++) {
             if (i < nbPackets-1) {
-                packets.put(i, Arrays.copyOfRange(masterPacket, i*COMM_PACKET_SIZE, (i+1)*COMM_PACKET_SIZE));
+                packets.put(i, Arrays.copyOfRange(masterPacket, i*nbResized, (i+1)*nbResized));
             } else {
-                packets.put(i, Arrays.copyOfRange(masterPacket, i*COMM_PACKET_SIZE, masterPacket.length));
+                packets.put(i, Arrays.copyOfRange(masterPacket, i*nbResized, masterPacket.length));
             }
         }
         return packets;
