@@ -31,9 +31,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     private String photoPath = "";
     private boolean loading = false;
     
-    public static final String[] MATCHING_TYPES = new String[] { 
-        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match1"), 
-        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match2")
+    public static final int NO_MATCH = 0; 
+    public static final int EXACT_MATCH = 1; 
+    public static final int FLASH_MATCH = 2; 
+
+    public static final String[] MATCHING_MENU = new String[] { 
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match1"), // both exact or loose
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match2")  // exact only
     };
 
     TreeSharingOptionsPanel(TreeSharingOptionsPanelController controller) {
@@ -41,7 +45,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         initComponents();
         loading = false;
         // TODO listen to changes in form fields and call controller.changed()
-    }
+    };
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -77,7 +81,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel3.text")); // NOI18N
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(MATCHING_TYPES));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(MATCHING_MENU));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel2.text")); // NOI18N
 
@@ -218,7 +222,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         photoPath = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "");
         loadPhoto(new File(photoPath));
         jCheckBox1.setSelected(NbPreferences.forModule(TreeSharingOptionsPanel.class).getBoolean("RespectPrivacy", true));
-        jComboBox1.setSelectedItem(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", MATCHING_TYPES[0]));
+        jComboBox1.setSelectedItem(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", MATCHING_MENU[0]));
     }
 
     void store() {
@@ -340,6 +344,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         java.util.regex.Matcher m = p.matcher(email);
         return m.matches();
     }
+
+
+    
+    public static String getMatchType() {
+        return NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", MATCHING_MENU[0]);
+    }
+
 
     
 }
