@@ -651,7 +651,7 @@ public class Comm {
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
             byte[] set = packetsOfProfile.get(iPacket);
             if (set == null) {
-                commandIndexed = CMD_TPFxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
+                commandIndexed = command + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                 sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
                 break;
             } else {
@@ -1293,7 +1293,7 @@ public class Comm {
     private Map<Integer, byte[]> buildPacketsOfProfile(MemberProfile profile) {
         Map<Integer, byte[]> packets = new HashMap<Integer, byte[]>();
         byte[] masterPacket = wrapObject(profile);
-        int nbPackets = (int) (Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE) + 1);
+        int nbPackets = (int) (Math.min(COMM_PACKET_NB, masterPacket.length / COMM_PACKET_SIZE / 8) + 1);   // make small packets to make sure it goes through
         for (Integer i = 0; i < nbPackets; i++) {
             if (i < nbPackets-1) {
                 packets.put(i, Arrays.copyOfRange(masterPacket, i*COMM_PACKET_SIZE, (i+1)*COMM_PACKET_SIZE));
