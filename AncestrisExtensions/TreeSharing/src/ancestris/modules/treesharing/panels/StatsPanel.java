@@ -63,7 +63,7 @@ public class StatsPanel extends javax.swing.JPanel {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int row = jTable1.rowAtPoint(evt.getPoint());
                 int col = jTable1.columnAtPoint(evt.getPoint());
-                if (row > 0 && col == 5) {
+                if (row >= 0 && col == 5) {
                     MemberProfile mp = list.get(jTable1.getModel().getValueAt(row, 1)).profile;
                     DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel"),
                             new ProfilePanel(mp, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
@@ -164,11 +164,11 @@ public class StatsPanel extends javax.swing.JPanel {
 
     private void formatTable(JTable table) {
         table.setAutoCreateRowSorter(true);
-        table.getColumnModel().getColumn(0).setPreferredWidth(90);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table.getColumnModel().getColumn(2).setPreferredWidth(40);
-        table.getColumnModel().getColumn(3).setPreferredWidth(140);
-        table.getColumnModel().getColumn(4).setPreferredWidth(140);
+        table.getColumnModel().getColumn(3).setPreferredWidth(160);
+        table.getColumnModel().getColumn(4).setPreferredWidth(160);
         table.getColumnModel().getColumn(5).setPreferredWidth(50);
         table.setFillsViewportHeight(true);
 
@@ -179,7 +179,7 @@ public class StatsPanel extends javax.swing.JPanel {
         table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-        table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        //table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
         
         if (table == jTable2) {
             table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
@@ -216,7 +216,7 @@ public class StatsPanel extends javax.swing.JPanel {
                 data[i][2] = list.get(member).match;
                 data[i][3] = formatter.format(list.get(member).startDate);
                 data[i][4] = formatter.format(list.get(member).endDate);
-                data[i][5] = (ImageIcon) ((list.get(member).profile != null) ? list.get(member).profile.getIcon() : null);
+                data[i][5] = (ImageIcon) ((list.get(member).profile != null) ? list.get(member).profile.getIcon() : new ImageIcon());
                 i++;
             }
         }
@@ -243,11 +243,7 @@ public class StatsPanel extends javax.swing.JPanel {
 
         @Override
         public Class getColumnClass(int c) {
-            if (c == 5) {
-                return ImageIcon.class;
-            } else {
-                return getValueAt(0, c).getClass();
-            }
+            return getValueAt(0, c).getClass();
         }
 
         @Override
