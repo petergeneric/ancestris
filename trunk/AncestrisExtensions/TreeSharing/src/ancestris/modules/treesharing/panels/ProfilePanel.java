@@ -63,7 +63,6 @@ public class ProfilePanel extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setToolTipText(org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jLabel8.toolTipText")); // NOI18N
         jLabel8.setBorder(null);
         jLabel8.setIconTextGap(0);
         jLabel8.setPreferredSize(new java.awt.Dimension(155, 186));
@@ -88,7 +87,7 @@ public class ProfilePanel extends javax.swing.JPanel {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/email.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jButton1.text")); // NOI18N
-        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jButton1.toolTipText")); // NOI18N
+        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jButton1.toolTipText", memberProfile.firstname + " " + memberProfile.lastname));
         jButton1.setIconTextGap(0);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

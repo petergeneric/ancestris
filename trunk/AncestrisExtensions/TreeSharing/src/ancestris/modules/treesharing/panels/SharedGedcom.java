@@ -22,6 +22,10 @@ import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
+import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyPlace;
+import genj.gedcom.TagPath;
+import genj.gedcom.time.PointInTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -455,7 +459,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
             if (indi != null) {
                 String str = indi.getLastName();
                 if (str != null && commonIndiLastnames.contains(str.trim())) {
-                    ret.add(new GedcomIndi(gedcom, indi));
+                    GedcomIndi gedcomIndi = new GedcomIndi();
+                    initiateValue(gedcomIndi, indi);   // I'd rather have no code in the GedcomIndi object for bandwidth and size reasons
+                    ret.add(gedcomIndi);
                 }
             }
         }
@@ -474,7 +480,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         for (Entity entity : entities) {
             Fam fam = (Fam) entity;
             if (commonFamLastnames.contains(getLastName(fam))) {
-                ret.add(new GedcomFam(gedcom, fam));
+                GedcomFam gedcomFam = new GedcomFam();
+                initiateValue(gedcomFam, fam);   // I'd rather have no code in the GedcomFam object for bandwidth and size reasons
+                ret.add(gedcomFam);
             }
         }
         return ret;
@@ -583,6 +591,100 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
             ret.add(data.myEntity.getId());
         }
         return ret.size();
+    }
+
+    
+    
+    
+    
+    private void initiateValue(GedcomIndi gedcomIndi, Indi indi) {
+        gedcomIndi.gedcomName = gedcom.getName();
+        gedcomIndi.entityID = indi.getId();
+        gedcomIndi.indiLastName = indi.getLastName();
+        gedcomIndi.indiFirstName = indi.getFirstName();
+        gedcomIndi.indiBirthDate = getYear(indi.getBirthDate());
+        gedcomIndi.indiBirthPlace = getBirthPlace(indi);
+        gedcomIndi.indiDeathDate = getYear(indi.getDeathDate());
+        gedcomIndi.indiDeathPlace = getDeathPlace(indi);
+    }
+
+    private void initiateValue(GedcomFam gedcomFam, Fam fam) {
+        gedcomFam.gedcomName = gedcom.getName();
+        gedcomFam.entityID = fam.getId();
+
+        gedcomFam.famMarrDate = getYear(fam.getMarriageDate());
+        gedcomFam.famMarrPlace = getMarrPlace(fam);
+        Indi husband = fam.getHusband();
+        if (husband != null) {
+            gedcomFam.husbLastName = husband.getLastName();
+            gedcomFam.husbFirstName = husband.getFirstName();
+            gedcomFam.husbBirthDate = getYear(husband.getBirthDate());
+            gedcomFam.husbBirthPlace = getBirthPlace(husband);
+            gedcomFam.husbDeathDate = getYear(husband.getDeathDate());
+            gedcomFam.husbDeathPlace = getDeathPlace(husband);
+        } else {
+            gedcomFam.husbLastName = "";
+            gedcomFam.husbFirstName = "";
+            gedcomFam.husbBirthDate = "0";
+            gedcomFam.husbBirthPlace = PropertyPlace.JURISDICTION_SEPARATOR;
+            gedcomFam.husbDeathDate = "0";
+            gedcomFam.husbDeathPlace = PropertyPlace.JURISDICTION_SEPARATOR;
+        }
+        Indi wife = fam.getWife();
+        if (wife != null) {
+            gedcomFam.wifeLastName = wife.getLastName();
+            gedcomFam.wifeFirstName = wife.getFirstName();
+            gedcomFam.wifeBirthDate = getYear(wife.getBirthDate());
+            gedcomFam.wifeBirthPlace = getBirthPlace(wife);
+            gedcomFam.wifeDeathDate = getYear(wife.getDeathDate());
+            gedcomFam.wifeDeathPlace = getDeathPlace(wife);
+        } else {
+            gedcomFam.wifeLastName = "";
+            gedcomFam.wifeFirstName = "";
+            gedcomFam.wifeBirthDate = "0";
+            gedcomFam.wifeBirthPlace = PropertyPlace.JURISDICTION_SEPARATOR;
+            gedcomFam.wifeDeathDate = "0";
+            gedcomFam.wifeDeathPlace = PropertyPlace.JURISDICTION_SEPARATOR;
+        }
+    }
+
+    private String getYear(PropertyDate date) {
+        if (date == null || !date.isValid()) {
+            return "0";
+        }
+        PointInTime pit = date.getStart();
+        return "" + (pit != null ? pit.getYear() : 0);
+    }
+
+    private String getBirthPlace(Indi indi) {
+        PropertyPlace prop = (PropertyPlace) indi.getProperty(new TagPath("INDI:BIRT:PLAC"));
+        return getCityCountry(prop);
+    }
+
+    private String getDeathPlace(Indi indi) {
+        PropertyPlace prop = (PropertyPlace) indi.getProperty(new TagPath("INDI:DEATH:PLAC"));
+        return getCityCountry(prop);
+    }
+
+    private String getMarrPlace(Fam fam) {
+        PropertyPlace prop = (PropertyPlace) fam.getProperty(new TagPath("FAM:MARR:PLAC"));
+        return getCityCountry(prop);
+    }
+
+    private String getCityCountry(PropertyPlace prop) {
+        if (prop == null) {
+            return "";
+        }
+        String city = prop.getCity();
+        String[] bits = prop.getFormat();
+        String country = "";
+        if (bits != null && bits.length != 0) {
+            String juri = prop.getJurisdiction(bits.length-1);
+            if (juri != null) {
+                country = juri;
+            }
+        }
+        return city + PropertyPlace.JURISDICTION_SEPARATOR + country;
     }
 
 
