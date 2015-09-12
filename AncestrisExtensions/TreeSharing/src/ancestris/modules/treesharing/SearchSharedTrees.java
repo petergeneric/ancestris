@@ -265,13 +265,40 @@ public class SearchSharedTrees extends Thread {
      */
     private int isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, String matchType) {
 
-        // Detect exact match first
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
-            String la1 = myIndi.indiLastName;
-            String fi1 = friendIndi.indiFirstName;
-            String ci1 = myIndi.indiBirthPlace;
-            String co1 = friendIndi.indiBirthPlace;
+        // 
+        if (false) {
             
+            // make it easier for the formulas for myIndi
+            String ln1 = myIndi.indiLastName;
+            String fn1 = myIndi.indiFirstName;
+            String pl11 = myIndi.indiBirthPlace + "/" + myIndi.indiBirthPlace; // city/country
+            String pl12 = myIndi.indiDeathPlace + "/" + myIndi.indiDeathPlace; // city/country
+            int yrMin1 = 1900; // myIndi.indiBirthDate.year
+            int yrMax1 = 1990; // myIndi.indiDeathDate.year
+            
+            // make it easier for the formulas for friendIndi
+            String ln2 = friendIndi.indiLastName;
+            String fn2 = friendIndi.indiFirstName;
+            String pl21 = friendIndi.indiBirthPlace + "/" + friendIndi.indiBirthPlace; // city/country
+            String pl22 = friendIndi.indiDeathPlace + "/" + friendIndi.indiDeathPlace; // city/country
+            int yrMin2 = 1900; // friendIndi.indiBirthDate.year
+            int yrMax2 = 1990; // friendIndi.indiDeathDate.year
+            
+            // Formulas : Detect exact match first
+            if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {
+                return TreeSharingOptionsPanel.EXACT_MATCH;
+            }
+            // Formulas : Detect flash match
+            if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
+                if (ln1.equals(ln2)) {
+                    if (pl11.equals(pl21) || pl11.equals(pl22)) {
+                        if ((yrMin1<=yrMin2 && yrMin2<yrMax1) || (yrMin1>=yrMin2 && yrMin1 < yrMax2)) {  // dates overlap
+                            return TreeSharingOptionsPanel.FLASH_MATCH;
+                        }
+                    }
+                }
+            }
+            return TreeSharingOptionsPanel.NO_MATCH;
         }
         
         
@@ -288,6 +315,48 @@ public class SearchSharedTrees extends Thread {
     }
 
     private int isSameFamily(GedcomFam myFamily, GedcomFam friendFam, String matchType) {
+
+        
+        // 
+        if (false) {
+            
+            // make it easier for the formulas for myIndi
+            String hln1 = myFamily.husbLastName;
+            String hfn1 = myFamily.husbFirstName;
+            String pl11 = myFamily.husbBirthDate + "/" + myFamily.husbBirthPlace; // city/country
+            String pl12 = myFamily.husbDeathPlace + "/" + myFamily.husbDeathDate; // city/country
+            int yrMin1 = 1900; // myFamily.husbBirthDate.year
+            int yrMax1 = 1990; // myFamily.husbDeathDate.year
+            
+            // make it easier for the formulas for friendIndi
+//            String ln2 = friendFam.indiLastName;
+//            String fn2 = friendFam.indiFirstName;
+//            String pl21 = friendFam.indiBirthPlace + "/" + friendFam.indiBirthPlace; // city/country
+//            String pl22 = friendFam.indiDeathPlace + "/" + friendFam.indiDeathPlace; // city/country
+//            int yrMin2 = 1900; // friendFam.indiBirthDate.year
+//            int yrMax2 = 1990; // friendFam.indiDeathDate.year
+//            
+//            // Formulas : Detect exact match first
+//            if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {
+//                return TreeSharingOptionsPanel.EXACT_MATCH;
+//            }
+//            // Formulas : Detect flash match
+//            if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
+//                if (ln1.equals(ln2)) {
+//                    if (pl11.equals(pl21) || pl11.equals(pl22)) {
+//                        if ((yrMin1<=yrMin2 && yrMin2<yrMax1) || (yrMin1>=yrMin2 && yrMin1 < yrMax2)) {  // dates overlap
+//                            return TreeSharingOptionsPanel.FLASH_MATCH;
+//                        }
+//                    }
+//                }
+//            }
+            return TreeSharingOptionsPanel.NO_MATCH;
+        }
+        
+        
+        
+        
+        
         if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbLastName != null && !myFamily.husbLastName.equals(friendFam.husbLastName)) {
             return TreeSharingOptionsPanel.NO_MATCH;
         }
