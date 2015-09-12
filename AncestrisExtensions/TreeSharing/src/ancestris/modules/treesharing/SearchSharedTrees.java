@@ -97,7 +97,7 @@ public class SearchSharedTrees extends Thread {
         
         // Initialize variables
         AncestrisFriend friend = null;
-        String matchType = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", TreeSharingOptionsPanel.MATCHING_TYPES[0]);
+        String matchType = TreeSharingOptionsPanel.getMatchType();
         List<AncestrisMember> copyOfAncestrisMembers = (List) ((ArrayList) ancestrisMembers).clone(); // Copy ancestris members to avoid concurrent access to the list while using it
         Set<String> myIndiLastnames = owner.getCommHandler().getMySharedIndiLastnames(sharedGedcoms);
         Set<String> myFamLastnames = owner.getCommHandler().getMySharedFamLastnames(sharedGedcoms);  
@@ -198,6 +198,7 @@ public class SearchSharedTrees extends Thread {
     private AncestrisFriend addCommonIndis(List<SharedGedcom> sharedGedcoms, Set<GedcomIndi> myGedcomIndis, Set<GedcomIndi> memberGedcomIndis, String matchType, AncestrisMember member) {
         
         AncestrisFriend friend = null;
+        int retMatch;
 
         // Loop on each of *my* shared gedcoms
         for (SharedGedcom sharedGedcom : sharedGedcoms) {
@@ -207,11 +208,12 @@ public class SearchSharedTrees extends Thread {
 
                 // Loop all *member* entities
                 for (GedcomIndi memberGedcomIndi : memberGedcomIndis) {
-                    if (isSameIndividual(myGedcomIndi, memberGedcomIndi, matchType)) { // we have a match
+                    retMatch = isSameIndividual(myGedcomIndi, memberGedcomIndi, matchType);
+                    if (retMatch != TreeSharingOptionsPanel.NO_MATCH) { // we have a match
                         friend = owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomIndi.entityID), 
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomIndi.gedcomName, memberGedcomIndi.entityID), 
-                                member);
+                                member, retMatch);
                     }
                     continue;
                 } // endfor memberEntities
@@ -227,6 +229,7 @@ public class SearchSharedTrees extends Thread {
     private AncestrisFriend addCommonFams(List<SharedGedcom> sharedGedcoms, Set<GedcomFam> myGedcomFams, Set<GedcomFam> memberGedcomFams, String matchType, AncestrisMember member) {
         
         AncestrisFriend friend = null;
+        int retMatch;
 
         // Loop on each of *my* shared gedcoms
         for (SharedGedcom sharedGedcom : sharedGedcoms) {
@@ -236,11 +239,12 @@ public class SearchSharedTrees extends Thread {
 
                 // Loop all *member* entities
                 for (GedcomFam memberGedcomFam : memberGedcomFams) {
-                    if (isSameFamily(myGedcomFam, memberGedcomFam, matchType)) { // we have a match
+                    retMatch = isSameFamily(myGedcomFam, memberGedcomFam, matchType);
+                    if (retMatch != TreeSharingOptionsPanel.NO_MATCH) { // we have a match
                         friend = owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomFam.entityID), 
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomFam.gedcomName, memberGedcomFam.entityID), 
-                                member);
+                                member, retMatch);
                     }
                     continue;
                 } // endfor memberEntities
@@ -258,40 +262,56 @@ public class SearchSharedTrees extends Thread {
     
     /**
      * Match functions for indi and fam:
-     *  TODO: enrich match function
-     *  Reminder : purpose is not to garantee a match but to suggest to the user a possible match
-     *  Later introduce colors : green for exact match on all criteria, orange on some only
+     * - Purpose is not to garantee a match but to suggest to the user a possible match
+     * - Compared data have to rely on elements most commonly found in any genealogy : name, place, dates
+     * - Exact match will be as exact as:
+     *      - individuals : exact lastname, exact firstname, exact birth city/country, exact birth year, and if available, same for death
+     *      - families : same for both husband and wife
+     * - Flash match will be like in a flash report ("2 people have a chance to have been at the same place at the same time"):
+     *      - individuals : exact lastname, any first name (not compared), across all events : one city/country in common and overlapping time period (min/max do cross)
+     *      - families : same for both husband and wife
      */
-    private boolean isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, String matchType) {
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.indiLastName.equals(friendIndi.indiLastName)) {
-            return false;
+    private int isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, String matchType) {
+
+        // Detect exxact match first
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
+            String la1 = myIndi.indiLastName;
+            String fi1 = friendIndi.indiFirstName;
+            String ci1 = myIndi.indiBirthPlace;
+            String co1 = friendIndi.indiBirthPlace;
+            
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && !myIndi.indiFirstName.equals(friendIndi.indiFirstName)) {
-            return false;
+        
+        
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && !myIndi.indiLastName.equals(friendIndi.indiLastName)) {
+            return TreeSharingOptionsPanel.NO_MATCH;
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0])) {
-            return true;
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && !myIndi.indiFirstName.equals(friendIndi.indiFirstName)) {
+            return TreeSharingOptionsPanel.NO_MATCH;
         }
-        return false;
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
+            return TreeSharingOptionsPanel.EXACT_MATCH;
+        }
+        return TreeSharingOptionsPanel.NO_MATCH;
     }
 
-    private boolean isSameFamily(GedcomFam myFamily, GedcomFam friendFam, String matchType) {
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && myFamily.husbLastName != null && !myFamily.husbLastName.equals(friendFam.husbLastName)) {
-            return false;
+    private int isSameFamily(GedcomFam myFamily, GedcomFam friendFam, String matchType) {
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbLastName != null && !myFamily.husbLastName.equals(friendFam.husbLastName)) {
+            return TreeSharingOptionsPanel.NO_MATCH;
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && myFamily.husbFirstName != null && !myFamily.husbFirstName.equals(friendFam.husbFirstName)) {
-            return false;
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbFirstName != null && !myFamily.husbFirstName.equals(friendFam.husbFirstName)) {
+            return TreeSharingOptionsPanel.NO_MATCH;
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && myFamily.wifeLastName != null && !myFamily.wifeLastName.equals(friendFam.wifeLastName)) {
-            return false;
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.wifeLastName != null && !myFamily.wifeLastName.equals(friendFam.wifeLastName)) {
+            return TreeSharingOptionsPanel.NO_MATCH;
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0]) && myFamily.wifeFirstName != null && !myFamily.wifeFirstName.equals(friendFam.wifeFirstName)) {
-            return false;
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.wifeFirstName != null && !myFamily.wifeFirstName.equals(friendFam.wifeFirstName)) {
+            return TreeSharingOptionsPanel.NO_MATCH;
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_TYPES[0])) {
-            return true;
+        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
+            return TreeSharingOptionsPanel.EXACT_MATCH;
         }
-        return false;
+        return TreeSharingOptionsPanel.NO_MATCH;
     }
     
     

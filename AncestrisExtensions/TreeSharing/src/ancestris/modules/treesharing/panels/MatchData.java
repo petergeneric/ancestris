@@ -22,12 +22,12 @@ public class MatchData {
     
     public Entity myEntity;
     public FriendGedcomEntity friendGedcomEntity;
-    public String matchType;
+    public int matchResult;
     
-    public MatchData(Entity entity, FriendGedcomEntity otherEntity, String type) {
+    public MatchData(Entity entity, FriendGedcomEntity otherEntity, int matchResult) {
         this.myEntity = entity;
         this.friendGedcomEntity = otherEntity;
-        this.matchType = type;
+        this.matchResult = matchResult;
     }
 
 }
