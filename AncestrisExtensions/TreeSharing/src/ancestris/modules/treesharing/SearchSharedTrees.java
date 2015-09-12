@@ -320,22 +320,31 @@ public class SearchSharedTrees extends Thread {
         // 
         if (false) {
             
-            // make it easier for the formulas for myIndi
+            // make it easier for the formulas for myFamily
             String hln1 = myFamily.husbLastName;
             String hfn1 = myFamily.husbFirstName;
-            String pl11 = myFamily.husbBirthDate + "/" + myFamily.husbBirthPlace; // city/country
-            String pl12 = myFamily.husbDeathPlace + "/" + myFamily.husbDeathDate; // city/country
+            String pl11 = myFamily.husbBirthPlace + "/" + myFamily.husbBirthPlace; // city/country
+            String pl12 = myFamily.husbDeathPlace + "/" + myFamily.husbDeathPlace; // city/country
             int yrMin1 = 1900; // myFamily.husbBirthDate.year
             int yrMax1 = 1990; // myFamily.husbDeathDate.year
+            String wln1 = myFamily.wifeLastName;
+            String wfn1 = myFamily.wifeFirstName;
+            String pl13 = myFamily.wifeBirthPlace + "/" + myFamily.wifeBirthPlace; // city/country
+            String pl14 = myFamily.wifeDeathPlace + "/" + myFamily.wifeDeathPlace; // city/country
+            yrMin1 = Math.min(yrMin1, 1900); // myFamily.wifeBirthDate.year
+            yrMax1 = Math.max(yrMax1, 1900); // myFamily.wifeDeathDate.year
+            String pl15 = myFamily.famMarrPlace + "/" + myFamily.famMarrPlace; // city/country
+            yrMin1 = Math.min(yrMin1, 1900); // myFamily.wifeBirthDate.year
+            yrMax1 = Math.max(yrMax1, 1900); // myFamily.wifeDeathDate.year
             
-            // make it easier for the formulas for friendIndi
-//            String ln2 = friendFam.indiLastName;
-//            String fn2 = friendFam.indiFirstName;
-//            String pl21 = friendFam.indiBirthPlace + "/" + friendFam.indiBirthPlace; // city/country
-//            String pl22 = friendFam.indiDeathPlace + "/" + friendFam.indiDeathPlace; // city/country
-//            int yrMin2 = 1900; // friendFam.indiBirthDate.year
-//            int yrMax2 = 1990; // friendFam.indiDeathDate.year
-//            
+            // make it easier for the formulas for friendFam
+            String ln2 = friendFam.husbLastName;
+            String fn2 = friendFam.husbFirstName;
+            String pl21 = friendFam.husbBirthPlace + "/" + friendFam.husbBirthPlace; // city/country
+            String pl22 = friendFam.husbDeathPlace + "/" + friendFam.husbDeathPlace; // city/country
+            int yrMin2 = 1900; // friendFam.husbBirthDate.year
+            int yrMax2 = 1990; // friendFam.husbDeathDate.year
+            
 //            // Formulas : Detect exact match first
 //            if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {
 //                return TreeSharingOptionsPanel.EXACT_MATCH;
