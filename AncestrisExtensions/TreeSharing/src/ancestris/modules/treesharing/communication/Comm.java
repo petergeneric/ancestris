@@ -179,9 +179,9 @@ public class Comm {
     private static String CMD_TFDxx = "TD";   // Take family details
     private static String CMD_GSTAT = "GS";   // Get stats (one packet will be enough)
     private static String CMD_TSTAT = "TS";   // Take stats (one packet will be enough)
-    private static String CMD_GPFxx = "GP";   // Get profile)
+    private static String CMD_GPFxx = "GP";   // Get profile
     private static String CMD_TPFxx = "TP";   // Take profile
-    private static String CMD_THANX = "THANX";   // I say thanks and provide my profile
+    private static String CMD_TXPxx = "TX";   // I say thanks and provide my profile
     
     // Threads
     private volatile boolean sharing;
@@ -196,7 +196,6 @@ public class Comm {
     private String expectedCallIPAddress = null;
     private String expectedCallPortAddress = null;
     private boolean expectedCall = false;
-    private static boolean thanksInProgress = false;
 
     // Possible data objects to be received
     private boolean gedcomNumbersEOF = false;
@@ -211,6 +210,7 @@ public class Comm {
     private Set<GedcomFam> listOfFamDetails = null;
     private boolean memberProfileEOF = false;
     private ByteArrayOutputStream memberProfile = null;
+    private ByteArrayOutputStream memberProfileRcv = null;
     
     // Possible data objects to be sent by packets
     private Map<Integer, Set<String>> packetsOfIndiLastnames = null;
@@ -517,24 +517,21 @@ public class Comm {
     }
     
     
-    public MemberProfile getProfileMember(AncestrisMember member, boolean connect) {
+    public MemberProfile getProfileMember(AncestrisMember member) {
         if (memberProfile == null) {
             memberProfile = new ByteArrayOutputStream();
         } else {
             memberProfile.reset();
         }
         memberProfileEOF = false;
-        if (!connect) {
-            setCommunicationInProgress(true);
-        }
         call(member, CMD_GPFxx, null);
         return (MemberProfile) unwrapObject(memberProfile.toByteArray());
     }
     
 
-    public void thankMember(AncestrisMember member, MemberProfile myProfile) {
-        thanksInProgress = true;
-        sendCommand(CMD_THANX, owner.getRegisteredPseudo() + STR_DELIMITER, null, member.getIPAddress(), Integer.valueOf(member.getPortAddress()));
+    public void thankMember(AncestrisMember member) {
+        packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
+        put(member, CMD_TXPxx, packetsOfProfile);
     }
         
             
@@ -628,6 +625,48 @@ public class Comm {
         LOG.log(Level.FINE, "...(END) Returned call from member " + member.getMemberName() + " after " + iPacket + " packets");
     }
 
+    
+    /**
+     * Generic call method to friend and expect something in return
+     */
+    public void put(AncestrisMember member, String command, Map<Integer, byte[]> packets) {
+
+        if (socket == null || socket.isClosed()) {
+            return;
+        }
+        
+        // Connect to Member only if no communication in progress
+        if (!communicationInProgress && !connectToMember(member)) {
+            return;
+        }
+        
+        // Loop on packets. Last packet number is COMM_PACKET_NB-1.
+        String senderIP = member.getIPAddress();
+        int senderPort = Integer.valueOf(member.getPortAddress());
+        int iPacket = 0;
+        LOG.log(Level.FINE, "Puting member " + member.getMemberName() + " with " + command);
+        while (iPacket < COMM_PACKET_NB) {  // stop at the last packet 
+            String commandIndexed = command + String.format(FMT_IDX, iPacket);
+            byte[] set = packetsOfProfile.get(iPacket);
+            if (set == null) {
+                commandIndexed = CMD_TPFxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
+                sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
+                break;
+            } else {
+                sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
+            }
+            // wait a bit before sending next packet
+            try {
+                TimeUnit.MILLISECONDS.sleep(COMM_RESPONSE_DELAY);
+            } catch (InterruptedException ex) {
+                //Exceptions.printStackTrace(ex);
+            }
+        }
+        LOG.log(Level.FINE, "...(END) Enf of put to member " + member.getMemberName() + " with " + iPacket + " packets");
+    }
+
+    
+    
     
     private boolean connectToMember(AncestrisMember member) {
         
@@ -757,7 +796,7 @@ public class Comm {
                     LOG.log(Level.FINE, "...Calling member " + member + " is not in the list of members.");
                     continue;
                 } else if (!aMember.isAllowed() ||  !senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress())) {
-                    LOG.log(Level.FINE, "...Member " + member + " is NOT allowed or address does not matcvh the one I know. Do not reply.");
+                    LOG.log(Level.FINE, "...Member " + member + " is NOT allowed or address does not match the one I know. Do not reply.");
                     continue;
                 } 
                 contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentStr.length() + STR_DELIMITER.length(), bytesReceived.length);
@@ -779,15 +818,9 @@ public class Comm {
                     continue;
                 } 
 
-                // Case of THANX command 
-                if (command.equals(CMD_THANX)) {
-                    thanksInProgress = true;
-                    owner.addUniqueFriend(member, getProfileMember(aMember, false)); // Note : during the time of getting the profile, reception is busy
-                    continue;
-                } 
 
                 
-                
+                //********************** Get and receive statistics **********************
                 
                 // Case of CMD_GSTAT command (member asks for the number of entities. Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GSTAT)) {
@@ -817,6 +850,8 @@ public class Comm {
                 
                 
                 
+                //********************** Get and receive lastnames **********************
+                
                 // Case of CMD_GILxx command (member asks for the list of lastnames I am sharing). Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GILxx)) {
                     Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
@@ -843,6 +878,7 @@ public class Comm {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfIndiLastnamesEOF = true;
+                            packetsOfIndiLastnames = null;
                         } else {
                             listOfIndiLastnames.addAll((Set<String>) unwrapObject(contentObj));
                         }
@@ -854,6 +890,7 @@ public class Comm {
                 
                 
                 
+                //********************** Get and receive individuals **********************
                 
                 // Case of CMD_GIDxx command (member asks for the details on individuals for a given list of lastnames. Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GIDxx)) {
@@ -881,6 +918,7 @@ public class Comm {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfIndiDetailsEOF = true;
+                            packetsOfIndiDetails = null;
                         } else {
                             listOfIndiDetails.addAll((Set<GedcomIndi>) unwrapObject(contentObj));
                         }
@@ -891,6 +929,7 @@ public class Comm {
 
                 
                 
+                //********************** Get and receive family names **********************
                 
                 // Case of CMD_GFLxx command (member asks for the list of lastnames I am sharing). Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GFLxx)) {
@@ -917,6 +956,7 @@ public class Comm {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfFamLastnamesEOF = true;
+                            packetsOfFamLastnames = null;
                         } else {
                             listOfFamLastnames.addAll((Set<String>) unwrapObject(contentObj));
                         }
@@ -928,6 +968,7 @@ public class Comm {
                 
                 
                 
+                //********************** Get and receive families **********************
                 
                 // Case of CMD_GFDxx command (member asks for the details on individuals for a given list of lastnames. Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GFDxx)) {
@@ -954,6 +995,7 @@ public class Comm {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfFamDetailsEOF = true;
+                            packetsOfFamDetails = null;
                         } else {
                             listOfFamDetails.addAll((Set<GedcomFam>) unwrapObject(contentObj));
                         }
@@ -964,12 +1006,10 @@ public class Comm {
 
                 
                 
+                //********************** Get and receive profile **********************
                 
                 // Case of CMD_GPFxx command (member asks for the profile. Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GPFxx)) {
-                    if (!thanksInProgress) {
-                        continue;
-                    }
                     Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                     if (iPacket == 0 || packetsOfProfile == null) {
                         packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
@@ -980,7 +1020,6 @@ public class Comm {
                     if (set == null) {
                         commandIndexed = CMD_TPFxx + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
-                        thanksInProgress = false; // I have thanked and send my profile.
                     } else {
                         sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
                     }
@@ -994,7 +1033,7 @@ public class Comm {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             memberProfileEOF = true;
-                            thanksInProgress = true;  // I have been thanked and given his profile so I thank as well so I can then give my profile
+                            packetsOfProfile = null;
                         } else {
                             memberProfile.write((byte[])unwrapObject(contentObj));
                         }
@@ -1004,6 +1043,27 @@ public class Comm {
                 }
 
                 
+                
+                
+                
+                //********************** Receive profile **********************
+                
+                // Case of THANX Profile command, take profile and log in incoming stats
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TXPxx)) {
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
+                    if (iPacket == 0) { // first packet
+                        if (memberProfileRcv == null) {
+                            memberProfileRcv = new ByteArrayOutputStream();
+                        } else {
+                            memberProfileRcv.reset();
+                        }
+                    } else if (iPacket == COMM_PACKET_NB - 1) { // last packet, log in stats
+                        owner.addUniqueFriend(member, (MemberProfile) unwrapObject(memberProfileRcv.toByteArray())); 
+                    } else {
+                        memberProfileRcv.write((byte[]) unwrapObject(contentObj));
+                    }
+                    continue;
+                }
                 
                 
             }
