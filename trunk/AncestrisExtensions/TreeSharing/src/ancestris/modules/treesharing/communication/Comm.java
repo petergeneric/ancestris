@@ -1293,8 +1293,8 @@ public class Comm {
     private Map<Integer, byte[]> buildPacketsOfProfile(MemberProfile profile) {
         Map<Integer, byte[]> packets = new HashMap<Integer, byte[]>();
         byte[] masterPacket = wrapObject(profile);
-        int nbResized = COMM_PACKET_SIZE / 8;
-        int nbPackets = (int) (Math.min(COMM_PACKET_NB, masterPacket.length / nbResized) + 1);   // make small packets to make sure it goes through
+        int nbResized = 1024;// make small packets to make sure it goes through
+        int nbPackets = (int) (Math.min(COMM_PACKET_NB, masterPacket.length / nbResized) + 1);   
         for (Integer i = 0; i < nbPackets; i++) {
             if (i < nbPackets-1) {
                 packets.put(i, Arrays.copyOfRange(masterPacket, i*nbResized, (i+1)*nbResized));
