@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import org.openide.util.NbBundle;
 
@@ -291,6 +290,11 @@ public class AncestrisFriend extends JInternalFrame {
         if (memberProfile != null) {
             jButton3.setEnabled(true);
             jButton3.setIcon(memberProfile.getIcon());
+            jButton3.setToolTipText(NbBundle.getMessage(StatsPanel.class, "TITL_SeeProfile", name));
+        } else {
+            jButton3.setEnabled(false);
+            jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/profile.png")));
+            jButton3.setToolTipText(NbBundle.getMessage(StatsPanel.class, "TITL_NoProfile"));
         }
     }
 

@@ -192,6 +192,7 @@ public class Comm {
     // Call info
     private int REQUEST_TIMEOUT = 5;
     private boolean communicationInProgress = false;
+    private boolean connectionInProgress = false;
     private boolean expectedConnection = false;
     private String expectedCallIPAddress = null;
     private String expectedCallPortAddress = null;
@@ -655,6 +656,7 @@ public class Comm {
             } else {
                 sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, set, senderIP, senderPort);
             }
+            iPacket++;
             // wait a bit before sending next packet
             try {
                 TimeUnit.MILLISECONDS.sleep(COMM_RESPONSE_DELAY);
@@ -670,14 +672,15 @@ public class Comm {
     
     private boolean connectToMember(AncestrisMember member) {
         
+        connectionInProgress = true;
         try {
             sendCommand(CMD_CONCT, member.getMemberName(), null, COMM_SERVER, COMM_PORT);
 
             // Expect that connection gets established (wait for response from the other thread...)
             expectedConnection = true;
             int s = 0;
-            while (expectedConnection && (s < REQUEST_TIMEOUT)) {  
-                TimeUnit.SECONDS.sleep(1);
+            while (expectedConnection && (s < REQUEST_TIMEOUT * 100)) {
+                TimeUnit.MILLISECONDS.sleep(10);
                 s++;
             }
             
@@ -686,6 +689,9 @@ public class Comm {
                 LOG.log(Level.FINE, "...(TIMEOUT) No connection to " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout.");
                 return false;
             }
+            // wait a bit for my generated pings and pongs have been processed
+            TimeUnit.MILLISECONDS.sleep(100);
+            connectionInProgress = false;
             
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
@@ -812,7 +818,7 @@ public class Comm {
                 // Case of PONG command 
                 if (command.equals(CMD_PONGG)) {
                     expectedConnection = false;
-                    if (!communicationInProgress) {
+                    if (!connectionInProgress) {
                         owner.addConnection(member);
                     }
                     continue;
