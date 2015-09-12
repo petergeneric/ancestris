@@ -344,6 +344,16 @@ public class SearchSharedTrees extends Thread {
             String pl22 = friendFam.husbDeathPlace + "/" + friendFam.husbDeathPlace; // city/country
             int yrMin2 = 1900; // friendFam.husbBirthDate.year
             int yrMax2 = 1990; // friendFam.husbDeathDate.year
+            String wln2 = myFamily.wifeLastName;
+            String wfn2 = myFamily.wifeFirstName;
+            String pl23 = myFamily.wifeBirthPlace + "/" + myFamily.wifeBirthPlace; // city/country
+            String pl24 = myFamily.wifeDeathPlace + "/" + myFamily.wifeDeathPlace; // city/country
+            yrMin2 = Math.min(yrMin2, 1900); // myFamily.wifeBirthDate.year
+            yrMax2 = Math.max(yrMax2, 1900); // myFamily.wifeDeathDate.year
+            String pl25 = myFamily.famMarrPlace + "/" + myFamily.famMarrPlace; // city/country
+            yrMin2 = Math.min(yrMin2, 1900); // myFamily.wifeBirthDate.year
+            yrMax2 = Math.max(yrMax2, 1900); // myFamily.wifeDeathDate.year
+            
             
 //            // Formulas : Detect exact match first
 //            if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {

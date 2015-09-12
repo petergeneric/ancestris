@@ -166,10 +166,10 @@ public class StatsPanel extends javax.swing.JPanel {
         table.setAutoCreateRowSorter(true);
         table.getColumnModel().getColumn(0).setPreferredWidth(90);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
-        table.getColumnModel().getColumn(2).setPreferredWidth(150);
+        table.getColumnModel().getColumn(2).setPreferredWidth(40);
         table.getColumnModel().getColumn(3).setPreferredWidth(140);
         table.getColumnModel().getColumn(4).setPreferredWidth(140);
-        table.getColumnModel().getColumn(5).setPreferredWidth(30);
+        table.getColumnModel().getColumn(5).setPreferredWidth(50);
         table.setFillsViewportHeight(true);
 
         // Center some of the columns
@@ -243,7 +243,11 @@ public class StatsPanel extends javax.swing.JPanel {
 
         @Override
         public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
+            if (c == 5) {
+                return ImageIcon.class;
+            } else {
+                return getValueAt(0, c).getClass();
+            }
         }
 
         @Override
