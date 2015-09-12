@@ -1064,6 +1064,7 @@ public class Comm {
                         } else {
                             memberProfileRcv.reset();
                         }
+                        memberProfileRcv.write((byte[]) unwrapObject(contentObj));
                     } else if (iPacket == COMM_PACKET_NB - 1) { // last packet, log in stats
                         owner.addUniqueFriend(member, (MemberProfile) unwrapObject(memberProfileRcv.toByteArray())); 
                     } else {
