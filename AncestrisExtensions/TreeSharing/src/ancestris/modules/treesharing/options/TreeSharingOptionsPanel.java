@@ -328,7 +328,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         if (myProfile.city.isEmpty() || myProfile.country.isEmpty()) {
             return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPlace");
         }
-        if (myProfile.photoBytes.length == 0) {
+        if (myProfile.photoBytes != null && myProfile.photoBytes.length == 0) {
             return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPhoto");
         }
         return "";
