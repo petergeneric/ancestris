@@ -17,10 +17,12 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import java.awt.Image;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import org.openide.util.NbBundle;
 
@@ -289,7 +291,7 @@ public class AncestrisFriend extends JInternalFrame {
         this.myProfile = myProfile;
         if (memberProfile != null) {
             jButton3.setEnabled(true);
-            jButton3.setIcon(memberProfile.getIcon());
+            jButton3.setIcon(new ImageIcon(memberProfile.getPhoto().getScaledInstance(51, 62, Image.SCALE_DEFAULT)));
             jButton3.setToolTipText(NbBundle.getMessage(StatsPanel.class, "TITL_SeeProfile", name));
         } else {
             jButton3.setEnabled(false);
