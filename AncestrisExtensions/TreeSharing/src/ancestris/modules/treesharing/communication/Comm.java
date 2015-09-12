@@ -15,7 +15,6 @@ package ancestris.modules.treesharing.communication;
 import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import ancestris.util.swing.DialogManager;
-import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -197,7 +196,7 @@ public class Comm {
     private String expectedCallIPAddress = null;
     private String expectedCallPortAddress = null;
     private boolean expectedCall = false;
-    private boolean thanksInProgress = false;
+    private static boolean thanksInProgress = false;
 
     // Possible data objects to be received
     private boolean gedcomNumbersEOF = false;
@@ -534,7 +533,6 @@ public class Comm {
     
 
     public void thankMember(AncestrisMember member, MemberProfile myProfile) {
-        //        put(member, CMD_THXxx, myProfile);
         thanksInProgress = true;
         sendCommand(CMD_THANX, owner.getRegisteredPseudo() + STR_DELIMITER, null, member.getIPAddress(), Integer.valueOf(member.getPortAddress()));
     }
@@ -627,7 +625,7 @@ public class Comm {
                 return;
             }
         }
-        LOG.log(Level.FINE, "...(SUCCESS) Returned call from member " + member.getMemberName() + " with " + iPacket + " packets");
+        LOG.log(Level.FINE, "...(END) Returned call from member " + member.getMemberName() + " after " + iPacket + " packets");
     }
 
     

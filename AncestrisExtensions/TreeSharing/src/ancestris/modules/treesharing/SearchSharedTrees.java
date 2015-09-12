@@ -273,7 +273,7 @@ public class SearchSharedTrees extends Thread {
      */
     private int isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, String matchType) {
 
-        // Detect exxact match first
+        // Detect exact match first
         if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
             String la1 = myIndi.indiLastName;
             String fi1 = friendIndi.indiFirstName;
