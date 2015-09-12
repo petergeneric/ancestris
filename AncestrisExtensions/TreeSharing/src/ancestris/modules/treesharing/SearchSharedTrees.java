@@ -65,27 +65,13 @@ public class SearchSharedTrees extends Thread {
      */
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
-        
-//        MemberProfile mp1 = owner.getMyProfile();
-//        DialogManager.create("debug1", new ProfilePanel(mp1, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
-//        
-//        Map<Integer, byte[]> packetsOfProfile = owner.getCommHandler().buildPacketsOfProfile(mp1);
-//        
-//        ByteArrayOutputStream memberProfile = new ByteArrayOutputStream();
-//        for (int i = 0; i < packetsOfProfile.size(); i++) {
-//            try {
-//                byte[] set = packetsOfProfile.get(i);
-//                byte[] compackedSet = owner.getCommHandler().wrapObject(set);
-//                memberProfile.write((byte[])owner.getCommHandler().unwrapObject(compackedSet));
-//            } catch (IOException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
+//        if (true) {
+//            Set<String> list = sharedGedcoms.get(0).getPublicFamLastnames();
+//            sharedGedcoms.get(0).getPublicGedcomFams(list);
+//            stopGracefully();
+//            return;
 //        }
-//        MemberProfile mp2 = (MemberProfile) owner.getCommHandler().unwrapObject(memberProfile.toByteArray());
-//        DialogManager.create("debug2", new ProfilePanel(mp2, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
 //        
-//        if (true) return;
-        
         
         // Initialize variables
         AncestrisFriend friend = null;
@@ -271,18 +257,18 @@ public class SearchSharedTrees extends Thread {
             // make it easier for the formulas for myIndi
             String ln1 = myIndi.indiLastName;
             String fn1 = myIndi.indiFirstName;
-            String pl11 = myIndi.indiBirthPlace + "/" + myIndi.indiBirthPlace; // city/country
-            String pl12 = myIndi.indiDeathPlace + "/" + myIndi.indiDeathPlace; // city/country
-            int yrMin1 = 1900; // myIndi.indiBirthDate.year
-            int yrMax1 = 1990; // myIndi.indiDeathDate.year
+            String pl11 = myIndi.indiBirthPlace;
+            String pl12 = myIndi.indiDeathPlace;
+            int yrMin1 = Integer.valueOf(myIndi.indiBirthDate);
+            int yrMax1 = Integer.valueOf(myIndi.indiDeathDate);
             
             // make it easier for the formulas for friendIndi
             String ln2 = friendIndi.indiLastName;
             String fn2 = friendIndi.indiFirstName;
-            String pl21 = friendIndi.indiBirthPlace + "/" + friendIndi.indiBirthPlace; // city/country
-            String pl22 = friendIndi.indiDeathPlace + "/" + friendIndi.indiDeathPlace; // city/country
-            int yrMin2 = 1900; // friendIndi.indiBirthDate.year
-            int yrMax2 = 1990; // friendIndi.indiDeathDate.year
+            String pl21 = friendIndi.indiBirthPlace;
+            String pl22 = friendIndi.indiDeathPlace;
+            int yrMin2 = Integer.valueOf(friendIndi.indiBirthDate);
+            int yrMax2 = Integer.valueOf(friendIndi.indiDeathDate);
             
             // Formulas : Detect exact match first
             if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {
@@ -338,8 +324,8 @@ public class SearchSharedTrees extends Thread {
             yrMax1 = Math.max(yrMax1, 1900); // myFamily.wifeDeathDate.year
             
             // make it easier for the formulas for friendFam
-            String ln2 = friendFam.husbLastName;
-            String fn2 = friendFam.husbFirstName;
+            String hln2 = friendFam.husbLastName;
+            String hfn2 = friendFam.husbFirstName;
             String pl21 = friendFam.husbBirthPlace + "/" + friendFam.husbBirthPlace; // city/country
             String pl22 = friendFam.husbDeathPlace + "/" + friendFam.husbDeathPlace; // city/country
             int yrMin2 = 1900; // friendFam.husbBirthDate.year
@@ -355,8 +341,10 @@ public class SearchSharedTrees extends Thread {
             yrMax2 = Math.max(yrMax2, 1900); // myFamily.wifeDeathDate.year
             
             
-//            // Formulas : Detect exact match first
-//            if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {
+            // Formulas : Detect exact match first
+//            if    (hln1.equals(hln2) && hfn1.equals(hfn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2   
+//                && wln1.equals(wln2) && wfn1.equals(wfn2) && pl13.equals(pl23) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2 
+//                &&  {
 //                return TreeSharingOptionsPanel.EXACT_MATCH;
 //            }
 //            // Formulas : Detect flash match
@@ -369,7 +357,7 @@ public class SearchSharedTrees extends Thread {
 //                    }
 //                }
 //            }
-            return TreeSharingOptionsPanel.NO_MATCH;
+//            return TreeSharingOptionsPanel.NO_MATCH;
         }
         
         
