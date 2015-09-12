@@ -154,6 +154,7 @@ public class Comm {
     private int COMM_PACKET_NB = 1000;
     private static String STR_DELIMITER = " ";
     private int COMM_RESPONSE_DELAY = 50;   // in milliseconds
+    private int COMM_NB_FAILS = 6;          // give up after this nb of "no response"
 
     // Commands
     // Registration on server
@@ -566,7 +567,7 @@ public class Comm {
         boolean retry = true;
         int nbNoResponses = 0; // nb of consecutive no responses
         LOG.log(Level.FINE, "Calling member " + member.getMemberName() + " with " + command);
-        while (iPacket < COMM_PACKET_NB && nbNoResponses < 10) {  // stop at the last packet or after 10 consecutive retry/skips
+        while (iPacket < COMM_PACKET_NB && nbNoResponses < COMM_NB_FAILS) {  // stop at the last packet or after 10 consecutive retry/skips
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
             try {
                 // Ask member for list of something
