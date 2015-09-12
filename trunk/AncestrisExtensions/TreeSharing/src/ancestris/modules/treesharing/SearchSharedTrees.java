@@ -15,22 +15,14 @@ import ancestris.modules.treesharing.communication.AncestrisMember;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
 import ancestris.modules.treesharing.communication.GedcomNumbers;
-import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
-import ancestris.modules.treesharing.panels.ProfilePanel;
 import ancestris.modules.treesharing.panels.SharedGedcom;
-import ancestris.util.swing.DialogManager;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import org.openide.util.Exceptions;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -168,10 +160,10 @@ public class SearchSharedTrees extends Thread {
 
             // Thank you, exchange profiles and update friend
             if (friend != null) {
-                friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);   // set numbers
-                owner.getCommHandler().thankMember(member, owner.getMyProfile());   // give my profile
-                friend.setProfile(owner.getCommHandler().getProfileMember(member, false), owner.getMyProfile());  // get member profile and set it for friend
+                friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);      // set numbers
+                friend.setProfile(owner.getCommHandler().getProfileMember(member), owner.getMyProfile());  // get member profile and set it for friend
                 friend = null;
+                owner.getCommHandler().thankMember(member);   // thank and give my profile
             }
             
             
