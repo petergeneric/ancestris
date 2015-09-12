@@ -106,7 +106,7 @@ public class SearchSharedTrees extends Thread {
             owner.displaySearchedMember(member.getMemberName());
             
             
-            // Ask for stats first (nb of indis and nb of families
+            // Ask for stats first (nb of indis and nb of families)
             owner.getCommHandler().setCommunicationInProgress(false);
             GedcomNumbers gedcomNumbers = owner.getCommHandler().getNbOfEntities(member);
             if (gedcomNumbers == null) {
