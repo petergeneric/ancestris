@@ -691,7 +691,7 @@ public class Comm {
                 return false;
             }
             // wait a bit for my generated pings and pongs have been processed
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(500);
             connectionInProgress = false;
             
         } catch (Exception ex) {
