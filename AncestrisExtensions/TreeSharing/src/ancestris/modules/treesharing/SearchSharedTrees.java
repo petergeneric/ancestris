@@ -74,6 +74,7 @@ public class SearchSharedTrees extends Thread {
 //        
         
         // Initialize variables
+        boolean found = false;
         AncestrisFriend friend = null;
         String matchType = TreeSharingOptionsPanel.getMatchType();
         List<AncestrisMember> copyOfAncestrisMembers = (List) ((ArrayList) ancestrisMembers).clone(); // Copy ancestris members to avoid concurrent access to the list while using it
@@ -118,6 +119,7 @@ public class SearchSharedTrees extends Thread {
                 Set<GedcomIndi> myGedcomIndis = owner.getCommHandler().getMySharedGedcomIndis(sharedGedcoms, commonIndiLastnames);
                 if (myGedcomIndis != null && !myGedcomIndis.isEmpty()) {
                     friend = addCommonIndis(sharedGedcoms, myGedcomIndis, memberGedcomIndis, matchType, member);    // create/update matches and friends if common are found
+                    found = found || (friend != null);
                 }
             }
 
@@ -140,12 +142,13 @@ public class SearchSharedTrees extends Thread {
                 Set<GedcomFam> myGedcomFams = owner.getCommHandler().getMySharedGedcomFams(sharedGedcoms, commonFamLastnames);
                 if (myGedcomFams != null && !myGedcomFams.isEmpty()) {
                     friend = addCommonFams(sharedGedcoms, myGedcomFams, memberGedcomFams, matchType, member);    // create/update matches and friends
+                    found = found || (friend != null);
                 }
                 
             }
 
             // Thank you, exchange profiles and update friend
-            if (friend != null) {
+            if (found) {
                 friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);      // set numbers
                 friend.setProfile(owner.getCommHandler().getProfileMember(member), owner.getMyProfile());  // get member profile and set it for friend
                 friend = null;
@@ -257,10 +260,10 @@ public class SearchSharedTrees extends Thread {
             // make it easier for the formulas for myIndi
             String ln1 = myIndi.indiLastName;
             String fn1 = myIndi.indiFirstName;
-            String pl11 = myIndi.indiBirthPlace;
-            String pl12 = myIndi.indiDeathPlace;
-            int yrMin1 = Integer.valueOf(myIndi.indiBirthDate);
-            int yrMax1 = Integer.valueOf(myIndi.indiDeathDate);
+            String pl11 = myIndi.indiBirthPlace;                    // What if it is "," ?
+            String pl12 = myIndi.indiDeathPlace;                    // What if it is "," ?
+            int yrMin1 = Integer.valueOf(myIndi.indiBirthDate);     // What if it is "0" ?
+            int yrMax1 = Integer.valueOf(myIndi.indiDeathDate);     // What if it is "0" ?
             
             // make it easier for the formulas for friendIndi
             String ln2 = friendIndi.indiLastName;

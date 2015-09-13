@@ -87,7 +87,7 @@ public class ProfilePanel extends javax.swing.JPanel {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/email.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jButton1.text")); // NOI18N
-        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jButton1.toolTipText", memberProfile.firstname + " " + memberProfile.lastname));
+        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jButton1.toolTipText", memberProfile != null ? memberProfile.firstname + " " + memberProfile.lastname : ""));
         jButton1.setIconTextGap(0);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
