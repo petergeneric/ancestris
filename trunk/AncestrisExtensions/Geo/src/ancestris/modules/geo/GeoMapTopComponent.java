@@ -107,6 +107,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         super.init(context);
         geoFilter.setGedcom(context.getGedcom());
         ToolTipManager.sharedInstance().setDismissDelay(10000);
+        markersSize = context.getGedcom().getRegistry().get("GEO.markers.size", 10);
+        jSpinner1.setValue(markersSize);
         markersColor = context.getGedcom().getRegistry().get("GEO.markers.color", Color.BLUE);
     }
 
@@ -804,7 +806,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             if (newColor != null) {
                 markersColor = newColor;
                 jButton4.repaint();
-               getGedcom().getRegistry().put("GEO.markers.color", newColor);
+                getGedcom().getRegistry().put("GEO.markers.color", newColor);
             }
         }
         displayMarkers();
@@ -812,6 +814,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
         markersSize = (int) Integer.valueOf(jSpinner1.getValue().toString());
+        getGedcom().getRegistry().put("GEO.markers.size", markersSize);
         displayMarkers();
     }//GEN-LAST:event_jSpinner1StateChanged
 
