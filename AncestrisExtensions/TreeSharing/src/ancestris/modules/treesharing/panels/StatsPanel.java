@@ -243,7 +243,7 @@ public class StatsPanel extends javax.swing.JPanel {
 
         @Override
         public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
+            return getValueAt(0, c) != null ? getValueAt(0, c).getClass() : String.class;
         }
 
         @Override

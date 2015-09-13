@@ -124,6 +124,9 @@
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable() {&#xa;    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {&#xa;        Component c = super.prepareRenderer(renderer, row, column);&#xa;        int type = (Integer) getValueAt(row, 5);&#xa;        if (type == TreeSharingOptionsPanel.EXACT_MATCH) {&#xa;            c.setForeground(COLOR_EXACT);&#xa;        } else if (type == TreeSharingOptionsPanel.FLASH_MATCH) {&#xa;            c.setForeground(COLOR_FLASH);&#xa;        } else if (type == TreeSharingOptionsPanel.LOOSE_MATCH) {&#xa;            c.setForeground(COLOR_LOOSE);&#xa;        }&#xa;        return c;&#xa;    }&#xa;}"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

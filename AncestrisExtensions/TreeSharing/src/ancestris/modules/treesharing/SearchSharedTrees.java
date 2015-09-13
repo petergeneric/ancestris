@@ -66,17 +66,33 @@ public class SearchSharedTrees extends Thread {
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
 //        if (true) {
-//            Set<String> list = sharedGedcoms.get(0).getPublicFamLastnames();
-//            sharedGedcoms.get(0).getPublicGedcomFams(list);
+//            Set<MatchData> list = new HashSet<MatchData>();
+//            
+//            Entity indi = sharedGedcoms.get(0).getGedcom().getFirstEntity(Gedcom.INDI);
+//            FriendGedcomEntity fge = new FriendGedcomEntity("Ami", "francois.ged", "I0001");
+//            MatchData md = new MatchData(indi, fge, 1);
+//            list.add(md);
+//            
+//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I00002");
+//            fge = new FriendGedcomEntity("Ami", "francois.ged", "I0002");
+//            md = new MatchData(indi, fge, 2);
+//            list.add(md);
+//            
+//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I00003");
+//            fge = new FriendGedcomEntity("Ami", "francois.ged", "I0002");
+//            md = new MatchData(indi, fge, 3);
+//            list.add(md);
+//            
+//            DialogManager.create("titre", new ListEntitiesPanel("allgedcoms", "nom", list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
 //            stopGracefully();
 //            return;
 //        }
-//        
+        
         
         // Initialize variables
         AncestrisFriend friend = null;
         boolean profileExchanged = false;
-        String matchType = TreeSharingOptionsPanel.getMatchType();
+        int matchType = TreeSharingOptionsPanel.getMatchType();
         List<AncestrisMember> copyOfAncestrisMembers = (List) ((ArrayList) ancestrisMembers).clone(); // Copy ancestris members to avoid concurrent access to the list while using it
         Set<String> myIndiLastnames = owner.getCommHandler().getMySharedIndiLastnames(sharedGedcoms);
         Set<String> myFamLastnames = owner.getCommHandler().getMySharedFamLastnames(sharedGedcoms);  
@@ -192,7 +208,7 @@ public class SearchSharedTrees extends Thread {
         return new HashSet<String>(memberIndiLastnames);
     }
 
-    private AncestrisFriend addCommonIndis(List<SharedGedcom> sharedGedcoms, Set<GedcomIndi> myGedcomIndis, Set<GedcomIndi> memberGedcomIndis, String matchType, AncestrisMember member) {
+    private AncestrisFriend addCommonIndis(List<SharedGedcom> sharedGedcoms, Set<GedcomIndi> myGedcomIndis, Set<GedcomIndi> memberGedcomIndis, int matchType, AncestrisMember member) {
         
         AncestrisFriend friend = null;
         int retMatch;
@@ -228,7 +244,7 @@ public class SearchSharedTrees extends Thread {
     
     
     
-    private AncestrisFriend addCommonFams(List<SharedGedcom> sharedGedcoms, Set<GedcomFam> myGedcomFams, Set<GedcomFam> memberGedcomFams, String matchType, AncestrisMember member) {
+    private AncestrisFriend addCommonFams(List<SharedGedcom> sharedGedcoms, Set<GedcomFam> myGedcomFams, Set<GedcomFam> memberGedcomFams, int matchType, AncestrisMember member) {
         
         AncestrisFriend friend = null;
         int retMatch;
@@ -278,137 +294,235 @@ public class SearchSharedTrees extends Thread {
      *      - individuals : exact lastname, any first name (not compared), across all events : one city/country in common and overlapping time period (min/max do cross)
      *      - families : same for both husband and wife
      */
-    private int isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, String matchType) {
+    private int isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, int matchType) {
 
-        // 
-        if (false) {
-            
-            // make it easier for the formulas for myIndi (A)
-            String Aln = myIndi.indiLastName;
-            String Afn = myIndi.indiFirstName;
-            String Apl1 = myIndi.indiBirthPlace;                    // What if it is "," ?
-            String Apl2 = myIndi.indiDeathPlace;                    // What if it is "," ?
-            int Ayr1 = Integer.valueOf(myIndi.indiBirthDate);       // What if it is "0" ?
-            int Ayr2 = Integer.valueOf(myIndi.indiDeathDate);       // What if it is "0" ?
-            
-            // make it easier for the formulas for friendIndi (B)
-            String Bln = friendIndi.indiLastName;
-            String Bfn = friendIndi.indiFirstName;
-            String Bpl1 = friendIndi.indiBirthPlace;
-            String Bpl2 = friendIndi.indiDeathPlace;
-            int Byr1 = Integer.valueOf(friendIndi.indiBirthDate);
-            int Byr2 = Integer.valueOf(friendIndi.indiDeathDate);
-            
-            // Formulas : Detect exact match first
-            if (Aln.equals(Bln) && Afn.equals(Bfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2) {
-                return TreeSharingOptionsPanel.EXACT_MATCH;
-            }
-            // Formulas : Detect flash match
-            if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
-                if (Aln.equals(Bln)) { // same lastname
-                    if (Apl1.equals(Bpl1) || Apl1.equals(Bpl2) || Apl2.equals(Bpl1) || Apl2.equals(Bpl2)) {    // a place in common, either birth or death
-                        if ((Ayr1<=Byr1 && Byr1<=Byr2) || (Byr1<=Ayr1 && Ayr1<=Byr2)) {  // dates overlap
-                            return TreeSharingOptionsPanel.FLASH_MATCH;
-                        }
+        // make it easier for the formulas for myIndi (A)
+        String Aln = myIndi.indiLastName;
+        String Afn = myIndi.indiFirstName;
+        String Apl1 = myIndi.indiBirthPlace;
+        String Apl2 = myIndi.indiDeathPlace;
+        int Ayr1 = Integer.valueOf(myIndi.indiBirthDate);
+        int Ayr2 = Integer.valueOf(myIndi.indiDeathDate);
+
+        // make it easier for the formulas for friendIndi (B)
+        String Bln = friendIndi.indiLastName;
+        String Bfn = friendIndi.indiFirstName;
+        String Bpl1 = friendIndi.indiBirthPlace;
+        String Bpl2 = friendIndi.indiDeathPlace;
+        int Byr1 = Integer.valueOf(friendIndi.indiBirthDate);
+        int Byr2 = Integer.valueOf(friendIndi.indiDeathDate);
+
+        // Formulas : Detect exact match first
+        if (Aln.equals(Bln) && Afn.equals(Bfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2) {
+            return TreeSharingOptionsPanel.EXACT_MATCH;
+        }
+        
+        // Formulas : Detect flash match
+        if (matchType >= TreeSharingOptionsPanel.FLASH_MATCH) {
+            if (Aln.equals(Bln) // if same lastname, 
+                    && (Apl1.length() > 1 || Apl2.length() > 1 || Bpl1.length() > 1 || Bpl2.length() > 1) // ...at least one place indicated across both, 
+                    && (Ayr1 > 0 || Ayr2 > 0) && (Byr1 > 0 || Byr2 > 0)) { // ...and at least one year with non zero for each (year can always be estimated and therefore filled in by user, places cannot)
+                if (Apl1.equals(Bpl1) || Apl1.equals(Bpl2) || Apl2.equals(Bpl1) || Apl2.equals(Bpl2)) {    // a place in common, either birth or death
+                    if ((Ayr1 <= Byr1 && Byr1 <= Ayr2) || (Byr1 <= Ayr1 && Ayr1 <= Byr2)) {  // dates overlap
+                        return TreeSharingOptionsPanel.FLASH_MATCH;
                     }
                 }
             }
-            return TreeSharingOptionsPanel.NO_MATCH;
         }
         
-        
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && !myIndi.indiLastName.equals(friendIndi.indiLastName)) {
-            return TreeSharingOptionsPanel.NO_MATCH;
+        // Formulas : Detect loose match (just lastname and first name)
+        if (matchType >= TreeSharingOptionsPanel.LOOSE_MATCH) {
+            if (Aln.equals(Bln) && Afn.equals(Bfn)) {
+                return TreeSharingOptionsPanel.LOOSE_MATCH;
+            }
         }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && !myIndi.indiFirstName.equals(friendIndi.indiFirstName)) {
-            return TreeSharingOptionsPanel.NO_MATCH;
-        }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
-            return TreeSharingOptionsPanel.EXACT_MATCH;
-        }
+
+        // no match
         return TreeSharingOptionsPanel.NO_MATCH;
+        
+//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && !myIndi.indiLastName.equals(friendIndi.indiLastName)) {
+//            return TreeSharingOptionsPanel.NO_MATCH;
+//        }
+//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && !myIndi.indiFirstName.equals(friendIndi.indiFirstName)) {
+//            return TreeSharingOptionsPanel.NO_MATCH;
+//        }
+//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
+//            return TreeSharingOptionsPanel.EXACT_MATCH;
+//        }
+//        return TreeSharingOptionsPanel.NO_MATCH;
     }
 
-    private int isSameFamily(GedcomFam myFamily, GedcomFam friendFam, String matchType) {
+    
+    
+    private int isSameFamily(GedcomFam myFamily, GedcomFam friendFam, int matchType) {
 
-        
-        // 
-        if (false) {
-            
-            // make it easier for the formulas for myFamily
-            String hln1 = myFamily.husbLastName;
-            String hfn1 = myFamily.husbFirstName;
-            String pl11 = myFamily.husbBirthPlace + "/" + myFamily.husbBirthPlace; // city/country
-            String pl12 = myFamily.husbDeathPlace + "/" + myFamily.husbDeathPlace; // city/country
-            int yrMin1 = 1900; // myFamily.husbBirthDate.year
-            int yrMax1 = 1990; // myFamily.husbDeathDate.year
-            String wln1 = myFamily.wifeLastName;
-            String wfn1 = myFamily.wifeFirstName;
-            String pl13 = myFamily.wifeBirthPlace + "/" + myFamily.wifeBirthPlace; // city/country
-            String pl14 = myFamily.wifeDeathPlace + "/" + myFamily.wifeDeathPlace; // city/country
-            yrMin1 = Math.min(yrMin1, 1900); // myFamily.wifeBirthDate.year
-            yrMax1 = Math.max(yrMax1, 1900); // myFamily.wifeDeathDate.year
-            String pl15 = myFamily.famMarrPlace + "/" + myFamily.famMarrPlace; // city/country
-            yrMin1 = Math.min(yrMin1, 1900); // myFamily.wifeBirthDate.year
-            yrMax1 = Math.max(yrMax1, 1900); // myFamily.wifeDeathDate.year
-            
-            // make it easier for the formulas for friendFam
-            String hln2 = friendFam.husbLastName;
-            String hfn2 = friendFam.husbFirstName;
-            String pl21 = friendFam.husbBirthPlace + "/" + friendFam.husbBirthPlace; // city/country
-            String pl22 = friendFam.husbDeathPlace + "/" + friendFam.husbDeathPlace; // city/country
-            int yrMin2 = 1900; // friendFam.husbBirthDate.year
-            int yrMax2 = 1990; // friendFam.husbDeathDate.year
-            String wln2 = myFamily.wifeLastName;
-            String wfn2 = myFamily.wifeFirstName;
-            String pl23 = myFamily.wifeBirthPlace + "/" + myFamily.wifeBirthPlace; // city/country
-            String pl24 = myFamily.wifeDeathPlace + "/" + myFamily.wifeDeathPlace; // city/country
-            yrMin2 = Math.min(yrMin2, 1900); // myFamily.wifeBirthDate.year
-            yrMax2 = Math.max(yrMax2, 1900); // myFamily.wifeDeathDate.year
-            String pl25 = myFamily.famMarrPlace + "/" + myFamily.famMarrPlace; // city/country
-            yrMin2 = Math.min(yrMin2, 1900); // myFamily.wifeBirthDate.year
-            yrMax2 = Math.max(yrMax2, 1900); // myFamily.wifeDeathDate.year
-            
-            
-            // Formulas : Detect exact match first
-//            if    (hln1.equals(hln2) && hfn1.equals(hfn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2   
-//                && wln1.equals(wln2) && wfn1.equals(wfn2) && pl13.equals(pl23) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2 
-//                &&  {
-//                return TreeSharingOptionsPanel.EXACT_MATCH;
-//            }
-//            // Formulas : Detect flash match
-//            if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
-//                if (ln1.equals(ln2)) {
-//                    if (pl11.equals(pl21) || pl11.equals(pl22)) {
-//                        if ((yrMin1<=yrMin2 && yrMin2<yrMax1) || (yrMin1>=yrMin2 && yrMin1 < yrMax2)) {  // dates overlap
-//                            return TreeSharingOptionsPanel.FLASH_MATCH;
-//                        }
-//                    }
-//                }
-//            }
-//            return TreeSharingOptionsPanel.NO_MATCH;
-        }
-        
-        
-        
-        
-        
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbLastName != null && !myFamily.husbLastName.equals(friendFam.husbLastName)) {
-            return TreeSharingOptionsPanel.NO_MATCH;
-        }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbFirstName != null && !myFamily.husbFirstName.equals(friendFam.husbFirstName)) {
-            return TreeSharingOptionsPanel.NO_MATCH;
-        }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.wifeLastName != null && !myFamily.wifeLastName.equals(friendFam.wifeLastName)) {
-            return TreeSharingOptionsPanel.NO_MATCH;
-        }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.wifeFirstName != null && !myFamily.wifeFirstName.equals(friendFam.wifeFirstName)) {
-            return TreeSharingOptionsPanel.NO_MATCH;
-        }
-        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
+        // make it easier for the formulas for myFamily
+        String Ahln = myFamily.husbLastName;
+        String Ahfn = myFamily.husbFirstName;
+        String Apl1 = myFamily.husbBirthPlace;
+        String Apl2 = myFamily.husbDeathPlace;
+        int Ayr1 = Integer.valueOf(myFamily.husbBirthDate);
+        int Ayr2 = Integer.valueOf(myFamily.husbDeathDate);
+        String Awln = myFamily.wifeLastName;
+        String Awfn = myFamily.wifeFirstName;
+        String Apl3 = myFamily.wifeBirthPlace;
+        String Apl4 = myFamily.wifeDeathPlace;
+        int Ayr3 = Integer.valueOf(myFamily.wifeBirthDate);
+        int Ayr4 = Integer.valueOf(myFamily.wifeDeathDate);
+        String Apl5 = myFamily.famMarrPlace;
+        int Ayr5 = Integer.valueOf(myFamily.famMarrDate);
+
+        // make it easier for the formulas for friendFam
+        String Bhln = friendFam.husbLastName;
+        String Bhfn = friendFam.husbFirstName;
+        String Bpl1 = friendFam.husbBirthPlace;
+        String Bpl2 = friendFam.husbDeathPlace;
+        int Byr1 = Integer.valueOf(friendFam.husbBirthDate);
+        int Byr2 = Integer.valueOf(friendFam.husbDeathDate);
+        String Bwln = friendFam.wifeLastName;
+        String Bwfn = friendFam.wifeFirstName;
+        String Bpl3 = friendFam.wifeBirthPlace;
+        String Bpl4 = friendFam.wifeDeathPlace;
+        int Byr3 = Integer.valueOf(friendFam.wifeBirthDate);
+        int Byr4 = Integer.valueOf(friendFam.wifeDeathDate);
+        String Bpl5 = friendFam.famMarrPlace;
+        int Byr5 = Integer.valueOf(friendFam.famMarrDate);
+
+        // Formulas : Detect exact match first
+        if (Ahln.equals(Bhln) && Ahfn.equals(Bhfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2
+                && Awln.equals(Bwln) && Awfn.equals(Bwfn) && Apl3.equals(Bpl3) && Ayr3 == Byr3 && Apl4.equals(Bpl4) && Ayr4 == Byr4
+                && Apl5.equals(Bpl5) && Ayr5 == Byr5) {
             return TreeSharingOptionsPanel.EXACT_MATCH;
         }
+
+        // Formulas : Detect flash match
+        if (matchType >= TreeSharingOptionsPanel.FLASH_MATCH) {  // [0] is flash match
+            
+            // Prepare variables
+            int AyrMin = getNonZeroMin(Ayr1, Ayr2, Ayr3, Ayr4, Ayr5);
+            int AyrMax = getNonZeroMax(Ayr1, Ayr2, Ayr3, Ayr4, Ayr5);
+            int ByrMin = getNonZeroMin(Byr1, Byr2, Byr3, Byr4, Byr5);
+            int ByrMax = getNonZeroMax(Byr1, Byr2, Byr3, Byr4, Byr5);
+            Set<String> Apls = getNonZeroPlaces(Apl1, Apl2, Apl3, Apl4, Apl5);
+            Set<String> Bpls = getNonZeroPlaces(Bpl1, Bpl2, Bpl3, Bpl4, Bpl5);
+            
+            // Now do the test
+            if (Ahln.equals(Bhln) && Awln.equals(Bwln) // if same lastname for each spouse, 
+            && Apls.size() > 0 && Bpls.size() > 0 && isPlaceCommon(Apls, Bpls)) { // ...if at least one place indicated on each side and one in common (places overlap !)
+                if ((AyrMin <= ByrMin && ByrMin <= AyrMax) || (ByrMin <= AyrMin && AyrMin <= ByrMax)) {  // if dates overlap
+                    return TreeSharingOptionsPanel.FLASH_MATCH;
+                }
+            }
+        }
+
+        // Formulas : Detect loose match (just lastname and first name)
+        if (matchType >= TreeSharingOptionsPanel.LOOSE_MATCH) {
+            if (Ahln.equals(Bhln) && Ahfn.equals(Bhfn) && Awln.equals(Bwln) && Awfn.equals(Bwfn)) {
+                return TreeSharingOptionsPanel.LOOSE_MATCH;
+            }
+        }
+
+        // No match
         return TreeSharingOptionsPanel.NO_MATCH;
+
+        
+        
+        
+//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbLastName != null && !myFamily.husbLastName.equals(friendFam.husbLastName)) {
+//            return TreeSharingOptionsPanel.NO_MATCH;
+//        }
+//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbFirstName != null && !myFamily.husbFirstName.equals(friendFam.husbFirstName)) {
+//            return TreeSharingOptionsPanel.NO_MATCH;
+//        }
+//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.wifeLastName != null && !myFamily.wifeLastName.equals(friendFam.wifeLastName)) {
+//            return TreeSharingOptionsPanel.NO_MATCH;
+//        }
+//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.wifeFirstName != null && !myFamily.wifeFirstName.equals(friendFam.wifeFirstName)) {
+//            return TreeSharingOptionsPanel.NO_MATCH;
+//        }
+//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
+//            return TreeSharingOptionsPanel.EXACT_MATCH;
+//        }
+//        return TreeSharingOptionsPanel.NO_MATCH;
+    }
+    
+    
+    
+    
+
+    private int getNonZeroMin(int Ayr1, int Ayr2, int Ayr3, int Ayr4, int Ayr5) {
+
+        int ret = Integer.MAX_VALUE;
+        
+        if (Ayr1 != 0) {
+           ret = Math.min(ret, Ayr1);
+        }
+        if (Ayr2 != 0) {
+           ret = Math.min(ret, Ayr2);
+        }
+        if (Ayr3 != 0) {
+           ret = Math.min(ret, Ayr3);
+        }
+        if (Ayr4 != 0) {
+           ret = Math.min(ret, Ayr4);
+        }
+        if (Ayr5 != 0) {
+           ret = Math.min(ret, Ayr5);
+        }
+        return ret;
+    }
+
+    private int getNonZeroMax(int Ayr1, int Ayr2, int Ayr3, int Ayr4, int Ayr5) {
+
+        int ret = Integer.MIN_VALUE;
+        
+        if (Ayr1 != 0) {
+           ret = Math.max(ret, Ayr1);
+        }
+        if (Ayr2 != 0) {
+           ret = Math.max(ret, Ayr2);
+        }
+        if (Ayr3 != 0) {
+           ret = Math.max(ret, Ayr3);
+        }
+        if (Ayr4 != 0) {
+           ret = Math.max(ret, Ayr4);
+        }
+        if (Ayr5 != 0) {
+           ret = Math.max(ret, Ayr5);
+        }
+        return ret;
+    }
+
+    private Set<String> getNonZeroPlaces(String Apl1, String Apl2, String Apl3, String Apl4, String Apl5) {
+        
+        Set<String> ret = new HashSet<String>();
+        if (Apl1.length()>1) {
+            ret.add(Apl1);
+        }
+        if (Apl2.length()>1) {
+            ret.add(Apl1);
+        }
+        if (Apl3.length()>1) {
+            ret.add(Apl1);
+        }
+        if (Apl4.length()>1) {
+            ret.add(Apl1);
+        }
+        if (Apl5.length()>1) {
+            ret.add(Apl1);
+        }
+        return ret;
+    }
+
+    private boolean isPlaceCommon(Set<String> Apls, Set<String> Bpls) {
+        
+        for (String Aplace : Apls) {
+            if (Bpls.contains(Aplace)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     

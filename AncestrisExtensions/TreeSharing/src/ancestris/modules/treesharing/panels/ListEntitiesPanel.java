@@ -11,9 +11,16 @@
  */
 package ancestris.modules.treesharing.panels;
 
+import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Set;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 import org.openide.util.NbBundle;
 
 /**
@@ -22,7 +29,11 @@ import org.openide.util.NbBundle;
  */
 public class ListEntitiesPanel extends javax.swing.JPanel {
 
-    private Set<MatchData> list;
+    private final Set<MatchData> list;
+    private Color COLOR_EXACT = Color.decode("#00641a");
+    private Color COLOR_FLASH = Color.decode("#b87900");
+    private Color COLOR_LOOSE = Color.DARK_GRAY;
+    
     
     /**
      * Creates new form ListEntitiesPanel
@@ -38,12 +49,32 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(130);
         jTable1.getColumnModel().getColumn(3).setPreferredWidth(150);
         jTable1.getColumnModel().getColumn(4).setPreferredWidth(100);
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(0);
         jTable1.setFillsViewportHeight(true);
         
         Dimension preferredSize = jTable1.getPreferredSize();
         preferredSize.height = list.size()*jTable1.getRowHeight();
         jTable1.setPreferredSize(preferredSize);
 
+        // Ability to click on my id to display entity in Ancestris editor
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                int col = jTable1.columnAtPoint(evt.getPoint());
+                if (col != 1 || evt.getClickCount() != 2) {   // if column not the names and not double count, return
+                    return;
+                }
+                int row = jTable1.rowAtPoint(evt.getPoint());
+                String text = (String) jTable1.getModel().getValueAt(row, 1);
+                Entity ent = getEntityFromString(text);
+                if (ent != null) {
+                    SelectionDispatcher.fireSelection(new Context(ent));
+                }
+            }
+        });
+        
+        
+        
     }
 
     /**
@@ -60,7 +91,20 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = new javax.swing.JTable() {
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                int type = (Integer) getValueAt(row, 5);
+                if (type == TreeSharingOptionsPanel.EXACT_MATCH) {
+                    c.setForeground(COLOR_EXACT);
+                } else if (type == TreeSharingOptionsPanel.FLASH_MATCH) {
+                    c.setForeground(COLOR_FLASH);
+                } else if (type == TreeSharingOptionsPanel.LOOSE_MATCH) {
+                    c.setForeground(COLOR_LOOSE);
+                }
+                return c;
+            }
+        };
 
         setPreferredSize(new java.awt.Dimension(700, 212));
 
@@ -136,13 +180,14 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
             NbBundle.getMessage(MembersPopup.class, "COL_myEntity"), 
             NbBundle.getMessage(MembersPopup.class, "COL_FriendsEntity"),  
             NbBundle.getMessage(MembersPopup.class, "COL_FriendsGedcom"),
-            NbBundle.getMessage(MembersPopup.class, "COL_Friend")
+            NbBundle.getMessage(MembersPopup.class, "COL_Friend"),
+            ""
         };
         Object[][] data;
         
         private MyTableModel(Set<MatchData> list) {
             this.list = list;
-            data = new Object[list.size()][5];
+            data = new Object[list.size()][6];
             int i = 0;
             for (MatchData line : list) {
                 data[i][0] = line.myEntity.getGedcom().getName();
@@ -150,6 +195,7 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
                 data[i][2] = line.friendGedcomEntity.entityID;
                 data[i][3] = line.friendGedcomEntity.gedcomName;
                 data[i][4] = line.friendGedcomEntity.friend;
+                data[i][5] = line.matchResult;
                 i++;
             }
         }
@@ -176,7 +222,7 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
 
         @Override
         public Class getColumnClass(int c) {
-            return String.class;
+            return getValueAt(0, c) != null ? getValueAt(0, c).getClass() : String.class;
         }
 
         @Override
@@ -194,5 +240,13 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
     }
     
    
-
+    private final Entity getEntityFromString(String str) {
+        for (MatchData item : list) {
+            if (item.myEntity.toString().equals(str)) {
+                return item.myEntity;
+            }
+        }
+        return null;
+    }
+        
 }
