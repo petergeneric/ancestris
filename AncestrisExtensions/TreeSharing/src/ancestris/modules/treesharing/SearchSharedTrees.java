@@ -307,7 +307,7 @@ public class SearchSharedTrees extends Thread {
             if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
                 if (Aln.equals(Bln)) { // same lastname
                     if (Apl1.equals(Bpl1) || Apl1.equals(Bpl2) || Apl2.equals(Bpl1) || Apl2.equals(Bpl2)) {    // a place in common, either birth or death
-                        if ((Ayr1<=Byr1 && Byr1<Byr2) || (Ayr1>=Byr2 && Ayr1 < Byr2)) {  // dates overlap
+                        if ((Ayr1<=Byr1 && Byr1<=Byr2) || (Byr1<=Ayr1 && Ayr1<=Byr2)) {  // dates overlap
                             return TreeSharingOptionsPanel.FLASH_MATCH;
                         }
                     }
