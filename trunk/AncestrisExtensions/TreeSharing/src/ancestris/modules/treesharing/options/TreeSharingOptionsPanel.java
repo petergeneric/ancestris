@@ -34,10 +34,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     public static final int NO_MATCH = 0; 
     public static final int EXACT_MATCH = 1; 
     public static final int FLASH_MATCH = 2; 
+    public static final int LOOSE_MATCH = 3; 
+    public static final int MAX_MATCH = 3; 
 
     public static final String[] MATCHING_MENU = new String[] { 
-        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match1"), // both exact or loose
-        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match2")  // exact only
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match"+EXACT_MATCH),
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match"+FLASH_MATCH),
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match"+LOOSE_MATCH) 
     };
 
     TreeSharingOptionsPanel(TreeSharingOptionsPanelController controller) {
@@ -222,7 +225,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         photoPath = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "");
         loadPhoto(new File(photoPath));
         jCheckBox1.setSelected(NbPreferences.forModule(TreeSharingOptionsPanel.class).getBoolean("RespectPrivacy", true));
-        jComboBox1.setSelectedItem(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", MATCHING_MENU[0]));
+        jComboBox1.setSelectedIndex(getMatchType()-1);
     }
 
     void store() {
@@ -236,7 +239,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Country", jTextField6.getText().trim());
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Photo", photoPath);
         NbPreferences.forModule(TreeSharingOptionsPanel.class).putBoolean("RespectPrivacy", jCheckBox1.isSelected());
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", (String) jComboBox1.getSelectedItem());
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", ""+ ((int)(jComboBox1.getSelectedIndex()+1)) );
     }
 
     boolean valid() {
@@ -347,10 +350,19 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
 
     
-    public static String getMatchType() {
-        return NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", MATCHING_MENU[0]);
+    public static int getMatchType() {
+        int ret = EXACT_MATCH;
+        String str = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", "");
+        try {
+            ret = Integer.valueOf(str);
+            if (ret < EXACT_MATCH || ret > MAX_MATCH) {
+                ret = EXACT_MATCH;
+            }
+        } catch (Exception e) {
+            ret = EXACT_MATCH;
+        }
+        return ret;
     }
-
 
     
 }

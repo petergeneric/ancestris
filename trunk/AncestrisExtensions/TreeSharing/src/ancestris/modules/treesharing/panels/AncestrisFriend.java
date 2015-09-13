@@ -214,15 +214,11 @@ public class AncestrisFriend extends JInternalFrame {
         if (entity instanceof Indi) {
             matchedIndis.add(new MatchData(entity, friendGedcomEntity, matchResult));
             updateStats();
-            // Friend is being match one more time for an indi, therefore notify him/her
-            // TODO
             return;
         }
         if (entity instanceof Fam) {
             matchedFams.add(new MatchData(entity, friendGedcomEntity, matchResult));
             updateStats();
-            // Friend is being match one more time for a family, therefore notify him/her
-            // TODO
             return;
         }
     }
