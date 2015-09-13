@@ -74,7 +74,8 @@ public class SearchSharedTrees extends Thread {
 //        
         
         // Initialize variables
-        AncestrisFriend friend = null, friendTmp = null;
+        AncestrisFriend friend = null;
+        boolean profileExchanged = false;
         String matchType = TreeSharingOptionsPanel.getMatchType();
         List<AncestrisMember> copyOfAncestrisMembers = (List) ((ArrayList) ancestrisMembers).clone(); // Copy ancestris members to avoid concurrent access to the list while using it
         Set<String> myIndiLastnames = owner.getCommHandler().getMySharedIndiLastnames(sharedGedcoms);
@@ -117,9 +118,15 @@ public class SearchSharedTrees extends Thread {
                 // Phase 3 - Identify and create/update matches
                 Set<GedcomIndi> myGedcomIndis = owner.getCommHandler().getMySharedGedcomIndis(sharedGedcoms, commonIndiLastnames);
                 if (myGedcomIndis != null && !myGedcomIndis.isEmpty()) {
-                    friendTmp = addCommonIndis(sharedGedcoms, myGedcomIndis, memberGedcomIndis, matchType, member);    // create/update matches and friends if common are found
-                    if (friendTmp != null) {
-                        friend = friendTmp;
+                    friend = addCommonIndis(sharedGedcoms, myGedcomIndis, memberGedcomIndis, matchType, member);    // create/update matches and friends if common are found
+                    if (friend != null) {
+                        friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);      // set numbers
+                        if (!profileExchanged) {
+                            friend.setProfile(owner.getCommHandler().getProfileMember(member), owner.getMyProfile());  // get member profile and set it for friend
+                            owner.getCommHandler().thankMember(member);   // thank and give my profile
+                            profileExchanged = true;
+                        }
+                        friend = null;
                     }
                 }
             }
@@ -142,9 +149,15 @@ public class SearchSharedTrees extends Thread {
                 // Phase 3 - Identify and create/update matches
                 Set<GedcomFam> myGedcomFams = owner.getCommHandler().getMySharedGedcomFams(sharedGedcoms, commonFamLastnames);
                 if (myGedcomFams != null && !myGedcomFams.isEmpty()) {
-                    friendTmp = addCommonFams(sharedGedcoms, myGedcomFams, memberGedcomFams, matchType, member);    // create/update matches and friends
-                    if (friendTmp != null) {
-                        friend = friendTmp;
+                    friend = addCommonFams(sharedGedcoms, myGedcomFams, memberGedcomFams, matchType, member);    // create/update matches and friends
+                    if (friend != null) {
+                        friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);      // set numbers
+                        if (!profileExchanged) {
+                            friend.setProfile(owner.getCommHandler().getProfileMember(member), owner.getMyProfile());  // get member profile and set it for friend
+                            owner.getCommHandler().thankMember(member);   // thank and give my profile
+                            profileExchanged = true;
+                        }
+                        friend = null;
                     }
                 }
                 
@@ -261,36 +274,36 @@ public class SearchSharedTrees extends Thread {
         if (false) {
             
             // make it easier for the formulas for myIndi
-            String ln1 = myIndi.indiLastName;
-            String fn1 = myIndi.indiFirstName;
-            String pl11 = myIndi.indiBirthPlace;                    // What if it is "," ?
-            String pl12 = myIndi.indiDeathPlace;                    // What if it is "," ?
-            int yrMin1 = Integer.valueOf(myIndi.indiBirthDate);     // What if it is "0" ?
-            int yrMax1 = Integer.valueOf(myIndi.indiDeathDate);     // What if it is "0" ?
+            String Aln = myIndi.indiLastName;
+            String Afn = myIndi.indiFirstName;
+            String Apl1 = myIndi.indiBirthPlace;                    // What if it is "," ?
+            String Apl2 = myIndi.indiDeathPlace;                    // What if it is "," ?
+            int Ayr1 = Integer.valueOf(myIndi.indiBirthDate);       // What if it is "0" ?
+            int Ayr2 = Integer.valueOf(myIndi.indiDeathDate);       // What if it is "0" ?
             
             // make it easier for the formulas for friendIndi
-            String ln2 = friendIndi.indiLastName;
-            String fn2 = friendIndi.indiFirstName;
-            String pl21 = friendIndi.indiBirthPlace;
-            String pl22 = friendIndi.indiDeathPlace;
-            int yrMin2 = Integer.valueOf(friendIndi.indiBirthDate);
-            int yrMax2 = Integer.valueOf(friendIndi.indiDeathDate);
+            String Bln = friendIndi.indiLastName;
+            String Bfn = friendIndi.indiFirstName;
+            String Bpl1 = friendIndi.indiBirthPlace;
+            String Bpl2 = friendIndi.indiDeathPlace;
+            int Byr1 = Integer.valueOf(friendIndi.indiBirthDate);
+            int Byr2 = Integer.valueOf(friendIndi.indiDeathDate);
             
-            // Formulas : Detect exact match first
-            if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {
-                return TreeSharingOptionsPanel.EXACT_MATCH;
-            }
-            // Formulas : Detect flash match
-            if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
-                if (ln1.equals(ln2)) {
-                    if (pl11.equals(pl21) || pl11.equals(pl22)) {
-                        if ((yrMin1<=yrMin2 && yrMin2<yrMax1) || (yrMin1>=yrMin2 && yrMin1 < yrMax2)) {  // dates overlap
-                            return TreeSharingOptionsPanel.FLASH_MATCH;
-                        }
-                    }
-                }
-            }
-            return TreeSharingOptionsPanel.NO_MATCH;
+//            // Formulas : Detect exact match first
+//            if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {
+//                return TreeSharingOptionsPanel.EXACT_MATCH;
+//            }
+//            // Formulas : Detect flash match
+//            if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
+//                if (ln1.equals(ln2)) {
+//                    if (pl11.equals(pl21) || pl11.equals(pl22)) {
+//                        if ((yrMin1<=yrMin2 && yrMin2<yrMax1) || (yrMin1>=yrMin2 && yrMin1 < yrMax2)) {  // dates overlap
+//                            return TreeSharingOptionsPanel.FLASH_MATCH;
+//                        }
+//                    }
+//                }
+//            }
+//            return TreeSharingOptionsPanel.NO_MATCH;
         }
         
         
