@@ -27,7 +27,6 @@ import org.openide.util.NbBundle;
  */
 public class GedcomFriendMatch extends JInternalFrame {
 
-    private final String name;
     private SharedGedcom sharedGedcom = null;
     private AncestrisFriend ancestrisFriend = null;
     private Set<MatchData> matchedIndis = null; 
@@ -37,9 +36,7 @@ public class GedcomFriendMatch extends JInternalFrame {
     /**
      * Creates new form GedcomFriendMatch
      */
-    public GedcomFriendMatch(String name, SharedGedcom sharedGedcom, AncestrisFriend ancestrisFriend) {
-        super(name);
-        this.name = name;
+    public GedcomFriendMatch(SharedGedcom sharedGedcom, AncestrisFriend ancestrisFriend) {
         this.sharedGedcom = sharedGedcom;
         this.ancestrisFriend = ancestrisFriend;
         matchedIndis = new HashSet<MatchData>();
