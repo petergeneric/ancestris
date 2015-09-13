@@ -29,5 +29,23 @@ public class MatchData {
         this.friendGedcomEntity = otherEntity;
         this.matchResult = matchResult;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        MatchData md = (MatchData) obj;
+        return md.myEntity.getGedcom().getName().equals(this.myEntity.getGedcom().getName())
+            && md.myEntity.getId().equals(this.myEntity.getId())
+            && md.friendGedcomEntity.entityID.equals(this.friendGedcomEntity.entityID)
+            && md.friendGedcomEntity.gedcomName.equals(this.friendGedcomEntity.gedcomName)
+            && md.friendGedcomEntity.friend.equals(this.friendGedcomEntity.friend);
+    }
 
+    @Override
+    public int hashCode() {
+        return myEntity.getGedcom().getName().hashCode() 
+             + myEntity.getId().hashCode() 
+             + friendGedcomEntity.entityID.hashCode() 
+             + friendGedcomEntity.gedcomName.hashCode() 
+             + friendGedcomEntity.friend.hashCode();
+    }
 }
