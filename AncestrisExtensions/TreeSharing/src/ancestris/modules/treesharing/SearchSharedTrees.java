@@ -203,6 +203,11 @@ public class SearchSharedTrees extends Thread {
             // Loop on all *my* shared entities
             for (GedcomIndi myGedcomIndi : myGedcomIndis) {
 
+                // Exclude all entities not belonging to sharedGedcom
+                if (!myGedcomIndi.gedcomName.equals(sharedGedcom.getGedcom().getName())) {
+                    continue;
+                }
+                
                 // Loop all *member* entities
                 for (GedcomIndi memberGedcomIndi : memberGedcomIndis) {
                     retMatch = isSameIndividual(myGedcomIndi, memberGedcomIndi, matchType);
@@ -234,6 +239,11 @@ public class SearchSharedTrees extends Thread {
             // Loop on all *my* shared entities
             for (GedcomFam myGedcomFam : myGedcomFams) {
 
+                // Exclude all entities not belonging to sharedGedcom
+                if (!myGedcomFam.gedcomName.equals(sharedGedcom.getGedcom().getName())) {
+                    continue;
+                }
+                
                 // Loop all *member* entities
                 for (GedcomFam memberGedcomFam : memberGedcomFams) {
                     retMatch = isSameFamily(myGedcomFam, memberGedcomFam, matchType);
@@ -273,7 +283,7 @@ public class SearchSharedTrees extends Thread {
         // 
         if (false) {
             
-            // make it easier for the formulas for myIndi
+            // make it easier for the formulas for myIndi (A)
             String Aln = myIndi.indiLastName;
             String Afn = myIndi.indiFirstName;
             String Apl1 = myIndi.indiBirthPlace;                    // What if it is "," ?
@@ -281,7 +291,7 @@ public class SearchSharedTrees extends Thread {
             int Ayr1 = Integer.valueOf(myIndi.indiBirthDate);       // What if it is "0" ?
             int Ayr2 = Integer.valueOf(myIndi.indiDeathDate);       // What if it is "0" ?
             
-            // make it easier for the formulas for friendIndi
+            // make it easier for the formulas for friendIndi (B)
             String Bln = friendIndi.indiLastName;
             String Bfn = friendIndi.indiFirstName;
             String Bpl1 = friendIndi.indiBirthPlace;
@@ -289,21 +299,21 @@ public class SearchSharedTrees extends Thread {
             int Byr1 = Integer.valueOf(friendIndi.indiBirthDate);
             int Byr2 = Integer.valueOf(friendIndi.indiDeathDate);
             
-//            // Formulas : Detect exact match first
-//            if (ln1.equals(ln2) && fn1.equals(fn2) && pl11.equals(pl21) && yrMin1 == yrMin2 && pl12.equals(pl22) && yrMax1 == yrMax2) {
-//                return TreeSharingOptionsPanel.EXACT_MATCH;
-//            }
-//            // Formulas : Detect flash match
-//            if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
-//                if (ln1.equals(ln2)) {
-//                    if (pl11.equals(pl21) || pl11.equals(pl22)) {
-//                        if ((yrMin1<=yrMin2 && yrMin2<yrMax1) || (yrMin1>=yrMin2 && yrMin1 < yrMax2)) {  // dates overlap
-//                            return TreeSharingOptionsPanel.FLASH_MATCH;
-//                        }
-//                    }
-//                }
-//            }
-//            return TreeSharingOptionsPanel.NO_MATCH;
+            // Formulas : Detect exact match first
+            if (Aln.equals(Bln) && Afn.equals(Bfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2) {
+                return TreeSharingOptionsPanel.EXACT_MATCH;
+            }
+            // Formulas : Detect flash match
+            if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {  // flash match
+                if (Aln.equals(Bln)) { // same lastname
+                    if (Apl1.equals(Bpl1) || Apl1.equals(Bpl2) || Apl2.equals(Bpl1) || Apl2.equals(Bpl2)) {    // a place in common, either birth or death
+                        if ((Ayr1<=Byr1 && Byr1<Byr2) || (Ayr1>=Byr2 && Ayr1 < Byr2)) {  // dates overlap
+                            return TreeSharingOptionsPanel.FLASH_MATCH;
+                        }
+                    }
+                }
+            }
+            return TreeSharingOptionsPanel.NO_MATCH;
         }
         
         
