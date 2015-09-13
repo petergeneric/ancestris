@@ -938,7 +938,7 @@ public class TreeSharingTopComponent extends TopComponent {
         AncestrisFriend friend = getFriend(memberEntity.friend, member.getIPAddress(), member.getPortAddress());
         
         // Update or Create MatchFrame
-        GedcomFriendMatch match = getGedcomFriendMatch(memberEntity.gedcomName, sharedGedcom, friend);
+        GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, friend);
         
         // Propagate updates
         sharedGedcom.addEntity(myEntity, memberEntity, matchResult);
@@ -953,7 +953,7 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     
-    private GedcomFriendMatch getGedcomFriendMatch(String foundGedcom, SharedGedcom sharedGedcom, AncestrisFriend friend) {
+    private GedcomFriendMatch getGedcomFriendMatch(SharedGedcom sharedGedcom, AncestrisFriend friend) {
         
         GedcomFriendMatch match = null;
         
@@ -975,7 +975,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // If match still null, then create it
         if (match == null) {
-            match = new GedcomFriendMatch(foundGedcom, sharedGedcom, friend);
+            match = new GedcomFriendMatch(sharedGedcom, friend);
             desktopPanel.addFrame(match, findLocation(gedcomFriendMatches.size(), LEFT_OFFSET_MATCHES, match.getPreferredSize().height));
             gedcomFriendMatches.add(match);
         }
