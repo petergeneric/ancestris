@@ -74,8 +74,7 @@ public class SearchSharedTrees extends Thread {
 //        
         
         // Initialize variables
-        boolean found = false;
-        AncestrisFriend friend = null;
+        AncestrisFriend friend = null, friendTmp = null;
         String matchType = TreeSharingOptionsPanel.getMatchType();
         List<AncestrisMember> copyOfAncestrisMembers = (List) ((ArrayList) ancestrisMembers).clone(); // Copy ancestris members to avoid concurrent access to the list while using it
         Set<String> myIndiLastnames = owner.getCommHandler().getMySharedIndiLastnames(sharedGedcoms);
@@ -118,8 +117,10 @@ public class SearchSharedTrees extends Thread {
                 // Phase 3 - Identify and create/update matches
                 Set<GedcomIndi> myGedcomIndis = owner.getCommHandler().getMySharedGedcomIndis(sharedGedcoms, commonIndiLastnames);
                 if (myGedcomIndis != null && !myGedcomIndis.isEmpty()) {
-                    friend = addCommonIndis(sharedGedcoms, myGedcomIndis, memberGedcomIndis, matchType, member);    // create/update matches and friends if common are found
-                    found = found || (friend != null);
+                    friendTmp = addCommonIndis(sharedGedcoms, myGedcomIndis, memberGedcomIndis, matchType, member);    // create/update matches and friends if common are found
+                    if (friendTmp != null) {
+                        friend = friendTmp;
+                    }
                 }
             }
 
@@ -141,14 +142,16 @@ public class SearchSharedTrees extends Thread {
                 // Phase 3 - Identify and create/update matches
                 Set<GedcomFam> myGedcomFams = owner.getCommHandler().getMySharedGedcomFams(sharedGedcoms, commonFamLastnames);
                 if (myGedcomFams != null && !myGedcomFams.isEmpty()) {
-                    friend = addCommonFams(sharedGedcoms, myGedcomFams, memberGedcomFams, matchType, member);    // create/update matches and friends
-                    found = found || (friend != null);
+                    friendTmp = addCommonFams(sharedGedcoms, myGedcomFams, memberGedcomFams, matchType, member);    // create/update matches and friends
+                    if (friendTmp != null) {
+                        friend = friendTmp;
+                    }
                 }
                 
             }
 
             // Thank you, exchange profiles and update friend
-            if (found) {
+            if (friend != null) {
                 friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);      // set numbers
                 friend.setProfile(owner.getCommHandler().getProfileMember(member), owner.getMyProfile());  // get member profile and set it for friend
                 friend = null;
