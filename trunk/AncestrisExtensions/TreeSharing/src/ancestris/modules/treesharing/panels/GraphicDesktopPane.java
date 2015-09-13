@@ -19,6 +19,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.CubicCurve2D;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JDesktopPane;
@@ -63,7 +64,10 @@ public class GraphicDesktopPane extends JDesktopPane {
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.setStroke(s);
         
-        for (Link link : listOfLinks) {
+        // Use array to avoid concurrent modification of listOfLinks
+        Link[] array = listOfLinks.toArray(new Link[listOfLinks.size()]);
+        for (int i = 0; i < array.length; i++) {
+            Link link = array[i];
             if (!link.f1.isIcon() && !link.f2.isIcon()) {
                 int x1 = link.f1.getX() + link.f1.getWidth() * 4 / 5;
                 int y1 = link.f1.getY() + link.f1.getHeight() / 2;
