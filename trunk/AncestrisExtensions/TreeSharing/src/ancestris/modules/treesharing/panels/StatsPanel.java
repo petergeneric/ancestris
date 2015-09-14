@@ -64,7 +64,7 @@ public class StatsPanel extends javax.swing.JPanel {
                 int row = jTable1.rowAtPoint(evt.getPoint());
                 int col = jTable1.columnAtPoint(evt.getPoint());
                 if (row >= 0 && col == 5) {
-                    MemberProfile mp = list.get(jTable1.getModel().getValueAt(jTable1.convertRowIndexToModel(row), 1)).profile;
+                    MemberProfile mp = list.get(jTable1.getModel().getValueAt(row, 1)).profile;
                     DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel"),
                             new ProfilePanel(mp, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
 

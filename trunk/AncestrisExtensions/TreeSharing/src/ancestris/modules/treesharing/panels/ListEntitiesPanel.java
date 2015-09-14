@@ -65,7 +65,7 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
                     return;
                 }
                 int row = jTable1.rowAtPoint(evt.getPoint());
-                String text = (String) jTable1.getModel().getValueAt(row, 1);
+                String text = (String) jTable1.getModel().getValueAt(jTable1.convertRowIndexToModel(row), 1);
                 Entity ent = getEntityFromString(text);
                 if (ent != null) {
                     SelectionDispatcher.fireSelection(new Context(ent));
