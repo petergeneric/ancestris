@@ -19,6 +19,8 @@ import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -65,30 +67,6 @@ public class SearchSharedTrees extends Thread {
      */
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
-//        if (true) {
-//            Set<MatchData> list = new HashSet<MatchData>();
-//            
-//            Entity indi = sharedGedcoms.get(0).getGedcom().getFirstEntity(Gedcom.INDI);
-//            FriendGedcomEntity fge = new FriendGedcomEntity("Ami", "francois.ged", "I0001");
-//            MatchData md = new MatchData(indi, fge, 1);
-//            list.add(md);
-//            
-//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I00002");
-//            fge = new FriendGedcomEntity("Ami", "francois.ged", "I0002");
-//            md = new MatchData(indi, fge, 2);
-//            list.add(md);
-//            
-//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I00003");
-//            fge = new FriendGedcomEntity("Ami", "francois.ged", "I0002");
-//            md = new MatchData(indi, fge, 3);
-//            list.add(md);
-//            
-//            DialogManager.create("titre", new ListEntitiesPanel("allgedcoms", "nom", list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
-//            stopGracefully();
-//            return;
-//        }
-        
-        
         // Initialize variables
         AncestrisFriend friend = null;
         boolean profileExchanged = false;
