@@ -12,13 +12,21 @@
 package ancestris.modules.treesharing;
 
 import ancestris.modules.treesharing.communication.AncestrisMember;
+import ancestris.modules.treesharing.communication.EntityConversion;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
 import ancestris.modules.treesharing.communication.GedcomNumbers;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
+import ancestris.modules.treesharing.panels.ListEntitiesPanel;
+import ancestris.modules.treesharing.panels.MatchData;
 import ancestris.modules.treesharing.panels.SharedGedcom;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -69,18 +77,33 @@ public class SearchSharedTrees extends Thread {
 //            Set<MatchData> list = new HashSet<MatchData>();
 //            
 //            Entity indi = sharedGedcoms.get(0).getGedcom().getFirstEntity(Gedcom.INDI);
-//            FriendGedcomEntity fge = new FriendGedcomEntity("Ami", "francois.ged", "I0001");
+//            FriendGedcomEntity fge = new FriendGedcomEntity("Ami", EntityConversion.indiToGedcomIndi((Indi)indi));
 //            MatchData md = new MatchData(indi, fge, 1);
 //            list.add(md);
 //            
-//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I00002");
-//            fge = new FriendGedcomEntity("Ami", "francois.ged", "I0002");
+//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I36");
+//            fge = new FriendGedcomEntity("Ami", EntityConversion.indiToGedcomIndi((Indi)indi));
 //            md = new MatchData(indi, fge, 2);
 //            list.add(md);
 //            
-//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I00003");
-//            fge = new FriendGedcomEntity("Ami", "francois.ged", "I0002");
+//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I38");
+//            fge = new FriendGedcomEntity("Ami", EntityConversion.indiToGedcomIndi((Indi)indi));
 //            md = new MatchData(indi, fge, 3);
+//            list.add(md);
+//            
+//            Entity fam = sharedGedcoms.get(0).getGedcom().getFirstEntity(Gedcom.FAM);
+//            fge = new FriendGedcomEntity("Ami", EntityConversion.famToGedcomFam((Fam)fam));
+//            md = new MatchData(fam, fge, 1);
+//            list.add(md);
+//            
+//            fam = sharedGedcoms.get(0).getGedcom().getEntity("F65");
+//            fge = new FriendGedcomEntity("Ami", EntityConversion.famToGedcomFam((Fam)fam));
+//            md = new MatchData(fam, fge, 1);
+//            list.add(md);
+//            
+//            fam = sharedGedcoms.get(0).getGedcom().getEntity("F102");
+//            fge = new FriendGedcomEntity("Ami", EntityConversion.famToGedcomFam((Fam)fam));
+//            md = new MatchData(fam, fge, 1);
 //            list.add(md);
 //            
 //            DialogManager.create("titre", new ListEntitiesPanel("allgedcoms", "nom", list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
