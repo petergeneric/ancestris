@@ -19,8 +19,6 @@ import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
-import java.awt.FileDialog;
-import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -67,6 +65,53 @@ public class SearchSharedTrees extends Thread {
      */
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
+        if (true) {
+//            Set<MatchData> list = new HashSet<MatchData>();
+//            
+//            Entity indi = sharedGedcoms.get(0).getGedcom().getFirstEntity(Gedcom.INDI);
+//            FriendGedcomEntity fge = new FriendGedcomEntity("Ami", "francois.ged", "I0001");
+//            MatchData md = new MatchData(indi, fge, 1);
+//            list.add(md);
+//            
+//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I00002");
+//            fge = new FriendGedcomEntity("Ami", "francois.ged", "I0002");
+//            md = new MatchData(indi, fge, 2);
+//            list.add(md);
+//            
+//            indi = sharedGedcoms.get(0).getGedcom().getEntity("I00003");
+//            fge = new FriendGedcomEntity("Ami", "francois.ged", "I0002");
+//            md = new MatchData(indi, fge, 3);
+//            list.add(md);
+//            
+//            DialogManager.create("titre", new ListEntitiesPanel("allgedcoms", "nom", list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+//FileDialog fd = new FileDialog(new Frame(), "Choose a file", FileDialog.LOAD);
+//fd.setDirectory("~");
+//fd.setFile("*.doc");
+//fd.setVisible(true);
+//String filename = fd.getFile();
+
+//if (filename == null)
+//  System.out.println("You cancelled the choice");
+//else
+//  System.out.println("You chose " + filename);
+//
+//
+//            fd.setFilenameFilter(new FilenameFilter() {
+//    @Override
+//    public boolean accept(File dir, String name) {
+//        return name.endsWith(".txt");
+//    }
+//});
+            
+            
+//stopGracefully();
+//            return;
+        }
+        
+        
+        
+        
+        
         // Initialize variables
         AncestrisFriend friend = null;
         boolean profileExchanged = false;
@@ -208,7 +253,7 @@ public class SearchSharedTrees extends Thread {
                     if (retMatch != TreeSharingOptionsPanel.NO_MATCH) { // we have a match
                         friend = owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomIndi.entityID), 
-                                new FriendGedcomEntity(member.getMemberName(), memberGedcomIndi.gedcomName, memberGedcomIndi.entityID), 
+                                new FriendGedcomEntity(member.getMemberName(), memberGedcomIndi), 
                                 member, retMatch);
                     }
                     continue;
@@ -244,7 +289,7 @@ public class SearchSharedTrees extends Thread {
                     if (retMatch != TreeSharingOptionsPanel.NO_MATCH) { // we have a match
                         friend = owner.createMatch(sharedGedcom, 
                                 sharedGedcom.getGedcom().getEntity(myGedcomFam.entityID), 
-                                new FriendGedcomEntity(member.getMemberName(), memberGedcomFam.gedcomName, memberGedcomFam.entityID), 
+                                new FriendGedcomEntity(member.getMemberName(), memberGedcomFam), 
                                 member, retMatch);
                     }
                     continue;

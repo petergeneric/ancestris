@@ -12,21 +12,79 @@
 
 package ancestris.modules.treesharing.panels;
 
+import ancestris.modules.treesharing.communication.GedcomFam;
+import ancestris.modules.treesharing.communication.GedcomIndi;
+import genj.gedcom.Gedcom;
+
 /**
  *
  * @author frederic
  */
 public class FriendGedcomEntity {
 
+    public String type = "";
     public String friend = "";
     public String gedcomName = "";
     public String entityID = "";
+    
+    public String indiID = "";
+    public String indiLastName = "";
+    public String indiFirstName = "";
+    public String indiBirthDate = "";
+    public String indiBirthPlace = "";
+    public String indiDeathDate = "";
+    public String indiDeathPlace = "";
 
-    public FriendGedcomEntity(String friend, String gedcomName, String entityID) {
-        this.friend = friend;
-        this.gedcomName = gedcomName;
-        this.entityID = entityID;
+    public String spouID = "";
+    public String spouLastName = "";
+    public String spouFirstName = "";
+    public String spouBirthDate = "";
+    public String spouBirthPlace = "";
+    public String spouDeathDate = "";
+    public String spouDeathPlace = "";
+    
+    public String famMarrDate = "";
+    public String famMarrPlace = "";
+    
+
+    public FriendGedcomEntity(String name, GedcomIndi indi) {
+        this.type= Gedcom.INDI;
+        this.friend = name;
+        this.gedcomName = indi.gedcomName;
+        this.entityID = indi.entityID;
+        this.indiID = indi.entityID;
+        this.indiLastName = indi.indiLastName;
+        this.indiFirstName = indi.indiFirstName;
+        this.indiBirthDate = indi.indiBirthDate;
+        this.indiBirthPlace = indi.indiBirthPlace;
+        this.indiDeathDate = indi.indiDeathDate;
+        this.indiDeathPlace = indi.indiDeathPlace;
+    }
+
+    public FriendGedcomEntity(String name, GedcomFam fam) {
+        this.type= Gedcom.FAM;
+        this.friend = name;
+        this.gedcomName = fam.gedcomName;
+        this.entityID = fam.entityID;
+        this.indiID = fam.husbID;
+        this.indiLastName = fam.husbLastName;
+        this.indiFirstName = fam.husbFirstName;
+        this.indiBirthDate = fam.husbBirthDate;
+        this.indiBirthPlace = fam.husbBirthPlace;
+        this.indiDeathDate = fam.husbDeathDate;
+        this.indiDeathPlace = fam.husbDeathPlace;
+        this.spouID = fam.wifeID;
+        this.spouLastName = fam.wifeLastName;
+        this.spouFirstName = fam.wifeFirstName;
+        this.spouBirthDate = fam.wifeBirthDate;
+        this.spouBirthPlace = fam.wifeBirthPlace;
+        this.spouDeathDate = fam.wifeDeathDate;
+        this.spouDeathPlace = fam.wifeDeathPlace;
+        this.famMarrDate = fam.famMarrDate;
+        this.famMarrPlace = fam.famMarrPlace;
+        
     }
         
+    
     
 }
