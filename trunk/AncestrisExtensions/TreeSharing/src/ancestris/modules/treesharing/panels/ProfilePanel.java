@@ -202,7 +202,7 @@ public class ProfilePanel extends javax.swing.JPanel {
                 + mp.userdir 
                 + "<br><br>" 
                 + mp.osname 
-                + " --- " 
+                + "<br>" 
                 + mp.osversion 
                 + "<br><br>" 
                 + "</font></center></html>";
