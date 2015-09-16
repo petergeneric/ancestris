@@ -12,6 +12,7 @@
 
 package ancestris.modules.treesharing.communication;
 
+import ancestris.core.TextOptions;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -104,7 +105,7 @@ public class EntityConversion {
     }
 
     private static String getDeathPlace(Indi indi) {
-        PropertyPlace prop = (PropertyPlace) indi.getProperty(new TagPath("INDI:DEATH:PLAC"));
+        PropertyPlace prop = (PropertyPlace) indi.getProperty(new TagPath("INDI:DEAT:PLAC"));
         return getCityCountry(prop);
     }
 
@@ -147,64 +148,56 @@ public class EntityConversion {
 
     
     
-    /**
-     * (Same format as method above) 
-     * 
-     * Indi format : Lapeyre, Frédéric (I01234)
-     * [1980-deathyear] [Paris,France-deathcity,deathcntry] 
-     * 
-     * Family format:
-     * Lapeyre, Frédéric (I01234) [1980-deathyear] [Paris,France-deathcity,deathcntry]
-     * x DUPOND, Charlotte (I01235)
-     * [1980-deathyear] [Paris,France-deathcity,deathcntry] (F123) 
-     * [marrYear] [marrCity,marrcntry]
-     *
-     * @param fge
-     * @return
-     */
     public static String getStringFromEntity(FriendGedcomEntity fge) {
+        
+        String b = TextOptions.getInstance().getBirthSymbol();
+        String m = TextOptions.getInstance().getMarriageSymbol();
+        String d = TextOptions.getInstance().getDeathSymbol();
+
         StringBuilder ret = new StringBuilder(fge.indiLastName);
         ret.append(", ");
         ret.append(fge.indiFirstName);
         ret.append(" (");
         ret.append(fge.indiID);
-        ret.append(") [");
-        ret.append(fge.indiBirthDate);
-        ret.append("-");
-        ret.append(fge.indiDeathDate);
-        ret.append("] [");
-        ret.append(fge.indiBirthPlace);
-        ret.append("-");
-        ret.append(fge.indiDeathPlace);
-        ret.append("]");
+        ret.append(") {"+b);
+        ret.append(fge.indiBirthDate.equals("0") ? "?" : fge.indiBirthDate);
+        ret.append(" ");
+        ret.append(fge.indiBirthPlace.equals(",") ? "?" : fge.indiBirthPlace);
+        ret.append(" "+d);
+        ret.append(fge.indiDeathDate.equals("0") ? "?" : fge.indiDeathDate);
+        ret.append(" ");
+        ret.append(fge.indiDeathPlace.equals(",") ? "?" : fge.indiDeathPlace);
+        ret.append("}");
         
         if (fge.type.equals(Gedcom.FAM)) {
-            ret.append(" x ");
+            ret.append(" {"+m);
+            ret.append(fge.famMarrDate.equals("0") ? "?" : fge.famMarrDate);
+            ret.append(" ");
+            ret.append(fge.famMarrPlace.equals(",") ? "?" : fge.famMarrPlace);
+            ret.append("} ");
             ret.append(fge.spouLastName);
             ret.append(", ");
             ret.append(fge.spouFirstName);
             ret.append(" (");
             ret.append(fge.spouID);
-            ret.append(") [");
-            ret.append(fge.spouBirthDate);
-            ret.append("-");
-            ret.append(fge.spouDeathDate);
-            ret.append("] [");
-            ret.append(fge.spouBirthPlace);
-            ret.append("-");
-            ret.append(fge.spouDeathPlace);
-            ret.append("] (");
+            ret.append(") {"+b);
+            ret.append(fge.spouBirthDate.equals("0") ? "?" : fge.spouBirthDate);
+            ret.append(" ");
+            ret.append(fge.spouBirthPlace.equals(",") ? "?" : fge.spouBirthPlace);
+            ret.append(" "+d);
+            ret.append(fge.spouDeathDate.equals("0") ? "?" : fge.spouDeathDate);
+            ret.append(" ");
+            ret.append(fge.spouDeathPlace.equals(",") ? "?" : fge.spouDeathPlace);
+            ret.append("} (");
             ret.append(fge.entityID);
-            ret.append(") [");
-            ret.append(fge.famMarrDate);
-            ret.append("] [");
-            ret.append(fge.famMarrPlace);
-            ret.append("]");
+            ret.append(")");
         }
 
         return ret.toString();
     }
 
+
+    
     
     
 }
