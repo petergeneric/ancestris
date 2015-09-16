@@ -310,7 +310,8 @@ public class Comm {
             }
             
         } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+            //Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "Error while getting ancestris members : " + ex.getMessage());
         }
                 
         // Return list
@@ -332,7 +333,8 @@ public class Comm {
             in.close();
             connection.disconnect();
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            //Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "Error while querying the server : " + ex.getMessage());
         }
 
         return ret;

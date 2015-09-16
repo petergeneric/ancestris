@@ -11,6 +11,7 @@
  */
 package ancestris.modules.treesharing.panels;
 
+import ancestris.modules.treesharing.communication.EntityConversion;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -44,10 +45,10 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
         jLabel3.setText(gedcomName);
         jLabel4.setText(friend);
         jTable1.setAutoCreateRowSorter(true);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(150);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(320);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(130);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(200);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(200);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(50);
         jTable1.getColumnModel().getColumn(4).setPreferredWidth(100);
         jTable1.getColumnModel().getColumn(5).setPreferredWidth(0);
         jTable1.setFillsViewportHeight(true);
@@ -191,8 +192,8 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
             int i = 0;
             for (MatchData line : list) {
                 data[i][0] = line.myEntity.getGedcom().getName();
-                data[i][1] = line.myEntity.toString();
-                data[i][2] = line.friendGedcomEntity.entityID;
+                data[i][1] = EntityConversion.getStringFromEntity(line.myEntity);
+                data[i][2] = EntityConversion.getStringFromEntity(line.friendGedcomEntity);
                 data[i][3] = line.friendGedcomEntity.gedcomName;
                 data[i][4] = line.friendGedcomEntity.friend;
                 data[i][5] = line.matchResult;
@@ -236,13 +237,19 @@ public class ListEntitiesPanel extends javax.swing.JPanel {
             fireTableCellUpdated(row, col);
         }
 
+        
 
     }
     
    
+    
+    
+    
     private final Entity getEntityFromString(String str) {
+        String id;
         for (MatchData item : list) {
-            if (item.myEntity.toString().equals(str)) {
+            id = "(" + item.myEntity.getId() + ")";
+            if (str.contains(id)) {
                 return item.myEntity;
             }
         }
