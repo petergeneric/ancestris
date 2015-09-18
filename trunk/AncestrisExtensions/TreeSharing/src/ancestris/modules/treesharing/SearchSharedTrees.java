@@ -27,6 +27,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertySex;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -343,6 +344,7 @@ public class SearchSharedTrees extends Thread {
     private int isSameIndividual(GedcomIndi myIndi, GedcomIndi friendIndi, int matchType) {
 
         // make it easier for the formulas for myIndi (A)
+        String Asx = myIndi.indiSex;
         String Aln = myIndi.indiLastName;
         String Afn = myIndi.indiFirstName;
         String Apl1 = myIndi.indiBirthPlace;
@@ -351,6 +353,7 @@ public class SearchSharedTrees extends Thread {
         int Ayr2 = Integer.valueOf(myIndi.indiDeathDate);
 
         // make it easier for the formulas for friendIndi (B)
+        String Bsx = friendIndi.indiSex;
         String Bln = friendIndi.indiLastName;
         String Bfn = friendIndi.indiFirstName;
         String Bpl1 = friendIndi.indiBirthPlace;
@@ -358,14 +361,19 @@ public class SearchSharedTrees extends Thread {
         int Byr1 = Integer.valueOf(friendIndi.indiBirthDate);
         int Byr2 = Integer.valueOf(friendIndi.indiDeathDate);
 
+        // If different sex, return no match
+        if ((!Asx.equals(""+PropertySex.UNKNOWN)) && (!Bsx.equals(""+PropertySex.UNKNOWN)) && (!Asx.equals(Bsx))) {
+            return TreeSharingOptionsPanel.NO_MATCH;
+        }
+        
         // Formulas : Detect exact match first
-        if (Aln.equals(Bln) && Afn.equals(Bfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2) {
+        if (Asx.equals(Bsx) && Aln.equals(Bln) && Afn.equals(Bfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2) {
             return TreeSharingOptionsPanel.EXACT_MATCH;
         }
         
         // Formulas : Detect flash match
         if (matchType >= TreeSharingOptionsPanel.FLASH_MATCH) {
-            if (Aln.equals(Bln) // if same lastname, 
+            if (Aln.equals(Bln)  // if same lastname
                     && (Apl1.length() > 1 || Apl2.length() > 1 || Bpl1.length() > 1 || Bpl2.length() > 1) // ...at least one place indicated across both, 
                     && (Ayr1 > 0 || Ayr2 > 0) && (Byr1 > 0 || Byr2 > 0)) { // ...and at least one year with non zero for each (year can always be estimated and therefore filled in by user, places cannot)
                 if (Apl1.equals(Bpl1) || Apl1.equals(Bpl2) || Apl2.equals(Bpl1) || Apl2.equals(Bpl2)) {    // a place in common, either birth or death
@@ -385,17 +393,6 @@ public class SearchSharedTrees extends Thread {
 
         // no match
         return TreeSharingOptionsPanel.NO_MATCH;
-        
-//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && !myIndi.indiLastName.equals(friendIndi.indiLastName)) {
-//            return TreeSharingOptionsPanel.NO_MATCH;
-//        }
-//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && !myIndi.indiFirstName.equals(friendIndi.indiFirstName)) {
-//            return TreeSharingOptionsPanel.NO_MATCH;
-//        }
-//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
-//            return TreeSharingOptionsPanel.EXACT_MATCH;
-//        }
-//        return TreeSharingOptionsPanel.NO_MATCH;
     }
 
     
@@ -403,12 +400,14 @@ public class SearchSharedTrees extends Thread {
     private int isSameFamily(GedcomFam myFamily, GedcomFam friendFam, int matchType) {
 
         // make it easier for the formulas for myFamily
+        String Ahsx = myFamily.husbSex;
         String Ahln = myFamily.husbLastName;
         String Ahfn = myFamily.husbFirstName;
         String Apl1 = myFamily.husbBirthPlace;
         String Apl2 = myFamily.husbDeathPlace;
         int Ayr1 = Integer.valueOf(myFamily.husbBirthDate);
         int Ayr2 = Integer.valueOf(myFamily.husbDeathDate);
+        String Awsx = myFamily.wifeSex;
         String Awln = myFamily.wifeLastName;
         String Awfn = myFamily.wifeFirstName;
         String Apl3 = myFamily.wifeBirthPlace;
@@ -419,12 +418,14 @@ public class SearchSharedTrees extends Thread {
         int Ayr5 = Integer.valueOf(myFamily.famMarrDate);
 
         // make it easier for the formulas for friendFam
+        String Bhsx = friendFam.husbSex;
         String Bhln = friendFam.husbLastName;
         String Bhfn = friendFam.husbFirstName;
         String Bpl1 = friendFam.husbBirthPlace;
         String Bpl2 = friendFam.husbDeathPlace;
         int Byr1 = Integer.valueOf(friendFam.husbBirthDate);
         int Byr2 = Integer.valueOf(friendFam.husbDeathDate);
+        String Bwsx = friendFam.wifeSex;
         String Bwln = friendFam.wifeLastName;
         String Bwfn = friendFam.wifeFirstName;
         String Bpl3 = friendFam.wifeBirthPlace;
@@ -434,6 +435,14 @@ public class SearchSharedTrees extends Thread {
         String Bpl5 = friendFam.famMarrPlace;
         int Byr5 = Integer.valueOf(friendFam.famMarrDate);
 
+        // If different sex, return no match
+        if ((!Ahsx.equals(""+PropertySex.UNKNOWN)) && (!Bhsx.equals(""+PropertySex.UNKNOWN)) && (!Ahsx.equals(Bhsx))) {
+            return TreeSharingOptionsPanel.NO_MATCH;
+        }
+        if ((!Awsx.equals(""+PropertySex.UNKNOWN)) && (!Bwsx.equals(""+PropertySex.UNKNOWN)) && (!Awsx.equals(Bwsx))) {
+            return TreeSharingOptionsPanel.NO_MATCH;
+        }
+        
         // Formulas : Detect exact match first
         if (Ahln.equals(Bhln) && Ahfn.equals(Bhfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2
                 && Awln.equals(Bwln) && Awfn.equals(Bwfn) && Apl3.equals(Bpl3) && Ayr3 == Byr3 && Apl4.equals(Bpl4) && Ayr4 == Byr4
@@ -470,26 +479,6 @@ public class SearchSharedTrees extends Thread {
 
         // No match
         return TreeSharingOptionsPanel.NO_MATCH;
-
-        
-        
-        
-//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbLastName != null && !myFamily.husbLastName.equals(friendFam.husbLastName)) {
-//            return TreeSharingOptionsPanel.NO_MATCH;
-//        }
-//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.husbFirstName != null && !myFamily.husbFirstName.equals(friendFam.husbFirstName)) {
-//            return TreeSharingOptionsPanel.NO_MATCH;
-//        }
-//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.wifeLastName != null && !myFamily.wifeLastName.equals(friendFam.wifeLastName)) {
-//            return TreeSharingOptionsPanel.NO_MATCH;
-//        }
-//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0]) && myFamily.wifeFirstName != null && !myFamily.wifeFirstName.equals(friendFam.wifeFirstName)) {
-//            return TreeSharingOptionsPanel.NO_MATCH;
-//        }
-//        if (matchType.equals(TreeSharingOptionsPanel.MATCHING_MENU[0])) {
-//            return TreeSharingOptionsPanel.EXACT_MATCH;
-//        }
-//        return TreeSharingOptionsPanel.NO_MATCH;
     }
     
     

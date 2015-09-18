@@ -22,6 +22,7 @@ public class GedcomFam implements Serializable {
     public String entityID = "";
     
     public String husbID = "";
+    public String husbSex = "";
     public String husbLastName = "";
     public String husbFirstName = "";
     public String husbBirthDate = "";
@@ -30,6 +31,7 @@ public class GedcomFam implements Serializable {
     public String husbDeathPlace = "";
     
     public String wifeID = "";
+    public String wifeSex = "";
     public String wifeLastName = "";
     public String wifeFirstName = "";
     public String wifeBirthDate = "";
