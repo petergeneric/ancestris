@@ -22,6 +22,7 @@ public class GedcomIndi implements Serializable {
         public String gedcomName = "";
         public String entityID = "";
         
+        public String indiSex = "";
         public String indiLastName = "";
         public String indiFirstName = "";
         public String indiBirthDate = "";

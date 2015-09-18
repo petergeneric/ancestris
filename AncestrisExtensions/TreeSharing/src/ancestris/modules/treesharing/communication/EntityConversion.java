@@ -17,11 +17,13 @@ import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -33,6 +35,7 @@ public class EntityConversion {
         GedcomIndi gedcomIndi = new GedcomIndi();
         gedcomIndi.gedcomName = indi.getGedcom().getName();
         gedcomIndi.entityID = indi.getId();
+        gedcomIndi.indiSex = ""+indi.getSex();
         gedcomIndi.indiLastName = indi.getLastName();
         gedcomIndi.indiFirstName = indi.getFirstName();
         gedcomIndi.indiBirthDate = getYear(indi.getBirthDate());
@@ -52,6 +55,7 @@ public class EntityConversion {
         Indi husband = fam.getHusband();
         if (husband != null) {
             gedcomFam.husbID = husband.getId();
+            gedcomFam.husbSex = ""+husband.getSex();
             gedcomFam.husbLastName = husband.getLastName();
             gedcomFam.husbFirstName = husband.getFirstName();
             gedcomFam.husbBirthDate = getYear(husband.getBirthDate());
@@ -60,6 +64,7 @@ public class EntityConversion {
             gedcomFam.husbDeathPlace = getDeathPlace(husband);
         } else {
             gedcomFam.husbID = "";
+            gedcomFam.husbSex = "";
             gedcomFam.husbLastName = "";
             gedcomFam.husbFirstName = "";
             gedcomFam.husbBirthDate = "0";
@@ -70,6 +75,7 @@ public class EntityConversion {
         Indi wife = fam.getWife();
         if (wife != null) {
             gedcomFam.wifeID = wife.getId();
+            gedcomFam.wifeSex = ""+wife.getSex();
             gedcomFam.wifeLastName = wife.getLastName();
             gedcomFam.wifeFirstName = wife.getFirstName();
             gedcomFam.wifeBirthDate = getYear(wife.getBirthDate());
@@ -78,6 +84,7 @@ public class EntityConversion {
             gedcomFam.wifeDeathPlace = getDeathPlace(wife);
         } else {
             gedcomFam.wifeID = "";
+            gedcomFam.wifeSex = "";
             gedcomFam.wifeLastName = "";
             gedcomFam.wifeFirstName = "";
             gedcomFam.wifeBirthDate = "0";
@@ -96,7 +103,16 @@ public class EntityConversion {
             return "0";
         }
         PointInTime pit = date.getStart();
-        return "" + (pit != null ? pit.getYear() : 0);
+        if (pit == null) {
+            return "0";
+        }
+        PointInTime pit2;
+        try {
+            pit2 = pit.getPointInTime(PointInTime.GREGORIAN);
+        } catch (GedcomException ex) {
+            return "0";
+        }
+        return (pit2 != null ? ""+pit2.getYear() : "0");
     }
 
     private static String getBirthPlace(Indi indi) {
