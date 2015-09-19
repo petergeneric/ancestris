@@ -935,7 +935,8 @@ public class TreeSharingTopComponent extends TopComponent {
     public AncestrisFriend createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, AncestrisMember member, int matchResult) {
 
         // Update or Create AncestrisFriend
-        AncestrisFriend friend = getFriend(memberEntity.friend, member.getIPAddress(), member.getPortAddress());
+        AncestrisFriend friend = getFriend(memberEntity.friend);
+        memberEntity.setFriend(friend);
         
         // Update or Create MatchFrame
         GedcomFriendMatch match = getGedcomFriendMatch(sharedGedcom, friend);
@@ -983,7 +984,7 @@ public class TreeSharingTopComponent extends TopComponent {
         return match;
     }
 
-    private AncestrisFriend getFriend(String foundFriend, String ipAddress, String portAddress) {
+    private AncestrisFriend getFriend(String foundFriend) {
 
         AncestrisFriend friend = null;
         

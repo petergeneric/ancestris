@@ -12,6 +12,7 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
+import ancestris.modules.treesharing.SearchSharedTrees;
 import ancestris.modules.treesharing.communication.EntityConversion;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
@@ -70,7 +71,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         initComponents();
         setShared(false);
         setPrivacy(respectPrivacy);
-        //updateStats(true);
+        updateStats(true);
     }
 
     /**
@@ -573,10 +574,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     }
 
     private void showList(Set<MatchData> list) {
-        DialogManager.create(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_CommonEntities"), 
-                new ListEntitiesPanel(getGedcom().getName(), 
-                NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllFriends"),  
-                list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+        SearchSharedTrees.displayResultsPanel(list, getGedcom().getName(), NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllFriends"));
     }
 
     private int countIds(Set<MatchData> matchedEntities) {
