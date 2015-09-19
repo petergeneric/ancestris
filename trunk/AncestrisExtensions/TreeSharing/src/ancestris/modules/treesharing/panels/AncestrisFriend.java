@@ -11,6 +11,8 @@
  */
 package ancestris.modules.treesharing.panels;
 
+import ancestris.modules.treesharing.SearchSharedTrees;
+import static ancestris.modules.treesharing.SearchSharedTrees.displayResultsPanel;
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
@@ -209,6 +211,10 @@ public class AncestrisFriend extends JInternalFrame {
         return name;
     }
     
+    public MemberProfile getFriendProfile() {
+        return memberProfile;
+    }
+    
     
     public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity, int matchResult) {
         if (entity instanceof Indi) {
@@ -242,10 +248,7 @@ public class AncestrisFriend extends JInternalFrame {
 
     
     private void showList(Set<MatchData> list) {
-        DialogManager.create(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_CommonEntities"), 
-                new ListEntitiesPanel(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllGedcoms"),  
-                name, 
-                list)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+        SearchSharedTrees.displayResultsPanel(list, NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllGedcoms"), name);
     }
 
     public void removeGedcom(SharedGedcom sg) {

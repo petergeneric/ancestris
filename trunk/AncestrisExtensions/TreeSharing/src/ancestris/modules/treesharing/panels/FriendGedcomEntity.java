@@ -15,6 +15,7 @@ package ancestris.modules.treesharing.panels;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
 import genj.gedcom.Gedcom;
+import genj.gedcom.PropertySex;
 
 /**
  *
@@ -23,11 +24,13 @@ import genj.gedcom.Gedcom;
 public class FriendGedcomEntity {
 
     public String type = "";
+    public AncestrisFriend afriend = null;
     public String friend = "";
     public String gedcomName = "";
     public String entityID = "";
     
     public String indiID = "";
+    public int    indiSex = PropertySex.UNKNOWN;
     public String indiLastName = "";
     public String indiFirstName = "";
     public String indiBirthDate = "";
@@ -36,6 +39,7 @@ public class FriendGedcomEntity {
     public String indiDeathPlace = "";
 
     public String spouID = "";
+    public int    spouSex = PropertySex.UNKNOWN;
     public String spouLastName = "";
     public String spouFirstName = "";
     public String spouBirthDate = "";
@@ -53,6 +57,7 @@ public class FriendGedcomEntity {
         this.gedcomName = indi.gedcomName;
         this.entityID = indi.entityID;
         this.indiID = indi.entityID;
+        this.indiSex = Integer.valueOf(indi.indiSex);
         this.indiLastName = indi.indiLastName;
         this.indiFirstName = indi.indiFirstName;
         this.indiBirthDate = indi.indiBirthDate;
@@ -67,6 +72,7 @@ public class FriendGedcomEntity {
         this.gedcomName = fam.gedcomName;
         this.entityID = fam.entityID;
         this.indiID = fam.husbID;
+        this.indiSex = Integer.valueOf(fam.husbSex);
         this.indiLastName = fam.husbLastName;
         this.indiFirstName = fam.husbFirstName;
         this.indiBirthDate = fam.husbBirthDate;
@@ -74,6 +80,7 @@ public class FriendGedcomEntity {
         this.indiDeathDate = fam.husbDeathDate;
         this.indiDeathPlace = fam.husbDeathPlace;
         this.spouID = fam.wifeID;
+        this.spouSex = Integer.valueOf(fam.wifeSex);
         this.spouLastName = fam.wifeLastName;
         this.spouFirstName = fam.wifeFirstName;
         this.spouBirthDate = fam.wifeBirthDate;
@@ -82,9 +89,11 @@ public class FriendGedcomEntity {
         this.spouDeathPlace = fam.wifeDeathPlace;
         this.famMarrDate = fam.famMarrDate;
         this.famMarrPlace = fam.famMarrPlace;
-        
     }
         
+    public void setFriend(AncestrisFriend afriend) {
+        this.afriend = afriend;
+    }
     
     
 }

@@ -150,27 +150,28 @@ public class EntityConversion {
     
     
     
-    public static String getStringFromEntity(Entity entity) {
+    public static String getStringFromEntity(Entity entity, boolean useHtml) {
         if (entity instanceof Indi) {
             FriendGedcomEntity fge = new FriendGedcomEntity("", EntityConversion.indiToGedcomIndi((Indi) entity));
-            return getStringFromEntity(fge);
+            return getStringFromEntity(fge, useHtml);
         }
         if (entity instanceof Fam) {
             FriendGedcomEntity fge = new FriendGedcomEntity("", EntityConversion.famToGedcomFam((Fam) entity));
-            return getStringFromEntity(fge);
+            return getStringFromEntity(fge, useHtml);
         }
         return "";
     }
 
     
     
-    public static String getStringFromEntity(FriendGedcomEntity fge) {
+    public static String getStringFromEntity(FriendGedcomEntity fge, boolean useHtml) {
         
         String b = TextOptions.getInstance().getBirthSymbol();
         String m = TextOptions.getInstance().getMarriageSymbol();
         String d = TextOptions.getInstance().getDeathSymbol();
 
-        StringBuilder ret = new StringBuilder(fge.indiLastName);
+        StringBuilder ret = new StringBuilder(useHtml ? "<html>" : "");
+        ret.append(fge.indiLastName);
         ret.append(", ");
         ret.append(fge.indiFirstName);
         ret.append(" (");
@@ -186,11 +187,11 @@ public class EntityConversion {
         ret.append("}");
         
         if (fge.type.equals(Gedcom.FAM)) {
-            ret.append(" {"+m);
+            ret.append((useHtml ? "<br>&nbsp;&nbsp;&nbsp;" : "") + " {"+m);
             ret.append(fge.famMarrDate.equals("0") ? "?" : fge.famMarrDate);
             ret.append(" ");
             ret.append(fge.famMarrPlace.equals(",") ? "?" : fge.famMarrPlace);
-            ret.append("} ");
+            ret.append("}" + (useHtml ? "<br>" : " "));
             ret.append(fge.spouLastName);
             ret.append(", ");
             ret.append(fge.spouFirstName);
@@ -208,6 +209,7 @@ public class EntityConversion {
             ret.append(fge.entityID);
             ret.append(")");
         }
+        ret.append(useHtml ? "</html>" : "");
 
         return ret.toString();
     }
