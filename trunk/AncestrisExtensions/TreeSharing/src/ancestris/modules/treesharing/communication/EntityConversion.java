@@ -23,7 +23,6 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
-import org.openide.util.Exceptions;
 
 /**
  *

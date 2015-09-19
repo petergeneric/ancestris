@@ -12,7 +12,6 @@
 package ancestris.modules.treesharing;
 
 import ancestris.modules.treesharing.communication.AncestrisMember;
-import ancestris.modules.treesharing.communication.EntityConversion;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
 import ancestris.modules.treesharing.communication.GedcomNumbers;
@@ -23,10 +22,6 @@ import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.MatchData;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import ancestris.util.swing.DialogManager;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import java.util.ArrayList;
 import java.util.HashSet;

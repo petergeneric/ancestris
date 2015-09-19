@@ -19,7 +19,6 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
-import java.awt.Color;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
