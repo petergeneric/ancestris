@@ -707,6 +707,19 @@ public class Comm {
     
     
     
+    private byte[] extractBytes(byte[] content, byte delimiter) {
+        byte[] ret = null;
+        for (int i = 0; i < content.length; i++) {
+            byte b = content[i];
+            if (b == delimiter || b == 0) {
+                ret = Arrays.copyOfRange(content, 0, i);
+                return ret;
+            }
+        }
+        ret = content;
+        return ret;
+    }
+    
 
     
     
@@ -722,10 +735,11 @@ public class Comm {
         byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
         DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
         
-        String contentStr = null;
+        byte[] contentMemberBytes = null;
+        String contentMemberStr = null;
+        byte[] contentObj = null;
         String member = null;
         AncestrisMember aMember = null;
-        byte[] contentObj = null;
         
         LOG.log(Level.INFO, "Listening to all incoming calls indefinitely.......");
 
@@ -741,16 +755,12 @@ public class Comm {
                 senderPort = packetReceived.getPort();
                 senderAddress = senderIP + ":" + senderPort;
                 
+                // Identify command
                 command = new String(Arrays.copyOfRange(bytesReceived, 0, COMM_CMD_SIZE));        
                 
-                contentStr = new String(bytesReceived).substring(COMM_CMD_SIZE);
-                String[] bits = contentStr.split("\0");
-                if (bits.length > 0) {
-                    contentStr = bits[0];
-                }
-                if (contentStr.contains(STR_DELIMITER)) {
-                    contentStr = contentStr.substring(0, contentStr.indexOf(STR_DELIMITER));
-                }
+                // Identify member part of bytes until STR_DELIMITER
+                contentMemberBytes = extractBytes(Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE, bytesReceived.length), STR_DELIMITER.getBytes()[0]);
+                contentMemberStr = new String(contentMemberBytes);
                 
                 LOG.log(Level.FINE, "...Incoming " + command + " command received from " + senderAddress);
 
@@ -774,7 +784,7 @@ public class Comm {
 
                 // Case of CMD_CONCT command (server replies back to my connection request or asks me to connect to indicated pseudo)
                 if (command.equals(CMD_CONCT)) {
-                    member = StringEscapeUtils.unescapeHtml(contentStr);
+                    member = StringEscapeUtils.unescapeHtml(contentMemberStr);
                     LOG.log(Level.FINE, "...Request to connect to " + member);
                     owner.updateMembersList();
                     aMember = owner.getMember(member);
@@ -799,7 +809,7 @@ public class Comm {
                 //
                 
                 // Identify member elements of call and content. If member not allowed, continue
-                member = StringEscapeUtils.unescapeHtml(contentStr);
+                member = StringEscapeUtils.unescapeHtml(contentMemberStr);
                 aMember = owner.getMember(member);
                 if (aMember == null) {
                     LOG.log(Level.FINE, "...Calling member " + member + " is not in the list of members.");
@@ -808,7 +818,7 @@ public class Comm {
                     LOG.log(Level.FINE, "...Member " + member + " is NOT allowed or address does not match the one I know. Do not reply.");
                     continue;
                 } 
-                contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentStr.length() + STR_DELIMITER.length(), bytesReceived.length);
+                contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentMemberBytes.length + STR_DELIMITER.length(), bytesReceived.length);
                 
                 
                 // Case of PING command 
@@ -1308,6 +1318,6 @@ public class Comm {
         return packets;
     }
 
-    
+
 }
 
