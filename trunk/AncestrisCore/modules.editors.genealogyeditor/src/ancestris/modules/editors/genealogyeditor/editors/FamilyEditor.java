@@ -262,6 +262,11 @@ public class FamilyEditor extends EntityEditor {
         husbandNameTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         husbandNameTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.husbandNameTextField.text"), new Object[] {})); // NOI18N
         husbandNameTextField.setBorder(null);
+        husbandNameTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                husbandNameTextFieldActionPerformed(evt);
+            }
+        });
 
         husbandBirthDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         husbandBirthDateLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.husbandBirthDateLabel.text"), new Object[] {})); // NOI18N
@@ -276,7 +281,7 @@ public class FamilyEditor extends EntityEditor {
         husbandImageBean.setLayout(husbandImageBeanLayout);
         husbandImageBeanLayout.setHorizontalGroup(
             husbandImageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 77, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         husbandImageBeanLayout.setVerticalGroup(
             husbandImageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,8 +298,8 @@ public class FamilyEditor extends EntityEditor {
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fatherPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(husbandImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(husbandImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(fatherPanelLayout.createSequentialGroup()
                         .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -310,13 +315,12 @@ public class FamilyEditor extends EntityEditor {
                             .addComponent(husbandDeathDateLabelDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addComponent(husbandNameTextField)
-                    .addComponent(fatherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(fatherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)))
         );
         fatherPanelLayout.setVerticalGroup(
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fatherPanelLayout.createSequentialGroup()
+            .addGroup(fatherPanelLayout.createSequentialGroup()
                 .addGroup(fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(husbandImageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                     .addGroup(fatherPanelLayout.createSequentialGroup()
                         .addComponent(husbandNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -330,7 +334,10 @@ public class FamilyEditor extends EntityEditor {
                             .addComponent(jLabel3)
                             .addComponent(husbandDeathDateLabelDate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(fatherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(fatherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(fatherPanelLayout.createSequentialGroup()
+                        .addComponent(husbandImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -408,7 +415,7 @@ public class FamilyEditor extends EntityEditor {
         wifeImageBean.setLayout(wifeImageBeanLayout);
         wifeImageBeanLayout.setHorizontalGroup(
             wifeImageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 77, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         wifeImageBeanLayout.setVerticalGroup(
             wifeImageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -425,10 +432,10 @@ public class FamilyEditor extends EntityEditor {
             motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(motherPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(wifeImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wifeImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(motherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(motherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                     .addGroup(motherPanelLayout.createSequentialGroup()
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(motherPanelLayout.createSequentialGroup()
@@ -452,6 +459,9 @@ public class FamilyEditor extends EntityEditor {
                 .addGap(0, 0, 0)
                 .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(motherPanelLayout.createSequentialGroup()
+                        .addComponent(wifeImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(motherPanelLayout.createSequentialGroup()
                         .addComponent(wifeNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -464,8 +474,7 @@ public class FamilyEditor extends EntityEditor {
                             .addComponent(jLabel5)
                             .addComponent(wifeDeathDateLabelDate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(motherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(wifeImageBean, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)))
+                        .addComponent(motherToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         eventsSplitPane.setBorder(null);
@@ -1318,6 +1327,10 @@ public class FamilyEditor extends EntityEditor {
             context = new Context(prop);
         }
     }//GEN-LAST:event_eventsListValueChanged
+
+    private void husbandNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_husbandNameTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_husbandNameTextFieldActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addHusbandButton;
