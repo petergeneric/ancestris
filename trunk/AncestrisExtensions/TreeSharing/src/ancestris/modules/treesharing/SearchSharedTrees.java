@@ -17,20 +17,13 @@ import ancestris.modules.treesharing.communication.GedcomIndi;
 import ancestris.modules.treesharing.communication.GedcomNumbers;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
-import ancestris.modules.treesharing.panels.EntitiesListPanel;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
-import ancestris.modules.treesharing.panels.MatchData;
 import ancestris.modules.treesharing.panels.SharedGedcom;
-import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertySex;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import org.openide.util.ImageUtilities;
-import org.openide.util.NbBundle;
 
 /**
  *
