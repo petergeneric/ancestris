@@ -12,11 +12,10 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
-import ancestris.modules.treesharing.SearchSharedTrees;
+import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.modules.treesharing.communication.EntityConversion;
 import ancestris.modules.treesharing.communication.GedcomFam;
 import ancestris.modules.treesharing.communication.GedcomIndi;
-import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -41,6 +40,8 @@ import org.openide.util.NbBundle;
  */
 public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
+    private final TreeSharingTopComponent owner;
+
     private final Gedcom gedcom;
     private final PrivacyPolicyImpl ppi;
     private Popup popup;
@@ -58,8 +59,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     /**
      * Creates new form SharedGedcom
      */
-    public SharedGedcom(Gedcom gedcom, boolean respectPrivacy) {
+    public SharedGedcom(TreeSharingTopComponent tstc, Gedcom gedcom, boolean respectPrivacy) {
         super(gedcom.getName());
+        this.owner = tstc;
         this.gedcom = gedcom;
         matchedIndis = new HashSet<MatchData>();
         matchedFams = new HashSet<MatchData>();
@@ -296,11 +298,11 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
 
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        showList(matchedIndis);
+        showList(Gedcom.INDI);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showList(matchedFams);
+        showList(Gedcom.FAM);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -573,8 +575,8 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         return true;
     }
 
-    private void showList(Set<MatchData> list) {
-        SearchSharedTrees.displayResultsPanel(list, getGedcom().getName(), NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllFriends"));
+    private void showList(String type) {
+        owner.displayResultsPanel(getGedcom().getName(), NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllFriends"), type);
     }
 
     private int countIds(Set<MatchData> matchedEntities) {

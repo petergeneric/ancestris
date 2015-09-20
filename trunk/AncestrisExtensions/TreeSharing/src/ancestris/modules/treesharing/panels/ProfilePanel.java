@@ -14,7 +14,6 @@ package ancestris.modules.treesharing.panels;
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.util.swing.DialogManager;
 import java.awt.Desktop;
-import java.awt.Image;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

@@ -12,6 +12,7 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.modules.treesharing.SearchSharedTrees;
+import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
@@ -36,6 +37,7 @@ import org.openide.util.NbBundle;
  */
 public class AncestrisFriend extends JInternalFrame {
 
+    private final TreeSharingTopComponent owner;
     
     private final static ImageIcon nophoto = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/nophoto.png"));
     private final String name;
@@ -48,8 +50,9 @@ public class AncestrisFriend extends JInternalFrame {
     /**
      * Creates new form AncestrisFriend
      */
-    public AncestrisFriend(String name) {
+    public AncestrisFriend(TreeSharingTopComponent tstc, String name) {
         super(name);
+        this.owner = tstc;
         this.name = name;
         matchedIndis = new HashSet<MatchData>();
         matchedFams = new HashSet<MatchData>();
@@ -183,11 +186,11 @@ public class AncestrisFriend extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        showList(matchedIndis);
+        showList(Gedcom.INDI);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showList(matchedFams);
+        showList(Gedcom.FAM);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -248,8 +251,8 @@ public class AncestrisFriend extends JInternalFrame {
     }
 
     
-    private void showList(Set<MatchData> list) {
-        SearchSharedTrees.displayResultsPanel(list, NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllGedcoms"), name);
+    private void showList(String type) {
+        owner.displayResultsPanel(NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllGedcoms"), name, type);
     }
 
     public void removeGedcom(SharedGedcom sg) {
