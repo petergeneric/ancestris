@@ -207,6 +207,9 @@ public final class IndividualEditor extends EntityEditor {
         individualIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.individualIDTextField.text"), new Object[] {})); // NOI18N
         individualIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.individualIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
+        imageBean.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        imageBean.setAlignmentX(0.0F);
+        imageBean.setAlignmentY(0.0F);
         imageBean.setMinimumSize(new java.awt.Dimension(135, 180));
         imageBean.setPreferredSize(new java.awt.Dimension(135, 180));
         imageBean.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -223,7 +226,7 @@ public final class IndividualEditor extends EntityEditor {
         );
         imageBeanLayout.setVerticalGroup(
             imageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 182, Short.MAX_VALUE)
+            .addGap(0, 178, Short.MAX_VALUE)
         );
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
@@ -472,7 +475,7 @@ public final class IndividualEditor extends EntityEditor {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(changeDateLabel)
-                    .addComponent(changeDateLabeldate)))
+                    .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
