@@ -51,7 +51,6 @@ public class TreeSharingPanel extends javax.swing.JPanel {
         jScrollPane = new DesktopScrollPane(gDesktopPane);
         jDesktopPane = gDesktopPane;
 
-        jDesktopPane.setToolTipText(org.openide.util.NbBundle.getMessage(TreeSharingPanel.class, "TreeSharingPanel.jDesktopPane.toolTipText")); // NOI18N
         jDesktopPane.setAutoscrolls(true);
 
         javax.swing.GroupLayout jDesktopPaneLayout = new javax.swing.GroupLayout(jDesktopPane);
