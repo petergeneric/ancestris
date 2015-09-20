@@ -187,6 +187,10 @@ public class SearchSharedTrees extends Thread {
                 continue;
             }
 
+            // Reset exchange
+            friend = null;
+            profileExchanged = false;
+            
             // Indicate which member is being analysed
             owner.displaySearchedMember(member.getMemberName());
             
@@ -268,7 +272,6 @@ public class SearchSharedTrees extends Thread {
                 friend = null;
                 owner.getCommHandler().thankMember(member);   // thank and give my profile
             }
-            
             
         } // endfor members
 

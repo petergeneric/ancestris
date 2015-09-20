@@ -290,7 +290,11 @@ public class AncestrisFriend extends JInternalFrame {
         this.myProfile = myProfile;
         if (memberProfile != null) {
             jButton3.setEnabled(true);
-            jButton3.setIcon(new ImageIcon(memberProfile.getPhoto().getScaledInstance(51, 62, Image.SCALE_DEFAULT)));
+            if (memberProfile.getPhoto() != null) {
+                jButton3.setIcon(new ImageIcon(memberProfile.getPhoto().getScaledInstance(51, 62, Image.SCALE_DEFAULT)));
+            } else {
+                jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/profile.png")));
+            }
             jButton3.setToolTipText(NbBundle.getMessage(StatsPanel.class, "TITL_SeeProfile", name));
         } else {
             jButton3.setEnabled(false);
