@@ -277,7 +277,16 @@ public class EntitiesListPanel extends javax.swing.JPanel {
             iMemberGedcomName = line.friendGedcomEntity.gedcomName;
             if (match(gedcomName, friend, memberGedcomName, iGedcomName, iFriend, iMemberGedcomName)) {
                 if (listNb != 1) myGedcoms.add(iGedcomName);
-                if (listNb != 2) members.put(iFriend, new ImageIcon(line.friendGedcomEntity.afriend.getFriendProfile().getPhoto().getScaledInstance(IMG_WIDTH, IMG_HEIGHT, Image.SCALE_DEFAULT)));
+                if (listNb != 2) { 
+                    Image image = line.friendGedcomEntity.afriend.getFriendProfile().getPhoto();
+                    ImageIcon icon = null;
+                    if (image == null) {
+                        icon = new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/profile.png"));
+                    } else {
+                        icon = new ImageIcon(line.friendGedcomEntity.afriend.getFriendProfile().getPhoto().getScaledInstance(IMG_WIDTH, IMG_HEIGHT, Image.SCALE_DEFAULT));
+                    }
+                    members.put(iFriend, icon);
+                }
                 if (listNb != 3) memberGedcoms.add(iMemberGedcomName);
             }
         }
