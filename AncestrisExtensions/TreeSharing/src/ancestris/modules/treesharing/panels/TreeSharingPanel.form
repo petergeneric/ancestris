@@ -36,9 +36,6 @@
       <SubComponents>
         <Container class="javax.swing.JDesktopPane" name="jDesktopPane">
           <Properties>
-            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/treesharing/panels/Bundle.properties" key="TreeSharingPanel.jDesktopPane.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
             <Property name="autoscrolls" type="boolean" value="true"/>
           </Properties>
           <AuxValues>
