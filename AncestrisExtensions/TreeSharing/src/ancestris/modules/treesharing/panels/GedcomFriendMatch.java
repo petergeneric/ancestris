@@ -11,22 +11,23 @@
  */
 package ancestris.modules.treesharing.panels;
 
-import ancestris.modules.treesharing.SearchSharedTrees;
-import ancestris.util.swing.DialogManager;
+import ancestris.modules.treesharing.TreeSharingTopComponent;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.util.HashSet;
 
 import java.util.Set;
 import javax.swing.JInternalFrame;
-import org.openide.util.NbBundle;
 
 /**
  *
  * @author frederic
  */
 public class GedcomFriendMatch extends JInternalFrame {
+
+    private final TreeSharingTopComponent owner;
 
     private SharedGedcom sharedGedcom = null;
     private AncestrisFriend ancestrisFriend = null;
@@ -37,7 +38,8 @@ public class GedcomFriendMatch extends JInternalFrame {
     /**
      * Creates new form GedcomFriendMatch
      */
-    public GedcomFriendMatch(SharedGedcom sharedGedcom, AncestrisFriend ancestrisFriend) {
+    public GedcomFriendMatch(TreeSharingTopComponent tstc, SharedGedcom sharedGedcom, AncestrisFriend ancestrisFriend) {
+        this.owner = tstc;
         this.sharedGedcom = sharedGedcom;
         this.ancestrisFriend = ancestrisFriend;
         matchedIndis = new HashSet<MatchData>();
@@ -128,11 +130,11 @@ public class GedcomFriendMatch extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        showList(matchedIndis);
+        showList(Gedcom.INDI);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showList(matchedFams);
+        showList(Gedcom.FAM);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -173,8 +175,8 @@ public class GedcomFriendMatch extends JInternalFrame {
         jButton2.setEnabled(nbCommonFams != 0);
     }
 
-    private void showList(Set<MatchData> list) {
-        SearchSharedTrees.displayResultsPanel(list, sharedGedcom.getGedcom().getName(), ancestrisFriend.getFriendName());
+    private void showList(String type) {
+        owner.displayResultsPanel(sharedGedcom.getGedcom().getName(), ancestrisFriend.getFriendName(), type);
     }
 
 

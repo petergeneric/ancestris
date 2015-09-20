@@ -14,6 +14,8 @@ package ancestris.modules.treesharing.panels;
 import ancestris.modules.treesharing.communication.EntityConversion;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -66,7 +68,7 @@ public class EntitiesListPanel extends javax.swing.JPanel {
     /**
      * Creates new form ListEntitiesPanel
      */
-    public EntitiesListPanel(String gedcomName, String friend, Set<MatchData> list) {
+    public EntitiesListPanel(String gedcomName, String friend, Set<MatchData> list, String typeOfEntity) {
         this.list = list;
         this.textToPaste = new StringBuffer("");
 
@@ -102,11 +104,20 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         jLabel2.setText(TreeSharingOptionsPanel.getPseudo());
         jLabel1.setIcon(TreeSharingOptionsPanel.getProfile().getPhoto(2));
         
+        // Set checkboxes
+        busy = true;
+        jCheckBox1.setSelected(typeOfEntity.equals(Gedcom.INDI));
+        jCheckBox2.setSelected(typeOfEntity.equals(Gedcom.FAM));
+        
         // Build filtered list from selection
-        buildFilteredLists(0, gedcomName, friend, null);
+        buildFilteredLists(0, null, null, null);
         
         // Update panel display
+        jComboBox1.setSelectedItem(gedcomName);
+        jComboBox2.setSelectedIndex(getIndexOf(friend));
+        jComboBox3.setSelectedIndex(0);
         updatePanelDisplay();
+        busy = false;
     }
 
     /**
@@ -126,6 +137,10 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         jComboBox3 = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel1.text")); // NOI18N
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -161,6 +176,30 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
         jScrollPane1.setViewportView(jPanel1);
 
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Indi.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel4.text")); // NOI18N
+        jLabel4.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel4.toolTipText")); // NOI18N
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Fam.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel7.text")); // NOI18N
+        jLabel7.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel7.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jCheckBox2.text")); // NOI18N
+        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jCheckBox2.toolTipText")); // NOI18N
+        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox2ActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jCheckBox1.toolTipText")); // NOI18N
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -173,13 +212,21 @@ public class EntitiesListPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                                .addComponent(jCheckBox1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4))
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 363, Short.MAX_VALUE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBox2)
+                                .addGap(33, 33, 33)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
+                            .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
@@ -193,13 +240,20 @@ public class EntitiesListPanel extends javax.swing.JPanel {
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(jCheckBox2)
+                            .addComponent(jLabel7)
+                            .addComponent(jCheckBox1)
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                 .addContainerGap())
@@ -208,55 +262,56 @@ public class EntitiesListPanel extends javax.swing.JPanel {
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         if (!busy) {
-            busy = true;
             updateSelections(2);
             updatePanelDisplay();
-            busy = false;
         }
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         if (!busy) {
-            busy = true;
             updateSelections(1);
             updatePanelDisplay();
-            busy = false;
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
         if (!busy) {
-            busy = true;
             updateSelections(3);
             updatePanelDisplay();
-            busy = false;
         }
     }//GEN-LAST:event_jComboBox3ActionPerformed
 
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        if (!busy) {
+            updatePanelDisplay();
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+        if (!busy) {
+            updatePanelDisplay();
+        }
+    }//GEN-LAST:event_jCheckBox2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    private void updateSelections(int listNb) {
-        String selection1 = arrayMyGedcoms[jComboBox1.getSelectedIndex()];
-        String selection2 = arrayMemberStrings[jComboBox2.getSelectedIndex()];
-        String selection3 = arrayMemberGedcoms[jComboBox3.getSelectedIndex()];
-        buildFilteredLists(listNb, listNb == 1 ? selection1 : null, listNb == 2 ? selection2 : null, listNb == 3 ? selection3 : null);
-        jComboBox1.setSelectedItem(selection1);
-        jComboBox2.setSelectedIndex(getIndexOf(selection2));
-        jComboBox3.setSelectedItem(selection3);
-    }
-
     private void buildFilteredLists(int listNb, String gedcomName, String friend, String memberGedcomName) {
-        // Clean lists
+
+        // Clear lists
         if (listNb != 1) myGedcoms.clear();
         if (listNb != 2) members.clear();
         if (listNb != 3) memberGedcoms.clear();
@@ -274,7 +329,7 @@ public class EntitiesListPanel extends javax.swing.JPanel {
             iGedcomName = line.myEntity.getGedcom().getName();
             iFriend = line.friendGedcomEntity.friend;
             iMemberGedcomName = line.friendGedcomEntity.gedcomName;
-            if (match(gedcomName, friend, memberGedcomName, iGedcomName, iFriend, iMemberGedcomName)) {
+            if (match("", gedcomName, friend, memberGedcomName, "", iGedcomName, iFriend, iMemberGedcomName)) {
                 if (listNb != 1) myGedcoms.add(iGedcomName);
                 if (listNb != 2) { 
                     ImageIcon icon = line.friendGedcomEntity.afriend.getFriendProfile().getPhoto(2);
@@ -299,10 +354,37 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         if (listNb != 3) jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(arrayMemberGedcoms));
     }
 
-    private boolean match(String gedcomName, String friend, String memberGedcomName, String iGedcomName, String iFriend, String iMemberGedcomName) {
+    private void updateSelections(int listNb) {
+        String selection1 = arrayMyGedcoms[jComboBox1.getSelectedIndex()];
+        String selection2 = arrayMemberStrings[jComboBox2.getSelectedIndex()];
+        String selection3 = arrayMemberGedcoms[jComboBox3.getSelectedIndex()];
+        busy = true;
+        buildFilteredLists(listNb, listNb == 1 ? selection1 : null, listNb == 2 ? selection2 : null, listNb == 3 ? selection3 : null);
+        if (arrayMyGedcoms.length == 2) {
+            jComboBox1.setSelectedIndex(1);
+        } else {
+            jComboBox1.setSelectedItem(selection1);
+        }
+        if (arrayMemberStrings.length == 2) {
+            jComboBox2.setSelectedIndex(1);
+        } else {
+            jComboBox2.setSelectedIndex(getIndexOf(selection2));
+        }
+        if (arrayMemberGedcoms.length == 2) {
+            jComboBox3.setSelectedIndex(1);
+        } else {
+            jComboBox3.setSelectedItem(selection3);
+        }
+        busy = false;
+    }
+
+    private boolean match(String type, String gedcomName, String friend, String memberGedcomName, String iType, String iGedcomName, String iFriend, String iMemberGedcomName) {
 
         String gn = gedcomName, f= friend, mgn = memberGedcomName;
 
+        if (type == null || type.isEmpty()) {
+            type = iType;
+        }
         if (gn == null || gn.isEmpty() || gn.equals(allGedcoms)) {
             gn = iGedcomName;
         }
@@ -313,7 +395,7 @@ public class EntitiesListPanel extends javax.swing.JPanel {
             mgn = iMemberGedcomName;
         }
         
-        return (gn.equals(iGedcomName) && f.equals(iFriend) && mgn.equals(iMemberGedcomName));
+        return (type.equals(iType) && gn.equals(iGedcomName) && f.equals(iFriend) && mgn.equals(iMemberGedcomName));
     }
 
     private int getIndexOf(String selection) {
@@ -338,20 +420,25 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         jLabel3.setText(arrayMemberStrings[jComboBox2.getSelectedIndex()]);
 
         // Get criteria
+        String type = "";
+        if (jCheckBox1.isSelected() && !jCheckBox2.isSelected()) type = Gedcom.INDI;
+        if (!jCheckBox1.isSelected() && jCheckBox2.isSelected()) type = Gedcom.FAM;
         String gedcomName = arrayMyGedcoms[jComboBox1.getSelectedIndex()];
         String friend = arrayMemberStrings[jComboBox2.getSelectedIndex()];
         String memberGedcomName = arrayMemberGedcoms[jComboBox3.getSelectedIndex()];
         
         // Scan list and build sorted maps
         String key = "";
+        String iType = "";
         String iGedcomName = "";
         String iFriend = "";
         String iMemberGedcomName = "";
         for (MatchData line : list) {
+            iType = line.myEntity instanceof Indi ? Gedcom.INDI : Gedcom.FAM;
             iGedcomName = line.myEntity.getGedcom().getName();
             iFriend = line.friendGedcomEntity.friend;
             iMemberGedcomName = line.friendGedcomEntity.gedcomName;
-            if (match(gedcomName, friend, memberGedcomName, iGedcomName, iFriend, iMemberGedcomName)) {
+            if (match(type, gedcomName, friend, memberGedcomName, iType, iGedcomName, iFriend, iMemberGedcomName)) {
                 key = iGedcomName + "-" + line.myEntity.toString() + "-" + line.matchResult + line.friendGedcomEntity.indiLastName;
                 sortedMatches.put(key, line);
             }
@@ -360,6 +447,7 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         // Display sortedMap
         textToPaste.delete(0, textToPaste.length());
         jPanel1.removeAll();
+        jPanel1.repaint();
         BoxLayout layout = new BoxLayout(jPanel1, BoxLayout.PAGE_AXIS);
         jPanel1.setLayout(layout);
         String group = "", strItem = "", str = "";
@@ -388,6 +476,8 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         if (i != 0) {
             addEntityBloc(currentEntity, subList);
         }
+        jPanel1.repaint();
+        jPanel1.validate();
         //jPanel1.add(Box.createVerticalGlue());
         
     }

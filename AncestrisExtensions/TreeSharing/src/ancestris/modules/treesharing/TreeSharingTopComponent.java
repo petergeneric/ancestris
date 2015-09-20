@@ -21,7 +21,9 @@ import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanelController;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.DisplayStatsAction;
+import ancestris.modules.treesharing.panels.EntitiesListPanel;
 import ancestris.modules.treesharing.panels.GedcomFriendMatch;
+import ancestris.modules.treesharing.panels.MatchData;
 import ancestris.modules.treesharing.panels.MembersPopup;
 import ancestris.modules.treesharing.panels.PrivacyToggle;
 import ancestris.modules.treesharing.panels.RearrangeAction;
@@ -50,9 +52,11 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -174,6 +178,10 @@ public class TreeSharingTopComponent extends TopComponent {
     private Map<String, StatsData> connectionStats = null;
     private boolean resetStats = false;
     
+    // Results
+    private Set<MatchData> matchedResults = null; 
+
+    
     
     
     /**
@@ -220,7 +228,8 @@ public class TreeSharingTopComponent extends TopComponent {
             initSharedGedcoms();
             
             initConnectionStats();
-        
+            
+            initResults();
     }
         
         privacyToggle.setPrivacy(getPreferredPrivacy());
@@ -459,7 +468,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // Get open gedcoms and build shared objects
         for (Context context : GedcomDirectory.getDefault().getContexts()) {
-            sharedGedcoms.add(new SharedGedcom(context.getGedcom(), privacyToggle.isSelected()));
+            sharedGedcoms.add(new SharedGedcom(this, context.getGedcom(), privacyToggle.isSelected()));
         }
         
         // Display shared Gedcoms for the first time on the desktop
@@ -467,6 +476,35 @@ public class TreeSharingTopComponent extends TopComponent {
         
     }
     
+
+
+    public void initConnectionStats() {
+        if (connectionStats == null) {
+            connectionStats = new HashMap<String, StatsData>();
+        } else {
+            connectionStats.clear();
+        }
+    }
+    
+    
+    public void initResults() {
+        if (matchedResults == null) {
+            matchedResults = new HashSet<MatchData>();    
+        } else {
+            matchedResults.clear();
+        }
+    }
+    
+    
+    
+    public void resetResults() {
+        matchedResults.clear();
+        for (SharedGedcom sg : sharedGedcoms) {
+            removeMatch(sg);
+            sg.resetResults();
+        }
+    }
+
 
     public void rearrangeWindows() {
         if (sharedGedcoms != null && !sharedGedcoms.isEmpty()) {
@@ -674,7 +712,7 @@ public class TreeSharingTopComponent extends TopComponent {
         //        } catch(Exception e) {
         //            e.printStackTrace();
         //        }
-        SharedGedcom newSharedGedcom = new SharedGedcom(gedcom, privacyToggle.isSelected());
+        SharedGedcom newSharedGedcom = new SharedGedcom(this, gedcom, privacyToggle.isSelected());
         desktopPanel.addFrame(newSharedGedcom, findLocation(sharedGedcoms.size(), LEFT_OFFSET_GEDCOM, newSharedGedcom.getPreferredSize().height));
         sharedGedcoms.add(newSharedGedcom);
     }
@@ -809,23 +847,6 @@ public class TreeSharingTopComponent extends TopComponent {
 
     
     
-    public void resetResults() {
-        for (SharedGedcom sg : sharedGedcoms) {
-            removeMatch(sg);
-            sg.resetResults();
-        }
-    }
-
-
-    
-    public void initConnectionStats() {
-        if (connectionStats == null) {
-            connectionStats = new HashMap<String, StatsData>();
-        } else {
-            connectionStats.clear();
-        }
-    }
-    
     public void updateStatsDisplay() {
         if (connectionStats == null || connectionStats.isEmpty()) {
             statsButton.setEnabled(false);
@@ -934,6 +955,9 @@ public class TreeSharingTopComponent extends TopComponent {
     
     public AncestrisFriend createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, AncestrisMember member, int matchResult) {
 
+        // Update matched results
+        matchedResults.add(new MatchData(myEntity, memberEntity, matchResult));
+        
         // Update or Create AncestrisFriend
         AncestrisFriend friend = getFriend(memberEntity.friend);
         memberEntity.setFriend(friend);
@@ -976,7 +1000,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // If match still null, then create it
         if (match == null) {
-            match = new GedcomFriendMatch(sharedGedcom, friend);
+            match = new GedcomFriendMatch(this, sharedGedcom, friend);
             desktopPanel.addFrame(match, findLocation(gedcomFriendMatches.size(), LEFT_OFFSET_MATCHES, match.getPreferredSize().height));
             gedcomFriendMatches.add(match);
         }
@@ -1005,7 +1029,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // If match still null, then create it
         if (friend == null) {
-            friend = new AncestrisFriend(foundFriend);
+            friend = new AncestrisFriend(this, foundFriend);
             desktopPanel.addFrame(friend, findLocation(ancestrisFriends.size(), LEFT_OFFSET_FRIENDS, friend.getPreferredSize().height));
             ancestrisFriends.add(friend);
         }
@@ -1013,6 +1037,23 @@ public class TreeSharingTopComponent extends TopComponent {
         return friend;
     }
 
+
+    public void displayResultsPanel(String gedcoms, String friends, String typeOfEntity) {
+        EntitiesListPanel el = new EntitiesListPanel(gedcoms, friends, matchedResults, typeOfEntity);
+        DialogManager.ADialog ad = DialogManager.create(NbBundle.getMessage(EntitiesListPanel.class, "TIP_TitleResults"), el);
+        ad.setMessageType(DialogManager.PLAIN_MESSAGE);
+        JButton copyButton = new JButton(new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/Copy.png")));
+        copyButton.setToolTipText(NbBundle.getMessage(EntitiesListPanel.class, "TIP_CopyData"));
+        ad.setOptions(new Object[]{copyButton, DialogManager.OK_OPTION});
+        Object ret = ad.show();
+        if (ret == copyButton) {
+            el.copy();
+        }
+        el.close();
+    }
+    
+    
+    
     
 
 }

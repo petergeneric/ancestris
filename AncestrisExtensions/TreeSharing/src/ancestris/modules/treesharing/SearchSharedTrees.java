@@ -57,21 +57,6 @@ public class SearchSharedTrees extends Thread {
     }
 
     
-    public static void displayResultsPanel(Set<MatchData> results, String gedcoms, String friends) {
-        EntitiesListPanel el = new EntitiesListPanel(gedcoms, friends, results);
-        DialogManager.ADialog ad = DialogManager.create("Comparaison des entités potentiellement communes avec des amis Ancestris", el);
-        ad.setMessageType(DialogManager.PLAIN_MESSAGE);
-        JButton copyButton = new JButton(new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/Copy.png")));
-        copyButton.setToolTipText(NbBundle.getMessage(EntitiesListPanel.class, "TIP_CopyData"));
-        ad.setOptions(new Object[]{copyButton, DialogManager.OK_OPTION});
-        Object ret = ad.show();
-        if (ret == copyButton) {
-            el.copy();
-        }
-        el.close();
-    }
-    
-    
     
     public void stopGracefully() {
         stopRun = true;
