@@ -355,8 +355,12 @@ public class EntitiesListPanel extends javax.swing.JPanel {
     }
 
     private void updateSelections(int listNb) {
-        String selection1 = arrayMyGedcoms[jComboBox1.getSelectedIndex()];
         String selection2 = arrayMemberStrings[jComboBox2.getSelectedIndex()];
+        if (listNb == 2 && jComboBox2.getSelectedIndex() == 0) {   // if all members are selected, select all on all lists
+            jComboBox1.setSelectedIndex(0);
+            jComboBox3.setSelectedIndex(0);
+        }
+        String selection1 = arrayMyGedcoms[jComboBox1.getSelectedIndex()];
         String selection3 = arrayMemberGedcoms[jComboBox3.getSelectedIndex()];
         busy = true;
         buildFilteredLists(listNb, listNb == 1 ? selection1 : null, listNb == 2 ? selection2 : null, listNb == 3 ? selection3 : null);
