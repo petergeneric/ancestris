@@ -448,7 +448,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     
 
     public List<GedcomIndi> getPublicGedcomIndis(Set<String> commonIndiLastnames) {
-        if (!isShared()) {
+        if (!isShared() || commonIndiLastnames == null) {
             return new ArrayList<GedcomIndi>();
         }
         List<GedcomIndi> ret = new ArrayList<GedcomIndi>();
