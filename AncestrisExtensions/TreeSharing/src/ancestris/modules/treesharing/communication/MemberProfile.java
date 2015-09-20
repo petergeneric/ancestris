@@ -72,6 +72,9 @@ public class MemberProfile implements Serializable {
     
     public Image getPhoto() {
         Image image = null;
+        if (photoBytes == null) {
+            return null;
+        }
         try {
             BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(photoBytes));
             image = bufferedImage.getScaledInstance(155, 186, Image.SCALE_DEFAULT);
