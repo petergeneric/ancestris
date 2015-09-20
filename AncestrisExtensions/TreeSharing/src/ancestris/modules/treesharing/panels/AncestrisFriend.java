@@ -12,7 +12,6 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.modules.treesharing.SearchSharedTrees;
-import static ancestris.modules.treesharing.SearchSharedTrees.displayResultsPanel;
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
@@ -26,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -37,6 +37,7 @@ import org.openide.util.NbBundle;
 public class AncestrisFriend extends JInternalFrame {
 
     
+    private final static ImageIcon nophoto = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/nophoto.png"));
     private final String name;
     private Set<MatchData> matchedIndis = null; 
     private Set<MatchData> matchedFams = null; 
@@ -290,15 +291,16 @@ public class AncestrisFriend extends JInternalFrame {
         this.myProfile = myProfile;
         if (memberProfile != null) {
             jButton3.setEnabled(true);
-            if (memberProfile.getPhoto() != null) {
-                jButton3.setIcon(new ImageIcon(memberProfile.getPhoto().getScaledInstance(51, 62, Image.SCALE_DEFAULT)));
+            ImageIcon icon = memberProfile.getPhoto(2);
+            if (icon != null) {
+                jButton3.setIcon(icon);
             } else {
-                jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/profile.png")));
+                jButton3.setIcon(nophoto);
             }
             jButton3.setToolTipText(NbBundle.getMessage(StatsPanel.class, "TITL_SeeProfile", name));
         } else {
             jButton3.setEnabled(false);
-            jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/profile.png")));
+            jButton3.setIcon(nophoto);
             jButton3.setToolTipText(NbBundle.getMessage(StatsPanel.class, "TITL_NoProfile"));
         }
     }

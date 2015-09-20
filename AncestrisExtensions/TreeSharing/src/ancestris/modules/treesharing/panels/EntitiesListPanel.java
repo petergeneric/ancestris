@@ -16,7 +16,6 @@ import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import genj.gedcom.Entity;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -45,9 +44,9 @@ public class EntitiesListPanel extends javax.swing.JPanel {
     private final Set<MatchData> list;
     private StringBuffer textToPaste;
     
-    private final static int IMG_WIDTH = 51;
-    private final static int IMG_HEIGHT = 62;
-    
+    private final static int IMG_MEDIUM_WIDTH = 51;
+
+    private final static ImageIcon nophoto = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/nophoto.png"));
     private final static ImageIcon ArrowButton = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/dropdownarrow.png"));
     private final static ImageIcon AllMembers = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/allMembers.png"));
     private final static String allGedcoms = NbBundle.getMessage(EntitiesListPanel.class, "STR_AllGedcoms");
@@ -85,7 +84,7 @@ public class EntitiesListPanel extends javax.swing.JPanel {
                     }
                     @Override
                     public int getX() {
-                        return IMG_WIDTH+1;
+                        return IMG_MEDIUM_WIDTH+1;
                     }
                     @Override
                     public Icon getIcon() {
@@ -101,7 +100,7 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         
         // Set my picture
         jLabel2.setText(TreeSharingOptionsPanel.getPseudo());
-        jLabel1.setIcon(new ImageIcon(TreeSharingOptionsPanel.getProfile().getPhoto().getScaledInstance(IMG_WIDTH, IMG_HEIGHT, Image.SCALE_DEFAULT)));
+        jLabel1.setIcon(TreeSharingOptionsPanel.getProfile().getPhoto(2));
         
         // Build filtered list from selection
         buildFilteredLists(0, gedcomName, friend, null);
@@ -278,12 +277,9 @@ public class EntitiesListPanel extends javax.swing.JPanel {
             if (match(gedcomName, friend, memberGedcomName, iGedcomName, iFriend, iMemberGedcomName)) {
                 if (listNb != 1) myGedcoms.add(iGedcomName);
                 if (listNb != 2) { 
-                    Image image = line.friendGedcomEntity.afriend.getFriendProfile().getPhoto();
-                    ImageIcon icon = null;
-                    if (image == null) {
-                        icon = new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/profile.png"));
-                    } else {
-                        icon = new ImageIcon(line.friendGedcomEntity.afriend.getFriendProfile().getPhoto().getScaledInstance(IMG_WIDTH, IMG_HEIGHT, Image.SCALE_DEFAULT));
+                    ImageIcon icon = line.friendGedcomEntity.afriend.getFriendProfile().getPhoto(2);
+                    if (icon == null) {
+                        icon = nophoto;
                     }
                     members.put(iFriend, icon);
                 }

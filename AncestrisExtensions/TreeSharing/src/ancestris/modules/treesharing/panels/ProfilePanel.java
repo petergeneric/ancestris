@@ -14,6 +14,7 @@ package ancestris.modules.treesharing.panels;
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.util.swing.DialogManager;
 import java.awt.Desktop;
+import java.awt.Image;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -21,6 +22,7 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import javax.swing.ImageIcon;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -29,6 +31,7 @@ import org.openide.util.NbBundle;
  */
 public class ProfilePanel extends javax.swing.JPanel {
 
+    private final static ImageIcon nophoto = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/nophotobig.png"));
     private MemberProfile memberProfile;
     private MemberProfile myProfile;
     
@@ -40,8 +43,11 @@ public class ProfilePanel extends javax.swing.JPanel {
         this.myProfile = myP;
         initComponents();
         jLabel1.setText(getDescription(mp));
-        if (mp.getPhoto() != null) {
-           jLabel8.setIcon(new ImageIcon(mp.getPhoto()));
+        ImageIcon icon = mp.getPhoto(3);
+        if (icon != null) {
+           jLabel8.setIcon(icon);
+        } else {
+           jLabel8.setIcon(nophoto); 
         }
     }
 
