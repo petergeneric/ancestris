@@ -66,7 +66,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                  <Component id="imageBean" min="-2" pref="130" max="-2" attributes="0"/>
+                  <Component id="imageBean" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
@@ -91,7 +91,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="imageBean" min="-2" pref="182" max="-2" attributes="0"/>
+                      <Component id="imageBean" min="-2" max="-2" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="sexBeanPanel" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -131,12 +131,15 @@
           </Properties>
         </Component>
         <Component class="ancestris.modules.editors.genealogyeditor.beans.SexBean" name="sexBeanPanel">
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="sexBeanPanelStateChanged"/>
+          </Events>
         </Component>
         <Container class="ancestris.modules.editors.genealogyeditor.beans.ImageBean" name="imageBean">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-                <EtchetBorder/>
+                <EtchetBorder bevelType="0"/>
               </Border>
             </Property>
             <Property name="alignmentX" type="float" value="0.0"/>
@@ -145,8 +148,9 @@
               <Dimension value="[135, 180]"/>
             </Property>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[135, 180]"/>
+              <Dimension value="[130, 173]"/>
             </Property>
+            <Property name="requestFocusEnabled" type="boolean" value="true"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imageBeanMouseClicked"/>
@@ -160,7 +164,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="178" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -247,7 +251,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="eventsSplitPane" max="32767" attributes="0"/>
+                      <Component id="eventsSplitPane" pref="251" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -399,7 +403,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                              <Component id="individualEventEditorPanel" pref="272" max="32767" attributes="0"/>
+                              <Component id="individualEventEditorPanel" pref="251" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

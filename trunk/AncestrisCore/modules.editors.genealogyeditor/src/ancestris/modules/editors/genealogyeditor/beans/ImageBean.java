@@ -17,6 +17,8 @@ import org.openide.util.Exceptions;
  */
 public class ImageBean extends javax.swing.JPanel {
 
+    private String[] genders = new String[] {"unknown", "male", "female"};
+    private boolean isDefault = true;
     private Image loadImage = null;
     private Image scaledImage = null;
 
@@ -26,7 +28,8 @@ public class ImageBean extends javax.swing.JPanel {
     public ImageBean() {
         super();
         try {
-            loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png"));
+            loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[0] + ".png"));
+            isDefault = true;
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -42,6 +45,7 @@ public class ImageBean extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        setBorder(null);
         setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/beans/Bundle").getString("ImageBean.toolTipText"), new Object[] {})); // NOI18N
         setMinimumSize(new java.awt.Dimension(150, 200));
         setName(org.openide.util.NbBundle.getMessage(ImageBean.class, "ImageBean.name")); // NOI18N
@@ -79,7 +83,7 @@ public class ImageBean extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public void setImage(File file) {
+    public void setImage(File file, int defaultGender) {
         InputStream imageInputStream;
 
         if (file != null && file.exists()) {
@@ -94,11 +98,12 @@ public class ImageBean extends javax.swing.JPanel {
                         scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
                     }
                 }
+                isDefault = false;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         } else {
-            imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png");
+            imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[defaultGender] + ".png");
             try {
                 loadImage = ImageIO.read(imageInputStream);
                 if (getWidth() > 0 && getWidth() < getHeight()) {
@@ -106,6 +111,7 @@ public class ImageBean extends javax.swing.JPanel {
                 } else if (getHeight() > 0) {
                     scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
                 }
+                isDefault = true;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -114,7 +120,7 @@ public class ImageBean extends javax.swing.JPanel {
         repaint();
     }
 
-    public void setImage(byte[] imageData) {
+    public void setImage(byte[] imageData, int defaultGender) {
         if (imageData != null) {
             ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
 
@@ -125,17 +131,19 @@ public class ImageBean extends javax.swing.JPanel {
                 } else if (getHeight() > 0) {
                     scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
                 }
+                isDefault = false;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         } else {
             try {
-                loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/indi_defaultimage.png"));
+                loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[defaultGender] + ".png"));
                 if (getWidth() > 0 && getWidth() < getHeight()) {
                     scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
                 } else if (getHeight() > 0) {
                     scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
                 }
+                isDefault = true;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -149,5 +157,9 @@ public class ImageBean extends javax.swing.JPanel {
         if (scaledImage != null) {
             ((Graphics2D) g).drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);
         }
+    }
+    
+    public boolean isDefault() {
+        return isDefault;
     }
 }

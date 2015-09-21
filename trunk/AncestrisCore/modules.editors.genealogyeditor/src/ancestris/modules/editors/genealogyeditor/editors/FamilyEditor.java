@@ -738,7 +738,7 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        husbandImageBean.setImage(file);
+                        husbandImageBean.setImage(file, mHusband.getSex());
                         break;
                     }
                 }
@@ -842,7 +842,7 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        wifeImageBean.setImage(file);
+                        wifeImageBean.setImage(file, mWife.getSex());
                         break;
                     }
                 }
@@ -935,7 +935,7 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        husbandImageBean.setImage(file);
+                        husbandImageBean.setImage(file, mHusband.getSex());
                         break;
                     }
                 }
@@ -1029,7 +1029,7 @@ public class FamilyEditor extends EntityEditor {
 
                     // bmp | gif | jpeg
                     if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                        wifeImageBean.setImage(file);
+                        wifeImageBean.setImage(file, mWife.getSex());
                         break;
                     }
                 }
@@ -1101,7 +1101,7 @@ public class FamilyEditor extends EntityEditor {
 
                 // bmp | gif | jpeg
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                    husbandImageBean.setImage(file);
+                    husbandImageBean.setImage(file, mHusband.getSex());
                     break;
                 }
             }
@@ -1166,7 +1166,7 @@ public class FamilyEditor extends EntityEditor {
 
                 // bmp | gif | jpeg
                 if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
-                    wifeImageBean.setImage(file);
+                    wifeImageBean.setImage(file, mWife.getSex());
                     break;
                 }
             }
@@ -1194,7 +1194,7 @@ public class FamilyEditor extends EntityEditor {
                 husbandNameTextField.setText("");
                 husbandBirthDateLabelDate.setText("");
                 husbandDeathDateLabelDate.setText("");
-                husbandImageBean.setImage((File) null);
+                husbandImageBean.setImage((File) null, PropertySex.MALE);
 
                 addHusbandButton.setVisible(true);
                 linkToHusbandButton.setVisible(true);
@@ -1227,7 +1227,7 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText("");
                 wifeBirthDateLabelDate.setText("");
                 wifeDeathDateLabelDate.setText("");
-                wifeImageBean.setImage((File) null);
+                wifeImageBean.setImage((File) null, PropertySex.FEMALE);
 
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
@@ -1524,7 +1524,7 @@ public class FamilyEditor extends EntityEditor {
                         break;
                     }
                 }
-                husbandImageBean.setImage(selectedFile);
+                husbandImageBean.setImage(selectedFile, mHusband.getSex());
 
                 addHusbandButton.setVisible(false);
                 linkToHusbandButton.setVisible(false);
@@ -1535,7 +1535,7 @@ public class FamilyEditor extends EntityEditor {
                 linkToHusbandButton.setVisible(true);
                 removeHusbandButton.setVisible(false);
                 editHusbandButton.setVisible(false);
-                husbandImageBean.setImage((File) null);
+                husbandImageBean.setImage((File) null, PropertySex.MALE);
             }
 
             /*
@@ -1601,13 +1601,13 @@ public class FamilyEditor extends EntityEditor {
                     }
                 }
 
-                wifeImageBean.setImage(selectedFile);
+                wifeImageBean.setImage(selectedFile, mWife.getSex());
                 addWifeButton.setVisible(false);
                 linkToWifeButton.setVisible(false);
                 removeWifeButton.setVisible(true);
                 editWifeButton.setVisible(true);
             } else {
-                wifeImageBean.setImage((File) null);
+                wifeImageBean.setImage((File) null, PropertySex.FEMALE);
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
                 removeWifeButton.setVisible(false);
