@@ -15,10 +15,13 @@ import ancestris.api.editor.AncestrisEditor;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.UnitOfWork;
 import javax.swing.Action;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -66,25 +69,29 @@ public class MapPlaceEditor extends AncestrisEditor{
 //    }
 //
     private Property edit(Property place, Property parent) {
-        if (place instanceof PropertyPlace || place == null){
-            
+        Gedcom gedcom=null;
+        if (parent != null){
+            gedcom = parent.getGedcom();
+        }
+        if (place != null){
+            gedcom = place.getGedcom();
+        }
+        if (gedcom != null && (place instanceof PropertyPlace || place == null)){
             editorPanel.set(parent, (PropertyPlace)place);
             ADialog dialog = new ADialog(NbBundle.getMessage(MapPlaceEditor.class, "PlaceEditorPanel.edit.title"), editorPanel);
             if (dialog.show() == ADialog.OK_OPTION) {
                 // Add dow:
-//                        gedcom.doUnitOfWork(new UnitOfWork() {
-//
-//                            @Override
-//                            public void perform(Gedcom gedcom) throws GedcomException {
-//                                PropertyPlace p = editor.commit();  // writes place edited and also writes geocoordinates into gedcom file
-//                                if (p != null){
-//                                    // update all other places in gedcom and refresh list
-//                                    obj.updateAllEventsPlaces(p);
-//                                }
-//                            }
-//                        });
+                    try {
+                        gedcom.doUnitOfWork(new UnitOfWork() {
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                editorPanel.commit();
+                            }
+                        });
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
 
-                editorPanel.commit();
                 return editorPanel.get();
             }
         }

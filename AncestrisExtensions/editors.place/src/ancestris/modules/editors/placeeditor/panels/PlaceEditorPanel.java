@@ -263,25 +263,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         gedcomPlaceEditorPanel.set(((PropertyPlace) propertyPlaceArray[0]).getParent(), (PropertyPlace) propertyPlaceArray[0]);
 
-        Property latitude = null;
-        Property longitude = null;
-
-        if (((PropertyPlace) propertyPlaceArray[0]).getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-            Property map = ((PropertyPlace) propertyPlaceArray[0]).getProperty("MAP");
-            if (map != null) {
-                latitude = map.getProperty("LATI");
-                longitude = map.getProperty("LONG");
-            }
-        } else {
-            Property map = ((PropertyPlace) propertyPlaceArray[0]).getProperty("_MAP");
-            if (map != null) {
-                latitude = map.getProperty("_LATI");
-                longitude = map.getProperty("_LONG");
-            }
-        }
-
-        if (latitude != null && !latitude.getValue().isEmpty() && longitude != null && !longitude.getValue().isEmpty()) {
-            jXMapKit1.setAddressLocation(new GeoPosition(Double.parseDouble(latitude.getValue()), Double.parseDouble(longitude.getValue())));
+        PropertyPlace place = (PropertyPlace) propertyPlaceArray[0];
+        PropertyLatitude latitude = place.getLatitude(true);
+        PropertyLongitude longitude = place.getLongitude(true);
+        
+        if (latitude != null && longitude != null) {
+            jXMapKit1.setAddressLocation(new GeoPosition(latitude.getDoubleValue(),longitude.getDoubleValue()));
         } else {
             placeEditorTabbedPane.setSelectedComponent(searchPlacePanel);
             searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString(GedcomPlaceEditorPanel.CITY).replaceAll(",", " ").replaceAll("\\s+", " "));

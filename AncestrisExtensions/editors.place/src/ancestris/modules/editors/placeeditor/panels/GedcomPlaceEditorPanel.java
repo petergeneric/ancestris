@@ -699,22 +699,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 }
             }
 
-            Property latitude = null;
-            Property longitude = null;
-
-            if (place.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                Property map = place.getProperty("MAP");
-                if (map != null) {
-                    latitude = map.getProperty("LATI");
-                    longitude = map.getProperty("LONG");
-                }
-            } else {
-                Property map = place.getProperty("_MAP");
-                if (map != null) {
-                    latitude = map.getProperty("_LATI");
-                    longitude = map.getProperty("_LONG");
-                }
-            }
+            PropertyLatitude latitude = place.getLatitude(true);
+            PropertyLongitude longitude = place.getLongitude(true);
 
             if (latitude != null && longitude != null) {
                 gedcomLatitudeTextField.setText(latitude.getValue());

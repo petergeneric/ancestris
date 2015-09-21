@@ -3,24 +3,26 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.edit.beans;
 
+import ancestris.api.editor.AncestrisEditor;
 import ancestris.core.CoreOptions;
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
@@ -28,8 +30,10 @@ import genj.util.GridBagHelper;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.Updateable;
 import java.awt.Component;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -37,12 +41,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * A Proxy knows how to generate interaction components that the user
- * will use to change a property : UNKNOWN
+ * A Proxy knows how to generate interaction components that the user will use
+ * to change a property : UNKNOWN
  */
 public class PlaceBean extends PropertyBean {
 
-    private GridBagHelper gh = new GridBagHelper(this);
+    private final GridBagHelper gh = new GridBagHelper(this);
     private int rows = 0;
     private JCheckBox global = new JCheckBox();
     private Property[] sameChoices = new Property[0];
@@ -53,9 +57,7 @@ public class PlaceBean extends PropertyBean {
         changeSupport.addChangeListener(new ChangeListener() {
 
             public void stateChanged(ChangeEvent e) {
-                String confirm = getGlobalConfirmMessage();
-                global.setVisible(confirm != null);
-                global.setToolTipText(confirm);
+                setupGlobal();
             }
         });
         // listen to selection of global and ask for confirmation
@@ -63,9 +65,9 @@ public class PlaceBean extends PropertyBean {
 
             public void actionPerformed(ActionEvent e) {
                 if (global.isSelected()) {
-            boolean yes = (DialogManager.YES_OPTION == 
-                    DialogManager.createYesNo(RESOURCES.getString("choice.global.enable"), getGlobalConfirmMessage())
-                    .show());
+                    boolean yes = (DialogManager.YES_OPTION
+                            == DialogManager.createYesNo(RESOURCES.getString("choice.global.enable"), getGlobalConfirmMessage(false))
+                            .show());
                     global.setSelected(yes);
                 }
             }
@@ -81,7 +83,7 @@ public class PlaceBean extends PropertyBean {
         boolean hierarchy = CoreOptions.getInstance().isSplitJurisdictions() && ((PropertyPlace) getProperty()).getFormatAsString().length() > 0;
 
         // collect the result by looking at all of the choices
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (int c = 0, n = getComponentCount(), j = 0; c < n; c++) {
 
             // check each text field
@@ -125,7 +127,7 @@ public class PlaceBean extends PropertyBean {
     /**
      * Set context to edit
      */
-    public void setPropertyImpl(Property prop) {
+    public void setPropertyImpl(final Property prop) {
 
         // remove all current fields and clear current default focus - this is all dynamic for each context
         removeAll();
@@ -147,8 +149,8 @@ public class PlaceBean extends PropertyBean {
         } else {
             sameChoices = place.getSameChoices();
             /*
-            thought about using getDisplayValue() here but the problem is that getAllJurisdictions()
-            works on values (PropertyChoiceValue stuff) - se we have to use getValue() here
+             thought about using getDisplayValue() here but the problem is that getAllJurisdictions()
+             works on values (PropertyChoiceValue stuff) - se we have to use getValue() here
              */
             value = place.isSecret() ? "" : place.getValue();
             formatAsString = place.getFormatAsString();
@@ -174,11 +176,35 @@ public class PlaceBean extends PropertyBean {
         }
 
         // add 'change all'
-        global.setVisible(false);
-        global.setSelected(false);
-        gh.add(global, 2, rows);
+        gh.addFillerH(2, rows);
+        setupGlobal();
+        gh.setAnchor(GridBagConstraints.LINE_START).
+                add(global, 1, ++rows, 2, 1);
+        gh.setAnchor(-1);
 
-        // add filler
+        // FIXME: We don't show edit button ATM
+        final AncestrisEditor editor = AncestrisEditor.findEditor(prop);
+        if (false && editor != null) {
+            gh.add(new JButton(
+                    new AbstractAncestrisAction() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            SelectionDispatcher.muteSelection(true);
+                            if (editor != null) {
+//                        PropertyPlace p = new PropertyPlace()
+                                editor.edit(prop);
+                                PlaceBean.this.changeSupport.setChanged(true);
+                                setPropertyImpl(prop);
+                            }
+                            SelectionDispatcher.muteSelection(false);
+                        }
+
+                    }.setText("modifier")),
+                    3,
+                    rows);
+        }
+
+// add filler
         gh.addFiller(1, ++rows);
 
         // Done
@@ -224,14 +250,22 @@ public class PlaceBean extends PropertyBean {
     /**
      * Create confirm message for global
      */
-    private String getGlobalConfirmMessage() {
+    private String getGlobalConfirmMessage(boolean isShort) {
         if (sameChoices.length < 2) {
             return null;
         }
         // we're using getDisplayValue() here
         // because like in PropertyRelationship's case there might be more
         // in the gedcom value than what we want to display (witness@INDI:BIRT)
-        return RESOURCES.getString("choice.global.confirm", "" + sameChoices.length, sameChoices[0].getDisplayValue(), getCommitValue());
+        String messageId = isShort ? "choice.global.confirm.short" : "choice.global.confirm";
+        return RESOURCES.getString(messageId, "" + sameChoices.length, sameChoices[0].getDisplayValue(), getCommitValue());
     }
+
+    private void setupGlobal() {
+        String confirm = getGlobalConfirmMessage(true);
+        global.setEnabled(confirm != null);
+        global.setText(confirm == null ? RESOURCES.getString("choice.global.hidden") : confirm);
+    }
+
 } //PlaceBean
 

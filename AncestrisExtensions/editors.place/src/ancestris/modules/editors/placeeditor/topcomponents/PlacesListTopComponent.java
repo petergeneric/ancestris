@@ -45,23 +45,10 @@ public final class PlacesListTopComponent extends TopComponent {
     private GedcomPlaceTableModel gedcomPlaceTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
     private Gedcom gedcom = null;
-    private String mapTAG;
-    private String latitudeTAG;
-    private String longitudeTAG;
     int currentRowIndex = -1;
 
     public PlacesListTopComponent(final Gedcom gedcom) {
         this.gedcom = gedcom;
-
-        if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
-            mapTAG = "MAP";
-            latitudeTAG = "LATI";
-            longitudeTAG = "LONG";
-        } else {
-            mapTAG = "_MAP";
-            latitudeTAG = "_LATI";
-            longitudeTAG = "_LONG";
-        }
 
         gedcomPlaceTableModel = new GedcomPlaceTableModel(PropertyPlace.getFormat(gedcom));
 
@@ -107,13 +94,8 @@ public final class PlacesListTopComponent extends TopComponent {
         placesMap.clear();
 
         for (PropertyPlace propertyPlace : gedcomPlacesList) {
-            Property latitude = null;
-            Property longitude = null;
-            Property map = propertyPlace.getProperty(mapTAG);
-            if (map != null) {
-                latitude = map.getProperty(latitudeTAG);
-                longitude = map.getProperty(longitudeTAG);
-            }
+            Property latitude = propertyPlace.getLatitude(false);
+            Property longitude = propertyPlace.getLongitude(false);
 
             String gedcomPlace = propertyPlace.getDisplayValue()
                     + PropertyPlace.JURISDICTION_SEPARATOR
