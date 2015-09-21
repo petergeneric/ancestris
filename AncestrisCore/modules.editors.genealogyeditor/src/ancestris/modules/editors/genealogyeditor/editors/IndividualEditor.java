@@ -491,11 +491,11 @@ public final class IndividualEditor extends EntityEditor {
 
         if ((mMultiMediaObject = mIndividual.getProperty("OBJE")) == null) {
             try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+                gedcom.doUnitOfWork(new UnitOfWork() {   // FL sept-2015 - FIXME : Why do we need a gedcom change ? 
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
+                        if (gedcom.getGrammar().getVersion().equals("5.5.1")) { // FL sept-2015 - FIXME : not sure this is a 5.5.1 grammar manadatory rule !?!?
                             mMultiMediaObject = mIndividual.getGedcom().createEntity("OBJE");
                         } else {
                             mMultiMediaObject = mIndividual.addProperty("OBJE", "");
@@ -513,18 +513,7 @@ public final class IndividualEditor extends EntityEditor {
                         changes.fireChangeEvent();
                     } 
                 } else {
-                    gedcom.doUnitOfWork(new UnitOfWork() {
-
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
-                                mIndividual.getGedcom().deleteEntity((Entity) mMultiMediaObject);
-                            } else {
-                                mIndividual.delProperty(mMultiMediaObject);
-                            }
-                        }
-                    }); // end of doUnitOfWork
-
+                    gedcom.undoUnitOfWork();
                 }
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
