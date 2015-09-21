@@ -508,10 +508,23 @@ public final class IndividualEditor extends EntityEditor {
                 if (multiMediaObjectEditor.showPanel()) {
                     if (mMultiMediaObject instanceof Media) {
                         mIndividual.addMedia((Media) mMultiMediaObject);
-                    }
-                    imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
-                    repaint();
-                    changes.fireChangeEvent();
+                        imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
+                        repaint();
+                        changes.fireChangeEvent();
+                    } 
+                } else {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
+                                mIndividual.getGedcom().deleteEntity((Entity) mMultiMediaObject);
+                            } else {
+                                mIndividual.delProperty(mMultiMediaObject);
+                            }
+                        }
+                    }); // end of doUnitOfWork
+
                 }
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
