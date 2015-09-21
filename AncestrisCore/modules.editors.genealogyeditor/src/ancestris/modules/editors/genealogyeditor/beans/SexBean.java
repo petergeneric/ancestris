@@ -4,7 +4,6 @@ import ancestris.modules.editors.genealogyeditor.models.SexComboBoxModel;
 import genj.gedcom.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.ChangeSupport;
 
@@ -89,6 +88,10 @@ public class SexBean extends javax.swing.JPanel {
         sexComboBox.setSelectedIndex(sex.getSex());
         sexModified = false;
         changeListner.unmute();
+    }
+
+    public int getSelectedSex() {
+        return sexComboBox.getSelectedIndex();
     }
 
     public void commit() {

@@ -207,11 +207,18 @@ public final class IndividualEditor extends EntityEditor {
         individualIDTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.individualIDTextField.text"), new Object[] {})); // NOI18N
         individualIDTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.individualIDTextField.toolTipText"), new Object[] {})); // NOI18N
 
-        imageBean.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        sexBeanPanel.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sexBeanPanelStateChanged(evt);
+            }
+        });
+
+        imageBean.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         imageBean.setAlignmentX(0.0F);
         imageBean.setAlignmentY(0.0F);
         imageBean.setMinimumSize(new java.awt.Dimension(135, 180));
-        imageBean.setPreferredSize(new java.awt.Dimension(135, 180));
+        imageBean.setPreferredSize(new java.awt.Dimension(130, 173));
+        imageBean.setRequestFocusEnabled(true);
         imageBean.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 imageBeanMouseClicked(evt);
@@ -226,7 +233,7 @@ public final class IndividualEditor extends EntityEditor {
         );
         imageBeanLayout.setVerticalGroup(
             imageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 178, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
@@ -250,7 +257,7 @@ public final class IndividualEditor extends EntityEditor {
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addComponent(imageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(imageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(generalPanelLayout.createSequentialGroup()
@@ -271,7 +278,7 @@ public final class IndividualEditor extends EntityEditor {
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(imageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imageBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(generalPanelLayout.createSequentialGroup()
                         .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(sexBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -346,7 +353,7 @@ public final class IndividualEditor extends EntityEditor {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+                .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
         );
 
         eventsSplitPane.setRightComponent(jPanel1);
@@ -360,7 +367,7 @@ public final class IndividualEditor extends EntityEditor {
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsPanelLayout.createSequentialGroup()
-                .addComponent(eventsSplitPane)
+                .addComponent(eventsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -502,7 +509,7 @@ public final class IndividualEditor extends EntityEditor {
                     if (mMultiMediaObject instanceof Media) {
                         mIndividual.addMedia((Media) mMultiMediaObject);
                     }
-                    imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null);
+                    imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
                     repaint();
                     changes.fireChangeEvent();
                 }
@@ -553,10 +560,10 @@ public final class IndividualEditor extends EntityEditor {
 
                         Property multimediaFile = multiMediaObject.getProperty("FILE", true);
                         if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                            imageBean.setImage(((PropertyFile) multimediaFile).getFile());
+                            imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
                         } else {
                             PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
-                            imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null);
+                            imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
                         }
                         repaint();
                         changes.fireChangeEvent();
@@ -656,6 +663,12 @@ public final class IndividualEditor extends EntityEditor {
             context = new Context(prop);
         }
     }//GEN-LAST:event_eventsListValueChanged
+
+    private void sexBeanPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sexBeanPanelStateChanged
+        if (imageBean.isDefault()) {
+            imageBean.setImage((File)null, sexBeanPanel.getSelectedSex());
+        }
+    }//GEN-LAST:event_sexBeanPanelStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel SOSALabel;
@@ -939,17 +952,17 @@ public final class IndividualEditor extends EntityEditor {
 
                     Property multimediaFile = multiMediaObject.getProperty("FILE", true);
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                        imageBean.setImage(((PropertyFile) multimediaFile).getFile());
+                        imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
                     } else {
                         PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
-                        imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null);
+                        imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
                     }
                     found = true;
                     break;
                 }
             }
             if (found == false) {
-                imageBean.setImage((File) null);
+                imageBean.setImage((File) null, mIndividual.getSex());
             }
             
             multimediaObjectCitationsTablePanel.set(mIndividual, Arrays.asList(multiMediaObjects));
