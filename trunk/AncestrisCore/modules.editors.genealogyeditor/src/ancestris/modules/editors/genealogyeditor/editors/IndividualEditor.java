@@ -495,7 +495,7 @@ public final class IndividualEditor extends EntityEditor {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        if (gedcom.getGrammar().getVersion().equals("5.5.1")) { // FL sept-2015 - FIXME : not sure this is a 5.5.1 grammar manadatory rule !?!?
+                        if (gedcom.getGrammar().getVersion().equals("5.5.1")) { // FL sept-2015 - FIXME : not sure this is a 5.5.1 grammar mandatory rule !?!?
                             mMultiMediaObject = mIndividual.getGedcom().createEntity("OBJE");
                         } else {
                             mMultiMediaObject = mIndividual.addProperty("OBJE", "");
