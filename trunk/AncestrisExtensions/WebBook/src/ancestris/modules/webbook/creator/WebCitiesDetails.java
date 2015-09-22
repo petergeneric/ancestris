@@ -178,11 +178,14 @@ public class WebCitiesDetails extends WebSection {
             // If fullnames different, return sorted strings
             String fullname1 = getFullname(prop1);
             String fullname2 = getFullname(prop2);
-            if (fullname1 == null) {
+            if (fullname1 == null && fullname2 != null) {
                 return -1;
             }
-            if (fullname2 == null) {
+            if (fullname1 != null && fullname2 == null) {
                 return +1;
+            }
+            if (fullname1 == null && fullname2 == null) {
+                return 0;
             }
             if (fullname1.compareTo(fullname2) != 0) {
                 return fullname1.compareTo(fullname2);
@@ -191,11 +194,14 @@ public class WebCitiesDetails extends WebSection {
             // Otherwise, sort on dates
             PropertyDate date1 = getDate(prop1);
             PropertyDate date2 = getDate(prop2);
-            if (date1 == null) {
+            if (date1 == null && date2 != null) {
                 return -1;
             }
-            if (date2 == null) {
+            if (date1 != null && date2 == null) {
                 return +1;
+            }
+            if (date1 == null && date2 == null) {
+                return 0;
             }
             if (date1.compareTo(date2) != 0) {
                 return date1.compareTo(date2);
@@ -205,13 +211,19 @@ public class WebCitiesDetails extends WebSection {
             Entity ent1 = prop1.getEntity();
             Entity ent2 = prop2.getEntity();
 
-            if (ent1 == null) {
+            if (ent1 == null && ent2 != null) {
                 return -1;
             }
-            if (ent2 == null) {
+            if (ent1 != null && ent2 == null) {
                 return +1;
             }
-            return ent1.toString().compareTo(ent2.toString());
+            if (ent1 == null && ent2 == null) {
+                return 0;
+            }
+            if (ent1.toString().compareTo(ent2.toString()) != 0) {
+                return ent1.toString().compareTo(ent2.toString());
+            }
+            return ent1.getId().compareTo(ent2.getId());
         }
     };
 
