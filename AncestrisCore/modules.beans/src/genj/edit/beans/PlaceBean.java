@@ -57,7 +57,7 @@ public class PlaceBean extends PropertyBean {
         changeSupport.addChangeListener(new ChangeListener() {
 
             public void stateChanged(ChangeEvent e) {
-                setupGlobal();
+                setupGlobal(true);
             }
         });
         // listen to selection of global and ask for confirmation
@@ -176,10 +176,9 @@ public class PlaceBean extends PropertyBean {
         }
 
         // add 'change all'
-        gh.addFillerH(2, rows);
-        setupGlobal();
+        setupGlobal(false);
         gh.setAnchor(GridBagConstraints.LINE_START).
-                add(global, 1, ++rows, 2, 1);
+                add(global, 1, ++rows, 1, 1);
         gh.setAnchor(-1);
 
         // FIXME: We don't show edit button ATM
@@ -204,7 +203,7 @@ public class PlaceBean extends PropertyBean {
                     rows);
         }
 
-// add filler
+        // add filler
         gh.addFiller(1, ++rows);
 
         // Done
@@ -261,9 +260,9 @@ public class PlaceBean extends PropertyBean {
         return RESOURCES.getString(messageId, "" + sameChoices.length, sameChoices[0].getDisplayValue(), getCommitValue());
     }
 
-    private void setupGlobal() {
+    private void setupGlobal(boolean enabled) {
         String confirm = getGlobalConfirmMessage(true);
-        global.setEnabled(confirm != null);
+        global.setEnabled(confirm != null && enabled);
         global.setText(confirm == null ? RESOURCES.getString("choice.global.hidden") : confirm);
     }
 
