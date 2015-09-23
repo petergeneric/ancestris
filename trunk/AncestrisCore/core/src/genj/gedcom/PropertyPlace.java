@@ -3,19 +3,18 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.gedcom;
 
@@ -36,7 +35,7 @@ public class PropertyPlace extends PropertyChoiceValue {
 
     private final static boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();
 
-  public final static ImageIcon IMAGE = Grammar.V55.getMeta(new TagPath("INDI:BIRT:PLAC")).getImage();
+    public final static ImageIcon IMAGE = Grammar.V55.getMeta(new TagPath("INDI:BIRT:PLAC")).getImage();
 
     public final static String JURISDICTION_SEPARATOR = ",";
 
@@ -55,25 +54,51 @@ public class PropertyPlace extends PropertyChoiceValue {
     /**
      * Overridden - special trim
      */
-    //FIXME: Not used?
-//    protected String trim(String value) {
-//        StringBuilder buf = new StringBuilder(value.length());
-//        DirectAccessTokenizer jurisdictions = new DirectAccessTokenizer(value, JURISDICTION_SEPARATOR);
-//        for (int i = 0;; i++) {
-//            String jurisdiction = jurisdictions.get(i, true);
-//            if (jurisdiction == null) {
-//                break;
-//            }
-//            if (i > 0) {
-//                buf.append(JURISDICTION_SEPARATOR);
-//                if (USE_SPACES) {
-//                    buf.append(' ');
-//                }
-//            }
-//            buf.append(jurisdiction);
-//        }
-//        return buf.toString().intern();
-//    }
+    @Override
+    protected String trim(String value) {
+
+        /*
+         20051212 at some point we switched to trimming values on places
+         here, making sure that the separator only is between jurisdictions.
+         Peter asked me to add spaces as well for readability:
+         2 PLAC Hamburg, Schleswig Holstein, Deutschland
+         instead of
+         2 PLAC Hamburg,Schleswig Holstein,Deutschland
+
+         But Francois reminded me that we didn't want to have spaces in
+         the Gedcom file - the spec doesn't explicitly disallow it but especially
+         in Francois' way of keeping place information
+         2 PLAC ,Allanche,,Cantal,Auvergne,
+         adding spaces doesn't look good
+         2 PLAC , Allanche, , Cantal, Auvergne,
+
+         We played with the idea of using space-comma in getDisplayValue()
+         and comma-only in getValue()/trim() - problem is that it takes mem
+         to cache or runtime performance to calculate that. It's also problematic
+         that the display value would be different from the choices remembered
+         (one with space the other without)
+
+         So finally we decided to put in a global option that lets the user
+         make the choice - internally getValue()-wize we handle this uniformly then
+         */
+        // trim each jurisdiction separately
+        StringBuilder buf = new StringBuilder(value.length());
+        DirectAccessTokenizer jurisdictions = new DirectAccessTokenizer(value, JURISDICTION_SEPARATOR);
+        for (int i = 0;; i++) {
+            String jurisdiction = jurisdictions.get(i, true);
+            if (jurisdiction == null) {
+                break;
+            }
+            if (i > 0) {
+                buf.append(JURISDICTION_SEPARATOR);
+                if (USE_SPACES) {
+                    buf.append(' ');
+                }
+            }
+            buf.append(jurisdiction);
+        }
+        return buf.toString().intern();
+    }
 
     /**
      * Remember a jurisdiction's value
@@ -135,8 +160,9 @@ public class PropertyPlace extends PropertyChoiceValue {
 
     /**
      * Returns Place Format for gedcom.
+     *
      * @param gedcom
-     * @return 
+     * @return
      */
     public static String[] getFormat(Gedcom gedcom) {
         return getFormat(gedcom, false);
@@ -144,16 +170,18 @@ public class PropertyPlace extends PropertyChoiceValue {
 
     /**
      * Returns Place Format for gedcom. fallback to AncestrisSetting
+     *
      * @param gedcom
-     * @return 
+     * @return
      */
-    public static String[] getFormat(Gedcom gedcom,boolean fallback) {
+    public static String[] getFormat(Gedcom gedcom, boolean fallback) {
         String[] format = toJurisdictions(gedcom.getPlaceFormat());
         if (fallback && (format == null || format.length == 0)) {
             format = toJurisdictions(GedcomOptions.getInstance().getPlaceFormat());
         }
         return format;
     }
+
     private static String[] toJurisdictions(String value) {
         ArrayList<String> result = new ArrayList<String>(10);
         String lastToken = JURISDICTION_SEPARATOR;
@@ -205,7 +233,8 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
-     * Accessor - all places with the same jurisdiction for given hierarchy level
+     * Accessor - all places with the same jurisdiction for given hierarchy
+     * level
      */
     public PropertyPlace[] getSameChoices(int hierarchyLevel) {
         String jurisdiction = getJurisdiction(hierarchyLevel);
@@ -217,7 +246,8 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
-     * Accessor - all places with the same jurisdiction for given hierarchy level
+     * Accessor - all places with the same jurisdiction for given hierarchy
+     * level
      */
     public static PropertyPlace[] getSameChoices(Gedcom gedcom, int hierarchyLevel, String jurisdiction) {
         if (jurisdiction == null) {
@@ -241,7 +271,8 @@ public class PropertyPlace extends PropertyChoiceValue {
     /**
      * Accessor - all jurisdictions of given level in gedcom
      *
-     * @param hierarchyLevel either a zero-based level or -1 for whole place values
+     * @param hierarchyLevel either a zero-based level or -1 for whole place
+     * values
      */
     public static String[] getAllJurisdictions(Gedcom gedcom, int hierarchyLevel, boolean sort) {
         ReferenceSet<String, Property> refset = gedcom.getReferenceSet(hierarchyLevel < 0 ? TAG : TAG + "." + hierarchyLevel);
@@ -319,7 +350,7 @@ public class PropertyPlace extends PropertyChoiceValue {
             String juri = juris[i];
             if (juri.matches("-?\\d+(\\.\\d+)?")) {         //match a number with optional '-' and decimal.
                 str += juri + JURISDICTION_SEPARATOR;
-            } 
+            }
         }
         return str;
     }
@@ -350,74 +381,87 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
-     * Return PropertyMap for this Place.
-     * Resolve aginst gedcom version
-     * @return 
+     * Return PropertyMap for this Place. Resolve aginst gedcom version
+     *
+     * @return
      */
-    public PropertyMap getMap(){
-        if (isVersion55()){
-            return (PropertyMap)getProperty("_MAP");
+    public PropertyMap getMap() {
+        if (isVersion55()) {
+            return (PropertyMap) getProperty("_MAP");
         } else {
-            return (PropertyMap)getProperty("MAP");
+            return (PropertyMap) getProperty("MAP");
         }
     }
-    
+
     /**
-     * Shortcut for PropertyPlace.getMap.getLatitude().
-     * returns null if not available. If strict is true,
-     * return null if Longitude is not available meaning that 
-     * a Latitude with no Longitude set has no real sens
+     * Shortcut for PropertyPlace.getMap.getLatitude(). returns null if not
+     * available. If strict is true, return null if Longitude is not available
+     * meaning that a Latitude with no Longitude set has no real sens
+     *
      * @param strict
-     * @return 
+     * @return
      */
-    public PropertyLatitude getLatitude(boolean strict){
+    public PropertyLatitude getLatitude(boolean strict) {
         PropertyMap map = getMap();
-        if (map == null) return null;
+        if (map == null) {
+            return null;
+        }
         PropertyLatitude lat = map.getLatitude();
-        if (lat == null) return null;
-        if (strict && map.getLongitude() == null) return null;
+        if (lat == null) {
+            return null;
+        }
+        if (strict && map.getLongitude() == null) {
+            return null;
+        }
         return lat;
     }
 
     /**
-     * Shortcut for PropertyPlace.getMap.getLongitude().
-     * returns null if not available. If strict is true,
-     * return null if Latitude is not available meaning that 
-     * a Longitude with no Latitude set has no real sens
+     * Shortcut for PropertyPlace.getMap.getLongitude(). returns null if not
+     * available. If strict is true, return null if Latitude is not available
+     * meaning that a Longitude with no Latitude set has no real sens
+     *
      * @param strict
-     * @return 
+     * @return
      */
-    public PropertyLongitude getLongitude(boolean strict){
+    public PropertyLongitude getLongitude(boolean strict) {
         PropertyMap map = getMap();
-        if (map == null) return null;
+        if (map == null) {
+            return null;
+        }
         PropertyLongitude longitude = map.getLongitude();
-        if (longitude == null) return null;
-        if (strict && map.getLatitude() == null) return null;
+        if (longitude == null) {
+            return null;
+        }
+        if (strict && map.getLatitude() == null) {
+            return null;
+        }
         return longitude;
     }
-    
+
     /**
      * Set PLAC::MAP::LATI value, adding properties if necessary.
-     * @param latitude 
-     * @param longitude  
+     *
+     * @param latitude
+     * @param longitude
      */
-    public void setCoordinates(String latitude,String longitude){
+    public void setCoordinates(String latitude, String longitude) {
         PropertyMap map = getMap();
         boolean is55 = isVersion55();
-        if (map == null){
+        if (map == null) {
             //add map property
             map = new PropertyMap(is55);
             addProperty(map);
         }
         PropertyLatitude lat = map.getLatitude();
-        if (lat == null){
+        if (lat == null) {
             // Add latitude
             lat = new PropertyLatitude(is55);
             map.addProperty(lat);
         }
         lat.setValue(latitude);
         PropertyLongitude lon = map.getLongitude();
-        if (lon == null){
+        if (lon == null) {
             // Add latitude
             lon = new PropertyLongitude(is55);
             map.addProperty(lon);
