@@ -43,6 +43,9 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
         Locale breton = new Locale("br");
         localeList.put(breton.getDisplayLanguage(), breton);
 
+        Locale esp = new Locale("eo");
+        localeList.put(esp.getDisplayLanguage(), esp);
+
         locales = new Locale[localeList.size()];
         SortedSet<String> sortedset = new TreeSet<String>(localeList.keySet());
 
