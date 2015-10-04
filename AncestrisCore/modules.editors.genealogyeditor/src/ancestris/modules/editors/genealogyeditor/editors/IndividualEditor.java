@@ -490,33 +490,39 @@ public final class IndividualEditor extends EntityEditor {
         Gedcom gedcom = mIndividual.getGedcom();
 
         if ((mMultiMediaObject = mIndividual.getProperty("OBJE")) == null) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {   // FL sept-2015 - FIXME : Why do we need a gedcom change ? 
+            gedcom.doMuteUnitOfWork(new UnitOfWork() {   // FL sept-2015 - FIXME : Why do we need a gedcom change ?
+                
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    if (gedcom.getGrammar().getVersion().equals("5.5.1")) { // FL sept-2015 - FIXME : not sure this is a 5.5.1 grammar mandatory rule !?!?
+                        mMultiMediaObject = mIndividual.getGedcom().createEntity("OBJE");
+                    } else {
+                        mMultiMediaObject = mIndividual.addProperty("OBJE", "");
+                    }
+                }
+            });
+            final MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
+            multiMediaObjectEditor.setContext(new Context(mMultiMediaObject));
+            if (multiMediaObjectEditor.showPanel()) {
+                if (mMultiMediaObject instanceof Media) {
+                    mIndividual.addMedia((Media) mMultiMediaObject);
+                    imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
+                    repaint();
+                    changes.fireChangeEvent();
+                }
+            } else {
+                gedcom.doMuteUnitOfWork(new UnitOfWork() {   // FL sept-2015 - FIXME : Why do we need a gedcom change ?
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         if (gedcom.getGrammar().getVersion().equals("5.5.1")) { // FL sept-2015 - FIXME : not sure this is a 5.5.1 grammar mandatory rule !?!?
-                            mMultiMediaObject = mIndividual.getGedcom().createEntity("OBJE");
+                            mIndividual.getGedcom().deleteEntity((Entity)mMultiMediaObject);
                         } else {
-                            mMultiMediaObject = mIndividual.addProperty("OBJE", "");
+                            mIndividual.delProperty(mMultiMediaObject);
                         }
                     }
                 }); // end of doUnitOfWork
 
-                final MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
-                multiMediaObjectEditor.setContext(new Context(mMultiMediaObject));
-                if (multiMediaObjectEditor.showPanel()) {
-                    if (mMultiMediaObject instanceof Media) {
-                        mIndividual.addMedia((Media) mMultiMediaObject);
-                        imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
-                        repaint();
-                        changes.fireChangeEvent();
-                    } 
-                } else {
-                    gedcom.undoUnitOfWork();
-                }
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
             }
         } else {
             for (Property multiMediaObject : mIndividual.getProperties("OBJE")) {
