@@ -332,7 +332,8 @@ public class EntitiesListPanel extends javax.swing.JPanel {
             if (match("", gedcomName, friend, memberGedcomName, "", iGedcomName, iFriend, iMemberGedcomName)) {
                 if (listNb != 1) myGedcoms.add(iGedcomName);
                 if (listNb != 2) { 
-                    ImageIcon icon = line.friendGedcomEntity.afriend.getFriendProfile().getPhoto(2);
+                    AncestrisFriend af = line.friendGedcomEntity.afriend;
+                    ImageIcon icon =  (af != null ? (af.getFriendProfile() != null ? af.getFriendProfile().getPhoto(2) : null) : null);
                     if (icon == null) {
                         icon = nophoto;
                     }
