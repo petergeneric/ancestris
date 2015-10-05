@@ -3,4 +3,5 @@ Error reading included file Templates/NetBeansModuleDevelopment-files/Templates/
 <map version="2.0">
     <mapID target="ancestris.modules.treesharing.title" url="treesharing-title.html"/>
     <mapID target="ancestris.modules.treesharing.about" url="treesharing-about.html"/>
+    <mapID target="ancestris.modules.treesharing.start" url="treesharing-start.html"/>
 </map>
