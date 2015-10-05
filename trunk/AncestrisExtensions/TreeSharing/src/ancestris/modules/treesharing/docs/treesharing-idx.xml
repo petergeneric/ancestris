@@ -6,5 +6,6 @@ and open the template in the editor.
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
     <indexitem text="Partage d'arbres" target="ancestris.modules.treesharing.title"/>
-    <indexitem text="Le Partage d'arbres" target="ancestris.modules.treesharing.about"/>
+    <indexitem text="Introduction et configuration" target="ancestris.modules.treesharing.about"/>
+    <indexitem text="Fonctionnement" target="ancestris.modules.treesharing.start"/>
 </index>
