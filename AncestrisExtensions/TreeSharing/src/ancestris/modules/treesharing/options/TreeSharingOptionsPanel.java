@@ -17,9 +17,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -33,7 +31,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     private static String photoPath = "";
     private static File dest = null;
     private static BufferedImage targetImage = null;
-    private boolean loading = false;
+    private static boolean loading = false;
     
     public static final int NO_MATCH = 0; 
     public static final int EXACT_MATCH = 1; 
@@ -318,9 +316,11 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
             return true;
 
         } catch (Exception ex) {
-            DialogManager.create(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_" + ex.getMessage()),
-                    NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_PleaseChooseOther"))
-                    .setMessageType(DialogManager.ERROR_MESSAGE).show();
+            if (loading) {
+                DialogManager.create(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_" + ex.getMessage()),
+                        NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_PleaseChooseOther"))
+                        .setMessageType(DialogManager.ERROR_MESSAGE).show();
+            }
             return false;
         }
     }
