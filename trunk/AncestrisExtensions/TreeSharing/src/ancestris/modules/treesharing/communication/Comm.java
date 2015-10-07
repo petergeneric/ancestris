@@ -742,6 +742,9 @@ public class Comm {
         AncestrisMember aMember = null;
         
         LOG.log(Level.INFO, "Listening to all incoming calls indefinitely.......");
+        
+        // Upload profile picture once for all
+        packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
 
         try {
             while (sharing) {
@@ -1030,7 +1033,7 @@ public class Comm {
                 // Case of CMD_GPFxx command (member asks for the profile. Send back.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_GPFxx)) {
                     Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
-                    if (iPacket == 0 || packetsOfProfile == null) {
+                    if (packetsOfProfile == null) {
                         packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
                     }
                     String commandIndexed = CMD_TPFxx + String.format(FMT_IDX, iPacket);
