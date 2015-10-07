@@ -8,4 +8,5 @@ and open the template in the editor.
     <indexitem text="Partage d'arbres" target="ancestris.modules.treesharing.title"/>
     <indexitem text="Introduction et configuration" target="ancestris.modules.treesharing.about"/>
     <indexitem text="Fonctionnement" target="ancestris.modules.treesharing.start"/>
+    <indexitem text="Résultat" target="ancestris.modules.treesharing.result"/>
 </index>
