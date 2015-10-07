@@ -2,36 +2,41 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package ancestris.modules.geo;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
-import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.Utilities;
+import org.openide.util.NbBundle;
 
 @ActionID(id = "ancestris.modules.geo.GeoMapAction", category = "Window")
-@ActionRegistration(iconBase = "ancestris/modules/geo/geo.png", displayName = "#CTL_GeoMapAction", iconInMenu = true)
+@ActionRegistration(
+        displayName = "#CTL_GeoMapAction",
+        iconInMenu = true,
+        lazy = false)
 @ActionReference(path = "Menu/View", name = "GeoMapAction", position = -650)
-public final class GeoMapAction implements ActionListener {
+public final class GeoMapAction extends AbstractAncestrisContextAction {
 
-    private Context context = null;
-
-    public GeoMapAction(Property property) {
-        context = new Context(property);
+    public GeoMapAction() {
+        super();
+        setImage("ancestris/modules/geo/geo.png");
+        setText(NbBundle.getMessage(GeoMapAction.class, "CTL_GeoMapAction"));
     }
-    
-    public void actionPerformed(ActionEvent e) {
+
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+        Context contextToOpen = getContext();
         GeoMapTopComponent tc = new GeoMapTopComponent();
-//        Context c = Utilities.actionsGlobalContext().lookup(Context.class);
-        if (context == null){
-            return;
-        }
-        tc.init(context);
+        tc.init(contextToOpen);
         tc.open();
         tc.requestActive();
     }

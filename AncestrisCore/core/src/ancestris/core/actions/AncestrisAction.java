@@ -42,6 +42,14 @@ public interface AncestrisAction extends Action, Presenter.Popup {
      * accessor - image
      */
     AncestrisAction setImage(Icon icon);
+    
+    /**
+     * Set Icon from resource path.
+     * @param resource resource path. This resource path is used to fond, possibly
+     * localized image in classpath. See also {@link ImageUtilities.loadImage}
+     * @return 
+     */
+    AncestrisAction setImage(String resource);
 
     boolean setSelected(boolean selected);
 
