@@ -37,8 +37,8 @@ public class MemberProfile implements Serializable {
     private final static int IMG_MEDIUM_WIDTH = 51;
     private final static int IMG_MEDIUM_HEIGHT = 62;
     
-    private final static int IMG_LARGE_WIDTH = 155;
-    private final static int IMG_LARGE_HEIGHT = 186;
+    public final static int IMG_LARGE_WIDTH = 155;
+    public final static int IMG_LARGE_HEIGHT = 186;
 
     
     

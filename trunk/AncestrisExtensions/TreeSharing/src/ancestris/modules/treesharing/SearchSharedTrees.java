@@ -383,7 +383,8 @@ public class SearchSharedTrees extends Thread {
         }
         
         // Formulas : Detect exact match first
-        if (Asx.equals(Bsx) && Aln.equals(Bln) && Afn.equals(Bfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2) {
+        if (!Aln.isEmpty() && !Afn.isEmpty() && !Apl1.isEmpty() && Ayr1 != 0 && !Apl2.isEmpty() && Ayr2 != 0
+            && Asx.equals(Bsx) && Aln.equals(Bln) && Afn.equals(Bfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2) {
             return TreeSharingOptionsPanel.EXACT_MATCH;
         }
         
@@ -460,7 +461,9 @@ public class SearchSharedTrees extends Thread {
         }
         
         // Formulas : Detect exact match first
-        if (Ahln.equals(Bhln) && Ahfn.equals(Bhfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2
+        if (!Ahln.isEmpty() && !Ahfn.isEmpty() && !Apl1.isEmpty() && Ayr1 != 0 && !Apl2.isEmpty() && Ayr2 != 0
+                && !Awln.isEmpty() && !Awfn.isEmpty() && !Apl3.isEmpty() && Ayr3 != 0 && !Apl4.isEmpty() && Ayr4 != 0
+                && Ahln.equals(Bhln) && Ahfn.equals(Bhfn) && Apl1.equals(Bpl1) && Ayr1 == Byr1 && Apl2.equals(Bpl2) && Ayr2 == Byr2
                 && Awln.equals(Bwln) && Awfn.equals(Bwfn) && Apl3.equals(Bpl3) && Ayr3 == Byr3 && Apl4.equals(Bpl4) && Ayr4 == Byr4
                 && Apl5.equals(Bpl5) && Ayr5 == Byr5) {
             return TreeSharingOptionsPanel.EXACT_MATCH;
