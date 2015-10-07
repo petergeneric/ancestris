@@ -13,14 +13,16 @@ package ancestris.modules.treesharing.options;
 
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.util.swing.DialogManager;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import org.apache.commons.io.FileUtils;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -29,6 +31,8 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
 
     private final TreeSharingOptionsPanelController controller;
     private String photoPath = "";
+    private File dest = null;
+    private BufferedImage targetImage = null;
     private boolean loading = false;
     
     public static final int NO_MATCH = 0; 
@@ -237,7 +241,16 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Email", jTextField4.getText().trim());
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("City", jTextField5.getText().trim());
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Country", jTextField6.getText().trim());
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Photo", photoPath);
+        if (targetImage != null && dest != null) {
+            photoPath = dest.getAbsolutePath();
+            try {
+                ImageIO.write(targetImage, "jpeg", dest);
+            } catch (Exception ex) {
+                DialogManager.create(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_CannotSaveCopy"),
+                        NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_PleaseCheckPath", photoPath)).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            }
+            NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Photo", photoPath);
+        }
         NbPreferences.forModule(TreeSharingOptionsPanel.class).putBoolean("RespectPrivacy", jCheckBox1.isSelected());
         NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", ""+ ((int)(jComboBox1.getSelectedIndex()+1)) );
     }
@@ -267,33 +280,42 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Get file from user and if file is not a picture or if picture cannot be resized, set null icon and display "choose another file" message
+     */
     private void chooseAndDisplayImage() {
         JFileChooser jfc = new JFileChooser();
         int ret = jfc.showDialog(jfc, NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserTitle"));
         if (ret == JFileChooser.APPROVE_OPTION) {
             File f = jfc.getSelectedFile();
-            if (loadPhoto(f)) {
-                File dest = new File(System.getProperty("netbeans.user") + File.separator + f.getName());
-                try {
-                    FileUtils.copyFile(f, dest);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+            try {
+                if (f == null) {
+                    throw new Exception("FileIsNull"); 
                 }
-                photoPath = dest.getAbsolutePath();
-            } else {
+                
+                targetImage = scaleImage(f, MemberProfile.IMG_LARGE_WIDTH, MemberProfile.IMG_LARGE_HEIGHT);
+                dest = new File(System.getProperty("netbeans.user") + File.separator + removeExtension(f.getName()) + ".jpg");
+                jLabel8.setText("");
+                jLabel8.setIcon(new ImageIcon(targetImage));
+                
+            } catch (Exception ex) {
+                DialogManager.create(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_" + ex.getMessage()), 
+                                     NbBundle.getMessage(TreeSharingOptionsPanel.class, "TITL_PleaseChooseOther"))
+                        .setMessageType(DialogManager.ERROR_MESSAGE).show();
                 jLabel8.setText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText"));
                 jLabel8.setIcon(null);
             }
         }
     }
     
+   
     private boolean loadPhoto(File f) {
         if (f != null) {
             try {
                 Image bi = ImageIO.read(f);
                 if (bi != null) {
                     jLabel8.setText("");
-                    jLabel8.setIcon(new ImageIcon(bi.getScaledInstance(jLabel8.getPreferredSize().width, jLabel8.getPreferredSize().height, Image.SCALE_SMOOTH)));
+                    jLabel8.setIcon(new ImageIcon(bi));
                     return true;
                 }
             } catch (Exception ex) {
@@ -304,8 +326,70 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                 }
             }
         }
+        jLabel8.setText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText"));
+        jLabel8.setIcon(null);
         return false;
     }
+ 
+    
+    private BufferedImage scaleImage(File f, int IMG_LARGE_WIDTH, int IMG_LARGE_HEIGHT) throws Exception {
+
+        BufferedImage ret = null;
+        Image image = null;
+        try {
+            image = ImageIO.read(f);
+        } catch (Exception ex) {
+            throw new Exception("FileIsNotAnImage"); 
+        }
+
+        if (image == null) {
+            throw new Exception("FileIsNotAnImage"); 
+        }
+        
+        int imageWidth = image.getWidth(null);
+        int imageHeight = image.getHeight(null);
+        if ((imageWidth <= 0) || (imageHeight <= 0)) {
+            image.flush();
+            throw new Exception("FileIsNotAnImage"); 
+        }
+        
+        double imageRatio = (double) imageWidth / (double) imageHeight;
+        int targetWidth = IMG_LARGE_WIDTH;
+        int targetHeight = IMG_LARGE_HEIGHT;
+        double targetRatio = (double) targetWidth / (double) targetHeight;
+        if (targetRatio < imageRatio) {
+            targetHeight = (int) (targetWidth / imageRatio);
+        } else {
+            targetWidth = (int) (targetHeight * imageRatio);
+        }
+
+        BufferedOutputStream out = null;
+        try {
+            ret = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics2D = ret.createGraphics();
+            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            graphics2D.drawImage(image, 0, 0, targetWidth, targetHeight, null);
+            
+        } catch (Exception e) {
+            throw new Exception("FileCannotBeResized"); 
+        }
+
+        if (out != null) {
+            try {
+                out.close();
+            } catch (IOException e) {
+                throw new Exception("FileCannotBeResized");
+            }
+        }
+        
+        return ret;
+    }
+
+    
+    
+    
+    
+    
     
     public static String getPseudo() {
         return NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", "").trim();
@@ -364,5 +448,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         return ret;
     }
 
-    
+    private String removeExtension(String name) {
+        String ret = name;
+        int dotIndex = name.lastIndexOf('.');
+        if (dotIndex >= 0) { // to prevent exception if there is no dot
+            ret = name.substring(0, dotIndex);
+        }
+        return ret;
+    }
+
 }
