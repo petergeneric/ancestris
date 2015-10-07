@@ -8,5 +8,6 @@ and open the template in the editor.
     <tocitem expand="true" text="Partage d'arbres" target="ancestris.modules.treesharing.title">
         <tocitem text="Introduction et configuration" target="ancestris.modules.treesharing.about"/>
         <tocitem text="Fonctionnement" target="ancestris.modules.treesharing.start"/>
+        <tocitem text="Résultat" target="ancestris.modules.treesharing.result"/>
     </tocitem>
 </toc>
