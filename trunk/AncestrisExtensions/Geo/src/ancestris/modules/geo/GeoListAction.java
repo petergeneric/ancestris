@@ -4,36 +4,46 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
-import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author frederic
  */
 @ActionID(id = "ancestris.modules.geo.GeoListAction", category = "Window")
-@ActionRegistration(iconBase = "ancestris/modules/geo/list.png", displayName = "#CTL_GeoListAction", iconInMenu = true)
+@ActionRegistration(
+        displayName = "#CTL_GeoListAction",
+        iconInMenu = true,
+        lazy = false)
 @ActionReference(path = "Menu/View", name = "GeoListAction", position = -450)
-public final class GeoListAction implements ActionListener {
+public final class GeoListAction extends AbstractAncestrisContextAction {
 
-    Context context = null;
-
-    public GeoListAction(Property property) {
-        context = new Context(property);
+    public GeoListAction() {
+        super();
+        setImage("ancestris/modules/geo/list.png");
+        setText(NbBundle.getMessage(GeoListAction.class, "CTL_GeoListAction"));
     }
 
-    public void actionPerformed(ActionEvent e) {
-        GeoListTopComponent tc = new GeoListTopComponent();
-        if (context == null) {
-            return;
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+        Context contextToOpen = getContext();
+        if (contextToOpen != null) {
+            GeoListTopComponent tc = new GeoListTopComponent();
+            tc.init(contextToOpen);
+            tc.open();
+            tc.requestActive();
         }
-        tc.init(context);
-        tc.open();
-        tc.requestActive();
     }
 }

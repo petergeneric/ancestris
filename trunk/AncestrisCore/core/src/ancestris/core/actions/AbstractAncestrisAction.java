@@ -11,6 +11,7 @@
  */
 package ancestris.core.actions;
 
+import genj.util.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -19,6 +20,7 @@ import javax.swing.Icon;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 import org.openide.awt.Actions;
+import org.openide.util.ImageUtilities;
 
 /**
  * A base class for Ancestris Action (simplified Action2 Class).
@@ -88,6 +90,12 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
         super.putValue(KEY_ICON, icon);
         return this;
     }
+
+    @Override
+    public final AncestrisAction setImage(String resource) {
+        return setImage(new ImageIcon(ImageUtilities.loadImage(resource, true)));
+    }
+    
 
     /**
      * accessor - text

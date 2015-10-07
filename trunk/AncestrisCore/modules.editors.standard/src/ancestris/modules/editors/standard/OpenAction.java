@@ -11,30 +11,40 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
-import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle;
 
 @ActionID(id = "ancestris.editor.EditorStdAction", category = "Window")
-@ActionRegistration(iconBase = "ancestris/modules/editors/standard/editeur_standard.png", displayName = "#CTL_EditorStdAction", iconInMenu = true)
+@ActionRegistration(
+        displayName = "#CTL_EditorStdAction",
+        iconInMenu = false,
+        lazy = false)
 @ActionReference(path = "Menu/View", name = "AncestrisEditorStdAction", position = -501)
-public final class OpenAction implements ActionListener {
+public final class OpenAction extends AbstractAncestrisContextAction {
 
-    private Context context = null;
-
-    public OpenAction(Property context) {
-        this.context = new Context(context);
+    public OpenAction() {
+        super();
+        setImage("ancestris/modules/editors/standard/editeur_standard.png");
+        setText(NbBundle.getMessage(OpenAction.class, "CTL_EditorStdAction"));
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (context != null) {
-            AncestrisTopComponent win = new EditorTopComponent().create(context);
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+        Context contextToOpen = getContext();
+        if (contextToOpen != null) {
+            AncestrisTopComponent win = new EditorTopComponent().create(contextToOpen);
 //            win.init(contextToOpen);
             win.open();
             win.requestActive();

@@ -10,9 +10,9 @@ import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.util.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.util.Map;
-import org.openide.util.Utilities;
 
-/** Opens a Genj top component.
+/**
+ * Opens a Genj top component.
  *
  * @author daniel
  */
@@ -37,10 +37,12 @@ final public class OpenGenjViewAction extends AbstractAncestrisContextAction {
         super.contextChanged();
     }
 
-    /** execute callback */
+    /**
+     * execute callback
+     */
     @Override
     public void actionPerformedImpl(ActionEvent e) {
-        Context contextToOpen = Utilities.actionsGlobalContext().lookup(Context.class);
+        Context contextToOpen = getContext();
         if (contextToOpen != null) {
             AncestrisTopComponent win = component.create(contextToOpen);
 //            win.init(contextToOpen);
