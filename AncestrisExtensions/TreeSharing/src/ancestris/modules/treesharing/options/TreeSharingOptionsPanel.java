@@ -397,8 +397,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         profile.city = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", "").trim();
         profile.country = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", "".trim());
         File f = new File(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", ""));
-        loadSavePhoto(f);
-        profile.setPhotoBytes(f);
+        if (loadSavePhoto(f)) {
+            profile.setPhotoBytes(f);
+        }
         return profile;
     }
 
