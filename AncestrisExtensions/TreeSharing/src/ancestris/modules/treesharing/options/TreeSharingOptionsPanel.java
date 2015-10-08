@@ -17,14 +17,27 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
+
+    private final static int IMG_SMALL_WIDTH = 16;
+    private final static int IMG_SMALL_HEIGHT = 19;
+    
+    private final static int IMG_MEDIUM_WIDTH = 51;
+    private final static int IMG_MEDIUM_HEIGHT = 62;
+    
+    public final static int IMG_LARGE_WIDTH = 155;
+    public final static int IMG_LARGE_HEIGHT = 186;
 
 
     private final TreeSharingOptionsPanelController controller;
@@ -311,7 +324,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
                 throw new Exception("FileIsNull");
             }
 
-            targetImage = scaleImage(f, MemberProfile.IMG_LARGE_WIDTH, MemberProfile.IMG_LARGE_HEIGHT);
+            targetImage = scaleImage(f, IMG_LARGE_WIDTH, IMG_LARGE_HEIGHT);
             dest = new File(System.getProperty("netbeans.user") + File.separator + removeExtension(f.getName()) + ".jpg");
             return true;
 
@@ -367,11 +380,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         }
 
         try {
-            ret = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
-            Graphics2D graphics2D = ret.createGraphics();
-            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            graphics2D.drawImage(image, 0, 0, targetWidth, targetHeight, null);
-            
+            ret = resizeImage(image, targetWidth, targetHeight);
         } catch (Exception e) {
             throw new Exception("FileCannotBeResized"); 
         }
@@ -380,7 +389,52 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
     }
 
     
+    private static BufferedImage resizeImage(Image img, int width, int height) {
+        BufferedImage dimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = dimg.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(img, 0, 0, width, height, null);
+        g.dispose();
+        return dimg;
+    }
+
     
+    
+    public static byte[] getPhotoBytes(File f) {
+        try {
+            BufferedImage img = ImageIO.read(f);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(img, "jpg", baos);
+            baos.flush();
+            return baos.toByteArray();
+        } catch (IOException ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+        return null;
+    }
+    
+    public static ImageIcon getPhoto(int size, byte[] photoBytes) {
+        Image image = null;
+        if (photoBytes == null) {
+            return null;
+        }
+        try {
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(photoBytes));
+            if (size == 1) {
+                image = bufferedImage.getScaledInstance(IMG_SMALL_WIDTH, IMG_SMALL_HEIGHT, Image.SCALE_DEFAULT);
+            } else if (size == 2) {
+                image = bufferedImage.getScaledInstance(IMG_MEDIUM_WIDTH, IMG_MEDIUM_HEIGHT, Image.SCALE_DEFAULT);
+            } else if (size == 3) {
+                image = bufferedImage.getScaledInstance(IMG_LARGE_WIDTH, IMG_LARGE_HEIGHT, Image.SCALE_DEFAULT);
+            } else {
+                image = bufferedImage.getScaledInstance(IMG_MEDIUM_WIDTH, IMG_MEDIUM_HEIGHT, Image.SCALE_DEFAULT);
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return new ImageIcon(image);
+    }
+
     
     
     
@@ -398,7 +452,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         profile.country = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", "".trim());
         File f = new File(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", ""));
         if (loadSavePhoto(f)) {
-            profile.setPhotoBytes(f);
+            profile.photoBytes = getPhotoBytes(f);
         }
         return profile;
     }
@@ -454,4 +508,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel {
         return ret;
     }
 
+    
+    
 }

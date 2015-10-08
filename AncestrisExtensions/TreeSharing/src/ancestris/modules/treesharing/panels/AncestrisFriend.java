@@ -11,15 +11,14 @@
  */
 package ancestris.modules.treesharing.panels;
 
-import ancestris.modules.treesharing.SearchSharedTrees;
 import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.modules.treesharing.communication.MemberProfile;
+import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import java.awt.Image;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -294,7 +293,7 @@ public class AncestrisFriend extends JInternalFrame {
         this.myProfile = myProfile;
         if (memberProfile != null) {
             jButton3.setEnabled(true);
-            ImageIcon icon = memberProfile.getPhoto(2);
+            ImageIcon icon = TreeSharingOptionsPanel.getPhoto(2, memberProfile.photoBytes);
             if (icon != null) {
                 jButton3.setIcon(icon);
             } else {
