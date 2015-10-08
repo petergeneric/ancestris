@@ -152,8 +152,8 @@ public class ProfilePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String techInfo = getTechInfo(memberProfile);
-        DialogManager.create(NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jButton2.toolTipText"), techInfo).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+        TechInfoPanel tip = new TechInfoPanel(memberProfile);
+        DialogManager.create(NbBundle.getMessage(ProfilePanel.class, "ProfilePanel.jButton2.toolTipText"), tip).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -210,9 +210,13 @@ public class ProfilePanel extends javax.swing.JPanel {
                 + mp.osname 
                 + "<br>" 
                 + mp.osversion 
+                + "<br>" 
+                + mp.ipaddress 
                 + "<br><br>" 
                 + "</font></center></html>";
         return str;
     }
+
+
 
 }

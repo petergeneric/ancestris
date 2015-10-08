@@ -19,6 +19,8 @@ import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
+import ancestris.modules.treesharing.panels.TechInfoPanel;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertySex;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -144,7 +146,6 @@ public class SearchSharedTrees extends Thread {
 //            stopGracefully();
 //            return;
 //        }
-        
         
         
       
