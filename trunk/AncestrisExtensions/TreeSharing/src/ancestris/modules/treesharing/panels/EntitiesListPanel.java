@@ -102,7 +102,7 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         
         // Set my picture
         jLabel2.setText(TreeSharingOptionsPanel.getPseudo());
-        jLabel1.setIcon(TreeSharingOptionsPanel.getProfile().getPhoto(2));
+        jLabel1.setIcon(TreeSharingOptionsPanel.getPhoto(2, TreeSharingOptionsPanel.getProfile().photoBytes));
         
         // Set checkboxes
         busy = true;
@@ -333,7 +333,7 @@ public class EntitiesListPanel extends javax.swing.JPanel {
                 if (listNb != 1) myGedcoms.add(iGedcomName);
                 if (listNb != 2) { 
                     AncestrisFriend af = line.friendGedcomEntity.afriend;
-                    ImageIcon icon =  (af != null ? (af.getFriendProfile() != null ? af.getFriendProfile().getPhoto(2) : null) : null);
+                    ImageIcon icon =  (af != null ? (af.getFriendProfile() != null ? TreeSharingOptionsPanel.getPhoto(2, af.getFriendProfile().photoBytes) : null) : null);
                     if (icon == null) {
                         icon = nophoto;
                     }

@@ -12,6 +12,7 @@
 package ancestris.modules.treesharing.panels;
 
 import ancestris.modules.treesharing.communication.MemberProfile;
+import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.util.swing.DialogManager;
 import java.awt.Desktop;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class ProfilePanel extends javax.swing.JPanel {
         this.myProfile = myP;
         initComponents();
         jLabel1.setText(getDescription(mp));
-        ImageIcon icon = mp.getPhoto(3);
+        ImageIcon icon = TreeSharingOptionsPanel.getPhoto(3, mp.photoBytes);
         if (icon != null) {
            jLabel8.setIcon(icon);
         } else {

@@ -13,6 +13,7 @@ package ancestris.modules.treesharing.panels;
 
 import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.modules.treesharing.communication.MemberProfile;
+import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.util.swing.DialogManager;
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;
@@ -217,7 +218,7 @@ public class StatsPanel extends javax.swing.JPanel {
                 data[i][2] = list.get(member).match;
                 data[i][3] = formatter.format(list.get(member).startDate);
                 data[i][4] = formatter.format(list.get(member).endDate);
-                data[i][5] = (ImageIcon) ((list.get(member).profile != null) ? list.get(member).profile.getPhoto(1) : new ImageIcon());
+                data[i][5] = (ImageIcon) ((list.get(member).profile != null) ? TreeSharingOptionsPanel.getPhoto(1, list.get(member).profile.photoBytes) : new ImageIcon());
                 i++;
             }
         }
