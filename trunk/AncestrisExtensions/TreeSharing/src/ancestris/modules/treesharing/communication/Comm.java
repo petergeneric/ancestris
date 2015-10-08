@@ -212,6 +212,7 @@ public class Comm {
     private Set<GedcomFam> listOfFamDetails = null;
     private boolean memberProfileEOF = false;
     private ByteArrayOutputStream memberProfile = null;
+    private String memberIPaddress = "";
     private ByteArrayOutputStream memberProfileRcv = null;
     
     // Possible data objects to be sent by packets
@@ -529,7 +530,10 @@ public class Comm {
         }
         memberProfileEOF = false;
         call(member, CMD_GPFxx, null);
-        return (MemberProfile) unwrapObject(memberProfile.toByteArray());
+        MemberProfile mp = (MemberProfile) unwrapObject(memberProfile.toByteArray());
+        mp.ipaddress = memberIPaddress;
+        memberIPaddress = "";
+        return mp;
     }
     
 
@@ -1056,6 +1060,7 @@ public class Comm {
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             memberProfileEOF = true;
                             packetsOfProfile = null;
+                            memberIPaddress = senderIP;
                         } else {
                             memberProfile.write((byte[])unwrapObject(contentObj));
                         }
@@ -1081,7 +1086,7 @@ public class Comm {
                         }
                         memberProfileRcv.write((byte[]) unwrapObject(contentObj));
                     } else if (iPacket == COMM_PACKET_NB - 1) { // last packet, log in stats
-                        owner.addUniqueFriend(member, (MemberProfile) unwrapObject(memberProfileRcv.toByteArray())); 
+                        owner.addUniqueFriend(member, (MemberProfile) unwrapObject(memberProfileRcv.toByteArray()), senderIP); 
                     } else {
                         memberProfileRcv.write((byte[]) unwrapObject(contentObj));
                     }

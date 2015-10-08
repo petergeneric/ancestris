@@ -34,6 +34,7 @@ public class MemberProfile implements Serializable {
     public String userdir = "";
     public String osname = "";
     public String osversion = "";
+    public String ipaddress = "";
 
     public MemberProfile() {
         username = System.getProperty("user.name");
