@@ -19,8 +19,6 @@ import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
-import ancestris.modules.treesharing.panels.TechInfoPanel;
-import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertySex;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -58,7 +56,7 @@ public class SearchSharedTrees extends Thread {
         owner.setRotatingIcon(false);
         owner.displaySearchedMember("");
     }
-
+    
     /**
      * Main search function
      * 
@@ -70,6 +68,13 @@ public class SearchSharedTrees extends Thread {
      */
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
 
+//        if (true) {
+//            stopGracefully();
+//            return;
+//        }
+        
+        
+        
 //        if (true) {
 //            int un = 0;
 //            int deux = 1;
