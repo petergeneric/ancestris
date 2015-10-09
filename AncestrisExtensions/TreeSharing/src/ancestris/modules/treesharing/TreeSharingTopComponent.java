@@ -784,6 +784,7 @@ public class TreeSharingTopComponent extends TopComponent {
         if (delay < 0) {
             delay = TimerPanel.DEFAULT_DELAY; 
             timerPanel.setTimerDate((int) delay);
+            delay *= 3600000; // convert hours delay into milliseconds
             //return false; 
         }
 
@@ -801,7 +802,7 @@ public class TreeSharingTopComponent extends TopComponent {
             };
             timer = new Timer();
 
-            // set delay in hours
+            // set delay in milliseconds
             timer.schedule(task, delay);  
         }
         return true;
