@@ -182,7 +182,7 @@ public class SearchSharedTrees extends Thread {
             // Ask for stats first (nb of indis and nb of families)
             owner.getCommHandler().setCommunicationInProgress(false);
             GedcomNumbers gedcomNumbers = owner.getCommHandler().getNbOfEntities(member);
-            if (gedcomNumbers == null) {
+            if (gedcomNumbers == null || (gedcomNumbers.nbIndis == 0 && gedcomNumbers.nbFams == 0)) {
                 continue;
             }
             owner.getCommHandler().setCommunicationInProgress(true);
@@ -256,6 +256,9 @@ public class SearchSharedTrees extends Thread {
                 friend = null;
                 owner.getCommHandler().thankMember(member);   // thank and give my profile
             }
+            
+            // Clear communication with member
+            owner.getCommHandler().clearMember(member);
             
         } // endfor members
 
@@ -383,10 +386,6 @@ public class SearchSharedTrees extends Thread {
         int Byr1 = Integer.valueOf(friendIndi.indiBirthDate);
         int Byr2 = Integer.valueOf(friendIndi.indiDeathDate);
 
-        if (Aln.equals("PRAT") && Bln.equals("PRAT") && Afn.equals("Jean") && Bfn.equals("Jean")) {
-            String debug = "";
-        }
-        
         // If different sex, return no match
         if ((!Asx.equals(""+PropertySex.UNKNOWN)) && (!Bsx.equals(""+PropertySex.UNKNOWN)) && (!Asx.equals(Bsx))) {
             return TreeSharingOptionsPanel.NO_MATCH;
@@ -462,10 +461,6 @@ public class SearchSharedTrees extends Thread {
         String Bpl5 = friendFam.famMarrPlace.toLowerCase();
         int Byr5 = Integer.valueOf(friendFam.famMarrDate);
 
-        if (Ahln.equals("prat") && Bwln.equals("chadefaux")) {
-            String debug = "";
-        }
-        
         // If different sex, return no match
         if ((!Ahsx.equals(""+PropertySex.UNKNOWN)) && (!Bhsx.equals(""+PropertySex.UNKNOWN)) && (!Ahsx.equals(Bhsx))) {
             return TreeSharingOptionsPanel.NO_MATCH;

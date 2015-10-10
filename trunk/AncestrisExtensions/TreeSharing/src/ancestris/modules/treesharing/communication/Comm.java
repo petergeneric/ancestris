@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -195,9 +196,10 @@ public class Comm {
     private boolean communicationInProgress = false;
     private boolean connectionInProgress = false;
     private boolean expectedConnection = false;
-    private String expectedCallIPAddress = null;
-    private String expectedCallPortAddress = null;
-    private boolean expectedCall = false;
+//    private String expectedCallIPAddress = null;
+//    private String expectedCallPortAddress = null;
+//    private boolean expectedCall = false;
+    private Set<ExpectedResponse> expectedResponses = null;
 
     // Possible data objects to be received
     private boolean gedcomNumbersEOF = false;
@@ -471,6 +473,8 @@ public class Comm {
         if (gedcomNumbers == null) {
             gedcomNumbers = new GedcomNumbers();
         }
+        gedcomNumbers.nbIndis = 0;
+        gedcomNumbers.nbFams = 0;
         gedcomNumbersEOF = false;
         call(member, CMD_GSTAT, null);
         return gedcomNumbers;
@@ -564,10 +568,6 @@ public class Comm {
             return;
         }
         
-        // Init call data
-        expectedCallIPAddress = member.getIPAddress();
-        expectedCallPortAddress = member.getPortAddress();
-        
         // Loop on packets. Last packet number is COMM_PACKET_NB-1.
         int iPacket = 0;
         boolean retry = true;
@@ -578,16 +578,17 @@ public class Comm {
             try {
                 // Ask member for list of something
                 // FIXME : possible bug if object size > limit (case of common indi or fam lastnames)
-                sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, (iPacket == 0 ? object : null), expectedCallIPAddress, Integer.valueOf(expectedCallPortAddress));
+                sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, (iPacket == 0 ? object : null), member.getIPAddress(), Integer.valueOf(member.getPortAddress()));
             
                 // Expect answer back and get shared entities in return (wait for response from the other thread...)
-                expectedCall = true;
+                ExpectedResponse exResp = new ExpectedResponse(member, commandIndexed);
+                expectedResponses.add(exResp);
                 int s = 0;
-                while (expectedCall && (s < REQUEST_TIMEOUT*100)) {  
+                while (expectedResponses.contains(exResp) && (s < REQUEST_TIMEOUT*100)) {  
                     TimeUnit.MILLISECONDS.sleep(10);
                     s++;
                 }
-                if (expectedCall) { // response never came back after timeout, retry once or consider it failed
+                if (expectedResponses.contains(exResp)) { // response never came back after timeout, retry once or consider it failed
                     nbNoResponses++;
                     if (retry) {
                         LOG.log(Level.FINE, "...(TIMEOUT) No response from " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout. Retrying once...");
@@ -691,7 +692,7 @@ public class Comm {
                 s++;
             }
             
-            if (expectedConnection) { // response never came back after 10 seconds, consider it failed
+            if (expectedConnection) { // response never came back after timeout, consider it failed
                 expectedConnection = false;
                 LOG.log(Level.FINE, "...(TIMEOUT) No connection to " + member.getMemberName() + " after " + REQUEST_TIMEOUT + "s timeout.");
                 return false;
@@ -749,6 +750,9 @@ public class Comm {
         
         // Upload profile picture once for all
         packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
+        
+        // Reset expected responses
+        expectedResponses = new HashSet<ExpectedResponse>();
 
         try {
             while (sharing) {
@@ -826,6 +830,7 @@ public class Comm {
                     continue;
                 } 
                 contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentMemberBytes.length + STR_DELIMITER.length(), bytesReceived.length);
+                ExpectedResponse response = new ExpectedResponse(aMember, command);
                 
                 
                 // Case of PING command 
@@ -844,7 +849,8 @@ public class Comm {
                     continue;
                 } 
 
-
+                
+                
                 
                 //********************** Get and receive statistics **********************
                 
@@ -861,13 +867,14 @@ public class Comm {
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TSTAT)) {
                     LOG.log(Level.FINE, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
-                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                    ExpectedResponse er = getExpectedResponse(response);
+                    if (er != null) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { 
                             gedcomNumbersEOF = true;
                             gedcomNumbers = (GedcomNumbers) unwrapObject(contentObj);
                         }
-                        expectedCall = false;
+                        expectedResponses.remove(er);
                     }
                     continue;
                 }
@@ -900,7 +907,8 @@ public class Comm {
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TILxx)) {
                     LOG.log(Level.FINE, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
-                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                    ExpectedResponse er = getExpectedResponse(response);
+                    if (er != null) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfIndiLastnamesEOF = true;
@@ -908,7 +916,7 @@ public class Comm {
                         } else {
                             listOfIndiLastnames.addAll((Set<String>) unwrapObject(contentObj));
                         }
-                        expectedCall = false;
+                        expectedResponses.remove(er);
                     }
                     continue;
                 }
@@ -940,7 +948,8 @@ public class Comm {
                 // Case of CMD_TIDxx command (following my GIDxx message to another member, he/she returns his/her shared entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TIDxx)) {
                     // Make sure there is a pending call expecting something from the ipaddress and port received
-                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                    ExpectedResponse er = getExpectedResponse(response);
+                    if (er != null) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfIndiDetailsEOF = true;
@@ -948,7 +957,7 @@ public class Comm {
                         } else {
                             listOfIndiDetails.addAll((Set<GedcomIndi>) unwrapObject(contentObj));
                         }
-                        expectedCall = false;
+                        expectedResponses.remove(er);
                     }
                     continue;
                 }
@@ -978,7 +987,8 @@ public class Comm {
                 // Case of CMD_TFLxx command (following my GFLxx message to another member, he/she returns his/her shared entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TFLxx)) {
                     // Make sure there is a pending call expecting something from the ipaddress and port received
-                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                    ExpectedResponse er = getExpectedResponse(response);
+                    if (er != null) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfFamLastnamesEOF = true;
@@ -986,7 +996,7 @@ public class Comm {
                         } else {
                             listOfFamLastnames.addAll((Set<String>) unwrapObject(contentObj));
                         }
-                        expectedCall = false;
+                        expectedResponses.remove(er);
                     }
                     continue;
                 }
@@ -1017,7 +1027,8 @@ public class Comm {
                 // Case of CMD_TFDxx command (following my GFDxx message to another member, he/she returns his/her shared entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TFDxx)) {
                     // Make sure there is a pending call expecting something from the ipaddress and port received
-                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                    ExpectedResponse er = getExpectedResponse(response);
+                    if (er != null) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             listOfFamDetailsEOF = true;
@@ -1025,7 +1036,7 @@ public class Comm {
                         } else {
                             listOfFamDetails.addAll((Set<GedcomFam>) unwrapObject(contentObj));
                         }
-                        expectedCall = false;
+                        expectedResponses.remove(er);
                     }
                     continue;
                 }
@@ -1055,7 +1066,8 @@ public class Comm {
                 // Case of CMD_TPFxx command (following my GPFxx message to another member, he/she returns his/her profile. Take it.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TPFxx)) {
                     // Make sure there is a pending call expecting something from the ipaddress and port received
-                    if (expectedCall && expectedCallIPAddress != null && expectedCallPortAddress != null && senderAddress.equals(expectedCallIPAddress + ":" + expectedCallPortAddress)) {
+                    ExpectedResponse er = getExpectedResponse(response);
+                    if (er != null) {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             memberProfileEOF = true;
@@ -1064,7 +1076,7 @@ public class Comm {
                         } else {
                             memberProfile.write((byte[])unwrapObject(contentObj));
                         }
-                        expectedCall = false;
+                        expectedResponses.remove(er);
                     }
                     continue;
                 }
@@ -1326,6 +1338,73 @@ public class Comm {
         return packets;
     }
 
+    /**
+     * 
+     * @param response
+     * @return 
+     * - item with exact same member/command if exxists
+     * - only remaining item if response includes 999 
+     */
+    private ExpectedResponse getExpectedResponse(ExpectedResponse response) {
 
+        boolean sameMember = false;
+        
+        for (Comm.ExpectedResponse er : expectedResponses) {
+            sameMember = (response.fromMember.getMemberName().equals(er.fromMember.getMemberName())
+                       && response.fromMember.getIPAddress().equals(er.fromMember.getIPAddress())
+                       && response.fromMember.getPortAddress().equals(er.fromMember.getPortAddress()) );
+            if (sameMember && (response.forCommand.equals(er.forCommand))) {
+                return er;
+            }
+            if (sameMember) {
+                String prefix1 = response.forCommand.substring(0, COMM_CMD_PFX_SIZE);
+                String prefix2 = er.forCommand.substring(0, COMM_CMD_PFX_SIZE);
+                Integer iPacket = Integer.valueOf(response.forCommand.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
+                if (prefix1.equals(prefix2) && iPacket == COMM_PACKET_NB - 1) {
+                    return er;
+                }
+            }
+        }
+        
+        return null;
+    }
+
+
+    public void clearMember(AncestrisMember member) {
+
+        Set<ExpectedResponse> listToRemove = new HashSet<ExpectedResponse>();
+        
+        for (Comm.ExpectedResponse er : expectedResponses) {
+            if (member.getMemberName().equals(er.fromMember.getMemberName())
+                       && member.getIPAddress().equals(er.fromMember.getIPAddress())
+                       && member.getPortAddress().equals(er.fromMember.getPortAddress()) ) {
+                listToRemove.add(er);
+            }
+        }
+        
+        if (!listToRemove.isEmpty()) {
+            expectedResponses.removeAll(listToRemove);
+        }
+        
+    }
+
+    
+
+    
+    
+    
+    // Classes
+    
+    private class ExpectedResponse {
+        private AncestrisMember fromMember = null;
+        private String forCommand = "";
+        
+        public ExpectedResponse(AncestrisMember member, String command) {
+            this.fromMember = member;
+            this.forCommand = command.replace("G", "T");
+        }
+    }
+    
+    
 }
 
