@@ -367,22 +367,26 @@ public class SearchSharedTrees extends Thread {
 
         // make it easier for the formulas for myIndi (A)
         String Asx = myIndi.indiSex;
-        String Aln = myIndi.indiLastName;
-        String Afn = myIndi.indiFirstName;
-        String Apl1 = myIndi.indiBirthPlace;
-        String Apl2 = myIndi.indiDeathPlace;
+        String Aln = myIndi.indiLastName.toLowerCase();
+        String Afn = myIndi.indiFirstName.toLowerCase();
+        String Apl1 = myIndi.indiBirthPlace.toLowerCase();
+        String Apl2 = myIndi.indiDeathPlace.toLowerCase();
         int Ayr1 = Integer.valueOf(myIndi.indiBirthDate);
         int Ayr2 = Integer.valueOf(myIndi.indiDeathDate);
 
         // make it easier for the formulas for friendIndi (B)
         String Bsx = friendIndi.indiSex;
-        String Bln = friendIndi.indiLastName;
-        String Bfn = friendIndi.indiFirstName;
-        String Bpl1 = friendIndi.indiBirthPlace;
-        String Bpl2 = friendIndi.indiDeathPlace;
+        String Bln = friendIndi.indiLastName.toLowerCase();
+        String Bfn = friendIndi.indiFirstName.toLowerCase();
+        String Bpl1 = friendIndi.indiBirthPlace.toLowerCase();
+        String Bpl2 = friendIndi.indiDeathPlace.toLowerCase();
         int Byr1 = Integer.valueOf(friendIndi.indiBirthDate);
         int Byr2 = Integer.valueOf(friendIndi.indiDeathDate);
 
+        if (Aln.equals("PRAT") && Bln.equals("PRAT") && Afn.equals("Jean") && Bfn.equals("Jean")) {
+            String debug = "";
+        }
+        
         // If different sex, return no match
         if ((!Asx.equals(""+PropertySex.UNKNOWN)) && (!Bsx.equals(""+PropertySex.UNKNOWN)) && (!Asx.equals(Bsx))) {
             return TreeSharingOptionsPanel.NO_MATCH;
@@ -424,40 +428,44 @@ public class SearchSharedTrees extends Thread {
 
         // make it easier for the formulas for myFamily
         String Ahsx = myFamily.husbSex;
-        String Ahln = myFamily.husbLastName;
-        String Ahfn = myFamily.husbFirstName;
-        String Apl1 = myFamily.husbBirthPlace;
-        String Apl2 = myFamily.husbDeathPlace;
+        String Ahln = myFamily.husbLastName.toLowerCase();
+        String Ahfn = myFamily.husbFirstName.toLowerCase();
+        String Apl1 = myFamily.husbBirthPlace.toLowerCase();
+        String Apl2 = myFamily.husbDeathPlace.toLowerCase();
         int Ayr1 = Integer.valueOf(myFamily.husbBirthDate);
         int Ayr2 = Integer.valueOf(myFamily.husbDeathDate);
         String Awsx = myFamily.wifeSex;
-        String Awln = myFamily.wifeLastName;
-        String Awfn = myFamily.wifeFirstName;
-        String Apl3 = myFamily.wifeBirthPlace;
-        String Apl4 = myFamily.wifeDeathPlace;
+        String Awln = myFamily.wifeLastName.toLowerCase();
+        String Awfn = myFamily.wifeFirstName.toLowerCase();
+        String Apl3 = myFamily.wifeBirthPlace.toLowerCase();
+        String Apl4 = myFamily.wifeDeathPlace.toLowerCase();
         int Ayr3 = Integer.valueOf(myFamily.wifeBirthDate);
         int Ayr4 = Integer.valueOf(myFamily.wifeDeathDate);
-        String Apl5 = myFamily.famMarrPlace;
+        String Apl5 = myFamily.famMarrPlace.toLowerCase();
         int Ayr5 = Integer.valueOf(myFamily.famMarrDate);
 
         // make it easier for the formulas for friendFam
         String Bhsx = friendFam.husbSex;
-        String Bhln = friendFam.husbLastName;
-        String Bhfn = friendFam.husbFirstName;
-        String Bpl1 = friendFam.husbBirthPlace;
-        String Bpl2 = friendFam.husbDeathPlace;
+        String Bhln = friendFam.husbLastName.toLowerCase();
+        String Bhfn = friendFam.husbFirstName.toLowerCase();
+        String Bpl1 = friendFam.husbBirthPlace.toLowerCase();
+        String Bpl2 = friendFam.husbDeathPlace.toLowerCase();
         int Byr1 = Integer.valueOf(friendFam.husbBirthDate);
         int Byr2 = Integer.valueOf(friendFam.husbDeathDate);
         String Bwsx = friendFam.wifeSex;
-        String Bwln = friendFam.wifeLastName;
-        String Bwfn = friendFam.wifeFirstName;
-        String Bpl3 = friendFam.wifeBirthPlace;
-        String Bpl4 = friendFam.wifeDeathPlace;
+        String Bwln = friendFam.wifeLastName.toLowerCase();
+        String Bwfn = friendFam.wifeFirstName.toLowerCase();
+        String Bpl3 = friendFam.wifeBirthPlace.toLowerCase();
+        String Bpl4 = friendFam.wifeDeathPlace.toLowerCase();
         int Byr3 = Integer.valueOf(friendFam.wifeBirthDate);
         int Byr4 = Integer.valueOf(friendFam.wifeDeathDate);
-        String Bpl5 = friendFam.famMarrPlace;
+        String Bpl5 = friendFam.famMarrPlace.toLowerCase();
         int Byr5 = Integer.valueOf(friendFam.famMarrDate);
 
+        if (Ahln.equals("prat") && Bwln.equals("chadefaux")) {
+            String debug = "";
+        }
+        
         // If different sex, return no match
         if ((!Ahsx.equals(""+PropertySex.UNKNOWN)) && (!Bhsx.equals(""+PropertySex.UNKNOWN)) && (!Ahsx.equals(Bhsx))) {
             return TreeSharingOptionsPanel.NO_MATCH;
