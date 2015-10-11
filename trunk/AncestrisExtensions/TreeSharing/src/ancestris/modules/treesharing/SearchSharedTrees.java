@@ -20,15 +20,10 @@ import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import genj.gedcom.PropertySex;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -76,95 +71,6 @@ public class SearchSharedTrees extends Thread {
      * @param ancestrisMembers 
      */
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
-
-
-
-//        if (true) {
-//            stopGracefully();
-//            return;
-//        }
-        
-        
-        
-//        if (true) {
-//            int un = 0;
-//            int deux = 1;
-//            
-//            if (sharedGedcoms.get(0).getGedcom().getName().startsWith("mon")) {
-//               un = 1;
-//               deux = 0;
-//            }
-//            
-//            
-//            Set<MatchData> list = new HashSet<MatchData>();
-//            AncestrisFriend friend = new AncestrisFriend("Ami");
-//            friend.setProfile(TreeSharingOptionsPanel.getProfile(), TreeSharingOptionsPanel.getProfile());
-//            
-//            Entity indi = sharedGedcoms.get(un).getGedcom().getFirstEntity(Gedcom.INDI);
-//            FriendGedcomEntity fge = new FriendGedcomEntity("Ami1", EntityConversion.indiToGedcomIndi((Indi)indi));
-//            fge.setFriend(friend);
-//            MatchData md = new MatchData(indi, fge, 1);
-//            list.add(md);
-//            
-//            Entity indi2 = sharedGedcoms.get(un).getGedcom().getEntity("I36");
-//            fge = new FriendGedcomEntity("Ami2", EntityConversion.indiToGedcomIndi((Indi)indi2));
-//            fge.setFriend(friend);
-//            md = new MatchData(indi2, fge, 2);
-//            list.add(md);
-//            
-//            Entity indi3 = sharedGedcoms.get(un).getGedcom().getEntity("I38");
-//            fge = new FriendGedcomEntity("Ami3", EntityConversion.indiToGedcomIndi((Indi)indi3));
-//            fge.setFriend(friend);
-//            md = new MatchData(indi2, fge, 3);
-//            list.add(md);
-//            
-//            indi = sharedGedcoms.get(un).getGedcom().getEntity("I95");
-//            fge = new FriendGedcomEntity("Ami3", EntityConversion.indiToGedcomIndi((Indi)indi));
-//            fge.setFriend(friend);
-//            md = new MatchData(indi, fge, 3);
-//            list.add(md);
-//            
-//            indi2 = sharedGedcoms.get(un).getGedcom().getEntity("I39");
-//            fge = new FriendGedcomEntity("Ami3", EntityConversion.indiToGedcomIndi((Indi)indi2));
-//            fge.setFriend(friend);
-//            md = new MatchData(indi, fge, 1);
-//            list.add(md);
-//            
-//            Entity fam = sharedGedcoms.get(un).getGedcom().getEntity("F25");
-//            fge = new FriendGedcomEntity("Ami3", EntityConversion.famToGedcomFam((Fam)fam));
-//            fge.setFriend(friend);
-//            md = new MatchData(fam, fge, 1);
-//            list.add(md);
-//            
-//            fam = sharedGedcoms.get(un).getGedcom().getEntity("F65");
-//            fge = new FriendGedcomEntity("Ami2", EntityConversion.famToGedcomFam((Fam)fam));
-//            fge.setFriend(friend);
-//            md = new MatchData(fam, fge, 1);
-//            list.add(md);
-//            
-//            fam = sharedGedcoms.get(un).getGedcom().getEntity("F102");
-//            fge = new FriendGedcomEntity("Ami1", EntityConversion.famToGedcomFam((Fam)fam));
-//            fge.setFriend(friend);
-//            md = new MatchData(fam, fge, 1);
-//            list.add(md);
-//
-//            if (sharedGedcoms.size()>1) {
-//                fam = sharedGedcoms.get(deux).getGedcom().getFirstEntity(Gedcom.FAM);
-//                fge = new FriendGedcomEntity("Ami1", EntityConversion.famToGedcomFam((Fam) fam));
-//                fge.setFriend(friend);
-//                md = new MatchData(fam, fge, 1);
-//                list.add(md);
-//            }
-//            
-//            displayResultsPanel(list, "", "");
-//            
-//            
-//            stopGracefully();
-//            return;
-//        }
-        
-        
-      
         
         // Initialize variables
         AncestrisFriend friend = null;
@@ -190,13 +96,17 @@ public class SearchSharedTrees extends Thread {
             owner.displaySearchedMember(member.getMemberName());
             
             
-            // Ask for stats first (nb of indis and nb of families)
+            // Give my simple profile (no picture) to make it faster
             owner.getCommHandler().setCommunicationInProgress(false);
+            owner.getCommHandler().giveSimpleProfile(member);
+            owner.getCommHandler().setCommunicationInProgress(true);
+
+            
+            // Ask for stats (nb of indis and nb of families)
             GedcomNumbers gedcomNumbers = owner.getCommHandler().getNbOfEntities(member);
             if (gedcomNumbers == null || (gedcomNumbers.nbIndis == 0 && gedcomNumbers.nbFams == 0)) {
                 continue;
             }
-            owner.getCommHandler().setCommunicationInProgress(true);
 
             // A. Individuals
             // Phase 1 - Get all lastnames from member for all its shared gedcoms at the same time and identify commons ones with mine
@@ -260,13 +170,6 @@ public class SearchSharedTrees extends Thread {
                 
             }
 
-            // Thank you, exchange profiles and update friend
-            if (friend != null) {
-                friend.setTotals(gedcomNumbers.nbIndis, gedcomNumbers.nbFams);      // set numbers
-                friend.setProfile(owner.getCommHandler().getProfileMember(member), owner.getMyProfile());  // get member profile and set it for friend
-                friend = null;
-                owner.getCommHandler().thankMember(member);   // thank and give my profile
-            }
             
             // Clear communication with member
             owner.getCommHandler().clearMember(member);

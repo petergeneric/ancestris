@@ -939,7 +939,7 @@ public class TreeSharingTopComponent extends TopComponent {
         updateStatsDisplay();
     }
     
-    public void addUniqueFriend(String member, MemberProfile profile, String ipaddress) {
+    public void addUniqueFriend(String member, MemberProfile profile, String ipaddress, boolean resultFound) {
         if (connectionStats == null) {
             initConnectionStats();
         }
@@ -951,7 +951,9 @@ public class TreeSharingTopComponent extends TopComponent {
             stats.endDate = new Date();
         }
         
-        stats.match = true;
+        if (resultFound) {
+            stats.match = true;
+        }
         stats.profile = profile;
         stats.profile.ipaddress = ipaddress;
         connectionStats.put(member, stats);
@@ -1087,7 +1089,6 @@ public class TreeSharingTopComponent extends TopComponent {
         el.close();
     }
 
-    
     
     
 

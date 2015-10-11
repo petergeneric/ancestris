@@ -186,6 +186,7 @@ public class Comm {
     private static String CMD_GPFxx = "GP";   // Get profile
     private static String CMD_TPFxx = "TP";   // Take profile
     private static String CMD_TXPxx = "TX";   // I say thanks and provide my profile
+    private static String CMD_TSPRF = "TS";   // I give my simple profile (no picture)
     
     // Threads
     private volatile boolean sharing;
@@ -472,6 +473,12 @@ public class Comm {
     }
     
     
+    public void giveSimpleProfile(AncestrisMember member) {
+        MemberProfile mp = owner.getMyProfile();
+        mp.photoBytes = null;
+        put(member, CMD_TSPRF, buildPacketsOfProfile(mp));
+    }
+        
     
     public GedcomNumbers getNbOfEntities(AncestrisMember member) {
         if (gedcomNumbers == null) {
@@ -546,7 +553,9 @@ public class Comm {
     
 
     public void thankMember(AncestrisMember member) {
-        packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
+        if (packetsOfProfile == null) {
+            packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
+        }
         put(member, CMD_TXPxx, packetsOfProfile);
     }
         
@@ -660,7 +669,7 @@ public class Comm {
         LOG.log(Level.FINE, "Puting member " + member.getMemberName() + " with " + command);
         while (iPacket < COMM_PACKET_NB) {  // stop at the last packet 
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
-            byte[] set = packetsOfProfile.get(iPacket);
+            byte[] set = packets.get(iPacket);
             if (set == null) {
                 commandIndexed = command + String.format(FMT_IDX, COMM_PACKET_NB - 1);
                 sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, null, senderIP, senderPort);
@@ -1080,7 +1089,6 @@ public class Comm {
                         Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
                         if (iPacket == COMM_PACKET_NB - 1) { // no more packet
                             memberProfileEOF = true;
-                            packetsOfProfile = null;
                             memberIPaddress = senderIP;
                         } else {
                             memberProfile.write((byte[])unwrapObject(contentObj));
@@ -1096,6 +1104,24 @@ public class Comm {
                 
                 //********************** Receive profile **********************
                 
+                // Case of Simple Profile command, take profile and log in incoming stats
+                if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TSPRF)) {
+                    Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
+                    if (iPacket == 0) { // first packet
+                        if (memberProfileRcv == null) {
+                            memberProfileRcv = new ByteArrayOutputStream();
+                        } else {
+                            memberProfileRcv.reset();
+                        }
+                        memberProfileRcv.write((byte[]) unwrapObject(contentObj));
+                    } else if (iPacket == COMM_PACKET_NB - 1) { // last packet, log in stats
+                        owner.addUniqueFriend(member, (MemberProfile) unwrapObject(memberProfileRcv.toByteArray()), senderIP, false); 
+                    } else {
+                        memberProfileRcv.write((byte[]) unwrapObject(contentObj));
+                    }
+                    continue;
+                }
+                
                 // Case of THANX Profile command, take profile and log in incoming stats
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TXPxx)) {
                     Integer iPacket = Integer.valueOf(command.substring(COMM_CMD_PFX_SIZE, COMM_CMD_SIZE));
@@ -1107,7 +1133,7 @@ public class Comm {
                         }
                         memberProfileRcv.write((byte[]) unwrapObject(contentObj));
                     } else if (iPacket == COMM_PACKET_NB - 1) { // last packet, log in stats
-                        owner.addUniqueFriend(member, (MemberProfile) unwrapObject(memberProfileRcv.toByteArray()), senderIP); 
+                        owner.addUniqueFriend(member, (MemberProfile) unwrapObject(memberProfileRcv.toByteArray()), senderIP, true); 
                     } else {
                         memberProfileRcv.write((byte[]) unwrapObject(contentObj));
                     }
