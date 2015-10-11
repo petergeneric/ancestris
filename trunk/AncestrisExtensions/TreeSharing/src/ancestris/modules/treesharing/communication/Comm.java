@@ -27,12 +27,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -142,6 +144,8 @@ public class Comm {
     private static String TAG_PSEUDO = "pseudo";
     private static String TAG_IPADDR = "ipaddress";
     private static String TAG_PORTAD = "portaddress";
+    private static String TAG_PIPADD = "pipaddress";
+    private static String TAG_PPORTA = "pportaddress";
 
     // Command and Packets size
     private int COMM_PACKET_SIZE = 10000;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
@@ -305,7 +309,9 @@ public class Comm {
                     String pseudo = StringEscapeUtils.unescapeHtml(member.getElementsByTagName(TAG_PSEUDO).item(0).getTextContent()); 
                     String ipAddress = member.getElementsByTagName(TAG_IPADDR).item(0).getTextContent();
                     String portAddress = member.getElementsByTagName(TAG_PORTAD).item(0).getTextContent();
-                    ancestrisMembers.add(new AncestrisMember(pseudo, ipAddress, portAddress));
+                    String pipAddress = member.getElementsByTagName(TAG_PIPADD).item(0).getTextContent();
+                    String pportAddress = member.getElementsByTagName(TAG_PPORTA).item(0).getTextContent();
+                    ancestrisMembers.add(new AncestrisMember(pseudo, ipAddress, portAddress, pipAddress, pportAddress));
                 }
             }
             
@@ -358,7 +364,8 @@ public class Comm {
             socket = new DatagramSocket();
             
             // Registers on server
-            sendCommand(CMD_REGIS, pseudo, null, COMM_SERVER, COMM_PORT);
+            String content = pseudo + " " + getLocalHostLANAddress().getHostAddress() + " " + socket.getLocalPort();
+            sendCommand(CMD_REGIS, content, null, COMM_SERVER, COMM_PORT);
 
             // Listen to reply
             byte[] bytesReceived = new byte[512];
@@ -800,7 +807,12 @@ public class Comm {
                         LOG.log(Level.FINE, "...Member " + member + " is not in the list of members.");
                     }
                     else if (aMember.isAllowed()) {
+                        // public connection
                         sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + STR_DELIMITER, null, aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
+                        // private connection
+                        if (!aMember.getpIPAddress().isEmpty() && Integer.valueOf(aMember.getpPortAddress()) != 0) {
+                            sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + STR_DELIMITER, null, aMember.getpIPAddress(), Integer.valueOf(aMember.getpPortAddress()));
+                        }
                         LOG.log(Level.FINE, "...Member " + member + " is allowed. Replied back with PINGG.");
                     } else {
                         LOG.log(Level.FINE, "...Member " + member + " is NOT allowed. No reply.");
@@ -1402,6 +1414,87 @@ public class Comm {
         }
     }
     
+
+    
+    
+    /**
+     * Returns an <code>InetAddress</code> object encapsulating what is most
+     * likely the machine's LAN IP address.
+     * <p/>
+     * This method is intended for use as a replacement of JDK method
+     * <code>InetAddress.getLocalHost</code>, because that method is ambiguous
+     * on Linux systems. Linux systems enumerate the loopback network interface
+     * the same way as regular LAN network interfaces, but the JDK
+     * <code>InetAddress.getLocalHost</code> method does not specify the
+     * algorithm used to select the address returned under such circumstances,
+     * and will often return the loopback address, which is not valid for
+     * network communication. Details
+     * <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4665037">here</a>.
+     * <p/>
+     * This method will scan all IP addresses on all network interfaces on the
+     * host machine to determine the IP address most likely to be the machine's
+     * LAN address. If the machine has multiple IP addresses, this method will
+     * prefer a site-local IP address (e.g. 192.168.x.x or 10.10.x.x, usually
+     * IPv4) if the machine has one (and will return the first site-local
+     * address if the machine has more than one), but if the machine does not
+     * hold a site-local address, this method will return simply the first
+     * non-loopback address found (IPv4 or IPv6).
+     * <p/>
+     * If this method cannot find a non-loopback address using this selection
+     * algorithm, it will fall back to calling and returning the result of JDK
+     * method <code>InetAddress.getLocalHost</code>.
+     * <p/>
+     *
+     * @throws UnknownHostException If the LAN address of the machine cannot be
+     * found.
+     */
+    private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
+        try {
+            InetAddress candidateAddress = null;
+            // Iterate all NICs (network interface cards)...
+            for (Enumeration ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
+                NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
+                // Iterate all IP addresses assigned to each card...
+                for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
+                    InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
+                    if (!inetAddr.isLoopbackAddress()) {
+
+                        if (inetAddr.isSiteLocalAddress()) {
+                            // Found non-loopback site-local address. Return it immediately...
+                            return inetAddr;
+                        } else if (candidateAddress == null) {
+                        // Found non-loopback address, but not necessarily site-local.
+                            // Store it as a candidate to be returned if site-local address is not subsequently found...
+                            candidateAddress = inetAddr;
+                        // Note that we don't repeatedly assign non-loopback non-site-local addresses as candidates,
+                            // only the first. For subsequent iterations, candidate will be non-null.
+                        }
+                    }
+                }
+            }
+            if (candidateAddress != null) {
+            // We did not find a site-local address, but we found some other non-loopback address.
+                // Server might have a non-site-local address assigned to its NIC (or it might be running
+                // IPv6 which deprecates the "site-local" concept).
+                // Return this non-loopback candidate address...
+                return candidateAddress;
+            }
+        // At this point, we did not find a non-loopback address.
+            // Fall back to returning whatever InetAddress.getLocalHost() returns...
+            InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
+            if (jdkSuppliedAddress == null) {
+                throw new UnknownHostException("InetAddress.getLocalHost() method unexpectedly returned null.");
+            }
+            return jdkSuppliedAddress;
+        } catch (Exception e) {
+            UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + e);
+            unknownHostException.initCause(e);
+            throw unknownHostException;
+        }
+    }
+    
+    
+     
     
 }
 

@@ -22,15 +22,19 @@ public class AncestrisMember {
     private final String name;
     private final String ipAddress;
     private final String portAddress;
+    private final String pipAddress;
+    private final String pportAddress;
 
     /**
      * Constructor
      */
-    public AncestrisMember(String name, String ipAddress, String portAddress) {
+    public AncestrisMember(String name, String ipAddress, String portAddress, String pipAddress, String pportAddress) {
         this.allowed = true;
         this.name = name;
         this.ipAddress = ipAddress;
         this.portAddress = portAddress;
+        this.pipAddress = pipAddress;
+        this.pportAddress = pportAddress;
     }
     
 
@@ -57,6 +61,14 @@ public class AncestrisMember {
 
     public String getPortAddress() {
         return portAddress;
+    }
+
+    public String getpIPAddress() {
+        return pipAddress;
+    }
+
+    public String getpPortAddress() {
+        return pportAddress;
     }
 
 }

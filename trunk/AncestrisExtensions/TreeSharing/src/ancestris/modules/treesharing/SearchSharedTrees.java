@@ -61,6 +61,10 @@ public class SearchSharedTrees extends Thread {
         owner.setRotatingIcon(false);
         owner.displaySearchedMember("");
     }
+
+    
+    
+    
     
     /**
      * Main search function
@@ -72,8 +76,6 @@ public class SearchSharedTrees extends Thread {
      * @param ancestrisMembers 
      */
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
-
-
 
 
 
