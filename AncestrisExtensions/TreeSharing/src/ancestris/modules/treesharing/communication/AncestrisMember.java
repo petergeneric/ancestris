@@ -24,6 +24,7 @@ public class AncestrisMember {
     private final String portAddress;
     private final String pipAddress;
     private final String pportAddress;
+    private boolean usePrivate;
 
     /**
      * Constructor
@@ -35,6 +36,7 @@ public class AncestrisMember {
         this.portAddress = portAddress;
         this.pipAddress = pipAddress;
         this.pportAddress = pportAddress;
+        this.usePrivate = false;
     }
     
 
@@ -56,10 +58,18 @@ public class AncestrisMember {
     }
 
     public String getIPAddress() {
-        return ipAddress;
+        return usePrivate ? pipAddress : ipAddress;
     }
 
     public String getPortAddress() {
+        return usePrivate ? pportAddress : portAddress;
+    }
+
+    public String getxIPAddress() {
+        return ipAddress;
+    }
+
+    public String getxPortAddress() {
         return portAddress;
     }
 
@@ -69,6 +79,14 @@ public class AncestrisMember {
 
     public String getpPortAddress() {
         return pportAddress;
+    }
+
+    public boolean getUsePrivate() {
+        return usePrivate;
+    }
+
+    public void setUsePrivate(boolean flag) {
+        usePrivate = flag;
     }
 
 }
