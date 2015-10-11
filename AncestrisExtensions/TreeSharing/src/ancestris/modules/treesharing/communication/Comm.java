@@ -195,7 +195,7 @@ public class Comm {
 
     // Call info
     private boolean communicationInProgress = false;
-    private boolean connectionInProgress = false;
+    private AncestrisMember memberInProgress = null;
     private boolean expectedConnection = false;
 //    private String expectedCallIPAddress = null;
 //    private String expectedCallPortAddress = null;
@@ -684,7 +684,7 @@ public class Comm {
     
     private boolean connectToMember(AncestrisMember member) {
         
-        connectionInProgress = true;
+        memberInProgress = member;
         try {
             sendCommand(CMD_CONCT, member.getMemberName(), null, COMM_SERVER, COMM_PORT);
 
@@ -703,7 +703,7 @@ public class Comm {
             }
             // wait a bit for my generated pings and pongs have been processed
             TimeUnit.MILLISECONDS.sleep(500);
-            connectionInProgress = false;
+            memberInProgress = null;
             
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
@@ -808,7 +808,7 @@ public class Comm {
                     }
                     else if (aMember.isAllowed()) {
                         // public connection
-                        sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + STR_DELIMITER, null, aMember.getIPAddress(), Integer.valueOf(aMember.getPortAddress()));
+                        sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + STR_DELIMITER, null, aMember.getxIPAddress(), Integer.valueOf(aMember.getxPortAddress()));
                         // private connection
                         if (!aMember.getpIPAddress().isEmpty() && Integer.valueOf(aMember.getpPortAddress()) != 0) {
                             sendCommand(CMD_PINGG, owner.getRegisteredPseudo() + STR_DELIMITER, null, aMember.getpIPAddress(), Integer.valueOf(aMember.getpPortAddress()));
@@ -852,7 +852,7 @@ public class Comm {
                 // Case of PONG command 
                 if (command.equals(CMD_PONGG)) {
                     expectedConnection = false;
-                    if (!connectionInProgress) {
+                    if (memberInProgress == null) {
                         owner.addConnection(member);
                     }
                     continue;
@@ -1360,8 +1360,8 @@ public class Comm {
         
         for (Comm.ExpectedResponse er : expectedResponses) {
             sameMember = (response.fromMember.getMemberName().equals(er.fromMember.getMemberName())
-                       && response.fromMember.getIPAddress().equals(er.fromMember.getIPAddress())
-                       && response.fromMember.getPortAddress().equals(er.fromMember.getPortAddress()) );
+                       && response.fromMember.getxIPAddress().equals(er.fromMember.getxIPAddress())
+                       && response.fromMember.getxPortAddress().equals(er.fromMember.getxPortAddress()) );
             if (sameMember && (response.forCommand.equals(er.forCommand))) {
                 return er;
             }
@@ -1399,11 +1399,12 @@ public class Comm {
 
     private boolean isSameAddress(String senderAddress, AncestrisMember aMember) {
         if (senderAddress.equals(aMember.getxIPAddress()+":"+aMember.getxPortAddress())) {
-            aMember.setUsePrivate(false);
             return true;
         }
         if (senderAddress.equals(aMember.getpIPAddress()+":"+aMember.getpPortAddress())) {
-            aMember.setUsePrivate(true);
+            if (memberInProgress != null) {
+                memberInProgress.setUsePrivate(true);
+            }
             return true;
         }
         return false;

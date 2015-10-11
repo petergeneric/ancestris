@@ -986,8 +986,8 @@ public class TreeSharingTopComponent extends TopComponent {
         return null;
     }
 
-
     
+
     public AncestrisFriend createMatch(SharedGedcom sharedGedcom, Entity myEntity, FriendGedcomEntity memberEntity, AncestrisMember member, int matchResult) {
 
         // Update matched results
@@ -1086,7 +1086,7 @@ public class TreeSharingTopComponent extends TopComponent {
         }
         el.close();
     }
-    
+
     
     
     
