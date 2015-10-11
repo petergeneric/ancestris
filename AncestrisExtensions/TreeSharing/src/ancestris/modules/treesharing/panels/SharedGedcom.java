@@ -33,6 +33,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -55,6 +56,8 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     private Set<MatchData> matchedIndis = null; 
     private Set<MatchData> matchedFams = null; 
     
+    private boolean busy = false;
+    
     
     /**
      * Creates new form SharedGedcom
@@ -69,11 +72,15 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         ppi = new PrivacyPolicyImpl();
         popup = null;
         
-        gedcom.addGedcomListener(this);
+        busy = true;
+        
         initComponents();
         setShared(false);
         setPrivacy(respectPrivacy);
         updateStats(true);
+        gedcom.addGedcomListener(this);
+
+        busy = false;
     }
 
     /**
@@ -531,49 +538,47 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     
     
     
-    // Gedcom lilsteners
+    // Gedcom listeners
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        if (worthUpdating(entity)) { updateStats(true); }
+        updateMe(entity);
     }
 
     @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        if (worthUpdating(entity)) { updateStats(true); }
+        updateMe(entity);
     }
 
     @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        if (worthUpdating(property)) { updateStats(true); }
+        updateMe(property);
     }
 
     @Override
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        if (worthUpdating(property)) { updateStats(true); }
+        updateMe(property);
     }
 
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        if (worthUpdating(property)) { updateStats(true); }
+        updateMe(property);
     }
     
-    
-    private boolean worthUpdating(Property property) {
-        // Exclude non INDI and non FAM entities
-        Entity ent = property.getEntity();
-        if (ent instanceof Indi || ent instanceof Fam) {
-            // nothing
-        } else {
-            return false;
+    private void updateMe(Property property) {
+        if (!busy && ((property.getEntity() instanceof Indi) || (property.getEntity() instanceof Fam) && !(property instanceof PropertyChange))) { 
+            busy = true; 
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+
+                @Override
+                public void run() {
+                    updateStats(true);
+                    busy = false;
+                }
+            });
         }
-        
-        // Exclude PropertyChange
-        if (property instanceof PropertyChange) {
-            return false;
-        }
-        
-        return true;
     }
+
+    
 
     private void showList(String type) {
         owner.displayResultsPanel(getGedcom().getName(), NbBundle.getMessage(GedcomFriendMatch.class, "TITL_AllFriends"), type);
