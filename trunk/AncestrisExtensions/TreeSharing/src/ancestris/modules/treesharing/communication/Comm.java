@@ -834,7 +834,7 @@ public class Comm {
                 if (aMember == null) {
                     LOG.log(Level.FINE, "...Calling member " + member + " is not in the list of members.");
                     continue;
-                } else if (!aMember.isAllowed() ||  !senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress())) {
+                } else if (!aMember.isAllowed() ||  !isSameAddress(senderAddress, aMember)) {
                     LOG.log(Level.FINE, "...Member " + member + " is NOT allowed or address does not match the one I know. Do not reply.");
                     continue;
                 } 
@@ -1396,6 +1396,10 @@ public class Comm {
         }
         
     }
+
+    private boolean isSameAddress(String senderAddress, AncestrisMember aMember) {
+        return senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress()) || senderAddress.equals(aMember.getpIPAddress()+":"+aMember.getpPortAddress());
+        }
 
     
 
