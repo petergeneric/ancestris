@@ -60,6 +60,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -130,6 +132,9 @@ public class TreeSharingTopComponent extends TopComponent {
     private static TreeSharingTopComponent instance;
     private static final String PREFERRED_ID = "TreeSharingTopComponent";  // NOI18N
     private static final String ICON_PATH = "ancestris/modules/treesharing/resources/treesharing.png";
+    
+    // Logger
+    private static final Logger LOG = Logger.getLogger("ancestris.treesharing");
     
     // Panel elements
     private boolean isComponentCreated = false;
@@ -217,12 +222,12 @@ public class TreeSharingTopComponent extends TopComponent {
     @Override
     public void componentOpened() {
         if (!isComponentCreated) {
+
             initCommunication();
-            initAncestrisMembers();
-            initConnectionStats();
 
             // retrieve last position of toolbar when modified
             defaultBorderLayout = NbPreferences.forModule(TreeSharingTopComponent.class).get("ToolbarBorderLayout", BorderLayout.NORTH);
+            
             initMainPanel();
 
             initSharedGedcoms();
@@ -230,22 +235,34 @@ public class TreeSharingTopComponent extends TopComponent {
             initConnectionStats();
             
             initResults();
+
+            initRefreshMembersThread();
     }
         
         privacyToggle.setPrivacy(getPreferredPrivacy());
         isComponentCreated = true;
     }
 
+    private void initCommunication() {
+        LOG.log(Level.FINE, "Creating communication handler.");
+
+        commHandler = new Comm(this, REFRESH_DELAY);
+    }
+
+
     private void initMainPanel() {
+        LOG.log(Level.FINE, "Initializing main panel.");
 
         // Create toolbar
         toolbar = new ToolBar();
         
         // Sharing space
         // - Sharing space : Dropbox on all connected friends
-        membersList = new MembersPopup(this);
+        LOG.log(Level.FINE, "   - Users button.");
         membersNumber = new JLabel("");
-        updateMembersList();
+        LOG.log(Level.FINE, "   - Initatilize Ancestris members list.");
+        updateMembersList(); 
+        membersList = new MembersPopup(this);
         JButton members = createDropDownButton(new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend24.png")), membersList);
         members.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersList"));
         members.addActionListener(new ActionListener() {
@@ -257,18 +274,11 @@ public class TreeSharingTopComponent extends TopComponent {
                 }
             }
         });
-        refreshThread = new Thread() {
-            @Override
-            public void run() {
-                refreshMembers();
-            }
-        };
-        refreshThread.setName("TreeSharing thread : refresh members list");
-        refreshing = true;
-        refreshThread.start();
         toolbar.add(members);
         toolbar.add(membersNumber);
         toolbar.add(new JLabel(TOOLBAR_SPACE)); 
+
+        LOG.log(Level.FINE, "   - Other button.");
 
         // - Sharing space : Timer display
         timerPanel = new TimerPanel(this);
@@ -352,12 +362,70 @@ public class TreeSharingTopComponent extends TopComponent {
         add(desktopPanel);
     }
 
+    
+    private void initSharedGedcoms() {
+        LOG.log(Level.FINE, "Initializing gedcoms panels.");
+
+        
+        // Init list
+        sharedGedcoms = new LinkedList<SharedGedcom>();
+        
+        // Get open gedcoms and build shared objects
+        for (Context context : GedcomDirectory.getDefault().getContexts()) {
+            sharedGedcoms.add(new SharedGedcom(this, context.getGedcom(), privacyToggle.isSelected()));
+        }
+        
+        // Display shared Gedcoms for the first time on the desktop
+        desktopPanel.setFrames(sharedGedcoms, LEFT_OFFSET_GEDCOM, TOP_OFFSET, VERTICAL_SPACE, true);
+        
+    }
+    
+
+
+    public void initConnectionStats() {
+        LOG.log(Level.FINE, "Initializing connection statistics.");
+
+        if (connectionStats == null) {
+            connectionStats = new HashMap<String, StatsData>();
+        } else {
+            connectionStats.clear();
+        }
+    }
+    
+    
+    public void initResults() {
+        LOG.log(Level.FINE, "Initializing matched results.");
+
+        if (matchedResults == null) {
+            matchedResults = new HashSet<MatchData>();    
+        } else {
+            matchedResults.clear();
+        }
+    }
+
+    
+    
+    private void initRefreshMembersThread() {
+        LOG.log(Level.FINE, "Creating refreshing members thread.");
+
+        refreshThread = new Thread() {
+            @Override
+            public void run() {
+                refreshMembers();
+            }
+        };
+        refreshThread.setName("TreeSharing thread : refresh members list");
+        refreshing = true;
+        refreshThread.start();
+    }
+
+    
     private void refreshMembers() {
 
         while (refreshing) {
-            updateMembersList();
             try {
                 TimeUnit.SECONDS.sleep(REFRESH_DELAY);  // aligned with ping, every 150 seconds
+                updateMembersList();
             } catch (InterruptedException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -365,8 +433,31 @@ public class TreeSharingTopComponent extends TopComponent {
 
     }
     
+    private void resetAncestrisMembers() {
+        // Get new list from server
+        List<AncestrisMember> newList = commHandler.getAncestrisMembers();
+
+        // If a list exists, 
+        if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
+            for (AncestrisMember tempItem : newList) {
+                for (AncestrisMember member : ancestrisMembers) {
+                    if (tempItem.getMemberName().equals(member.getMemberName())) {
+                        tempItem.setAllowed(member.isAllowed());
+                        continue;
+                    }
+                }
+            }
+            ancestrisMembers.clear();
+        }
+        
+        // Set previous list to newlist or set it if first time        
+        ancestrisMembers = newList;
+    }
+
+    
+    
     public void updateMembersList() {
-        initAncestrisMembers();
+        resetAncestrisMembers();
         membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
         final int n = ancestrisMembers.size() - (shareAll ? 1 : 0);
         SwingUtilities.invokeLater(new Runnable() {
@@ -436,64 +527,6 @@ public class TreeSharingTopComponent extends TopComponent {
     
     
     
-    private void initCommunication() {
-        commHandler = new Comm(this, REFRESH_DELAY);
-    }
-
-    private void initAncestrisMembers() {
-        // Get new list from server
-        List<AncestrisMember> newList = commHandler.getAncestrisMembers();
-
-        // If a list exists, 
-        if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
-            for (AncestrisMember tempItem : newList) {
-                for (AncestrisMember member : ancestrisMembers) {
-                    if (tempItem.getMemberName().equals(member.getMemberName())) {
-                        tempItem.setAllowed(member.isAllowed());
-                        continue;
-                    }
-                }
-            }
-            ancestrisMembers.clear();
-        }
-        
-        // Set previous list to newlist or set it if first time        
-        ancestrisMembers = newList;
-    }
-    
-    private void initSharedGedcoms() {
-        
-        // Init list
-        sharedGedcoms = new LinkedList<SharedGedcom>();
-        
-        // Get open gedcoms and build shared objects
-        for (Context context : GedcomDirectory.getDefault().getContexts()) {
-            sharedGedcoms.add(new SharedGedcom(this, context.getGedcom(), privacyToggle.isSelected()));
-        }
-        
-        // Display shared Gedcoms for the first time on the desktop
-        desktopPanel.setFrames(sharedGedcoms, LEFT_OFFSET_GEDCOM, TOP_OFFSET, VERTICAL_SPACE, true);
-        
-    }
-    
-
-
-    public void initConnectionStats() {
-        if (connectionStats == null) {
-            connectionStats = new HashMap<String, StatsData>();
-        } else {
-            connectionStats.clear();
-        }
-    }
-    
-    
-    public void initResults() {
-        if (matchedResults == null) {
-            matchedResults = new HashSet<MatchData>();    
-        } else {
-            matchedResults.clear();
-        }
-    }
     
     
     
@@ -702,25 +735,24 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     public void gedcomOpened(Gedcom gedcom) {
+        LOG.log(Level.FINE, "Gedcom opened... (" + gedcom.getName() + ")");
         if (!isComponentCreated) {
+            LOG.log(Level.FINE, "   - Do nothing. Component not created yet.");
             return;
         }
-        //        try {
-        //            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        //            //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        //            //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        //        } catch(Exception e) {
-        //            e.printStackTrace();
-        //        }
+        LOG.log(Level.FINE, "   - Creating gedcom panel.");
         SharedGedcom newSharedGedcom = new SharedGedcom(this, gedcom, privacyToggle.isSelected());
         desktopPanel.addFrame(newSharedGedcom, findLocation(sharedGedcoms.size(), LEFT_OFFSET_GEDCOM, newSharedGedcom.getPreferredSize().height));
         sharedGedcoms.add(newSharedGedcom);
     }
     
     public void gedcomClosed(Gedcom gedcom) {
+        LOG.log(Level.FINE, "Gedcom closed... (" + gedcom.getName() + ")");
         if (!isComponentCreated) {
+            LOG.log(Level.FINE, "   - Do nothing. Component not created yet.");
             return;
         }
+        LOG.log(Level.FINE, "   - Removing gedcom panel.");
         for (SharedGedcom sg : sharedGedcoms) {
             if (sg.getGedcom() == gedcom) {
                 // Remove gedcom from desktop and list

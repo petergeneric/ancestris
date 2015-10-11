@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -114,8 +113,6 @@ import org.xml.sax.InputSource;
  * 
  *  • Client A can send GETSE to client B once connection is established (call : connect, wait for connection flag, then GETSE)
  * .
- * Documentation : UDP - http://www.brynosaurus.com/pub/net/p2pnat/ 
- * Packet - http://www.javaworld.com/article/2077539/learn-java/java-tip-40--object-transport-via-datagram-packets.html
  * 
  */
 
