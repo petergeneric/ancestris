@@ -443,6 +443,7 @@ public class TreeSharingTopComponent extends TopComponent {
                 for (AncestrisMember member : ancestrisMembers) {
                     if (tempItem.getMemberName().equals(member.getMemberName())) {
                         tempItem.setAllowed(member.isAllowed());
+                        tempItem.setUsePrivate(member.getUsePrivate());
                         continue;
                     }
                 }

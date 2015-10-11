@@ -1398,7 +1398,15 @@ public class Comm {
     }
 
     private boolean isSameAddress(String senderAddress, AncestrisMember aMember) {
-        return senderAddress.equals(aMember.getIPAddress()+":"+aMember.getPortAddress()) || senderAddress.equals(aMember.getpIPAddress()+":"+aMember.getpPortAddress());
+        if (senderAddress.equals(aMember.getxIPAddress()+":"+aMember.getxPortAddress())) {
+            aMember.setUsePrivate(false);
+            return true;
+        }
+        if (senderAddress.equals(aMember.getpIPAddress()+":"+aMember.getpPortAddress())) {
+            aMember.setUsePrivate(true);
+            return true;
+        }
+        return false;
         }
 
     
