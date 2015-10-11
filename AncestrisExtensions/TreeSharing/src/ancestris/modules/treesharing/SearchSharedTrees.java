@@ -20,10 +20,15 @@ import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import genj.gedcom.PropertySex;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -67,6 +72,10 @@ public class SearchSharedTrees extends Thread {
      * @param ancestrisMembers 
      */
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
+
+
+
+
 
 //        if (true) {
 //            stopGracefully();
