@@ -433,13 +433,38 @@ public class TreeSharingTopComponent extends TopComponent {
 
     }
     
+
+    public void rememberMembers() {
+        String key = "";
+        for (AncestrisMember member : ancestrisMembers) {
+            key = "member-" + member.getxIPAddress();
+            NbPreferences.forModule(TreeSharingTopComponent.class).put(key, member.isAllowed() ? "1" : "0");
+        }
+    }
+    
+//    private void initAncestrisMembers() {
+//        // Get new list from server
+//        ancestrisMembers = commHandler.getAncestrisMembers();
+//        String key = "";
+//
+//        // If a list exists, 
+//        if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
+//            for (AncestrisMember member : ancestrisMembers) {
+//                key = "member-" + member.getxIPAddress();
+//                boolean isAllowed = NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
+//                member.setAllowed(isAllowed);
+//            }
+//        }
+//    }
+        
     private void resetAncestrisMembers() {
         // Get new list from server
         List<AncestrisMember> newList = commHandler.getAncestrisMembers();
+        String key = "";
 
         // If a list exists, 
-        if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
-            for (AncestrisMember tempItem : newList) {
+        for (AncestrisMember tempItem : newList) {
+            if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
                 for (AncestrisMember member : ancestrisMembers) {
                     if (tempItem.getMemberName().equals(member.getMemberName())) {
                         tempItem.setAllowed(member.isAllowed());
@@ -448,14 +473,18 @@ public class TreeSharingTopComponent extends TopComponent {
                     }
                 }
             }
+            key = "member-" + tempItem.getxIPAddress();
+            boolean isAllowed = NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
+            tempItem.setAllowed(isAllowed);
+        }
+
+        // Set previous list to newlist or set it if first time        
+        if (ancestrisMembers != null) {
             ancestrisMembers.clear();
         }
-        
-        // Set previous list to newlist or set it if first time        
         ancestrisMembers = newList;
     }
 
-    
     
     public void updateMembersList() {
         resetAncestrisMembers();
@@ -476,6 +505,11 @@ public class TreeSharingTopComponent extends TopComponent {
             }
         });
     }
+    
+
+
+    
+    
     
     @Override
     protected void addImpl(Component comp, Object constraints, int index) {
@@ -501,6 +535,7 @@ public class TreeSharingTopComponent extends TopComponent {
     public void componentClosed() {
         stopSharingToggle.doClick();
         refreshing = false;
+        rememberMembers();
     }
 
         
