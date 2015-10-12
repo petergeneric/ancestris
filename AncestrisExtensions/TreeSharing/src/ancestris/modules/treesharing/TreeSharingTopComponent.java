@@ -739,7 +739,7 @@ public class TreeSharingTopComponent extends TopComponent {
         // avoid double opening
         boolean found = false;
         for (SharedGedcom sg : sharedGedcoms) {
-            if (sg.getGedcom() != null && sg.getGedcom().getOrigin() != null && sg.getGedcom().getOrigin().getFileName().equals(gedcom.getOrigin().getFileName())) {
+            if (sg.getGedcom() != null && sg.getGedcom().getOrigin() != null && gedcom.getOrigin() != null && sg.getGedcom().getOrigin().getFileName().equals(gedcom.getOrigin().getFileName())) {
                 found = true;
                 break;
             }
