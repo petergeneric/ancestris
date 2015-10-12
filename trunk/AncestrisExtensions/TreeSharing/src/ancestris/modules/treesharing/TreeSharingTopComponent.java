@@ -736,26 +736,17 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     public void gedcomOpened(Gedcom gedcom) {
-        // avoid double opening
-        boolean found = false;
-//        for (SharedGedcom sg : sharedGedcoms) {
-//            if (sg.getGedcom() != null && sg.getGedcom().getOrigin() != null && gedcom.getOrigin() != null && sg.getGedcom().getOrigin().getFileName().equals(gedcom.getOrigin().getFileName())) {
-//                found = true;
-//                break;
-//            }
-//        }
-        if (!found) {
-            LOG.log(Level.FINE, "Gedcom opened... (" + gedcom.getName() + ")");
-            if (!isComponentCreated) {
-                LOG.log(Level.FINE, "   - Do nothing. Component not created yet.");
-                return;
-            }
-            LOG.log(Level.FINE, "   - Creating gedcom panel.");
-            SharedGedcom newSharedGedcom = new SharedGedcom(this, gedcom, privacyToggle.isSelected());
-            desktopPanel.addFrame(newSharedGedcom, findLocation(sharedGedcoms.size(), LEFT_OFFSET_GEDCOM, newSharedGedcom.getPreferredSize().height));
-            sharedGedcoms.add(newSharedGedcom);
+        LOG.log(Level.FINE, "Gedcom opened... (" + gedcom.getName() + ")");
+        if (!isComponentCreated) {
+            LOG.log(Level.FINE, "   - Do nothing. Component not created yet.");
+            return;
         }
+        LOG.log(Level.FINE, "   - Creating gedcom panel.");
+        SharedGedcom newSharedGedcom = new SharedGedcom(this, gedcom, privacyToggle.isSelected());
+        desktopPanel.addFrame(newSharedGedcom, findLocation(sharedGedcoms.size(), LEFT_OFFSET_GEDCOM, newSharedGedcom.getPreferredSize().height));
+        sharedGedcoms.add(newSharedGedcom);
     }
+
     
     public void gedcomClosed(Gedcom gedcom) {
         LOG.log(Level.FINE, "Gedcom closed... (" + gedcom.getName() + ")");
