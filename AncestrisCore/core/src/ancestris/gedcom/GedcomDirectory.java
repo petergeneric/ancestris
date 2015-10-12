@@ -177,8 +177,9 @@ public abstract class GedcomDirectory {
                 firstIndi.addDefaultProperties();
             }
 
-            // save gedcom file
+            // save gedcom file and close
             GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(file));
+            GedcomMgr.getDefault().gedcomClose(context);
 
             // and reopens the file
             return openGedcom(FileUtil.toFileObject(file));
