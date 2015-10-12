@@ -172,7 +172,7 @@ public class Comm {
     private static String CMD_CONCT = "CONCT";
     private static String CMD_PINGG = "PINGG";
     private static String CMD_PONGG = "PONGG";
-    // Sharing my shared entities
+    // Sharing my entities
     private static String CMD_GILxx = "GA";   // Get Individual lastnames
     private static String CMD_TILxx = "TA";   // Take individual lastnames
     private static String CMD_GIDxx = "GB";   // Get individual details
@@ -186,7 +186,7 @@ public class Comm {
     private static String CMD_GPFxx = "GP";   // Get profile
     private static String CMD_TPFxx = "TP";   // Take profile
     private static String CMD_TXPxx = "TX";   // I say thanks and provide my profile
-    private static String CMD_TSPRF = "TS";   // I give my simple profile (no picture)
+    private static String CMD_TSPRF = "TY";   // I give my simple profile (no picture)
     
     // Threads
     private volatile boolean sharing;
