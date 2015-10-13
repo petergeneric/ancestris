@@ -473,10 +473,10 @@ public class Comm {
     }
     
     
-    public void giveSimpleProfile(AncestrisMember member) {
+    public boolean giveSimpleProfile(AncestrisMember member) {
         MemberProfile mp = owner.getMyProfile();
         mp.photoBytes = null;
-        put(member, CMD_TSPRF, buildPacketsOfProfile(mp));
+        return put(member, CMD_TSPRF, buildPacketsOfProfile(mp));
     }
         
     
@@ -570,15 +570,15 @@ public class Comm {
     /**
      * Generic call method to friend and expect something in return
      */
-    public void call(AncestrisMember member, String command, Object object) {
+    public boolean call(AncestrisMember member, String command, Object object) {
 
         if (socket == null || socket.isClosed()) {
-            return;
+            return false;
         }
         
         // Connect to Member only if no communication in progress
         if (!communicationInProgress && !connectToMember(member)) {
-            return;
+            return false;
         }
         
         // Loop on packets. Last packet number is COMM_PACKET_NB-1.
@@ -641,25 +641,26 @@ public class Comm {
             
             } catch (Exception e) {
                 Exceptions.printStackTrace(e);
-                return;
+                return false;
             }
         }
         LOG.log(Level.FINE, "...(END) Returned call from member " + member.getMemberName() + " after " + iPacket + " packets");
+        return true;
     }
 
     
     /**
      * Generic call method to friend and expect something in return
      */
-    public void put(AncestrisMember member, String command, Map<Integer, byte[]> packets) {
+    public boolean put(AncestrisMember member, String command, Map<Integer, byte[]> packets) {
 
         if (socket == null || socket.isClosed()) {
-            return;
+            return false;
         }
         
         // Connect to Member only if no communication in progress
         if (!communicationInProgress && !connectToMember(member)) {
-            return;
+            return false;
         }
         
         // Loop on packets. Last packet number is COMM_PACKET_NB-1.
@@ -683,9 +684,11 @@ public class Comm {
                 TimeUnit.MILLISECONDS.sleep(COMM_RESPONSE_DELAY);
             } catch (InterruptedException ex) {
                 //Exceptions.printStackTrace(ex);
+                return false;
             }
         }
         LOG.log(Level.FINE, "...(END) Enf of put to member " + member.getMemberName() + " with " + iPacket + " packets");
+        return true;
     }
 
     
