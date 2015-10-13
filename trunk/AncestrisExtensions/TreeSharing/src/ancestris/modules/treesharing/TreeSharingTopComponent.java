@@ -437,9 +437,9 @@ public class TreeSharingTopComponent extends TopComponent {
     public void rememberMembers() {
         String key = "";
         for (AncestrisMember member : ancestrisMembers) {
-            key = "member-" + member.getxIPAddress();
+            key = "memberip-" + member.getxIPAddress();
             NbPreferences.forModule(TreeSharingTopComponent.class).put(key, member.isAllowed() ? "1" : "0");
-            key = "member-" + member.getMemberName();
+            key = "memberps-" + member.getMemberName();
             NbPreferences.forModule(TreeSharingTopComponent.class).put(key, member.isAllowed() ? "1" : "0");
         }
     }
@@ -462,9 +462,9 @@ public class TreeSharingTopComponent extends TopComponent {
                     }
                 }
             }
-            key = "member-" + tempItem.getxIPAddress();
+            key = "memberip-" + tempItem.getxIPAddress();
             isAllowed = NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
-            key = "member-" + tempItem.getMemberName();
+            key = "memberps-" + tempItem.getMemberName();
             isAllowed &= NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
             tempItem.setAllowed(isAllowed);
         }

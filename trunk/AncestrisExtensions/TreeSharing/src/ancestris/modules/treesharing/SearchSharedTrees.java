@@ -98,7 +98,9 @@ public class SearchSharedTrees extends Thread {
             
             // Give my simple profile (no picture) to make it faster
             owner.getCommHandler().setCommunicationInProgress(false);
-            owner.getCommHandler().giveSimpleProfile(member);
+            if (!owner.getCommHandler().giveSimpleProfile(member)) {
+                continue;
+            }
             owner.getCommHandler().setCommunicationInProgress(true);
 
             
