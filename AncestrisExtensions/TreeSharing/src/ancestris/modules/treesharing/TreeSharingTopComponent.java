@@ -439,28 +439,17 @@ public class TreeSharingTopComponent extends TopComponent {
         for (AncestrisMember member : ancestrisMembers) {
             key = "member-" + member.getxIPAddress();
             NbPreferences.forModule(TreeSharingTopComponent.class).put(key, member.isAllowed() ? "1" : "0");
+            key = "member-" + member.getMemberName();
+            NbPreferences.forModule(TreeSharingTopComponent.class).put(key, member.isAllowed() ? "1" : "0");
         }
     }
     
-//    private void initAncestrisMembers() {
-//        // Get new list from server
-//        ancestrisMembers = commHandler.getAncestrisMembers();
-//        String key = "";
-//
-//        // If a list exists, 
-//        if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
-//            for (AncestrisMember member : ancestrisMembers) {
-//                key = "member-" + member.getxIPAddress();
-//                boolean isAllowed = NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
-//                member.setAllowed(isAllowed);
-//            }
-//        }
-//    }
         
     private void resetAncestrisMembers() {
         // Get new list from server
         List<AncestrisMember> newList = commHandler.getAncestrisMembers();
         String key = "";
+        boolean isAllowed = true;
 
         // If a list exists, 
         for (AncestrisMember tempItem : newList) {
@@ -474,7 +463,9 @@ public class TreeSharingTopComponent extends TopComponent {
                 }
             }
             key = "member-" + tempItem.getxIPAddress();
-            boolean isAllowed = NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
+            isAllowed = NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
+            key = "member-" + tempItem.getMemberName();
+            isAllowed &= NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
             tempItem.setAllowed(isAllowed);
         }
 
