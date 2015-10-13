@@ -177,7 +177,7 @@ public class TechInfoPanel extends javax.swing.JPanel {
 
 
 
-  private static void openIpLocator(String ipaddress) {
+  public static void openIpLocator(String ipaddress) {
       try {
           URI uri = new URI("http://ip-api.com/#" + ipaddress);
           if (Desktop.isDesktopSupported()) {

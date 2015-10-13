@@ -13,11 +13,15 @@ package ancestris.modules.treesharing.options;
 
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.modules.treesharing.panels.MembersPopup;
+import ancestris.modules.treesharing.panels.TechInfoPanel;
 import ancestris.util.swing.DialogManager;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -693,9 +697,11 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         table.getColumnModel().getColumn(0).setPreferredWidth(20);
         
         // Set tooltip text for name column (is string and does not loose its format)
-        DefaultTableCellRenderer rendererCol1 = new DefaultTableCellRenderer();
-        rendererCol1.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_Allowed"));
-        table.getColumnModel().getColumn(1).setCellRenderer(rendererCol1);        
+        if (table == jTable2) {
+            DefaultTableCellRenderer rendererCol1 = new DefaultTableCellRenderer();
+            rendererCol1.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_DisplayMap"));
+            table.getColumnModel().getColumn(1).setCellRenderer(rendererCol1);
+        }
 
         // Remove grid lines
         table.setShowHorizontalLines(false);
@@ -712,6 +718,22 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         table.getColumnModel().getColumn(1).setHeaderRenderer(renderer);
         table.getColumnModel().getColumn(0).setHeaderValue(allowedLabel);
         table.getColumnModel().getColumn(1).setHeaderValue(nameLabel);
+        
+        // Set double click
+        table.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                JTable table = (JTable) me.getSource();
+                if (table != jTable2) {
+                    return;
+                }
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                if (me.getClickCount() == 2) {
+                    String key = (String) model2.getValueAt(row, 1);
+                    TechInfoPanel.openIpLocator(key);
+                }
+            }
+        });
     }
 
     public void tableChanged(TableModelEvent e) {
