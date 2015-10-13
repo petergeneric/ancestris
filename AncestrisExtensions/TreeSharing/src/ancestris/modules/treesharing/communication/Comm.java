@@ -475,7 +475,7 @@ public class Comm {
     
     public boolean giveSimpleProfile(AncestrisMember member) {
         MemberProfile mp = owner.getMyProfile();
-        mp.photoBytes = null;
+        //mp.photoBytes = null;
         return put(member, CMD_TSPRF, buildPacketsOfProfile(mp));
     }
         

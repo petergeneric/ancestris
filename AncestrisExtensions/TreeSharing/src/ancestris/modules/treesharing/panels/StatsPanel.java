@@ -80,7 +80,7 @@ public class StatsPanel extends javax.swing.JPanel {
         // Size table2
         Dimension preferredSize2 = jTable2.getPreferredSize();
         preferredSize2.height = jTable2.getRowHeight();
-        jTable1.setPreferredSize(preferredSize2);
+        jTable2.setPreferredSize(preferredSize2);
         
         // Set table2 transparent
         jTable2.setShowGrid(false);
