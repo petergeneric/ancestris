@@ -438,9 +438,9 @@ public class TreeSharingTopComponent extends TopComponent {
         String key = "";
         for (AncestrisMember member : ancestrisMembers) {
             key = "memberip-" + member.getxIPAddress();
-            NbPreferences.forModule(TreeSharingTopComponent.class).put(key, member.isAllowed() ? "1" : "0");
+            NbPreferences.forModule(TreeSharingOptionsPanel.class).put(key, member.isAllowed() ? "1" : "0");
             key = "memberps-" + member.getMemberName();
-            NbPreferences.forModule(TreeSharingTopComponent.class).put(key, member.isAllowed() ? "1" : "0");
+            NbPreferences.forModule(TreeSharingOptionsPanel.class).put(key, member.isAllowed() ? "1" : "0");
         }
     }
     
@@ -463,9 +463,9 @@ public class TreeSharingTopComponent extends TopComponent {
                 }
             }
             key = "memberip-" + tempItem.getxIPAddress();
-            isAllowed = NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
+            isAllowed = NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1");
             key = "memberps-" + tempItem.getMemberName();
-            isAllowed &= NbPreferences.forModule(EntitiesListPanel.class).get(key, "1").equals("1");
+            isAllowed &= NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1");
             tempItem.setAllowed(isAllowed);
         }
 
@@ -981,7 +981,9 @@ public class TreeSharingTopComponent extends TopComponent {
         if (resultFound) {
             stats.match = true;
         }
-        stats.profile = profile;
+        if (stats.profile == null || (stats.profile.photoBytes == null && profile.photoBytes != null)) {
+            stats.profile = profile;
+        }
         stats.profile.ipaddress = ipaddress;
         connectionStats.put(member, stats);
 
