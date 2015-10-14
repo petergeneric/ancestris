@@ -27,9 +27,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -646,8 +646,8 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
 
     private void loadMembersLists() {
         
-        jlist1 = new HashMap<String, Boolean>();
-        jlist2 = new HashMap<String, Boolean>();
+        jlist1 = new TreeMap<String, Boolean>();
+        jlist2 = new TreeMap<String, Boolean>();
         
         String[] keys;
         try {
@@ -660,7 +660,10 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         for (int i = 0; i < keys.length; i++) {
             key = keys[i];
             if (key.startsWith("memberps-")) {
-                jlist1.put(key.substring(9), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
+                String pseudo = key.substring(9);
+                if (!getPseudo().equals(pseudo)) {
+                    jlist1.put(pseudo, NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
+                }
             }
             if (key.startsWith("memberip-")) {
                 jlist2.put(key.substring(9), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));

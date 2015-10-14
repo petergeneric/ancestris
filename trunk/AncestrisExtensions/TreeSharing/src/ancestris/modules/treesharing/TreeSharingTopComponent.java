@@ -493,6 +493,7 @@ public class TreeSharingTopComponent extends TopComponent {
                     membersNumber.setText(" ");
                     instance.setDisplayName(title);
                 }
+                rememberMembers();
             }
         });
     }
