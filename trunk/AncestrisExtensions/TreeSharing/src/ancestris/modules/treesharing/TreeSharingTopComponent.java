@@ -45,10 +45,14 @@ import genj.gedcom.Gedcom;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,7 +69,10 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -1106,19 +1113,40 @@ public class TreeSharingTopComponent extends TopComponent {
 
 
     public void displayResultsPanel(String gedcoms, String friends, String typeOfEntity) {
-        EntitiesListPanel el = new EntitiesListPanel(gedcoms, friends, matchedResults, typeOfEntity);
-        DialogManager.ADialog ad = DialogManager.create(NbBundle.getMessage(EntitiesListPanel.class, "TIP_TitleResults"), el);
-        ad.setMessageType(DialogManager.PLAIN_MESSAGE);
-        JButton copyButton = new JButton(new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/Copy.png")));
-        copyButton.setToolTipText(NbBundle.getMessage(EntitiesListPanel.class, "TIP_CopyData"));
-        ad.setOptions(new Object[]{copyButton, DialogManager.OK_OPTION});
-        Object ret = ad.show();
-        if (ret == copyButton) {
-            el.copy();
-        }
-        el.close();
-    }
+        
+        final EntitiesListPanel el = new EntitiesListPanel(gedcoms, friends, matchedResults, typeOfEntity);
 
+        JFrame frame = (JFrame)SwingUtilities.windowForComponent(this);
+        final JDialog dialog = new JDialog((Frame)null, NbBundle.getMessage(EntitiesListPanel.class, "TIP_TitleResults"), false);
+        
+        final JButton copyButton = new JButton(new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/Copy.png")));
+        copyButton.setToolTipText(NbBundle.getMessage(EntitiesListPanel.class, "TIP_CopyData"));
+        copyButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                el.copy();
+            }
+        });
+
+        final JButton closeButton = new JButton(new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/Close.png")));
+        closeButton.setToolTipText(NbBundle.getMessage(EntitiesListPanel.class, "TIP_Close"));
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                el.close();
+                dialog.setVisible(false);
+                dialog.dispose();
+            }
+        });
+        
+        final JOptionPane optionPane = new JOptionPane(el);
+        optionPane.setOptions(new Object[]{ closeButton, copyButton });
+
+        dialog.setContentPane(optionPane);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.pack();
+        dialog.setLocationRelativeTo(frame);
+        dialog.setVisible(true);
+
+    }
     
     
 
