@@ -76,6 +76,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.netbeans.api.settings.ConvertAsProperties;
 import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
 import org.openide.util.Exceptions;
@@ -593,7 +594,11 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     public String getRegisteredPseudo() {
-        return commPseudo;
+        return getRegisteredPseudo(true);
+    }
+    
+    public String getRegisteredPseudo(boolean escape) {
+        return escape ? StringEscapeUtils.escapeHtml(commPseudo) : commPseudo;
     }
     
     public String getRegisteredIPAddress() {
@@ -1138,10 +1143,10 @@ public class TreeSharingTopComponent extends TopComponent {
         });
         
         final JOptionPane optionPane = new JOptionPane(el);
-        optionPane.setOptions(new Object[]{ closeButton, copyButton });
+        optionPane.setOptions(new Object[]{ copyButton, closeButton });
 
         dialog.setContentPane(optionPane);
-        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        //dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.pack();
         dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);

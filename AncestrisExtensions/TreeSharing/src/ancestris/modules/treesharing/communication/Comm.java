@@ -461,7 +461,7 @@ public class Comm {
     public void sendPing() {
 
         if (sharing) {
-            sendCommand(CMD_PONGG, owner.getRegisteredPseudo(), null, COMM_SERVER, COMM_PORT);
+            sendCommand(CMD_PONGG, owner.getRegisteredPseudo(false), null, COMM_SERVER, COMM_PORT);
         }
 
     }
@@ -667,7 +667,7 @@ public class Comm {
         String senderIP = member.getIPAddress();
         int senderPort = Integer.valueOf(member.getPortAddress());
         int iPacket = 0;
-        LOG.log(Level.FINE, "Puting member " + member.getMemberName() + " with " + command);
+        LOG.log(Level.FINE, "Putting member " + member.getMemberName() + " with " + command);
         while (iPacket < COMM_PACKET_NB) {  // stop at the last packet 
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
             byte[] set = packets.get(iPacket);
@@ -804,7 +804,7 @@ public class Comm {
                 // Case of CMD_UNRKO command (unregistration did not work)
                 if (command.equals(CMD_UNRKO)) {
                     String err = new String(bytesReceived).substring(COMM_CMD_SIZE);
-                    LOG.log(Level.FINE, "...Could not unregister " + owner.getRegisteredPseudo() + " from the Ancestris server. Error : " + err);
+                    LOG.log(Level.FINE, "...Could not unregister " + owner.getRegisteredPseudo(false) + " from the Ancestris server. Error : " + err);
                     DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
                     continue;
                 } 
@@ -1172,7 +1172,7 @@ public class Comm {
         
         byte[] msgBytes = null; // content to send
 
-        String contentStr = command + string;
+        String contentStr = command + string; 
         byte[] contentBytes = contentStr.getBytes(Charset.forName(COMM_CHARSET));
         
         // Return just this if no object
